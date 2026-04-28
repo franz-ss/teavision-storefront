@@ -16,7 +16,7 @@ export const New: Story = { args: { variant: 'new' } }
 
 export const AllVariants: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: '0.5rem' }}>
+    <div className="flex gap-2">
       <Badge variant="sale" />
       <Badge variant="new" />
       <Badge variant="outOfStock" />

@@ -6,7 +6,7 @@ const preview: Preview = {
     backgrounds: {
       default: 'brand',
       values: [
-        { name: 'brand', value: '#F5F0E8' },
+        { name: 'brand', value: 'var(--color-background)' },
         { name: 'white', value: '#ffffff' },
       ],
     },
