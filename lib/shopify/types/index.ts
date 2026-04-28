@@ -6,8 +6,8 @@ export type Money = {
 export type ShopifyImage = {
   url: string
   altText: string | null
-  width: number
-  height: number
+  width: number | null
+  height: number | null
 }
 
 export type ProductVariant = {
