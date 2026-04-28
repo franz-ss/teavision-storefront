@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -16,12 +17,12 @@ export default function HomePage() {
           Bulk wholesale tea, herbs, and spices for cafes, restaurants, and
           retailers.
         </p>
-        <a
+        <Link
           href="/collections/all"
           className="mt-8 inline-block rounded bg-black px-6 py-3 font-medium text-white hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           Shop All Products
-        </a>
+        </Link>
       </section>
 
       {/* Featured collections placeholder */}

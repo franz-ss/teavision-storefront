@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { cacheLife, cacheTag } from 'next/cache'
+import { Suspense } from 'react'
 
 type Collection = {
   handle: string
@@ -50,58 +51,69 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: collection.title }
 }
 
-export default async function CollectionPage({ params }: Props) {
+async function CollectionContent({
+  params,
+}: {
+  params: Promise<{ handle: string }>
+}) {
   const { handle } = await params
-
   const [collection, products] = await Promise.all([
     getCollection(handle),
     getCollectionProducts(handle),
   ])
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <div className="md:grid md:grid-cols-[240px_1fr] md:gap-8">
-        {/* Filter sidebar placeholder */}
-        <aside aria-label="Filters">
-          <h2 className="mb-4 font-semibold">Filter</h2>
-          <div className="space-y-2">
-            {['By Weight', 'By Origin', 'By Price'].map((label) => (
-              <div
-                key={label}
-                className="rounded border border-dashed p-3 text-sm text-gray-400"
-              >
-                {label} — placeholder
-              </div>
-            ))}
-          </div>
-        </aside>
-
-        {/* Product grid */}
-        <div>
-          <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
-          <p className="mb-6 text-gray-600">{collection.description}</p>
-
-          <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3" role="list">
-            {products.map((product) => (
-              <li key={product.id}>
-                <a
-                  href={`/products/${product.handle}`}
-                  className="group block focus-visible:ring-2 focus-visible:ring-offset-2"
-                >
-                  <div
-                    className="aspect-square rounded bg-gray-100"
-                    aria-hidden="true"
-                  />
-                  <p className="mt-2 font-medium group-hover:underline">
-                    {product.title}
-                  </p>
-                  <p className="text-sm text-gray-500">{product.price}</p>
-                </a>
-              </li>
-            ))}
-          </ul>
+    <div className="md:grid md:grid-cols-[240px_1fr] md:gap-8">
+      {/* Filter sidebar placeholder */}
+      <aside aria-label="Filters">
+        <h2 className="mb-4 font-semibold">Filter</h2>
+        <div className="space-y-2">
+          {['By Weight', 'By Origin', 'By Price'].map((label) => (
+            <div
+              key={label}
+              className="rounded border border-dashed p-3 text-sm text-gray-400"
+            >
+              {label} — placeholder
+            </div>
+          ))}
         </div>
+      </aside>
+
+      {/* Product grid */}
+      <div>
+        <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
+        <p className="mb-6 text-gray-600">{collection.description}</p>
+
+        <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3" role="list">
+          {products.map((product) => (
+            <li key={product.id}>
+              <a
+                href={`/products/${product.handle}`}
+                className="group block focus-visible:ring-2 focus-visible:ring-offset-2"
+              >
+                <div
+                  className="aspect-square rounded bg-gray-100"
+                  aria-hidden="true"
+                />
+                <p className="mt-2 font-medium group-hover:underline">
+                  {product.title}
+                </p>
+                <p className="text-sm text-gray-500">{product.price}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
+    </div>
+  )
+}
+
+export default function CollectionPage({ params }: Props) {
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-8">
+      <Suspense fallback={<div aria-live="polite">Loading collection…</div>}>
+        <CollectionContent params={params} />
+      </Suspense>
     </div>
   )
 }
