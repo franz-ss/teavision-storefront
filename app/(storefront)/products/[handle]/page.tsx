@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import { getProduct } from '@/lib/shopify/operations/product'
 import { ProductForm } from '@/components/product/product-form'
+import { Price } from '@/components/ui/price'
 
 type Props = {
   params: Promise<{ handle: string }>
@@ -27,21 +28,16 @@ async function ProductContent({
   return (
     <div className="grid gap-8 md:grid-cols-2">
       <div
-        className="aspect-square rounded bg-gray-100"
+        className="bg-surface aspect-square rounded"
         role="img"
         aria-label={product.featuredImage?.altText ?? `${product.title} image`}
       />
 
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold">{product.title}</h1>
-        <p className="text-xl font-semibold">
-          {product.priceRange.minVariantPrice.currencyCode}{' '}
-          {product.priceRange.minVariantPrice.amount}
-        </p>
-
+        <Price price={product.priceRange.minVariantPrice} size="lg" />
         <ProductForm variants={product.variants} />
-
-        <p className="text-gray-600">{product.description}</p>
+        <p className="text-text-muted">{product.description}</p>
       </div>
     </div>
   )
