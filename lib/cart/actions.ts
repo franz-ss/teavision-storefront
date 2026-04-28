@@ -96,22 +96,18 @@ export async function addToCartAction(
 export async function updateCartLineAction(
   lineId: string,
   quantity: number,
-): Promise<Cart> {
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return STUB_CART
-  }
+): Promise<void> {
+  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) return
   const cookieStore = await cookies()
   const cartId = cookieStore.get(CART_COOKIE)?.value
   if (!cartId) throw new Error('No cart found')
-  return updateCartLines(cartId, [{ id: lineId, quantity }])
+  await updateCartLines(cartId, [{ id: lineId, quantity }])
 }
 
-export async function removeCartLineAction(lineId: string): Promise<Cart> {
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return STUB_CART
-  }
+export async function removeCartLineAction(lineId: string): Promise<void> {
+  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) return
   const cookieStore = await cookies()
   const cartId = cookieStore.get(CART_COOKIE)?.value
   if (!cartId) throw new Error('No cart found')
-  return removeCartLines(cartId, [lineId])
+  await removeCartLines(cartId, [lineId])
 }

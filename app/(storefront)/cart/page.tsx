@@ -38,16 +38,13 @@ export default async function CartPage() {
             null,
             line.id,
             Math.max(1, line.quantity - 1),
-          ) as unknown as () => Promise<void>
+          )
           const increaseAction = updateCartLineAction.bind(
             null,
             line.id,
             line.quantity + 1,
-          ) as unknown as () => Promise<void>
-          const removeAction = removeCartLineAction.bind(
-            null,
-            line.id,
-          ) as unknown as () => Promise<void>
+          )
+          const removeAction = removeCartLineAction.bind(null, line.id)
 
           return (
             <li key={line.id} className="flex items-center gap-4 py-6">
