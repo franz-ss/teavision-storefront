@@ -1,46 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { cacheLife, cacheTag } from 'next/cache'
+import Image from 'next/image'
 import { Suspense } from 'react'
-
-type Collection = {
-  handle: string
-  title: string
-  description: string
-}
-
-type ProductCard = {
-  id: string
-  title: string
-  price: string
-  handle: string
-}
-
-async function getCollection(handle: string): Promise<Collection> {
-  'use cache'
-  cacheTag('collection', `collection-${handle}`)
-  cacheLife('hours')
-
-  return {
-    handle,
-    title: 'Black Tea',
-    description:
-      'Premium black teas sourced from Assam, Darjeeling, and Sri Lanka.',
-  }
-}
-
-async function getCollectionProducts(handle: string): Promise<ProductCard[]> {
-  'use cache'
-  cacheTag('collection', `collection-${handle}`)
-  cacheLife('hours')
-
-  return Array.from({ length: 8 }, (_, i) => ({
-    id: String(i + 1),
-    title: `Product Placeholder ${i + 1}`,
-    price: '$0.00',
-    handle: `product-placeholder-${i + 1}`,
-  }))
-}
+import { notFound } from 'next/navigation'
+import {
+  getCollection,
+  getCollectionProducts,
+} from '@/lib/shopify/operations/collection'
 
 type Props = {
   params: Promise<{ handle: string }>
@@ -49,6 +15,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params
   const collection = await getCollection(handle)
+  if (!collection) return { title: 'Collection not found' }
   return { title: collection.title }
 }
 
@@ -58,14 +25,16 @@ async function CollectionContent({
   params: Promise<{ handle: string }>
 }) {
   const { handle } = await params
+
   const [collection, products] = await Promise.all([
     getCollection(handle),
     getCollectionProducts(handle),
   ])
 
+  if (!collection) notFound()
+
   return (
     <div className="md:grid md:grid-cols-[240px_1fr] md:gap-8">
-      {/* Filter sidebar placeholder */}
       <aside aria-label="Filters">
         <h2 className="mb-4 font-semibold">Filter</h2>
         <div className="space-y-2">
@@ -80,7 +49,6 @@ async function CollectionContent({
         </div>
       </aside>
 
-      {/* Product grid */}
       <div>
         <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
         <p className="mb-6 text-gray-600">{collection.description}</p>
@@ -92,14 +60,29 @@ async function CollectionContent({
                 href={`/products/${product.handle}`}
                 className="group block focus-visible:ring-2 focus-visible:ring-offset-2"
               >
-                <div
-                  className="aspect-square rounded bg-gray-100"
-                  aria-hidden="true"
-                />
+                {product.featuredImage &&
+                product.featuredImage.width &&
+                product.featuredImage.height ? (
+                  <Image
+                    src={`${product.featuredImage.url}&width=400`}
+                    alt={product.featuredImage.altText ?? product.title}
+                    width={product.featuredImage.width}
+                    height={product.featuredImage.height}
+                    className="aspect-square w-full rounded object-cover"
+                  />
+                ) : (
+                  <div
+                    className="aspect-square rounded bg-gray-100"
+                    aria-hidden="true"
+                  />
+                )}
                 <p className="mt-2 font-medium group-hover:underline">
                   {product.title}
                 </p>
-                <p className="text-sm text-gray-500">{product.price}</p>
+                <p className="text-sm text-gray-500">
+                  {product.priceRange.minVariantPrice.currencyCode}{' '}
+                  {product.priceRange.minVariantPrice.amount}
+                </p>
               </Link>
             </li>
           ))}
