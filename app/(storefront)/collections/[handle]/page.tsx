@@ -1,12 +1,11 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import {
   getCollection,
   getCollectionProducts,
 } from '@/lib/shopify/operations/collection'
+import { ProductCard } from '@/components/ui/product-card'
 
 type Props = {
   params: Promise<{ handle: string }>
@@ -41,7 +40,7 @@ async function CollectionContent({
           {['By Weight', 'By Origin', 'By Price'].map((label) => (
             <div
               key={label}
-              className="rounded border border-dashed p-3 text-sm text-gray-400"
+              className="text-text-muted rounded border border-dashed p-3 text-sm"
             >
               {label} — placeholder
             </div>
@@ -51,39 +50,12 @@ async function CollectionContent({
 
       <div>
         <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
-        <p className="mb-6 text-gray-600">{collection.description}</p>
+        <p className="text-text-muted mb-6">{collection.description}</p>
 
         <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3" role="list">
-          {products.map((product) => (
+          {products.map((product, i) => (
             <li key={product.id}>
-              <Link
-                href={`/products/${product.handle}`}
-                className="group block focus-visible:ring-2 focus-visible:ring-offset-2"
-              >
-                {product.featuredImage &&
-                product.featuredImage.width &&
-                product.featuredImage.height ? (
-                  <Image
-                    src={`${product.featuredImage.url}&width=400`}
-                    alt={product.featuredImage.altText ?? product.title}
-                    width={product.featuredImage.width}
-                    height={product.featuredImage.height}
-                    className="aspect-square w-full rounded object-cover"
-                  />
-                ) : (
-                  <div
-                    className="aspect-square rounded bg-gray-100"
-                    aria-hidden="true"
-                  />
-                )}
-                <p className="mt-2 font-medium group-hover:underline">
-                  {product.title}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {product.priceRange.minVariantPrice.currencyCode}{' '}
-                  {product.priceRange.minVariantPrice.amount}
-                </p>
-              </Link>
+              <ProductCard product={product} priority={i === 0} />
             </li>
           ))}
         </ul>
