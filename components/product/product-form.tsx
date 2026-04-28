@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { addToCartAction } from '@/lib/cart/actions'
+import { Button } from '@/components/ui/button'
 import type { ProductVariant } from '@/lib/shopify/types'
 
 type ProductFormProps = {
@@ -23,7 +24,7 @@ export function ProductForm({ variants }: ProductFormProps) {
 
   if (variants.length === 0) {
     return (
-      <div className="rounded border border-dashed p-4 text-sm text-gray-400">
+      <div className="text-text-muted rounded border border-dashed p-4 text-sm">
         No variants available
       </div>
     )
@@ -44,8 +45,8 @@ export function ProductForm({ variants }: ProductFormProps) {
               onClick={() => setSelectedVariantId(v.id)}
               className={`rounded border px-4 py-2 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 ${
                 selectedVariantId === v.id
-                  ? 'border-black bg-black text-white'
-                  : 'hover:border-gray-800'
+                  ? 'border-primary bg-primary text-background'
+                  : 'border-border hover:border-primary'
               }`}
             >
               {v.title}
@@ -54,15 +55,14 @@ export function ProductForm({ variants }: ProductFormProps) {
         </div>
       </fieldset>
 
-      <button
-        type="button"
-        disabled={isPending || !selectedVariantId}
-        aria-label={isPending ? 'Adding to cart…' : 'Add to cart'}
+      <Button
         onClick={handleAddToCart}
-        className="rounded bg-black px-6 py-3 font-medium text-white hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50"
+        isLoading={isPending}
+        disabled={!selectedVariantId}
+        size="lg"
       >
-        {isPending ? 'Adding…' : 'Add to Cart'}
-      </button>
+        Add to Cart
+      </Button>
     </div>
   )
 }
