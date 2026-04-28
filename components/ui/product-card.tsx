@@ -18,17 +18,9 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product.handle}`}
-      className="group block overflow-hidden rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-      style={{
-        border: '1px solid var(--color-border)',
-        background: 'var(--color-surface)',
-        transition: 'border-color 0.15s',
-      }}
+      className="group border-border bg-surface block overflow-hidden rounded border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
     >
-      <div
-        className="relative aspect-square"
-        style={{ background: 'var(--color-border)' }}
-      >
+      <div className="bg-border relative aspect-square">
         {product.featuredImage &&
         product.featuredImage.width &&
         product.featuredImage.height ? (
@@ -51,10 +43,7 @@ export function ProductCard({
       </div>
 
       <div className="p-3">
-        <p
-          className="truncate text-sm font-medium group-hover:underline"
-          style={{ color: 'var(--color-text)' }}
-        >
+        <p className="text-text truncate text-sm font-medium group-hover:underline">
           {product.title}
         </p>
         <Price

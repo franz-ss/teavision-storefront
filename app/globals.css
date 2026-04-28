@@ -1,8 +1,10 @@
 @import 'tailwindcss';
 
-:root {
+@theme {
   --color-background: #f5f0e8;
   --color-surface: #ede8de;
+  --color-surface-warm: #e8ddd5;
+  --color-surface-sage: #d8e2d0;
   --color-border: #d4c9b0;
   --color-primary: #6b7c5a;
   --color-primary-hover: #5a6b4a;
@@ -16,6 +18,11 @@
   ::before,
   ::after {
     --tw-ring-color: var(--color-primary);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
   }
 
   button,

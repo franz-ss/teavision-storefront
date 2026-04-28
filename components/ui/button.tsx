@@ -9,11 +9,9 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 const variantStyles: Record<string, string> = {
-  primary:
-    'bg-[var(--color-primary)] text-[var(--color-background)] hover:bg-[var(--color-primary-hover)]',
-  secondary:
-    'border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-surface)]',
-  ghost: 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface)]',
+  primary: 'bg-primary text-background hover:bg-primary-hover',
+  secondary: 'border border-primary text-primary hover:bg-surface',
+  ghost: 'text-text-muted hover:bg-surface',
 }
 
 const sizeStyles: Record<string, string> = {

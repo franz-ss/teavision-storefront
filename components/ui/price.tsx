@@ -37,10 +37,9 @@ export function Price({
   if (!compareAtPrice) {
     return (
       <span
-        className={['tabular-nums', sizeStyles[size], className]
+        className={['text-text tabular-nums', sizeStyles[size], className]
           .filter(Boolean)
           .join(' ')}
-        style={{ color: 'var(--color-text)' }}
       >
         {formattedPrice}
       </span>
@@ -56,15 +55,13 @@ export function Price({
         .join(' ')}
     >
       <span
-        className={`${compareSizeStyles[size]} line-through`}
-        style={{ color: 'var(--color-text-muted)' }}
+        className={`${compareSizeStyles[size]} text-text-muted line-through`}
         aria-label={`Was ${formattedCompare}`}
       >
         {formattedCompare}
       </span>
       <span
-        className={sizeStyles[size]}
-        style={{ color: 'var(--color-primary)' }}
+        className={`${sizeStyles[size]} text-primary`}
         aria-label={`Now ${formattedPrice}`}
       >
         {formattedPrice}
