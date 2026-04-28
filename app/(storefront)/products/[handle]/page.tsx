@@ -23,14 +23,6 @@ async function getProduct(handle: string): Promise<Product> {
   }
 }
 
-async function getRelatedProducts(): Promise<Product[]> {
-  'use cache'
-  cacheTag('product')
-  cacheLife('hours')
-
-  return []
-}
-
 type Props = {
   params: Promise<{ handle: string }>
 }
@@ -44,10 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params
 
-  const [product] = await Promise.all([
-    getProduct(handle),
-    getRelatedProducts(),
-  ])
+  const product = await getProduct(handle)
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
