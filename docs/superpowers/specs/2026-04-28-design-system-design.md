@@ -10,16 +10,16 @@
 
 Sand/sage green, muted, low contrast. Placeholder values — swap for real brand assets when available.
 
-| Token | Value | Use |
-|---|---|---|
-| `--color-background` | `#F5F0E8` | Page background |
-| `--color-surface` | `#EDE8DE` | Cards, input backgrounds |
-| `--color-border` | `#D4C9B0` | Borders, dividers |
-| `--color-primary` | `#6B7C5A` | CTAs, active states, sale badge |
-| `--color-primary-hover` | `#5A6B4A` | Primary button hover |
-| `--color-text` | `#3D3D35` | Body text |
-| `--color-text-muted` | `#7A7868` | Secondary text, placeholders |
-| `--color-destructive` | `#8B4A42` | Errors, remove actions, out-of-stock badge |
+| Token                   | Value     | Use                                        |
+| ----------------------- | --------- | ------------------------------------------ |
+| `--color-background`    | `#F5F0E8` | Page background                            |
+| `--color-surface`       | `#EDE8DE` | Cards, input backgrounds                   |
+| `--color-border`        | `#D4C9B0` | Borders, dividers                          |
+| `--color-primary`       | `#6B7C5A` | CTAs, active states, sale badge            |
+| `--color-primary-hover` | `#5A6B4A` | Primary button hover                       |
+| `--color-text`          | `#3D3D35` | Body text                                  |
+| `--color-text-muted`    | `#7A7868` | Secondary text, placeholders               |
+| `--color-destructive`   | `#8B4A42` | Errors, remove actions, out-of-stock badge |
 
 All tokens defined in `app/globals.css` inside `:root`. No hex values in component files.
 
@@ -35,6 +35,7 @@ All tokens defined in `app/globals.css` inside `:root`. No hex values in compone
 `preview.ts` imports `app/globals.css` so token variables and base styles are present in every story. Storybook background set to `--color-background`.
 
 **Scripts added to `package.json`:**
+
 - `"storybook": "storybook dev -p 6006"` — dev server
 - `"build-storybook": "storybook build"` — static build
 
@@ -89,7 +90,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 ```typescript
 type PriceProps = {
-  price: Money          // { amount: string; currencyCode: string }
+  price: Money // { amount: string; currencyCode: string }
   compareAtPrice?: Money
   size?: 'sm' | 'md' | 'lg'
   className?: string
@@ -123,9 +124,9 @@ type BadgeProps = {
 
 ```typescript
 type ProductCardProps = {
-  product: ProductSummary   // from lib/shopify/types
+  product: ProductSummary // from lib/shopify/types
   badge?: 'outOfStock' | 'sale' | 'new'
-  priority?: boolean        // next/image priority prop for above-fold cards
+  priority?: boolean // next/image priority prop for above-fold cards
 }
 ```
 
@@ -144,11 +145,11 @@ type ProductCardProps = {
 
 After the design system is built, existing pages should be updated to use components:
 
-| Current inline pattern | Replace with |
-|---|---|
-| `className="rounded bg-black px-6 py-3 font-medium text-white..."` | `<Button variant="primary">` |
-| `{currencyCode} {amount}` | `<Price price={...}>` |
-| Product card markup in home page + PLP | `<ProductCard product={...}>` |
+| Current inline pattern                                             | Replace with                  |
+| ------------------------------------------------------------------ | ----------------------------- |
+| `className="rounded bg-black px-6 py-3 font-medium text-white..."` | `<Button variant="primary">`  |
+| `{currencyCode} {amount}`                                          | `<Price price={...}>`         |
+| Product card markup in home page + PLP                             | `<ProductCard product={...}>` |
 
 This refactor is a separate task after the design system itself is built and reviewed in Storybook.
 

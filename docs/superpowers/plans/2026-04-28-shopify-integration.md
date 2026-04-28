@@ -12,29 +12,30 @@
 
 ## File Map
 
-| File | Action | Purpose |
-|---|---|---|
-| `package.json` | Modify | Add graphql + codegen deps and script |
-| `codegen.ts` | Create | Codegen config (runs when credentials arrive) |
-| `lib/shopify/client.ts` | Replace stub | `shopifyFetch<T>` HTTP primitive |
-| `lib/shopify/types/index.ts` | Create | Hand-written domain types |
-| `lib/shopify/queries/product.graphql` | Create | Product GraphQL queries |
-| `lib/shopify/queries/collection.graphql` | Create | Collection GraphQL queries |
-| `lib/shopify/queries/cart.graphql` | Create | Cart GraphQL queries + mutations |
-| `lib/shopify/operations/product.ts` | Create | `getProduct`, `getProducts` with stubs |
-| `lib/shopify/operations/collection.ts` | Create | `getCollection`, `getCollectionProducts` with stubs |
-| `lib/shopify/operations/cart.ts` | Create | `getCart`, `createCart`, `addCartLines`, `updateCartLines`, `removeCartLines` |
-| `lib/cart/actions.ts` | Replace stub | `'use server'` cart actions |
-| `components/product/product-form.tsx` | Create | Client Component — variant selector + add-to-cart |
-| `app/(storefront)/products/[handle]/page.tsx` | Modify | Wire to `getProduct` + `ProductForm` |
-| `app/(storefront)/collections/[handle]/page.tsx` | Modify | Wire to `getCollection` + `getCollectionProducts` |
-| `app/(storefront)/cart/page.tsx` | Modify | Wire to `getCartAction` + form actions |
+| File                                             | Action       | Purpose                                                                       |
+| ------------------------------------------------ | ------------ | ----------------------------------------------------------------------------- |
+| `package.json`                                   | Modify       | Add graphql + codegen deps and script                                         |
+| `codegen.ts`                                     | Create       | Codegen config (runs when credentials arrive)                                 |
+| `lib/shopify/client.ts`                          | Replace stub | `shopifyFetch<T>` HTTP primitive                                              |
+| `lib/shopify/types/index.ts`                     | Create       | Hand-written domain types                                                     |
+| `lib/shopify/queries/product.graphql`            | Create       | Product GraphQL queries                                                       |
+| `lib/shopify/queries/collection.graphql`         | Create       | Collection GraphQL queries                                                    |
+| `lib/shopify/queries/cart.graphql`               | Create       | Cart GraphQL queries + mutations                                              |
+| `lib/shopify/operations/product.ts`              | Create       | `getProduct`, `getProducts` with stubs                                        |
+| `lib/shopify/operations/collection.ts`           | Create       | `getCollection`, `getCollectionProducts` with stubs                           |
+| `lib/shopify/operations/cart.ts`                 | Create       | `getCart`, `createCart`, `addCartLines`, `updateCartLines`, `removeCartLines` |
+| `lib/cart/actions.ts`                            | Replace stub | `'use server'` cart actions                                                   |
+| `components/product/product-form.tsx`            | Create       | Client Component — variant selector + add-to-cart                             |
+| `app/(storefront)/products/[handle]/page.tsx`    | Modify       | Wire to `getProduct` + `ProductForm`                                          |
+| `app/(storefront)/collections/[handle]/page.tsx` | Modify       | Wire to `getCollection` + `getCollectionProducts`                             |
+| `app/(storefront)/cart/page.tsx`                 | Modify       | Wire to `getCartAction` + form actions                                        |
 
 ---
 
 ## Task 1: Install dependencies
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install graphql runtime and codegen packages**
@@ -64,6 +65,7 @@ git commit -m "chore: install graphql and codegen dependencies"
 ## Task 2: Codegen config
 
 **Files:**
+
 - Create: `codegen.ts`
 
 Note: This config is wired up now but `pnpm codegen` will only succeed once `SHOPIFY_STORE_DOMAIN` and `SHOPIFY_STOREFRONT_ACCESS_TOKEN` are in `.env.local`. The `lib/shopify/types/generated.ts` file will not exist until then — operations in this plan use inline TypeScript types instead.
@@ -121,6 +123,7 @@ git commit -m "chore: add GraphQL Codegen config (runs when credentials availabl
 ## Task 3: GraphQL queries
 
 **Files:**
+
 - Create: `lib/shopify/queries/product.graphql`
 - Create: `lib/shopify/queries/collection.graphql`
 - Create: `lib/shopify/queries/cart.graphql`
@@ -339,6 +342,7 @@ git commit -m "feat: add Shopify GraphQL query and mutation definitions"
 ## Task 4: Domain types
 
 **Files:**
+
 - Create: `lib/shopify/types/index.ts`
 
 - [ ] **Step 1: Create lib/shopify/types/index.ts**
@@ -434,6 +438,7 @@ git commit -m "feat: add Shopify domain types"
 ## Task 5: shopifyFetch client
 
 **Files:**
+
 - Replace: `lib/shopify/client.ts`
 
 - [ ] **Step 1: Replace lib/shopify/client.ts**
@@ -513,6 +518,7 @@ git commit -m "feat: add shopifyFetch typed HTTP primitive"
 ## Task 6: Product operations
 
 **Files:**
+
 - Create: `lib/shopify/operations/product.ts`
 
 - [ ] **Step 1: Create lib/shopify/operations/product.ts**
@@ -520,16 +526,44 @@ git commit -m "feat: add shopifyFetch typed HTTP primitive"
 ```typescript
 import { cacheLife, cacheTag } from 'next/cache'
 import { shopifyFetch } from '@/lib/shopify/client'
-import type { Money, Product, ProductSummary, ShopifyImage } from '@/lib/shopify/types'
+import type {
+  Money,
+  Product,
+  ProductSummary,
+  ShopifyImage,
+} from '@/lib/shopify/types'
 
 const GET_PRODUCT_QUERY = /* GraphQL */ `
   query GetProduct($handle: String!) {
     product(handle: $handle) {
-      id handle title description
-      featuredImage { url altText width height }
-      priceRange { minVariantPrice { amount currencyCode } }
+      id
+      handle
+      title
+      description
+      featuredImage {
+        url
+        altText
+        width
+        height
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
       variants(first: 10) {
-        edges { node { id title availableForSale price { amount currencyCode } } }
+        edges {
+          node {
+            id
+            title
+            availableForSale
+            price {
+              amount
+              currencyCode
+            }
+          }
+        }
       }
     }
   }
@@ -540,9 +574,21 @@ const GET_PRODUCTS_QUERY = /* GraphQL */ `
     products(first: $first) {
       edges {
         node {
-          id handle title
-          featuredImage { url altText width height }
-          priceRange { minVariantPrice { amount currencyCode } }
+          id
+          handle
+          title
+          featuredImage {
+            url
+            altText
+            width
+            height
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
         }
       }
     }
@@ -558,7 +604,12 @@ type ShopifyProductNode = {
   priceRange: { minVariantPrice: Money }
   variants: {
     edges: Array<{
-      node: { id: string; title: string; availableForSale: boolean; price: Money }
+      node: {
+        id: string
+        title: string
+        availableForSale: boolean
+        price: Money
+      }
     }>
   }
 }
@@ -680,6 +731,7 @@ git commit -m "feat: add product operations with stub data fallback"
 ## Task 7: Collection operations
 
 **Files:**
+
 - Create: `lib/shopify/operations/collection.ts`
 
 - [ ] **Step 1: Create lib/shopify/operations/collection.ts**
@@ -687,12 +739,19 @@ git commit -m "feat: add product operations with stub data fallback"
 ```typescript
 import { cacheLife, cacheTag } from 'next/cache'
 import { shopifyFetch } from '@/lib/shopify/client'
-import type { Collection, Money, ProductSummary, ShopifyImage } from '@/lib/shopify/types'
+import type {
+  Collection,
+  Money,
+  ProductSummary,
+  ShopifyImage,
+} from '@/lib/shopify/types'
 
 const GET_COLLECTION_QUERY = /* GraphQL */ `
   query GetCollection($handle: String!) {
     collection(handle: $handle) {
-      handle title description
+      handle
+      title
+      description
     }
   }
 `
@@ -703,9 +762,21 @@ const GET_COLLECTION_PRODUCTS_QUERY = /* GraphQL */ `
       products(first: $first) {
         edges {
           node {
-            id handle title
-            featuredImage { url altText width height }
-            priceRange { minVariantPrice { amount currencyCode } }
+            id
+            handle
+            title
+            featuredImage {
+              url
+              altText
+              width
+              height
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
           }
         }
       }
@@ -818,6 +889,7 @@ git commit -m "feat: add collection operations with stub data fallback"
 ## Task 8: Cart operations
 
 **Files:**
+
 - Create: `lib/shopify/operations/cart.ts`
 
 - [ ] **Step 1: Create lib/shopify/operations/cart.ts**
@@ -828,22 +900,41 @@ import type { Cart, Money, ShopifyImage } from '@/lib/shopify/types'
 
 const CART_FIELDS = /* GraphQL */ `
   fragment CartFields on Cart {
-    id checkoutUrl totalQuantity
+    id
+    checkoutUrl
+    totalQuantity
     cost {
-      totalAmount { amount currencyCode }
-      subtotalAmount { amount currencyCode }
+      totalAmount {
+        amount
+        currencyCode
+      }
+      subtotalAmount {
+        amount
+        currencyCode
+      }
     }
     lines(first: 100) {
       edges {
         node {
-          id quantity
+          id
+          quantity
           merchandise {
             ... on ProductVariant {
-              id title
-              price { amount currencyCode }
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
               product {
-                handle title
-                featuredImage { url altText width height }
+                handle
+                title
+                featuredImage {
+                  url
+                  altText
+                  width
+                  height
+                }
               }
             }
           }
@@ -856,7 +947,9 @@ const CART_FIELDS = /* GraphQL */ `
 const GET_CART_QUERY = /* GraphQL */ `
   ${CART_FIELDS}
   query GetCart($cartId: ID!) {
-    cart(id: $cartId) { ...CartFields }
+    cart(id: $cartId) {
+      ...CartFields
+    }
   }
 `
 
@@ -864,8 +957,13 @@ const CART_CREATE_MUTATION = /* GraphQL */ `
   ${CART_FIELDS}
   mutation CartCreate($input: CartInput!) {
     cartCreate(input: $input) {
-      cart { ...CartFields }
-      userErrors { field message }
+      cart {
+        ...CartFields
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `
@@ -874,8 +972,13 @@ const CART_LINES_ADD_MUTATION = /* GraphQL */ `
   ${CART_FIELDS}
   mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
-      cart { ...CartFields }
-      userErrors { field message }
+      cart {
+        ...CartFields
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `
@@ -884,8 +987,13 @@ const CART_LINES_UPDATE_MUTATION = /* GraphQL */ `
   ${CART_FIELDS}
   mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
     cartLinesUpdate(cartId: $cartId, lines: $lines) {
-      cart { ...CartFields }
-      userErrors { field message }
+      cart {
+        ...CartFields
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `
@@ -894,8 +1002,13 @@ const CART_LINES_REMOVE_MUTATION = /* GraphQL */ `
   ${CART_FIELDS}
   mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
-      cart { ...CartFields }
-      userErrors { field message }
+      cart {
+        ...CartFields
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `
@@ -1032,6 +1145,7 @@ git commit -m "feat: add cart operations (getCart, createCart, add/update/remove
 ## Task 9: Cart server actions
 
 **Files:**
+
 - Replace: `lib/cart/actions.ts`
 
 - [ ] **Step 1: Replace lib/cart/actions.ts**
@@ -1175,6 +1289,7 @@ git commit -m "feat: add cart server actions with stub fallback"
 ## Task 10: ProductForm client component
 
 **Files:**
+
 - Create: `components/product/product-form.tsx`
 
 This component replaces the separate `VariantSelector` + add-to-cart button on the PDP. It manages selected variant state and calls `addToCartAction`.
@@ -1272,6 +1387,7 @@ git commit -m "feat: add ProductForm client component (variant selector + add to
 ## Task 11: Wire PDP to real data
 
 **Files:**
+
 - Replace: `app/(storefront)/products/[handle]/page.tsx`
 
 - [ ] **Step 1: Replace app/(storefront)/products/[handle]/page.tsx**
@@ -1367,6 +1483,7 @@ git commit -m "feat: wire PDP to getProduct and ProductForm"
 ## Task 12: Wire PLP to real data
 
 **Files:**
+
 - Replace: `app/(storefront)/collections/[handle]/page.tsx`
 
 - [ ] **Step 1: Replace app/(storefront)/collections/[handle]/page.tsx**
@@ -1505,6 +1622,7 @@ git commit -m "feat: wire PLP to getCollection and getCollectionProducts"
 ## Task 13: Wire cart page to real data
 
 **Files:**
+
 - Replace: `app/(storefront)/cart/page.tsx`
 
 - [ ] **Step 1: Replace app/(storefront)/cart/page.tsx**
@@ -1734,12 +1852,14 @@ If working tree is clean, no commit needed.
 When Shopify credentials are available:
 
 1. Add to `.env.local`:
+
    ```
    SHOPIFY_STORE_DOMAIN=mrteashop-com.myshopify.com
    SHOPIFY_STOREFRONT_ACCESS_TOKEN=<token>
    ```
 
 2. Run codegen to generate typed operations:
+
    ```bash
    pnpm codegen
    ```

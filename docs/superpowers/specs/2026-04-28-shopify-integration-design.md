@@ -86,7 +86,12 @@ type Product = {
   handle: string
   title: string
   description: string
-  featuredImage: { url: string; altText: string | null; width: number; height: number } | null
+  featuredImage: {
+    url: string
+    altText: string | null
+    width: number
+    height: number
+  } | null
   priceRange: { minVariantPrice: Money }
   variants: ProductVariant[]
 }
@@ -100,7 +105,11 @@ type Collection = {
 type CartLine = {
   id: string
   quantity: number
-  merchandise: { product: Pick<Product, 'handle' | 'title' | 'featuredImage'>; title: string; price: Money }
+  merchandise: {
+    product: Pick<Product, 'handle' | 'title' | 'featuredImage'>
+    title: string
+    price: Money
+  }
 }
 
 type Cart = {
@@ -131,7 +140,7 @@ Each operation in `lib/shopify/operations/` follows this pattern:
 ```typescript
 export async function getProduct(handle: string): Promise<Product | null> {
   if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return STUB_PRODUCT  // hardcoded stub matching the Product type
+    return STUB_PRODUCT // hardcoded stub matching the Product type
   }
   const { data } = await shopifyFetch<GetProductQuery>({
     query: GetProductDocument,
@@ -149,16 +158,17 @@ export async function getProduct(handle: string): Promise<Product | null> {
 
 All functions are `'use server'`. `cartId` stored in an HTTP-only cookie named `teavision_cart`.
 
-| Function | Behaviour |
-|---|---|
-| `getCart()` | Reads cookie → calls `getCart` operation → returns `Cart \| null` |
-| `addToCart(variantId, quantity)` | Gets or creates cart → `CartLinesAdd` → returns `Cart` |
-| `updateCartLine(lineId, quantity)` | `CartLinesUpdate` with new quantity → returns `Cart` |
-| `removeCartLine(lineId)` | `CartLinesRemove` mutation → returns `Cart` |
+| Function                           | Behaviour                                                         |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| `getCart()`                        | Reads cookie → calls `getCart` operation → returns `Cart \| null` |
+| `addToCart(variantId, quantity)`   | Gets or creates cart → `CartLinesAdd` → returns `Cart`            |
+| `updateCartLine(lineId, quantity)` | `CartLinesUpdate` with new quantity → returns `Cart`              |
+| `removeCartLine(lineId)`           | `CartLinesRemove` mutation → returns `Cart`                       |
 
 **Stub mode:** when no token, `getCart()` returns hardcoded placeholder cart so the cart page renders during development.
 
 **Error handling:**
+
 - Expired cart (`getCart` returns null for a known cartId) → clear cookie, return null
 - Variant unavailable → surface as a typed error, not an unhandled exception
 - Out of stock → same

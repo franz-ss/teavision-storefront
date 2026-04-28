@@ -12,26 +12,27 @@
 
 ## File Map
 
-| File | Action | Purpose |
-|---|---|---|
-| `package.json` | Modify | Add Storybook scripts and deps |
-| `.storybook/main.ts` | Create | Storybook config — framework, addons, stories glob |
-| `.storybook/preview.ts` | Create | Import globals.css, set brand background |
-| `app/globals.css` | Modify | Add `:root` design token block |
-| `components/ui/button.tsx` | Create | Button — `'use client'`, forwardRef, variants, loading |
-| `components/ui/button.stories.tsx` | Create | Button stories |
-| `components/ui/price.tsx` | Create | Price — formats `Money`, sale state |
-| `components/ui/price.stories.tsx` | Create | Price stories |
-| `components/ui/badge.tsx` | Create | Badge — outOfStock, sale, new variants |
-| `components/ui/badge.stories.tsx` | Create | Badge stories |
-| `components/ui/product-card.tsx` | Create | ProductCard — links to PDP, optional badge |
-| `components/ui/product-card.stories.tsx` | Create | ProductCard stories |
+| File                                     | Action | Purpose                                                |
+| ---------------------------------------- | ------ | ------------------------------------------------------ |
+| `package.json`                           | Modify | Add Storybook scripts and deps                         |
+| `.storybook/main.ts`                     | Create | Storybook config — framework, addons, stories glob     |
+| `.storybook/preview.ts`                  | Create | Import globals.css, set brand background               |
+| `app/globals.css`                        | Modify | Add `:root` design token block                         |
+| `components/ui/button.tsx`               | Create | Button — `'use client'`, forwardRef, variants, loading |
+| `components/ui/button.stories.tsx`       | Create | Button stories                                         |
+| `components/ui/price.tsx`                | Create | Price — formats `Money`, sale state                    |
+| `components/ui/price.stories.tsx`        | Create | Price stories                                          |
+| `components/ui/badge.tsx`                | Create | Badge — outOfStock, sale, new variants                 |
+| `components/ui/badge.stories.tsx`        | Create | Badge stories                                          |
+| `components/ui/product-card.tsx`         | Create | ProductCard — links to PDP, optional badge             |
+| `components/ui/product-card.stories.tsx` | Create | ProductCard stories                                    |
 
 ---
 
 ## Task 1: Install Storybook packages
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install Storybook and framework packages**
@@ -69,6 +70,7 @@ git commit -m "chore: install Storybook 8 with Next.js framework and a11y addon"
 ## Task 2: Storybook configuration
 
 **Files:**
+
 - Create: `.storybook/main.ts`
 - Create: `.storybook/preview.ts`
 
@@ -131,6 +133,7 @@ git commit -m "chore: configure Storybook with Next.js framework and brand backg
 ## Task 3: Design tokens
 
 **Files:**
+
 - Modify: `app/globals.css`
 
 - [ ] **Step 1: Add token block to app/globals.css**
@@ -141,14 +144,14 @@ Open `app/globals.css`. Add the `:root` block immediately after `@import 'tailwi
 @import 'tailwindcss';
 
 :root {
-  --color-background:    #F5F0E8;
-  --color-surface:       #EDE8DE;
-  --color-border:        #D4C9B0;
-  --color-primary:       #6B7C5A;
-  --color-primary-hover: #5A6B4A;
-  --color-text:          #3D3D35;
-  --color-text-muted:    #7A7868;
-  --color-destructive:   #8B4A42;
+  --color-background: #f5f0e8;
+  --color-surface: #ede8de;
+  --color-border: #d4c9b0;
+  --color-primary: #6b7c5a;
+  --color-primary-hover: #5a6b4a;
+  --color-text: #3d3d35;
+  --color-text-muted: #7a7868;
+  --color-destructive: #8b4a42;
 }
 
 @layer base {
@@ -209,6 +212,7 @@ git commit -m "feat: add design tokens to globals.css"
 ## Task 4: Button component
 
 **Files:**
+
 - Create: `components/ui/button.tsx`
 - Create: `components/ui/button.stories.tsx`
 
@@ -395,6 +399,7 @@ git commit -m "feat: add Button component with variants, sizes, and loading stat
 ## Task 5: Price component
 
 **Files:**
+
 - Create: `components/ui/price.tsx`
 - Create: `components/ui/price.stories.tsx`
 
@@ -528,6 +533,7 @@ git commit -m "feat: add Price component with sale state and size variants"
 ## Task 6: Badge component
 
 **Files:**
+
 - Create: `components/ui/badge.tsx`
 - Create: `components/ui/badge.stories.tsx`
 
@@ -639,6 +645,7 @@ git commit -m "feat: add Badge component with outOfStock, sale, and new variants
 ## Task 7: ProductCard component
 
 **Files:**
+
 - Create: `components/ui/product-card.tsx`
 - Create: `components/ui/product-card.stories.tsx`
 
@@ -820,6 +827,7 @@ pnpm storybook
 ```
 
 Open `http://localhost:6006`. Verify all four components appear under "UI/":
+
 - `UI/Button` — 8 stories, all render
 - `UI/Price` — 4 stories, all render
 - `UI/Badge` — 4 stories including AllVariants, all render
