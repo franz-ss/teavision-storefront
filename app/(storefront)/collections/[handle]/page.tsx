@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { cacheLife, cacheTag } from 'next/cache'
 import { Suspense } from 'react'
 
@@ -87,7 +88,7 @@ async function CollectionContent({
         <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3" role="list">
           {products.map((product) => (
             <li key={product.id}>
-              <a
+              <Link
                 href={`/products/${product.handle}`}
                 className="group block focus-visible:ring-2 focus-visible:ring-offset-2"
               >
@@ -99,7 +100,7 @@ async function CollectionContent({
                   {product.title}
                 </p>
                 <p className="text-sm text-gray-500">{product.price}</p>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
