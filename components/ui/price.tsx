@@ -13,13 +13,26 @@ const sizeStyles: Record<string, string> = {
   lg: 'text-xl font-semibold',
 }
 
+const compareSizeStyles: Record<string, string> = {
+  sm: 'text-xs',
+  md: 'text-sm',
+  lg: 'text-base',
+}
+
+function format(money: Money): string {
+  return new Intl.NumberFormat('en-AU', {
+    style: 'currency',
+    currency: money.currencyCode,
+  }).format(parseFloat(money.amount))
+}
+
 export function Price({
   price,
   compareAtPrice,
   size = 'md',
   className = '',
 }: PriceProps) {
-  const formattedPrice = `${price.currencyCode} ${price.amount}`
+  const formattedPrice = format(price)
 
   if (!compareAtPrice) {
     return (
@@ -34,7 +47,7 @@ export function Price({
     )
   }
 
-  const formattedCompare = `${compareAtPrice.currencyCode} ${compareAtPrice.amount}`
+  const formattedCompare = format(compareAtPrice)
 
   return (
     <span
@@ -43,7 +56,7 @@ export function Price({
         .join(' ')}
     >
       <span
-        className="text-sm line-through"
+        className={`${compareSizeStyles[size]} line-through`}
         style={{ color: 'var(--color-text-muted)' }}
         aria-label={`Was ${formattedCompare}`}
       >

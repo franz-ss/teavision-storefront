@@ -1,4 +1,4 @@
-type BadgeVariant = 'outOfStock' | 'sale' | 'new'
+export type BadgeVariant = 'outOfStock' | 'sale' | 'new'
 
 type BadgeProps = {
   variant: BadgeVariant
