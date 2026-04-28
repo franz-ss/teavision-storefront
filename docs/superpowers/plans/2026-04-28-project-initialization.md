@@ -12,30 +12,31 @@
 
 ## File Map
 
-| File | Purpose |
-|---|---|
-| `next.config.ts` | `dynamicIO`, `remotePatterns` for Shopify CDN |
-| `.prettierrc` | Prettier config with tailwindcss plugin |
-| `.env.example` | Committed empty key stubs |
-| `.env.local` | Local env (gitignored) |
-| `app/layout.tsx` | Root HTML shell — fonts, body, global CSS import |
-| `app/globals.css` | Tailwind directives + base layer overrides |
-| `app/(storefront)/layout.tsx` | Header + main + footer shell for all storefront routes |
-| `app/(storefront)/page.tsx` | Home wireframe — static |
-| `app/(storefront)/products/[handle]/page.tsx` | PDP wireframe — `'use cache'` |
-| `app/(storefront)/collections/[handle]/page.tsx` | PLP wireframe — `'use cache'` |
-| `app/(storefront)/cart/page.tsx` | Cart wireframe — dynamic, no cache |
-| `components/layout/header.tsx` | Wireframe header |
-| `components/layout/footer.tsx` | Wireframe footer |
-| `components/product/variant-selector.tsx` | Client Component stub — variant picker |
-| `lib/shopify/index.ts` | Stub — Storefront API client placeholder |
-| `lib/cart/index.ts` | Stub — cart server actions placeholder |
+| File                                             | Purpose                                                |
+| ------------------------------------------------ | ------------------------------------------------------ |
+| `next.config.ts`                                 | `dynamicIO`, `remotePatterns` for Shopify CDN          |
+| `.prettierrc`                                    | Prettier config with tailwindcss plugin                |
+| `.env.example`                                   | Committed empty key stubs                              |
+| `.env.local`                                     | Local env (gitignored)                                 |
+| `app/layout.tsx`                                 | Root HTML shell — fonts, body, global CSS import       |
+| `app/globals.css`                                | Tailwind directives + base layer overrides             |
+| `app/(storefront)/layout.tsx`                    | Header + main + footer shell for all storefront routes |
+| `app/(storefront)/page.tsx`                      | Home wireframe — static                                |
+| `app/(storefront)/products/[handle]/page.tsx`    | PDP wireframe — `'use cache'`                          |
+| `app/(storefront)/collections/[handle]/page.tsx` | PLP wireframe — `'use cache'`                          |
+| `app/(storefront)/cart/page.tsx`                 | Cart wireframe — dynamic, no cache                     |
+| `components/layout/header.tsx`                   | Wireframe header                                       |
+| `components/layout/footer.tsx`                   | Wireframe footer                                       |
+| `components/product/variant-selector.tsx`        | Client Component stub — variant picker                 |
+| `lib/shopify/index.ts`                           | Stub — Storefront API client placeholder               |
+| `lib/cart/index.ts`                              | Stub — cart server actions placeholder                 |
 
 ---
 
 ## Task 1: Bootstrap with create-next-app
 
 **Files:**
+
 - Create: entire project scaffold in `d:\Work\teavision\teavision.com.au\`
 
 The project directory already contains a `docs/` folder. `create-next-app` will scaffold into this directory — existing files are not overwritten.
@@ -88,6 +89,7 @@ git commit -m "chore: bootstrap Next.js 15 with TypeScript, Tailwind, ESLint"
 ## Task 2: Configure next.config.ts
 
 **Files:**
+
 - Modify: `next.config.ts`
 
 - [ ] **Step 1: Replace next.config.ts with project config**
@@ -132,6 +134,7 @@ git commit -m "chore: configure dynamicIO and Shopify CDN remotePatterns"
 ## Task 3: Add Prettier
 
 **Files:**
+
 - Create: `.prettierrc`
 - Modify: `package.json` (devDependencies + scripts)
 
@@ -180,6 +183,7 @@ git commit -m "chore: add Prettier with Tailwind class-sort plugin"
 ## Task 4: Environment variable stubs
 
 **Files:**
+
 - Create: `.env.example`
 - Create: `.env.local`
 
@@ -224,6 +228,7 @@ git commit -m "chore: add env var stubs for Shopify integration"
 ## Task 5: Root layout and global CSS
 
 **Files:**
+
 - Modify: `app/layout.tsx`
 - Modify: `app/globals.css`
 
@@ -232,12 +237,12 @@ git commit -m "chore: add env var stubs for Shopify integration"
 Replace `app/globals.css` entirely:
 
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @layer base {
   button,
   a,
-  [role="button"] {
+  [role='button'] {
     touch-action: manipulation;
   }
 
@@ -308,6 +313,7 @@ git commit -m "chore: set up root layout, fonts, and base CSS overrides"
 ## Task 6: Header and footer wireframes
 
 **Files:**
+
 - Create: `components/layout/header.tsx`
 - Create: `components/layout/footer.tsx`
 - Create: `app/(storefront)/layout.tsx`
@@ -417,6 +423,7 @@ git commit -m "feat: add wireframe header, footer, and storefront layout"
 ## Task 7: Create stub directories and placeholder files
 
 **Files:**
+
 - Create: `components/product/.gitkeep`
 - Create: `components/cart/.gitkeep`
 - Create: `components/ui/.gitkeep`
@@ -477,6 +484,7 @@ git commit -m "chore: create stub directories for components, lib, and api"
 ## Task 8: Home page wireframe
 
 **Files:**
+
 - Create: `app/(storefront)/page.tsx`
 - Delete: `app/page.tsx` (default create-next-app home — replaced by route group)
 
@@ -584,6 +592,7 @@ git commit -m "feat: add home page wireframe"
 ## Task 9: Variant selector (Client Component)
 
 **Files:**
+
 - Create: `components/product/variant-selector.tsx`
 
 This is a standalone Client Component because variant selection requires click interactivity. It is a stub — no real data in this phase.
@@ -653,6 +662,7 @@ git commit -m "feat: add variant selector stub (client component)"
 ## Task 10: PDP wireframe
 
 **Files:**
+
 - Create: `app/(storefront)/products/[handle]/page.tsx`
 
 Uses `'use cache'` with `cacheTag()` and `cacheLife()`. Fetches are parallelised with `Promise.all`. Requires `experimental.dynamicIO: true` (already configured in Task 2).
@@ -752,7 +762,10 @@ npx tsc --noEmit
 Expected: no errors. If `cacheTag`/`cacheLife` are not found at `'next/cache'`, try the unstable prefix:
 
 ```typescript
-import { unstable_cacheTag as cacheTag, unstable_cacheLife as cacheLife } from 'next/cache'
+import {
+  unstable_cacheTag as cacheTag,
+  unstable_cacheLife as cacheLife,
+} from 'next/cache'
 ```
 
 - [ ] **Step 3: Verify page renders in dev**
@@ -775,6 +788,7 @@ git commit -m "feat: add PDP wireframe with use cache and parallel fetches"
 ## Task 11: PLP wireframe
 
 **Files:**
+
 - Create: `app/(storefront)/collections/[handle]/page.tsx`
 
 - [ ] **Step 1: Create app/(storefront)/collections/[handle]/page.tsx**
@@ -908,6 +922,7 @@ git commit -m "feat: add PLP wireframe with use cache and parallel fetches"
 ## Task 12: Cart page wireframe
 
 **Files:**
+
 - Create: `app/(storefront)/cart/page.tsx`
 
 Cart is dynamic — no caching. Checkout CTA is a placeholder `href="#"` until Shopify integration lands.
@@ -1059,6 +1074,7 @@ npm run build
 ```
 
 Expected: build completes with no errors. Output shows routes:
+
 - `○ /` (static)
 - `ƒ /products/[handle]` (dynamic — server)
 - `ƒ /collections/[handle]` (dynamic — server)

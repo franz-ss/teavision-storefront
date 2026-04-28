@@ -1,4 +1,5 @@
 # Teavision Storefront Rebuild
+
 ## Next.js Implementation Plan
 
 ---
@@ -44,14 +45,14 @@ Repository and Shopify admin access are already in place. The following items re
 
 ### 3. Timeline Overview
 
-| Week | Phase | Primary Deliverable |
-|---|---|---|
-| 1 | Audit and Foundation Kickoff | Scope finalised, infrastructure provisioned, initial Shopify integration operational |
-| 2 | Foundation Completion | Cart, customer authentication, layout, design system primitives |
-| 3 | Core Templates | Product detail page, collection page, homepage |
-| 4 | Supporting Templates and Integrations | Cart pages, account pages, content pages, third-party integrations, analytics |
-| 5 | SEO Implementation and Quality Assurance | Redirects, structured data, sitemap, performance optimisation, testing |
-| 6 | Launch | Phased traffic migration with monitoring |
+| Week | Phase                                    | Primary Deliverable                                                                  |
+| ---- | ---------------------------------------- | ------------------------------------------------------------------------------------ |
+| 1    | Audit and Foundation Kickoff             | Scope finalised, infrastructure provisioned, initial Shopify integration operational |
+| 2    | Foundation Completion                    | Cart, customer authentication, layout, design system primitives                      |
+| 3    | Core Templates                           | Product detail page, collection page, homepage                                       |
+| 4    | Supporting Templates and Integrations    | Cart pages, account pages, content pages, third-party integrations, analytics        |
+| 5    | SEO Implementation and Quality Assurance | Redirects, structured data, sitemap, performance optimisation, testing               |
+| 6    | Launch                                   | Phased traffic migration with monitoring                                             |
 
 The project is budgeted at six weeks with a one-week contingency. The contingency covers two anticipated risk areas: complexity in third-party application integration and edge cases in the cart-to-checkout flow.
 
@@ -187,10 +188,10 @@ Launch follows a phased traffic migration approach to validate performance and p
 
 **Migration sequence.**
 
-1. *Day 1.* Production deployment with 1% of traffic routed to the new application via edge middleware or weighted DNS. Continuous monitoring of conversion rate, revenue per session, error rate, Core Web Vitals, and 404 rate against the existing Shopify-served control.
-2. *Days 2–3.* Traffic share increased to 10% if metrics remain within tolerance. Re-evaluation at the 24-hour mark.
-3. *Day 4.* Traffic share increased to 50%.
-4. *Days 5–6.* Traffic share increased to 100%. The existing Shopify theme is preserved as a deployable rollback target for thirty days following full cutover.
+1. _Day 1._ Production deployment with 1% of traffic routed to the new application via edge middleware or weighted DNS. Continuous monitoring of conversion rate, revenue per session, error rate, Core Web Vitals, and 404 rate against the existing Shopify-served control.
+2. _Days 2–3._ Traffic share increased to 10% if metrics remain within tolerance. Re-evaluation at the 24-hour mark.
+3. _Day 4._ Traffic share increased to 50%.
+4. _Days 5–6._ Traffic share increased to 100%. The existing Shopify theme is preserved as a deployable rollback target for thirty days following full cutover.
 
 **Rollback criteria.** A drop in revenue per session exceeding 5% at any migration stage that does not recover within four hours triggers a pause and diagnostic review. Migration does not advance until the issue is resolved.
 
@@ -279,20 +280,20 @@ To set clear expectations on what this project does and does not include, the fo
 ### 13. Project Risks and Mitigations
 
 **Risk: Loss of organic search traffic during migration.**
-*Mitigation.* Comprehensive redirect mapping, URL parity, structured data continuity, phased traffic migration with rollback capability, and dedicated post-launch SEO monitoring as described in Section 11.
+_Mitigation._ Comprehensive redirect mapping, URL parity, structured data continuity, phased traffic migration with rollback capability, and dedicated post-launch SEO monitoring as described in Section 11.
 
 **Risk: Cart or checkout regression introducing revenue loss.**
-*Mitigation.* End-to-end automated testing of the complete cart-to-checkout flow for every product type, executed continuously through development and at each migration stage.
+_Mitigation._ End-to-end automated testing of the complete cart-to-checkout flow for every product type, executed continuously through development and at each migration stage.
 
 **Risk: Third-party application incompatibility with the headless architecture.**
-*Mitigation.* Application inventory and porting plan completed in Phase 1, with a documented headless approach for each application before downstream development depends on it.
+_Mitigation._ Application inventory and porting plan completed in Phase 1, with a documented headless approach for each application before downstream development depends on it.
 
 **Risk: Performance regression on real-user metrics.**
-*Mitigation.* Performance budgets enforced through development, baseline comparison against current production before launch, and inclusion of performance criteria in the readiness checklist.
+_Mitigation._ Performance budgets enforced through development, baseline comparison against current production before launch, and inclusion of performance criteria in the readiness checklist.
 
 **Risk: Scope expansion compromising timeline.**
-*Mitigation.* Explicit scope boundaries documented in Section 12, with a defined process for handling change requests as separate post-launch projects.
+_Mitigation._ Explicit scope boundaries documented in Section 12, with a defined process for handling change requests as separate post-launch projects.
 
 ---
 
-*End of document.*
+_End of document._

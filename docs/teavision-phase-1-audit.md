@@ -85,7 +85,7 @@ Several URL patterns to be aware of:
 
 **Recommended action:**
 
-Before Phase 5 redirect work begins, the team should pull both the Shopify Admin redirect export *and* a Search Console "Pages → Indexed" report. The delta between what Shopify knows about and what Google has indexed will reveal the URL inventory the rebuild needs to handle. Expect this to be larger than anyone expects.
+Before Phase 5 redirect work begins, the team should pull both the Shopify Admin redirect export _and_ a Search Console "Pages → Indexed" report. The delta between what Shopify knows about and what Google has indexed will reveal the URL inventory the rebuild needs to handle. Expect this to be larger than anyone expects.
 
 ---
 
@@ -126,6 +126,7 @@ The earlier app audit listed 35 installed apps. The site fetch reveals which one
 **Recommended action:**
 
 Browse the live site interactively with browser dev tools open and audit:
+
 1. What scripts actually load (Network tab)
 2. What renders after JavaScript executes that didn't appear in the static HTML
 3. Specific behaviour for: searching, filtering on collection pages, viewing a sold-out product, clicking the Reviews tab, attempting to interact with bulk ordering
@@ -191,11 +192,13 @@ Based on the findings above, the implementation plan needs revisiting in several
 **Section 2 (Pre-Kickoff Requirements).** Add: business confirmation of retail/wholesale split and wholesale flow priority. The mrtea.com.au / teavision.com.au domain question. SEO partner identification (already noted but now elevated in importance).
 
 **Section 6 (Phase 3 — Core Templates).** PDPs need to handle:
+
 - The variant-as-sample-tier pattern (50g/250g/1kg)
 - Inquiry CTAs alongside add-to-cart for bulk volumes
 - Wholesale pricing visibility logic (if applicable)
 
 Additionally, the project needs first-class lead-generation templates that the original plan undersized:
+
 - Wholesale account application form and confirmation
 - Custom blend inquiry flow
 - Catalogue download with optional lead capture
@@ -204,6 +207,7 @@ Additionally, the project needs first-class lead-generation templates that the o
 **Section 7 (Phase 4 — Integrations).** The form-builder app question becomes more important. The current site has multiple inquiry forms with different destinations; the rebuild needs a clear strategy for handling all of them.
 
 **Section 8 (Phase 5 — SEO).** The SEO workstream needs more weight given the level of investment visible. Specific additions:
+
 - Footer keyword-link block must be reproduced exactly (this is a deliberate ranking strategy, not decorative)
 - Programmatic location pages (`/collections/tea-wholesale-perth` etc.) must be preserved with their copy and structure
 - Tag-based collection URL patterns need an explicit decision: preserve, redirect, or canonicalize

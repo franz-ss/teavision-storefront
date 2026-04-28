@@ -17,6 +17,7 @@ Scaffold from scratch using `create-next-app`. The Vercel Commerce template was 
 **Bootstrapped with:** `create-next-app@latest` — TypeScript, Tailwind CSS, ESLint, App Router, no `src/` directory, no import alias changes from default.
 
 **Added on top:**
+
 - `prettier` + `prettier-plugin-tailwindcss` — class sorting; `.prettierrc` committed to repo
 - `.env.local` stub with empty keys: `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_ACCESS_TOKEN`, `SHOPIFY_ADMIN_API_ACCESS_TOKEN`
 - `next.config.ts` — Shopify CDN domain added to `images.remotePatterns`; `experimental.dynamicIO: true` enabled to support the `'use cache'` directive
@@ -24,6 +25,7 @@ Scaffold from scratch using `create-next-app`. The Vercel Commerce template was 
 **Not included in this phase:** shadcn/ui (deferred), Shopify client (deferred), GraphQL Codegen (deferred), cart drawer (deferred).
 
 **Installed skills (applied throughout):**
+
 - `vercel-react-best-practices` — parallel data fetching, no barrel imports, `React.cache()` for deduplication, Server Components by default
 - `next-cache-components` — `'use cache'` directive with `cacheTag()` / `revalidateTag()` instead of `unstable_cache`
 - `web-design-guidelines` — accessibility, focus states, semantic HTML, typography, touch targets
@@ -67,12 +69,14 @@ lib/
 ## Routes
 
 ### Home (`/`)
+
 - Fully static Server Component — no data fetching in this phase
 - Placeholder sections: hero, featured collections strip, featured products grid
 - Hardcoded placeholder content; real data wired in a later phase
 - `text-wrap: balance` on all headings (web-design-guidelines)
 
 ### PDP (`/products/[handle]`)
+
 - Server Component
 - `'use cache'` directive at the data-fetch level with `cacheTag('product')` — enables webhook-driven revalidation later
 - Product data and related products fetched in parallel, not sequential awaits (react-best-practices: eliminating waterfalls)
@@ -80,12 +84,14 @@ lib/
 - All `<img>` placeholders have explicit `width` and `height` to prevent CLS (web-design-guidelines)
 
 ### PLP (`/collections/[handle]`)
+
 - Server Component
 - `'use cache'` directive with `cacheTag('collection')`
 - Collection and products fetched in parallel
 - Wireframe sections: collection header, product grid, filter sidebar placeholder
 
 ### Cart (`/cart`)
+
 - Server Component wireframe — hardcoded placeholder content only (no real cart data in this phase)
 - Wireframe sections: line items list, quantity controls, subtotal, checkout CTA
 - Checkout CTA is a placeholder `<a>` — real `cart.checkoutUrl` wired in when Shopify integration lands
@@ -111,12 +117,12 @@ Derived from `building-components` and `web-design-guidelines`:
 
 Driven by `next-cache-components`:
 
-| Route | Caching | Tag |
-|---|---|---|
-| Home | Static (build time) | — |
-| PDP | `'use cache'` | `product`, `product-{handle}` |
-| PLP | `'use cache'` | `collection`, `collection-{handle}` |
-| Cart | Dynamic (no cache) | — |
+| Route | Caching             | Tag                                 |
+| ----- | ------------------- | ----------------------------------- |
+| Home  | Static (build time) | —                                   |
+| PDP   | `'use cache'`       | `product`, `product-{handle}`       |
+| PLP   | `'use cache'`       | `collection`, `collection-{handle}` |
+| Cart  | Dynamic (no cache)  | —                                   |
 
 `cacheLife('hours')` profile used for product/collection data as a starting point. Webhook handlers (added in a later phase) call `revalidateTag('product-{handle}')` on Shopify product update events.
 

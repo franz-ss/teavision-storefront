@@ -4,7 +4,14 @@
       "WebFetch(domain:skills.sh)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:github.com)",
-      "Bash(npx skills *)"
+      "Bash(npx skills *)",
+      "Bash(npx tsc *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(pnpm exec *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm next *)",
+      "Bash(pnpm list *)"
     ]
   }
 }

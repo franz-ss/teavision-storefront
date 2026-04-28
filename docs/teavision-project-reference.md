@@ -112,17 +112,17 @@ These keep working unchanged.
 
 ### Storefront integrations needing headless port
 
-| App | Role | Approach |
-|---|---|---|
-| Searchanise | Search and faceted filtering | Decision pending: headless SDK, replace with Algolia/Typesense, or drop to native Shopify |
-| TrustWILL (Trustoo) | Product reviews | API-based, render widget client-side, surface review data in JSON-LD via SSR |
-| POWR Popup | Marketing popups | Embeddable script with `next/script lazyOnload`, or rebuild native |
-| AMP Back in Stock | Notify-me-when-back form | API-based subscription, native React form |
-| MultiVariants Bulk Order | Bulk ordering UI | Likely needs native React rebuild — bulk pricing/order UI for B2B |
-| Hulk Discounts | Volume discounts | API for tier rules, apply via cart line item attributes — or evaluate Shopify native discounts as replacement |
-| Mailchimp | Email/SMS marketing, e-commerce tracking | JS SDK and API for forms, server-side events for cart abandonment |
-| Consentmo GDPR | Cookie consent | Script tag works headless, or native consent solution |
-| POWR Photo Gallery | Image gallery | Easier to rebuild as native React component |
+| App                      | Role                                     | Approach                                                                                                      |
+| ------------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Searchanise              | Search and faceted filtering             | Decision pending: headless SDK, replace with Algolia/Typesense, or drop to native Shopify                     |
+| TrustWILL (Trustoo)      | Product reviews                          | API-based, render widget client-side, surface review data in JSON-LD via SSR                                  |
+| POWR Popup               | Marketing popups                         | Embeddable script with `next/script lazyOnload`, or rebuild native                                            |
+| AMP Back in Stock        | Notify-me-when-back form                 | API-based subscription, native React form                                                                     |
+| MultiVariants Bulk Order | Bulk ordering UI                         | Likely needs native React rebuild — bulk pricing/order UI for B2B                                             |
+| Hulk Discounts           | Volume discounts                         | API for tier rules, apply via cart line item attributes — or evaluate Shopify native discounts as replacement |
+| Mailchimp                | Email/SMS marketing, e-commerce tracking | JS SDK and API for forms, server-side events for cart abandonment                                             |
+| Consentmo GDPR           | Cookie consent                           | Script tag works headless, or native consent solution                                                         |
+| POWR Photo Gallery       | Image gallery                            | Easier to rebuild as native React component                                                                   |
 
 ### Likely vestigial — confirm and remove
 
@@ -196,6 +196,7 @@ content/              # MDX if used for editorial content
 ### URL strategy
 
 Match Shopify conventions exactly:
+
 - `/products/{handle}`
 - `/collections/{handle}`
 - `/collections/{handle}/{filter-state-as-search-params}`
@@ -220,14 +221,14 @@ Filtered collection canonicalization: pending Searchanise decision and SEO partn
 
 Six-week plan with one-week contingency. Solo developer using Claude Code Max 20x.
 
-| Week | Phase | Headline Deliverable |
-|---|---|---|
-| 1 | Audit + Foundation Kickoff | Stack running, first product renders from Shopify |
-| 2 | Foundation Complete | Cart, auth, layout, design system primitives |
-| 3 | Core Templates | PDP, PLP, homepage |
-| 4 | Supporting Templates + Integrations | Cart, account, content, analytics, reviews, SEO scaffolding |
-| 5 | SEO + QA | Redirects, structured data, sitemap, CWV, E2E tests, UAT |
-| 6 | Launch | Canary 1% → 10% → 50% → 100%, week-1 monitoring |
+| Week | Phase                               | Headline Deliverable                                        |
+| ---- | ----------------------------------- | ----------------------------------------------------------- |
+| 1    | Audit + Foundation Kickoff          | Stack running, first product renders from Shopify           |
+| 2    | Foundation Complete                 | Cart, auth, layout, design system primitives                |
+| 3    | Core Templates                      | PDP, PLP, homepage                                          |
+| 4    | Supporting Templates + Integrations | Cart, account, content, analytics, reviews, SEO scaffolding |
+| 5    | SEO + QA                            | Redirects, structured data, sitemap, CWV, E2E tests, UAT    |
+| 6    | Launch                              | Canary 1% → 10% → 50% → 100%, week-1 monitoring             |
 
 ### Phase 1 (Week 1) — Audit deliverables
 
@@ -253,6 +254,7 @@ PDP, PLP, homepage. Variant selection, filtering, faceted search, metafield-driv
 Cart pages, account pages, search results, content pages. Analytics (GA4, Meta, Klaviyo), reviews, popups, email capture, tag manager, consent.
 
 **For Teavision specifically:** lead-generation flows are first-class scope here:
+
 - Wholesale account application form and confirmation
 - Custom blend inquiry flow
 - Catalogue download with lead capture
@@ -377,6 +379,7 @@ Captured here so the reasoning isn't lost.
 The POC commencing now should validate the core technical assumptions before full project commitment. Suggested POC scope:
 
 **In scope:**
+
 - Next.js 15 App Router project with TypeScript and Tailwind
 - Shopify Storefront API client with GraphQL Codegen
 - One product detail page rendering live Shopify data
@@ -388,6 +391,7 @@ The POC commencing now should validate the core technical assumptions before ful
 - Deployed to Vercel preview
 
 **Out of POC scope:**
+
 - Auth (Customer Account API)
 - All third-party integrations
 - SEO infrastructure (metadata, JSON-LD, sitemap)
@@ -398,6 +402,7 @@ The POC commencing now should validate the core technical assumptions before ful
 - Design system polish
 
 **POC success criteria:**
+
 - A real product loaded from Shopify renders on the PDP
 - A real collection renders with at least one filter working
 - Add a product to cart, see it in drawer, modify quantity
