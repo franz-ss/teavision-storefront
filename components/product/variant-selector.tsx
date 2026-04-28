@@ -22,11 +22,7 @@ export function VariantSelector({ variants = [] }: VariantSelectorProps) {
   return (
     <fieldset>
       <legend className="mb-2 text-sm font-medium">Size</legend>
-      <div
-        className="flex flex-wrap gap-2"
-        role="group"
-        aria-label="Select size"
-      >
+      <div className="flex flex-wrap gap-2">
         {variants.map((v) => (
           <button
             key={v.id}
