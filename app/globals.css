@@ -1,6 +1,12 @@
 @import 'tailwindcss';
 
 @layer base {
+  *,
+  ::before,
+  ::after {
+    --tw-ring-color: #000;
+  }
+
   button,
   a,
   [role='button'] {
