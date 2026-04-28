@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "graphql": "^16.13.2",
@@ -19,6 +21,10 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^6.3.1",
     "@graphql-codegen/client-preset": "^5.3.0",
+    "@storybook/addon-a11y": "^8.6.14",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/nextjs": "^8.6.14",
+    "@storybook/react": "^8.6.14",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -27,6 +33,7 @@
     "eslint-config-next": "16.2.4",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "storybook": "^8.6.14",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
