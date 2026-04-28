@@ -5,6 +5,7 @@ import {
   updateCartLineAction,
   removeCartLineAction,
 } from '@/lib/cart/actions'
+import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
   title: 'Your Cart',
@@ -17,10 +18,10 @@ export default async function CartPage() {
     return (
       <div className="mx-auto max-w-4xl px-4 py-8 text-center">
         <h1 className="mb-4 text-2xl font-bold">Your Cart</h1>
-        <p className="mb-6 text-gray-500">Your cart is empty.</p>
+        <p className="text-text-muted mb-6">Your cart is empty.</p>
         <Link
           href="/collections/all"
-          className="inline-block rounded bg-black px-6 py-3 font-medium text-white hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="bg-primary text-background hover:bg-primary-hover inline-block rounded px-6 py-3 font-medium focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           Continue shopping
         </Link>
@@ -49,7 +50,7 @@ export default async function CartPage() {
           return (
             <li key={line.id} className="flex items-center gap-4 py-6">
               <div
-                className="h-20 w-20 shrink-0 rounded bg-gray-100"
+                className="bg-surface h-20 w-20 shrink-0 rounded"
                 role="img"
                 aria-label={`${line.merchandise.product.title} image`}
               />
@@ -58,7 +59,7 @@ export default async function CartPage() {
                 <p className="truncate font-medium">
                   {line.merchandise.product.title}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-text-muted text-sm">
                   {line.merchandise.title}
                 </p>
               </div>
@@ -68,7 +69,7 @@ export default async function CartPage() {
                   <button
                     type="submit"
                     aria-label={`Decrease quantity of ${line.merchandise.product.title}`}
-                    className="flex h-8 w-8 items-center justify-center rounded border hover:border-gray-400 focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="border-border hover:border-primary flex h-8 w-8 items-center justify-center rounded border focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
                     &minus;
                   </button>
@@ -80,7 +81,7 @@ export default async function CartPage() {
                   <button
                     type="submit"
                     aria-label={`Increase quantity of ${line.merchandise.product.title}`}
-                    className="flex h-8 w-8 items-center justify-center rounded border hover:border-gray-400 focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="border-border hover:border-primary flex h-8 w-8 items-center justify-center rounded border focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
                     +
                   </button>
@@ -93,20 +94,16 @@ export default async function CartPage() {
               </p>
 
               <form action={removeAction}>
-                <button
-                  type="submit"
-                  aria-label={`Remove ${line.merchandise.product.title} from cart`}
-                  className="text-sm text-gray-400 hover:text-gray-800 focus-visible:ring-2 focus-visible:ring-offset-2"
-                >
+                <Button variant="ghost" size="sm" type="submit">
                   Remove
-                </button>
+                </Button>
               </form>
             </li>
           )
         })}
       </ul>
 
-      <div className="mt-8 rounded border p-6">
+      <div className="border-border mt-8 rounded border p-6">
         <div className="flex justify-between text-lg font-semibold">
           <span>Subtotal</span>
           <span>
@@ -114,19 +111,21 @@ export default async function CartPage() {
             {cart.cost.subtotalAmount.amount}
           </span>
         </div>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="text-text-muted mt-1 text-sm">
           Shipping and taxes calculated at checkout.
         </p>
+
         <a
           href={cart.checkoutUrl}
-          className="mt-4 block w-full rounded bg-black py-3 text-center font-medium text-white hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="bg-primary text-background hover:bg-primary-hover mt-4 block w-full rounded py-3 text-center font-medium focus-visible:ring-2 focus-visible:ring-offset-2"
           aria-label="Proceed to checkout"
         >
           Checkout
         </a>
+
         <Link
           href="/collections/all"
-          className="mt-3 block text-center text-sm text-gray-500 hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="text-text-muted mt-3 block text-center text-sm hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           Continue shopping
         </Link>
