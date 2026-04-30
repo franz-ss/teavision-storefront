@@ -7,6 +7,7 @@ import {
   removeCartLineAction,
 } from '@/lib/cart/actions'
 import { Button } from '@/components/ui/button'
+import { Price } from '@/components/ui/price'
 
 export const metadata: Metadata = {
   title: 'Your Cart',
@@ -86,10 +87,9 @@ async function CartContent() {
                 </form>
               </div>
 
-              <p className="w-20 text-right font-medium">
-                {line.merchandise.price.currencyCode}{' '}
-                {line.merchandise.price.amount}
-              </p>
+              <div className="w-20 text-right">
+                <Price price={line.merchandise.price} size="md" />
+              </div>
 
               <form action={removeAction}>
                 <Button variant="ghost" size="sm" type="submit">
@@ -104,10 +104,7 @@ async function CartContent() {
       <div className="border-border mt-8 rounded border p-6">
         <div className="flex justify-between text-lg font-semibold">
           <span>Subtotal</span>
-          <span>
-            {cart.cost.subtotalAmount.currencyCode}{' '}
-            {cart.cost.subtotalAmount.amount}
-          </span>
+          <Price price={cart.cost.subtotalAmount} size="lg" />
         </div>
         <p className="text-text-muted mt-1 text-sm">
           Shipping and taxes calculated at checkout.
