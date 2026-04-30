@@ -10,7 +10,9 @@
     "format": "prettier --write .",
     "codegen": "dotenv -e .env.local graphql-codegen",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "create:component": "node scripts/create-component.mjs",
+    "create:lib": "node scripts/create-lib.mjs"
   },
   "dependencies": {
     "graphql": "^16.13.2",
