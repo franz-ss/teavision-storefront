@@ -97,6 +97,37 @@ export async function getCollection(
   return data.collection
 }
 
+const GET_COLLECTIONS_QUERY = /* GraphQL */ `
+  query GetCollections($first: Int!) {
+    collections(first: $first) {
+      edges {
+        node {
+          handle
+        }
+      }
+    }
+  }
+`
+
+export async function getCollections(first = 250): Promise<string[]> {
+  'use cache'
+  cacheTag('collections')
+  cacheLife('days')
+
+  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+    return ['all', 'tea', 'herbs-spices']
+  }
+
+  const data = await shopifyFetch<{
+    collections: { edges: Array<{ node: { handle: string } }> }
+  }>({
+    query: GET_COLLECTIONS_QUERY,
+    variables: { first },
+  })
+
+  return data.collections.edges.map((e) => e.node.handle)
+}
+
 export async function getCollectionProducts(
   handle: string,
   first = 24,
