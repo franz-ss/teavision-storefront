@@ -1,42 +1,25 @@
 import Link from 'next/link'
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
-import type { ProductSummary } from '@/lib/shopify/types'
 import { ProductCard } from '@/components/ui/product-card'
+import { getProducts } from '@/lib/shopify/operations/product'
 
 export const metadata: Metadata = {
   title: 'Bulk Wholesale Tea, Herbs & Spices | Teavision',
 }
 
-const STUB_PRODUCTS: ProductSummary[] = [
-  {
-    id: '1',
-    handle: 'product-placeholder-1',
-    title: 'English Breakfast Loose Leaf',
-    featuredImage: null,
-    priceRange: { minVariantPrice: { amount: '18.00', currencyCode: 'AUD' } },
-  },
-  {
-    id: '2',
-    handle: 'product-placeholder-2',
-    title: 'Chamomile Flowers Whole',
-    featuredImage: null,
-    priceRange: { minVariantPrice: { amount: '24.00', currencyCode: 'AUD' } },
-  },
-  {
-    id: '3',
-    handle: 'product-placeholder-3',
-    title: 'Matcha Ceremonial Grade',
-    featuredImage: null,
-    priceRange: { minVariantPrice: { amount: '48.00', currencyCode: 'AUD' } },
-  },
-  {
-    id: '4',
-    handle: 'product-placeholder-4',
-    title: 'Earl Grey Loose Leaf',
-    featuredImage: null,
-    priceRange: { minVariantPrice: { amount: '22.00', currencyCode: 'AUD' } },
-  },
-]
+async function FeaturedProducts() {
+  const products = await getProducts(4)
+  return (
+    <ul className="grid grid-cols-2 gap-6 md:grid-cols-4" role="list">
+      {products.map((product, i) => (
+        <li key={product.id}>
+          <ProductCard product={product} priority={i === 0} />
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 const CATEGORIES = [
   { name: 'Tea', href: '/collections/tea' },
@@ -201,13 +184,21 @@ export default function HomePage() {
       <section className="bg-surface px-4 py-16">
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-8 text-2xl font-semibold">Featured Products</h2>
-          <ul className="grid grid-cols-2 gap-6 md:grid-cols-4" role="list">
-            {STUB_PRODUCTS.map((product, i) => (
-              <li key={product.id}>
-                <ProductCard product={product} priority={i === 0} />
-              </li>
-            ))}
-          </ul>
+          <Suspense
+            fallback={
+              <ul className="grid grid-cols-2 gap-6 md:grid-cols-4" role="list">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <li
+                    key={i}
+                    className="bg-border animate-pulse rounded"
+                    style={{ aspectRatio: '3/4' }}
+                  />
+                ))}
+              </ul>
+            }
+          >
+            <FeaturedProducts />
+          </Suspense>
         </div>
       </section>
     </div>

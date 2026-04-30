@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import {
   getCartAction,
   updateCartLineAction,
@@ -11,13 +12,12 @@ export const metadata: Metadata = {
   title: 'Your Cart',
 }
 
-export default async function CartPage() {
+async function CartContent() {
   const cart = await getCartAction()
 
   if (!cart || cart.totalQuantity === 0) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8 text-center">
-        <h1 className="mb-4 text-2xl font-bold">Your Cart</h1>
+      <div className="text-center">
         <p className="text-text-muted mb-6">Your cart is empty.</p>
         <Link
           href="/collections/all"
@@ -30,9 +30,7 @@ export default async function CartPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="mb-8 text-2xl font-bold">Your Cart</h1>
-
+    <>
       <ul className="divide-y" role="list">
         {cart.lines.map((line) => {
           const decreaseAction = updateCartLineAction.bind(
@@ -130,6 +128,23 @@ export default async function CartPage() {
           Continue shopping
         </Link>
       </div>
+    </>
+  )
+}
+
+export default function CartPage() {
+  return (
+    <div className="mx-auto max-w-4xl px-4 py-8">
+      <h1 className="mb-8 text-2xl font-bold">Your Cart</h1>
+      <Suspense
+        fallback={
+          <p className="text-text-muted" aria-live="polite">
+            Loading cart…
+          </p>
+        }
+      >
+        <CartContent />
+      </Suspense>
     </div>
   )
 }
