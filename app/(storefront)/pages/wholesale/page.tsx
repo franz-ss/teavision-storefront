@@ -59,10 +59,7 @@ export default function WholesalePage() {
         </p>
         <dl className="mt-6 space-y-3">
           <div>
-            <dt
-              className="text-text-muted text-sm font-medium uppercase tracking-wide"
-              style={{ fontSize: '0.65rem' }}
-            >
+            <dt className="text-text-muted font-medium uppercase tracking-wide" style={{ fontSize: '0.65rem' }}>
               Phone
             </dt>
             <dd className="mt-1 text-base font-medium">
@@ -75,10 +72,7 @@ export default function WholesalePage() {
             </dd>
           </div>
           <div>
-            <dt
-              className="text-text-muted text-sm font-medium uppercase tracking-wide"
-              style={{ fontSize: '0.65rem' }}
-            >
+            <dt className="text-text-muted font-medium uppercase tracking-wide" style={{ fontSize: '0.65rem' }}>
               Email
             </dt>
             <dd className="mt-1 text-base font-medium">
