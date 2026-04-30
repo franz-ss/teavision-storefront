@@ -51,7 +51,23 @@ async function CollectionContent({
 
   if (!collection) notFound()
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${baseUrl}/` },
+      { '@type': 'ListItem', position: 2, name: 'Collections', item: `${baseUrl}/collections/all` },
+      { '@type': 'ListItem', position: 3, name: collection.title, item: `${baseUrl}/collections/${handle}` },
+    ],
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
     <div>
       <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
       <p className="text-text-muted mb-6">{collection.description}</p>
@@ -70,6 +86,7 @@ async function CollectionContent({
         ))}
       </ul>
     </div>
+    </>
   )
 }
 

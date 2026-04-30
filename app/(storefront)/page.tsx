@@ -111,8 +111,45 @@ const TRUST_STATS = [
   },
 ]
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Teavision',
+  url: BASE_URL,
+  logo: `${BASE_URL}/favicon.ico`,
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '1300-729-617',
+    contactType: 'sales',
+    areaServed: 'AU',
+  },
+}
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Teavision',
+  url: BASE_URL,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: `${BASE_URL}/search?q={search_term_string}` },
+    'query-input': 'required name=search_term_string',
+  },
+}
+
 export default function HomePage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
     <div>
       {/* Hero */}
       <section className="bg-surface px-4 py-28 text-center">
@@ -202,5 +239,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    </>
   )
 }

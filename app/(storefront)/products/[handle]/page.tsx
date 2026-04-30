@@ -26,36 +26,74 @@ async function ProductContent({
   const product = await getProduct(handle)
   if (!product) notFound()
 
-  return (
-    <div className="grid gap-8 md:grid-cols-2">
-      <div className="bg-surface relative aspect-square overflow-hidden rounded">
-        {product.featuredImage &&
-        product.featuredImage.width &&
-        product.featuredImage.height ? (
-          <Image
-            src={product.featuredImage.url}
-            alt={product.featuredImage.altText ?? product.title}
-            width={product.featuredImage.width}
-            height={product.featuredImage.height}
-            priority
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div
-            className="h-full w-full"
-            role="img"
-            aria-label={`${product.title} image`}
-          />
-        )}
-      </div>
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
+  const productUrl = `${baseUrl}/products/${product.handle}`
 
-      <div className="flex flex-col gap-4">
-        <h1 className="text-3xl font-bold">{product.title}</h1>
-        <Price price={product.priceRange.minVariantPrice} size="lg" />
-        <ProductForm variants={product.variants} />
-        <p className="text-text-muted">{product.description}</p>
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.description,
+    ...(product.featuredImage && { image: product.featuredImage.url }),
+    offers: {
+      '@type': 'Offer',
+      url: productUrl,
+      price: product.priceRange.minVariantPrice.amount,
+      priceCurrency: product.priceRange.minVariantPrice.currencyCode,
+      availability: 'https://schema.org/InStock',
+    },
+  }
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${baseUrl}/` },
+      { '@type': 'ListItem', position: 2, name: 'Products', item: `${baseUrl}/collections/all` },
+      { '@type': 'ListItem', position: 3, name: product.title, item: productUrl },
+    ],
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <div className="grid gap-8 md:grid-cols-2">
+        <div className="bg-surface relative aspect-square overflow-hidden rounded">
+          {product.featuredImage &&
+          product.featuredImage.width &&
+          product.featuredImage.height ? (
+            <Image
+              src={product.featuredImage.url}
+              alt={product.featuredImage.altText ?? product.title}
+              width={product.featuredImage.width}
+              height={product.featuredImage.height}
+              priority
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div
+              className="h-full w-full"
+              role="img"
+              aria-label={`${product.title} image`}
+            />
+          )}
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h1 className="text-3xl font-bold">{product.title}</h1>
+          <Price price={product.priceRange.minVariantPrice} size="lg" />
+          <ProductForm variants={product.variants} />
+          <p className="text-text-muted">{product.description}</p>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
