@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    // Git worktrees
+    '.worktrees/**',
   ]),
   ...storybook.configs['flat/recommended'],
 
