@@ -128,16 +128,16 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
-              href="/collections/all"
+              href="/pages/wholesale"
               className="bg-primary text-background hover:bg-primary-hover rounded px-8 py-3 font-medium focus-visible:ring-2 focus-visible:ring-offset-2"
             >
-              Explore Our Teas
+              Apply for a Wholesale Account
             </Link>
             <Link
-              href="/pages/wholesale"
+              href="/collections/all"
               className="border-primary text-primary hover:bg-surface rounded border px-8 py-3 font-medium focus-visible:ring-2 focus-visible:ring-offset-2"
             >
-              Wholesale Enquiry
+              Explore Our Teas
             </Link>
           </div>
         </div>
