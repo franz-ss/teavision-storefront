@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
+
 import {
   getCartAction,
   updateCartLineAction,
   removeCartLineAction,
 } from '@/lib/cart/actions'
-import { Button } from '@/components/ui/button'
-import { Price } from '@/components/ui/price'
+import { Button, Price } from '@/components/ui'
 
 export const metadata: Metadata = {
   title: 'Your Cart',

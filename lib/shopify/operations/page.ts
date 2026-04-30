@@ -1,4 +1,5 @@
 import { cacheLife, cacheTag } from 'next/cache'
+
 import { shopifyFetch } from '@/lib/shopify/client'
 
 const GET_PAGE_QUERY = /* GraphQL */ `

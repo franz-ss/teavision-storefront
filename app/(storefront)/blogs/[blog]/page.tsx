@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
+
 import { STUB_ARTICLES, BLOG_TAGS, formatArticleDate } from '@/lib/blog/stubs'
 
 const ARTICLES_PER_PAGE = 6

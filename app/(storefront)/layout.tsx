@@ -1,5 +1,4 @@
-import { Footer } from '@/components/layout/footer'
-import { Header } from '@/components/layout/header'
+import { Footer, Header } from '@/components/layout'
 
 export default function StorefrontLayout({
   children,

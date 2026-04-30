@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { ProductCard } from './product-card'
+
 import type { ProductSummary } from '@/lib/shopify/types'
+
+import { ProductCard } from './product-card'
 
 const stubProduct: ProductSummary = {
   id: 'gid://shopify/Product/1',

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+
 import { getPage } from '@/lib/shopify/operations/page'
 
 type Props = {

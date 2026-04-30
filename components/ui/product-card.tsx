@@ -1,8 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
+
 import type { ProductSummary } from '@/lib/shopify/types'
-import { Badge, type BadgeVariant } from '@/components/ui/badge'
-import { Price } from '@/components/ui/price'
+
+import { Badge, type BadgeVariant } from './badge'
+import { Price } from './price'
 
 type ProductCardProps = {
   product: ProductSummary
