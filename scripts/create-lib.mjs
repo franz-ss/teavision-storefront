@@ -3,7 +3,11 @@ import { existsSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const arg = process.argv[2]
+// Skip '--' separator if pnpm passes it through
+let arg = process.argv[2]
+if (arg === '--') {
+  arg = process.argv[3]
+}
 
 if (!arg || !arg.includes('/')) {
   console.error('Usage: npm run create:lib -- <domain>/<module-name>')
