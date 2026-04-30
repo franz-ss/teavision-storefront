@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
+
 import { ProductCard } from '@/components/ui/product-card'
 import { getProducts } from '@/lib/shopify/operations/product'
 

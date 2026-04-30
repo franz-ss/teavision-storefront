@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+
 import { getProducts } from '@/lib/shopify/operations/product'
 import { getCollections } from '@/lib/shopify/operations/collection'
 

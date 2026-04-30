@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+
 import { getProduct } from '@/lib/shopify/operations/product'
 import { ProductForm } from '@/components/product/product-form'
 import { Price } from '@/components/ui/price'

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+
 import { searchProducts } from '@/lib/shopify/operations/search'
 import { ProductCard } from '@/components/ui/product-card'
 

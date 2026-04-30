@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Suspense } from 'react'
+
 import { getCartAction } from '@/lib/cart/actions'
 
 async function CartCount() {
