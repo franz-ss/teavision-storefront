@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import { getProduct } from '@/lib/shopify/operations/product'
 import { ProductForm } from '@/components/product/product-form'
 import { Price } from '@/components/ui/price'
@@ -27,11 +28,26 @@ async function ProductContent({
 
   return (
     <div className="grid gap-8 md:grid-cols-2">
-      <div
-        className="bg-surface aspect-square rounded"
-        role="img"
-        aria-label={product.featuredImage?.altText ?? `${product.title} image`}
-      />
+      <div className="bg-surface relative aspect-square overflow-hidden rounded">
+        {product.featuredImage &&
+        product.featuredImage.width &&
+        product.featuredImage.height ? (
+          <Image
+            src={product.featuredImage.url}
+            alt={product.featuredImage.altText ?? product.title}
+            width={product.featuredImage.width}
+            height={product.featuredImage.height}
+            priority
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div
+            className="h-full w-full"
+            role="img"
+            aria-label={`${product.title} image`}
+          />
+        )}
+      </div>
 
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold">{product.title}</h1>
