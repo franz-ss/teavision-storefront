@@ -18,9 +18,9 @@ const GET_COLLECTION_QUERY = /* GraphQL */ `
 `
 
 const GET_COLLECTION_PRODUCTS_QUERY = /* GraphQL */ `
-  query GetCollectionProducts($handle: String!, $first: Int!) {
+  query GetCollectionProducts($handle: String!, $first: Int!, $sortKey: ProductCollectionSortKeys, $reverse: Boolean) {
     collection(handle: $handle) {
-      products(first: $first) {
+      products(first: $first, sortKey: $sortKey, reverse: $reverse) {
         edges {
           node {
             id
@@ -100,6 +100,8 @@ export async function getCollection(
 export async function getCollectionProducts(
   handle: string,
   first = 24,
+  sortKey = 'COLLECTION_DEFAULT',
+  reverse = false,
 ): Promise<ProductSummary[]> {
   'use cache'
   cacheTag('collection', `collection-${handle}`)
@@ -115,7 +117,7 @@ export async function getCollectionProducts(
     } | null
   }>({
     query: GET_COLLECTION_PRODUCTS_QUERY,
-    variables: { handle, first },
+    variables: { handle, first, sortKey, reverse },
   })
 
   if (!data.collection) return []
