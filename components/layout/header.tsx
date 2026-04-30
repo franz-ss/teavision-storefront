@@ -1,4 +1,17 @@
 import Link from 'next/link'
+import { Suspense } from 'react'
+import { getCartAction } from '@/lib/cart/actions'
+
+async function CartCount() {
+  const cart = await getCartAction()
+  const count = cart?.totalQuantity ?? 0
+  if (count === 0) return null
+  return (
+    <span className="bg-primary text-background ml-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold">
+      {count}
+    </span>
+  )
+}
 
 export function Header() {
   return (
@@ -33,9 +46,12 @@ export function Header() {
           <li>
             <Link
               href="/cart"
-              className="hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="inline-flex items-center hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
             >
               Cart
+              <Suspense fallback={null}>
+                <CartCount />
+              </Suspense>
             </Link>
           </li>
         </ul>
