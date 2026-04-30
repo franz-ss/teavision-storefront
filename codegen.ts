@@ -11,7 +11,7 @@ const config: CodegenConfig = {
   },
   documents: ['lib/shopify/queries/**/*.graphql'],
   generates: {
-    'lib/shopify/types/generated.ts': {
+    'lib/shopify/types/generated/': {
       preset: 'client',
     },
   },
