@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 
@@ -59,7 +60,7 @@ async function CollectionContent({
 
   const [collection, products] = await Promise.all([
     getCollection(handle),
-    getCollectionProducts(handle, 24, sortKey, reverse),
+    getCollectionProducts(handle, 250, sortKey, reverse),
   ])
 
   if (!collection) notFound()
@@ -81,24 +82,40 @@ async function CollectionContent({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-    <div>
-      <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
-      <p className="text-text-muted mb-6">{collection.description}</p>
 
-      <div className="mb-4 flex justify-end">
+      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
+        <Link href="/">Home</Link>
+        <span aria-hidden="true"> › </span>
+        <Link href="/collections/all">Collections</Link>
+        <span aria-hidden="true"> › </span>
+        <span>{collection.title}</span>
+      </nav>
+
+      <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
+      {collection.description && (
+        <p className="text-text-muted mb-0">{collection.description}</p>
+      )}
+
+      <div className="border-border mt-4 mb-6 flex items-center justify-between border-t pt-3">
+        <span className="text-text-muted text-sm">{products.length} products</span>
         <Suspense fallback={null}>
           <SortSelect currentSort={sort} />
         </Suspense>
       </div>
 
-      <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3" role="list">
-        {products.map((product, i) => (
-          <li key={product.id}>
-            <ProductCard product={product} priority={i === 0} />
+      <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4" role="list">
+        {products.length === 0 ? (
+          <li className="col-span-full py-16 text-center text-text-muted">
+            No products in this collection yet.
           </li>
-        ))}
+        ) : (
+          products.map((product, i) => (
+            <li key={product.id}>
+              <ProductCard product={product} priority={i === 0} />
+            </li>
+          ))
+        )}
       </ul>
-    </div>
     </>
   )
 }
