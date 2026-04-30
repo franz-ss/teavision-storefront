@@ -9,10 +9,22 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { article: handle } = await params
+  const { blog, article: handle } = await params
   const article = getArticleByHandle(handle)
   if (!article) return { title: 'Article not found' }
-  return { title: article.title }
+  const description = article.excerpt.slice(0, 160)
+  return {
+    title: article.title,
+    description,
+    openGraph: {
+      title: article.title,
+      description,
+      url: `/blogs/${blog}/${handle}`,
+      type: 'article',
+      publishedTime: article.publishedAt,
+    },
+    alternates: { canonical: `/blogs/${blog}/${handle}` },
+  }
 }
 
 async function ArticleContent({

@@ -3,6 +3,8 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: '404 — Page Not Found | Teavision',
+  description: "The page you're looking for has moved or never existed.",
+  robots: { index: false },
 }
 
 export default function NotFound() {

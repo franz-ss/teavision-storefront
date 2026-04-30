@@ -14,7 +14,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params
   const product = await getProduct(handle)
   if (!product) return { title: 'Product not found' }
-  return { title: product.title }
+  const description = product.description
+    ? product.description.slice(0, 160)
+    : `Buy ${product.title} from Teavision — Australia's bulk tea and herb supplier.`
+  const imageUrl = product.featuredImage?.url
+  return {
+    title: product.title,
+    description,
+    openGraph: {
+      title: product.title,
+      description,
+      url: `/products/${handle}`,
+      ...(imageUrl && { images: [{ url: imageUrl }] }),
+    },
+    alternates: { canonical: `/products/${handle}` },
+  }
 }
 
 async function ProductContent({

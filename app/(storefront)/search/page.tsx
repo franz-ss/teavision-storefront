@@ -8,8 +8,13 @@ type Props = {
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const { q } = await searchParams
+  const title = q ? `Search: "${q}"` : 'Search'
   return {
-    title: q ? `Search: "${q}" | Teavision` : 'Search | Teavision',
+    title,
+    description: q
+      ? `Search results for "${q}" on Teavision — Australia's bulk tea and herb supplier.`
+      : 'Search Teavision for bulk tea, herbs, and spices.',
+    robots: { index: false },
   }
 }
 

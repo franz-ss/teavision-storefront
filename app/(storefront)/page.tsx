@@ -6,6 +6,15 @@ import { getProducts } from '@/lib/shopify/operations/product'
 
 export const metadata: Metadata = {
   title: 'Bulk Wholesale Tea, Herbs & Spices | Teavision',
+  description:
+    "Australia's leading bulk tea, herb, and spice supplier. 1,000+ ingredients, 500+ certified organic. Serving cafes, restaurants, and retailers since 2014.",
+  openGraph: {
+    title: 'Bulk Wholesale Tea, Herbs & Spices | Teavision',
+    description:
+      "Australia's leading bulk tea, herb, and spice supplier. 1,000+ ingredients, 500+ certified organic.",
+    url: '/',
+  },
+  alternates: { canonical: '/' },
 }
 
 async function FeaturedProducts() {

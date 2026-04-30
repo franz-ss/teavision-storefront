@@ -14,7 +14,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Page Not Found' }
   }
 
-  return { title: `${page.title} | Teavision` }
+  const plainDescription = page.body
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160)
+  return {
+    title: page.title,
+    description: plainDescription || undefined,
+    openGraph: {
+      title: page.title,
+      description: plainDescription || undefined,
+      url: `/pages/${slug}`,
+    },
+    alternates: { canonical: `/pages/${slug}` },
+  }
 }
 
 export default async function StaticPage({ params }: Props) {

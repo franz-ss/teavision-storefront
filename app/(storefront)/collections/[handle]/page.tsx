@@ -26,7 +26,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params
   const collection = await getCollection(handle)
   if (!collection) return { title: 'Collection not found' }
-  return { title: collection.title }
+  const description = collection.description
+    ? collection.description.slice(0, 160)
+    : `Browse ${collection.title} from Teavision — Australia's bulk tea and herb supplier.`
+  return {
+    title: collection.title,
+    description,
+    openGraph: {
+      title: collection.title,
+      description,
+      url: `/collections/${handle}`,
+    },
+    alternates: { canonical: `/collections/${handle}` },
+  }
 }
 
 async function CollectionContent({

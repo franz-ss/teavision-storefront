@@ -12,6 +12,15 @@ type Props = {
 
 export const metadata: Metadata = {
   title: 'Tea Journal',
+  description:
+    'Industry insights, tea sourcing guides, and wholesale tips for cafes, restaurants, and retailers from the Teavision team.',
+  openGraph: {
+    title: 'Tea Journal | Teavision',
+    description:
+      'Industry insights, tea sourcing guides, and wholesale tips for cafes, restaurants, and retailers.',
+    url: '/blogs/journal',
+  },
+  alternates: { canonical: '/blogs/journal' },
 }
 
 async function BlogContent({

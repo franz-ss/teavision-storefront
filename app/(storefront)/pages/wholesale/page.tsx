@@ -5,6 +5,13 @@ export const metadata: Metadata = {
   title: 'Wholesale Accounts | Teavision',
   description:
     'Apply for a Teavision wholesale account. Bulk tea, herbs and spices for cafes, restaurants, and retailers across Australia.',
+  openGraph: {
+    title: 'Wholesale Accounts | Teavision',
+    description:
+      'Apply for a Teavision wholesale account. Bulk tea, herbs and spices for cafes, restaurants, and retailers.',
+    url: '/pages/wholesale',
+  },
+  alternates: { canonical: '/pages/wholesale' },
 }
 
 export default function WholesalePage() {
