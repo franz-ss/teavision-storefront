@@ -6,8 +6,8 @@ import {
   getCollection,
   getCollectionProducts,
 } from '@/lib/shopify/operations/collection'
-import { ProductCard } from '@/components/ui/product-card'
-import { SortSelect } from '@/components/collection/sort-select'
+import { SortSelect } from '@/components/collection'
+import { ProductCard } from '@/components/ui'
 
 type Props = {
   params: Promise<{ handle: string }>

@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 
 import { addToCartAction } from '@/lib/cart/actions'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui'
 import type { ProductVariant } from '@/lib/shopify/types'
 
 type ProductFormProps = {
