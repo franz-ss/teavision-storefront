@@ -13,7 +13,7 @@ type VariantSelectorProps = {
 export function VariantSelector({ variants = [] }: VariantSelectorProps) {
   if (variants.length === 0) {
     return (
-      <div className="rounded border border-dashed p-4 text-sm text-gray-400">
+      <div className="rounded border border-dashed p-4 text-sm text-text-muted">
         Variant selector placeholder
       </div>
     )
@@ -29,7 +29,7 @@ export function VariantSelector({ variants = [] }: VariantSelectorProps) {
             type="button"
             disabled={!v.available}
             aria-label={`${v.title}${!v.available ? ', out of stock' : ''}`}
-            className="rounded border px-4 py-2 text-sm font-medium hover:border-gray-800 focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded border px-4 py-2 text-sm font-medium hover:border-primary focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {v.title}
           </button>
