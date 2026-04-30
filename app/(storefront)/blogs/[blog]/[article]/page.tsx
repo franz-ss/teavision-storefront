@@ -80,7 +80,7 @@ async function ArticleContent({
       </div>
 
       {/* Excerpt lead */}
-      <p className="text-text-muted border-primary mt-6 border-l-2 pl-4 text-lg leading-relaxed">
+      <p className="text-text-muted bg-surface rounded px-4 py-3 mt-6 text-lg leading-relaxed italic">
         {article.excerpt}
       </p>
 
