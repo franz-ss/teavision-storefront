@@ -9,6 +9,16 @@ import { ProductCard } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 import type { ProductSummary } from '@/lib/shopify/types'
 
+// Mirrors the Liquid tag display logic from the Teavision theme:
+// - Package_ tags are internal only, never shown
+// - Underscored tags: strip "filter_" prefix, replace first _ with ": "
+// - Plain strings: display as-is
+function formatTag(tag: string): string | null {
+  if (tag.includes('Package_')) return null
+  if (tag.includes('_')) return tag.replace('filter_', '').replace('_', ': ')
+  return tag
+}
+
 type Props = {
   params: Promise<{ handle: string }>
 }
@@ -160,16 +170,20 @@ async function ProductContent({
           />
 
           {/* Tags */}
-          {product.tags.length > 0 && (
+          {product.tags.some((t) => formatTag(t) !== null) && (
             <div className="flex flex-wrap gap-1.5">
-              {product.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="border-border bg-surface rounded border px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-text-muted"
-                >
-                  {tag}
-                </span>
-              ))}
+              {product.tags.map((tag) => {
+                const label = formatTag(tag)
+                if (!label) return null
+                return (
+                  <span
+                    key={tag}
+                    className="border-border bg-surface rounded border px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-text-muted"
+                  >
+                    {label}
+                  </span>
+                )
+              })}
             </div>
           )}
         </div>
