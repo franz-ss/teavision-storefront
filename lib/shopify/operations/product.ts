@@ -4,6 +4,7 @@ import { shopifyFetch } from '@/lib/shopify/client'
 import type {
   Money,
   Product,
+  ProductOption,
   ProductSummary,
   ShopifyImage,
 } from '@/lib/shopify/types'
@@ -15,17 +16,25 @@ const GET_PRODUCT_QUERY = /* GraphQL */ `
       handle
       title
       description
-      featuredImage {
-        url
-        altText
-        width
-        height
+      images(first: 10) {
+        edges {
+          node {
+            url
+            altText
+            width
+            height
+          }
+        }
       }
       priceRange {
         minVariantPrice {
           amount
           currencyCode
         }
+      }
+      options {
+        name
+        values
       }
       variants(first: 10) {
         edges {
@@ -75,8 +84,11 @@ type ShopifyProductNode = {
   handle: string
   title: string
   description: string
-  featuredImage: ShopifyImage | null
+  images: {
+    edges: Array<{ node: ShopifyImage }>
+  }
   priceRange: { minVariantPrice: Money }
+  options: ProductOption[]
   variants: {
     edges: Array<{
       node: {
@@ -103,8 +115,9 @@ function reshapeProduct(p: ShopifyProductNode): Product {
     handle: p.handle,
     title: p.title,
     description: p.description,
-    featuredImage: p.featuredImage,
+    images: p.images.edges.map((e) => e.node),
     priceRange: p.priceRange,
+    options: p.options,
     variants: p.variants.edges.map((e) => e.node),
   }
 }
@@ -125,8 +138,9 @@ const STUB_PRODUCT: Product = {
   title: 'English Breakfast — Bulk Loose Leaf',
   description:
     'Premium Assam-based black tea blend. Available in 250g, 1kg, 5kg, and 10kg.',
-  featuredImage: null,
+  images: [],
   priceRange: { minVariantPrice: { amount: '18.00', currencyCode: 'AUD' } },
+  options: [{ name: 'Weight', values: ['250g', '1kg', '5kg', '10kg'] }],
   variants: [
     {
       id: 'gid://shopify/ProductVariant/1',
@@ -172,7 +186,15 @@ export async function getProducts(first = 24): Promise<ProductSummary[]> {
   cacheLife('hours')
 
   if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return [reshapeProductSummary(STUB_PRODUCT)]
+    return [
+      {
+        id: STUB_PRODUCT.id,
+        handle: STUB_PRODUCT.handle,
+        title: STUB_PRODUCT.title,
+        featuredImage: null,
+        priceRange: STUB_PRODUCT.priceRange,
+      },
+    ]
   }
 
   const data = await shopifyFetch<{
