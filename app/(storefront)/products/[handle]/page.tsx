@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Script from 'next/script'
 import { notFound } from 'next/navigation'
 
 import { getProduct, getProductRecommendations } from '@/lib/shopify/operations/product'
@@ -141,14 +140,6 @@ async function ProductContent({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* Trustoo reviews widget script — loads only when configured */}
-      {process.env.NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN && (
-        <Script
-          src="https://cdn.trustoo.io/widget/v2/widget.js"
-          strategy="lazyOnload"
-        />
-      )}
-
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
         <Link href="/" className="rounded hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1">Home</Link>
         <span aria-hidden="true"> › </span>
@@ -189,33 +180,16 @@ async function ProductContent({
         </div>
       </div>
 
-      {/* Reviews — Trustoo widget */}
+      {/* Reviews — Shopify Product Reviews (SPR) */}
       <section className="border-border mt-12 border-t pt-10" aria-label="Customer reviews">
         <div className="mb-6 flex flex-wrap items-baseline gap-3">
           <h2 className="text-xl font-semibold">Reviews</h2>
-          {/* Aggregate star rating — populated by Trustoo widget on mount */}
-          <div
-            id="trustoo-aggregate-rating"
-            className="trustoo-star-rating"
-            data-product-id={numericProductId}
-          >
-            {/* Trustoo injects aggregate score here; StarRating shown as placeholder */}
-            <StarRating rating={0} size="sm" />
-          </div>
+          {product.rating !== undefined && (
+            <StarRating rating={product.rating} count={product.reviewCount} size="sm" />
+          )}
         </div>
-        {process.env.NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN ? (
-          <div
-            className="trustoo-widget"
-            data-product-id={numericProductId}
-            data-shop={process.env.NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN}
-          />
-        ) : (
-          <p className="text-text-muted text-sm">
-            Reviews are powered by Trustoo. Configure{' '}
-            <code className="bg-surface rounded px-1 py-0.5 text-xs">NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN</code>
-            {' '}to enable.
-          </p>
-        )}
+        {/* SPR embed — the app injects review HTML into this element */}
+        <div id="shopify-product-reviews" data-id={numericProductId} />
       </section>
 
       {/* Related products and complementary — parallel server fetches */}

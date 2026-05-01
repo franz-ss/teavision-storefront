@@ -33,6 +33,8 @@ export type Product = {
   priceRange: { minVariantPrice: Money }
   variants: ProductVariant[]
   options: ProductOption[]
+  rating?: number
+  reviewCount?: number
 }
 
 export type ProductSummary = {

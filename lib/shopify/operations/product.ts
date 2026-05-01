@@ -38,6 +38,12 @@ const GET_PRODUCT_QUERY = /* GraphQL */ `
         name
         values
       }
+      ratingMetafield: metafield(namespace: "reviews", key: "rating") {
+        value
+      }
+      ratingCountMetafield: metafield(namespace: "reviews", key: "rating_count") {
+        value
+      }
       variants(first: 10) {
         edges {
           node {
@@ -115,6 +121,8 @@ type ShopifyProductNode = {
   }
   priceRange: { minVariantPrice: Money }
   options: ProductOption[]
+  ratingMetafield: { value: string } | null
+  ratingCountMetafield: { value: string } | null
   variants: {
     edges: Array<{
       node: {
@@ -136,6 +144,23 @@ type ShopifyProductSummaryNode = {
 }
 
 function reshapeProduct(p: ShopifyProductNode): Product {
+  // SPR rating metafield stores a JSON object: { "value": "4.8", "scale_min": "1.0", "scale_max": "5.0" }
+  let rating: number | undefined
+  let reviewCount: number | undefined
+  if (p.ratingMetafield?.value) {
+    try {
+      const parsed = JSON.parse(p.ratingMetafield.value) as { value?: string }
+      const n = parseFloat(parsed.value ?? '')
+      if (!isNaN(n)) rating = n
+    } catch {
+      // metafield not present or malformed — leave undefined
+    }
+  }
+  if (p.ratingCountMetafield?.value) {
+    const n = parseInt(p.ratingCountMetafield.value, 10)
+    if (!isNaN(n)) reviewCount = n
+  }
+
   return {
     id: p.id,
     handle: p.handle,
@@ -147,6 +172,8 @@ function reshapeProduct(p: ShopifyProductNode): Product {
     priceRange: p.priceRange,
     options: p.options,
     variants: p.variants.edges.map((e) => e.node),
+    rating,
+    reviewCount,
   }
 }
 
