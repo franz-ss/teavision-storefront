@@ -131,7 +131,7 @@ export async function getCollections(first = 250): Promise<string[]> {
 
 export async function getCollectionProducts(
   handle: string,
-  first = 24,
+  first = 250,
   sortKey = 'COLLECTION_DEFAULT',
   reverse = false,
 ): Promise<ProductSummary[]> {
