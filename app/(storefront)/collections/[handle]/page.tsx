@@ -97,7 +97,7 @@ async function CollectionContent({
       )}
 
       <div className="border-border mt-4 mb-6 flex items-center justify-between border-t pt-3">
-        <span className="text-text-muted text-sm">{products.length} products</span>
+        <span className="text-text-muted text-sm">{products.length} {products.length === 1 ? 'product' : 'products'}</span>
         <Suspense fallback={null}>
           <SortSelect currentSort={sort} />
         </Suspense>
