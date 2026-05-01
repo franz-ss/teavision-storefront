@@ -16,6 +16,7 @@ const GET_PRODUCT_QUERY = /* GraphQL */ `
       handle
       title
       description
+      descriptionHtml
       images(first: 10) {
         edges {
           node {
@@ -84,6 +85,7 @@ type ShopifyProductNode = {
   handle: string
   title: string
   description: string
+  descriptionHtml: string
   images: {
     edges: Array<{ node: ShopifyImage }>
   }
@@ -115,6 +117,7 @@ function reshapeProduct(p: ShopifyProductNode): Product {
     handle: p.handle,
     title: p.title,
     description: p.description,
+    descriptionHtml: p.descriptionHtml,
     images: p.images.edges.map((e) => e.node),
     priceRange: p.priceRange,
     options: p.options,
@@ -138,6 +141,8 @@ const STUB_PRODUCT: Product = {
   title: 'English Breakfast — Bulk Loose Leaf',
   description:
     'Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.',
+  descriptionHtml:
+    '<p>Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.</p>',
   images: [],
   priceRange: { minVariantPrice: { amount: '18.00', currencyCode: 'AUD' } },
   options: [{ name: 'Weight', values: ['250g', '1kg', '5kg'] }],

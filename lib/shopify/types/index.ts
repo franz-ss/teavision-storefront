@@ -27,6 +27,7 @@ export type Product = {
   handle: string
   title: string
   description: string
+  descriptionHtml: string
   images: ShopifyImage[]
   priceRange: { minVariantPrice: Money }
   variants: ProductVariant[]

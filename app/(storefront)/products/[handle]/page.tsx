@@ -103,7 +103,10 @@ async function ProductContent({
         <div className="flex flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
           <h1 className="text-3xl font-bold">{product.title}</h1>
           <ProductForm variants={product.variants} options={product.options} />
-          <p className="text-text-muted max-w-prose">{product.description}</p>
+          <div
+            className="text-text-muted max-w-prose text-sm leading-relaxed [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-text [&_h3]:mb-1 [&_h3]:mt-3 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-text [&_li]:mb-1 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_strong]:font-semibold [&_strong]:text-text [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
+            dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+          />
         </div>
       </div>
     </>

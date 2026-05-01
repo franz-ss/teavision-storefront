@@ -34,8 +34,8 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   }
 
   return (
-    <div>
-      <div className="overflow-hidden rounded" ref={emblaRef}>
+    <div className="w-full">
+      <div className="w-full overflow-hidden rounded" ref={emblaRef}>
         <div className="flex">
           {images.map((image, i) => (
             <div
@@ -61,10 +61,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div
-          className="mt-2 grid gap-2"
-          style={{ gridTemplateColumns: `repeat(${images.length}, 1fr)` }}
-        >
+        <div className="mt-2 flex gap-2 overflow-x-auto">
           {images.map((image, i) => (
             <button
               key={image.url}
@@ -73,7 +70,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               aria-pressed={selectedIndex === i}
               onClick={() => emblaApi?.scrollTo(i)}
               className={cn(
-                'relative aspect-square overflow-hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
+                'relative h-16 w-16 shrink-0 overflow-hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
                 selectedIndex === i
                   ? 'ring-primary ring-2'
                   : 'opacity-60 hover:opacity-100',
