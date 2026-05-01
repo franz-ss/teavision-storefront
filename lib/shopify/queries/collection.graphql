@@ -6,9 +6,24 @@ query GetCollection($handle: String!) {
   }
 }
 
-query GetCollectionProducts($handle: String!, $first: Int!) {
+query GetCollectionProducts(
+  $handle: String!
+  $first: Int!
+  $after: String
+  $sortKey: ProductCollectionSortKeys
+  $reverse: Boolean
+) {
   collection(handle: $handle) {
-    products(first: $first) {
+    products(
+      first: $first
+      after: $after
+      sortKey: $sortKey
+      reverse: $reverse
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       edges {
         node {
           id
@@ -27,6 +42,20 @@ query GetCollectionProducts($handle: String!, $first: Int!) {
             }
           }
         }
+      }
+    }
+  }
+}
+
+query GetCollections($first: Int!, $after: String) {
+  collections(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        handle
       }
     }
   }

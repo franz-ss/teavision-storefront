@@ -1,42 +1,61 @@
 import { shopifyFetch } from '@/lib/shopify/client'
-import type { Money, ProductSummary, ShopifyImage } from '@/lib/shopify/types'
+import {
+  SearchProductsDocument,
+  type Money,
+  type ProductSummary,
+  type ShopifyImage,
+} from '@/lib/shopify/types'
 
-const PREDICTIVE_SEARCH_QUERY = /* GraphQL */ `
-  query PredictiveSearch($query: String!) {
-    predictiveSearch(query: $query, types: [PRODUCT]) {
-      products {
-        id
-        handle
-        title
-        featuredImage {
-          url
-          altText
-          width
-          height
-        }
-        priceRange {
-          minVariantPrice {
-            amount
-            currencyCode
-          }
-        }
-      }
-    }
-  }
-`
+type MoneyLike = {
+  amount: unknown
+  currencyCode: string
+}
 
-type ShopifyPredictiveProductNode = {
+type ShopifyImageLike = {
+  url: unknown
+  altText?: string | null
+  width?: number | null
+  height?: number | null
+}
+
+type ShopifyProductSummaryNode = {
   id: string
   handle: string
   title: string
-  featuredImage: ShopifyImage | null
-  priceRange: { minVariantPrice: Money }
+  featuredImage?: ShopifyImageLike | null
+  priceRange: { minVariantPrice: MoneyLike }
 }
 
-type PredictiveSearchData = {
-  predictiveSearch: {
-    products: ShopifyPredictiveProductNode[]
-  } | null
+function reshapeMoney(money: MoneyLike): Money {
+  return {
+    amount: String(money.amount),
+    currencyCode: String(money.currencyCode),
+  }
+}
+
+function reshapeImage(image: ShopifyImageLike): ShopifyImage {
+  return {
+    url: String(image.url),
+    altText: image.altText ?? null,
+    width: image.width ?? null,
+    height: image.height ?? null,
+  }
+}
+
+function reshapeProductSummary(
+  product: ShopifyProductSummaryNode,
+): ProductSummary {
+  return {
+    id: product.id,
+    handle: product.handle,
+    title: product.title,
+    featuredImage: product.featuredImage
+      ? reshapeImage(product.featuredImage)
+      : null,
+    priceRange: {
+      minVariantPrice: reshapeMoney(product.priceRange.minVariantPrice),
+    },
+  }
 }
 
 export async function searchProducts(query: string): Promise<ProductSummary[]> {
@@ -46,18 +65,12 @@ export async function searchProducts(query: string): Promise<ProductSummary[]> {
     return []
   }
 
-  const data = await shopifyFetch<PredictiveSearchData>({
-    query: PREDICTIVE_SEARCH_QUERY,
+  const data = await shopifyFetch({
+    query: SearchProductsDocument,
     variables: { query },
   })
 
   if (!data.predictiveSearch) return []
 
-  return data.predictiveSearch.products.map((node) => ({
-    id: node.id,
-    handle: node.handle,
-    title: node.title,
-    featuredImage: node.featuredImage,
-    priceRange: node.priceRange,
-  }))
+  return data.predictiveSearch.products.map(reshapeProductSummary)
 }

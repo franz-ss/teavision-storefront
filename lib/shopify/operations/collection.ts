@@ -1,63 +1,69 @@
 import { cacheLife, cacheTag } from 'next/cache'
 
 import { shopifyFetch } from '@/lib/shopify/client'
-import type {
-  Collection,
-  Money,
-  ProductSummary,
-  ShopifyImage,
+import {
+  GetCollectionDocument,
+  GetCollectionProductsDocument,
+  GetCollectionsDocument,
+  ProductCollectionSortKeys,
+  type Collection,
+  type Money,
+  type ProductSummary,
+  type ShopifyImage,
 } from '@/lib/shopify/types'
 
-const GET_COLLECTION_QUERY = /* GraphQL */ `
-  query GetCollection($handle: String!) {
-    collection(handle: $handle) {
-      handle
-      title
-      description
-    }
-  }
-`
+const SHOPIFY_PAGE_SIZE = 250
 
-const GET_COLLECTION_PRODUCTS_QUERY = /* GraphQL */ `
-  query GetCollectionProducts($handle: String!, $first: Int!, $sortKey: ProductCollectionSortKeys, $reverse: Boolean) {
-    collection(handle: $handle) {
-      products(first: $first, sortKey: $sortKey, reverse: $reverse) {
-        edges {
-          node {
-            id
-            handle
-            title
-            featuredImage {
-              url
-              altText
-              width
-              height
-            }
-            priceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+type MoneyLike = {
+  amount: unknown
+  currencyCode: string
+}
 
-type ShopifyCollectionNode = {
-  handle: string
-  title: string
-  description: string
+type ShopifyImageLike = {
+  url: unknown
+  altText?: string | null
+  width?: number | null
+  height?: number | null
 }
 
 type ShopifyProductSummaryNode = {
   id: string
   handle: string
   title: string
-  featuredImage: ShopifyImage | null
-  priceRange: { minVariantPrice: Money }
+  featuredImage?: ShopifyImageLike | null
+  priceRange: { minVariantPrice: MoneyLike }
+}
+
+function reshapeMoney(money: MoneyLike): Money {
+  return {
+    amount: String(money.amount),
+    currencyCode: String(money.currencyCode),
+  }
+}
+
+function reshapeImage(image: ShopifyImageLike): ShopifyImage {
+  return {
+    url: String(image.url),
+    altText: image.altText ?? null,
+    width: image.width ?? null,
+    height: image.height ?? null,
+  }
+}
+
+function reshapeProductSummary(
+  product: ShopifyProductSummaryNode,
+): ProductSummary {
+  return {
+    id: product.id,
+    handle: product.handle,
+    title: product.title,
+    featuredImage: product.featuredImage
+      ? reshapeImage(product.featuredImage)
+      : null,
+    priceRange: {
+      minVariantPrice: reshapeMoney(product.priceRange.minVariantPrice),
+    },
+  }
 }
 
 const STUB_COLLECTION: Collection = {
@@ -88,29 +94,23 @@ export async function getCollection(
     return { ...STUB_COLLECTION, handle }
   }
 
-  const data = await shopifyFetch<{
-    collection: ShopifyCollectionNode | null
-  }>({
-    query: GET_COLLECTION_QUERY,
+  const data = await shopifyFetch({
+    query: GetCollectionDocument,
     variables: { handle },
   })
 
   return data.collection
+    ? {
+        handle: data.collection.handle,
+        title: data.collection.title,
+        description: data.collection.description,
+      }
+    : null
 }
 
-const GET_COLLECTIONS_QUERY = /* GraphQL */ `
-  query GetCollections($first: Int!) {
-    collections(first: $first) {
-      edges {
-        node {
-          handle
-        }
-      }
-    }
-  }
-`
-
-export async function getCollections(first = 250): Promise<string[]> {
+export async function getCollections(
+  first = SHOPIFY_PAGE_SIZE,
+): Promise<string[]> {
   'use cache'
   cacheTag('collections')
   cacheLife('days')
@@ -119,20 +119,28 @@ export async function getCollections(first = 250): Promise<string[]> {
     return ['all', 'tea', 'herbs-spices']
   }
 
-  const data = await shopifyFetch<{
-    collections: { edges: Array<{ node: { handle: string } }> }
-  }>({
-    query: GET_COLLECTIONS_QUERY,
-    variables: { first },
-  })
+  const handles: string[] = []
+  let after: string | null | undefined
+  let hasNextPage = true
 
-  return data.collections.edges.map((e) => e.node.handle)
+  while (hasNextPage) {
+    const data = await shopifyFetch({
+      query: GetCollectionsDocument,
+      variables: { first, after },
+    })
+
+    handles.push(...data.collections.edges.map((edge) => edge.node.handle))
+    hasNextPage = data.collections.pageInfo.hasNextPage
+    after = data.collections.pageInfo.endCursor
+  }
+
+  return handles
 }
 
 export async function getCollectionProducts(
   handle: string,
-  first = 250,
-  sortKey = 'COLLECTION_DEFAULT',
+  first = SHOPIFY_PAGE_SIZE,
+  sortKey = ProductCollectionSortKeys.CollectionDefault,
   reverse = false,
 ): Promise<ProductSummary[]> {
   'use cache'
@@ -143,22 +151,26 @@ export async function getCollectionProducts(
     return STUB_PRODUCTS
   }
 
-  const data = await shopifyFetch<{
-    collection: {
-      products: { edges: Array<{ node: ShopifyProductSummaryNode }> }
-    } | null
-  }>({
-    query: GET_COLLECTION_PRODUCTS_QUERY,
-    variables: { handle, first, sortKey, reverse },
-  })
+  const products: ProductSummary[] = []
+  let after: string | null | undefined
+  let hasNextPage = true
 
-  if (!data.collection) return []
+  while (hasNextPage) {
+    const data = await shopifyFetch({
+      query: GetCollectionProductsDocument,
+      variables: { handle, first, after, sortKey, reverse },
+    })
 
-  return data.collection.products.edges.map((e) => ({
-    id: e.node.id,
-    handle: e.node.handle,
-    title: e.node.title,
-    featuredImage: e.node.featuredImage,
-    priceRange: e.node.priceRange,
-  }))
+    if (!data.collection) return []
+
+    products.push(
+      ...data.collection.products.edges.map((edge) =>
+        reshapeProductSummary(edge.node),
+      ),
+    )
+    hasNextPage = data.collection.products.pageInfo.hasNextPage
+    after = data.collection.products.pageInfo.endCursor
+  }
+
+  return products
 }

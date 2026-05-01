@@ -3,7 +3,10 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { getProduct, getProductRecommendations } from '@/lib/shopify/operations/product'
+import {
+  getProduct,
+  getProductRecommendations,
+} from '@/lib/shopify/operations/product'
 import { ProductCard, StarRating } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 import type { ProductSummary } from '@/lib/shopify/types'
@@ -46,7 +49,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 function ProductGrid({ products }: { products: ProductSummary[] }) {
   if (products.length === 0) return null
   return (
-    <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4" role="list">
+    <ul
+      className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+      role="list"
+    >
       {products.map((product, i) => (
         <li key={product.id}>
           <ProductCard product={product} priority={i === 0} />
@@ -74,7 +80,9 @@ async function ComplementaryProducts({ productId }: { productId: string }) {
   if (shown.length === 0) return null
   return (
     <section className="border-border border-t pt-10">
-      <h2 className="mb-6 text-xl font-semibold">Customers Who Bought This Also Bought</h2>
+      <h2 className="mb-6 text-xl font-semibold">
+        Customers Who Bought This Also Bought
+      </h2>
       <ProductGrid products={shown} />
     </section>
   )
@@ -91,6 +99,7 @@ async function ProductContent({
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
   const productUrl = `${baseUrl}/products/${product.handle}`
+  const hasAvailableVariant = product.variants.some((v) => v.availableForSale)
 
   const productJsonLd = {
     '@context': 'https://schema.org',
@@ -103,7 +112,9 @@ async function ProductContent({
       url: productUrl,
       price: product.priceRange.minVariantPrice.amount,
       priceCurrency: product.priceRange.minVariantPrice.currencyCode,
-      availability: 'https://schema.org/InStock',
+      availability: hasAvailableVariant
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
     },
   }
 
@@ -140,10 +151,20 @@ async function ProductContent({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
-        <Link href="/" className="rounded hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1">Home</Link>
+      <nav aria-label="Breadcrumb" className="text-text-muted mb-6 text-sm">
+        <Link
+          href="/"
+          className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+        >
+          Home
+        </Link>
         <span aria-hidden="true"> › </span>
-        <Link href="/collections/all" className="rounded hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1">Products</Link>
+        <Link
+          href="/collections/all"
+          className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+        >
+          Products
+        </Link>
         <span aria-hidden="true"> › </span>
         <span aria-current="page">{product.title}</span>
       </nav>
@@ -156,7 +177,7 @@ async function ProductContent({
           <h1 className="text-3xl font-bold">{product.title}</h1>
           <ProductForm variants={product.variants} options={product.options} />
           <div
-            className="text-text-muted max-w-prose text-sm leading-relaxed [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-text [&_h3]:mb-1 [&_h3]:mt-3 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-text [&_li]:mb-1 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_strong]:font-semibold [&_strong]:text-text [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
+            className="text-text-muted [&_h2]:text-text [&_h3]:text-text [&_strong]:text-text max-w-prose text-sm leading-relaxed [&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_li]:mb-1 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_strong]:font-semibold [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
             dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
           />
 
@@ -169,7 +190,7 @@ async function ProductContent({
                 return (
                   <span
                     key={tag}
-                    className="border-border bg-surface rounded border px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-text-muted"
+                    className="border-border bg-surface text-text-muted rounded border px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase"
                   >
                     {label}
                   </span>
@@ -181,11 +202,18 @@ async function ProductContent({
       </div>
 
       {/* Reviews — Shopify Product Reviews (SPR) */}
-      <section className="border-border mt-12 border-t pt-10" aria-label="Customer reviews">
+      <section
+        className="border-border mt-12 border-t pt-10"
+        aria-label="Customer reviews"
+      >
         <div className="mb-6 flex flex-wrap items-baseline gap-3">
           <h2 className="text-xl font-semibold">Reviews</h2>
           {product.rating !== undefined && (
-            <StarRating rating={product.rating} count={product.reviewCount} size="sm" />
+            <StarRating
+              rating={product.rating}
+              count={product.reviewCount}
+              size="sm"
+            />
           )}
         </div>
         {/* SPR embed — the app injects review HTML into this element */}

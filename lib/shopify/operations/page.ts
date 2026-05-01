@@ -1,20 +1,7 @@
 import { cacheLife, cacheTag } from 'next/cache'
 
 import { shopifyFetch } from '@/lib/shopify/client'
-
-const GET_PAGE_QUERY = /* GraphQL */ `
-  query GetPage($handle: String!) {
-    page(handle: $handle) {
-      title
-      body
-    }
-  }
-`
-
-type ShopifyPageNode = {
-  title: string
-  body: string
-}
+import { GetPageDocument } from '@/lib/shopify/types'
 
 export async function getPage(
   handle: string,
@@ -25,17 +12,20 @@ export async function getPage(
 
   if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
     return {
-      title: handle
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
+      title: handle.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
       body: '<p>Page content will appear here once the Shopify API is connected.</p>',
     }
   }
 
-  const data = await shopifyFetch<{ page: ShopifyPageNode | null }>({
-    query: GET_PAGE_QUERY,
+  const data = await shopifyFetch({
+    query: GetPageDocument,
     variables: { handle },
   })
 
   return data.page
+    ? {
+        title: data.page.title,
+        body: String(data.page.body),
+      }
+    : null
 }

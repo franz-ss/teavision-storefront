@@ -2,7 +2,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: {
-    [`https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-01/graphql.json`]: {
+    [`https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2026-04/graphql.json`]: {
       headers: {
         'X-Shopify-Storefront-Access-Token':
           process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ?? '',
@@ -13,6 +13,9 @@ const config: CodegenConfig = {
   generates: {
     'lib/shopify/types/generated/': {
       preset: 'client',
+      presetConfig: {
+        fragmentMasking: false,
+      },
     },
   },
 }

@@ -20,12 +20,13 @@ export function ProductForm({ variants, options }: ProductFormProps) {
   const [error, setError] = useState<string | null>(null)
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId)
+  const canAddToCart = selectedVariant?.availableForSale === true
 
   function handleAddToCart() {
-    if (!selectedVariantId) return
+    if (!canAddToCart || !selectedVariant) return
     startTransition(async () => {
       try {
-        await addToCartAction(selectedVariantId, 1)
+        await addToCartAction(selectedVariant.id, 1)
         setError(null)
       } catch {
         setError('Unable to add to cart. Please try again.')
@@ -43,9 +44,7 @@ export function ProductForm({ variants, options }: ProductFormProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      {selectedVariant && (
-        <Price price={selectedVariant.price} size="lg" />
-      )}
+      {selectedVariant && <Price price={selectedVariant.price} size="lg" />}
 
       <fieldset>
         <legend className="mb-2 text-sm font-medium">
@@ -76,10 +75,10 @@ export function ProductForm({ variants, options }: ProductFormProps) {
       <Button
         onClick={handleAddToCart}
         isLoading={isPending}
-        disabled={!selectedVariantId || isPending}
+        disabled={!canAddToCart || isPending}
         size="lg"
       >
-        Add to Cart
+        {canAddToCart ? 'Add to Cart' : 'Sold Out'}
       </Button>
 
       {error && (

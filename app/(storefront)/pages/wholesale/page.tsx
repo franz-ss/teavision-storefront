@@ -18,10 +18,12 @@ export default function WholesalePage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
       {/* Header */}
-      <h1 className="text-4xl font-semibold tracking-tight">Wholesale Accounts</h1>
+      <h1 className="text-4xl font-semibold tracking-tight">
+        Wholesale Accounts
+      </h1>
       <p className="text-text-muted mt-4 text-lg">
-        Australia&rsquo;s leading supplier of bulk tea, herbs, and spices. Serving cafes,
-        restaurants, retailers, and wellness brands since 2014.
+        Australia&rsquo;s leading supplier of bulk tea, herbs, and spices.
+        Serving cafes, restaurants, retailers, and wellness brands since 2014.
       </p>
 
       {/* Trust signals */}
@@ -51,7 +53,9 @@ export default function WholesalePage() {
             'Catalogue and sample packs available',
           ].map((item) => (
             <li key={item} className="flex items-start gap-2">
-              <span className="text-primary mt-0.5 text-sm font-semibold">—</span>
+              <span className="text-primary mt-0.5 text-sm font-semibold">
+                —
+              </span>
               {item}
             </li>
           ))}
@@ -62,11 +66,12 @@ export default function WholesalePage() {
       <section className="bg-surface mt-12 rounded p-8">
         <h2 className="text-xl font-semibold">Get in touch</h2>
         <p className="text-text-muted mt-2">
-          To apply for a wholesale account or request a quote, contact us directly:
+          To apply for a wholesale account or request a quote, contact us
+          directly:
         </p>
         <dl className="mt-6 space-y-3">
           <div>
-            <dt className="text-text-muted font-medium uppercase tracking-wide" style={{ fontSize: '0.65rem' }}>
+            <dt className="text-text-muted text-[0.65rem] font-medium tracking-wide uppercase">
               Phone
             </dt>
             <dd className="mt-1 text-base font-medium">
@@ -79,7 +84,7 @@ export default function WholesalePage() {
             </dd>
           </div>
           <div>
-            <dt className="text-text-muted font-medium uppercase tracking-wide" style={{ fontSize: '0.65rem' }}>
+            <dt className="text-text-muted text-[0.65rem] font-medium tracking-wide uppercase">
               Email
             </dt>
             <dd className="mt-1 text-base font-medium">
@@ -94,7 +99,10 @@ export default function WholesalePage() {
         </dl>
         <p className="text-text-muted mt-6 text-sm">
           Minimum order quantities start from 100kg for new wholesale accounts.
-          <Link href="/collections/all" className="text-primary ml-1 hover:underline">
+          <Link
+            href="/collections/all"
+            className="text-primary ml-1 hover:underline"
+          >
             Browse our full range
           </Link>{' '}
           to build your order.

@@ -1,0 +1,21 @@
+query SearchProducts($query: String!) {
+  predictiveSearch(query: $query, types: [PRODUCT]) {
+    products {
+      id
+      handle
+      title
+      featuredImage {
+        url
+        altText
+        width
+        height
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+    }
+  }
+}

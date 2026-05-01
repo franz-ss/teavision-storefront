@@ -7,6 +7,7 @@ import {
   getCollection,
   getCollectionProducts,
 } from '@/lib/shopify/operations/collection'
+import { ProductCollectionSortKeys } from '@/lib/shopify/types'
 import { SortSelect } from '@/components/collection'
 import { ProductCard } from '@/components/ui'
 
@@ -15,13 +16,19 @@ type Props = {
   searchParams: Promise<{ sort?: string }>
 }
 
-const SORT_MAP: Record<string, { sortKey: string; reverse: boolean }> = {
-  featured: { sortKey: 'COLLECTION_DEFAULT', reverse: false },
-  'title-asc': { sortKey: 'TITLE', reverse: false },
-  'title-desc': { sortKey: 'TITLE', reverse: true },
-  'price-asc': { sortKey: 'PRICE', reverse: false },
-  'price-desc': { sortKey: 'PRICE', reverse: true },
-  newest: { sortKey: 'CREATED', reverse: true },
+const SORT_MAP: Record<
+  string,
+  { sortKey: ProductCollectionSortKeys; reverse: boolean }
+> = {
+  featured: {
+    sortKey: ProductCollectionSortKeys.CollectionDefault,
+    reverse: false,
+  },
+  'title-asc': { sortKey: ProductCollectionSortKeys.Title, reverse: false },
+  'title-desc': { sortKey: ProductCollectionSortKeys.Title, reverse: true },
+  'price-asc': { sortKey: ProductCollectionSortKeys.Price, reverse: false },
+  'price-desc': { sortKey: ProductCollectionSortKeys.Price, reverse: true },
+  newest: { sortKey: ProductCollectionSortKeys.Created, reverse: true },
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -71,8 +78,18 @@ async function CollectionContent({
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${baseUrl}/` },
-      { '@type': 'ListItem', position: 2, name: 'Collections', item: `${baseUrl}/collections/all` },
-      { '@type': 'ListItem', position: 3, name: collection.title, item: `${baseUrl}/collections/${handle}` },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Collections',
+        item: `${baseUrl}/collections/all`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: collection.title,
+        item: `${baseUrl}/collections/${handle}`,
+      },
     ],
   }
 
@@ -83,10 +100,20 @@ async function CollectionContent({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
-        <Link href="/" className="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 rounded">Home</Link>
+      <nav aria-label="Breadcrumb" className="text-text-muted mb-6 text-sm">
+        <Link
+          href="/"
+          className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+        >
+          Home
+        </Link>
         <span aria-hidden="true"> › </span>
-        <Link href="/collections/all" className="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 rounded">Collections</Link>
+        <Link
+          href="/collections/all"
+          className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+        >
+          Collections
+        </Link>
         <span aria-hidden="true"> › </span>
         <span aria-current="page">{collection.title}</span>
       </nav>
@@ -97,15 +124,20 @@ async function CollectionContent({
       )}
 
       <div className="border-border mt-4 mb-6 flex items-center justify-between border-t pt-3">
-        <span className="text-text-muted text-sm">{products.length} {products.length === 1 ? 'product' : 'products'}</span>
+        <span className="text-text-muted text-sm">
+          {products.length} {products.length === 1 ? 'product' : 'products'}
+        </span>
         <Suspense fallback={null}>
           <SortSelect currentSort={sort} />
         </Suspense>
       </div>
 
-      <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4" role="list">
+      <ul
+        className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4"
+        role="list"
+      >
         {products.length === 0 ? (
-          <li className="col-span-full py-16 text-center text-text-muted">
+          <li className="text-text-muted col-span-full py-16 text-center">
             No products in this collection yet.
           </li>
         ) : (

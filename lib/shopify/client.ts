@@ -1,7 +1,10 @@
-const SHOPIFY_API_VERSION = '2025-01'
+import { print } from 'graphql'
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
-type ShopifyFetchOptions<TVariables> = {
-  query: string
+const SHOPIFY_API_VERSION = '2026-04'
+
+type ShopifyFetchOptions<T, TVariables> = {
+  query: string | TypedDocumentNode<T, TVariables>
   variables?: TVariables
   cache?: RequestCache
 }
@@ -15,7 +18,7 @@ export async function shopifyFetch<T, TVariables = Record<string, unknown>>({
   query,
   variables,
   cache = 'no-store',
-}: ShopifyFetchOptions<TVariables>): Promise<T> {
+}: ShopifyFetchOptions<T, TVariables>): Promise<T> {
   const domain = process.env.SHOPIFY_STORE_DOMAIN
   const token = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
 
@@ -31,7 +34,10 @@ export async function shopifyFetch<T, TVariables = Record<string, unknown>>({
         'Content-Type': 'application/json',
         'X-Shopify-Storefront-Access-Token': token,
       },
-      body: JSON.stringify({ query, variables }),
+      body: JSON.stringify({
+        query: typeof query === 'string' ? query : print(query),
+        variables,
+      }),
       cache,
     },
   )

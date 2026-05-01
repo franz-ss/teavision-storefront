@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-import { getProducts } from '@/lib/shopify/operations/product'
+import { getAllProducts } from '@/lib/shopify/operations/product'
 import { getCollections } from '@/lib/shopify/operations/collection'
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
@@ -46,7 +46,7 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, collectionHandles] = await Promise.all([
-    getProducts(250),
+    getAllProducts(),
     getCollections(250),
   ])
 

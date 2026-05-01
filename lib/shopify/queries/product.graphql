@@ -1,14 +1,48 @@
-query GetProduct($handle: String!) {
+fragment ProductSummaryFields on Product {
+  id
+  handle
+  title
+  featuredImage {
+    url
+    altText
+    width
+    height
+  }
+  priceRange {
+    minVariantPrice {
+      amount
+      currencyCode
+    }
+  }
+}
+
+fragment ProductVariantFields on ProductVariant {
+  id
+  title
+  availableForSale
+  price {
+    amount
+    currencyCode
+  }
+}
+
+query GetProduct($handle: String!, $variantFirst: Int!, $variantAfter: String) {
   product(handle: $handle) {
     id
     handle
     title
     description
-    featuredImage {
-      url
-      altText
-      width
-      height
+    descriptionHtml
+    tags
+    images(first: 10) {
+      edges {
+        node {
+          url
+          altText
+          width
+          height
+        }
+      }
     }
     priceRange {
       minVariantPrice {
@@ -16,42 +50,65 @@ query GetProduct($handle: String!) {
         currencyCode
       }
     }
-    variants(first: 10) {
+    options {
+      name
+      values
+    }
+    ratingMetafield: metafield(namespace: "reviews", key: "rating") {
+      value
+    }
+    ratingCountMetafield: metafield(namespace: "reviews", key: "rating_count") {
+      value
+    }
+    variants(first: $variantFirst, after: $variantAfter) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       edges {
         node {
-          id
-          title
-          availableForSale
-          price {
-            amount
-            currencyCode
-          }
+          ...ProductVariantFields
         }
       }
     }
   }
 }
 
-query GetProducts($first: Int!) {
-  products(first: $first) {
-    edges {
-      node {
-        id
-        handle
-        title
-        featuredImage {
-          url
-          altText
-          width
-          height
-        }
-        priceRange {
-          minVariantPrice {
-            amount
-            currencyCode
-          }
+query GetProductVariants($handle: String!, $first: Int!, $after: String) {
+  product(handle: $handle) {
+    variants(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          ...ProductVariantFields
         }
       }
     }
+  }
+}
+
+query GetProducts($first: Int!, $after: String) {
+  products(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        ...ProductSummaryFields
+      }
+    }
+  }
+}
+
+query GetProductRecommendations(
+  $productId: ID!
+  $intent: ProductRecommendationIntent
+) {
+  productRecommendations(productId: $productId, intent: $intent) {
+    ...ProductSummaryFields
   }
 }

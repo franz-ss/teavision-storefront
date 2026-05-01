@@ -1,156 +1,95 @@
 import { shopifyFetch } from '@/lib/shopify/client'
-import type { Cart, Money, ShopifyImage } from '@/lib/shopify/types'
+import {
+  CartCreateDocument,
+  CartLinesAddDocument,
+  CartLinesRemoveDocument,
+  CartLinesUpdateDocument,
+  GetCartDocument,
+  type Cart,
+  type GetCartQuery,
+  type Money,
+  type ShopifyImage,
+} from '@/lib/shopify/types'
 
-const CART_FIELDS = /* GraphQL */ `
-  fragment CartFields on Cart {
-    id
-    checkoutUrl
-    totalQuantity
-    cost {
-      totalAmount {
-        amount
-        currencyCode
-      }
-      subtotalAmount {
-        amount
-        currencyCode
-      }
-    }
-    lines(first: 100) {
-      edges {
-        node {
-          id
-          quantity
-          merchandise {
-            ... on ProductVariant {
-              id
-              title
-              price {
-                amount
-                currencyCode
-              }
-              product {
-                handle
-                title
-                featuredImage {
-                  url
-                  altText
-                  width
-                  height
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+type MoneyLike = {
+  amount: unknown
+  currencyCode: string
+}
 
-const GET_CART_QUERY = /* GraphQL */ `
-  ${CART_FIELDS}
-  query GetCart($cartId: ID!) {
-    cart(id: $cartId) {
-      ...CartFields
-    }
-  }
-`
+type ShopifyImageLike = {
+  url: unknown
+  altText?: string | null
+  width?: number | null
+  height?: number | null
+}
 
-const CART_CREATE_MUTATION = /* GraphQL */ `
-  ${CART_FIELDS}
-  mutation CartCreate($input: CartInput!) {
-    cartCreate(input: $input) {
-      cart {
-        ...CartFields
-      }
-      userErrors {
-        field
-        message
-      }
-    }
-  }
-`
+type ShopifyCart = NonNullable<GetCartQuery['cart']>
 
-const CART_LINES_ADD_MUTATION = /* GraphQL */ `
-  ${CART_FIELDS}
-  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
-    cartLinesAdd(cartId: $cartId, lines: $lines) {
-      cart {
-        ...CartFields
-      }
-      userErrors {
-        field
-        message
-      }
-    }
-  }
-`
+type ShopifyCartLineNode = ShopifyCart['lines']['edges'][number]['node']
 
-const CART_LINES_UPDATE_MUTATION = /* GraphQL */ `
-  ${CART_FIELDS}
-  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
-    cartLinesUpdate(cartId: $cartId, lines: $lines) {
-      cart {
-        ...CartFields
-      }
-      userErrors {
-        field
-        message
-      }
-    }
-  }
-`
+type ShopifyProductVariant = ShopifyCartLineNode['merchandise']
 
-const CART_LINES_REMOVE_MUTATION = /* GraphQL */ `
-  ${CART_FIELDS}
-  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
-    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
-      cart {
-        ...CartFields
-      }
-      userErrors {
-        field
-        message
-      }
-    }
-  }
-`
+type ShopifyProduct = ShopifyProductVariant['product']
 
-type ShopifyCartLineNode = {
-  id: string
-  quantity: number
-  merchandise: {
-    id: string
-    title: string
-    price: Money
-    product: {
-      handle: string
-      title: string
-      featuredImage: ShopifyImage | null
-    }
+type ShopifyCartLine = Cart['lines'][number]
+
+type ShopifyUserError = {
+  field?: string[] | null
+  message: string
+}
+
+function reshapeMoney(money: MoneyLike): Money {
+  return {
+    amount: String(money.amount),
+    currencyCode: String(money.currencyCode),
   }
 }
 
-type ShopifyCart = {
-  id: string
-  checkoutUrl: string
-  totalQuantity: number
-  cost: { totalAmount: Money; subtotalAmount: Money }
-  lines: { edges: Array<{ node: ShopifyCartLineNode }> }
+function reshapeImage(image: ShopifyImageLike): ShopifyImage {
+  return {
+    url: String(image.url),
+    altText: image.altText ?? null,
+    width: image.width ?? null,
+    height: image.height ?? null,
+  }
 }
 
-type ShopifyUserError = { field: string[] | null; message: string }
+function reshapeProduct(
+  product: ShopifyProduct,
+): ShopifyCartLine['merchandise']['product'] {
+  return {
+    handle: product.handle,
+    title: product.title,
+    featuredImage: product.featuredImage
+      ? reshapeImage(product.featuredImage)
+      : null,
+  }
+}
+
+function reshapeMerchandise(
+  merchandise: ShopifyProductVariant,
+): ShopifyCartLine['merchandise'] {
+  return {
+    id: merchandise.id,
+    title: merchandise.title,
+    price: reshapeMoney(merchandise.price),
+    product: reshapeProduct(merchandise.product),
+  }
+}
 
 function reshapeCart(cart: ShopifyCart): Cart {
   return {
     id: cart.id,
-    checkoutUrl: cart.checkoutUrl,
+    checkoutUrl: String(cart.checkoutUrl),
     totalQuantity: cart.totalQuantity,
-    cost: cart.cost,
+    cost: {
+      totalAmount: reshapeMoney(cart.cost.totalAmount),
+      subtotalAmount: reshapeMoney(cart.cost.subtotalAmount),
+    },
     lines: cart.lines.edges.map((e) => ({
       id: e.node.id,
       quantity: e.node.quantity,
-      merchandise: e.node.merchandise,
+      merchandise: reshapeMerchandise(e.node.merchandise),
     })),
   }
 }
@@ -162,8 +101,8 @@ function handleUserErrors(errors: ShopifyUserError[]): void {
 }
 
 export async function getCart(cartId: string): Promise<Cart | null> {
-  const data = await shopifyFetch<{ cart: ShopifyCart | null }>({
-    query: GET_CART_QUERY,
+  const data = await shopifyFetch({
+    query: GetCartDocument,
     variables: { cartId },
     cache: 'no-store',
   })
@@ -171,14 +110,13 @@ export async function getCart(cartId: string): Promise<Cart | null> {
 }
 
 export async function createCart(): Promise<Cart> {
-  const data = await shopifyFetch<{
-    cartCreate: { cart: ShopifyCart; userErrors: ShopifyUserError[] }
-  }>({
-    query: CART_CREATE_MUTATION,
+  const data = await shopifyFetch({
+    query: CartCreateDocument,
     variables: { input: {} },
     cache: 'no-store',
   })
-  handleUserErrors(data.cartCreate.userErrors)
+  handleUserErrors(data.cartCreate?.userErrors ?? [])
+  if (!data.cartCreate?.cart) throw new Error('Unable to create cart')
   return reshapeCart(data.cartCreate.cart)
 }
 
@@ -186,14 +124,13 @@ export async function addCartLines(
   cartId: string,
   lines: Array<{ merchandiseId: string; quantity: number }>,
 ): Promise<Cart> {
-  const data = await shopifyFetch<{
-    cartLinesAdd: { cart: ShopifyCart; userErrors: ShopifyUserError[] }
-  }>({
-    query: CART_LINES_ADD_MUTATION,
+  const data = await shopifyFetch({
+    query: CartLinesAddDocument,
     variables: { cartId, lines },
     cache: 'no-store',
   })
-  handleUserErrors(data.cartLinesAdd.userErrors)
+  handleUserErrors(data.cartLinesAdd?.userErrors ?? [])
+  if (!data.cartLinesAdd?.cart) throw new Error('Unable to add cart lines')
   return reshapeCart(data.cartLinesAdd.cart)
 }
 
@@ -201,14 +138,14 @@ export async function updateCartLines(
   cartId: string,
   lines: Array<{ id: string; quantity: number }>,
 ): Promise<Cart> {
-  const data = await shopifyFetch<{
-    cartLinesUpdate: { cart: ShopifyCart; userErrors: ShopifyUserError[] }
-  }>({
-    query: CART_LINES_UPDATE_MUTATION,
+  const data = await shopifyFetch({
+    query: CartLinesUpdateDocument,
     variables: { cartId, lines },
     cache: 'no-store',
   })
-  handleUserErrors(data.cartLinesUpdate.userErrors)
+  handleUserErrors(data.cartLinesUpdate?.userErrors ?? [])
+  if (!data.cartLinesUpdate?.cart)
+    throw new Error('Unable to update cart lines')
   return reshapeCart(data.cartLinesUpdate.cart)
 }
 
@@ -216,13 +153,13 @@ export async function removeCartLines(
   cartId: string,
   lineIds: string[],
 ): Promise<Cart> {
-  const data = await shopifyFetch<{
-    cartLinesRemove: { cart: ShopifyCart; userErrors: ShopifyUserError[] }
-  }>({
-    query: CART_LINES_REMOVE_MUTATION,
+  const data = await shopifyFetch({
+    query: CartLinesRemoveDocument,
     variables: { cartId, lineIds },
     cache: 'no-store',
   })
-  handleUserErrors(data.cartLinesRemove.userErrors)
+  handleUserErrors(data.cartLinesRemove?.userErrors ?? [])
+  if (!data.cartLinesRemove?.cart)
+    throw new Error('Unable to remove cart lines')
   return reshapeCart(data.cartLinesRemove.cart)
 }

@@ -935,6 +935,17 @@ export enum CartCardSource {
   SavedCreditCard = 'SAVED_CREDIT_CARD',
 }
 
+/** Return type for `cartClone` mutation. */
+export type CartClonePayload = {
+  __typename?: 'CartClonePayload'
+  /** The newly created cart without PII. This is a different cart from the source. */
+  cart?: Maybe<Cart>
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>
+  /** A list of warnings that occurred during the mutation. */
+  warnings: Array<CartWarning>
+}
+
 /**
  * A discount allocation applied to a cart line when a customer enters a [discount code](https://help.shopify.com/manual/discounts/discount-methods/discount-codes).
  *
@@ -1215,6 +1226,17 @@ export type CartDeliveryAddressesAddPayload = {
 /** Return type for `cartDeliveryAddressesRemove` mutation. */
 export type CartDeliveryAddressesRemovePayload = {
   __typename?: 'CartDeliveryAddressesRemovePayload'
+  /** The updated cart. */
+  cart?: Maybe<Cart>
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>
+  /** A list of warnings that occurred during the mutation. */
+  warnings: Array<CartWarning>
+}
+
+/** Return type for `cartDeliveryAddressesReplace` mutation. */
+export type CartDeliveryAddressesReplacePayload = {
+  __typename?: 'CartDeliveryAddressesReplacePayload'
   /** The updated cart. */
   cart?: Maybe<Cart>
   /** The list of errors that occurred from executing the mutation. */
@@ -1505,10 +1527,14 @@ export enum CartErrorCode {
   AddressFieldIsRequired = 'ADDRESS_FIELD_IS_REQUIRED',
   /** The specified address field is too long. */
   AddressFieldIsTooLong = 'ADDRESS_FIELD_IS_TOO_LONG',
+  /** Bundles and addons cannot be mixed. */
+  BundlesAndAddonsCannotBeMixed = 'BUNDLES_AND_ADDONS_CANNOT_BE_MIXED',
   /** Buyer cannot purchase for company location. */
   BuyerCannotPurchaseForCompanyLocation = 'BUYER_CANNOT_PURCHASE_FOR_COMPANY_LOCATION',
   /** The cart is too large to save. */
   CartTooLarge = 'CART_TOO_LARGE',
+  /** The specified gift card recipient is invalid. */
+  GiftCardRecipientInvalid = 'GIFT_CARD_RECIPIENT_INVALID',
   /** The input value is invalid. */
   Invalid = 'INVALID',
   /** Company location not found or not allowed. */
@@ -1539,6 +1565,10 @@ export enum CartErrorCode {
   LessThan = 'LESS_THAN',
   /** The quantity must be below the specified maximum for the item. */
   MaximumExceeded = 'MAXIMUM_EXCEEDED',
+  /** An error occurred while processing cart transformations. */
+  MerchandiseLineTransformersRunError = 'MERCHANDISE_LINE_TRANSFORMERS_RUN_ERROR',
+  /** Item cannot be purchased as configured. */
+  MerchandiseNotApplicable = 'MERCHANDISE_NOT_APPLICABLE',
   /** The quantity must be above the specified minimum for the item. */
   MinimumNotMet = 'MINIMUM_NOT_MET',
   /** The customer access token is required when setting a company location. */
@@ -1551,6 +1581,14 @@ export enum CartErrorCode {
   NoteTooLong = 'NOTE_TOO_LONG',
   /** Only one delivery address can be selected. */
   OnlyOneDeliveryAddressCanBeSelected = 'ONLY_ONE_DELIVERY_ADDRESS_CAN_BE_SELECTED',
+  /** Cannot reference existing parent lines by variant_id. */
+  ParentLineInvalidReference = 'PARENT_LINE_INVALID_REFERENCE',
+  /** Parent line nesting is too deep or circular. */
+  ParentLineNestingTooDeep = 'PARENT_LINE_NESTING_TOO_DEEP',
+  /** Parent line not found. */
+  ParentLineNotFound = 'PARENT_LINE_NOT_FOUND',
+  /** Nested cartlines are blocked due to an incompatibility. */
+  ParentLineOperationBlocked = 'PARENT_LINE_OPERATION_BLOCKED',
   /** Credit card has expired. */
   PaymentsCreditCardBaseExpired = 'PAYMENTS_CREDIT_CARD_BASE_EXPIRED',
   /** Credit card gateway is not supported. */
@@ -1622,6 +1660,17 @@ export type CartEstimatedCost = {
 export type CartFreePaymentMethodInput = {
   /** The customer's billing address. */
   billingAddress: MailingAddressInput
+}
+
+/** Return type for `cartGiftCardCodesAdd` mutation. */
+export type CartGiftCardCodesAddPayload = {
+  __typename?: 'CartGiftCardCodesAddPayload'
+  /** The updated cart. */
+  cart?: Maybe<Cart>
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>
+  /** A list of warnings that occurred during the mutation. */
+  warnings: Array<CartWarning>
 }
 
 /** Return type for `cartGiftCardCodesRemove` mutation. */
@@ -1745,8 +1794,12 @@ export type CartLine = BaseCartLine &
     estimatedCost: CartLineEstimatedCost
     /** A globally-unique ID. */
     id: Scalars['ID']['output']
+    /** The instructions for the line item. */
+    instructions: CartLineInstructions
     /** The merchandise that the buyer intends to purchase. */
     merchandise: Merchandise
+    /** The parent of the line item. */
+    parentRelationship?: Maybe<CartLineParentRelationship>
     /** The quantity of the merchandise that the customer intends to purchase. */
     quantity: Scalars['Int']['output']
     /** The selling plan associated with the cart line and the effect that each selling plan has on variants when they're purchased. */
@@ -1812,10 +1865,36 @@ export type CartLineInput = {
   attributes?: InputMaybe<Array<AttributeInput>>
   /** The ID of the merchandise that the buyer intends to purchase. */
   merchandiseId: Scalars['ID']['input']
+  /** The parent line item of the cart line. */
+  parent?: InputMaybe<CartLineParentInput>
   /** The quantity of the merchandise. */
   quantity?: InputMaybe<Scalars['Int']['input']>
   /** The ID of the selling plan that the merchandise is being purchased with. */
   sellingPlanId?: InputMaybe<Scalars['ID']['input']>
+}
+
+/** Represents instructions for a cart line item. */
+export type CartLineInstructions = {
+  __typename?: 'CartLineInstructions'
+  /** Whether the line item can be removed from the cart. */
+  canRemove: Scalars['Boolean']['output']
+  /** Whether the line item quantity can be updated. */
+  canUpdateQuantity: Scalars['Boolean']['output']
+}
+
+/** The parent line item of the cart line. */
+export type CartLineParentInput = {
+  /** The id of the parent line item. */
+  lineId?: InputMaybe<Scalars['ID']['input']>
+  /** The ID of the parent line merchandise. */
+  merchandiseId?: InputMaybe<Scalars['ID']['input']>
+}
+
+/** Represents the parent relationship of a cart line. */
+export type CartLineParentRelationship = {
+  __typename?: 'CartLineParentRelationship'
+  /** The parent cart line. */
+  parent: CartLine
 }
 
 /**
@@ -2229,6 +2308,8 @@ export enum CartWarningCode {
   MerchandiseNotEnoughStock = 'MERCHANDISE_NOT_ENOUGH_STOCK',
   /** The merchandise is out of stock. */
   MerchandiseOutOfStock = 'MERCHANDISE_OUT_OF_STOCK',
+  /** Only one-time purchase is available for B2B orders. */
+  MerchandiseSellingPlanNotApplicableOnCompanyLocation = 'MERCHANDISE_SELLING_PLAN_NOT_APPLICABLE_ON_COMPANY_LOCATION',
   /** Gift cards are not available as a payment method. */
   PaymentsGiftCardsUnavailable = 'PAYMENTS_GIFT_CARDS_UNAVAILABLE',
 }
@@ -3528,6 +3609,8 @@ export type Customer = HasMetafields & {
   acceptsMarketing: Scalars['Boolean']['output']
   /** A list of addresses for the customer. */
   addresses: MailingAddressConnection
+  /** The URL of the customer's avatar image. */
+  avatarUrl?: Maybe<Scalars['String']['output']>
   /** The date and time when the customer was created. */
   createdAt: Scalars['DateTime']['output']
   /** The customer’s default address. */
@@ -3552,6 +3635,8 @@ export type Customer = HasMetafields & {
   orders: OrderConnection
   /** The customer’s phone number. */
   phone?: Maybe<Scalars['String']['output']>
+  /** The social login provider associated with the customer. */
+  socialLoginProvider?: Maybe<SocialLoginProvider>
   /**
    * A comma separated list of tags that have been added to the customer.
    * Additional access scope required: unauthenticated_read_customer_tags.
@@ -5634,6 +5719,7 @@ export type MetafieldParentResource =
  *
  */
 export type MetafieldReference =
+  | Article
   | Collection
   | GenericFile
   | MediaImage
@@ -5896,6 +5982,8 @@ export type Mutation = {
    *
    */
   cartBuyerIdentityUpdate?: Maybe<CartBuyerIdentityUpdatePayload>
+  /** Creates a clone of the specified cart with all personally identifiable information removed. */
+  cartClone?: Maybe<CartClonePayload>
   /**
    * Creates a new [`Cart`](https://shopify.dev/docs/api/storefront/current/objects/Cart) for a buyer session. You can optionally initialize the cart with merchandise lines, discount codes, gift card codes, buyer identity for international pricing, and custom attributes.
    *
@@ -5914,6 +6002,13 @@ export type Mutation = {
    */
   cartDeliveryAddressesRemove?: Maybe<CartDeliveryAddressesRemovePayload>
   /**
+   * Replaces all delivery addresses on a [`Cart`](https://shopify.dev/docs/api/storefront/current/objects/Cart) with a new set of addresses in a single operation. Unlike [`cartDeliveryAddressesUpdate`](https://shopify.dev/docs/api/storefront/current/mutations/cartDeliveryAddressesUpdate), which modifies existing addresses, this mutation removes all current addresses and sets the provided list as the new delivery addresses.
+   *
+   * One address can be marked as selected, and each address can be flagged for one-time use or configured with a specific validation strategy.
+   *
+   */
+  cartDeliveryAddressesReplace?: Maybe<CartDeliveryAddressesReplacePayload>
+  /**
    * Updates one or more delivery addresses on a [`Cart`](https://shopify.dev/docs/api/storefront/current/objects/Cart). Each address can be modified to change its details, set it as the pre-selected address for checkout, or mark it for one-time use so it isn't saved to the customer's account.
    *
    */
@@ -5925,6 +6020,13 @@ export type Mutation = {
    *
    */
   cartDiscountCodesUpdate?: Maybe<CartDiscountCodesUpdatePayload>
+  /**
+   * Adds gift card codes to a [`Cart`](https://shopify.dev/docs/api/storefront/current/objects/Cart) without replacing any codes already applied. Gift card codes are case-insensitive.
+   *
+   * To replace all gift card codes instead of adding to them, use [`cartGiftCardCodesUpdate`](https://shopify.dev/docs/api/storefront/current/mutations/cartGiftCardCodesUpdate).
+   *
+   */
+  cartGiftCardCodesAdd?: Maybe<CartGiftCardCodesAddPayload>
   /**
    * Removes gift cards from a [`Cart`](https://shopify.dev/docs/api/storefront/current/objects/Cart) using their IDs. You can retrieve the IDs of applied gift cards from the cart's [`appliedGiftCards`](https://shopify.dev/docs/api/storefront/current/objects/Cart#field-Cart.fields.appliedGiftCards) field.
    *
@@ -6164,6 +6266,11 @@ export type MutationCartBuyerIdentityUpdateArgs = {
 }
 
 /** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartCloneArgs = {
+  cartId: Scalars['ID']['input']
+}
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
 export type MutationCartCreateArgs = {
   input?: InputMaybe<CartInput>
 }
@@ -6181,6 +6288,12 @@ export type MutationCartDeliveryAddressesRemoveArgs = {
 }
 
 /** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartDeliveryAddressesReplaceArgs = {
+  addresses: Array<CartSelectableAddressInput>
+  cartId: Scalars['ID']['input']
+}
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
 export type MutationCartDeliveryAddressesUpdateArgs = {
   addresses: Array<CartSelectableAddressUpdateInput>
   cartId: Scalars['ID']['input']
@@ -6189,7 +6302,13 @@ export type MutationCartDeliveryAddressesUpdateArgs = {
 /** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
 export type MutationCartDiscountCodesUpdateArgs = {
   cartId: Scalars['ID']['input']
-  discountCodes?: InputMaybe<Array<Scalars['String']['input']>>
+  discountCodes: Array<Scalars['String']['input']>
+}
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartGiftCardCodesAddArgs = {
+  cartId: Scalars['ID']['input']
+  giftCardCodes: Array<Scalars['String']['input']>
 }
 
 /** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
@@ -9054,12 +9173,18 @@ export type Shop = HasMetafields &
     __typename?: 'Shop'
     /** The shop's branding configuration. */
     brand?: Maybe<Brand>
+    /** The shop's contact information. */
+    contactInformation?: Maybe<ShopPolicy>
+    /** Translations for customer accounts. */
+    customerAccountTranslations?: Maybe<Array<Translation>>
     /** The URL for the customer account (only present if shop has a customer account vanity domain). */
     customerAccountUrl?: Maybe<Scalars['String']['output']>
     /** A description of the shop. */
     description?: Maybe<Scalars['String']['output']>
     /** A globally-unique ID. */
     id: Scalars['ID']['output']
+    /** The shop's legal notice. */
+    legalNotice?: Maybe<ShopPolicy>
     /** A [custom field](https://shopify.dev/docs/apps/build/custom-data), including its `namespace` and `key`, that's associated with a Shopify resource for the purposes of adding and storing additional information. */
     metafield?: Maybe<Metafield>
     /** A list of [custom fields](/docs/apps/build/custom-data) that a merchant associates with a Shopify resource. */
@@ -9082,8 +9207,12 @@ export type Shop = HasMetafields &
     shipsToCountries: Array<CountryCode>
     /** The Shop Pay Installments pricing information for the shop. */
     shopPayInstallmentsPricing?: Maybe<ShopPayInstallmentsPricing>
+    /** The social login providers for customer accounts. */
+    socialLoginProviders: Array<SocialLoginProvider>
     /** The shop’s subscription policy. */
     subscriptionPolicy?: Maybe<ShopPolicyWithDefault>
+    /** The shop's terms of sale. */
+    termsOfSale?: Maybe<ShopPolicy>
     /** The shop’s terms of service. */
     termsOfService?: Maybe<ShopPolicy>
   }
@@ -9657,6 +9786,13 @@ export enum SitemapType {
   Product = 'PRODUCT',
 }
 
+/** A social login provider for customer accounts. */
+export type SocialLoginProvider = {
+  __typename?: 'SocialLoginProvider'
+  /** The handle of the social login provider. */
+  handle: Scalars['String']['output']
+}
+
 /**
  * Inventory information for a product variant at a physical store location that offers local pickup. Includes stock availability, quantity on hand, and estimated pickup readiness time.
  *
@@ -9925,6 +10061,15 @@ export type Trackable = {
   trackingParameters?: Maybe<Scalars['String']['output']>
 }
 
+/** Translation represents a translation of a key-value pair. */
+export type Translation = {
+  __typename?: 'Translation'
+  /** The key of the translation. */
+  key: Scalars['String']['output']
+  /** The value of the translation. */
+  value: Scalars['String']['output']
+}
+
 /**
  * The measurement data used to calculate unit prices for a [`ProductVariant`](https://shopify.dev/docs/api/storefront/current/objects/ProductVariant). Unit pricing helps customers compare costs across different package sizes by showing a standardized price, such as "$9.99 / 100ml".
  *
@@ -10133,6 +10278,18 @@ export type VideoSource = {
   width: Scalars['Int']['output']
 }
 
+/** The visitor's consent to data processing purposes for the shop. true means accepting the purposes, false means declining them, and null means that the visitor didn't express a preference. */
+export type VisitorConsent = {
+  /** The visitor accepts or rejects the analytics data processing purpose. */
+  analytics?: InputMaybe<Scalars['Boolean']['input']>
+  /** The visitor accepts or rejects the first and third party marketing data processing purposes. */
+  marketing?: InputMaybe<Scalars['Boolean']['input']>
+  /** The visitor accepts or rejects the preferences data processing purpose. */
+  preferences?: InputMaybe<Scalars['Boolean']['input']>
+  /** The visitor accepts or rejects the sale or sharing of their data with third parties. */
+  saleOfData?: InputMaybe<Scalars['Boolean']['input']>
+}
+
 /**
  * Units of measurement for weight, supporting both metric and imperial systems. Used by [`ProductVariant`](https://shopify.dev/docs/api/storefront/current/objects/ProductVariant) to specify the unit for the variant's weight value.
  *
@@ -10227,7 +10384,7 @@ export type CartFieldsFragment = {
           }
     }>
   }
-} & { ' $fragmentName'?: 'CartFieldsFragment' }
+}
 
 export type GetCartQueryVariables = Exact<{
   cartId: Scalars['ID']['input']
@@ -10235,11 +10392,86 @@ export type GetCartQueryVariables = Exact<{
 
 export type GetCartQuery = {
   __typename?: 'QueryRoot'
-  cart?:
-    | ({ __typename?: 'Cart' } & {
-        ' $fragmentRefs'?: { CartFieldsFragment: CartFieldsFragment }
-      })
-    | null
+  cart?: {
+    __typename?: 'Cart'
+    id: string
+    checkoutUrl: any
+    totalQuantity: number
+    cost: {
+      __typename?: 'CartCost'
+      totalAmount: {
+        __typename?: 'MoneyV2'
+        amount: any
+        currencyCode: CurrencyCode
+      }
+      subtotalAmount: {
+        __typename?: 'MoneyV2'
+        amount: any
+        currencyCode: CurrencyCode
+      }
+    }
+    lines: {
+      __typename?: 'BaseCartLineConnection'
+      edges: Array<{
+        __typename?: 'BaseCartLineEdge'
+        node:
+          | {
+              __typename?: 'CartLine'
+              id: string
+              quantity: number
+              merchandise: {
+                __typename?: 'ProductVariant'
+                id: string
+                title: string
+                price: {
+                  __typename?: 'MoneyV2'
+                  amount: any
+                  currencyCode: CurrencyCode
+                }
+                product: {
+                  __typename?: 'Product'
+                  handle: string
+                  title: string
+                  featuredImage?: {
+                    __typename?: 'Image'
+                    url: any
+                    altText?: string | null
+                    width?: number | null
+                    height?: number | null
+                  } | null
+                }
+              }
+            }
+          | {
+              __typename?: 'ComponentizableCartLine'
+              id: string
+              quantity: number
+              merchandise: {
+                __typename?: 'ProductVariant'
+                id: string
+                title: string
+                price: {
+                  __typename?: 'MoneyV2'
+                  amount: any
+                  currencyCode: CurrencyCode
+                }
+                product: {
+                  __typename?: 'Product'
+                  handle: string
+                  title: string
+                  featuredImage?: {
+                    __typename?: 'Image'
+                    url: any
+                    altText?: string | null
+                    width?: number | null
+                    height?: number | null
+                  } | null
+                }
+              }
+            }
+      }>
+    }
+  } | null
 }
 
 export type CartCreateMutationVariables = Exact<{
@@ -10250,11 +10482,86 @@ export type CartCreateMutation = {
   __typename?: 'Mutation'
   cartCreate?: {
     __typename?: 'CartCreatePayload'
-    cart?:
-      | ({ __typename?: 'Cart' } & {
-          ' $fragmentRefs'?: { CartFieldsFragment: CartFieldsFragment }
-        })
-      | null
+    cart?: {
+      __typename?: 'Cart'
+      id: string
+      checkoutUrl: any
+      totalQuantity: number
+      cost: {
+        __typename?: 'CartCost'
+        totalAmount: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+        subtotalAmount: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+      }
+      lines: {
+        __typename?: 'BaseCartLineConnection'
+        edges: Array<{
+          __typename?: 'BaseCartLineEdge'
+          node:
+            | {
+                __typename?: 'CartLine'
+                id: string
+                quantity: number
+                merchandise: {
+                  __typename?: 'ProductVariant'
+                  id: string
+                  title: string
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                  product: {
+                    __typename?: 'Product'
+                    handle: string
+                    title: string
+                    featuredImage?: {
+                      __typename?: 'Image'
+                      url: any
+                      altText?: string | null
+                      width?: number | null
+                      height?: number | null
+                    } | null
+                  }
+                }
+              }
+            | {
+                __typename?: 'ComponentizableCartLine'
+                id: string
+                quantity: number
+                merchandise: {
+                  __typename?: 'ProductVariant'
+                  id: string
+                  title: string
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                  product: {
+                    __typename?: 'Product'
+                    handle: string
+                    title: string
+                    featuredImage?: {
+                      __typename?: 'Image'
+                      url: any
+                      altText?: string | null
+                      width?: number | null
+                      height?: number | null
+                    } | null
+                  }
+                }
+              }
+        }>
+      }
+    } | null
     userErrors: Array<{
       __typename?: 'CartUserError'
       field?: Array<string> | null
@@ -10272,11 +10579,86 @@ export type CartLinesAddMutation = {
   __typename?: 'Mutation'
   cartLinesAdd?: {
     __typename?: 'CartLinesAddPayload'
-    cart?:
-      | ({ __typename?: 'Cart' } & {
-          ' $fragmentRefs'?: { CartFieldsFragment: CartFieldsFragment }
-        })
-      | null
+    cart?: {
+      __typename?: 'Cart'
+      id: string
+      checkoutUrl: any
+      totalQuantity: number
+      cost: {
+        __typename?: 'CartCost'
+        totalAmount: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+        subtotalAmount: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+      }
+      lines: {
+        __typename?: 'BaseCartLineConnection'
+        edges: Array<{
+          __typename?: 'BaseCartLineEdge'
+          node:
+            | {
+                __typename?: 'CartLine'
+                id: string
+                quantity: number
+                merchandise: {
+                  __typename?: 'ProductVariant'
+                  id: string
+                  title: string
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                  product: {
+                    __typename?: 'Product'
+                    handle: string
+                    title: string
+                    featuredImage?: {
+                      __typename?: 'Image'
+                      url: any
+                      altText?: string | null
+                      width?: number | null
+                      height?: number | null
+                    } | null
+                  }
+                }
+              }
+            | {
+                __typename?: 'ComponentizableCartLine'
+                id: string
+                quantity: number
+                merchandise: {
+                  __typename?: 'ProductVariant'
+                  id: string
+                  title: string
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                  product: {
+                    __typename?: 'Product'
+                    handle: string
+                    title: string
+                    featuredImage?: {
+                      __typename?: 'Image'
+                      url: any
+                      altText?: string | null
+                      width?: number | null
+                      height?: number | null
+                    } | null
+                  }
+                }
+              }
+        }>
+      }
+    } | null
     userErrors: Array<{
       __typename?: 'CartUserError'
       field?: Array<string> | null
@@ -10294,11 +10676,86 @@ export type CartLinesUpdateMutation = {
   __typename?: 'Mutation'
   cartLinesUpdate?: {
     __typename?: 'CartLinesUpdatePayload'
-    cart?:
-      | ({ __typename?: 'Cart' } & {
-          ' $fragmentRefs'?: { CartFieldsFragment: CartFieldsFragment }
-        })
-      | null
+    cart?: {
+      __typename?: 'Cart'
+      id: string
+      checkoutUrl: any
+      totalQuantity: number
+      cost: {
+        __typename?: 'CartCost'
+        totalAmount: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+        subtotalAmount: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+      }
+      lines: {
+        __typename?: 'BaseCartLineConnection'
+        edges: Array<{
+          __typename?: 'BaseCartLineEdge'
+          node:
+            | {
+                __typename?: 'CartLine'
+                id: string
+                quantity: number
+                merchandise: {
+                  __typename?: 'ProductVariant'
+                  id: string
+                  title: string
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                  product: {
+                    __typename?: 'Product'
+                    handle: string
+                    title: string
+                    featuredImage?: {
+                      __typename?: 'Image'
+                      url: any
+                      altText?: string | null
+                      width?: number | null
+                      height?: number | null
+                    } | null
+                  }
+                }
+              }
+            | {
+                __typename?: 'ComponentizableCartLine'
+                id: string
+                quantity: number
+                merchandise: {
+                  __typename?: 'ProductVariant'
+                  id: string
+                  title: string
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                  product: {
+                    __typename?: 'Product'
+                    handle: string
+                    title: string
+                    featuredImage?: {
+                      __typename?: 'Image'
+                      url: any
+                      altText?: string | null
+                      width?: number | null
+                      height?: number | null
+                    } | null
+                  }
+                }
+              }
+        }>
+      }
+    } | null
     userErrors: Array<{
       __typename?: 'CartUserError'
       field?: Array<string> | null
@@ -10316,11 +10773,86 @@ export type CartLinesRemoveMutation = {
   __typename?: 'Mutation'
   cartLinesRemove?: {
     __typename?: 'CartLinesRemovePayload'
-    cart?:
-      | ({ __typename?: 'Cart' } & {
-          ' $fragmentRefs'?: { CartFieldsFragment: CartFieldsFragment }
-        })
-      | null
+    cart?: {
+      __typename?: 'Cart'
+      id: string
+      checkoutUrl: any
+      totalQuantity: number
+      cost: {
+        __typename?: 'CartCost'
+        totalAmount: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+        subtotalAmount: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+      }
+      lines: {
+        __typename?: 'BaseCartLineConnection'
+        edges: Array<{
+          __typename?: 'BaseCartLineEdge'
+          node:
+            | {
+                __typename?: 'CartLine'
+                id: string
+                quantity: number
+                merchandise: {
+                  __typename?: 'ProductVariant'
+                  id: string
+                  title: string
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                  product: {
+                    __typename?: 'Product'
+                    handle: string
+                    title: string
+                    featuredImage?: {
+                      __typename?: 'Image'
+                      url: any
+                      altText?: string | null
+                      width?: number | null
+                      height?: number | null
+                    } | null
+                  }
+                }
+              }
+            | {
+                __typename?: 'ComponentizableCartLine'
+                id: string
+                quantity: number
+                merchandise: {
+                  __typename?: 'ProductVariant'
+                  id: string
+                  title: string
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                  product: {
+                    __typename?: 'Product'
+                    handle: string
+                    title: string
+                    featuredImage?: {
+                      __typename?: 'Image'
+                      url: any
+                      altText?: string | null
+                      width?: number | null
+                      height?: number | null
+                    } | null
+                  }
+                }
+              }
+        }>
+      }
+    } | null
     userErrors: Array<{
       __typename?: 'CartUserError'
       field?: Array<string> | null
@@ -10346,6 +10878,9 @@ export type GetCollectionQuery = {
 export type GetCollectionProductsQueryVariables = Exact<{
   handle: Scalars['String']['input']
   first: Scalars['Int']['input']
+  after?: InputMaybe<Scalars['String']['input']>
+  sortKey?: InputMaybe<ProductCollectionSortKeys>
+  reverse?: InputMaybe<Scalars['Boolean']['input']>
 }>
 
 export type GetCollectionProductsQuery = {
@@ -10354,6 +10889,11 @@ export type GetCollectionProductsQuery = {
     __typename?: 'Collection'
     products: {
       __typename?: 'ProductConnection'
+      pageInfo: {
+        __typename?: 'PageInfo'
+        hasNextPage: boolean
+        endCursor?: string | null
+      }
       edges: Array<{
         __typename?: 'ProductEdge'
         node: {
@@ -10382,8 +10922,70 @@ export type GetCollectionProductsQuery = {
   } | null
 }
 
+export type GetCollectionsQueryVariables = Exact<{
+  first: Scalars['Int']['input']
+  after?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type GetCollectionsQuery = {
+  __typename?: 'QueryRoot'
+  collections: {
+    __typename?: 'CollectionConnection'
+    pageInfo: {
+      __typename?: 'PageInfo'
+      hasNextPage: boolean
+      endCursor?: string | null
+    }
+    edges: Array<{
+      __typename?: 'CollectionEdge'
+      node: { __typename?: 'Collection'; handle: string }
+    }>
+  }
+}
+
+export type GetPageQueryVariables = Exact<{
+  handle: Scalars['String']['input']
+}>
+
+export type GetPageQuery = {
+  __typename?: 'QueryRoot'
+  page?: { __typename?: 'Page'; title: string; body: any } | null
+}
+
+export type ProductSummaryFieldsFragment = {
+  __typename?: 'Product'
+  id: string
+  handle: string
+  title: string
+  featuredImage?: {
+    __typename?: 'Image'
+    url: any
+    altText?: string | null
+    width?: number | null
+    height?: number | null
+  } | null
+  priceRange: {
+    __typename?: 'ProductPriceRange'
+    minVariantPrice: {
+      __typename?: 'MoneyV2'
+      amount: any
+      currencyCode: CurrencyCode
+    }
+  }
+}
+
+export type ProductVariantFieldsFragment = {
+  __typename?: 'ProductVariant'
+  id: string
+  title: string
+  availableForSale: boolean
+  price: { __typename?: 'MoneyV2'; amount: any; currencyCode: CurrencyCode }
+}
+
 export type GetProductQueryVariables = Exact<{
   handle: Scalars['String']['input']
+  variantFirst: Scalars['Int']['input']
+  variantAfter?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type GetProductQuery = {
@@ -10394,13 +10996,21 @@ export type GetProductQuery = {
     handle: string
     title: string
     description: string
-    featuredImage?: {
-      __typename?: 'Image'
-      url: any
-      altText?: string | null
-      width?: number | null
-      height?: number | null
-    } | null
+    descriptionHtml: any
+    tags: Array<string>
+    images: {
+      __typename?: 'ImageConnection'
+      edges: Array<{
+        __typename?: 'ImageEdge'
+        node: {
+          __typename?: 'Image'
+          url: any
+          altText?: string | null
+          width?: number | null
+          height?: number | null
+        }
+      }>
+    }
     priceRange: {
       __typename?: 'ProductPriceRange'
       minVariantPrice: {
@@ -10409,8 +11019,55 @@ export type GetProductQuery = {
         currencyCode: CurrencyCode
       }
     }
+    options: Array<{
+      __typename?: 'ProductOption'
+      name: string
+      values: Array<string>
+    }>
+    ratingMetafield?: { __typename?: 'Metafield'; value: string } | null
+    ratingCountMetafield?: { __typename?: 'Metafield'; value: string } | null
     variants: {
       __typename?: 'ProductVariantConnection'
+      pageInfo: {
+        __typename?: 'PageInfo'
+        hasNextPage: boolean
+        endCursor?: string | null
+      }
+      edges: Array<{
+        __typename?: 'ProductVariantEdge'
+        node: {
+          __typename?: 'ProductVariant'
+          id: string
+          title: string
+          availableForSale: boolean
+          price: {
+            __typename?: 'MoneyV2'
+            amount: any
+            currencyCode: CurrencyCode
+          }
+        }
+      }>
+    }
+  } | null
+}
+
+export type GetProductVariantsQueryVariables = Exact<{
+  handle: Scalars['String']['input']
+  first: Scalars['Int']['input']
+  after?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type GetProductVariantsQuery = {
+  __typename?: 'QueryRoot'
+  product?: {
+    __typename?: 'Product'
+    variants: {
+      __typename?: 'ProductVariantConnection'
+      pageInfo: {
+        __typename?: 'PageInfo'
+        hasNextPage: boolean
+        endCursor?: string | null
+      }
       edges: Array<{
         __typename?: 'ProductVariantEdge'
         node: {
@@ -10431,12 +11088,18 @@ export type GetProductQuery = {
 
 export type GetProductsQueryVariables = Exact<{
   first: Scalars['Int']['input']
+  after?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type GetProductsQuery = {
   __typename?: 'QueryRoot'
   products: {
     __typename?: 'ProductConnection'
+    pageInfo: {
+      __typename?: 'PageInfo'
+      hasNextPage: boolean
+      endCursor?: string | null
+    }
     edges: Array<{
       __typename?: 'ProductEdge'
       node: {
@@ -10462,6 +11125,68 @@ export type GetProductsQuery = {
       }
     }>
   }
+}
+
+export type GetProductRecommendationsQueryVariables = Exact<{
+  productId: Scalars['ID']['input']
+  intent?: InputMaybe<ProductRecommendationIntent>
+}>
+
+export type GetProductRecommendationsQuery = {
+  __typename?: 'QueryRoot'
+  productRecommendations?: Array<{
+    __typename?: 'Product'
+    id: string
+    handle: string
+    title: string
+    featuredImage?: {
+      __typename?: 'Image'
+      url: any
+      altText?: string | null
+      width?: number | null
+      height?: number | null
+    } | null
+    priceRange: {
+      __typename?: 'ProductPriceRange'
+      minVariantPrice: {
+        __typename?: 'MoneyV2'
+        amount: any
+        currencyCode: CurrencyCode
+      }
+    }
+  }> | null
+}
+
+export type SearchProductsQueryVariables = Exact<{
+  query: Scalars['String']['input']
+}>
+
+export type SearchProductsQuery = {
+  __typename?: 'QueryRoot'
+  predictiveSearch?: {
+    __typename?: 'PredictiveSearchResult'
+    products: Array<{
+      __typename?: 'Product'
+      id: string
+      handle: string
+      title: string
+      featuredImage?: {
+        __typename?: 'Image'
+        url: any
+        altText?: string | null
+        width?: number | null
+        height?: number | null
+      } | null
+      priceRange: {
+        __typename?: 'ProductPriceRange'
+        minVariantPrice: {
+          __typename?: 'MoneyV2'
+          amount: any
+          currencyCode: CurrencyCode
+        }
+      }
+    }>
+  } | null
 }
 
 export const CartFieldsFragmentDoc = {
@@ -10697,6 +11422,101 @@ export const CartFieldsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<CartFieldsFragment, unknown>
+export const ProductSummaryFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProductSummaryFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Product' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'featuredImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'priceRange' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'minVariantPrice' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'amount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'currencyCode' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductSummaryFieldsFragment, unknown>
+export const ProductVariantFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProductVariantFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProductVariant' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'price' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProductVariantFieldsFragment, unknown>
 export const GetCartDocument = {
   kind: 'Document',
   definitions: [
@@ -12366,6 +13186,33 @@ export const GetCollectionProductsDocument = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'after' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'sortKey' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ProductCollectionSortKeys' },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'reverse' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -12398,10 +13245,51 @@ export const GetCollectionProductsDocument = {
                         name: { kind: 'Name', value: 'first' },
                       },
                     },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'after' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'after' },
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'sortKey' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'sortKey' },
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'reverse' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'reverse' },
+                      },
+                    },
                   ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pageInfo' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'hasNextPage' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'endCursor' },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'edges' },
@@ -12518,6 +13406,160 @@ export const GetCollectionProductsDocument = {
   GetCollectionProductsQuery,
   GetCollectionProductsQueryVariables
 >
+export const GetCollectionsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetCollections' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'first' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'after' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'collections' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'first' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'first' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'after' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'after' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'pageInfo' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'hasNextPage' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endCursor' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'edges' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'node' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'handle' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetCollectionsQuery, GetCollectionsQueryVariables>
+export const GetPageDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPage' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'handle' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'page' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'handle' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'handle' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'body' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetPageQuery, GetPageQueryVariables>
 export const GetProductDocument = {
   kind: 'Document',
   definitions: [
@@ -12539,6 +13581,25 @@ export const GetProductDocument = {
               name: { kind: 'Name', value: 'String' },
             },
           },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'variantFirst' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'variantAfter' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
       ],
       selectionSet: {
@@ -12566,19 +13627,55 @@ export const GetProductDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'featuredImage' },
+                  name: { kind: 'Name', value: 'descriptionHtml' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'images' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'first' },
+                      value: { kind: 'IntValue', value: '10' },
+                    },
+                  ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'altText' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'width' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'height' },
+                        name: { kind: 'Name', value: 'edges' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'node' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'altText' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },
@@ -12611,17 +13708,121 @@ export const GetProductDocument = {
                 },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'variants' },
+                  name: { kind: 'Name', value: 'options' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'values' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'ratingMetafield' },
+                  name: { kind: 'Name', value: 'metafield' },
                   arguments: [
                     {
                       kind: 'Argument',
-                      name: { kind: 'Name', value: 'first' },
-                      value: { kind: 'IntValue', value: '10' },
+                      name: { kind: 'Name', value: 'namespace' },
+                      value: {
+                        kind: 'StringValue',
+                        value: 'reviews',
+                        block: false,
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'key' },
+                      value: {
+                        kind: 'StringValue',
+                        value: 'rating',
+                        block: false,
+                      },
                     },
                   ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'ratingCountMetafield' },
+                  name: { kind: 'Name', value: 'metafield' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'namespace' },
+                      value: {
+                        kind: 'StringValue',
+                        value: 'reviews',
+                        block: false,
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'key' },
+                      value: {
+                        kind: 'StringValue',
+                        value: 'rating_count',
+                        block: false,
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'variants' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'first' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'variantFirst' },
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'after' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'variantAfter' },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pageInfo' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'hasNextPage' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'endCursor' },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'edges' },
@@ -12635,41 +13836,10 @@ export const GetProductDocument = {
                                 kind: 'SelectionSet',
                                 selections: [
                                   {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'title' },
-                                  },
-                                  {
-                                    kind: 'Field',
+                                    kind: 'FragmentSpread',
                                     name: {
                                       kind: 'Name',
-                                      value: 'availableForSale',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'price' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'amount',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'currencyCode',
-                                          },
-                                        },
-                                      ],
+                                      value: 'ProductVariantFields',
                                     },
                                   },
                                 ],
@@ -12687,8 +13857,209 @@ export const GetProductDocument = {
         ],
       },
     },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProductVariantFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProductVariant' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'price' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<GetProductQuery, GetProductQueryVariables>
+export const GetProductVariantsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetProductVariants' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'handle' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'first' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'after' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'product' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'handle' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'handle' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'variants' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'first' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'first' },
+                      },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'after' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'after' },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pageInfo' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'hasNextPage' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'endCursor' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'edges' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'node' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'ProductVariantFields',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProductVariantFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ProductVariant' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'price' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currencyCode' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetProductVariantsQuery,
+  GetProductVariantsQueryVariables
+>
 export const GetProductsDocument = {
   kind: 'Document',
   definitions: [
@@ -12708,6 +14079,14 @@ export const GetProductsDocument = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'after' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -12724,10 +14103,35 @@ export const GetProductsDocument = {
                   name: { kind: 'Name', value: 'first' },
                 },
               },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'after' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'after' },
+                },
+              },
             ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'pageInfo' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'hasNextPage' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endCursor' },
+                      },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'edges' },
@@ -12741,72 +14145,317 @@ export const GetProductsDocument = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'handle' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'featuredImage' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'altText' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'width' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'height' },
-                                  },
-                                ],
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'ProductSummaryFields',
                               },
                             },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProductSummaryFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Product' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'featuredImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'priceRange' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'minVariantPrice' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'amount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'currencyCode' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetProductsQuery, GetProductsQueryVariables>
+export const GetProductRecommendationsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetProductRecommendations' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'productId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'intent' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ProductRecommendationIntent' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'productRecommendations' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'productId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'productId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'intent' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'intent' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ProductSummaryFields' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProductSummaryFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Product' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'featuredImage' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'priceRange' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'minVariantPrice' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'amount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'currencyCode' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetProductRecommendationsQuery,
+  GetProductRecommendationsQueryVariables
+>
+export const SearchProductsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'SearchProducts' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'query' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'predictiveSearch' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'query' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'query' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'types' },
+                value: {
+                  kind: 'ListValue',
+                  values: [{ kind: 'EnumValue', value: 'PRODUCT' }],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'products' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'handle' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'featuredImage' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'priceRange' },
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'altText' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'width' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'height' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'priceRange' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'minVariantPrice' },
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'amount' },
+                                  },
                                   {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
-                                      value: 'minVariantPrice',
-                                    },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'amount',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'currencyCode',
-                                          },
-                                        },
-                                      ],
+                                      value: 'currencyCode',
                                     },
                                   },
                                 ],
@@ -12825,4 +14474,4 @@ export const GetProductsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetProductsQuery, GetProductsQueryVariables>
+} as unknown as DocumentNode<SearchProductsQuery, SearchProductsQueryVariables>

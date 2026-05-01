@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 import { STUB_ARTICLES, BLOG_TAGS, formatArticleDate } from '@/lib/blog/stubs'
+import { cn } from '@/lib/utils'
 
 const ARTICLES_PER_PAGE = 6
 
@@ -71,11 +72,12 @@ async function BlogContent({
       <nav aria-label="Filter by tag" className="mb-10 flex flex-wrap gap-2">
         <Link
           href={tagHref(null)}
-          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+          className={cn(
+            'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
             !activeTag
               ? 'bg-primary text-background'
-              : 'border-border bg-surface hover:border-primary border'
-          }`}
+              : 'border-border bg-surface hover:border-primary border',
+          )}
         >
           All
         </Link>
@@ -83,11 +85,12 @@ async function BlogContent({
           <Link
             key={t}
             href={tagHref(t)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={cn(
+              'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
               activeTag === t
                 ? 'bg-primary text-background'
-                : 'border-border bg-surface hover:border-primary border'
-            }`}
+                : 'border-border bg-surface hover:border-primary border',
+            )}
           >
             {t}
           </Link>
@@ -156,11 +159,12 @@ async function BlogContent({
               key={p}
               href={pageHref(p)}
               aria-current={p === safePage ? 'page' : undefined}
-              className={`flex h-9 w-9 items-center justify-center rounded text-sm ${
+              className={cn(
+                'flex h-9 w-9 items-center justify-center rounded text-sm',
                 p === safePage
                   ? 'bg-primary text-background font-medium'
-                  : 'border-border text-text-muted border hover:border-primary'
-              }`}
+                  : 'border-border text-text-muted hover:border-primary border',
+              )}
             >
               {p}
             </Link>
