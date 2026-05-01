@@ -46,7 +46,7 @@ export function SortSelect({ currentSort }: { currentSort: string }) {
         id="sort-select"
         value={currentSort}
         onChange={handleChange}
-        className="border-border bg-background text-text rounded border px-3 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+        className="border-border bg-background text-text min-h-11 rounded border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
       >
         {SORT_OPTIONS.map((opt) => (
           <option key={opt.value} value={opt.value}>

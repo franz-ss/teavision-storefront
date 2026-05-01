@@ -61,7 +61,7 @@ export function ProductForm({ variants, options }: ProductFormProps) {
               aria-label={`${v.title}${!v.availableForSale ? ', out of stock' : ''}`}
               onClick={() => setSelectedVariantId(v.id)}
               className={cn(
-                'rounded border px-4 py-2 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40',
+                'min-h-11 rounded border px-4 py-2 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40',
                 selectedVariantId === v.id
                   ? 'border-primary bg-primary text-background'
                   : 'border-border hover:border-primary',

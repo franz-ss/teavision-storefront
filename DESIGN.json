@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-30T00:00:00Z",
+  "title": "Design System: Teavision",
+  "extensions": {
+    "colorMeta": {
+      "background": {
+        "role": "neutral",
+        "displayName": "Sun-Dried Parchment",
+        "canonical": "oklch(95.6% 0.012 85)",
+        "tonalRamp": [
+          "oklch(30% 0.020 85)",
+          "oklch(42% 0.022 85)",
+          "oklch(54% 0.024 85)",
+          "oklch(64% 0.026 85)",
+          "oklch(72% 0.028 85)",
+          "oklch(81% 0.030 85)",
+          "oklch(88% 0.020 85)",
+          "oklch(95.6% 0.012 85)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Aged Linen",
+        "canonical": "oklch(92.8% 0.015 83)",
+        "tonalRamp": [
+          "oklch(28% 0.018 83)",
+          "oklch(40% 0.020 83)",
+          "oklch(52% 0.022 83)",
+          "oklch(62% 0.024 83)",
+          "oklch(70% 0.026 83)",
+          "oklch(79% 0.028 83)",
+          "oklch(86% 0.020 83)",
+          "oklch(92.8% 0.015 83)"
+        ]
+      },
+      "surface-warm": {
+        "role": "neutral",
+        "displayName": "Warm Bisque",
+        "canonical": "oklch(89.5% 0.020 65)",
+        "tonalRamp": [
+          "oklch(25% 0.025 65)",
+          "oklch(38% 0.030 65)",
+          "oklch(50% 0.032 65)",
+          "oklch(60% 0.030 65)",
+          "oklch(70% 0.028 65)",
+          "oklch(78% 0.025 65)",
+          "oklch(84% 0.022 65)",
+          "oklch(89.5% 0.020 65)"
+        ]
+      },
+      "surface-sage": {
+        "role": "neutral",
+        "displayName": "Pale Herb",
+        "canonical": "oklch(88.5% 0.028 140)",
+        "tonalRamp": [
+          "oklch(20% 0.030 140)",
+          "oklch(32% 0.040 140)",
+          "oklch(44% 0.050 140)",
+          "oklch(55% 0.052 140)",
+          "oklch(65% 0.044 140)",
+          "oklch(74% 0.038 140)",
+          "oklch(82% 0.032 140)",
+          "oklch(88.5% 0.028 140)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Harvest Straw",
+        "canonical": "oklch(81.5% 0.035 82)",
+        "tonalRamp": [
+          "oklch(22% 0.025 82)",
+          "oklch(35% 0.030 82)",
+          "oklch(48% 0.032 82)",
+          "oklch(58% 0.034 82)",
+          "oklch(68% 0.035 82)",
+          "oklch(75% 0.035 82)",
+          "oklch(81.5% 0.035 82)",
+          "oklch(90% 0.020 82)"
+        ]
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Dried Sage",
+        "canonical": "oklch(51.5% 0.060 135)",
+        "tonalRamp": [
+          "oklch(15% 0.025 135)",
+          "oklch(25% 0.038 135)",
+          "oklch(35% 0.052 135)",
+          "oklch(44.5% 0.060 135)",
+          "oklch(51.5% 0.060 135)",
+          "oklch(62% 0.050 135)",
+          "oklch(74% 0.038 135)",
+          "oklch(88% 0.024 135)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Deep Sage",
+        "canonical": "oklch(44.5% 0.060 135)",
+        "tonalRamp": [
+          "oklch(12% 0.022 135)",
+          "oklch(22% 0.035 135)",
+          "oklch(32% 0.050 135)",
+          "oklch(44.5% 0.060 135)",
+          "oklch(52% 0.058 135)",
+          "oklch(62% 0.048 135)",
+          "oklch(74% 0.036 135)",
+          "oklch(87% 0.022 135)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Dark Earth",
+        "canonical": "oklch(27.5% 0.010 95)",
+        "tonalRamp": [
+          "oklch(10% 0.006 95)",
+          "oklch(18% 0.008 95)",
+          "oklch(27.5% 0.010 95)",
+          "oklch(38% 0.012 95)",
+          "oklch(50% 0.014 95)",
+          "oklch(63% 0.013 95)",
+          "oklch(75% 0.011 95)",
+          "oklch(88% 0.008 95)"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Dusty Stone",
+        "canonical": "oklch(51.0% 0.015 90)",
+        "tonalRamp": [
+          "oklch(18% 0.008 90)",
+          "oklch(28% 0.010 90)",
+          "oklch(38% 0.012 90)",
+          "oklch(51.0% 0.015 90)",
+          "oklch(62% 0.015 90)",
+          "oklch(72% 0.013 90)",
+          "oklch(82% 0.010 90)",
+          "oklch(91% 0.007 90)"
+        ]
+      },
+      "destructive": {
+        "role": "tertiary",
+        "displayName": "Terracotta",
+        "canonical": "oklch(41.5% 0.090 22)",
+        "tonalRamp": [
+          "oklch(14% 0.040 22)",
+          "oklch(24% 0.060 22)",
+          "oklch(34% 0.078 22)",
+          "oklch(41.5% 0.090 22)",
+          "oklch(52% 0.088 22)",
+          "oklch(63% 0.078 22)",
+          "oklch(75% 0.060 22)",
+          "oklch(87% 0.035 22)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines and campaign-scale headings. Moderate weight, tight tracking. Never bolded to 700+ at display size."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings, page titles, collection names."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names in cards, sub-section headers, sidebar labels."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Long-form paragraphs, product descriptions, blog copy. Max 65-75ch line length."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Badges, category chips, certification marks, trust-bar items. All-caps, tracked. Labels only — never headings or paragraphs."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-color",
+        "value": "150ms ease",
+        "purpose": "Color-only transitions on buttons and links. Fast, unobtrusive."
+      },
+      {
+        "name": "ease-border",
+        "value": "150ms ease",
+        "purpose": "Border-color transitions on product cards and interactive containers."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button Primary",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main CTA button. Used for Wholesale Apply, Add to Cart, and primary form submissions.",
+      "html": "<button class=\"ds-btn-primary\">Apply for Wholesale</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #6b7c5a; color: #f5f0e8; padding: 8px 20px; font-size: 14px; font-family: Geist, system-ui, sans-serif; font-weight: 500; border-radius: 4px; border: none; cursor: pointer; transition: background-color 150ms ease; } .ds-btn-primary:hover { background: #5a6b4a; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a; } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Button Secondary",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined action button. Used for secondary CTAs like Download Catalogue or View Details.",
+      "html": "<button class=\"ds-btn-secondary\">Download Catalogue</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: #6b7c5a; border: 1px solid #6b7c5a; padding: 8px 20px; font-size: 14px; font-family: Geist, system-ui, sans-serif; font-weight: 500; border-radius: 4px; cursor: pointer; transition: background-color 150ms ease; } .ds-btn-secondary:hover { background: #ede8de; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a; } .ds-btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Button Ghost",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Minimal action button. Used for low-priority actions like View All or Dismiss.",
+      "html": "<button class=\"ds-btn-ghost\">View all teas</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: #7a7868; border: none; padding: 8px 20px; font-size: 14px; font-family: Geist, system-ui, sans-serif; font-weight: 500; border-radius: 4px; cursor: pointer; transition: background-color 150ms ease; } .ds-btn-ghost:hover { background: #ede8de; } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a; } .ds-btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Badge Sale",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Overlaid top-left on product card images to signal a discounted product.",
+      "html": "<span class=\"ds-badge-sale\">Sale</span>",
+      "css": ".ds-badge-sale { display: inline-block; background: #d8e2d0; color: #5a6b4a; padding: 2px 6px; font-size: 0.65rem; font-family: Geist, system-ui, sans-serif; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; }"
+    },
+    {
+      "name": "Badge Out of Stock",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Overlaid top-left on product card images to signal an unavailable product.",
+      "html": "<span class=\"ds-badge-oos\">Out of Stock</span>",
+      "css": ".ds-badge-oos { display: inline-block; background: #e8ddd5; color: #8b4a42; padding: 2px 6px; font-size: 0.65rem; font-family: Geist, system-ui, sans-serif; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; }"
+    },
+    {
+      "name": "Badge New",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "Overlaid top-left on product card images to signal a recently added product.",
+      "html": "<span class=\"ds-badge-new\">New</span>",
+      "css": ".ds-badge-new { display: inline-block; background: #d4c9b0; color: #7a7868; padding: 2px 6px; font-size: 0.65rem; font-family: Geist, system-ui, sans-serif; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": null,
+      "description": "Core browsing unit on collection pages. Image-first, title, price. No excerpt, no hover-reveal panels.",
+      "html": "<a class=\"ds-product-card\" href=\"#\">\n  <div class=\"ds-product-card__image\"></div>\n  <div class=\"ds-product-card__body\">\n    <p class=\"ds-product-card__title\">Organic Sencha Green Tea</p>\n    <span class=\"ds-product-card__price\">AUD 24.00</span>\n  </div>\n</a>",
+      "css": ".ds-product-card { display: block; background: #ede8de; border: 1px solid #d4c9b0; border-radius: 4px; overflow: hidden; text-decoration: none; transition: border-color 150ms ease; } .ds-product-card:hover { border-color: #6b7c5a; } .ds-product-card:focus-visible { outline: none; box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a; } .ds-product-card__image { background: #d4c9b0; aspect-ratio: 1; width: 100%; } .ds-product-card__body { padding: 12px; } .ds-product-card__title { font-size: 14px; font-family: Geist, system-ui, sans-serif; font-weight: 500; color: #3d3d35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; } .ds-product-card:hover .ds-product-card__title { text-decoration: underline; } .ds-product-card__price { display: block; font-size: 14px; font-family: Geist, system-ui, sans-serif; color: #3d3d35; font-variant-numeric: tabular-nums; margin-top: 4px; }"
+    },
+    {
+      "name": "Navigation Header",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Top-of-page navigation. Brand mark + Shop, Wholesale (B2B priority), Cart links.",
+      "html": "<header class=\"ds-header\">\n  <nav class=\"ds-header__nav\" aria-label=\"Main navigation\">\n    <a class=\"ds-header__brand\" href=\"/\">Teavision</a>\n    <ul class=\"ds-header__links\" role=\"list\">\n      <li><a class=\"ds-header__link\" href=\"/collections/all\">Shop</a></li>\n      <li><a class=\"ds-header__link ds-header__link--wholesale\" href=\"/pages/wholesale\">Wholesale</a></li>\n      <li><a class=\"ds-header__link\" href=\"/cart\">Cart</a></li>\n    </ul>\n  </nav>\n</header>",
+      "css": ".ds-header { background: #f5f0e8; border-bottom: 1px solid #d4c9b0; padding: 12px 16px; } .ds-header__nav { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; } .ds-header__brand { font-size: 16px; font-family: Geist, system-ui, sans-serif; font-weight: 600; color: #3d3d35; text-decoration: none; } .ds-header__brand:hover { text-decoration: underline; } .ds-header__links { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; } .ds-header__link { font-size: 14px; font-family: Geist, system-ui, sans-serif; font-weight: 400; color: #3d3d35; text-decoration: none; } .ds-header__link:hover { text-decoration: underline; } .ds-header__link--wholesale { color: #6b7c5a; font-weight: 500; } .ds-header__link:focus-visible, .ds-header__brand:focus-visible { outline: none; box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a; border-radius: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Provenance Merchant",
+    "overview": "The Teavision design system is a merchant's catalog that respects its reader. The aesthetic is built from the raw material up: sand and sage aren't decorative choices — they're what tea looks like before it's brewed. The palette reads like dried herbs laid on aged paper, the type is clear and authoritative without ceremony. Nothing is here for show. Every element either carries information or stays out of the way.\n\nThis is a B2B supplier that has served St. Ali, Remedy Drinks, and 1,000+ businesses. The design earns confidence through specificity: real certification marks, named origins, actual testimonials from actual businesses. No lifestyle photography abstractions, no wellness-brand softness. The warmth comes from the materials themselves, not applied as a veneer.\n\nThe system refuses four aesthetic families: the artisan craft-tea hipster register (kraft paper, hand-stamped texture, overworked provenance theater), clinical wellness white (mint green accents, molecule graphics, pharmaceutical sterility), mass-market grocery commodity energy (primary-color banners, coupon typography, supermarket shelf logic), and the generic B2B SaaS template (pricing grids, feature checkmarks, star-rating carousels with headshots). What remains is a serious supplier's interface: grounded, warm, and precise.",
+    "keyCharacteristics": [
+      "A tonal stack of dried-botanical neutrals: sand, linen, straw, sage — no cold grays anywhere",
+      "Single Geist typeface throughout; hierarchy through weight and scale, not font switching",
+      "Flat surfaces with depth from tonal layering, no decorative shadows",
+      "One primary accent (Dried Sage green) used sparingly: CTAs, active states, sale signals",
+      "Touch-target-aware interactive elements; WCAG AA with visible sage focus rings throughout"
+    ],
+    "rules": [
+      {
+        "name": "The Dried Botanical Rule",
+        "body": "Every neutral in this system has a warm tint toward ochre or sage (H 80-140). There are no cool grays. If a neutral reads as charcoal, slate, or cool gray, it's wrong — rework with chroma raised toward the yellow-green family.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Accent Rule",
+        "body": "Dried Sage (#6b7c5a) appears on 15% or less of any given surface. Its job is to mean 'action.' If it's everywhere, it means nothing. Decorative sage touches are prohibited.",
+        "section": "colors"
+      },
+      {
+        "name": "The Single Voice Rule",
+        "body": "One font family at all sizes. Don't add a serif display font for 'warmth' or a mono font for 'technical credibility.' Geist carries every role. Atmosphere comes from the palette, not font switching.",
+        "section": "typography"
+      },
+      {
+        "name": "The Weight Ladder Rule",
+        "body": "Use weight steps of at least 100 between adjacent hierarchy levels (400 body to 500 title to 600 headline). Avoid the flat-scale trap of all-medium-weight text at slightly different sizes.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces are flat at rest. A shadow on a card is not atmospheric polish; it's visual noise that breaks the material language. Use tonal layering and border-color changes for depth and state.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the tonal stack for depth: Sun-Dried Parchment (base) to Aged Linen (card) to Warm Bisque or Pale Herb (raised). Never introduce a cool neutral.",
+      "Do lead with specifics: certification names (HACCP, ACO Organic), real origin countries, named clients (St. Ali, Remedy Drinks, MOOD Tea).",
+      "Do treat the Wholesale CTA as a primary action on every relevant surface — equal to or more prominent than Add to Cart.",
+      "Do use tabular-nums on all price displays for column alignment.",
+      "Do ensure all keyboard-focusable elements have visible sage focus rings (box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a).",
+      "Do cap body copy at 65-75ch line length.",
+      "Do reserve the uppercase/tracked label style for badges, certification marks, and category chips only."
+    ],
+    "donts": [
+      "Don't use artisan craft-tea aesthetics: hand-stamped texture overlays, kraft paper backgrounds, overworked provenance theater.",
+      "Don't use clinical wellness white: white backgrounds with mint or sage accents, pharmaceutical-sterile layouts.",
+      "Don't use mass-market grocery commodity energy: primary-color banners, coupon-style typography, sale badges that mimic supermarket shelf tags.",
+      "Don't apply generic B2B SaaS templates: pricing tables with feature-grid checkmarks, testimonial carousels with headshots and star ratings, hero metric blocks.",
+      "Don't introduce a second typeface for atmosphere. Geist handles all roles.",
+      "Don't add box-shadow to cards, list items, or content containers. The system is flat.",
+      "Don't use border-left or border-right greater than 1px as a colored accent stripe. Use a background tint from the tonal stack instead.",
+      "Don't use gradient text (background-clip: text with a gradient fill). Use Dried Sage (#6b7c5a) solid.",
+      "Don't remove the footer's keyword links for visual cleanliness. They are SEO traffic infrastructure and a hard requirement."
+    ]
+  }
+}

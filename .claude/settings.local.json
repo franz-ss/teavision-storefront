@@ -11,7 +11,9 @@
       "Bash(pnpm exec *)",
       "Bash(pnpm lint *)",
       "Bash(pnpm next *)",
-      "Bash(pnpm list *)"
+      "Bash(pnpm list *)",
+      "Bash(git -C \"D:/Work/teavision/teavision.com.au/.worktrees/feature-collection-page\" show fbf3e03)",
+      "Bash(pnpm run *)"
     ]
   }
 }

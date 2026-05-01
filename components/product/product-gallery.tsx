@@ -49,6 +49,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   width={image.width}
                   height={image.height}
                   priority={i === 0}
+                  sizes="(min-width: 1024px) calc(100vw - 464px), 100vw"
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -69,6 +70,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               key={image.url}
               type="button"
               aria-label={`View image ${i + 1}`}
+              aria-pressed={selectedIndex === i}
               onClick={() => emblaApi?.scrollTo(i)}
               className={cn(
                 'relative aspect-square overflow-hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
@@ -83,6 +85,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   alt={image.altText ?? `${title} ${i + 1}`}
                   width={image.width}
                   height={image.height}
+                  sizes="120px"
                   className="h-full w-full object-cover"
                 />
               ) : (

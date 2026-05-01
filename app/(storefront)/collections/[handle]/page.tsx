@@ -84,11 +84,11 @@ async function CollectionContent({
       />
 
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
-        <Link href="/">Home</Link>
+        <Link href="/" className="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 rounded">Home</Link>
         <span aria-hidden="true"> › </span>
-        <Link href="/collections/all">Collections</Link>
+        <Link href="/collections/all" className="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 rounded">Collections</Link>
         <span aria-hidden="true"> › </span>
-        <span>{collection.title}</span>
+        <span aria-current="page">{collection.title}</span>
       </nav>
 
       <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>

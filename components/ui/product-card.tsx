@@ -20,7 +20,7 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product.handle}`}
-      className="group border-border bg-surface block overflow-hidden rounded border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      className="group border-border bg-surface block overflow-hidden rounded border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       <div className="bg-border relative aspect-square">
         {product.featuredImage &&
@@ -32,6 +32,7 @@ export function ProductCard({
             width={product.featuredImage.width}
             height={product.featuredImage.height}
             priority={priority}
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
             className="h-full w-full object-cover"
           />
         ) : (

@@ -1,4 +1,5 @@
 import type { Money } from '@/lib/shopify/types'
+import { cn } from '@/lib/utils'
 
 type PriceProps = {
   price: Money
@@ -30,17 +31,13 @@ export function Price({
   price,
   compareAtPrice,
   size = 'md',
-  className = '',
+  className,
 }: PriceProps) {
   const formattedPrice = format(price)
 
   if (!compareAtPrice) {
     return (
-      <span
-        className={['text-text tabular-nums', sizeStyles[size], className]
-          .filter(Boolean)
-          .join(' ')}
-      >
+      <span className={cn('text-text tabular-nums', sizeStyles[size], className)}>
         {formattedPrice}
       </span>
     )
@@ -49,19 +46,15 @@ export function Price({
   const formattedCompare = format(compareAtPrice)
 
   return (
-    <span
-      className={['inline-flex items-baseline gap-2 tabular-nums', className]
-        .filter(Boolean)
-        .join(' ')}
-    >
+    <span className={cn('inline-flex items-baseline gap-2 tabular-nums', className)}>
       <span
-        className={`${compareSizeStyles[size]} text-text-muted line-through`}
+        className={cn(compareSizeStyles[size], 'text-text-muted line-through')}
         aria-label={`Was ${formattedCompare}`}
       >
         {formattedCompare}
       </span>
       <span
-        className={`${sizeStyles[size]} text-primary`}
+        className={cn(sizeStyles[size], 'text-primary')}
         aria-label={`Now ${formattedPrice}`}
       >
         {formattedPrice}

@@ -90,11 +90,11 @@ async function ProductContent({
       />
 
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
-        <Link href="/">Home</Link>
+        <Link href="/" className="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 rounded">Home</Link>
         <span aria-hidden="true"> › </span>
-        <Link href="/collections/all">Products</Link>
+        <Link href="/collections/all" className="hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 rounded">Products</Link>
         <span aria-hidden="true"> › </span>
-        <span>{product.title}</span>
+        <span aria-current="page">{product.title}</span>
       </nav>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
@@ -103,7 +103,7 @@ async function ProductContent({
         <div className="flex flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
           <h1 className="text-3xl font-bold">{product.title}</h1>
           <ProductForm variants={product.variants} options={product.options} />
-          <p className="text-text-muted">{product.description}</p>
+          <p className="text-text-muted max-w-prose">{product.description}</p>
         </div>
       </div>
     </>
