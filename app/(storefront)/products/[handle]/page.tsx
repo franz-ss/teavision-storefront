@@ -167,7 +167,7 @@ async function ProductContent({
                   key={tag}
                   className="border-border bg-surface rounded border px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-text-muted"
                 >
-                  {tag.replace(/[-_]/g, ' ')}
+                  {tag}
                 </span>
               ))}
             </div>

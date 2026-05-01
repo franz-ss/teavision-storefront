@@ -168,7 +168,7 @@ const STUB_PRODUCT: Product = {
     'Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.',
   descriptionHtml:
     '<p>Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.</p>',
-  tags: ['black-tea', 'bulk', 'assam', 'aco-organic'],
+  tags: ['Black Tea', 'Bulk', 'Assam', 'ACO Organic', 'Caffeinated'],
   images: [],
   priceRange: { minVariantPrice: { amount: '18.00', currencyCode: 'AUD' } },
   options: [{ name: 'Weight', values: ['250g', '1kg', '5kg'] }],
