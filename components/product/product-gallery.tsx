@@ -39,7 +39,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
         <div className="flex">
           {images.map((image, i) => (
             <div
-              key={i}
+              key={image.url}
               className="relative aspect-[4/3] min-w-0 flex-[0_0_100%]"
             >
               {image.width && image.height ? (
@@ -60,13 +60,10 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div
-          className="mt-2 grid gap-2"
-          style={{ gridTemplateColumns: `repeat(${images.length}, 1fr)` }}
-        >
+        <div className={cn('mt-2 grid gap-2', `grid-cols-[repeat(${images.length},1fr)]`)}>
           {images.map((image, i) => (
             <button
-              key={i}
+              key={image.url}
               type="button"
               aria-label={`View image ${i + 1}`}
               onClick={() => emblaApi?.scrollTo(i)}
