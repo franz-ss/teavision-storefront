@@ -70,16 +70,18 @@ Only on Server Actions files (`lib/*/actions.ts`). Never on a component file.
 
 - Tailwind utilities only — no CSS modules, no `style={{}}`, no inline hex values
 - Use token class names: `bg-background`, `text-primary`, `ring-ring` — not `bg-[#f5f0e8]`
-- **Always use `cn()` from `@/lib/utils` for all className composition** — no exceptions:
+- **Use `cn()` from `@/lib/utils` for all className composition** (conditionals, merging, toggling):
   ```ts
   import { cn } from '@/lib/utils'
-  // ✅
+  // ✅ conditional composition — use cn()
   cn('base', isActive && 'active', variant === 'lg' && 'text-lg')
-  cn('mt-2 grid', `grid-cols-[repeat(${n},1fr)]`)
-  // ❌ never
+  // ✅ static only — plain string is fine
+  className="flex flex-col gap-4"
+  // ❌ never — template literals or filter/join for className
   `base ${isActive ? 'active' : ''}`
   [base, conditional].filter(Boolean).join(' ')
   ```
+- **Exception:** dynamic computed values that Tailwind cannot statically extract (e.g. `repeat(${n}, 1fr)`) must use `style={{ ... }}` — Tailwind's JIT only processes static string literals
 - Palette is warm/botanical — never introduce cool grays
 
 ---
