@@ -5,7 +5,7 @@ import Script from 'next/script'
 import { notFound } from 'next/navigation'
 
 import { getProduct, getProductRecommendations } from '@/lib/shopify/operations/product'
-import { ProductCard } from '@/components/ui'
+import { ProductCard, StarRating } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 import type { ProductSummary } from '@/lib/shopify/types'
 
@@ -191,11 +191,23 @@ async function ProductContent({
 
       {/* Reviews — Trustoo widget */}
       <section className="border-border mt-12 border-t pt-10" aria-label="Customer reviews">
-        <h2 className="mb-6 text-xl font-semibold">Reviews</h2>
+        <div className="mb-6 flex flex-wrap items-baseline gap-3">
+          <h2 className="text-xl font-semibold">Reviews</h2>
+          {/* Aggregate star rating — populated by Trustoo widget on mount */}
+          <div
+            id="trustoo-aggregate-rating"
+            className="trustoo-star-rating"
+            data-product-id={numericProductId}
+          >
+            {/* Trustoo injects aggregate score here; StarRating shown as placeholder */}
+            <StarRating rating={0} size="sm" />
+          </div>
+        </div>
         {process.env.NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN ? (
           <div
             className="trustoo-widget"
             data-product-id={numericProductId}
+            data-shop={process.env.NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN}
           />
         ) : (
           <p className="text-text-muted text-sm">

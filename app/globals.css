@@ -11,6 +11,7 @@
   --color-text: #3d3d35;
   --color-text-muted: #5e5d4f;
   --color-destructive: #8b4a42;
+  --color-star: #b5763a;
 }
 
 @layer base {
