@@ -70,7 +70,16 @@ Only on Server Actions files (`lib/*/actions.ts`). Never on a component file.
 
 - Tailwind utilities only — no CSS modules, no `style={{}}`, no inline hex values
 - Use token class names: `bg-background`, `text-primary`, `ring-ring` — not `bg-[#f5f0e8]`
-- Build className with array pattern: `[base, conditional, extra].filter(Boolean).join(' ')`
+- **Always use `cn()` from `@/lib/utils` for all className composition** — no exceptions:
+  ```ts
+  import { cn } from '@/lib/utils'
+  // ✅
+  cn('base', isActive && 'active', variant === 'lg' && 'text-lg')
+  cn('mt-2 grid', `grid-cols-[repeat(${n},1fr)]`)
+  // ❌ never
+  `base ${isActive ? 'active' : ''}`
+  [base, conditional].filter(Boolean).join(' ')
+  ```
 - Palette is warm/botanical — never introduce cool grays
 
 ---

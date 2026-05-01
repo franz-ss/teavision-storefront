@@ -71,6 +71,7 @@ These anti-patterns are explicitly banned — they override any default AI behav
 - No default exports on components or lib modules (Next.js special files are excepted)
 - No `any` type — use `unknown` and narrow, or define a proper type
 - No raw hex/rgb values in className — use design token class names only (`text-primary` not `text-[#3d3d35]`)
+- No className string concatenation or `filter(Boolean).join(' ')` — always use `cn()` from `@/lib/utils`
 - No `'use client'` on parent/wrapper components — push it down to the interactive leaf
 - No new CSS modules, styled-components, or `style={{}}` attributes
 - No direct imports from `lib/shopify/types/generated/` — import via `lib/shopify/types/index.ts`
