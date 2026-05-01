@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
 import { searchProducts } from '@/lib/shopify/operations/search'
@@ -19,13 +20,16 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   }
 }
 
-export default async function SearchPage({ searchParams }: Props) {
+async function SearchContent({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>
+}) {
   const { q } = await searchParams
-
   const products = q ? await searchProducts(q) : []
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div>
       <h1 className="mb-6 text-2xl font-bold">
         {q ? `Search results for "${q}"` : 'Search'}
       </h1>
@@ -47,6 +51,16 @@ export default async function SearchPage({ searchParams }: Props) {
           ))}
         </ul>
       )}
+    </div>
+  )
+}
+
+export default function SearchPage({ searchParams }: Props) {
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-8">
+      <Suspense fallback={<div aria-live="polite">Loading…</div>}>
+        <SearchContent searchParams={searchParams} />
+      </Suspense>
     </div>
   )
 }
