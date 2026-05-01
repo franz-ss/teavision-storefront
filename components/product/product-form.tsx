@@ -35,23 +35,23 @@ export function ProductForm({ variants, options }: ProductFormProps) {
 
   if (variants.length === 0) {
     return (
-      <div className={cn('text-text-muted rounded border border-dashed p-4 text-sm')}>
+      <div className="text-text-muted rounded border border-dashed p-4 text-sm">
         No variants available
       </div>
     )
   }
 
   return (
-    <div className={cn('flex flex-col gap-4')}>
+    <div className="flex flex-col gap-4">
       {selectedVariant && (
         <Price price={selectedVariant.price} size="lg" />
       )}
 
       <fieldset>
-        <legend className={cn('mb-2 text-sm font-medium')}>
+        <legend className="mb-2 text-sm font-medium">
           {options[0]?.name ?? 'Option'}
         </legend>
-        <div className={cn('flex flex-wrap gap-2')}>
+        <div className="flex flex-wrap gap-2">
           {variants.map((v) => (
             <button
               key={v.id}
@@ -83,7 +83,7 @@ export function ProductForm({ variants, options }: ProductFormProps) {
       </Button>
 
       {error && (
-        <p role="alert" className={cn('text-destructive mt-1 text-sm')}>
+        <p role="alert" className="text-destructive mt-1 text-sm">
           {error}
         </p>
       )}

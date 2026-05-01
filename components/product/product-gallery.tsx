@@ -60,7 +60,10 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div className={cn('mt-2 grid gap-2', `grid-cols-[repeat(${images.length},1fr)]`)}>
+        <div
+          className="mt-2 grid gap-2"
+          style={{ gridTemplateColumns: `repeat(${images.length}, 1fr)` }}
+        >
           {images.map((image, i) => (
             <button
               key={image.url}

@@ -137,7 +137,7 @@ const STUB_PRODUCT: Product = {
   handle: 'english-breakfast',
   title: 'English Breakfast — Bulk Loose Leaf',
   description:
-    'Premium Assam-based black tea blend. Available in 250g, 1kg, 5kg, and 10kg.',
+    'Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.',
   images: [],
   priceRange: { minVariantPrice: { amount: '18.00', currencyCode: 'AUD' } },
   options: [{ name: 'Weight', values: ['250g', '1kg', '5kg'] }],
