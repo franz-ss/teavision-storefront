@@ -140,7 +140,7 @@ const STUB_PRODUCT: Product = {
     'Premium Assam-based black tea blend. Available in 250g, 1kg, 5kg, and 10kg.',
   images: [],
   priceRange: { minVariantPrice: { amount: '18.00', currencyCode: 'AUD' } },
-  options: [{ name: 'Weight', values: ['250g', '1kg', '5kg', '10kg'] }],
+  options: [{ name: 'Weight', values: ['250g', '1kg', '5kg'] }],
   variants: [
     {
       id: 'gid://shopify/ProductVariant/1',
