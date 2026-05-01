@@ -1,11 +1,10 @@
-import type { Metadata } from 'next'
 import { Suspense } from 'react'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
 
 import { getProduct } from '@/lib/shopify/operations/product'
-import { ProductForm } from '@/components/product'
-import { Price } from '@/components/ui'
+import { ProductForm, ProductGallery } from '@/components/product'
 
 type Props = {
   params: Promise<{ handle: string }>
@@ -18,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = product.description
     ? product.description.slice(0, 160)
     : `Buy ${product.title} from Teavision — Australia's bulk tea and herb supplier.`
-  const imageUrl = product.featuredImage?.url
+  const imageUrl = product.images[0]?.url
   return {
     title: product.title,
     description,
@@ -49,7 +48,7 @@ async function ProductContent({
     '@type': 'Product',
     name: product.title,
     description: product.description,
-    ...(product.featuredImage && { image: product.featuredImage.url }),
+    ...(product.images[0] && { image: product.images[0].url }),
     offers: {
       '@type': 'Offer',
       url: productUrl,
@@ -64,8 +63,18 @@ async function ProductContent({
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${baseUrl}/` },
-      { '@type': 'ListItem', position: 2, name: 'Products', item: `${baseUrl}/collections/all` },
-      { '@type': 'ListItem', position: 3, name: product.title, item: productUrl },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Products',
+        item: `${baseUrl}/collections/all`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: product.title,
+        item: productUrl,
+      },
     ],
   }
 
@@ -79,32 +88,21 @@ async function ProductContent({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="grid gap-8 md:grid-cols-2">
-        <div className="bg-surface relative aspect-square overflow-hidden rounded">
-          {product.featuredImage &&
-          product.featuredImage.width &&
-          product.featuredImage.height ? (
-            <Image
-              src={product.featuredImage.url}
-              alt={product.featuredImage.altText ?? product.title}
-              width={product.featuredImage.width}
-              height={product.featuredImage.height}
-              priority
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div
-              className="h-full w-full"
-              role="img"
-              aria-label={`${product.title} image`}
-            />
-          )}
-        </div>
 
-        <div className="flex flex-col gap-4">
+      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
+        <Link href="/">Home</Link>
+        <span aria-hidden="true"> › </span>
+        <Link href="/collections/all">Products</Link>
+        <span aria-hidden="true"> › </span>
+        <span>{product.title}</span>
+      </nav>
+
+      <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
+        <ProductGallery images={product.images} title={product.title} />
+
+        <div className="flex flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
           <h1 className="text-3xl font-bold">{product.title}</h1>
-          <Price price={product.priceRange.minVariantPrice} size="lg" />
-          <ProductForm variants={product.variants} />
+          <ProductForm variants={product.variants} options={product.options} />
           <p className="text-text-muted">{product.description}</p>
         </div>
       </div>

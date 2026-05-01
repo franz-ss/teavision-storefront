@@ -17,14 +17,20 @@ export type ProductVariant = {
   price: Money
 }
 
+export type ProductOption = {
+  name: string
+  values: string[]
+}
+
 export type Product = {
   id: string
   handle: string
   title: string
   description: string
-  featuredImage: ShopifyImage | null
+  images: ShopifyImage[]
   priceRange: { minVariantPrice: Money }
   variants: ProductVariant[]
+  options: ProductOption[]
 }
 
 export type ProductSummary = {

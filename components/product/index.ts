@@ -1,2 +1,2 @@
 export { ProductForm } from './product-form'
-export { VariantSelector } from './variant-selector'
+export { ProductGallery } from './product-gallery'
