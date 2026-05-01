@@ -28,6 +28,7 @@ export type Product = {
   title: string
   description: string
   descriptionHtml: string
+  tags: string[]
   images: ShopifyImage[]
   priceRange: { minVariantPrice: Money }
   variants: ProductVariant[]

@@ -17,6 +17,7 @@ const GET_PRODUCT_QUERY = /* GraphQL */ `
       title
       description
       descriptionHtml
+      tags
       images(first: 10) {
         edges {
           node {
@@ -80,12 +81,35 @@ const GET_PRODUCTS_QUERY = /* GraphQL */ `
   }
 `
 
+const GET_PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
+  query GetProductRecommendations($productId: ID!, $intent: ProductRecommendationIntent) {
+    productRecommendations(productId: $productId, intent: $intent) {
+      id
+      handle
+      title
+      featuredImage {
+        url
+        altText
+        width
+        height
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+    }
+  }
+`
+
 type ShopifyProductNode = {
   id: string
   handle: string
   title: string
   description: string
   descriptionHtml: string
+  tags: string[]
   images: {
     edges: Array<{ node: ShopifyImage }>
   }
@@ -118,6 +142,7 @@ function reshapeProduct(p: ShopifyProductNode): Product {
     title: p.title,
     description: p.description,
     descriptionHtml: p.descriptionHtml,
+    tags: p.tags,
     images: p.images.edges.map((e) => e.node),
     priceRange: p.priceRange,
     options: p.options,
@@ -143,6 +168,7 @@ const STUB_PRODUCT: Product = {
     'Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.',
   descriptionHtml:
     '<p>Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.</p>',
+  tags: ['black-tea', 'bulk', 'assam', 'aco-organic'],
   images: [],
   priceRange: { minVariantPrice: { amount: '18.00', currencyCode: 'AUD' } },
   options: [{ name: 'Weight', values: ['250g', '1kg', '5kg'] }],
@@ -210,4 +236,26 @@ export async function getProducts(first = 24): Promise<ProductSummary[]> {
   })
 
   return data.products.edges.map((e) => reshapeProductSummary(e.node))
+}
+
+export async function getProductRecommendations(
+  productId: string,
+  intent: 'RELATED' | 'COMPLEMENTARY' = 'RELATED',
+): Promise<ProductSummary[]> {
+  'use cache'
+  cacheTag('product', `product-recommendations-${productId}`)
+  cacheLife('hours')
+
+  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+    return []
+  }
+
+  const data = await shopifyFetch<{
+    productRecommendations: ShopifyProductSummaryNode[]
+  }>({
+    query: GET_PRODUCT_RECOMMENDATIONS_QUERY,
+    variables: { productId, intent },
+  })
+
+  return (data.productRecommendations ?? []).map(reshapeProductSummary)
 }
