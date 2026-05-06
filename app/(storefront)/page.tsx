@@ -32,10 +32,13 @@ async function FeaturedProducts() {
 }
 
 const CATEGORIES = [
-  { name: 'Tea', href: '/collections/tea' },
-  { name: 'Tea Bags', href: '/collections/tea-bags' },
-  { name: 'Herbs & Spices', href: '/collections/herbs-spices' },
-  { name: 'Superfood Powders', href: '/collections/superfood-powders' },
+  { name: 'Bulk Tea', href: '/collections/wholesale-bulk-tea' },
+  { name: 'Tea Bags', href: '/collections/bulk-tea-bags' },
+  { name: 'Herbs & Spices', href: '/collections/herbs-and-spices' },
+  {
+    name: 'Superfood Powders',
+    href: '/collections/superfood-extract-powders-proteins-supplements',
+  },
 ]
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'

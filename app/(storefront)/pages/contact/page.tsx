@@ -216,7 +216,7 @@ export default function ContactPage() {
               {SUPPLY_CUES.map((cue) => (
                 <li
                   key={cue}
-                  className="border-default bg-canvas rounded border px-3 py-2 text-sm font-medium"
+                  className="type-label border-default bg-canvas rounded border px-3 py-2"
                 >
                   {cue}
                 </li>
@@ -233,7 +233,7 @@ export default function ContactPage() {
               priority
               className="aspect-[4/3] h-full w-full object-cover"
             />
-            <figcaption className="border-default bg-surface text-muted border-t px-4 py-3 text-sm">
+            <figcaption className="type-body-sm border-default bg-surface text-muted border-t px-4 py-3">
               Bulk ingredients, sample requests, and custom blend briefs start
               here.
             </figcaption>
@@ -242,7 +242,7 @@ export default function ContactPage() {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
-        <nav className="mb-8 text-sm" aria-label="Breadcrumb">
+        <nav className="type-body-sm mb-8" aria-label="Breadcrumb">
           <ol className="text-muted flex items-center gap-2">
             <li>
               <Link
@@ -278,7 +278,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <dt className="text-muted type-eyebrow">{method.label}</dt>
-                    <dd className="mt-1 font-medium">
+                    <dd className="type-label text-default mt-1">
                       <a
                         href={method.href}
                         className="hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
@@ -303,7 +303,7 @@ export default function ContactPage() {
               <p className="text-muted type-eyebrow">Useful for</p>
               <ul className="mt-4 space-y-3" role="list">
                 {SUPPLY_NOTES.map((note) => (
-                  <li key={note} className="flex gap-3 text-sm leading-relaxed">
+                  <li key={note} className="type-body-sm flex gap-3">
                     <span
                       className="bg-action-primary mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
                       aria-hidden="true"

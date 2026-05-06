@@ -1,6 +1,38 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+const WHOLESALE_STATS = [
+  { stat: '1,000+', label: 'Ingredients' },
+  { stat: '500+', label: 'Certified Organic' },
+  { stat: '15+', label: 'Countries sourced' },
+  { stat: '15+', label: 'Industry awards' },
+]
+
+const WHOLESALE_INCLUSIONS = [
+  'Trade pricing on commercial bulk orders',
+  'Custom blending and private label pathways',
+  'HACCP and ACO certified supply conversations',
+  'Catalogue support, sample packs, and account guidance',
+]
+
+const WHOLESALE_PATHS = [
+  {
+    title: 'Custom blending',
+    body: 'Develop signature blends with product development support and practical commercial guidance.',
+    href: '/pages/custom-tea-blends',
+  },
+  {
+    title: 'Private label',
+    body: 'Package tea, herbs, spices, and functional blends under your own brand.',
+    href: '/pages/private-label-packing',
+  },
+  {
+    title: 'Bulk supply',
+    body: 'Plan larger orders, imports, and repeat supply with a team built for scale.',
+    href: '/pages/bulk-wholesale-supply',
+  },
+]
+
 export const metadata: Metadata = {
   title: 'Wholesale Accounts | Teavision',
   description:
@@ -16,90 +48,137 @@ export const metadata: Metadata = {
 
 export default function WholesalePage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      {/* Header */}
-      <h1 className="type-heading-02">Wholesale Accounts</h1>
-      <p className="text-muted type-body mt-4">
-        Australia&rsquo;s leading supplier of bulk tea, herbs, and spices.
-        Serving cafes, restaurants, retailers, and wellness brands since 2014.
-      </p>
+    <>
+      <section className="border-default bg-surface-sunken border-b">
+        <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
+          <nav className="type-body-sm text-muted mb-8" aria-label="Breadcrumb">
+            <ol className="flex items-center gap-2" role="list">
+              <li>
+                <Link
+                  href="/"
+                  className="text-link hover:text-link-hover focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                >
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li className="text-default" aria-current="page">
+                Wholesale
+              </li>
+            </ol>
+          </nav>
 
-      {/* Trust signals */}
-      <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4" role="list">
-        {[
-          { stat: '1,000+', label: 'Ingredients' },
-          { stat: '500+', label: 'Certified Organic' },
-          { stat: '15+', label: 'Countries Sourced' },
-          { stat: '15+', label: 'Industry Awards' },
-        ].map(({ stat, label }) => (
-          <li key={label} className="bg-surface rounded p-4 text-center">
-            <p className="text-brand text-2xl font-semibold">{stat}</p>
-            <p className="text-muted mt-1 text-sm">{label}</p>
-          </li>
-        ))}
-      </ul>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(18rem,0.28fr)] lg:items-end">
+            <div>
+              <p className="type-eyebrow text-muted">Wholesale accounts</p>
+              <h1 className="type-display-01 text-strong mt-5 max-w-4xl text-balance">
+                Bulk tea, herbs, and spices for serious buyers.
+              </h1>
+              <p className="type-body-lg text-muted mt-6 max-w-prose">
+                Access Teavision&rsquo;s ingredient range, certified supply
+                pathways, and commercial guidance for cafes, restaurants,
+                retailers, and wellness brands across Australia.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/pages/contact"
+                  className="type-label bg-action-primary text-action-primary-text hover:bg-action-primary-hover focus-visible:ring-ring inline-flex min-h-11 items-center rounded-md px-5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                >
+                  Apply for wholesale
+                </Link>
+                <Link
+                  href="/collections/all"
+                  className="type-label border-action-secondary-border text-action-secondary-text hover:bg-action-secondary-hover focus-visible:ring-ring inline-flex min-h-11 items-center rounded-md border px-5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                >
+                  Browse ingredients
+                </Link>
+              </div>
+            </div>
 
-      {/* What's included */}
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold">What&rsquo;s included</h2>
-        <ul className="mt-4 space-y-2 text-base" role="list">
-          {[
-            'Trade pricing on orders from 1kg',
-            'Custom blending and private label',
-            'HACCP and ACO certified supply chain',
-            'Dedicated account manager',
-            'Catalogue and sample packs available',
-          ].map((item) => (
-            <li key={item} className="flex items-start gap-2">
-              <span className="text-brand mt-0.5 text-sm font-semibold">-</span>
-              {item}
-            </li>
-          ))}
-        </ul>
+            <dl className="border-default bg-surface grid grid-cols-2 gap-px overflow-hidden rounded-lg border">
+              {WHOLESALE_STATS.map(({ stat, label }) => (
+                <div key={label} className="bg-surface p-4">
+                  <dt className="type-caption text-muted">{label}</dt>
+                  <dd className="type-heading-03 text-brand mt-2">{stat}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
       </section>
 
-      {/* Contact CTA */}
-      <section className="bg-surface mt-12 rounded p-8">
-        <h2 className="text-xl font-semibold">Get in touch</h2>
-        <p className="text-muted mt-2">
-          To apply for a wholesale account or request a quote, contact us
-          directly:
-        </p>
-        <dl className="mt-6 space-y-3">
-          <div>
-            <dt className="text-muted type-eyebrow">Phone</dt>
-            <dd className="mt-1 text-base font-medium">
-              <a
-                href="tel:1300729617"
-                className="hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
-              >
-                1300 729 617
-              </a>
-            </dd>
-          </div>
-          <div>
-            <dt className="text-muted type-eyebrow">Email</dt>
-            <dd className="mt-1 text-base font-medium">
-              <a
-                href="mailto:wholesale@teavision.com.au"
-                className="hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
-              >
-                wholesale@teavision.com.au
-              </a>
-            </dd>
-          </div>
-        </dl>
-        <p className="text-muted mt-6 text-sm">
-          Minimum order quantities start from 100kg for new wholesale accounts.
-          <Link
-            href="/collections/all"
-            className="text-brand ml-1 hover:underline"
-          >
-            Browse our full range
-          </Link>{' '}
-          to build your order.
-        </p>
-      </section>
-    </div>
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.3fr)]">
+          <section>
+            <p className="type-eyebrow text-muted">Supply pathways</p>
+            <h2 className="type-heading-02 text-strong mt-3">
+              Start with the right commercial route.
+            </h2>
+            <ul
+              className="mt-8 grid gap-4 md:grid-cols-3"
+              role="list"
+              aria-label="Wholesale service pathways"
+            >
+              {WHOLESALE_PATHS.map((path) => (
+                <li key={path.title}>
+                  <Link
+                    href={path.href}
+                    className="border-default bg-surface hover:border-brand focus-visible:ring-ring block h-full rounded-lg border p-5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                  >
+                    <h3 className="type-heading-04 text-strong">
+                      {path.title}
+                    </h3>
+                    <p className="type-body-sm text-muted mt-3">{path.body}</p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <aside className="border-default border-y py-6">
+            <p className="type-eyebrow text-muted">What&rsquo;s included</p>
+            <ul className="mt-5 grid gap-4" role="list">
+              {WHOLESALE_INCLUSIONS.map((item) => (
+                <li key={item} className="type-body-sm flex gap-3">
+                  <span
+                    className="bg-brand mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
+                    aria-hidden="true"
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="border-default mt-8 border-t pt-6">
+              <p className="type-eyebrow text-muted">Direct contact</p>
+              <dl className="mt-4 grid gap-4">
+                <div>
+                  <dt className="type-caption text-muted">Phone</dt>
+                  <dd className="type-label mt-1">
+                    <a
+                      href="tel:1300729617"
+                      className="text-link hover:text-link-hover focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    >
+                      1300 729 617
+                    </a>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="type-caption text-muted">Email</dt>
+                  <dd className="type-label mt-1">
+                    <a
+                      href="mailto:wholesale@teavision.com.au"
+                      className="text-link hover:text-link-hover focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    >
+                      wholesale@teavision.com.au
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </>
   )
 }
