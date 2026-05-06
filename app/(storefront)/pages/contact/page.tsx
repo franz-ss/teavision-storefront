@@ -23,8 +23,6 @@ const PHONE_HREF = 'tel:1300729617'
 const EMAIL = 'info@teavision.com.au'
 const EMAIL_HREF = 'mailto:info@teavision.com.au'
 const ADDRESS = '29 Palladium Circuit, Clyde North VIC 3978'
-const IMAGE_SRC =
-  'https://images.pexels.com/photos/7303163/pexels-photo-7303163.jpeg?auto=compress&cs=tinysrgb&w=1200'
 
 const SUPPLY_CUES = [
   'Wholesale account support',
@@ -223,21 +221,6 @@ export default function ContactPage() {
               ))}
             </ul>
           </div>
-
-          <figure className="border-default bg-surface overflow-hidden rounded border">
-            <Image
-              src={IMAGE_SRC}
-              alt="Loose leaf tea steeping in glassware, showing the ingredient texture Teavision supplies."
-              width={1200}
-              height={900}
-              priority
-              className="aspect-[4/3] h-full w-full object-cover"
-            />
-            <figcaption className="type-body-sm border-default bg-surface text-muted border-t px-4 py-3">
-              Bulk ingredients, sample requests, and custom blend briefs start
-              here.
-            </figcaption>
-          </figure>
         </div>
       </section>
 
