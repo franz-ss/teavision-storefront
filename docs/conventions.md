@@ -30,11 +30,21 @@ Canonical reference for this codebase. Check here before adding files.
 | Thing                 | Convention                  | Example                               |
 | --------------------- | --------------------------- | ------------------------------------- |
 | File names            | kebab-case                  | `product-card.tsx`, `sort-select.tsx` |
+| Component folders     | kebab-case                  | `components/ui/product-card/`         |
 | Component exports     | PascalCase named export     | `export function ProductCard(`        |
 | Server Action exports | camelCase + "Action" suffix | `addToCartAction`, `getCartAction`    |
 | Lib operation exports | camelCase verb + noun       | `getProduct`, `getCollection`         |
 
 File name and export name are different things. `product-card.tsx` exports `ProductCard`.
+
+Each component lives in its own folder:
+
+```text
+components/<domain>/<component-name>/
+|-- <component-name>.tsx
+|-- <component-name>.stories.tsx
+`-- index.ts
+```
 
 ---
 
@@ -74,15 +84,15 @@ Only on Server Actions files (`lib/*/actions.ts`). Never on a component file.
 - Tailwind utilities only — no CSS modules, no `style={{}}`, no inline hex values
 - Use token class names: `bg-canvas`, `text-default`, `text-brand`, `border-default`, `ring-ring` — not `bg-[#f5f0e8]`
 - **Use `cn()` from `@/lib/utils` for all className composition** (conditionals, merging, toggling):
-  ```ts
+  ```tsx
   import { cn } from '@/lib/utils'
   // ✅ conditional composition — use cn()
   cn('base', isActive && 'active', variant === 'lg' && 'text-lg')
   // ✅ static only — plain string is fine
-  className="flex flex-col gap-4"
+  ;<div className="flex flex-col gap-4" />
   // ❌ never — template literals or filter/join for className
-  `base ${isActive ? 'active' : ''}`
-  [base, conditional].filter(Boolean).join(' ')
+  const className = `base ${isActive ? 'active' : ''}`
+  const className = [base, conditional].filter(Boolean).join(' ')
   ```
 - **Exception:** dynamic computed values that Tailwind cannot statically extract (e.g. `repeat(${n}, 1fr)`) must use `style={{ ... }}` — Tailwind's JIT only processes static string literals
 - Palette is warm/botanical — never introduce cool grays
@@ -91,25 +101,25 @@ Only on Server Actions files (`lib/*/actions.ts`). Never on a component file.
 
 ## Where new things go
 
-| I'm adding a…                                        | Put it in…                             |
-| ---------------------------------------------------- | -------------------------------------- |
-| Reusable UI primitive (button, badge, price display) | `components/ui/`                       |
-| Domain feature component                             | `components/<domain>/`                 |
-| Page layout wrapper                                  | `components/layout/`                   |
-| Shopify data fetch function                          | `lib/shopify/operations/<domain>.ts`   |
-| Shopify GraphQL query                                | `lib/shopify/queries/<domain>.graphql` |
-| Cart/checkout mutation                               | `lib/cart/actions.ts`                  |
-| New exported type                                    | `lib/shopify/types/index.ts`           |
-| SEO helper                                           | `lib/seo/`                             |
+| I'm adding a…                                        | Put it in…                              |
+| ---------------------------------------------------- | --------------------------------------- |
+| Reusable UI primitive (button, badge, price display) | `components/ui/<component-name>/`       |
+| Domain feature component                             | `components/<domain>/<component-name>/` |
+| Page layout wrapper                                  | `components/layout/<component-name>/`   |
+| Shopify data fetch function                          | `lib/shopify/operations/<domain>.ts`    |
+| Shopify GraphQL query                                | `lib/shopify/queries/<domain>.graphql`  |
+| Cart/checkout mutation                               | `lib/cart/actions.ts`                   |
+| New exported type                                    | `lib/shopify/types/index.ts`            |
+| SEO helper                                           | `lib/seo/`                              |
 
 ---
 
 ## Scaffolding shortcuts
 
 ```bash
-npm run create:component -- ui/my-component       # component + story + barrel update
-npm run create:component -- product/my-feature    # domain component + story + barrel update
-npm run create:lib -- blog/operations             # new lib module
+pnpm create:component -- ui/my-component       # component folder + story + barrels
+pnpm create:component -- product/my-feature    # domain component folder + story + barrels
+pnpm create:lib -- blog/operations             # new lib module
 ```
 
 ---
@@ -117,6 +127,6 @@ npm run create:lib -- blog/operations             # new lib module
 ## Import style
 
 - Use barrel imports for cross-domain component imports: `@/components/ui`, `@/components/product`
-- Use relative imports for within-domain: `./badge`, `./price` (avoids circular import risk)
+- Use relative imports for within-domain: `../badge`, `../price` (avoids circular import risk)
 - Use direct file paths for `lib/` imports: `@/lib/cart/actions`, `@/lib/shopify/operations/product`
 - `lib/` does NOT have barrels — import by explicit path

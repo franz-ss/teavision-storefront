@@ -1,3 +1,4 @@
+import { cva } from 'class-variance-authority'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -17,15 +18,44 @@ type ArticleCardArticle = {
   readingTimeMinutes: number
 }
 
-type ArticleCardProps = {
+export type ArticleCardVariant = 'default' | 'featured'
+
+export type ArticleCardProps = {
   article: ArticleCardArticle
   href: string
   publishedLabel: string
-  variant?: 'default' | 'featured'
+  variant?: ArticleCardVariant
   headingLevel?: 'h2' | 'h3'
   priority?: boolean
   className?: string
 }
+
+const articleHeadingVariants = cva(
+  'text-strong group-hover:text-brand line-clamp-2 transition-colors',
+  {
+    variants: {
+      variant: {
+        default: 'type-heading-03',
+        featured: 'type-heading-02',
+      } satisfies Record<ArticleCardVariant, string>,
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  },
+)
+
+const articleExcerptVariants = cva('text-muted mt-3 line-clamp-3', {
+  variants: {
+    variant: {
+      default: 'type-body-sm',
+      featured: 'type-body',
+    } satisfies Record<ArticleCardVariant, string>,
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+})
 
 export function ArticleCard({
   article,
@@ -82,21 +112,11 @@ export function ArticleCard({
             </div>
           )}
 
-          <Heading
-            className={cn(
-              'text-strong group-hover:text-brand line-clamp-2 transition-colors',
-              isFeatured ? 'type-heading-02' : 'type-heading-03',
-            )}
-          >
+          <Heading className={articleHeadingVariants({ variant })}>
             {article.title}
           </Heading>
 
-          <p
-            className={cn(
-              'text-muted mt-3 line-clamp-3',
-              isFeatured ? 'type-body' : 'type-body-sm',
-            )}
-          >
+          <p className={articleExcerptVariants({ variant })}>
             {article.excerpt}
           </p>
 

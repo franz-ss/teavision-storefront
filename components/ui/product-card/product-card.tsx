@@ -3,8 +3,8 @@ import Link from 'next/link'
 
 import type { ProductSummary } from '@/lib/shopify/types'
 
-import { Badge, type BadgeVariant } from './badge'
-import { Price } from './price'
+import { Badge, type BadgeVariant } from '../badge'
+import { Price } from '../price'
 
 type ProductCardProps = {
   product: ProductSummary
@@ -20,7 +20,7 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product.handle}`}
-      className="group border-default bg-surface block overflow-hidden rounded border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      className="border-default bg-surface hover:border-brand focus-visible:ring-ring group block h-full overflow-hidden rounded-lg border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
     >
       <div className="bg-surface-sunken relative aspect-square">
         {product.featuredImage &&
@@ -32,8 +32,8 @@ export function ProductCard({
             width={product.featuredImage.width}
             height={product.featuredImage.height}
             priority={priority}
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-            className="h-full w-full object-cover"
+            sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
         ) : (
           <div className="h-full w-full" aria-hidden="true" />
@@ -45,14 +45,14 @@ export function ProductCard({
         )}
       </div>
 
-      <div className="p-3">
-        <p className="text-default truncate text-sm font-medium group-hover:underline">
+      <div className="p-4">
+        <p className="type-label text-strong group-hover:text-brand line-clamp-2 transition-colors">
           {product.title}
         </p>
         <Price
           price={product.priceRange.minVariantPrice}
           size="sm"
-          className="mt-1"
+          className="mt-2"
         />
       </div>
     </Link>

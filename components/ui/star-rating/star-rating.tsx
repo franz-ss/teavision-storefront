@@ -1,19 +1,44 @@
+import { cva } from 'class-variance-authority'
+
 import { cn } from '@/lib/utils'
 
-type StarRatingProps = {
+export type StarRatingSize = 'sm' | 'md' | 'lg'
+
+export type StarRatingProps = {
   rating: number
   count?: number
-  size?: 'sm' | 'md' | 'lg'
+  size?: StarRatingSize
   className?: string
 }
 
-const sizeMap = {
-  sm: { star: 12, text: 'text-xs' },
-  md: { star: 16, text: 'text-sm' },
-  lg: { star: 20, text: 'text-base' },
+const starSizeBySize: Record<StarRatingSize, number> = {
+  sm: 12,
+  md: 16,
+  lg: 20,
 }
 
-function Star({ fill, size, index }: { fill: 'full' | 'half' | 'empty'; size: number; index: number }) {
+const ratingTextVariants = cva('text-muted tabular-nums', {
+  variants: {
+    size: {
+      sm: 'text-xs',
+      md: 'text-sm',
+      lg: 'text-base',
+    } satisfies Record<StarRatingSize, string>,
+  },
+  defaultVariants: {
+    size: 'md',
+  },
+})
+
+function Star({
+  fill,
+  size,
+  index,
+}: {
+  fill: 'full' | 'half' | 'empty'
+  size: number
+  index: number
+}) {
   const id = `star-half-${index}`
   return (
     <svg
@@ -48,8 +73,13 @@ function Star({ fill, size, index }: { fill: 'full' | 'half' | 'empty'; size: nu
   )
 }
 
-export function StarRating({ rating, count, size = 'md', className }: StarRatingProps) {
-  const { star: starSize, text } = sizeMap[size]
+export function StarRating({
+  rating,
+  count,
+  size = 'md',
+  className,
+}: StarRatingProps) {
+  const starSize = starSizeBySize[size]
   const clamped = Math.min(5, Math.max(0, rating))
 
   const stars = Array.from({ length: 5 }, (_, i) => {
@@ -63,13 +93,13 @@ export function StarRating({ rating, count, size = 'md', className }: StarRating
       className={cn('inline-flex items-center gap-1.5', className)}
       aria-label={`${clamped.toFixed(1)} out of 5 stars${count !== undefined ? `, ${count} ${count === 1 ? 'review' : 'reviews'}` : ''}`}
     >
-      <div className="flex text-accent" role="img" aria-hidden="true">
+      <div className="text-accent flex" role="img" aria-hidden="true">
         {stars.map((fill, i) => (
           <Star key={i} fill={fill} size={starSize} index={i} />
         ))}
       </div>
       {count !== undefined && (
-        <span className={cn('text-muted tabular-nums', text)}>
+        <span className={ratingTextVariants({ size })}>
           ({count.toLocaleString()})
         </span>
       )}

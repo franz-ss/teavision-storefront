@@ -10,7 +10,7 @@ import {
 import type { NewsletterSignupActionResult } from '@/lib/contact/actions'
 import { cn } from '@/lib/utils'
 
-import { Button } from './button'
+import { Button } from '../button'
 
 type NewsletterSignupProps = {
   action: (formData: FormData) => Promise<NewsletterSignupActionResult>

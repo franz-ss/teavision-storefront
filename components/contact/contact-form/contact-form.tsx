@@ -43,7 +43,7 @@ const DEFAULT_ERROR =
 const labelClassName = 'text-muted type-eyebrow'
 
 const inputClassName =
-  'mt-2 min-h-11 w-full rounded border border-default bg-canvas px-4 py-3 text-base text-default transition-colors placeholder:text-muted/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-ring/20'
+  'type-body mt-2 min-h-11 w-full rounded border border-default bg-canvas px-4 py-3 text-default transition-colors placeholder:text-muted/70 focus:border-brand focus:ring-2 focus:ring-ring/20 focus:outline-none'
 
 export function ContactForm({
   action,
@@ -90,10 +90,10 @@ export function ContactForm({
     return (
       <div className="border-success/30 bg-success rounded border p-6">
         <p className={labelClassName}>Enquiry received</p>
-        <h2 className="mt-4 text-2xl font-semibold">
+        <h2 className="type-heading-03 text-strong mt-4">
           Thanks for your message.
         </h2>
-        <p className="text-muted mt-3 max-w-xl leading-relaxed">
+        <p className="type-body text-muted mt-3 max-w-xl">
           We&rsquo;ll review the details and come back to you shortly. If your
           request is time-sensitive, call 1300 729 617.
         </p>
@@ -117,8 +117,8 @@ export function ContactForm({
     >
       <div>
         <p className={labelClassName}>Procurement desk</p>
-        <h2 className="mt-3 text-2xl font-semibold">Start an enquiry</h2>
-        <p className="text-muted mt-3 max-w-2xl leading-relaxed">
+        <h2 className="type-heading-03 text-strong mt-3">Start an enquiry</h2>
+        <p className="type-body text-muted mt-3 max-w-2xl">
           Tell us what you need sourced, blended, packed, or quoted. A short
           brief is enough to start the conversation.
         </p>
@@ -210,14 +210,14 @@ export function ContactForm({
         <p
           id="contact-form-error"
           role="alert"
-          className="border-danger/30 bg-danger text-danger rounded border p-4 text-sm"
+          className="type-body-sm border-danger/30 bg-danger text-danger rounded border p-4"
         >
           {error}
         </p>
       )}
 
       <div className="border-default flex flex-col gap-3 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-muted text-sm">
+        <p className="type-body-sm text-muted">
           We reply from Teavision during Australian business hours.
         </p>
         <Button

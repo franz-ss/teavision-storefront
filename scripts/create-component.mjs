@@ -1,5 +1,11 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync, writeFileSync, appendFileSync } from 'node:fs'
+import {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -21,7 +27,9 @@ const domainDir = join(root, 'components', domain)
 
 if (!existsSync(domainDir)) {
   console.error(`Domain folder does not exist: components/${domain}/`)
-  console.error(`Available domains: ui, layout, product, collection, cart`)
+  console.error(
+    `Available domains: ui, layout, product, collection, cart, contact`,
+  )
   process.exit(1)
 }
 
@@ -30,16 +38,20 @@ const componentName = componentKebab
   .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
   .join('')
 
-const componentPath = join(domainDir, `${componentKebab}.tsx`)
-const storyPath = join(domainDir, `${componentKebab}.stories.tsx`)
+const componentDir = join(domainDir, componentKebab)
+const componentPath = join(componentDir, `${componentKebab}.tsx`)
+const storyPath = join(componentDir, `${componentKebab}.stories.tsx`)
+const componentIndexPath = join(componentDir, 'index.ts')
 const barrelPath = join(domainDir, 'index.ts')
 
-if (existsSync(componentPath)) {
-  console.error(`Already exists: components/${domain}/${componentKebab}.tsx`)
+if (existsSync(componentDir)) {
+  console.error(`Already exists: components/${domain}/${componentKebab}/`)
   process.exit(1)
 }
 
 const domainTitle = domain.charAt(0).toUpperCase() + domain.slice(1)
+
+mkdirSync(componentDir, { recursive: true })
 
 writeFileSync(
   componentPath,
@@ -56,6 +68,8 @@ export function ${componentName}({ className = '' }: ${componentName}Props) {
 }
 `,
 )
+
+writeFileSync(componentIndexPath, `export * from './${componentKebab}'\n`)
 
 writeFileSync(
   storyPath,
@@ -78,7 +92,7 @@ export const Default: Story = {
 `,
 )
 
-const exportLine = `export { ${componentName} } from './${componentKebab}'\n`
+const exportLine = `export * from './${componentKebab}'\n`
 
 if (!existsSync(barrelPath)) {
   writeFileSync(barrelPath, exportLine)
@@ -89,6 +103,9 @@ if (!existsSync(barrelPath)) {
   }
 }
 
-console.log(`✓ components/${domain}/${componentKebab}.tsx`)
-console.log(`✓ components/${domain}/${componentKebab}.stories.tsx`)
+console.log(`✓ components/${domain}/${componentKebab}/${componentKebab}.tsx`)
+console.log(`✓ components/${domain}/${componentKebab}/index.ts`)
+console.log(
+  `✓ components/${domain}/${componentKebab}/${componentKebab}.stories.tsx`,
+)
 console.log(`✓ components/${domain}/index.ts updated`)
