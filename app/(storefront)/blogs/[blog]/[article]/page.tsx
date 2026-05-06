@@ -1,121 +1,253 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
-import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 
-import { getArticleByHandle, formatArticleDate } from '@/lib/blog/stubs'
+import {
+  formatArticleDate,
+  getArticle,
+  getArticlePath,
+  getBlog,
+  getBlogPath,
+  getTagPath,
+  normalizeBlogHandle,
+} from '@/lib/blog/operations'
+import { cn } from '@/lib/utils'
 
 type Props = {
   params: Promise<{ blog: string; article: string }>
 }
 
+const ARTICLE_BODY_CLASS_NAME =
+  'type-body space-y-6 break-words text-default [&_a]:text-link [&_a]:underline [&_a]:underline-offset-4 [&_blockquote]:type-body-lg [&_blockquote]:border [&_blockquote]:border-default [&_blockquote]:bg-surface [&_blockquote]:rounded-lg [&_blockquote]:p-5 [&_blockquote]:italic [&_h2]:type-heading-02 [&_h2]:mt-10 [&_h3]:type-heading-03 [&_h3]:mt-8 [&_img]:my-8 [&_img]:h-auto [&_img]:rounded-lg [&_img]:border [&_img]:border-default [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:text-default [&_strong]:type-label [&_ul]:list-disc [&_ul]:pl-6'
+
+function articleDescription(article: Awaited<ReturnType<typeof getArticle>>) {
+  return article?.seo.description ?? article?.excerpt.slice(0, 160) ?? ''
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { blog, article: handle } = await params
-  const article = getArticleByHandle(handle)
+  const normalizedBlog = normalizeBlogHandle(blog)
+  const article = await getArticle(normalizedBlog, handle)
   if (!article) return { title: 'Article not found' }
-  const description = article.excerpt.slice(0, 160)
+
+  const description = articleDescription(article)
+  const title = article.seo.title ?? article.title
+  const canonical = getArticlePath(normalizedBlog, handle)
+
   return {
-    title: article.title,
+    title,
     description,
     openGraph: {
-      title: article.title,
+      title,
       description,
-      url: `/blogs/${blog}/${handle}`,
+      url: canonical,
       type: 'article',
       publishedTime: article.publishedAt,
+      images: article.featuredImage
+        ? [
+            {
+              url: article.featuredImage.url,
+              alt: article.featuredImage.altText ?? article.title,
+            },
+          ]
+        : undefined,
     },
-    alternates: { canonical: `/blogs/${blog}/${handle}` },
+    alternates: { canonical },
   }
 }
 
-async function ArticleContent({
-  params,
-}: {
-  params: Promise<{ blog: string; article: string }>
-}) {
+async function ArticleContent({ params }: Props) {
   const { blog, article: handle } = await params
-  const article = getArticleByHandle(handle)
-  if (!article) notFound()
+  const normalizedBlog = normalizeBlogHandle(blog)
+  const [article, blogData] = await Promise.all([
+    getArticle(normalizedBlog, handle),
+    getBlog(normalizedBlog),
+  ])
+
+  if (!article || !blogData) notFound()
+
+  const articleIndex = blogData.articles.findIndex(
+    (item) => item.handle === article.handle,
+  )
+  const newerArticle =
+    articleIndex > 0 ? blogData.articles[articleIndex - 1] : null
+  const olderArticle =
+    articleIndex >= 0 && articleIndex < blogData.articles.length - 1
+      ? blogData.articles[articleIndex + 1]
+      : null
+  const description = articleDescription(article)
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: article.title,
+    description,
+    datePublished: article.publishedAt,
+    dateModified: article.publishedAt,
+    author: {
+      '@type': 'Person',
+      name: article.authorName ?? 'Teavision Team',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Teavision',
+    },
+    image: article.featuredImage ? [article.featuredImage.url] : undefined,
+    mainEntityOfPage: getArticlePath(normalizedBlog, article.handle),
+  }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="text-text-muted mb-8 text-sm">
-        <ol className="flex items-center gap-2" role="list">
-          <li>
-            <Link
-              href={`/blogs/${blog}`}
-              className="hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
-            >
-              Tea Journal
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li className="truncate" aria-current="page">
-            {article.title}
-          </li>
-        </ol>
-      </nav>
-
-      {/* Featured image placeholder */}
-      <div
-        className="bg-border mb-8 aspect-video rounded"
-        role="img"
-        aria-label={`Featured image for ${article.title}`}
+    <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Tags */}
-      {article.tags.length > 0 && (
-        <div className="mb-4 flex flex-wrap gap-2">
-          {article.tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-surface border-border rounded-full border px-3 py-1 text-xs font-semibold tracking-wide uppercase"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Title */}
-      <h1 className="text-3xl leading-tight font-bold md:text-4xl">
-        {article.title}
-      </h1>
-
-      {/* Meta */}
-      <div className="text-text-muted mt-4 flex items-center gap-3 text-sm">
-        <time dateTime={article.publishedAt}>
-          {formatArticleDate(article.publishedAt)}
-        </time>
-        <span aria-hidden="true">·</span>
-        <span>{article.readingTimeMinutes} min read</span>
-      </div>
-
-      {/* Excerpt lead */}
-      <p className="text-text-muted bg-surface rounded px-4 py-3 mt-6 text-lg leading-relaxed italic">
-        {article.excerpt}
-      </p>
-
-      {/* Article body */}
-      <article className="mt-8 space-y-8">
-        {article.sections.map((section) => (
-          <section key={section.heading}>
-            <h2 className="mb-3 text-xl font-semibold">{section.heading}</h2>
-            <p className="text-text-muted leading-relaxed">{section.body}</p>
-          </section>
-        ))}
-      </article>
-
-      {/* Back link */}
-      <div className="border-border mt-12 border-t pt-8">
-        <Link
-          href={`/blogs/${blog}`}
-          className="text-primary hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
+      <article className="mx-auto max-w-4xl px-4 py-12">
+        <nav
+          aria-label="Breadcrumb"
+          className="type-body-sm text-muted mx-auto mb-8 max-w-prose"
         >
-          ← Back to Tea Journal
-        </Link>
-      </div>
+          <ol className="flex items-center gap-2" role="list">
+            <li>
+              <Link
+                href={getBlogPath(normalizedBlog)}
+                className="text-link hover:text-link-hover focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                Tea Journal
+              </Link>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li className="text-default truncate" aria-current="page">
+              {article.title}
+            </li>
+          </ol>
+        </nav>
+
+        {article.tags.length > 0 && (
+          <div className="mx-auto mb-5 flex max-w-prose flex-wrap gap-2">
+            {article.tags.map((tag) => (
+              <Link
+                key={tag}
+                href={getTagPath(normalizedBlog, tag)}
+                className="type-eyebrow border-default bg-surface hover:border-brand focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full border px-3 py-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                {tag}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        <h1 className="type-heading-01 text-strong mx-auto max-w-prose">
+          {article.title}
+        </h1>
+
+        <div className="type-body-sm text-muted mx-auto mt-5 flex max-w-prose flex-wrap items-center gap-3">
+          <time dateTime={article.publishedAt}>
+            {formatArticleDate(article.publishedAt)}
+          </time>
+          <span aria-hidden="true">·</span>
+          <span>{article.readingTimeMinutes} min read</span>
+          {article.authorName && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>{article.authorName}</span>
+            </>
+          )}
+        </div>
+
+        {article.featuredImage &&
+          article.featuredImage.width &&
+          article.featuredImage.height && (
+            <div className="bg-surface-sunken mt-8 overflow-hidden rounded-lg">
+              <Image
+                src={article.featuredImage.url}
+                alt={article.featuredImage.altText ?? article.title}
+                width={article.featuredImage.width}
+                height={article.featuredImage.height}
+                priority
+                sizes="(min-width: 1024px) 896px, 100vw"
+                className="h-auto w-full object-cover"
+              />
+            </div>
+          )}
+
+        {article.excerpt && (
+          <p className="type-body-lg border-default bg-surface text-muted mx-auto mt-8 max-w-prose rounded-lg border p-5 italic">
+            {article.excerpt}
+          </p>
+        )}
+
+        <div
+          className={cn(ARTICLE_BODY_CLASS_NAME, 'mx-auto mt-10 max-w-prose')}
+          dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+        />
+
+        {(newerArticle || olderArticle) && (
+          <nav
+            aria-label="Adjacent articles"
+            className="border-default mx-auto mt-12 grid max-w-prose gap-4 border-t pt-8 sm:grid-cols-2"
+          >
+            {olderArticle ? (
+              <Link
+                href={getArticlePath(normalizedBlog, olderArticle.handle)}
+                className="border-default bg-surface hover:border-brand focus-visible:ring-ring rounded-lg border p-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <span className="type-eyebrow text-muted">Previous Post</span>
+                <span className="type-heading-03 text-strong mt-2 block">
+                  {olderArticle.title}
+                </span>
+              </Link>
+            ) : (
+              <span />
+            )}
+
+            {newerArticle && (
+              <Link
+                href={getArticlePath(normalizedBlog, newerArticle.handle)}
+                className="border-default bg-surface hover:border-brand focus-visible:ring-ring rounded-lg border p-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:text-right"
+              >
+                <span className="type-eyebrow text-muted">Next Post</span>
+                <span className="type-heading-03 text-strong mt-2 block">
+                  {newerArticle.title}
+                </span>
+              </Link>
+            )}
+          </nav>
+        )}
+
+        {article.comments.length > 0 && (
+          <section className="border-default mx-auto mt-12 max-w-prose border-t pt-8">
+            <h2 className="type-heading-03 text-strong">
+              Comments {article.comments.length}
+            </h2>
+            <ul className="mt-5 space-y-4" role="list">
+              {article.comments.map((comment) => (
+                <li
+                  key={comment.id}
+                  className="border-default bg-surface rounded-lg border p-4"
+                >
+                  <p className="type-label text-strong">{comment.authorName}</p>
+                  <div
+                    className="type-body-sm text-default mt-3"
+                    dangerouslySetInnerHTML={{ __html: comment.contentHtml }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <div className="border-default mx-auto mt-12 max-w-prose border-t pt-8">
+          <Link
+            href={getBlogPath(normalizedBlog)}
+            className="type-label text-link hover:text-link-hover focus-visible:ring-ring inline-flex min-h-11 items-center hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            Back to Tea Journal
+          </Link>
+        </div>
+      </article>
     </div>
   )
 }
@@ -124,8 +256,11 @@ export default function ArticlePage({ params }: Props) {
   return (
     <Suspense
       fallback={
-        <div className="px-4 py-12" aria-live="polite">
-          Loading article…
+        <div
+          className="type-body text-muted mx-auto max-w-4xl px-4 py-12"
+          aria-live="polite"
+        >
+          Loading article...
         </div>
       }
     >

@@ -1,0 +1,93 @@
+query GetBlog($handle: String!, $first: Int!, $after: String) {
+  blog(handle: $handle) {
+    id
+    handle
+    title
+    seo {
+      title
+      description
+    }
+    articles(
+      first: $first
+      after: $after
+      sortKey: PUBLISHED_AT
+      reverse: true
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          handle
+          title
+          content(truncateAt: 1200)
+          excerpt(truncateAt: 240)
+          excerptHtml
+          image {
+            url
+            altText
+            width
+            height
+          }
+          publishedAt
+          tags
+          authorV2 {
+            name
+          }
+          seo {
+            title
+            description
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetArticle($blogHandle: String!, $articleHandle: String!) {
+  blog(handle: $blogHandle) {
+    id
+    handle
+    title
+    seo {
+      title
+      description
+    }
+    articleByHandle(handle: $articleHandle) {
+      id
+      handle
+      title
+      content(truncateAt: 320)
+      contentHtml
+      excerpt(truncateAt: 320)
+      excerptHtml
+      image {
+        url
+        altText
+        width
+        height
+      }
+      publishedAt
+      tags
+      authorV2 {
+        name
+      }
+      seo {
+        title
+        description
+      }
+      comments(first: 20) {
+        nodes {
+          id
+          contentHtml
+          author {
+            name
+          }
+        }
+      }
+    }
+  }
+}
