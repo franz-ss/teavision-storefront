@@ -4,9 +4,13 @@ import { shopifyFetch } from '@/lib/shopify/client'
 import {
   GetCollectionDocument,
   GetCollectionProductsDocument,
+  GetCollectionSummariesDocument,
   GetCollectionsDocument,
   ProductCollectionSortKeys,
   type Collection,
+  type CollectionSummary,
+  type GetCollectionQuery,
+  type GetCollectionSummariesQuery,
   type Money,
   type ProductSummary,
   type ShopifyImage,
@@ -34,6 +38,11 @@ type ShopifyProductSummaryNode = {
   priceRange: { minVariantPrice: MoneyLike }
 }
 
+type ShopifyCollectionNode = NonNullable<GetCollectionQuery['collection']>
+
+type ShopifyCollectionSummaryNode =
+  GetCollectionSummariesQuery['collections']['edges'][number]['node']
+
 function reshapeMoney(money: MoneyLike): Money {
   return {
     amount: String(money.amount),
@@ -48,6 +57,46 @@ function reshapeImage(image: ShopifyImageLike): ShopifyImage {
     width: image.width ?? null,
     height: image.height ?? null,
   }
+}
+
+function textFromHtml(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function looksLikeCss(value: string): boolean {
+  return /\/\*|--[a-z0-9-]+:|@media|#[a-z0-9_-]+\s*\{/i.test(value)
+}
+
+function cleanCollectionDescription(
+  description: string,
+  descriptionHtml: string,
+  seoDescription: string | null | undefined,
+): string {
+  const trimmedSeoDescription = seoDescription?.replace(/\s+/g, ' ').trim()
+  if (trimmedSeoDescription && !looksLikeCss(trimmedSeoDescription)) {
+    return trimmedSeoDescription
+  }
+
+  const trimmedDescription = description.replace(/\s+/g, ' ').trim()
+  if (trimmedDescription && !looksLikeCss(trimmedDescription)) {
+    return trimmedDescription
+  }
+
+  const htmlText = textFromHtml(descriptionHtml)
+  if (htmlText && !looksLikeCss(htmlText)) {
+    return htmlText
+  }
+
+  return ''
 }
 
 function reshapeProductSummary(
@@ -66,22 +115,76 @@ function reshapeProductSummary(
   }
 }
 
-const STUB_COLLECTION: Collection = {
-  handle: 'black-tea',
-  title: 'Black Tea',
-  description:
-    'Premium black teas sourced from Assam, Darjeeling, and Sri Lanka.',
+function reshapeCollection(collection: ShopifyCollectionNode): Collection {
+  const descriptionHtml = String(collection.descriptionHtml)
+  const description = cleanCollectionDescription(
+    collection.description,
+    descriptionHtml,
+    collection.seo?.description,
+  )
+
+  return {
+    id: collection.id,
+    handle: collection.handle,
+    title: collection.title,
+    description,
+    descriptionHtml,
+    featuredImage: collection.image ? reshapeImage(collection.image) : null,
+    updatedAt: String(collection.updatedAt),
+    seo: {
+      title: collection.seo?.title ?? null,
+      description: collection.seo?.description ?? null,
+    },
+  }
 }
 
-const STUB_PRODUCTS: ProductSummary[] = Array.from({ length: 8 }, (_, i) => ({
-  id: `gid://shopify/Product/${i + 1}`,
-  handle: `product-placeholder-${i + 1}`,
-  title: `Product Placeholder ${i + 1}`,
-  featuredImage: null,
-  priceRange: {
-    minVariantPrice: { amount: '0.00', currencyCode: 'AUD' },
-  },
-}))
+function reshapeCollectionSummary(
+  collection: ShopifyCollectionSummaryNode,
+): CollectionSummary {
+  const description = cleanCollectionDescription(
+    collection.description,
+    '',
+    collection.seo?.description,
+  )
+
+  return {
+    id: collection.id,
+    handle: collection.handle,
+    title: collection.title,
+    description,
+    featuredImage: collection.image ? reshapeImage(collection.image) : null,
+    updatedAt: String(collection.updatedAt),
+    seo: {
+      title: collection.seo?.title ?? null,
+      description: collection.seo?.description ?? null,
+    },
+  }
+}
+
+async function fetchCollectionSummaries(
+  first: number,
+): Promise<CollectionSummary[]> {
+  const collections: CollectionSummary[] = []
+  let after: string | null | undefined
+  let hasNextPage = true
+
+  while (hasNextPage) {
+    const data = await shopifyFetch({
+      query: GetCollectionSummariesDocument,
+      variables: { first, after },
+    })
+
+    collections.push(
+      ...data.collections.edges.map((edge) =>
+        reshapeCollectionSummary(edge.node),
+      ),
+    )
+    hasNextPage = data.collections.pageInfo.hasNextPage
+    after = data.collections.pageInfo.endCursor
+  }
+
+  return collections
+}
 
 export async function getCollection(
   handle: string,
@@ -90,22 +193,12 @@ export async function getCollection(
   cacheTag('collection', `collection-${handle}`)
   cacheLife('hours')
 
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return { ...STUB_COLLECTION, handle }
-  }
-
   const data = await shopifyFetch({
     query: GetCollectionDocument,
     variables: { handle },
   })
 
-  return data.collection
-    ? {
-        handle: data.collection.handle,
-        title: data.collection.title,
-        description: data.collection.description,
-      }
-    : null
+  return data.collection ? reshapeCollection(data.collection) : null
 }
 
 export async function getCollections(
@@ -114,10 +207,6 @@ export async function getCollections(
   'use cache'
   cacheTag('collections')
   cacheLife('days')
-
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return ['all', 'tea', 'herbs-spices']
-  }
 
   const handles: string[] = []
   let after: string | null | undefined
@@ -137,6 +226,16 @@ export async function getCollections(
   return handles
 }
 
+export async function getCollectionSummaries(
+  first = SHOPIFY_PAGE_SIZE,
+): Promise<CollectionSummary[]> {
+  'use cache'
+  cacheTag('collections')
+  cacheLife('days')
+
+  return fetchCollectionSummaries(first)
+}
+
 export async function getCollectionProducts(
   handle: string,
   first = SHOPIFY_PAGE_SIZE,
@@ -146,10 +245,6 @@ export async function getCollectionProducts(
   'use cache'
   cacheTag('collection', `collection-${handle}`)
   cacheLife('hours')
-
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return STUB_PRODUCTS
-  }
 
   const products: ProductSummary[] = []
   let after: string | null | undefined

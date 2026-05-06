@@ -1,6 +1,36 @@
 query GetPage($handle: String!) {
   page(handle: $handle) {
+    id
+    handle
     title
     body
+    bodySummary
+    updatedAt
+    seo {
+      title
+      description
+    }
+  }
+}
+
+query GetPages($first: Int!, $after: String) {
+  pages(first: $first, after: $after, sortKey: TITLE) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        handle
+        title
+        bodySummary
+        updatedAt
+        seo {
+          title
+          description
+        }
+      }
+    }
   }
 }

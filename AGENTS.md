@@ -59,7 +59,7 @@ SHOPIFY_STORE_DOMAIN=
 SHOPIFY_STOREFRONT_ACCESS_TOKEN=
 ```
 
-Lib functions fall back to stub data when the token is absent, so the dev server runs without credentials.
+Shopify credentials are required for storefront data. Missing credentials should fail fast via `shopifyFetch()` rather than falling back to stub data.
 
 ### Storybook
 

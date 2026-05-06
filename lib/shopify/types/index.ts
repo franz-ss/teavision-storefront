@@ -46,10 +46,20 @@ export type ProductSummary = {
 }
 
 export type Collection = {
+  id: string
   handle: string
   title: string
   description: string
+  descriptionHtml: string
+  featuredImage: ShopifyImage | null
+  updatedAt: string
+  seo: {
+    title: string | null
+    description: string | null
+  }
 }
+
+export type CollectionSummary = Omit<Collection, 'descriptionHtml'>
 
 export type CartLine = {
   id: string
@@ -87,8 +97,10 @@ export {
   GetCartDocument,
   GetCollectionDocument,
   GetCollectionProductsDocument,
+  GetCollectionSummariesDocument,
   GetCollectionsDocument,
   GetPageDocument,
+  GetPagesDocument,
   GetProductDocument,
   GetProductRecommendationsDocument,
   GetProductsDocument,
@@ -108,8 +120,10 @@ export type {
   GetCartQuery,
   GetCollectionProductsQuery,
   GetCollectionQuery,
+  GetCollectionSummariesQuery,
   GetCollectionsQuery,
   GetPageQuery,
+  GetPagesQuery,
   GetProductQuery,
   GetProductRecommendationsQuery,
   GetProductsQuery,

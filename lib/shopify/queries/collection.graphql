@@ -1,8 +1,21 @@
 query GetCollection($handle: String!) {
   collection(handle: $handle) {
+    id
     handle
     title
     description
+    descriptionHtml
+    updatedAt
+    image {
+      url
+      altText
+      width
+      height
+    }
+    seo {
+      title
+      description
+    }
   }
 }
 
@@ -56,6 +69,34 @@ query GetCollections($first: Int!, $after: String) {
     edges {
       node {
         handle
+      }
+    }
+  }
+}
+
+query GetCollectionSummaries($first: Int!, $after: String) {
+  collections(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        handle
+        title
+        description
+        updatedAt
+        image {
+          url
+          altText
+          width
+          height
+        }
+        seo {
+          title
+          description
+        }
       }
     }
   }

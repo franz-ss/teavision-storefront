@@ -180,55 +180,10 @@ async function fetchProductSummaryPages(
   return products
 }
 
-const STUB_PRODUCT: Product = {
-  id: 'gid://shopify/Product/1',
-  handle: 'english-breakfast',
-  title: 'English Breakfast — Bulk Loose Leaf',
-  description:
-    'Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.',
-  descriptionHtml:
-    '<p>Premium Assam-based black tea blend. Available in 250g, 1kg, and 5kg.</p>',
-  tags: [
-    'Package_250|1000|5000',
-    'certified_organic',
-    'origin_India',
-    'filter_Type_Black Tea',
-    'filter_Caffeine_High',
-    'tea-bags',
-  ],
-  images: [],
-  priceRange: { minVariantPrice: { amount: '18.00', currencyCode: 'AUD' } },
-  options: [{ name: 'Weight', values: ['250g', '1kg', '5kg'] }],
-  variants: [
-    {
-      id: 'gid://shopify/ProductVariant/1',
-      title: '250g',
-      availableForSale: true,
-      price: { amount: '18.00', currencyCode: 'AUD' },
-    },
-    {
-      id: 'gid://shopify/ProductVariant/2',
-      title: '1kg',
-      availableForSale: true,
-      price: { amount: '42.00', currencyCode: 'AUD' },
-    },
-    {
-      id: 'gid://shopify/ProductVariant/3',
-      title: '5kg',
-      availableForSale: false,
-      price: { amount: '180.00', currencyCode: 'AUD' },
-    },
-  ],
-}
-
 export async function getProduct(handle: string): Promise<Product | null> {
   'use cache'
   cacheTag('product', `product-${handle}`)
   cacheLife('hours')
-
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return STUB_PRODUCT
-  }
 
   const data = await shopifyFetch({
     query: GetProductDocument,
@@ -251,18 +206,6 @@ export async function getProducts(first = 24): Promise<ProductSummary[]> {
   cacheTag('product')
   cacheLife('hours')
 
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return [
-      {
-        id: STUB_PRODUCT.id,
-        handle: STUB_PRODUCT.handle,
-        title: STUB_PRODUCT.title,
-        featuredImage: null,
-        priceRange: STUB_PRODUCT.priceRange,
-      },
-    ]
-  }
-
   return fetchProductSummaryPages(first)
 }
 
@@ -270,18 +213,6 @@ export async function getAllProducts(): Promise<ProductSummary[]> {
   'use cache'
   cacheTag('product')
   cacheLife('hours')
-
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return [
-      {
-        id: STUB_PRODUCT.id,
-        handle: STUB_PRODUCT.handle,
-        title: STUB_PRODUCT.title,
-        featuredImage: null,
-        priceRange: STUB_PRODUCT.priceRange,
-      },
-    ]
-  }
 
   return fetchProductSummaryPages()
 }
@@ -293,10 +224,6 @@ export async function getProductRecommendations(
   'use cache'
   cacheTag('product', `product-recommendations-${productId}`)
   cacheLife('hours')
-
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return []
-  }
 
   const recommendationIntent =
     intent === 'RELATED'

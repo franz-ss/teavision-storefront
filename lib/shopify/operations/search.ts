@@ -61,10 +61,6 @@ function reshapeProductSummary(
 export async function searchProducts(query: string): Promise<ProductSummary[]> {
   if (!query) return []
 
-  if (!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-    return []
-  }
-
   const data = await shopifyFetch({
     query: SearchProductsDocument,
     variables: { query },

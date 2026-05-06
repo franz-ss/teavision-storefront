@@ -1,6 +1,5 @@
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { STUB_ARTICLES, getArticleByHandle } from '@/lib/blog/stubs'
 import { shopifyFetch } from '@/lib/shopify/client'
 import {
   GetArticleDocument,
@@ -73,13 +72,6 @@ export type PaginatedArticles = {
   totalArticles: number
 }
 
-function hasShopifyCredentials(): boolean {
-  return Boolean(
-    process.env.SHOPIFY_STORE_DOMAIN &&
-    process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-  )
-}
-
 function reshapeImage(image: BlogArticleNode['image']): ShopifyImage | null {
   if (!image) return null
 
@@ -98,15 +90,6 @@ function stripHtml(html: string): string {
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
 }
 
 function estimateReadingTime(text: string): number {
@@ -164,70 +147,6 @@ function reshapeArticle(article: ArticleNode): BlogArticle {
     ),
     contentHtml: String(article.contentHtml),
     comments: article.comments.nodes.map(reshapeComment),
-  }
-}
-
-function stubArticleHtml(
-  article: NonNullable<ReturnType<typeof getArticleByHandle>>,
-) {
-  return article.sections
-    .map(
-      (section) =>
-        `<section><h2>${escapeHtml(section.heading)}</h2><p>${escapeHtml(
-          section.body,
-        )}</p></section>`,
-    )
-    .join('')
-}
-
-function getStubBlog(): BlogIndex {
-  return {
-    id: 'gid://shopify/Blog/teavision-blogs',
-    handle: DEFAULT_BLOG_HANDLE,
-    title: 'Teavision Blogs',
-    seo: {
-      title: 'Teavision Blogs',
-      description:
-        'Expert insights on bulk tea purchasing, supplier guides, and cost-effective solutions for Australian businesses.',
-    },
-    articles: STUB_ARTICLES.map((article) => ({
-      id: article.id,
-      handle: article.handle,
-      title: article.title,
-      excerpt: article.excerpt,
-      featuredImage: null,
-      publishedAt: article.publishedAt,
-      tags: [...article.tags],
-      authorName: 'Teavision Team',
-      seo: {
-        title: article.title,
-        description: article.excerpt,
-      },
-      readingTimeMinutes: article.readingTimeMinutes,
-    })),
-  }
-}
-
-function getStubArticle(handle: string): BlogArticle | null {
-  const article = getArticleByHandle(handle)
-  if (!article) return null
-
-  return {
-    id: article.id,
-    handle: article.handle,
-    title: article.title,
-    excerpt: article.excerpt,
-    featuredImage: null,
-    publishedAt: article.publishedAt,
-    tags: [...article.tags],
-    authorName: 'Teavision Team',
-    seo: {
-      title: article.title,
-      description: article.excerpt,
-    },
-    readingTimeMinutes: article.readingTimeMinutes,
-    contentHtml: stubArticleHtml(article),
-    comments: [],
   }
 }
 
@@ -349,10 +268,6 @@ export async function getBlog(handle: string): Promise<BlogIndex | null> {
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
-  if (!hasShopifyCredentials()) {
-    return normalizedHandle === DEFAULT_BLOG_HANDLE ? getStubBlog() : null
-  }
-
   const articles: BlogArticleSummary[] = []
   let blogDetails: Omit<BlogIndex, 'articles'> | null = null
   let after: string | null | undefined
@@ -406,12 +321,6 @@ export async function getArticle(
     `article-${normalizedHandle}-${articleHandle}`,
   )
   cacheLife('hours')
-
-  if (!hasShopifyCredentials()) {
-    return normalizedHandle === DEFAULT_BLOG_HANDLE
-      ? getStubArticle(articleHandle)
-      : null
-  }
 
   const data = await shopifyFetch({
     query: GetArticleDocument,
