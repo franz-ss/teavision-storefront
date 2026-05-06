@@ -1,220 +1,190 @@
 ---
 name: Teavision
-description: Australia's leading wholesale tea supplier — authoritative, warm, precise.
+description: "Australia's B2B wholesale tea, herb, and spice supplier: quiet authority, warm precision."
 colors:
-  background: "#f5f0e8"
-  surface: "#ede8de"
-  surface-warm: "#e8ddd5"
-  surface-sage: "#d8e2d0"
-  border: "#d4c9b0"
-  primary: "#526043"
-  primary-hover: "#415234"
-  text: "#3d3d35"
-  text-muted: "#5e5d4f"
-  destructive: "#8b4a42"
+  canvas: "#FAF7F2"
+  surface: "#FFFFFE"
+  surface-sunken: "#F2EFE9"
+  brand: "#244332"
+  brand-strong: "#11201A"
+  brand-subtle: "#F2F6F3"
+  action-primary: "#100F0D"
+  action-primary-hover: "#25241F"
+  action-primary-text: "#FAF7F2"
+  text-default: "#25241F"
+  text-muted: "#4F4E4A"
+  border-default: "#C9C9C5"
+  accent: "#B5841F"
+  danger: "#B33C30"
 typography:
   display:
-    fontFamily: "Geist, system-ui, sans-serif"
-    fontSize: "clamp(2.5rem, 6vw, 3.75rem)"
-    fontWeight: 400
-    lineHeight: 1.1
-    letterSpacing: "-0.02em"
-  headline:
-    fontFamily: "Geist, system-ui, sans-serif"
-    fontSize: "clamp(1.375rem, 3vw, 1.875rem)"
-    fontWeight: 600
-    lineHeight: 1.25
-    letterSpacing: "-0.01em"
-  title:
-    fontFamily: "Geist, system-ui, sans-serif"
-    fontSize: "1.125rem"
+    fontFamily: "Fraunces, Times New Roman, serif"
     fontWeight: 500
-    lineHeight: 1.4
+    letterSpacing: "0"
   body:
-    fontFamily: "Geist, system-ui, sans-serif"
-    fontSize: "1rem"
+    fontFamily: "Inter, system-ui, sans-serif"
     fontWeight: 400
     lineHeight: 1.6
-  label:
-    fontFamily: "Geist, system-ui, sans-serif"
-    fontSize: "0.65rem"
-    fontWeight: 600
-    lineHeight: 1
-    letterSpacing: "0.05em"
+    letterSpacing: "0"
+  mono:
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontWeight: 400
+    letterSpacing: "0"
 rounded:
-  default: "4px"
-spacing:
-  xs: "4px"
-  sm: "8px"
-  md: "12px"
-  lg: "16px"
-  xl: "24px"
-  2xl: "32px"
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.background}"
-    rounded: "{rounded.default}"
-    padding: "8px 20px"
-  button-primary-hover:
-    backgroundColor: "{colors.primary-hover}"
-    textColor: "{colors.background}"
-    rounded: "{rounded.default}"
-    padding: "8px 20px"
-  button-secondary:
-    backgroundColor: "transparent"
-    textColor: "{colors.primary}"
-    rounded: "{rounded.default}"
-    padding: "8px 20px"
-  button-ghost:
-    backgroundColor: "transparent"
-    textColor: "{colors.text-muted}"
-    rounded: "{rounded.default}"
-    padding: "8px 20px"
+  xs: "2px"
+  sm: "4px"
+  md: "6px"
+  lg: "8px"
+sources:
+  implementation: "app/globals.css"
+  productContext: "PRODUCT.md"
+  extendedReference: "docs/design-system/"
 ---
 
 # Design System: Teavision
 
-## 1. Overview
+## 1. Purpose
 
-**Creative North Star: "The Provenance Merchant"**
+This file is the short design-system contract for day-to-day work. Use it when designing, implementing, or reviewing storefront UI. The canonical implementation lives in `app/globals.css`; the fuller imported reference lives in `docs/design-system/`; the brand and business strategy live in `PRODUCT.md`.
 
-The Teavision design system is a merchant's catalog that respects its reader. The aesthetic is built from the raw material up: sand and sage aren't decorative choices — they're what tea looks like before it's brewed. The palette reads like dried herbs laid on aged paper, the type is clear and authoritative without ceremony. Nothing is here for show. Every element either carries information or stays out of the way.
+Teavision should feel like a precise wholesale supplier with deep product knowledge: botanical, practical, and quietly premium. The interface serves buyers who need to scan, compare, trust, and act quickly.
 
-This is a B2B supplier that has served St. Ali, Remedy Drinks, and 1,000+ businesses. The design earns confidence through specificity: real certification marks, named origins, actual testimonials from actual businesses. No lifestyle photography abstractions, no wellness-brand softness. The warmth comes from the materials themselves, not applied as a veneer.
+## 2. North Star
 
-The system refuses four aesthetic families: the artisan craft-tea hipster register (kraft paper, hand-stamped texture, overworked provenance theater), clinical wellness white (mint green accents, molecule graphics, pharmaceutical sterility), mass-market grocery commodity energy (primary-color banners, coupon typography, supermarket shelf logic), and the generic B2B SaaS template (pricing grids, feature checkmarks, star-rating carousels with headshots). What remains is a serious supplier's interface: grounded, warm, and precise.
+Teavision is a supplier at scale, not a lifestyle tea brand. Trust comes from specific evidence: certifications, origins, pack sizes, lead times, named customers, and clear access to a real team.
 
-**Key Characteristics:**
-- A tonal stack of dried-botanical neutrals: sand, linen, straw, sage — no cold grays anywhere
-- Single Geist typeface throughout; hierarchy through weight and scale, not font switching
-- Flat surfaces with depth from tonal layering, no decorative shadows
-- One primary accent (Dried Sage green) used sparingly: CTAs, active states, sale signals
-- Touch-target-aware interactive elements; WCAG AA with visible sage focus rings throughout
+The visual language is warm and restrained. Product photography and ingredient variety carry the brand. Components should make the catalogue feel credible and easy to navigate, without drifting into craft-market rustic, clinical wellness, grocery discounting, or generic B2B SaaS.
 
-## 2. Colors: The Dried Botanical Palette
+## 3. Design Principles
 
-The palette reads as a single dried-botanical family: warm sand grounds every surface; sage green carries action and growth signals; terracotta marks errors and urgency. No cold gray appears anywhere in the system.
+- **Authority through specificity.** Prefer real claims over atmospheric copy: ACO Organic, HACCP, 1,000+ ingredients, 500+ certified organic, sourced from 15+ countries, serving 1,000+ businesses.
+- **B2B conversion first.** Wholesale inquiry, account application, catalogue download, custom blend, and private-label paths must stay prominent on relevant surfaces.
+- **Product range before decoration.** Let real products, origins, categories, and certification details do the visual work.
+- **Warm precision.** Use botanical warmth, small radii, hairline borders, and calm spacing. Avoid cute, rustic, clinical, or coupon-like treatments.
+- **SEO is structural.** Footer links, journal content, location pages, and collection architecture are traffic infrastructure, not visual clutter to remove casually.
+- **Accessibility is a system rule.** WCAG AA contrast, keyboard focus, labels, reduced motion, and readable type are baseline requirements.
 
-### Primary
-- **Dried Sage** (`#526043`): The single action color. Primary buttons, active nav states, sale badge text, hover borders on product cards. Used sparingly — its restraint is the point. This color means "do something." (5.4:1 contrast on background — WCAG AA compliant.)
-- **Deep Sage** (`#415234`): Hover and pressed states for primary actions only. One step darker on the same sage hue; never appears independently.
+## 4. Token Model
 
-### Neutral
-- **Sun-Dried Parchment** (`#f5f0e8`): Page background. The base layer — every other surface sits above it.
-- **Aged Linen** (`#ede8de`): Cards, product card backgrounds, input backgrounds. The first step up from the base.
-- **Warm Bisque** (`#e8ddd5`): Warm surface variant. Out-of-stock badge background; signals diminished state without aggression.
-- **Pale Herb** (`#d8e2d0`): Sage-tinted surface. Sale badge background; subtly signals discount through a cooler, herb-family green.
-- **Harvest Straw** (`#d4c9b0`): Borders, dividers, "new" badge background. The structural line color — never decorative.
-- **Dark Earth** (`#3d3d35`): Primary body text. Almost-black with a warm olive tint; never pure `#000`.
-- **Dusty Stone** (`#5e5d4f`): Secondary text, placeholders, ghost button text, muted labels. (5.4:1 contrast on background — WCAG AA compliant.)
+Use Tailwind 4 CSS-first tokens from `app/globals.css`. Components consume semantic utilities, not raw primitive values.
 
-### Tertiary
-- **Terracotta** (`#8b4a42`): Errors, out-of-stock badge text, remove-item actions. Warm red-brown; urgent without being alarming.
+Primary utility families:
 
-### Named Rules
+- Surfaces: `bg-canvas`, `bg-surface`, `bg-surface-raised`, `bg-surface-sunken`, `bg-brand`, `bg-brand-strong`, `bg-brand-subtle`
+- Text: `text-default`, `text-strong`, `text-muted`, `text-subtle`, `text-brand`, `text-accent`, `text-on-brand`, `text-inverse`
+- Borders and focus: `border-subtle`, `border-default`, `border-strong`, `border-brand`, `border-focus`, `ring-ring`, `shadow-focus`
+- Actions: `bg-action-primary`, `hover:bg-action-primary-hover`, `text-action-primary-text`, `border-action-secondary-border`, `text-action-secondary-text`
+- Status: `bg-success`, `text-success`, `border-success`, plus warning, danger, and info equivalents
+- Type: `font-display`, `font-sans`, `font-mono`, and the `type-*` utilities
 
-**The Dried Botanical Rule.** Every neutral in this system has a warm tint toward ochre or sage (H 80–140). There are no cool grays. If a neutral reads as charcoal, slate, or cool gray, it's wrong — rework with chroma raised toward the yellow-green family.
+Do not reintroduce legacy aliases from the previous system. Do not place raw hex, RGB, or ad hoc color values in `className`.
 
-**The One Accent Rule.** Dried Sage (`#6b7c5a`) appears on ≤15% of any given surface. Its job is to mean "action." If it's everywhere, it means nothing. Decorative sage touches are prohibited.
+## 5. Color Roles
 
-## 3. Typography
+- **Canvas** is warm paper: `bg-canvas`.
+- **Surfaces** are clean and calm: `bg-surface` for cards and inputs, `bg-surface-sunken` for recessed wells and placeholders.
+- **Brand green** is for identity, botanical emphasis, links, brand sections, and selected states.
+- **Primary actions** use near-black ink, not green. This keeps conversion controls distinct from brand decoration and gives them reliable contrast.
+- **Amber** is the accent and focus color. Use it for focus affordances, certifications, and small moments of energy, not broad backgrounds.
+- **Status colors** are functional. Use dedicated success, warning, danger, and info tokens rather than repurposing brand colors.
 
-**Display / Body Font:** Geist (system-ui, sans-serif fallback)
+Neutral colors must stay warm or ink-based. If a new neutral reads as blue-gray, slate, or cold charcoal, it does not belong in this system.
 
-**Character:** Geist is Vercel's variable sans-serif: geometric precision with enough warmth in the rounded terminals to avoid clinical coldness. A single-family system reinforces the merchant's pragmatism — no decorative display font, no serifs added for character. Hierarchy is built from weight and scale alone, which suits a product catalog that prizes clarity over atmosphere.
+## 6. Typography
 
-### Hierarchy
-- **Display** (400 weight, clamp(2.5rem, 6vw, 3.75rem), lh 1.1, -0.02em tracking): Hero headlines and campaign-scale headings. Moderate weight, tight tracking. Never bolded to 700+ at display size.
-- **Headline** (600 weight, clamp(1.375rem, 3vw, 1.875rem), lh 1.25, -0.01em tracking): Section headings, page titles, collection names.
-- **Title** (500 weight, 1.125rem, lh 1.4): Product names in cards, sub-section headers, sidebar labels.
-- **Body** (400 weight, 1rem, lh 1.6): Long-form paragraphs, product descriptions, blog copy. Max line length 65–75ch. `text-wrap: pretty` is set globally for orphan prevention.
-- **Label** (600 weight, 0.65rem, lh 1, 0.05em tracking, uppercase): Badges, category chips, certification marks, trust-bar items. All-caps treatment is for labels only — never apply to headings or paragraphs.
+Teavision uses a three-font system:
 
-### Named Rules
+- **Fraunces via `font-display`** for hero headlines, editorial headings, and considered brand moments.
+- **Inter via `font-sans`** for navigation, forms, product cards, body copy, dense UI, and all operational surfaces.
+- **JetBrains Mono via `font-mono`** for SKUs, order numbers, codes, tables, and technical identifiers.
 
-**The Single Voice Rule.** One font family at all sizes. Don't add a serif display font for "warmth" or a mono font for "technical credibility." Geist carries every role. Atmosphere comes from the palette, not font switching.
+Use the provided type utilities where possible: `type-display-01`, `type-display-02`, `type-heading-01` through `type-heading-05`, `type-body-lg`, `type-body`, `type-body-sm`, `type-label`, `type-caption`, `type-code`, and `type-eyebrow`.
 
-**The Weight Ladder Rule.** Use weight steps of at least 100 between adjacent hierarchy levels (400 body → 500 title → 600 headline). Avoid the flat-scale trap of all-medium-weight text at slightly different sizes.
+Type rules:
 
-## 4. Elevation
+- Keep letter spacing at `0` except for compact uppercase labels such as `type-eyebrow`.
+- Body copy should remain 16px or larger with comfortable leading.
+- Long prose should stay near `65ch`.
+- Do not use all-caps for headings or paragraph copy.
+- Reserve mono for operational identifiers. Do not use it as generic "technical credibility."
 
-This system is flat by default. No decorative shadows exist in the codebase, and none should be introduced. Depth is communicated entirely through tonal layering: Sun-Dried Parchment (base) → Aged Linen (card surface) → Warm Bisque / Pale Herb (raised surface variants). Interactive state is communicated through border-color shifts, not shadow lifts.
+## 7. Layout and Surfaces
 
-Focus rings are the one exception: visible sage-tinted focus outlines (`box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a`) appear on all keyboard-focusable elements. These are accessibility affordances, not decoration.
+The site should feel calm but useful, especially for wholesale buyers comparing information. Favor structured sections, clear information grouping, and enough density to support scanning.
 
-### Named Rules
+Surface rules:
 
-**The Flat-By-Default Rule.** Surfaces are flat at rest. A shadow on a card is not atmospheric polish; it's visual noise that breaks the material language. If an element must communicate elevation (a dropdown, an overlay), use the tonal stack and a subtle border — not a `box-shadow`.
+- Page backgrounds use `bg-canvas`.
+- Page sections should be full-width bands or unframed layouts with constrained inner content.
+- Cards are for repeated items, modals, popovers, and genuinely framed tools. Do not put cards inside cards.
+- Product, article, testimonial, catalogue, and stat cards use small radii, warm borders, and restrained elevation.
+- Use shadows sparingly and only from the existing shadow utilities. Do not use shadow as decoration.
 
-## 5. Components
+Spacing rules:
 
-### Buttons
+- Inside components, prefer compact steps such as `gap-2`, `gap-3`, `gap-4`, and `p-4` to `p-6`.
+- Between components, use stronger rhythm such as `gap-6`, `gap-8`, or `gap-12`.
+- Between page sections, use generous section spacing, but keep the next section visible where a first viewport needs continuity.
 
-Three variants, three sizes, no decorative flourishes. Shape is consistently a small radius (4px) — enough to soften the corners without reading as pill-shaped. Color transitions only (150ms ease); never scale or translate transforms on click.
+## 8. Imagery
 
-- **Shape:** Gently squared (4px radius)
-- **Primary:** Dried Sage fill (`#6b7c5a`), Sun-Dried Parchment text (`#f5f0e8`). Padding: sm 14px/6px, md 20px/8px, lg 28px/12px.
-- **Hover:** Deep Sage fill (`#5a6b4a`); no transform.
-- **Focus:** `outline: none; box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a`
-- **Secondary:** Sage border + text, transparent fill. Hover: Aged Linen fill.
-- **Ghost:** Dusty Stone text, transparent, no border. Hover: Aged Linen fill. For low-priority actions: "View all."
-- **Disabled / Loading:** 50% opacity, `cursor: not-allowed`. Loading shows a spinning SVG inline before the label.
+The product carries the brand. Use real product, ingredient, origin, facility, catalogue, or customer imagery wherever a surface depends on visual trust.
 
-### Badges
+Avoid generic tea lifestyle shots, anonymous hands holding cups, stock wellness imagery, floating botanical illustrations, and dark atmospheric crops that hide the product. If an image is a product or process signal, the viewer should be able to inspect it.
 
-Compact status labels: always uppercase, 0.65rem, semibold, 0.05em tracked. Three variants, always positioned top-left on product card images.
+All meaningful images need useful alt text. Decorative images should be hidden from assistive technology.
 
-- **Sale:** Pale Herb background (`#d8e2d0`), Deep Sage text (`#5a6b4a`). Discount signal in the sage family.
-- **Out of Stock:** Warm Bisque background (`#e8ddd5`), Terracotta text (`#8b4a42`). Muted; visible without being emphasized.
-- **New:** Harvest Straw background (`#d4c9b0`), Dusty Stone text (`#7a7868`). Neutral, for recently added products.
+## 9. Component Rules
 
-### Cards / Product Cards
+- **Buttons:** Use action tokens, `rounded-md`, visible `focus-visible` rings, and explicit transitions. One primary action per moment.
+- **Icon buttons:** Use recognizable icons with accessible names and tooltips when the icon is not obvious.
+- **Badges:** Keep them compact. Use uppercase labels for certifications, status, and short category signals only.
+- **Product cards:** Image first, then product name, category/origin or pack note, certification where relevant, and a quote or detail action. Do not add marketing excerpts to dense catalogue grids.
+- **Forms:** Labels must be visible or programmatically clear. Validation messages must connect to fields. Submit areas should include the privacy or data-handling note when collecting contact details.
+- **Spec tables:** Use semantic table markup for tea grades, pack sizes, lead times, certifications, and bulk-order details. Numeric columns should align cleanly.
+- **Header and footer:** Treat navigation and SEO links as conversion infrastructure. Do not simplify them away for visual neatness without replacing the lost path.
 
-The core browsing unit on collection pages. Image-first, title, price. No description excerpts, no hover-reveal panels, no nested cards.
+Compose `className` values with `cn()` from `@/lib/utils` whenever classes are conditional or merged.
 
-- **Corner Style:** Gently squared (4px)
-- **Background:** Aged Linen (`#ede8de`)
-- **Image Area:** Harvest Straw (`#d4c9b0`) as placeholder; square aspect ratio (1:1)
-- **Border:** 1px Harvest Straw at rest → 1px Dried Sage on hover. No shadow at any state.
-- **Focus:** Sage focus ring identical to buttons.
-- **Body Padding:** 12px
-- **Title:** Dark Earth, 14px/500 weight, single-line truncation on overflow with underline on hover.
-- **Price:** Dark Earth, tabular-nums. Sizes: sm (14px), md (16px), lg (20px/semibold).
+## 10. Content Rules
 
-### Price Display
+Write for buyers who are deciding whether Teavision is credible enough to contact.
 
-Two modes: simple (single price, Dark Earth, tabular-nums) and sale (compare-at in Dusty Stone with strikethrough, current price in Dried Sage). Both use `tabular-nums` for column alignment in product grids.
+- Prefer specific proof over broad quality claims.
+- Use "Talk to our experts", "Request a quote", "Apply for wholesale", and "Download catalogue" when they match the surface.
+- Keep product and collection copy factual: origin, ingredient type, organic status, pack size, use case, grade, and preparation details.
+- Do not use urgency patterns such as countdowns, fake scarcity, or supermarket sale language.
+- Testimonials need attributable names, businesses, and context.
 
-### Navigation (Header)
+## 11. Accessibility and Motion
 
-Minimal horizontal nav at page top. The brand mark ("Teavision") is semibold text — no logomark yet. Wholesale link receives priority treatment as the primary B2B conversion entry point.
+- Meet WCAG AA for text and meaningful UI states.
+- Use `focus-visible:ring-ring` or `shadow-focus` for keyboard focus.
+- Respect `prefers-reduced-motion`. Non-essential animation should stop when reduced motion is requested.
+- Never rely on color alone for state or error communication.
+- Hit targets should be at least 40px on touch surfaces.
+- Animate only intentional properties: `color`, `background-color`, `border-color`, `box-shadow`, `opacity`, and occasional `transform`. Never use `transition-all` as a system rule.
 
-- **Background:** Sun-Dried Parchment (`#f5f0e8`)
-- **Border:** 1px Harvest Straw bottom border
-- **Brand mark:** 16px/600 weight, Dark Earth
-- **Nav links:** 14px/400 weight, Dark Earth; underline on hover
-- **Wholesale link:** 500 weight or Dried Sage color — always visually distinct as the B2B entry point
-- **Focus rings:** Consistent sage ring on all interactive elements
+## 12. Anti-Patterns
 
-## 6. Do's and Don'ts
+Do not introduce:
 
-### Do:
-- **Do** use the tonal stack for depth: Sun-Dried Parchment (base) → Aged Linen (card) → Warm Bisque or Pale Herb (raised). Never introduce a cool neutral that breaks the botanical warmth.
-- **Do** lead with specifics: certification names (HACCP, ACO Organic), real origin countries, named clients (St. Ali, Remedy Drinks, MOOD Tea). Vague quality claims are visually and strategically inert.
-- **Do** treat the Wholesale CTA as a primary action on every surface where it is contextually relevant — equal to or more prominent than Add to Cart.
-- **Do** use `tabular-nums` on all price displays, even single-price contexts, for column alignment in grids.
-- **Do** ensure all keyboard-focusable elements have visible sage focus rings (`box-shadow: 0 0 0 2px #f5f0e8, 0 0 0 4px #6b7c5a`).
-- **Do** cap body copy at 65–75ch line length and apply `text-wrap: pretty` globally.
-- **Do** reserve the uppercase/tracked label style (0.65rem, 0.05em) for badges, certification marks, and category chips — not headings.
+- Cool grays, blue slates, or monochrome SaaS palettes
+- Kraft-paper, hand-stamped, rustic craft-tea treatments
+- Clinical white wellness layouts, molecule graphics, or mint-accent pharma cues
+- Mass-market grocery sale language, coupon tags, or loud discount banners
+- Generic B2B SaaS sections such as feature-check grids, hero metric templates, and anonymous testimonial carousels
+- Gradient text, decorative glassmorphism, side-stripe accents, nested cards, or decorative blobs
+- Raw colors in component classes, CSS modules, styled-components, or inline style objects for ordinary styling
 
-### Don't:
-- **Don't** use artisan craft-tea aesthetics: hand-stamped texture overlays, kraft paper backgrounds, overworked provenance theater, or rough-hewn display typography. This is a serious industrial supplier, not a farmers' market stall.
-- **Don't** use clinical wellness white: white or near-white page backgrounds with mint or sage accents, floating icon illustrations, pharmaceutical-sterile layouts.
-- **Don't** use mass-market grocery commodity energy: primary-color banners, coupon-style typography, sale badges that mimic supermarket shelf tags.
-- **Don't** apply generic B2B SaaS templates: pricing tables with feature-grid checkmarks, testimonial carousels with headshots and star ratings, hero metric blocks (big number, small label, gradient accent).
-- **Don't** introduce a second typeface for atmosphere. Geist carries every role. Serifs-for-warmth or mono-for-technical-credibility both break the Single Voice Rule.
-- **Don't** add `box-shadow` to cards, list items, or content containers. The system is flat. Depth comes from tonal layering.
-- **Don't** use `border-left` or `border-right` greater than 1px as a colored accent stripe on any element. Use a background tint from the tonal stack instead.
-- **Don't** use gradient text (`background-clip: text` with a gradient fill). Sale prices and accent text are Dried Sage (`#6b7c5a`) solid.
-- **Don't** remove the footer's keyword links for visual cleanliness. They are SEO traffic infrastructure and a hard requirement for the migration.
+## 13. Review Checklist
+
+Before shipping a new or changed UI surface, check:
+
+- Does the surface make Teavision feel authoritative, warm, and precise?
+- Are B2B actions visible where a buyer would naturally need them?
+- Are tokens semantic and sourced from `app/globals.css`?
+- Does the typography use the intended role utilities with readable line lengths?
+- Are products, certifications, origins, or proof points surfaced before vague brand copy?
+- Are focus states, labels, contrast, hit targets, and reduced-motion behavior handled?
+- Does the layout avoid nested cards, decorative effects, and generic SaaS patterns?

@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1800" viewBox="0 0 1440 1800" font-family="Inter, system-ui, sans-serif">
+  <style>
+    .lbl-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;fill:#777671}
+    .lbl-h1{font-family:'Fraunces','Times New Roman',serif;font-size:48px;font-weight:500;letter-spacing:-1px;fill:#100F0D}
+    .lbl-h2{font-family:'Fraunces','Times New Roman',serif;font-size:30px;font-weight:500;letter-spacing:-0.5px;fill:#100F0D}
+    .lbl-h3{font-size:18px;font-weight:600;fill:#25241F}
+    .lbl-body{font-size:14px;fill:#4F4E4A}
+    .lbl-mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;fill:#777671}
+    .divider{stroke:#E7E7E5;stroke-width:1}
+    .btn-primary{fill:#100F0D}
+    .btn-primary-text{font-size:14px;font-weight:500;fill:#FAF7F2}
+    .btn-secondary{fill:#FFFFFF;stroke:#25241F}
+    .btn-secondary-text{font-size:14px;font-weight:500;fill:#25241F}
+    .btn-tertiary-text{font-size:14px;font-weight:500;fill:#244332}
+    .input-bg{fill:#FFFFFF;stroke:#C9C9C5}
+    .input-text{font-size:14px;fill:#25241F}
+    .input-placeholder{font-size:14px;fill:#777671}
+    .input-label{font-size:13px;font-weight:500;fill:#100F0D}
+    .input-helper{font-size:11px;fill:#777671}
+    .badge{font-size:11px;font-weight:500}
+    .card-bg{fill:#FFFFFF;stroke:#E7E7E5}
+    .card-title{font-size:18px;font-weight:600;fill:#100F0D}
+    .card-meta{font-size:11px;fill:#777671}
+  </style>
+
+  <rect width="1440" height="1800" fill="#FAF7F2"/>
+
+  <text x="64" y="100" class="lbl-eyebrow">TEAVISION DESIGN SYSTEM</text>
+  <text x="64" y="148" class="lbl-h1">Components</text>
+  <text x="64" y="180" class="lbl-body">Buttons · Inputs · Badges · Product Cards · Stat Block</text>
+
+  <line x1="64" y1="220" x2="1376" y2="220" class="divider"/>
+
+  <!-- BUTTONS -->
+  <text x="64" y="270" class="lbl-eyebrow">BUTTON</text>
+  <text x="64" y="304" class="lbl-h3">Variants × sizes × states</text>
+
+  <!-- Primary -->
+  <text x="64" y="360" class="lbl-mono">primary · md (default)</text>
+  <g transform="translate(64,376)">
+    <rect width="148" height="40" rx="6" class="btn-primary"/>
+    <text x="74" y="25" text-anchor="middle" class="btn-primary-text">Request a quote</text>
+  </g>
+
+  <text x="244" y="360" class="lbl-mono">primary · sm</text>
+  <g transform="translate(244,380)">
+    <rect width="80" height="32" rx="6" class="btn-primary"/>
+    <text x="40" y="20" text-anchor="middle" class="btn-primary-text" font-size="13">Quote</text>
+  </g>
+
+  <text x="356" y="360" class="lbl-mono">primary · lg</text>
+  <g transform="translate(356,372)">
+    <rect width="180" height="48" rx="6" class="btn-primary"/>
+    <text x="90" y="30" text-anchor="middle" class="btn-primary-text" font-size="16">Request a quote</text>
+  </g>
+
+  <text x="568" y="360" class="lbl-mono">primary · disabled</text>
+  <g transform="translate(568,376)" opacity="0.4">
+    <rect width="148" height="40" rx="6" class="btn-primary"/>
+    <text x="74" y="25" text-anchor="middle" class="btn-primary-text">Request a quote</text>
+  </g>
+
+  <!-- Secondary / Tertiary / Destructive -->
+  <text x="64" y="464" class="lbl-mono">secondary</text>
+  <g transform="translate(64,480)">
+    <rect width="148" height="40" rx="6" class="btn-secondary"/>
+    <text x="74" y="25" text-anchor="middle" class="btn-secondary-text">Browse catalogue</text>
+  </g>
+
+  <text x="244" y="464" class="lbl-mono">tertiary</text>
+  <g transform="translate(244,480)">
+    <text x="0" y="25" class="btn-tertiary-text">Learn more →</text>
+  </g>
+
+  <text x="408" y="464" class="lbl-mono">destructive</text>
+  <g transform="translate(408,480)">
+    <rect width="120" height="40" rx="6" fill="#B33C30"/>
+    <text x="60" y="25" text-anchor="middle" font-size="14" font-weight="500" fill="#FAF7F2">Cancel order</text>
+  </g>
+
+  <text x="568" y="464" class="lbl-mono">inverse (on dark)</text>
+  <g transform="translate(568,476)">
+    <rect width="172" height="48" rx="6" fill="#244332"/>
+    <rect x="12" y="8" width="148" height="32" rx="6" fill="#FAF7F2"/>
+    <text x="86" y="29" text-anchor="middle" font-size="13" font-weight="500" fill="#100F0D">Talk to experts</text>
+  </g>
+
+  <line x1="64" y1="560" x2="1376" y2="560" class="divider"/>
+
+  <!-- INPUT / FORM FIELD -->
+  <text x="64" y="610" class="lbl-eyebrow">INPUT · FORM FIELD</text>
+
+  <text x="64" y="650" class="input-label">Your name</text>
+  <g transform="translate(64,664)">
+    <rect width="320" height="40" rx="6" class="input-bg"/>
+    <text x="12" y="25" class="input-placeholder">Enter your name</text>
+  </g>
+  <text x="64" y="724" class="input-helper">As it should appear on the quote.</text>
+
+  <text x="408" y="650" class="input-label">Work email</text>
+  <g transform="translate(408,664)">
+    <rect width="320" height="40" rx="6" fill="#FFFFFF" stroke="#244332" stroke-width="1.5"/>
+    <text x="12" y="25" class="input-text">you@business.com.au</text>
+  </g>
+  <text x="408" y="724" class="input-helper" fill="#244332">Focus state shown</text>
+
+  <text x="752" y="650" class="input-label">Estimated volume</text>
+  <g transform="translate(752,664)">
+    <rect width="240" height="40" rx="6" class="input-bg"/>
+    <text x="12" y="25" class="input-text">20 – 100 kg</text>
+    <path d="M218 18 L226 18 L222 22 Z" fill="#25241F"/>
+  </g>
+
+  <text x="1016" y="650" class="input-label">Phone <tspan fill="#777671">(optional)</tspan></text>
+  <g transform="translate(1016,664)">
+    <rect width="280" height="40" rx="6" fill="#F2EFE9" stroke="#C9C9C5"/>
+    <text x="12" y="25" class="input-placeholder">+61 …</text>
+  </g>
+
+  <line x1="64" y1="760" x2="1376" y2="760" class="divider"/>
+
+  <!-- BADGES + TAGS + CERTIFICATIONS -->
+  <text x="64" y="810" class="lbl-eyebrow">BADGE · TAG · CERTIFICATION</text>
+
+  <g transform="translate(64,840)">
+    <rect width="68" height="24" rx="6" fill="#F2EFE9"/>      <text x="34" y="16" text-anchor="middle" class="badge" fill="#25241F">Neutral</text>
+    <rect x="80"  y="0" width="58" height="24" rx="6" fill="#F2F6F3"/>     <text x="109" y="16" text-anchor="middle" class="badge" fill="#244332">Brand</text>
+    <rect x="148" y="0" width="46" height="24" rx="6" fill="#FBF6EA"/>     <text x="171" y="16" text-anchor="middle" class="badge" fill="#6E4D14">New</text>
+    <rect x="204" y="0" width="68" height="24" rx="6" fill="#ECF5EE"/>     <text x="238" y="16" text-anchor="middle" class="badge" fill="#1B4B29">In stock</text>
+    <rect x="282" y="0" width="78" height="24" rx="6" fill="#FDF5E6"/>     <text x="321" y="16" text-anchor="middle" class="badge" fill="#65450A">Low stock</text>
+    <rect x="370" y="0" width="98" height="24" rx="6" fill="#F9EAE8"/>     <text x="419" y="16" text-anchor="middle" class="badge" fill="#6A2118">Out of stock</text>
+    <rect x="478" y="0" width="80" height="24" rx="6" fill="#E8EFF7"/>     <text x="518" y="16" text-anchor="middle" class="badge" fill="#1A344E">Backorder</text>
+  </g>
+
+  <!-- Filter chips -->
+  <g transform="translate(64,890)">
+    <rect width="92" height="32" rx="16" fill="#FFFFFF" stroke="#C9C9C5"/> <text x="46" y="20" text-anchor="middle" font-size="13" fill="#25241F">Black tea</text>
+    <rect x="104" y="0" width="100" height="32" rx="16" fill="#100F0D"/>  <text x="142" y="20" font-size="13" fill="#FAF7F2">Organic</text>
+       <path d="M188 12 l8 8 M196 12 l-8 8" stroke="#FAF7F2" stroke-width="1.2"/>
+    <rect x="216" y="0" width="138" height="32" rx="16" fill="#100F0D"/>  <text x="232" y="20" font-size="13" fill="#FAF7F2">Caffeine-free</text>
+       <path d="M338 12 l8 8 M346 12 l-8 8" stroke="#FAF7F2" stroke-width="1.2"/>
+    <rect x="366" y="0" width="148" height="32" rx="16" fill="#FFFFFF" stroke="#C9C9C5"/> <text x="440" y="20" text-anchor="middle" font-size="13" fill="#25241F">Australian native</text>
+    <rect x="524" y="0" width="80" height="32" rx="16" fill="#FFFFFF" stroke="#C9C9C5"/>  <text x="564" y="20" text-anchor="middle" font-size="13" fill="#25241F">Wellness</text>
+  </g>
+
+  <!-- Cert badges -->
+  <g transform="translate(64,940)">
+    <rect width="208" height="32" rx="6" fill="#FFFFFF" stroke="#C9C9C5"/>
+    <circle cx="20" cy="16" r="6" fill="#244332"/>
+    <text x="36" y="20" font-size="13" font-weight="500" fill="#25241F">Certified Organic · ACO</text>
+
+    <rect x="220" y="0" width="160" height="32" rx="6" fill="#FFFFFF" stroke="#C9C9C5"/>
+    <circle cx="240" cy="16" r="6" fill="#244332"/>
+    <text x="256" y="20" font-size="13" font-weight="500" fill="#25241F">HACCP Certified</text>
+
+    <rect x="392" y="0" width="120" height="32" rx="6" fill="#FFFFFF" stroke="#C9C9C5"/>
+    <circle cx="412" cy="16" r="6" fill="#244332"/>
+    <text x="428" y="20" font-size="13" font-weight="500" fill="#25241F">Fair-Trade</text>
+
+    <rect x="524" y="0" width="120" height="32" rx="6" fill="#FFFFFF" stroke="#C9C9C5"/>
+    <circle cx="544" cy="16" r="6" fill="#244332"/>
+    <text x="560" y="20" font-size="13" font-weight="500" fill="#25241F">ISO 22000</text>
+  </g>
+
+  <line x1="64" y1="1010" x2="1376" y2="1010" class="divider"/>
+
+  <!-- PRODUCT CARDS -->
+  <text x="64" y="1060" class="lbl-eyebrow">PRODUCT CARD</text>
+  <text x="64" y="1090" class="lbl-body">Wholesale-gated. No public price; CTA is "Request a quote".</text>
+
+  <!-- Card 1 -->
+  <g transform="translate(64,1120)">
+    <rect width="280" height="380" rx="8" class="card-bg"/>
+    <rect x="24" y="24" width="232" height="232" rx="6" fill="#F2EFE9"/>
+    <text x="140" y="160" text-anchor="middle" font-family="Fraunces, serif" font-size="80" fill="#C9C9C5">茶</text>
+    <rect x="172" y="36" width="72" height="22" rx="4" fill="#FFFFFF" stroke="#C9C9C5"/>
+    <circle cx="186" cy="47" r="4" fill="#244332"/>
+    <text x="196" y="51" font-size="11" font-weight="500" fill="#25241F">Organic</text>
+    <text x="24" y="288" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">BLACK TEA</text>
+    <text x="24" y="312" class="card-title">Organic Black Assam (FBOP)</text>
+    <text x="24" y="332" class="card-meta">India · 1 kg / 5 kg / 25 kg</text>
+    <line x1="24" y1="348" x2="256" y2="348" stroke="#E7E7E5"/>
+    <text x="24" y="368" font-size="14" font-weight="500" fill="#244332">Request a quote →</text>
+  </g>
+
+  <!-- Card 2 -->
+  <g transform="translate(360,1120)">
+    <rect width="280" height="380" rx="8" class="card-bg"/>
+    <rect x="24" y="24" width="232" height="232" rx="6" fill="#F2EFE9"/>
+    <text x="140" y="170" text-anchor="middle" font-size="64">🌿</text>
+    <text x="24" y="288" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">AUSTRALIAN NATIVE</text>
+    <text x="24" y="312" class="card-title">Native Lemongrass (Maarr)</text>
+    <text x="24" y="332" class="card-meta">NSW Australia · 500 g / 1 kg</text>
+    <line x1="24" y1="348" x2="256" y2="348" stroke="#E7E7E5"/>
+    <text x="24" y="368" font-size="14" font-weight="500" fill="#244332">Request a quote →</text>
+  </g>
+
+  <!-- Card 3 -->
+  <g transform="translate(656,1120)">
+    <rect width="280" height="380" rx="8" class="card-bg"/>
+    <rect x="24" y="24" width="232" height="232" rx="6" fill="#F2EFE9"/>
+    <text x="140" y="170" text-anchor="middle" font-size="64">🍵</text>
+    <rect x="172" y="36" width="72" height="22" rx="4" fill="#FFFFFF" stroke="#C9C9C5"/>
+    <circle cx="186" cy="47" r="4" fill="#244332"/>
+    <text x="196" y="51" font-size="11" font-weight="500" fill="#25241F">Organic</text>
+    <text x="24" y="288" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">GREEN TEA</text>
+    <text x="24" y="312" class="card-title">Japanese Sencha (Premium)</text>
+    <text x="24" y="332" class="card-meta">Shizuoka, Japan · 500 g / 1 kg</text>
+    <line x1="24" y1="348" x2="256" y2="348" stroke="#E7E7E5"/>
+    <text x="24" y="368" font-size="14" font-weight="500" fill="#244332">Request a quote →</text>
+  </g>
+
+  <!-- Card 4 -->
+  <g transform="translate(952,1120)">
+    <rect width="280" height="380" rx="8" class="card-bg"/>
+    <rect x="24" y="24" width="232" height="232" rx="6" fill="#F2EFE9"/>
+    <text x="140" y="170" text-anchor="middle" font-size="64">🌶</text>
+    <text x="24" y="288" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">SPECIALITY BLEND</text>
+    <text x="24" y="312" class="card-title">Anti-Inflammatory Chai</text>
+    <text x="24" y="332" class="card-meta">House blend · 1 kg / 5 kg</text>
+    <line x1="24" y1="348" x2="256" y2="348" stroke="#E7E7E5"/>
+    <text x="24" y="368" font-size="14" font-weight="500" fill="#244332">Request a quote →</text>
+  </g>
+
+  <line x1="64" y1="1540" x2="1376" y2="1540" class="divider"/>
+
+  <!-- STAT BLOCK on brand -->
+  <text x="64" y="1590" class="lbl-eyebrow">STAT BLOCK · ON BRAND</text>
+
+  <g transform="translate(64,1610)">
+    <rect width="1312" height="180" rx="8" fill="#244332"/>
+    <text x="32" y="44" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#FAF7F2" opacity="0.7">TRUST</text>
+
+    <text x="32" y="120" font-family="Fraunces, serif" font-size="60" font-weight="500" letter-spacing="-1.8" fill="#FAF7F2">Australian</text>
+    <text x="32" y="148" font-size="13" font-weight="500" fill="#FAF7F2" opacity="0.85">Owned &amp; operated</text>
+
+    <text x="364" y="120" font-family="Fraunces, serif" font-size="60" font-weight="500" letter-spacing="-1.8" fill="#FAF7F2">#1</text>
+    <text x="364" y="148" font-size="13" font-weight="500" fill="#FAF7F2" opacity="0.85">Tea company in Australia</text>
+
+    <text x="660" y="120" font-family="Fraunces, serif" font-size="60" font-weight="500" letter-spacing="-1.8" fill="#FAF7F2">1,000+</text>
+    <text x="660" y="148" font-size="13" font-weight="500" fill="#FAF7F2" opacity="0.85">Products in catalogue</text>
+
+    <text x="996" y="120" font-family="Fraunces, serif" font-size="60" font-weight="500" letter-spacing="-1.8" fill="#FAF7F2">15+</text>
+    <text x="996" y="148" font-size="13" font-weight="500" fill="#FAF7F2" opacity="0.85">Years of trade</text>
+  </g>
+
+  <text x="64" y="1770" class="lbl-mono">Drag this SVG into the Components page · Editable layers · Use as starter, then refactor with Auto Layout.</text>
+</svg>

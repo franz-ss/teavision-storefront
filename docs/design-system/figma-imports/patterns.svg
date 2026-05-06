@@ -1,0 +1,272 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="2700" viewBox="0 0 1440 2700" font-family="Inter, system-ui, sans-serif">
+  <style>
+    .lbl-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;fill:#777671}
+    .lbl-h1{font-family:'Fraunces','Times New Roman',serif;font-size:48px;font-weight:500;letter-spacing:-1px;fill:#100F0D}
+    .lbl-h2{font-family:'Fraunces','Times New Roman',serif;font-size:30px;font-weight:500;letter-spacing:-0.5px;fill:#100F0D}
+    .lbl-h3{font-family:'Fraunces','Times New Roman',serif;font-size:24px;font-weight:500;letter-spacing:-0.3px;fill:#100F0D}
+    .lbl-body{font-size:14px;fill:#4F4E4A}
+    .lbl-mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;fill:#777671}
+    .divider{stroke:#E7E7E5;stroke-width:1}
+    .input-bg{fill:#FFFFFF;stroke:#C9C9C5}
+    .input-text{font-size:14px;fill:#25241F}
+    .input-placeholder{font-size:14px;fill:#777671}
+    .input-label{font-size:13px;font-weight:500;fill:#100F0D}
+    .input-helper{font-size:11px;fill:#777671}
+    .card-bg{fill:#FFFFFF;stroke:#E7E7E5}
+  </style>
+
+  <rect width="1440" height="2700" fill="#FAF7F2"/>
+
+  <text x="64" y="100" class="lbl-eyebrow">TEAVISION DESIGN SYSTEM</text>
+  <text x="64" y="148" class="lbl-h1">Patterns</text>
+  <text x="64" y="180" class="lbl-body">Composed components · Quote form · Mega menu · FAQ · Testimonials · Spec table</text>
+
+  <line x1="64" y1="220" x2="1376" y2="220" class="divider"/>
+
+  <!-- ===== QUOTE REQUEST FORM ===== -->
+  <text x="64" y="270" class="lbl-eyebrow">QUOTE REQUEST FORM</text>
+  <text x="64" y="310" class="lbl-h2">Request a quote</text>
+  <text x="64" y="340" class="lbl-body">Most-important conversion surface. We respond within 1 business day.</text>
+
+  <g transform="translate(64,376)">
+    <rect width="800" height="660" rx="8" fill="#FFFFFF" stroke="#E7E7E5"/>
+
+    <!-- Row 1 -->
+    <text x="32" y="44" class="input-label">Your name *</text>
+    <rect x="32" y="56" width="352" height="40" rx="6" class="input-bg"/>
+    <text x="44" y="81" class="input-placeholder">Full name</text>
+
+    <text x="416" y="44" class="input-label">Business name *</text>
+    <rect x="416" y="56" width="352" height="40" rx="6" class="input-bg"/>
+    <text x="428" y="81" class="input-placeholder">Café, restaurant, brand</text>
+
+    <!-- Row 2 -->
+    <text x="32" y="136" class="input-label">Work email *</text>
+    <rect x="32" y="148" width="352" height="40" rx="6" class="input-bg"/>
+    <text x="44" y="173" class="input-placeholder">you@business.com.au</text>
+
+    <text x="416" y="136" class="input-label">Phone</text>
+    <rect x="416" y="148" width="352" height="40" rx="6" class="input-bg"/>
+    <text x="428" y="173" class="input-placeholder">+61 …</text>
+
+    <!-- Row 3 -->
+    <text x="32" y="228" class="input-label">Country / region</text>
+    <rect x="32" y="240" width="352" height="40" rx="6" class="input-bg"/>
+    <text x="44" y="265" class="input-text">Australia</text>
+    <path d="M362 258 L370 258 L366 262 Z" fill="#25241F"/>
+
+    <text x="416" y="228" class="input-label">Estimated volume *</text>
+    <rect x="416" y="240" width="352" height="40" rx="6" class="input-bg"/>
+    <text x="428" y="265" class="input-text">20 – 100 kg</text>
+    <path d="M746 258 L754 258 L750 262 Z" fill="#25241F"/>
+
+    <!-- Products full row -->
+    <text x="32" y="320" class="input-label">Products of interest</text>
+    <rect x="32" y="332" width="736" height="40" rx="6" class="input-bg"/>
+    <text x="44" y="357" class="input-placeholder">e.g. Black Assam, Earl Grey, native blends</text>
+
+    <!-- Message full row -->
+    <text x="32" y="412" class="input-label">Message *</text>
+    <rect x="32" y="424" width="736" height="100" rx="6" class="input-bg"/>
+    <text x="44" y="449" class="input-placeholder">Tell us about your project, packaging, deadlines, anything we should know.</text>
+
+    <!-- Inline reassurance alert -->
+    <g transform="translate(32,548)">
+      <rect width="736" height="56" rx="6" fill="#E8EFF7"/>
+      <rect width="3" height="56" fill="#2E5A99"/>
+      <circle cx="28" cy="28" r="9" stroke="#1A344E" stroke-width="1.5" fill="none"/>
+      <text x="28" y="32" text-anchor="middle" font-size="13" font-weight="600" fill="#1A344E">i</text>
+      <text x="48" y="24" font-size="13" font-weight="500" fill="#1A344E">Response time</text>
+      <text x="48" y="42" font-size="13" fill="#25241F">Our trade team responds within 1 business day. For urgent requests, call +61 (0)2 …</text>
+    </g>
+
+    <!-- Submit row -->
+    <text x="32" y="640" class="input-helper">By submitting, you agree to our Privacy policy.</text>
+    <rect x="572" y="616" width="196" height="48" rx="6" fill="#100F0D"/>
+    <text x="670" y="645" text-anchor="middle" font-size="16" font-weight="500" fill="#FAF7F2">Request a quote →</text>
+  </g>
+
+  <line x1="64" y1="1080" x2="1376" y2="1080" class="divider"/>
+
+  <!-- ===== MEGA MENU ===== -->
+  <text x="64" y="1130" class="lbl-eyebrow">MEGA MENU</text>
+  <text x="64" y="1170" class="lbl-h2">Header dropdown</text>
+  <text x="64" y="1200" class="lbl-body">Three columns of categories on desktop. Featured slot carries a current promo or "Browse all" CTA.</text>
+
+  <g transform="translate(64,1234)">
+    <!-- Header strip showing context -->
+    <rect width="1312" height="64" fill="#FFFFFF" stroke="#E7E7E5"/>
+    <text x="32" y="40" font-family="Fraunces, serif" font-size="20" font-weight="500" fill="#100F0D">Teavision</text>
+    <circle cx="170" cy="34" r="3" fill="#B5841F"/>
+    <text x="240" y="40" font-size="13" font-weight="500" fill="#244332" text-decoration="underline">Shop ▾</text>
+    <text x="320" y="40" font-size="13" font-weight="500" fill="#25241F">Services</text>
+    <text x="400" y="40" font-size="13" font-weight="500" fill="#25241F">Wholesale</text>
+    <text x="490" y="40" font-size="13" font-weight="500" fill="#25241F">Tea Journal</text>
+    <text x="588" y="40" font-size="13" font-weight="500" fill="#25241F">About</text>
+    <rect x="1100" y="20" width="80" height="28" rx="6" fill="#FFFFFF" stroke="#25241F"/>
+    <text x="1140" y="38" text-anchor="middle" font-size="13" font-weight="500" fill="#25241F">Account</text>
+    <rect x="1190" y="20" width="100" height="28" rx="6" fill="#100F0D"/>
+    <text x="1240" y="38" text-anchor="middle" font-size="13" font-weight="500" fill="#FAF7F2">Get a quote</text>
+
+    <!-- Mega panel -->
+    <g transform="translate(0,80)">
+      <rect width="1312" height="380" rx="8" fill="#FFFFFF" stroke="#E7E7E5" filter="drop-shadow(0 12px 24px rgba(15,15,13,0.06))"/>
+
+      <!-- Col 1 -->
+      <text x="32" y="48" class="lbl-eyebrow">By style</text>
+      <text x="32" y="84" font-size="14" fill="#25241F">Wholesale Bulk Tea</text>
+      <text x="32" y="116" font-size="14" fill="#25241F">Speciality Blends</text>
+      <text x="32" y="148" font-size="14" fill="#25241F">Bulk Tea Bag Packs</text>
+      <text x="32" y="180" font-size="14" fill="#25241F">Cafe Range</text>
+      <text x="32" y="212" font-size="14" fill="#25241F">Tea Masters Selection</text>
+      <text x="32" y="244" font-size="14" fill="#25241F">Cocktail &amp; Iced Tea</text>
+
+      <!-- Col 2 -->
+      <text x="448" y="48" class="lbl-eyebrow">By origin &amp; ingredient</text>
+      <text x="448" y="84" font-size="14" fill="#25241F">Herbs, Spices &amp; Botanicals</text>
+      <text x="448" y="116" font-size="14" fill="#25241F">Functional Wellness Tea</text>
+      <text x="448" y="148" font-size="14" fill="#25241F">Organic Tea Collection</text>
+      <text x="448" y="180" font-size="14" fill="#25241F">Australian Native Tea</text>
+      <text x="448" y="212" font-size="14" fill="#25241F">Superfoods &amp; Supplements</text>
+      <text x="448" y="244" font-size="14" fill="#25241F">Custom Tea Blends</text>
+
+      <!-- Featured -->
+      <g transform="translate(864,32)">
+        <rect width="416" height="316" rx="8" fill="#F2F6F3"/>
+        <text x="24" y="44" class="lbl-eyebrow" fill="#244332">FEATURED</text>
+        <text x="24" y="92" font-family="Fraunces, serif" font-size="24" font-weight="500" letter-spacing="-0.3" fill="#100F0D">Australian Native Range</text>
+        <text x="24" y="124" font-size="14" fill="#4F4E4A">Wild-grown lemongrass, lemon</text>
+        <text x="24" y="142" font-size="14" fill="#4F4E4A">myrtle, anise myrtle, and more —</text>
+        <text x="24" y="160" font-size="14" fill="#4F4E4A">sourced direct from First-Nations</text>
+        <text x="24" y="178" font-size="14" fill="#4F4E4A">growers.</text>
+        <text x="24" y="276" font-size="14" font-weight="500" fill="#244332">Browse the range →</text>
+      </g>
+    </g>
+  </g>
+
+  <line x1="64" y1="1740" x2="1376" y2="1740" class="divider"/>
+
+  <!-- ===== FAQ ACCORDION ===== -->
+  <text x="64" y="1790" class="lbl-eyebrow">FAQ ACCORDION</text>
+  <text x="64" y="1830" class="lbl-h2">Frequently asked questions</text>
+
+  <g transform="translate(64,1870)">
+    <line x1="0" y1="0" x2="760" y2="0" stroke="#E7E7E5"/>
+
+    <!-- Open item -->
+    <g transform="translate(0,0)">
+      <line x1="0" y1="80" x2="760" y2="80" stroke="#E7E7E5"/>
+      <text x="0" y="34" class="lbl-h3">What's the minimum order quantity?</text>
+      <g transform="translate(740,28) rotate(45 0 0)">
+        <line x1="-8" y1="0" x2="8" y2="0" stroke="#25241F" stroke-width="1.5"/>
+        <line x1="0" y1="-8" x2="0" y2="8" stroke="#25241F" stroke-width="1.5"/>
+      </g>
+      <text x="0" y="62" font-size="14" fill="#4F4E4A">For loose-leaf tea, our standard MOQ is 1 kg per SKU. For private-label and custom-blend orders, MOQ</text>
+      <text x="0" y="80" font-size="14" fill="#4F4E4A" dy="-4">is typically 25 kg per blend. Contact our trade team for project-specific quotes.</text>
+    </g>
+
+    <g transform="translate(0,100)">
+      <line x1="0" y1="60" x2="760" y2="60" stroke="#E7E7E5"/>
+      <text x="0" y="34" class="lbl-h3">How long does bulk tea last?</text>
+      <line x1="732" y1="32" x2="748" y2="32" stroke="#25241F" stroke-width="1.5"/>
+      <line x1="740" y1="24" x2="740" y2="40" stroke="#25241F" stroke-width="1.5"/>
+    </g>
+
+    <g transform="translate(0,160)">
+      <line x1="0" y1="60" x2="760" y2="60" stroke="#E7E7E5"/>
+      <text x="0" y="34" class="lbl-h3">Do you ship internationally?</text>
+      <line x1="732" y1="32" x2="748" y2="32" stroke="#25241F" stroke-width="1.5"/>
+      <line x1="740" y1="24" x2="740" y2="40" stroke="#25241F" stroke-width="1.5"/>
+    </g>
+
+    <g transform="translate(0,220)">
+      <line x1="0" y1="60" x2="760" y2="60" stroke="#E7E7E5"/>
+      <text x="0" y="34" class="lbl-h3">Can you create a custom blend for my café?</text>
+      <line x1="732" y1="32" x2="748" y2="32" stroke="#25241F" stroke-width="1.5"/>
+      <line x1="740" y1="24" x2="740" y2="40" stroke="#25241F" stroke-width="1.5"/>
+    </g>
+  </g>
+
+  <!-- ===== TESTIMONIAL CARDS (right side, alongside FAQ) ===== -->
+  <g transform="translate(880,1870)">
+    <text class="lbl-eyebrow">TESTIMONIAL</text>
+
+    <g transform="translate(0,30)">
+      <rect width="496" height="180" rx="8" fill="#FFFFFF" stroke="#E7E7E5"/>
+      <text x="32" y="48" font-size="16" fill="#25241F">"Teavision has been our wholesale</text>
+      <text x="32" y="68" font-size="16" fill="#25241F">supplier for nearly a decade. The</text>
+      <text x="32" y="88" font-size="16" fill="#25241F">consistency and breadth of their</text>
+      <text x="32" y="108" font-size="16" fill="#25241F">organic range keeps our blend menus sharp."</text>
+      <line x1="32" y1="126" x2="464" y2="126" stroke="#E7E7E5"/>
+      <circle cx="48" cy="156" r="14" fill="#F2F6F3"/>
+      <text x="48" y="161" text-anchor="middle" font-family="Fraunces, serif" font-size="13" font-weight="500" fill="#244332">SA</text>
+      <text x="72" y="153" font-size="13" font-weight="500" fill="#100F0D">St. Ali</text>
+      <text x="72" y="168" font-size="11" fill="#777671">Café group · Melbourne</text>
+    </g>
+
+    <g transform="translate(0,232)">
+      <rect width="496" height="180" rx="8" fill="#FFFFFF" stroke="#E7E7E5"/>
+      <text x="32" y="48" font-size="16" fill="#25241F">"We launched our private-label tea</text>
+      <text x="32" y="68" font-size="16" fill="#25241F">range with Teavision's NPD team.</text>
+      <text x="32" y="88" font-size="16" fill="#25241F">Sample to shelf was 11 weeks. They</text>
+      <text x="32" y="108" font-size="16" fill="#25241F">handled compliance for AU and NZ markets."</text>
+      <line x1="32" y1="126" x2="464" y2="126" stroke="#E7E7E5"/>
+      <circle cx="48" cy="156" r="14" fill="#F2F6F3"/>
+      <text x="48" y="161" text-anchor="middle" font-family="Fraunces, serif" font-size="13" font-weight="500" fill="#244332">JB</text>
+      <text x="72" y="153" font-size="13" font-weight="500" fill="#100F0D">Julia Blair</text>
+      <text x="72" y="168" font-size="11" fill="#777671">Founder · Buy Organics Online</text>
+    </g>
+  </g>
+
+  <line x1="64" y1="2330" x2="1376" y2="2330" class="divider"/>
+
+  <!-- ===== SPEC TABLE ===== -->
+  <text x="64" y="2380" class="lbl-eyebrow">SPEC TABLE</text>
+  <text x="64" y="2420" class="lbl-h2">Tea grade comparison</text>
+
+  <g transform="translate(64,2456)">
+    <rect width="1312" height="200" rx="8" fill="#FFFFFF" stroke="#E7E7E5"/>
+
+    <!-- Header row -->
+    <rect width="1312" height="40" fill="#F2EFE9"/>
+    <text x="20" y="26" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">GRADE</text>
+    <text x="380" y="26" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">CUP CHARACTER</text>
+    <text x="700" y="26" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">BREW TIME</text>
+    <text x="1162" y="26" text-anchor="end" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">PACK SIZES (KG)</text>
+    <text x="1188" y="26" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#777671">LEAD TIME</text>
+
+    <!-- Rows -->
+    <g transform="translate(0,40)">
+      <line x1="0" y1="40" x2="1312" y2="40" stroke="#E7E7E5"/>
+      <text x="20" y="26" font-size="13" font-weight="500" fill="#100F0D">FBOP — Flowery Broken Orange Pekoe</text>
+      <text x="380" y="26" font-size="13" fill="#25241F">Brisk, bright, floral notes</text>
+      <text x="700" y="26" font-size="13" fill="#25241F">3–4 min @ 95°C</text>
+      <text x="1162" y="26" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="13" fill="#25241F">1, 5, 25</text>
+      <text x="1188" y="26" font-size="13" fill="#25241F">5–7 days</text>
+    </g>
+    <g transform="translate(0,80)">
+      <line x1="0" y1="40" x2="1312" y2="40" stroke="#E7E7E5"/>
+      <text x="20" y="26" font-size="13" font-weight="500" fill="#100F0D">OP1 — Orange Pekoe Grade 1</text>
+      <text x="380" y="26" font-size="13" fill="#25241F">Smooth, full-bodied, malty</text>
+      <text x="700" y="26" font-size="13" fill="#25241F">3–4 min @ 95°C</text>
+      <text x="1162" y="26" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="13" fill="#25241F">1, 5, 25</text>
+      <text x="1188" y="26" font-size="13" fill="#25241F">5–7 days</text>
+    </g>
+    <g transform="translate(0,120)">
+      <line x1="0" y1="40" x2="1312" y2="40" stroke="#E7E7E5"/>
+      <text x="20" y="26" font-size="13" font-weight="500" fill="#100F0D">BOP — Broken Orange Pekoe</text>
+      <text x="380" y="26" font-size="13" fill="#25241F">Strong, robust, briskest cup</text>
+      <text x="700" y="26" font-size="13" fill="#25241F">3 min @ 95°C</text>
+      <text x="1162" y="26" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="13" fill="#25241F">5, 25</text>
+      <text x="1188" y="26" font-size="13" fill="#25241F">7–10 days</text>
+    </g>
+    <g transform="translate(0,160)">
+      <text x="20" y="26" font-size="13" font-weight="500" fill="#100F0D">CTC — Crush Tear Curl</text>
+      <text x="380" y="26" font-size="13" fill="#25241F">Bold, ideal for milk tea</text>
+      <text x="700" y="26" font-size="13" fill="#25241F">2–3 min @ 95°C</text>
+      <text x="1162" y="26" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="13" fill="#25241F">25, 50</text>
+      <text x="1188" y="26" font-size="13" fill="#25241F">10–14 days</text>
+    </g>
+  </g>
+
+</svg>
