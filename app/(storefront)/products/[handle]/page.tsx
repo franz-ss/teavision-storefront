@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: 'Product not found' }
   const description = product.description
     ? product.description.slice(0, 160)
-    : `Buy ${product.title} from Teavision — Australia's bulk tea and herb supplier.`
+    : `Buy ${product.title} from Teavision, Australia's bulk tea and herb supplier.`
   const imageUrl = product.images[0]?.url
   return {
     title: product.title,
@@ -67,7 +67,7 @@ async function RelatedProducts({ productId }: { productId: string }) {
   const shown = products.slice(0, 4)
   if (shown.length === 0) return null
   return (
-    <section className="border-border border-t pt-10">
+    <section className="border-default border-t pt-10">
       <h2 className="mb-6 text-xl font-semibold">You May Also Like</h2>
       <ProductGrid products={shown} />
     </section>
@@ -79,7 +79,7 @@ async function ComplementaryProducts({ productId }: { productId: string }) {
   const shown = products.slice(0, 4)
   if (shown.length === 0) return null
   return (
-    <section className="border-border border-t pt-10">
+    <section className="border-default border-t pt-10">
       <h2 className="mb-6 text-xl font-semibold">
         Customers Who Bought This Also Bought
       </h2>
@@ -151,21 +151,21 @@ async function ProductContent({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <nav aria-label="Breadcrumb" className="text-text-muted mb-6 text-sm">
+      <nav aria-label="Breadcrumb" className="text-muted mb-6 text-sm">
         <Link
           href="/"
           className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
         >
           Home
         </Link>
-        <span aria-hidden="true"> › </span>
+        <span aria-hidden="true"> / </span>
         <Link
           href="/collections/all"
           className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
         >
           Products
         </Link>
-        <span aria-hidden="true"> › </span>
+        <span aria-hidden="true"> / </span>
         <span aria-current="page">{product.title}</span>
       </nav>
 
@@ -174,10 +174,10 @@ async function ProductContent({
         <ProductGallery images={product.images} title={product.title} />
 
         <div className="flex flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
-          <h1 className="text-3xl font-bold">{product.title}</h1>
+          <h1 className="type-heading-02">{product.title}</h1>
           <ProductForm variants={product.variants} options={product.options} />
           <div
-            className="text-text-muted [&_h2]:text-text [&_h3]:text-text [&_strong]:text-text max-w-prose text-sm leading-relaxed [&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_li]:mb-1 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_strong]:font-semibold [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
+            className="text-muted [&_h2]:text-default [&_h3]:text-default [&_strong]:text-default max-w-prose text-sm leading-relaxed [&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_li]:mb-1 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_strong]:font-semibold [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
             dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
           />
 
@@ -190,7 +190,7 @@ async function ProductContent({
                 return (
                   <span
                     key={tag}
-                    className="border-border bg-surface text-text-muted rounded border px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase"
+                    className="border-default bg-surface text-muted type-eyebrow rounded border px-2 py-0.5"
                   >
                     {label}
                   </span>
@@ -201,9 +201,9 @@ async function ProductContent({
         </div>
       </div>
 
-      {/* Reviews — Shopify Product Reviews (SPR) */}
+      {/* Reviews */}
       <section
-        className="border-border mt-12 border-t pt-10"
+        className="border-default mt-12 border-t pt-10"
         aria-label="Customer reviews"
       >
         <div className="mb-6 flex flex-wrap items-baseline gap-3">
@@ -216,11 +216,10 @@ async function ProductContent({
             />
           )}
         </div>
-        {/* SPR embed — the app injects review HTML into this element */}
         <div id="shopify-product-reviews" data-id={numericProductId} />
       </section>
 
-      {/* Related products and complementary — parallel server fetches */}
+      {/* Related products and complementary recommendations */}
       <div className="mt-12 flex flex-col gap-10">
         <Suspense fallback={null}>
           <RelatedProducts productId={product.id} />
@@ -236,7 +235,7 @@ async function ProductContent({
 export default function ProductPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <Suspense fallback={<div aria-live="polite">Loading product…</div>}>
+      <Suspense fallback={<div aria-live="polite">Loading product...</div>}>
         <ProductContent params={params} />
       </Suspense>
     </div>

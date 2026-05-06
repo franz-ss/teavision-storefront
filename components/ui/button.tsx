@@ -5,21 +5,28 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary' | 'ghost'
-  size?: 'sm' | 'md' | 'lg'
+  variant?: ButtonVariant
+  size?: ButtonSize
   isLoading?: boolean
 }
 
-const variantStyles: Record<string, string> = {
-  primary: 'bg-primary text-background hover:bg-primary-hover',
-  secondary: 'border border-primary text-primary hover:bg-surface',
-  ghost: 'text-text-muted hover:bg-surface',
+type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+
+type ButtonSize = 'sm' | 'md' | 'lg'
+
+const variantStyles: Record<ButtonVariant, string> = {
+  primary:
+    'bg-action-primary text-action-primary-text hover:bg-action-primary-hover active:bg-action-primary-active',
+  secondary:
+    'border border-action-secondary-border bg-action-secondary text-action-secondary-text hover:bg-action-secondary-hover',
+  ghost:
+    'text-action-tertiary hover:bg-surface-sunken hover:text-action-tertiary-hover',
 }
 
-const sizeStyles: Record<string, string> = {
-  sm: 'px-3.5 py-1.5 text-xs',
-  md: 'px-5 py-2 text-sm',
-  lg: 'px-7 py-3 text-base',
+const sizeStyles: Record<ButtonSize, string> = {
+  sm: 'min-h-8 px-3 text-sm',
+  md: 'min-h-10 px-4 text-base',
+  lg: 'min-h-12 px-5 text-lg',
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -43,9 +50,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || isLoading}
         aria-busy={isLoading || undefined}
         className={cn(
-          'inline-flex cursor-pointer items-center justify-center gap-2 rounded font-medium transition-colors',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-          'disabled:cursor-not-allowed disabled:opacity-50',
+          'inline-flex cursor-pointer items-center justify-center gap-2 rounded-md font-medium transition-colors',
+          'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          'disabled:cursor-not-allowed disabled:opacity-40',
           variantStyles[variant],
           sizeStyles[size],
           className,

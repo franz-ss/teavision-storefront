@@ -100,7 +100,7 @@ async function CollectionContent({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      <nav aria-label="Breadcrumb" className="text-text-muted mb-6 text-sm">
+      <nav aria-label="Breadcrumb" className="text-muted mb-6 text-sm">
         <Link
           href="/"
           className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
@@ -118,13 +118,13 @@ async function CollectionContent({
         <span aria-current="page">{collection.title}</span>
       </nav>
 
-      <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
+      <h1 className="mb-2 text-2xl font-medium">{collection.title}</h1>
       {collection.description && (
-        <p className="text-text-muted mb-0">{collection.description}</p>
+        <p className="text-muted mb-0">{collection.description}</p>
       )}
 
-      <div className="border-border mt-4 mb-6 flex items-center justify-between border-t pt-3">
-        <span className="text-text-muted text-sm">
+      <div className="border-default mt-4 mb-6 flex items-center justify-between border-t pt-3">
+        <span className="text-muted text-sm">
           {products.length} {products.length === 1 ? 'product' : 'products'}
         </span>
         <Suspense fallback={null}>
@@ -137,7 +137,7 @@ async function CollectionContent({
         role="list"
       >
         {products.length === 0 ? (
-          <li className="text-text-muted col-span-full py-16 text-center">
+          <li className="text-muted col-span-full py-16 text-center">
             No products in this collection yet.
           </li>
         ) : (

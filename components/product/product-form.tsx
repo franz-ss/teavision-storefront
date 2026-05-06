@@ -36,7 +36,7 @@ export function ProductForm({ variants, options }: ProductFormProps) {
 
   if (variants.length === 0) {
     return (
-      <div className="text-text-muted rounded border border-dashed p-4 text-sm">
+      <div className="text-muted rounded border border-dashed p-4 text-sm">
         No variants available
       </div>
     )
@@ -62,8 +62,8 @@ export function ProductForm({ variants, options }: ProductFormProps) {
               className={cn(
                 'min-h-11 rounded border px-4 py-2 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40',
                 selectedVariantId === v.id
-                  ? 'border-primary bg-primary text-background'
-                  : 'border-border hover:border-primary',
+                  ? 'border-brand bg-action-primary text-action-primary-text'
+                  : 'border-default hover:border-brand',
               )}
             >
               {v.title}
@@ -82,7 +82,7 @@ export function ProductForm({ variants, options }: ProductFormProps) {
       </Button>
 
       {error && (
-        <p role="alert" className="text-destructive mt-1 text-sm">
+        <p role="alert" className="text-danger mt-1 text-sm">
           {error}
         </p>
       )}

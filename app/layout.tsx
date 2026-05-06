@@ -1,8 +1,27 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google'
+
+import { cn } from '@/lib/utils'
+
 import './globals.css'
 
-const geist = Geist({ subsets: ['latin'] })
+const fraunces = Fraunces({
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+})
+
+const inter = Inter({
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
+
+const jetBrainsMono = JetBrains_Mono({
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
+})
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
 
@@ -31,7 +50,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={geist.className}>{children}</body>
+      <body
+        className={cn(
+          inter.variable,
+          fraunces.variable,
+          jetBrainsMono.variable,
+        )}
+      >
+        {children}
+      </body>
     </html>
   )
 }

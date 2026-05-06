@@ -63,13 +63,13 @@ export function StarRating({ rating, count, size = 'md', className }: StarRating
       className={cn('inline-flex items-center gap-1.5', className)}
       aria-label={`${clamped.toFixed(1)} out of 5 stars${count !== undefined ? `, ${count} ${count === 1 ? 'review' : 'reviews'}` : ''}`}
     >
-      <div className="flex text-star" role="img" aria-hidden="true">
+      <div className="flex text-accent" role="img" aria-hidden="true">
         {stars.map((fill, i) => (
           <Star key={i} fill={fill} size={starSize} index={i} />
         ))}
       </div>
       {count !== undefined && (
-        <span className={cn('text-text-muted tabular-nums', text)}>
+        <span className={cn('text-muted tabular-nums', text)}>
           ({count.toLocaleString()})
         </span>
       )}

@@ -37,7 +37,7 @@ export function Price({
 
   if (!compareAtPrice) {
     return (
-      <span className={cn('text-text tabular-nums', sizeStyles[size], className)}>
+      <span className={cn('text-default tabular-nums', sizeStyles[size], className)}>
         {formattedPrice}
       </span>
     )
@@ -48,13 +48,13 @@ export function Price({
   return (
     <span className={cn('inline-flex items-baseline gap-2 tabular-nums', className)}>
       <span
-        className={cn(compareSizeStyles[size], 'text-text-muted line-through')}
+        className={cn(compareSizeStyles[size], 'text-muted line-through')}
         aria-label={`Was ${formattedCompare}`}
       >
         {formattedCompare}
       </span>
       <span
-        className={cn(sizeStyles[size], 'text-primary')}
+        className={cn(sizeStyles[size], 'text-brand')}
         aria-label={`Now ${formattedPrice}`}
       >
         {formattedPrice}

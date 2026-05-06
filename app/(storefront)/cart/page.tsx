@@ -19,10 +19,10 @@ async function CartContent() {
   if (!cart || cart.totalQuantity === 0) {
     return (
       <div className="text-center">
-        <p className="text-text-muted mb-6">Your cart is empty.</p>
+        <p className="text-muted mb-6">Your cart is empty.</p>
         <Link
           href="/collections/all"
-          className="bg-primary text-background hover:bg-primary-hover inline-block rounded px-6 py-3 font-medium focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="bg-action-primary text-action-primary-text hover:bg-action-primary-hover inline-block rounded px-6 py-3 font-medium focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           Continue shopping
         </Link>
@@ -58,9 +58,7 @@ async function CartContent() {
                 <p className="truncate font-medium">
                   {line.merchandise.product.title}
                 </p>
-                <p className="text-text-muted text-sm">
-                  {line.merchandise.title}
-                </p>
+                <p className="text-muted text-sm">{line.merchandise.title}</p>
               </div>
 
               <div className="flex items-center gap-2">
@@ -68,7 +66,7 @@ async function CartContent() {
                   <button
                     type="submit"
                     aria-label={`Decrease quantity of ${line.merchandise.product.title}`}
-                    className="border-border hover:border-primary flex h-8 w-8 items-center justify-center rounded border focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="border-default hover:border-brand flex h-8 w-8 items-center justify-center rounded border focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
                     &minus;
                   </button>
@@ -80,7 +78,7 @@ async function CartContent() {
                   <button
                     type="submit"
                     aria-label={`Increase quantity of ${line.merchandise.product.title}`}
-                    className="border-border hover:border-primary flex h-8 w-8 items-center justify-center rounded border focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="border-default hover:border-brand flex h-8 w-8 items-center justify-center rounded border focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
                     +
                   </button>
@@ -101,18 +99,18 @@ async function CartContent() {
         })}
       </ul>
 
-      <div className="border-border mt-8 rounded border p-6">
+      <div className="border-default mt-8 rounded border p-6">
         <div className="flex justify-between text-lg font-semibold">
           <span>Subtotal</span>
           <Price price={cart.cost.subtotalAmount} size="lg" />
         </div>
-        <p className="text-text-muted mt-1 text-sm">
+        <p className="text-muted mt-1 text-sm">
           Shipping and taxes calculated at checkout.
         </p>
 
         <a
           href={cart.checkoutUrl}
-          className="bg-primary text-background hover:bg-primary-hover mt-4 block w-full rounded py-3 text-center font-medium focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="bg-action-primary text-action-primary-text hover:bg-action-primary-hover mt-4 block w-full rounded py-3 text-center font-medium focus-visible:ring-2 focus-visible:ring-offset-2"
           aria-label="Proceed to checkout"
         >
           Checkout
@@ -120,7 +118,7 @@ async function CartContent() {
 
         <Link
           href="/collections/all"
-          className="text-text-muted mt-3 block text-center text-sm hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="text-muted mt-3 block text-center text-sm hover:underline focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           Continue shopping
         </Link>
@@ -132,10 +130,10 @@ async function CartContent() {
 export default function CartPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="mb-8 text-2xl font-bold">Your Cart</h1>
+      <h1 className="mb-8 text-2xl font-medium">Your Cart</h1>
       <Suspense
         fallback={
-          <p className="text-text-muted" aria-live="polite">
+          <p className="text-muted" aria-live="polite">
             Loading cart…
           </p>
         }

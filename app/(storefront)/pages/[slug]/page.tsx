@@ -43,7 +43,7 @@ async function PageContent({ params }: { params: Promise<{ slug: string }> }) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
-      <h1 className="text-4xl font-semibold tracking-tight">{page.title}</h1>
+      <h1 className="text-4xl font-semibold">{page.title}</h1>
       <div
         className="bg-surface mt-8 rounded p-8 text-base leading-relaxed"
         dangerouslySetInnerHTML={{ __html: page.body }}

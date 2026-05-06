@@ -8,9 +8,9 @@ type BadgeProps = {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  outOfStock: 'bg-surface-warm text-destructive',
-  sale: 'bg-surface-sage text-primary-hover',
-  new: 'bg-border text-text-muted',
+  outOfStock: 'border border-danger bg-danger text-danger',
+  sale: 'border border-accent/30 bg-accent-subtle text-accent',
+  new: 'border border-default bg-surface-sunken text-muted',
 }
 
 const labels: Record<BadgeVariant, string> = {
@@ -23,7 +23,7 @@ export function Badge({ variant, className }: BadgeProps) {
   return (
     <span
       className={cn(
-        'inline-block rounded px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide',
+        'type-eyebrow inline-block rounded-sm px-1.5 py-0.5',
         variantClasses[variant],
         className,
       )}

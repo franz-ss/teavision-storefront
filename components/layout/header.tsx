@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Suspense } from 'react'
 
 import { getCartAction } from '@/lib/cart/actions'
@@ -8,7 +9,7 @@ async function CartCount() {
   const count = cart?.totalQuantity ?? 0
   if (count === 0) return null
   return (
-    <span className="bg-primary text-background ml-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold">
+    <span className="bg-action-primary text-action-primary-text ml-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold">
       {count}
     </span>
   )
@@ -23,9 +24,16 @@ export function Header() {
       >
         <Link
           href="/"
-          className="inline-flex min-h-11 items-center font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="inline-flex min-h-11 shrink-0 items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
-          Teavision
+          <Image
+            src="/teavision.svg"
+            alt="Teavision"
+            width={188}
+            height={44}
+            className="h-8 w-auto sm:h-9"
+            priority
+          />
         </Link>
         <ul className="flex text-sm" role="list">
           <li>

@@ -8,7 +8,9 @@ type Props = {
   searchParams: Promise<{ q?: string }>
 }
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
   const { q } = await searchParams
   const title = q ? `Search: "${q}"` : 'Search'
   return {
@@ -30,16 +32,16 @@ async function SearchContent({
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">
+      <h1 className="mb-6 text-2xl font-medium">
         {q ? `Search results for "${q}"` : 'Search'}
       </h1>
 
       {!q && (
-        <p className="text-text-muted">Enter a search term to find products.</p>
+        <p className="text-muted">Enter a search term to find products.</p>
       )}
 
       {q && products.length === 0 && (
-        <p className="text-text-muted">No products found for &ldquo;{q}&rdquo;.</p>
+        <p className="text-muted">No products found for &ldquo;{q}&rdquo;.</p>
       )}
 
       {products.length > 0 && (

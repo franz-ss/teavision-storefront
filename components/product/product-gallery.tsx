@@ -72,7 +72,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               className={cn(
                 'relative h-16 w-16 shrink-0 overflow-hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
                 selectedIndex === i
-                  ? 'ring-primary ring-2'
+                  ? 'ring-ring ring-2'
                   : 'opacity-60 hover:opacity-100',
               )}
             >

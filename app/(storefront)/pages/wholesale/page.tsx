@@ -18,10 +18,8 @@ export default function WholesalePage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
       {/* Header */}
-      <h1 className="text-4xl font-semibold tracking-tight">
-        Wholesale Accounts
-      </h1>
-      <p className="text-text-muted mt-4 text-lg">
+      <h1 className="type-heading-02">Wholesale Accounts</h1>
+      <p className="text-muted type-body mt-4">
         Australia&rsquo;s leading supplier of bulk tea, herbs, and spices.
         Serving cafes, restaurants, retailers, and wellness brands since 2014.
       </p>
@@ -35,8 +33,8 @@ export default function WholesalePage() {
           { stat: '15+', label: 'Industry Awards' },
         ].map(({ stat, label }) => (
           <li key={label} className="bg-surface rounded p-4 text-center">
-            <p className="text-primary text-2xl font-semibold">{stat}</p>
-            <p className="text-text-muted mt-1 text-sm">{label}</p>
+            <p className="text-brand text-2xl font-semibold">{stat}</p>
+            <p className="text-muted mt-1 text-sm">{label}</p>
           </li>
         ))}
       </ul>
@@ -53,9 +51,7 @@ export default function WholesalePage() {
             'Catalogue and sample packs available',
           ].map((item) => (
             <li key={item} className="flex items-start gap-2">
-              <span className="text-primary mt-0.5 text-sm font-semibold">
-                —
-              </span>
+              <span className="text-brand mt-0.5 text-sm font-semibold">-</span>
               {item}
             </li>
           ))}
@@ -65,15 +61,13 @@ export default function WholesalePage() {
       {/* Contact CTA */}
       <section className="bg-surface mt-12 rounded p-8">
         <h2 className="text-xl font-semibold">Get in touch</h2>
-        <p className="text-text-muted mt-2">
+        <p className="text-muted mt-2">
           To apply for a wholesale account or request a quote, contact us
           directly:
         </p>
         <dl className="mt-6 space-y-3">
           <div>
-            <dt className="text-text-muted text-[0.65rem] font-medium tracking-wide uppercase">
-              Phone
-            </dt>
+            <dt className="text-muted type-eyebrow">Phone</dt>
             <dd className="mt-1 text-base font-medium">
               <a
                 href="tel:1300729617"
@@ -84,9 +78,7 @@ export default function WholesalePage() {
             </dd>
           </div>
           <div>
-            <dt className="text-text-muted text-[0.65rem] font-medium tracking-wide uppercase">
-              Email
-            </dt>
+            <dt className="text-muted type-eyebrow">Email</dt>
             <dd className="mt-1 text-base font-medium">
               <a
                 href="mailto:wholesale@teavision.com.au"
@@ -97,11 +89,11 @@ export default function WholesalePage() {
             </dd>
           </div>
         </dl>
-        <p className="text-text-muted mt-6 text-sm">
+        <p className="text-muted mt-6 text-sm">
           Minimum order quantities start from 100kg for new wholesale accounts.
           <Link
             href="/collections/all"
-            className="text-primary ml-1 hover:underline"
+            className="text-brand ml-1 hover:underline"
           >
             Browse our full range
           </Link>{' '}
