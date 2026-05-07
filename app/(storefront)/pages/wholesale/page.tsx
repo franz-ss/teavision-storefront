@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import { Section } from '@/components/ui'
+
 const WHOLESALE_STATS = [
   { stat: '1,000+', label: 'Ingredients' },
   { stat: '500+', label: 'Certified Organic' },
@@ -49,8 +51,8 @@ export const metadata: Metadata = {
 export default function WholesalePage() {
   return (
     <>
-      <section className="border-default bg-surface-sunken border-b">
-        <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
+      <Section.Root tone="sunken" className="border-default border-b">
+        <Section.Container>
           <nav className="type-body-sm text-muted mb-8" aria-label="Breadcrumb">
             <ol className="flex items-center gap-2" role="list">
               <li>
@@ -104,12 +106,12 @@ export default function WholesalePage() {
               ))}
             </dl>
           </div>
-        </div>
-      </section>
+        </Section.Container>
+      </Section.Root>
 
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.3fr)]">
-          <section>
+          <Section.Root tone="transparent" spacing="none">
             <p className="type-eyebrow text-muted">Supply pathways</p>
             <h2 className="type-heading-02 text-strong mt-3">
               Start with the right commercial route.
@@ -133,7 +135,7 @@ export default function WholesalePage() {
                 </li>
               ))}
             </ul>
-          </section>
+          </Section.Root>
 
           <aside className="border-default border-y py-6">
             <p className="type-eyebrow text-muted">What&rsquo;s included</p>

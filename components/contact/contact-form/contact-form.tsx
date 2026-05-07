@@ -88,7 +88,7 @@ export function ContactForm({
 
   if (status === 'success') {
     return (
-      <div className="border-success/30 bg-success rounded border p-6">
+      <div className="border-success-border/30 bg-success-bg rounded border p-6">
         <p className={labelClassName}>Enquiry received</p>
         <h2 className="type-heading-03 text-strong mt-4">
           Thanks for your message.
@@ -210,7 +210,7 @@ export function ContactForm({
         <p
           id="contact-form-error"
           role="alert"
-          className="type-body-sm border-danger/30 bg-danger text-danger rounded border p-4"
+          className="type-body-sm border-danger-border/30 bg-danger-bg text-danger-text rounded border p-4"
         >
           {error}
         </p>

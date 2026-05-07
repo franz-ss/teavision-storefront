@@ -3,8 +3,7 @@
 import { useState, useTransition } from 'react'
 
 import { addToCartAction } from '@/lib/cart/actions'
-import { Button, Price } from '@/components/ui'
-import { cn } from '@/lib/utils'
+import { Button, Price, ToggleButton } from '@/components/ui'
 import type { ProductOption, ProductVariant } from '@/lib/shopify/types'
 
 type ProductFormProps = {
@@ -52,22 +51,15 @@ export function ProductForm({ variants, options }: ProductFormProps) {
         </legend>
         <div className="flex flex-wrap gap-2">
           {variants.map((v) => (
-            <button
+            <ToggleButton
               key={v.id}
-              type="button"
+              pressed={selectedVariantId === v.id}
               disabled={!v.availableForSale}
-              aria-pressed={selectedVariantId === v.id}
               aria-label={`${v.title}${!v.availableForSale ? ', out of stock' : ''}`}
               onClick={() => setSelectedVariantId(v.id)}
-              className={cn(
-                'min-h-11 rounded border px-4 py-2 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40',
-                selectedVariantId === v.id
-                  ? 'border-brand bg-action-primary text-action-primary-text'
-                  : 'border-default hover:border-brand',
-              )}
             >
               {v.title}
-            </button>
+            </ToggleButton>
           ))}
         </div>
       </fieldset>
@@ -82,7 +74,7 @@ export function ProductForm({ variants, options }: ProductFormProps) {
       </Button>
 
       {error && (
-        <p role="alert" className="text-danger mt-1 text-sm">
+        <p role="alert" className="text-danger-text mt-1 text-sm">
           {error}
         </p>
       )}

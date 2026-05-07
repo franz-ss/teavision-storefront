@@ -10,7 +10,7 @@ import {
 } from '@/lib/shopify/operations/collection'
 import { ProductCollectionSortKeys } from '@/lib/shopify/types'
 import { SortSelect } from '@/components/collection'
-import { ProductCard } from '@/components/ui'
+import { ProductCard, Section } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 type Props = {
@@ -234,8 +234,8 @@ async function CollectionContent({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <section className="border-default bg-surface-sunken border-b">
-        <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-14">
+      <Section.Root tone="sunken" className="border-default border-b">
+        <Section.Container>
           <nav
             aria-label="Breadcrumb"
             className="type-body-sm text-muted mb-8 flex flex-wrap items-center gap-2"
@@ -323,70 +323,73 @@ async function CollectionContent({
               </dl>
             </aside>
           </div>
-        </div>
-      </section>
+        </Section.Container>
+      </Section.Root>
 
       <main className="bg-canvas">
-        <section
+        <Section.Root
+          tone="transparent"
           aria-labelledby="collection-products-heading"
-          className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-12"
         >
-          <div className="border-default mb-8 flex flex-col gap-5 border-b pb-6 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="type-eyebrow text-accent">Catalogue</p>
-              <h2
-                id="collection-products-heading"
-                className="type-heading-02 text-strong mt-3"
-              >
-                Products in this range
-              </h2>
-              <p className="type-body-sm text-muted mt-3">
-                {productCountLabel} available for browsing, sampling, and bulk
-                ordering.
-              </p>
-            </div>
-            <Suspense fallback={null}>
-              <SortSelect currentSort={sort} />
-            </Suspense>
-          </div>
-
-          <ul
-            className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-            role="list"
-          >
-            {products.length === 0 ? (
-              <li className="border-default bg-surface col-span-full rounded-lg border px-6 py-16 text-center">
-                <h3 className="type-heading-03 text-strong">
-                  No products listed yet
-                </h3>
-                <p className="type-body-sm text-muted mx-auto mt-3 max-w-lg">
-                  This collection is available in Shopify, but no products are
-                  currently published to it. The Teavision team can still help
-                  confirm suitable options.
-                </p>
-                <Link
-                  href="/pages/contact"
-                  className={cn(PRIMARY_LINK_CLASS_NAME, 'mt-6')}
+          <Section.Container>
+            <div className="border-default mb-8 flex flex-col gap-5 border-b pb-6 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="type-eyebrow text-accent">Catalogue</p>
+                <h2
+                  id="collection-products-heading"
+                  className="type-heading-02 text-strong mt-3"
                 >
-                  Contact Teavision
-                </Link>
-              </li>
-            ) : (
-              products.map((product, i) => (
-                <li key={product.id}>
-                  <ProductCard product={product} priority={i === 0} />
+                  Products in this range
+                </h2>
+                <p className="type-body-sm text-muted mt-3">
+                  {productCountLabel} available for browsing, sampling, and bulk
+                  ordering.
+                </p>
+              </div>
+              <Suspense fallback={null}>
+                <SortSelect currentSort={sort} />
+              </Suspense>
+            </div>
+
+            <ul
+              className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+              role="list"
+            >
+              {products.length === 0 ? (
+                <li className="border-default bg-surface col-span-full rounded-lg border px-6 py-16 text-center">
+                  <h3 className="type-heading-03 text-strong">
+                    No products listed yet
+                  </h3>
+                  <p className="type-body-sm text-muted mx-auto mt-3 max-w-lg">
+                    This collection is available in Shopify, but no products are
+                    currently published to it. The Teavision team can still help
+                    confirm suitable options.
+                  </p>
+                  <Link
+                    href="/pages/contact"
+                    className={cn(PRIMARY_LINK_CLASS_NAME, 'mt-6')}
+                  >
+                    Contact Teavision
+                  </Link>
                 </li>
-              ))
-            )}
-          </ul>
-        </section>
+              ) : (
+                products.map((product, i) => (
+                  <li key={product.id}>
+                    <ProductCard product={product} priority={i === 0} />
+                  </li>
+                ))
+              )}
+            </ul>
+          </Section.Container>
+        </Section.Root>
 
         {hasRichDescription && (
-          <section
+          <Section.Root
+            tone="surface"
             aria-labelledby="collection-about-heading"
-            className="border-default bg-surface border-t"
+            className="border-default border-t"
           >
-            <div className="mx-auto max-w-7xl px-4 py-12 md:px-6">
+            <Section.Container>
               <p className="type-eyebrow text-accent">Range notes</p>
               <h2
                 id="collection-about-heading"
@@ -398,8 +401,8 @@ async function CollectionContent({
                 className={cn(COLLECTION_BODY_CLASS_NAME, 'mt-8 max-w-prose')}
                 dangerouslySetInnerHTML={{ __html: richDescriptionHtml }}
               />
-            </div>
-          </section>
+            </Section.Container>
+          </Section.Root>
         )}
       </main>
     </>

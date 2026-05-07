@@ -7,7 +7,7 @@ import {
   getProduct,
   getProductRecommendations,
 } from '@/lib/shopify/operations/product'
-import { ProductCard, StarRating } from '@/components/ui'
+import { ProductCard, Section, StarRating } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 import type { ProductSummary } from '@/lib/shopify/types'
 
@@ -67,10 +67,14 @@ async function RelatedProducts({ productId }: { productId: string }) {
   const shown = products.slice(0, 4)
   if (shown.length === 0) return null
   return (
-    <section className="border-default border-t pt-10">
+    <Section.Root
+      tone="transparent"
+      spacing="none"
+      className="border-default border-t pt-10"
+    >
       <h2 className="mb-6 text-xl font-semibold">You May Also Like</h2>
       <ProductGrid products={shown} />
-    </section>
+    </Section.Root>
   )
 }
 
@@ -79,12 +83,16 @@ async function ComplementaryProducts({ productId }: { productId: string }) {
   const shown = products.slice(0, 4)
   if (shown.length === 0) return null
   return (
-    <section className="border-default border-t pt-10">
+    <Section.Root
+      tone="transparent"
+      spacing="none"
+      className="border-default border-t pt-10"
+    >
       <h2 className="mb-6 text-xl font-semibold">
         Customers Who Bought This Also Bought
       </h2>
       <ProductGrid products={shown} />
-    </section>
+    </Section.Root>
   )
 }
 
@@ -202,7 +210,9 @@ async function ProductContent({
       </div>
 
       {/* Reviews */}
-      <section
+      <Section.Root
+        tone="transparent"
+        spacing="none"
         className="border-default mt-12 border-t pt-10"
         aria-label="Customer reviews"
       >
@@ -217,7 +227,7 @@ async function ProductContent({
           )}
         </div>
         <div id="shopify-product-reviews" data-id={numericProductId} />
-      </section>
+      </Section.Root>
 
       {/* Related products and complementary recommendations */}
       <div className="mt-12 flex flex-col gap-10">

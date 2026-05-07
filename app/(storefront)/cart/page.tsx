@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import { Minus, Plus } from 'lucide-react'
 
 import {
   getCartAction,
   updateCartLineAction,
   removeCartLineAction,
 } from '@/lib/cart/actions'
-import { Button, Price } from '@/components/ui'
+import { Button, IconButton, Price } from '@/components/ui'
 
 export const metadata: Metadata = {
   title: 'Your Cart',
@@ -63,25 +64,25 @@ async function CartContent() {
 
               <div className="flex items-center gap-2">
                 <form action={decreaseAction}>
-                  <button
+                  <IconButton
                     type="submit"
+                    size="sm"
                     aria-label={`Decrease quantity of ${line.merchandise.product.title}`}
-                    className="border-default hover:border-brand flex h-8 w-8 items-center justify-center rounded border focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
-                    &minus;
-                  </button>
+                    <Minus className="h-4 w-4" aria-hidden="true" />
+                  </IconButton>
                 </form>
                 <span aria-label={`Quantity: ${line.quantity}`}>
                   {line.quantity}
                 </span>
                 <form action={increaseAction}>
-                  <button
+                  <IconButton
                     type="submit"
+                    size="sm"
                     aria-label={`Increase quantity of ${line.merchandise.product.title}`}
-                    className="border-default hover:border-brand flex h-8 w-8 items-center justify-center rounded border focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
-                    +
-                  </button>
+                    <Plus className="h-4 w-4" aria-hidden="true" />
+                  </IconButton>
                 </form>
               </div>
 

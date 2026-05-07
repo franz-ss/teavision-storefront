@@ -180,7 +180,11 @@ export function getTagPath(blogHandle: string, tag: string): string {
 
 export function findTagBySlug(tags: string[], slug?: string): string | null {
   if (!slug) return null
-  return tags.find((tag) => slugifyTag(tag) === slug) ?? null
+  return (
+    tags.find(
+      (tag) => slugifyTag(tag) === slugifyTag(decodeURIComponent(slug)),
+    ) ?? null
+  )
 }
 
 export function formatArticleDate(iso: string): string {

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { Section } from '@/components/ui'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 import type { CollectionSummary } from '@/lib/shopify/types'
 
@@ -87,7 +88,7 @@ function CollectionImage({ collection }: { collection: CollectionSummary }) {
     !collection.featuredImage.width ||
     !collection.featuredImage.height
   ) {
-    return <div className="bg-surface-sunken aspect-[4/3] w-full" />
+    return <div className="bg-surface-sunken aspect-4/3 w-full" />
   }
 
   return (
@@ -97,7 +98,7 @@ function CollectionImage({ collection }: { collection: CollectionSummary }) {
       width={collection.featuredImage.width}
       height={collection.featuredImage.height}
       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-      className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+      className="aspect-4/3 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
     />
   )
 }
@@ -136,8 +137,8 @@ export default async function CollectionsPage() {
       />
 
       <main className="bg-canvas">
-        <section className="border-default bg-surface-sunken border-b">
-          <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-14">
+        <Section.Root tone="sunken" className="border-default border-b">
+          <Section.Container>
             <nav
               aria-label="Breadcrumb"
               className="type-body-sm text-muted mb-8 flex flex-wrap items-center gap-2"
@@ -176,44 +177,46 @@ export default async function CollectionsPage() {
                 Request wholesale access
               </Link>
             </div>
-          </div>
-        </section>
+          </Section.Container>
+        </Section.Root>
 
-        <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
-          <div className="max-w-prose">
-            <p className="type-eyebrow text-accent">Popular paths</p>
-            <h2 className="type-heading-02 text-strong mt-3">
-              Find the right range faster
-            </h2>
-          </div>
+        <Section.Root tone="transparent">
+          <Section.Container>
+            <div className="max-w-prose">
+              <p className="type-eyebrow text-accent">Popular paths</p>
+              <h2 className="type-heading-02 text-strong mt-3">
+                Find the right range faster
+              </h2>
+            </div>
 
-          <ul
-            className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-            role="list"
-          >
-            {featuredCollections.map((collection) => (
-              <li key={collection.id}>
-                <Link
-                  href={collectionHref(collection.handle)}
-                  className="border-default bg-surface hover:border-brand focus-visible:ring-ring group block h-full overflow-hidden rounded-lg border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                >
-                  <CollectionImage collection={collection} />
-                  <div className="p-4">
-                    <h3 className="type-heading-04 text-strong group-hover:text-brand transition-colors">
-                      {collection.title}
-                    </h3>
-                    <p className="type-body-sm text-muted mt-3">
-                      {getCollectionDescription(collection)}
-                    </p>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
+            <ul
+              className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+              role="list"
+            >
+              {featuredCollections.map((collection) => (
+                <li key={collection.id}>
+                  <Link
+                    href={collectionHref(collection.handle)}
+                    className="border-default bg-surface hover:border-brand focus-visible:ring-ring group block h-full overflow-hidden rounded-lg border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                  >
+                    <CollectionImage collection={collection} />
+                    <div className="p-4">
+                      <h3 className="type-heading-04 text-strong group-hover:text-brand transition-colors">
+                        {collection.title}
+                      </h3>
+                      <p className="type-body-sm text-muted mt-3">
+                        {getCollectionDescription(collection)}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Section.Container>
+        </Section.Root>
 
-        <section className="border-default bg-surface border-t">
-          <div className="mx-auto max-w-7xl px-4 py-12 md:px-6">
+        <Section.Root tone="surface" className="border-default border-t">
+          <Section.Container>
             <div className="border-default mb-6 flex flex-col gap-3 border-b pb-6 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="type-eyebrow text-accent">Directory</p>
@@ -248,8 +251,8 @@ export default async function CollectionsPage() {
                 </li>
               ))}
             </ul>
-          </div>
-        </section>
+          </Section.Container>
+        </Section.Root>
       </main>
     </>
   )

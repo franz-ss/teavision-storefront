@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/image'
 
-import { cn } from '@/lib/utils'
+import { ToggleButton } from '@/components/ui'
 import type { ShopifyImage } from '@/lib/shopify/types'
 
 type ProductGalleryProps = {
@@ -63,18 +63,12 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       {images.length > 1 && (
         <div className="mt-2 flex gap-2 overflow-x-auto">
           {images.map((image, i) => (
-            <button
+            <ToggleButton
               key={image.url}
-              type="button"
+              variant="thumbnail"
               aria-label={`View image ${i + 1}`}
-              aria-pressed={selectedIndex === i}
+              pressed={selectedIndex === i}
               onClick={() => emblaApi?.scrollTo(i)}
-              className={cn(
-                'relative h-16 w-16 shrink-0 overflow-hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
-                selectedIndex === i
-                  ? 'ring-ring ring-2'
-                  : 'opacity-60 hover:opacity-100',
-              )}
             >
               {image.width && image.height ? (
                 <Image
@@ -88,7 +82,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               ) : (
                 <div className="bg-surface h-full w-full" />
               )}
-            </button>
+            </ToggleButton>
           ))}
         </div>
       )}

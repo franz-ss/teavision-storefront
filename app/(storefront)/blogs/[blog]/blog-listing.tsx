@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
-import { ArticleCard, Button, NewsletterSignup } from '@/components/ui'
+import { ArticleCard, Button, NewsletterSignup, Section } from '@/components/ui'
 import {
   filterArticles,
   findTagBySlug,
@@ -28,7 +28,6 @@ type SearchParams = {
 type BlogListingProps = {
   params: Promise<{ blog: string; tag?: string }>
   searchParams: Promise<SearchParams>
-  tagSlug?: string
 }
 
 type PaginationItem = number | 'ellipsis-left' | 'ellipsis-right'
@@ -94,7 +93,6 @@ function listingHref({
 export async function generateBlogListingMetadata({
   params,
   searchParams,
-  tagSlug,
 }: BlogListingProps): Promise<Metadata> {
   const [{ blog, tag }, { page, q }] = await Promise.all([params, searchParams])
   const normalizedBlog = normalizeBlogHandle(blog)
@@ -102,7 +100,7 @@ export async function generateBlogListingMetadata({
   if (!blogData) return { title: 'Tea Journal' }
 
   const tags = getUniqueArticleTags(blogData.articles)
-  const activeTag = findTagBySlug(tags, tagSlug ?? tag)
+  const activeTag = findTagBySlug(tags, tag)
   const currentPage = parsePage(page)
   const titleParts = [
     activeTag ? `${blogData.title}: ${activeTag}` : blogData.seo.title,
@@ -131,20 +129,15 @@ export async function generateBlogListingMetadata({
   }
 }
 
-async function BlogListingContent({
-  params,
-  searchParams,
-  tagSlug,
-}: BlogListingProps) {
+async function BlogListingContent({ params, searchParams }: BlogListingProps) {
   const [{ blog, tag }, { page, q }] = await Promise.all([params, searchParams])
   const normalizedBlog = normalizeBlogHandle(blog)
   const blogData = await getBlog(normalizedBlog)
   if (!blogData) notFound()
 
   const tags = getUniqueArticleTags(blogData.articles)
-  const activeTagSlug = tagSlug ?? tag
-  const activeTag = findTagBySlug(tags, activeTagSlug)
-  if (activeTagSlug && !activeTag) notFound()
+  const activeTag = findTagBySlug(tags, tag)
+  if (tag && !activeTag) notFound()
 
   const featuredArticles = getFeaturedArticles(blogData.articles)
   const featuredIds = new Set(featuredArticles.map((article) => article.id))
@@ -171,229 +164,228 @@ async function BlogListingContent({
 
   return (
     <>
-      <section className="mx-auto max-w-7xl px-4 py-12">
-        <form
-          action={
-            activeTag
-              ? getTagPath(normalizedBlog, activeTag)
-              : getBlogPath(normalizedBlog)
-          }
-          className="mx-auto flex max-w-2xl flex-col gap-3 sm:flex-row"
-          role="search"
-        >
-          <label className="sr-only" htmlFor="blog-search">
-            Search tea topics
-          </label>
-          <input
-            id="blog-search"
-            name="q"
-            type="search"
-            defaultValue={q ?? ''}
-            placeholder="Search tea topics..."
-            className="type-body border-default bg-surface text-default placeholder:text-muted focus:border-brand focus:ring-ring min-h-11 flex-1 rounded-md border px-4 transition-colors focus:ring-2 focus:outline-none"
-          />
-          <Button type="submit">Search</Button>
-        </form>
-
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <a
-            href={`${getBlogPath(normalizedBlog)}/atom`}
-            className="type-label text-link hover:text-link-hover focus-visible:ring-ring inline-flex min-h-11 items-center hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      <Section.Root tone="surface">
+        <Section.Container variant="compact">
+          <form
+            action={
+              activeTag
+                ? getTagPath(normalizedBlog, activeTag)
+                : getBlogPath(normalizedBlog)
+            }
+            className="flex flex-col gap-3 sm:flex-row"
+            role="search"
           >
-            RSS
-          </a>
-        </div>
-      </section>
+            <label className="sr-only" htmlFor="blog-search">
+              Search tea topics
+            </label>
+            <input
+              id="blog-search"
+              name="q"
+              type="search"
+              defaultValue={q ?? ''}
+              placeholder="Search tea topics..."
+              className="type-body border-default bg-surface text-default placeholder:text-muted focus:border-brand focus:ring-ring min-h-11 flex-1 rounded-md border px-4 transition-colors focus:ring-2 focus:outline-none"
+            />
+            <Button type="submit">Search</Button>
+          </form>
+
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <a
+              href={`${getBlogPath(normalizedBlog)}/atom`}
+              className="type-label text-link hover:text-link-hover focus-visible:ring-ring inline-flex min-h-11 items-center hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              RSS
+            </a>
+          </div>
+        </Section.Container>
+      </Section.Root>
 
       {shouldShowFeatured && (
-        <section className="mx-auto max-w-7xl px-4 pb-12">
-          <div className="mb-6 flex items-end justify-between gap-4">
+        <Section.Root tone="surface">
+          <Section.Container>
+            <div className="mb-6 flex items-end justify-between gap-4">
+              <div>
+                <p className="type-eyebrow text-muted">Tea Journal</p>
+                <h2 className="type-heading-02 text-strong mt-2">
+                  Featured Articles
+                </h2>
+              </div>
+            </div>
+            <ul className="grid gap-6 md:grid-cols-2" role="list">
+              {featuredArticles.map((article, index) => (
+                <li key={article.id}>
+                  <ArticleCard
+                    article={article}
+                    href={getArticlePath(normalizedBlog, article.handle)}
+                    publishedLabel={formatArticleDate(article.publishedAt)}
+                    variant="featured"
+                    headingLevel="h3"
+                    priority={index === 0}
+                  />
+                </li>
+              ))}
+            </ul>
+          </Section.Container>
+        </Section.Root>
+      )}
+
+      <Section.Root tone="surface">
+        <Section.Container>
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="type-eyebrow text-muted">Tea Journal</p>
               <h2 className="type-heading-02 text-strong mt-2">
-                Featured Articles
+                {articleGridHeading}
               </h2>
+              {normalizedQuery && (
+                <p className="type-body-sm text-muted mt-3">
+                  Showing matches for{' '}
+                  <span className="type-label text-default">
+                    {normalizedQuery}
+                  </span>
+                </p>
+              )}
             </div>
+            <p className="type-body-sm text-muted">
+              {paginated.totalArticles}{' '}
+              {paginated.totalArticles === 1 ? 'article' : 'articles'}
+            </p>
           </div>
-          <ul className="grid gap-6 md:grid-cols-2" role="list">
-            {featuredArticles.map((article, index) => (
-              <li key={article.id}>
-                <ArticleCard
-                  article={article}
-                  href={getArticlePath(normalizedBlog, article.handle)}
-                  publishedLabel={formatArticleDate(article.publishedAt)}
-                  variant="featured"
-                  headingLevel="h3"
-                  priority={index === 0}
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
 
-      <section className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="type-eyebrow text-muted">Tea Journal</p>
-            <h2 className="type-heading-02 text-strong mt-2">
-              {articleGridHeading}
-            </h2>
-            {normalizedQuery && (
-              <p className="type-body-sm text-muted mt-3">
-                Showing matches for{' '}
-                <span className="type-label text-default">
-                  {normalizedQuery}
-                </span>
-              </p>
-            )}
-          </div>
-          <p className="type-body-sm text-muted">
-            {paginated.totalArticles}{' '}
-            {paginated.totalArticles === 1 ? 'article' : 'articles'}
-          </p>
-        </div>
-
-        <nav aria-label="Filter by tag" className="mb-8 flex flex-wrap gap-2">
-          <Link
-            href={getBlogPath(normalizedBlog)}
-            aria-current={!activeTag ? 'page' : undefined}
-            className={cn(
-              'type-label focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-              !activeTag
-                ? 'bg-action-primary text-action-primary-text'
-                : 'border-default bg-surface text-default hover:border-brand border',
-            )}
-          >
-            All
-          </Link>
-          {tags.map((tag) => (
+          <nav aria-label="Filter by tag" className="mb-8 flex flex-wrap gap-2">
             <Link
-              key={tag}
-              href={getTagPath(normalizedBlog, tag)}
-              aria-current={activeTag === tag ? 'page' : undefined}
+              href={getBlogPath(normalizedBlog)}
+              aria-current={!activeTag ? 'page' : undefined}
               className={cn(
                 'type-label focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-                activeTag === tag
+                !activeTag
                   ? 'bg-action-primary text-action-primary-text'
                   : 'border-default bg-surface text-default hover:border-brand border',
               )}
             >
-              {tag}
+              All
             </Link>
-          ))}
-        </nav>
-
-        {paginated.totalArticles === 0 ? (
-          <div className="border-default bg-surface rounded-lg border px-6 py-12 text-center">
-            <h2 className="type-heading-03 text-strong">No articles found</h2>
-            <p className="type-body-sm text-muted mx-auto mt-3 max-w-lg">
-              Try a different search term or browse all Tea Journal articles.
-            </p>
-          </div>
-        ) : (
-          <ul
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            role="list"
-          >
-            {paginated.articles.map((article) => (
-              <li key={article.id}>
-                <ArticleCard
-                  article={article}
-                  href={getArticlePath(normalizedBlog, article.handle)}
-                  publishedLabel={formatArticleDate(article.publishedAt)}
-                  headingLevel="h3"
-                />
-              </li>
+            {tags.map((tag) => (
+              <Link
+                key={tag}
+                href={getTagPath(normalizedBlog, tag)}
+                aria-current={activeTag === tag ? 'page' : undefined}
+                className={cn(
+                  'type-label focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                  activeTag === tag
+                    ? 'bg-action-primary text-action-primary-text'
+                    : 'border-default bg-surface text-default hover:border-brand border',
+                )}
+              >
+                {tag}
+              </Link>
             ))}
-          </ul>
-        )}
-
-        {paginated.totalPages > 1 && (
-          <nav
-            aria-label="Blog pagination"
-            className="border-default mt-12 flex items-center justify-center gap-1 border-t pt-8"
-          >
-            {getPaginationItems(
-              paginated.currentPage,
-              paginated.totalPages,
-            ).map((item) =>
-              typeof item === 'number' ? (
-                <Link
-                  key={item}
-                  href={listingHref({
-                    blogHandle: normalizedBlog,
-                    activeTag,
-                    query: q,
-                    page: item,
-                  })}
-                  aria-current={
-                    item === paginated.currentPage ? 'page' : undefined
-                  }
-                  className={cn(
-                    'type-label focus-visible:ring-ring flex h-11 w-11 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-                    item === paginated.currentPage
-                      ? 'bg-action-primary text-action-primary-text'
-                      : 'border-default bg-surface text-default hover:border-brand border',
-                  )}
-                >
-                  {item}
-                </Link>
-              ) : (
-                <span
-                  key={item}
-                  className="type-label text-muted flex h-11 w-11 items-center justify-center"
-                  aria-hidden="true"
-                >
-                  ...
-                </span>
-              ),
-            )}
           </nav>
-        )}
-      </section>
 
-      <section className="bg-surface-sunken px-4 py-16">
-        <div className="mx-auto max-w-7xl">
+          {paginated.totalArticles === 0 ? (
+            <div className="border-default bg-surface rounded-lg border px-6 py-12 text-center">
+              <h2 className="type-heading-03 text-strong">No articles found</h2>
+              <p className="type-body-sm text-muted mx-auto mt-3 max-w-lg">
+                Try a different search term or browse all Tea Journal articles.
+              </p>
+            </div>
+          ) : (
+            <ul
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              role="list"
+            >
+              {paginated.articles.map((article) => (
+                <li key={article.id}>
+                  <ArticleCard
+                    article={article}
+                    href={getArticlePath(normalizedBlog, article.handle)}
+                    publishedLabel={formatArticleDate(article.publishedAt)}
+                    headingLevel="h3"
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {paginated.totalPages > 1 && (
+            <nav
+              aria-label="Blog pagination"
+              className="border-default mt-12 flex items-center justify-center gap-1 border-t pt-8"
+            >
+              {getPaginationItems(
+                paginated.currentPage,
+                paginated.totalPages,
+              ).map((item) =>
+                typeof item === 'number' ? (
+                  <Link
+                    key={item}
+                    href={listingHref({
+                      blogHandle: normalizedBlog,
+                      activeTag,
+                      query: q,
+                      page: item,
+                    })}
+                    aria-current={
+                      item === paginated.currentPage ? 'page' : undefined
+                    }
+                    className={cn(
+                      'type-label focus-visible:ring-ring flex h-11 w-11 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                      item === paginated.currentPage
+                        ? 'bg-action-primary text-action-primary-text'
+                        : 'border-default bg-surface text-default hover:border-brand border',
+                    )}
+                  >
+                    {item}
+                  </Link>
+                ) : (
+                  <span
+                    key={item}
+                    className="type-label text-muted flex h-11 w-11 items-center justify-center"
+                    aria-hidden="true"
+                  >
+                    ...
+                  </span>
+                ),
+              )}
+            </nav>
+          )}
+        </Section.Container>
+      </Section.Root>
+
+      <Section.Root tone="sunken">
+        <Section.Container variant="compact">
           <NewsletterSignup action={sendNewsletterSignupAction} />
-        </div>
-      </section>
+        </Section.Container>
+      </Section.Root>
     </>
   )
 }
 
-export function BlogListingPage({
-  params,
-  searchParams,
-  tagSlug,
-}: BlogListingProps) {
+export function BlogListingPage({ params, searchParams }: BlogListingProps) {
   return (
     <div>
-      <section className="bg-surface px-4 py-16 text-center">
-        <p className="type-eyebrow text-muted">Tea Journal</p>
-        <h1 className="type-heading-01 text-strong mx-auto mt-3 max-w-4xl">
-          {HERO_TITLE}
-        </h1>
-        <p className="type-body-lg text-muted mx-auto mt-4 max-w-2xl">
-          {HERO_DESCRIPTION}
-        </p>
-      </section>
+      <Section.Root tone="surface">
+        <Section.Container variant="compact" className="text-center">
+          <p className="type-eyebrow text-muted">Tea Journal</p>
+          <h1 className="type-heading-01 text-strong mt-3">{HERO_TITLE}</h1>
+          <p className="type-body-lg text-muted mt-4">{HERO_DESCRIPTION}</p>
+        </Section.Container>
+      </Section.Root>
 
       <Suspense
         fallback={
-          <div
-            className="type-body text-muted mx-auto max-w-7xl px-4 py-12"
-            aria-live="polite"
-          >
-            Loading articles...
-          </div>
+          <Section.Root tone="surface">
+            <Section.Container
+              variant="compact"
+              className="type-body text-muted"
+              aria-live="polite"
+            >
+              Loading articles...
+            </Section.Container>
+          </Section.Root>
         }
       >
-        <BlogListingContent
-          params={params}
-          searchParams={searchParams}
-          tagSlug={tagSlug}
-        />
+        <BlogListingContent params={params} searchParams={searchParams} />
       </Suspense>
     </div>
   )

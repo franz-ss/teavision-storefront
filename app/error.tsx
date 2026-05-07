@@ -1,9 +1,8 @@
 'use client'
 
-import Link from 'next/link'
+import { Button } from '@/components/ui'
 
 export default function Error({
-  error: _error,
   reset,
 }: {
   error: Error & { digest?: string }
@@ -12,26 +11,18 @@ export default function Error({
   return (
     <div className="bg-canvas flex min-h-[60vh] items-center justify-center px-4">
       <div className="bg-surface w-full max-w-md rounded p-10 text-center">
-        <p className="text-danger text-7xl font-semibold">!</p>
-        <h1 className="text-default mt-4 text-2xl font-semibold">
+        <p className="type-display-02 text-danger-text">!</p>
+        <h1 className="type-heading-03 text-default mt-4">
           Something went wrong
         </h1>
-        <p className="text-muted mt-2 text-base">
+        <p className="type-body text-muted mt-2">
           An unexpected error occurred. Please try again.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <button
-            onClick={reset}
-            className="bg-action-primary text-action-primary-text rounded px-5 py-2.5 text-sm font-medium hover:opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2"
-          >
-            Try again
-          </button>
-          <Link
-            href="/"
-            className="bg-canvas text-default rounded px-5 py-2.5 text-sm font-medium hover:opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2"
-          >
+          <Button onClick={reset}>Try again</Button>
+          <Button href="/" variant="secondary">
             Go home
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

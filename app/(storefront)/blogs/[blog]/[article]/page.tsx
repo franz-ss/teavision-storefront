@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
+import { Section } from '@/components/ui'
 import {
   formatArticleDate,
   getArticle,
@@ -104,11 +105,8 @@ async function ArticleContent({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <article className="mx-auto max-w-4xl px-4 py-12">
-        <nav
-          aria-label="Breadcrumb"
-          className="type-body-sm text-muted mx-auto mb-8 max-w-prose"
-        >
+      <article className="mx-auto max-w-prose px-4 py-12">
+        <nav aria-label="Breadcrumb" className="type-body-sm text-muted mb-8">
           <ol className="flex items-center gap-2" role="list">
             <li>
               <Link
@@ -218,7 +216,11 @@ async function ArticleContent({ params }: Props) {
         )}
 
         {article.comments.length > 0 && (
-          <section className="border-default mx-auto mt-12 max-w-prose border-t pt-8">
+          <Section.Root
+            tone="transparent"
+            spacing="none"
+            className="border-default mt-12 border-t pt-8"
+          >
             <h2 className="type-heading-03 text-strong">
               Comments {article.comments.length}
             </h2>
@@ -236,7 +238,7 @@ async function ArticleContent({ params }: Props) {
                 </li>
               ))}
             </ul>
-          </section>
+          </Section.Root>
         )}
 
         <div className="border-default mx-auto mt-12 max-w-prose border-t pt-8">

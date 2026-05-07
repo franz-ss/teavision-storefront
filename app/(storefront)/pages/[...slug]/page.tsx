@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { Section } from '@/components/ui'
 import {
   getPage,
   getPageHandleFromSlug,
@@ -566,8 +567,8 @@ function PageContent({ page }: { page: ShopifyPage }) {
       />
 
       <article>
-        <section className="border-default bg-surface-sunken border-b">
-          <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
+        <Section.Root tone="sunken" className="border-default border-b">
+          <Section.Container>
             <nav
               className="type-body-sm text-muted mb-8 flex flex-wrap items-center gap-2"
               aria-label="Breadcrumb"
@@ -645,8 +646,8 @@ function PageContent({ page }: { page: ShopifyPage }) {
                 </dl>
               </aside>
             </div>
-          </div>
-        </section>
+          </Section.Container>
+        </Section.Root>
 
         <main className="bg-canvas">
           <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:px-6 lg:grid-cols-3 lg:py-16">
@@ -680,8 +681,8 @@ function PageContent({ page }: { page: ShopifyPage }) {
             </aside>
           </div>
 
-          <section className="border-default bg-surface border-t">
-            <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-10 md:px-6 lg:flex-row lg:items-center lg:justify-between">
+          <Section.Root tone="surface" className="border-default border-t">
+            <Section.Container className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-prose">
                 <p className="type-eyebrow text-accent">Wholesale support</p>
                 <h2 className="type-heading-03 text-strong mt-3">
@@ -698,8 +699,8 @@ function PageContent({ page }: { page: ShopifyPage }) {
               >
                 Contact Teavision
               </Link>
-            </div>
-          </section>
+            </Section.Container>
+          </Section.Root>
         </main>
       </article>
     </>
