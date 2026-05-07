@@ -28,7 +28,7 @@ const domainDir = join(root, 'components', domain)
 if (!existsSync(domainDir)) {
   console.error(`Domain folder does not exist: components/${domain}/`)
   console.error(
-    `Available domains: ui, layout, product, collection, cart, contact`,
+    `Available domains: ui, layout, product, collection, cart, contact, homepage`,
   )
   process.exit(1)
 }

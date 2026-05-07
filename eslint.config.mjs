@@ -5,6 +5,20 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 
+import { noRawSection } from './scripts/eslint-rules/no-raw-section.mjs'
+import { noButtonStyleClass } from './scripts/eslint-rules/no-button-style-class.mjs'
+import { noRawButton } from './scripts/eslint-rules/no-raw-button.mjs'
+import { noSectionRootToneClass } from './scripts/eslint-rules/no-section-root-tone-class.mjs'
+
+const teavisionPlugin = {
+  rules: {
+    'no-button-style-class': noButtonStyleClass,
+    'no-raw-button': noRawButton,
+    'no-raw-section': noRawSection,
+    'no-section-root-tone-class': noSectionRootToneClass,
+  },
+}
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
@@ -14,6 +28,7 @@ const eslintConfig = defineConfig([
     '.next/**',
     'out/**',
     'build/**',
+    'storybook-static/**',
     'next-env.d.ts',
     // Git worktrees
     '.worktrees/**',
@@ -33,7 +48,9 @@ const eslintConfig = defineConfig([
             'internal',
             ['parent', 'sibling', 'index'],
           ],
-          pathGroups: [{ pattern: '@/**', group: 'internal', position: 'before' }],
+          pathGroups: [
+            { pattern: '@/**', group: 'internal', position: 'before' },
+          ],
           pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
         },
@@ -46,6 +63,19 @@ const eslintConfig = defineConfig([
     files: ['components/**/*.tsx', 'lib/**/*.ts'],
     rules: {
       'import/no-default-export': 'error',
+    },
+  },
+
+  // Storefront section layout primitive
+  {
+    files: ['app/**/*.tsx', 'components/**/*.tsx'],
+    ignores: ['components/ui/section/section.tsx'],
+    plugins: { teavision: teavisionPlugin },
+    rules: {
+      'teavision/no-raw-section': 'error',
+      'teavision/no-raw-button': 'error',
+      'teavision/no-button-style-class': 'error',
+      'teavision/no-section-root-tone-class': 'error',
     },
   },
 
