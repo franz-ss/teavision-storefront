@@ -60,7 +60,7 @@ const eslintConfig = defineConfig([
 
   // No default exports — components and lib files only
   {
-    files: ['components/**/*.tsx', 'lib/**/*.ts'],
+    files: ['src/components/**/*.tsx', 'src/lib/**/*.ts'],
     rules: {
       'import/no-default-export': 'error',
     },
@@ -68,8 +68,8 @@ const eslintConfig = defineConfig([
 
   // Storefront section layout primitive
   {
-    files: ['app/**/*.tsx', 'components/**/*.tsx'],
-    ignores: ['components/ui/section/section.tsx'],
+    files: ['src/app/**/*.tsx', 'src/components/**/*.tsx'],
+    ignores: ['src/components/ui/section/section.tsx'],
     plugins: { teavision: teavisionPlugin },
     rules: {
       'teavision/no-raw-section': 'error',
@@ -82,14 +82,14 @@ const eslintConfig = defineConfig([
   // Allow default exports where Next.js or Storybook requires them
   {
     files: [
-      'app/**/page.tsx',
-      'app/**/layout.tsx',
-      'app/**/error.tsx',
-      'app/**/not-found.tsx',
-      'app/**/loading.tsx',
-      'app/**/route.ts',
-      'app/**/robots.ts',
-      'app/**/sitemap.ts',
+      'src/app/**/page.tsx',
+      'src/app/**/layout.tsx',
+      'src/app/**/error.tsx',
+      'src/app/**/not-found.tsx',
+      'src/app/**/loading.tsx',
+      'src/app/**/route.ts',
+      'src/app/**/robots.ts',
+      'src/app/**/sitemap.ts',
       '**/*.stories.tsx',
     ],
     rules: {

@@ -16,7 +16,7 @@ function sourcePath(...segments) {
 
 test('IconButton small size keeps a 44px touch target', async () => {
   const source = await readFile(
-    sourcePath('components', 'ui', 'icon-button', 'icon-button.tsx'),
+    sourcePath('src', 'components', 'ui', 'icon-button', 'icon-button.tsx'),
     'utf8',
   )
 
@@ -25,7 +25,7 @@ test('IconButton small size keeps a 44px touch target', async () => {
 
 test('Button small size keeps a 44px touch target', async () => {
   const source = await readFile(
-    sourcePath('components', 'ui', 'button', 'button.tsx'),
+    sourcePath('src', 'components', 'ui', 'button', 'button.tsx'),
     'utf8',
   )
 
@@ -35,6 +35,7 @@ test('Button small size keeps a 44px touch target', async () => {
 test('DisclosureButton requires disclosure state attributes', async () => {
   const source = await readFile(
     sourcePath(
+      'src',
       'components',
       'ui',
       'disclosure-button',
@@ -50,7 +51,7 @@ test('DisclosureButton requires disclosure state attributes', async () => {
 
 test('IconButton variants stay named visual styles', async () => {
   const source = await readFile(
-    sourcePath('components', 'ui', 'icon-button', 'icon-button.tsx'),
+    sourcePath('src', 'components', 'ui', 'icon-button', 'icon-button.tsx'),
     'utf8',
   )
 
@@ -59,7 +60,7 @@ test('IconButton variants stay named visual styles', async () => {
 
 test('Button exposes a secondary variant for dark surfaces', async () => {
   const source = await readFile(
-    sourcePath('components', 'ui', 'button', 'button.tsx'),
+    sourcePath('src', 'components', 'ui', 'button', 'button.tsx'),
     'utf8',
   )
 
@@ -68,7 +69,7 @@ test('Button exposes a secondary variant for dark surfaces', async () => {
 
 test('Button variant styles share repeated frame classes', async () => {
   const source = await readFile(
-    sourcePath('components', 'ui', 'button', 'button.tsx'),
+    sourcePath('src', 'components', 'ui', 'button', 'button.tsx'),
     'utf8',
   )
 
@@ -82,11 +83,11 @@ test('Button variant styles share repeated frame classes', async () => {
 
 test('Button variants stay limited to action styles', async () => {
   const buttonSource = await readFile(
-    sourcePath('components', 'ui', 'button', 'button.tsx'),
+    sourcePath('src', 'components', 'ui', 'button', 'button.tsx'),
     'utf8',
   )
   const storiesSource = await readFile(
-    sourcePath('components', 'ui', 'button', 'button.stories.tsx'),
+    sourcePath('src', 'components', 'ui', 'button', 'button.stories.tsx'),
     'utf8',
   )
 
@@ -105,11 +106,12 @@ test('Button variants stay limited to action styles', async () => {
 
 test('homepage dark-surface CTAs use inverse button variants', async () => {
   const heroSource = await readFile(
-    sourcePath('components', 'homepage', 'hero', 'hero.tsx'),
+    sourcePath('src', 'components', 'homepage', 'hero', 'hero.tsx'),
     'utf8',
   )
   const cataloguesSource = await readFile(
     sourcePath(
+      'src',
       'components',
       'homepage',
       'catalogues',
@@ -125,7 +127,7 @@ test('homepage dark-surface CTAs use inverse button variants', async () => {
 
 test('Button inverse stories render on the dark Storybook background', async () => {
   const storiesSource = await readFile(
-    sourcePath('components', 'ui', 'button', 'button.stories.tsx'),
+    sourcePath('src', 'components', 'ui', 'button', 'button.stories.tsx'),
     'utf8',
   )
 
@@ -148,21 +150,23 @@ test('Button inverse stories render on the dark Storybook background', async () 
 
 test('hover zoom image treatments respect reduced motion', async () => {
   const files = [
-    sourcePath('app', '(storefront)', 'collections', 'page.tsx'),
+    sourcePath('src', 'app', '(storefront)', 'collections', 'page.tsx'),
     sourcePath(
+      'src',
       'components',
       'homepage',
       'overlay-image-card',
       'overlay-image-card.tsx',
     ),
     sourcePath(
+      'src',
       'components',
       'homepage',
       'tea-journal',
       'tea-journal.tsx',
     ),
-    sourcePath('components', 'ui', 'article-card', 'article-card.tsx'),
-    sourcePath('components', 'ui', 'product-card', 'product-card.tsx'),
+    sourcePath('src', 'components', 'ui', 'article-card', 'article-card.tsx'),
+    sourcePath('src', 'components', 'ui', 'product-card', 'product-card.tsx'),
   ]
 
   for (const file of files) {

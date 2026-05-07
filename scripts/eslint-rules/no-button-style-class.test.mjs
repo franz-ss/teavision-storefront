@@ -35,7 +35,7 @@ test('reports visual styling classes on Button className', async () => {
         </Button>
       )
     }`,
-    'components/homepage/hero/hero.tsx',
+    'src/components/homepage/hero/hero.tsx',
   )
 
   assert.ok(
@@ -56,7 +56,7 @@ test('allows layout-only classes on Button className', async () => {
         </Button>
       )
     }`,
-    'components/homepage/hero/hero.tsx',
+    'src/components/homepage/hero/hero.tsx',
   )
 
   assert.equal(
@@ -79,7 +79,7 @@ test('reports visual styling classes inside cn calls on Button className', async
         </Button>
       )
     }`,
-    'components/layout/header/header-mega-nav.tsx',
+    'src/components/layout/header/header-mega-nav.tsx',
   )
 
   assert.ok(
@@ -96,7 +96,7 @@ test('reports dynamic Button className expressions that cannot be checked', asyn
     export function UnknownCta({ classes }) {
       return <Button className={classes}>Submit</Button>
     }`,
-    'components/homepage/contact-form/contact-form.tsx',
+    'src/components/homepage/contact-form/contact-form.tsx',
   )
 
   assert.ok(
@@ -113,7 +113,7 @@ test('reports visual classes on aliased Button imports', async () => {
     export function HeroCta() {
       return <CtaButton className="text-brand">Apply</CtaButton>
     }`,
-    'components/homepage/hero/hero.tsx',
+    'src/components/homepage/hero/hero.tsx',
   )
 
   assert.ok(
@@ -130,7 +130,7 @@ test('reports visual classes on namespaced Button imports', async () => {
     export function HeroCta() {
       return <UI.Button className="text-brand">Apply</UI.Button>
     }`,
-    'components/homepage/hero/hero.tsx',
+    'src/components/homepage/hero/hero.tsx',
   )
 
   assert.ok(
@@ -147,7 +147,7 @@ test('reports visual classes on local aliased Button imports', async () => {
     export function ButtonExample() {
       return <StoryButton className="text-brand">Apply</StoryButton>
     }`,
-    'components/ui/button/button.stories.tsx',
+    'src/components/ui/button/button.stories.tsx',
   )
 
   assert.ok(

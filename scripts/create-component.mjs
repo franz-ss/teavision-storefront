@@ -23,10 +23,10 @@ if (!arg || !arg.includes('/')) {
 
 const [domain, componentKebab] = arg.split('/')
 const root = fileURLToPath(new URL('..', import.meta.url))
-const domainDir = join(root, 'components', domain)
+const domainDir = join(root, 'src', 'components', domain)
 
 if (!existsSync(domainDir)) {
-  console.error(`Domain folder does not exist: components/${domain}/`)
+  console.error(`Domain folder does not exist: src/components/${domain}/`)
   console.error(
     `Available domains: ui, layout, product, collection, cart, contact, homepage`,
   )
@@ -45,7 +45,7 @@ const componentIndexPath = join(componentDir, 'index.ts')
 const barrelPath = join(domainDir, 'index.ts')
 
 if (existsSync(componentDir)) {
-  console.error(`Already exists: components/${domain}/${componentKebab}/`)
+  console.error(`Already exists: src/components/${domain}/${componentKebab}/`)
   process.exit(1)
 }
 
@@ -103,9 +103,9 @@ if (!existsSync(barrelPath)) {
   }
 }
 
-console.log(`✓ components/${domain}/${componentKebab}/${componentKebab}.tsx`)
-console.log(`✓ components/${domain}/${componentKebab}/index.ts`)
+console.log(`✓ src/components/${domain}/${componentKebab}/${componentKebab}.tsx`)
+console.log(`✓ src/components/${domain}/${componentKebab}/index.ts`)
 console.log(
-  `✓ components/${domain}/${componentKebab}/${componentKebab}.stories.tsx`,
+  `✓ src/components/${domain}/${componentKebab}/${componentKebab}.stories.tsx`,
 )
-console.log(`✓ components/${domain}/index.ts updated`)
+console.log(`✓ src/components/${domain}/index.ts updated`)

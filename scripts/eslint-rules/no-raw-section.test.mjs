@@ -29,7 +29,7 @@ test('reports raw section elements in the blog listing route', async () => {
     `export function BlogListing() {
       return <section className="bg-surface px-4 py-12" />
     }`,
-    'app/(storefront)/blogs/[blog]/blog-listing.tsx',
+    'src/app/(storefront)/blogs/[blog]/blog-listing.tsx',
   )
 
   assert.ok(
@@ -42,7 +42,7 @@ test('reports raw section elements in storefront pages', async () => {
     `export function CollectionsPage() {
       return <section className="bg-surface-sunken border-b" />
     }`,
-    'app/(storefront)/collections/page.tsx',
+    'src/app/(storefront)/collections/page.tsx',
   )
 
   assert.ok(
@@ -55,7 +55,7 @@ test('reports raw section elements in shared components', async () => {
     `export function FooterNewsletter() {
       return <section aria-labelledby="footer-newsletter-heading" />
     }`,
-    'components/layout/footer/footer.tsx',
+    'src/components/layout/footer/footer.tsx',
   )
 
   assert.ok(
@@ -68,7 +68,7 @@ test('allows the Section primitive to render the native section element', async 
     `export function Root() {
       return <section />
     }`,
-    'components/ui/section/section.tsx',
+    'src/components/ui/section/section.tsx',
   )
 
   assert.equal(
@@ -88,7 +88,7 @@ test('reports background and foreground tone classes on Section.Root', async () 
         </Section.Root>
       )
     }`,
-    'components/homepage/example-section/example-section.tsx',
+    'src/components/homepage/example-section/example-section.tsx',
   )
 
   assert.ok(

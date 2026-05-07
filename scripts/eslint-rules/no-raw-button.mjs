@@ -1,8 +1,8 @@
 const ALLOWED_NATIVE_BUTTON_FILES = [
-  'components/ui/button/button.tsx',
-  'components/ui/disclosure-button/disclosure-button.tsx',
-  'components/ui/icon-button/icon-button.tsx',
-  'components/ui/toggle-button/toggle-button.tsx',
+  'src/components/ui/button/button.tsx',
+  'src/components/ui/disclosure-button/disclosure-button.tsx',
+  'src/components/ui/icon-button/icon-button.tsx',
+  'src/components/ui/toggle-button/toggle-button.tsx',
 ]
 
 function normalizePath(filePath) {

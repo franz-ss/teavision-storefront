@@ -9,9 +9,9 @@ const config: CodegenConfig = {
       },
     },
   },
-  documents: ['lib/shopify/queries/**/*.graphql'],
+  documents: ['src/lib/shopify/queries/**/*.graphql'],
   generates: {
-    'lib/shopify/types/generated/': {
+    'src/lib/shopify/types/generated/': {
       preset: 'client',
       presetConfig: {
         fragmentMasking: false,

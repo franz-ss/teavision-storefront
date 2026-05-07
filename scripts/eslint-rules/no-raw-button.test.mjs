@@ -29,7 +29,7 @@ test('reports raw button elements in feature components', async () => {
     `export function ProductOption() {
       return <button type="button">English Breakfast</button>
     }`,
-    'components/product/product-form/product-form.tsx',
+    'src/components/product/product-form/product-form.tsx',
   )
 
   assert.ok(
@@ -44,7 +44,7 @@ test('reports React.createElement button usage in feature components', async () 
     export function HeaderTrigger() {
       return React.createElement('button', { type: 'button' }, 'Shop')
     }`,
-    'components/layout/header/header-mega-nav.tsx',
+    'src/components/layout/header/header-mega-nav.tsx',
   )
 
   assert.ok(
@@ -54,10 +54,10 @@ test('reports React.createElement button usage in feature components', async () 
 
 test('allows approved native button primitive implementations', async () => {
   for (const filePath of [
-    'components/ui/button/button.tsx',
-    'components/ui/icon-button/icon-button.tsx',
-    'components/ui/disclosure-button/disclosure-button.tsx',
-    'components/ui/toggle-button/toggle-button.tsx',
+    'src/components/ui/button/button.tsx',
+    'src/components/ui/icon-button/icon-button.tsx',
+    'src/components/ui/disclosure-button/disclosure-button.tsx',
+    'src/components/ui/toggle-button/toggle-button.tsx',
   ]) {
     const messages = await lintText(
       `export function Primitive() {
@@ -81,7 +81,7 @@ test('allows the shared Button component to be used', async () => {
     export function HeroCta() {
       return <Button href="/pages/wholesale">Apply for wholesale</Button>
     }`,
-    'components/homepage/hero/hero.tsx',
+    'src/components/homepage/hero/hero.tsx',
   )
 
   assert.equal(

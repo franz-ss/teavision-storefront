@@ -17,20 +17,20 @@ if (!arg || !arg.includes('/')) {
 
 const [domain, moduleName] = arg.split('/')
 const root = fileURLToPath(new URL('..', import.meta.url))
-const domainDir = join(root, 'lib', domain)
+const domainDir = join(root, 'src', 'lib', domain)
 
 if (!existsSync(domainDir)) {
-  console.error(`Domain folder does not exist: lib/${domain}/`)
+  console.error(`Domain folder does not exist: src/lib/${domain}/`)
   process.exit(1)
 }
 
 const filePath = join(domainDir, `${moduleName}.ts`)
 
 if (existsSync(filePath)) {
-  console.error(`Already exists: lib/${domain}/${moduleName}.ts`)
+  console.error(`Already exists: src/lib/${domain}/${moduleName}.ts`)
   process.exit(1)
 }
 
 writeFileSync(filePath, `export {}\n`)
 
-console.log(`✓ lib/${domain}/${moduleName}.ts`)
+console.log(`✓ src/lib/${domain}/${moduleName}.ts`)
