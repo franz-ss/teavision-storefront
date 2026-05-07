@@ -25,16 +25,16 @@ No test runner outside Storybook. To run a single Storybook story in isolation, 
 
 ### Data flow
 
-- **Server Components** fetch data by calling `lib/shopify/index.ts` helpers (e.g. `getProduct`, `getCollection`, `getCart`)
+- **Server Components** fetch data by calling `src/lib/shopify/operations/*` helpers (e.g. `getProduct`, `getCollection`, `getCart`)
 - Those helpers call `shopifyFetch()` which wraps the Storefront GraphQL API
-- Queries live in `lib/shopify/queries/*.graphql`; TypeScript types are generated into `lib/shopify/types/generated/` via `pnpm codegen`
+- Queries live in `src/lib/shopify/queries/*.graphql`; TypeScript types are generated into `src/lib/shopify/types/generated/` via `pnpm codegen`
 - **Cart state** lives in a cookie (`teavision_cart`) holding the Shopify cart ID — no client-side store
-- **Server Actions** in `lib/cart/actions.ts` handle all cart mutations; they read/write the cookie and call Shopify
+- **Server Actions** in `src/lib/cart/actions.ts` handle all cart mutations; they read/write the cookie and call Shopify
 - **`'use cache'`** (Next.js 16 Cache Components) with `cacheTag()` and `cacheLife()` wraps expensive product/collection fetches
 
 ### Routing
 
-All storefront pages live under `app/(storefront)/`. Dynamic segments use the Next.js 16 `params: Promise<{...}>` pattern — always `await params` before destructuring.
+All storefront pages live under `src/app/(storefront)/`. Dynamic segments use the Next.js 16 `params: Promise<{...}>` pattern — always `await params` before destructuring.
 
 Key routes:
 - `/products/[handle]` — product detail
@@ -75,12 +75,12 @@ These anti-patterns are explicitly banned — they override any default AI behav
 - No className string concatenation or `filter(Boolean).join(' ')` — always use `cn()` from `@/lib/utils`
 - No `'use client'` on parent/wrapper components — push it down to the interactive leaf
 - No new CSS modules, styled-components, or `style={{}}` attributes
-- No direct imports from `lib/shopify/types/generated/` — import via `lib/shopify/types/index.ts`
-- No creating new top-level directories in `components/` or `lib/` without updating `docs/conventions.md`
+- No direct imports from `src/lib/shopify/types/generated/` — import via `src/lib/shopify/types/index.ts`
+- No recreating root-level `app/`, `components/`, or `lib/`; application code lives in `src/`
 
 ## Before adding a file
 
 1. Does a similar file already exist that should be extended instead?
 2. Which directory does it belong in? (check `docs/conventions.md` folder map)
-3. Does it need a Storybook story? (yes if it lives in `components/`)
+3. Does it need a Storybook story? (yes if it lives in `src/components/`)
 4. Scaffold it: `pnpm create:component <domain>/<name>` or `pnpm create:lib <domain>/<name>`

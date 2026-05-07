@@ -167,20 +167,21 @@ These keep working unchanged.
 ### Repo structure
 
 ```
-app/                  # App Router routes
-  (storefront)/       # Public storefront routes
-  (account)/          # Customer account routes
-  api/                # Webhook handlers, internal API routes
-components/           # Reusable UI components
-  ui/                 # Design system primitives (button, input, etc.)
-  product/            # Product-specific (variant selector, gallery)
-  cart/               # Cart drawer, line items
-  ...
-lib/
-  shopify/            # Storefront API client, typed queries, types from codegen
-  cart/               # Cart server actions
-  analytics/          # Tracking abstractions
-  seo/                # JSON-LD builders, metadata helpers
+src/
+  app/                # App Router routes
+    (storefront)/     # Public storefront routes
+    (account)/        # Customer account routes
+    api/              # Webhook handlers, internal API routes
+  components/         # Reusable UI components
+    ui/               # Design system primitives (button, input, etc.)
+    product/          # Product-specific (variant selector, gallery)
+    cart/             # Cart drawer, line items
+    ...
+  lib/
+    shopify/          # Storefront API client, typed queries, types from codegen
+    cart/             # Cart server actions
+    analytics/        # Tracking abstractions
+    seo/              # JSON-LD builders, metadata helpers
 content/              # MDX if used for editorial content
 ```
 
