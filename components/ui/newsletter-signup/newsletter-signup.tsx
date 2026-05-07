@@ -11,6 +11,7 @@ import type { NewsletterSignupActionResult } from '@/lib/contact/actions'
 import { cn } from '@/lib/utils'
 
 import { Button } from '../button'
+import { Section } from '../section'
 
 type NewsletterSignupProps = {
   action: (formData: FormData) => Promise<NewsletterSignupActionResult>
@@ -90,12 +91,12 @@ export function NewsletterSignup({
   }
 
   return (
-    <section
+    <Section.Root
+      tone={tone}
+      spacing="none"
       className={cn(
         'rounded-lg border p-6',
-        tone === 'brand'
-          ? 'border-on-brand bg-brand text-on-brand'
-          : 'border-default bg-surface text-default',
+        tone === 'brand' ? 'border-on-brand' : 'border-default',
         className,
       )}
       aria-labelledby="newsletter-signup-heading"
@@ -154,12 +155,7 @@ export function NewsletterSignup({
           />
         </div>
 
-        <Button
-          type="submit"
-          isLoading={isPending}
-          disabled={isPending}
-          className={cn(tone === 'brand' && 'bg-canvas text-strong')}
-        >
+        <Button type="submit" isLoading={isPending} disabled={isPending}>
           {isPending ? 'Subscribing' : 'Subscribe'}
         </Button>
       </form>
@@ -178,6 +174,6 @@ export function NewsletterSignup({
           {error}
         </p>
       )}
-    </section>
+    </Section.Root>
   )
 }

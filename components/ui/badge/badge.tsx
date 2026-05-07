@@ -14,7 +14,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        outOfStock: 'border border-danger bg-danger text-danger',
+        outOfStock: 'border border-danger-border bg-danger-bg text-danger-text',
         sale: 'border border-accent/30 bg-accent-subtle text-accent',
         new: 'border border-default bg-surface-sunken text-muted',
       } satisfies Record<BadgeVariant, string>,

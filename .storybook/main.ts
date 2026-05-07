@@ -11,5 +11,21 @@ const config: StorybookConfig = {
   ],
   framework: '@storybook/nextjs-vite',
   staticDirs: ['..\\public'],
+  viteFinal(config) {
+    return {
+      ...config,
+      build: {
+        ...config.build,
+        chunkSizeWarningLimit: 1400,
+        rolldownOptions: {
+          ...config.build?.rolldownOptions,
+          checks: {
+            ...config.build?.rolldownOptions?.checks,
+            pluginTimings: false,
+          },
+        },
+      },
+    }
+  },
 }
 export default config

@@ -1,25 +1,17 @@
-'use client'
-
 import React from 'react'
-import { cva } from 'class-variance-authority'
+import Link, { type LinkProps } from 'next/link'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { LoaderCircle } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost'
-
-export type ButtonSize = 'sm' | 'md' | 'lg'
-
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: ButtonVariant
-  size?: ButtonSize
-  isLoading?: boolean
-}
-
 const buttonVariants = cva(
   [
-    'inline-flex cursor-pointer items-center justify-center gap-2 rounded-md transition-colors',
+    'items-center justify-center gap-2',
+    'inline-flex cursor-pointer transition-colors',
     'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
     'disabled:cursor-not-allowed disabled:opacity-40',
+    'rounded-md',
   ],
   {
     variants: {
@@ -28,14 +20,19 @@ const buttonVariants = cva(
           'bg-action-primary text-action-primary-text hover:bg-action-primary-hover active:bg-action-primary-active',
         secondary:
           'border border-action-secondary-border bg-action-secondary text-action-secondary-text hover:bg-action-secondary-hover',
+        inverse:
+          'bg-canvas text-strong hover:bg-surface-sunken active:bg-surface-sunken',
+        inverseSecondary:
+          'border border-on-brand/70 bg-transparent text-on-brand hover:border-on-brand hover:bg-canvas hover:text-strong active:bg-surface-sunken',
         ghost:
           'text-action-tertiary hover:bg-surface-sunken hover:text-action-tertiary-hover',
-      } satisfies Record<ButtonVariant, string>,
+      },
       size: {
-        sm: 'type-label min-h-10 px-3',
+        sm: 'type-label min-h-11 px-3',
         md: 'type-label min-h-11 px-4',
         lg: 'type-label min-h-12 px-5',
-      } satisfies Record<ButtonSize, string>,
+        cta: 'type-label min-h-12 px-8',
+      },
     },
     defaultVariants: {
       variant: 'primary',
@@ -44,51 +41,74 @@ const buttonVariants = cva(
   },
 )
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+type ButtonVariantProps = VariantProps<typeof buttonVariants>
+
+type ButtonSharedProps = ButtonVariantProps & {
+  children?: React.ReactNode
+}
+
+type ButtonAsButton = ButtonSharedProps &
+  Omit<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    keyof ButtonSharedProps
+  > & {
+    href?: never
+    isLoading?: boolean
+  }
+
+type ButtonAsAnchor = ButtonSharedProps &
+  Omit<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    keyof ButtonSharedProps | keyof LinkProps | 'type'
+  > &
+  LinkProps & {
+    disabled?: never
+    isLoading?: never
+    type?: never
+  }
+
+export type ButtonProps = ButtonAsButton | ButtonAsAnchor
+
+export const Button = React.forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  ButtonProps
+>(
   (
-    {
-      variant = 'primary',
-      size = 'md',
-      isLoading = false,
-      disabled,
-      children,
-      className,
-      type = 'button',
-      ...props
-    },
+    { variant = 'primary', size = 'md', children, className, ...props },
     ref,
   ) => {
+    const classes = cn(buttonVariants({ variant, size }), className)
+
+    if (props.href !== undefined) {
+      return (
+        <Link
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          className={classes}
+          {...props}
+        >
+          {children}
+        </Link>
+      )
+    }
+
+    const {
+      disabled,
+      isLoading = false,
+      type = 'button',
+      ...buttonProps
+    } = props
+
     return (
       <button
-        ref={ref}
+        ref={ref as React.Ref<HTMLButtonElement>}
         type={type}
         disabled={disabled || isLoading}
         aria-busy={isLoading || undefined}
-        className={cn(buttonVariants({ variant, size }), className)}
-        {...props}
+        className={classes}
+        {...buttonProps}
       >
         {isLoading && (
-          <svg
-            className="h-4 w-4 animate-spin"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            />
-          </svg>
+          <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
         )}
         {children}
       </button>

@@ -33,7 +33,7 @@ export function ProductCard({
             height={product.featuredImage.height}
             priority={priority}
             sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         ) : (
           <div className="h-full w-full" aria-hidden="true" />
