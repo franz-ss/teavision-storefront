@@ -1,73 +1,123 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+import { Mail, Phone, Search, ShoppingCart, User } from 'lucide-react'
 import { Suspense } from 'react'
 
 import { getCartAction } from '@/lib/cart/actions'
+import { cn } from '@/lib/utils'
+
+import { HeaderMegaNav, HeaderMobileMegaNav } from './header-mega-nav'
+
+const ACTION_LINK_CLASS =
+  'type-label focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
+
+const ANNOUNCEMENT_LINK_CLASS =
+  'focus-visible:ring-ring focus-visible:ring-offset-brand inline-flex min-h-11 items-center gap-1 rounded-md text-on-brand underline-offset-4 transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-8'
 
 async function CartCount() {
   const cart = await getCartAction()
   const count = cart?.totalQuantity ?? 0
+
   if (count === 0) return null
+
   return (
-    <span className="type-caption bg-action-primary text-action-primary-text ml-1 inline-flex h-5 w-5 items-center justify-center rounded-full">
+    <span className="type-caption bg-action-primary text-action-primary-text absolute -top-1 -right-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1">
       {count}
+      <span className="sr-only"> items in cart</span>
     </span>
   )
 }
 
 export function Header() {
   return (
-    <header className="border-default border-b px-4">
-      <nav
-        aria-label="Main navigation"
-        className="mx-auto flex max-w-7xl items-center justify-between gap-3"
-      >
+    <header className="border-subtle bg-surface sticky top-0 z-50 border-b">
+      <div className="bg-brand text-on-brand">
+        <div className="type-caption max-w-wide mx-auto flex flex-col gap-1 px-4 py-2 md:flex-row md:items-center md:justify-between md:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <a
+              href="tel:1300729617"
+              className={ANNOUNCEMENT_LINK_CLASS}
+              aria-label="Call Teavision at 1300 729 617"
+            >
+              <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+              <span>1300 729 617</span>
+            </a>
+            <span className="text-on-brand/60" aria-hidden="true">
+              |
+            </span>
+            <a
+              href="mailto:info@teavision.com.au"
+              className={ANNOUNCEMENT_LINK_CLASS}
+              aria-label="Email Teavision at info@teavision.com.au"
+            >
+              <Mail className="size-4 shrink-0" aria-hidden="true" />
+              <span>info@teavision.com.au</span>
+            </a>
+          </div>
+          <p className="text-on-brand/85 max-w-2xl">
+            We&apos;re committed to delivering the greatest value and customer
+            service on the planet.
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-wide mx-auto flex min-h-14 items-center justify-between gap-3 px-4 md:px-6 lg:min-h-18 lg:px-8">
         <Link
           href="/"
-          className="focus-visible:ring-ring inline-flex min-h-11 shrink-0 items-center focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="focus-visible:ring-ring inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          aria-label="Teavision home"
         >
           <Image
             src="/teavision.svg"
             alt="Teavision"
             width={188}
             height={44}
-            className="h-8 w-auto sm:h-9"
+            className="h-6 w-auto sm:h-8 lg:h-9"
             priority
           />
+          <span
+            className="bg-accent hidden h-1.5 w-1.5 rounded-full sm:block"
+            aria-hidden="true"
+          />
         </Link>
-        <ul
-          className="type-body-sm flex min-w-0 shrink items-center"
-          role="list"
-        >
-          <li>
-            <Link
-              href="/collections/all"
-              className="focus-visible:ring-ring inline-flex min-h-11 items-center px-2 hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-3"
-            >
-              Shop
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/pages/wholesale"
-              className="focus-visible:ring-ring inline-flex min-h-11 items-center px-2 hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-3"
-            >
-              Wholesale
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/cart"
-              className="focus-visible:ring-ring inline-flex min-h-11 items-center px-2 hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-3"
-            >
-              Cart
-              <Suspense fallback={null}>
-                <CartCount />
-              </Suspense>
-            </Link>
-          </li>
-        </ul>
-      </nav>
+
+        <div className="hidden lg:block">
+          <HeaderMegaNav />
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href="/search"
+            className={cn(
+              ACTION_LINK_CLASS,
+              'text-action-tertiary hover:bg-surface-sunken hover:text-action-tertiary-hover hidden aspect-square p-0 sm:inline-flex',
+            )}
+          >
+            <Search className="size-4" aria-hidden="true" strokeWidth={1.8} />
+            <span className="sr-only">Search</span>
+          </Link>
+          <a
+            href="https://mrtea.com.au/account/login"
+            className={cn(ACTION_LINK_CLASS, '')}
+          >
+            <User className="size-4" aria-hidden="true" strokeWidth={1.8} />
+            <span className="sr-only">Log in</span>
+          </a>
+          <Link href="/cart" className={cn(ACTION_LINK_CLASS, '')}>
+            <ShoppingCart
+              className="size-4"
+              aria-hidden="true"
+              strokeWidth={1.8}
+            />
+            <span className="sr-only">Cart</span>
+            <Suspense fallback={null}>
+              <CartCount />
+            </Suspense>
+          </Link>
+        </div>
+      </div>
+
+      <HeaderMobileMegaNav />
     </header>
   )
 }
