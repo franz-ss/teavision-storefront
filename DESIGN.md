@@ -2,50 +2,50 @@
 name: Teavision
 description: "Australia's B2B wholesale tea, herb, and spice supplier: quiet authority, warm precision."
 colors:
-  canvas: "#FAF7F2"
-  surface: "#FFFFFE"
-  surface-sunken: "#F2EFE9"
-  brand: "#244332"
-  brand-strong: "#11201A"
-  brand-subtle: "#F2F6F3"
-  action-primary: "#100F0D"
-  action-primary-hover: "#25241F"
-  action-primary-text: "#FAF7F2"
-  text-default: "#25241F"
-  text-muted: "#4F4E4A"
-  border-default: "#C9C9C5"
-  accent: "#B5841F"
-  danger: "#B33C30"
+  canvas: 'oklch(97.71% 0.0074 80.7)'
+  surface: 'oklch(99.97% 0.0013 106.4)'
+  surface-sunken: 'oklch(95.28% 0.0086 84.6)'
+  brand: 'oklch(35.31% 0.0478 158.7)'
+  brand-strong: 'oklch(22.76% 0.0238 167.1)'
+  brand-subtle: 'oklch(96.93% 0.0058 153.8)'
+  action-primary: 'oklch(16.88% 0.0044 84.6)'
+  action-primary-hover: 'oklch(25.96% 0.0092 97.7)'
+  action-primary-text: 'oklch(97.71% 0.0074 80.7)'
+  text-default: 'oklch(25.96% 0.0092 97.7)'
+  text-muted: 'oklch(42.35% 0.0066 95.2)'
+  border-default: 'oklch(83.48% 0.0055 106.5)'
+  accent: 'oklch(64.54% 0.1242 80)'
+  danger: 'oklch(52.52% 0.1567 29.2)'
 typography:
   display:
-    fontFamily: "Fraunces, Times New Roman, serif"
+    fontFamily: 'Fraunces, Times New Roman, serif'
     fontWeight: 500
-    letterSpacing: "0"
+    letterSpacing: '0'
   body:
-    fontFamily: "Inter, system-ui, sans-serif"
+    fontFamily: 'Inter, system-ui, sans-serif'
     fontWeight: 400
     lineHeight: 1.6
-    letterSpacing: "0"
+    letterSpacing: '0'
   mono:
-    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontFamily: 'JetBrains Mono, ui-monospace, monospace'
     fontWeight: 400
-    letterSpacing: "0"
+    letterSpacing: '0'
 rounded:
-  xs: "2px"
-  sm: "4px"
-  md: "6px"
-  lg: "8px"
+  xs: '2px'
+  sm: '4px'
+  md: '6px'
+  lg: '8px'
 sources:
-  implementation: "app/globals.css"
-  productContext: "PRODUCT.md"
-  extendedReference: "docs/design-system/"
+  implementation: 'app/globals.css'
+  productContext: 'PRODUCT.md'
+  legacyReference: 'docs/design-system/'
 ---
 
 # Design System: Teavision
 
 ## 1. Purpose
 
-This file is the short design-system contract for day-to-day work. Use it when designing, implementing, or reviewing storefront UI. The canonical implementation lives in `app/globals.css`; the fuller imported reference lives in `docs/design-system/`; the brand and business strategy live in `PRODUCT.md`.
+This file is the short design-system contract for day-to-day work. Use it when designing, implementing, or reviewing storefront UI. The canonical implementation lives in `app/globals.css`; `docs/design-system/` is an archived legacy Figma/import reference and must not override this file; the brand and business strategy live in `PRODUCT.md`.
 
 Teavision should feel like a precise wholesale supplier with deep product knowledge: botanical, practical, and quietly premium. The interface serves buyers who need to scan, compare, trust, and act quickly.
 
@@ -71,10 +71,10 @@ Use Tailwind 4 CSS-first tokens from `app/globals.css`. Components consume seman
 Primary utility families:
 
 - Surfaces: `bg-canvas`, `bg-surface`, `bg-surface-raised`, `bg-surface-sunken`, `bg-brand`, `bg-brand-strong`, `bg-brand-subtle`
-- Text: `text-default`, `text-strong`, `text-muted`, `text-subtle`, `text-brand`, `text-accent`, `text-on-brand`, `text-inverse`
-- Borders and focus: `border-subtle`, `border-default`, `border-strong`, `border-brand`, `border-focus`, `ring-ring`, `shadow-focus`
+- Text: `text-default`, `text-strong`, `text-muted`, `text-subtle`, `text-brand`, `text-accent`, `text-on-brand`
+- Borders and focus: `border-subtle`, `border-default`, `border-brand`, `ring-ring`
 - Actions: `bg-action-primary`, `hover:bg-action-primary-hover`, `text-action-primary-text`, `border-action-secondary-border`, `text-action-secondary-text`
-- Status: `bg-success`, `text-success`, `border-success`, plus warning, danger, and info equivalents
+- Status: `bg-success-bg`, `text-success-text`, `border-success-border`, `bg-danger-bg`, `text-danger-text`, `border-danger-border`
 - Type: `font-display`, `font-sans`, `font-mono`, and the `type-*` utilities
 
 Do not reintroduce legacy aliases from the previous system. Do not place raw hex, RGB, or ad hoc color values in `className`.
@@ -86,7 +86,7 @@ Do not reintroduce legacy aliases from the previous system. Do not place raw hex
 - **Brand green** is for identity, botanical emphasis, links, brand sections, and selected states.
 - **Primary actions** use near-black ink, not green. This keeps conversion controls distinct from brand decoration and gives them reliable contrast.
 - **Amber** is the accent and focus color. Use it for focus affordances, certifications, and small moments of energy, not broad backgrounds.
-- **Status colors** are functional. Use dedicated success, warning, danger, and info tokens rather than repurposing brand colors.
+- **Status colors** are functional. Use dedicated success and danger tokens rather than repurposing brand colors.
 
 Neutral colors must stay warm or ink-based. If a new neutral reads as blue-gray, slate, or cold charcoal, it does not belong in this system.
 
@@ -98,7 +98,7 @@ Teavision uses a three-font system:
 - **Inter via `font-sans`** for navigation, forms, product cards, body copy, dense UI, and all operational surfaces.
 - **JetBrains Mono via `font-mono`** for SKUs, order numbers, codes, tables, and technical identifiers.
 
-Use the provided type utilities where possible: `type-display-01`, `type-display-02`, `type-heading-01` through `type-heading-05`, `type-body-lg`, `type-body`, `type-body-sm`, `type-label`, `type-caption`, `type-code`, and `type-eyebrow`.
+Use the provided type utilities where possible: `type-display-01`, `type-display-02`, `type-heading-01` through `type-heading-05`, `type-body-lg`, `type-body`, `type-body-sm`, `type-label`, `type-caption`, and `type-eyebrow`.
 
 Type rules:
 
@@ -159,7 +159,7 @@ Write for buyers who are deciding whether Teavision is credible enough to contac
 ## 11. Accessibility and Motion
 
 - Meet WCAG AA for text and meaningful UI states.
-- Use `focus-visible:ring-ring` or `shadow-focus` for keyboard focus.
+- Use `focus-visible:ring-ring` for keyboard focus.
 - Respect `prefers-reduced-motion`. Non-essential animation should stop when reduced motion is requested.
 - Never rely on color alone for state or error communication.
 - Hit targets should be at least 40px on touch surfaces.

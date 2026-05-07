@@ -1,3 +1,4 @@
+/* Archived legacy reference. The live runtime token source is app/globals.css. This file preserves the earlier Figma/import package and may contain dark-theme, warning/info, alias, and hex tokens that are no longer part of the minimal runtime surface. */
 /* ============================================================= * Teavision Design System — Foundation Tokens * v1.0  ·  2026-04-30 * * Two-layer system: *   1. Primitives  (raw values, do not use directly in components) *   2. Semantics   (usage-based, this is what components consume) * * Toggle dark theme by setting <html data-theme="dark">. * ============================================================= */
 :root {
   /* ---------- 1. PRIMITIVES ---------------------------------- */ /* Steep — brand green */

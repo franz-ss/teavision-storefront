@@ -4,10 +4,10 @@ import '../app/globals.css'
 const preview: Preview = {
   parameters: {
     backgrounds: {
-      default: 'brand',
+      default: 'canvas',
       values: [
-        { name: 'brand', value: 'var(--color-background)' },
-        { name: 'white', value: '#ffffff' },
+        { name: 'canvas', value: 'var(--tv-bg-canvas)' },
+        { name: 'surface', value: 'var(--tv-bg-surface)' },
       ],
     },
     controls: {

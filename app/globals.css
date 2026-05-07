@@ -20,7 +20,6 @@
   --color-strong: var(--tv-text-strong);
   --color-muted: var(--tv-text-muted);
   --color-subtle: var(--tv-text-subtle);
-  --color-disabled: var(--tv-text-disabled);
   --color-on-brand: var(--tv-text-on-brand);
   --color-link: var(--tv-text-link);
   --color-link-hover: var(--tv-text-link-hover);
@@ -37,102 +36,79 @@
   --color-action-destructive: var(--tv-action-destructive-bg);
   --color-action-destructive-hover: var(--tv-action-destructive-bg-hover);
   --color-action-destructive-text: var(--tv-action-destructive-text);
-  --color-success: var(--tv-success);
   --color-success-bg: var(--tv-success-bg);
   --color-success-text: var(--tv-success-text);
   --color-success-border: var(--tv-success-border);
-  --color-warning: var(--tv-warning);
-  --color-warning-bg: var(--tv-warning-bg);
-  --color-warning-text: var(--tv-warning-text);
-  --color-warning-border: var(--tv-warning-border);
-  --color-danger: var(--tv-danger);
   --color-danger-bg: var(--tv-danger-bg);
   --color-danger-text: var(--tv-danger-text);
   --color-danger-border: var(--tv-danger-border);
-  --color-info: var(--tv-info);
-  --color-info-bg: var(--tv-info-bg);
-  --color-info-text: var(--tv-info-text);
-  --color-info-border: var(--tv-info-border);
   --radius-xs: var(--tv-radius-xs);
   --radius-sm: var(--tv-radius-sm);
   --radius-md: var(--tv-radius-md);
   --radius-lg: var(--tv-radius-lg);
   --radius-xl: var(--tv-radius-xl);
   --radius-2xl: var(--tv-radius-2xl);
-  --shadow-sm: var(--tv-shadow-1);
-  --shadow-md: var(--tv-shadow-2);
-  --shadow-lg: var(--tv-shadow-3);
-  --shadow-xl: var(--tv-shadow-4);
-  --shadow-focus: var(--tv-shadow-focus);
   --container-prose: 65ch;
   --container-base: 80rem;
   --container-wide: 90rem;
 }
 :root {
-  --color-steep-50: #f2f6f3;
-  --color-steep-100: #dde9df;
-  --color-steep-200: #b5cdb9;
-  --color-steep-300: #87ac8e;
-  --color-steep-400: #5c8b69;
-  --color-steep-500: #3f6e4e;
-  --color-steep-600: #305840;
-  --color-steep-700: #244332;
-  --color-steep-800: #1b3327;
-  --color-steep-900: #11201a;
-  --color-steep-950: #08120f;
-  --color-stone-50: #faf8f4;
-  --color-stone-100: #f2efe9;
-  --color-stone-200: #e5e0d5;
-  --color-stone-300: #cfc8b8;
-  --color-stone-400: #b0a793;
-  --color-stone-500: #8e8470;
-  --color-stone-600: #6f6856;
-  --color-stone-700: #564f40;
-  --color-stone-800: #3d382d;
-  --color-stone-900: #25221b;
-  --color-stone-950: #15130f;
-  --color-ink-50: #f5f5f4;
-  --color-ink-100: #e7e7e5;
-  --color-ink-200: #c9c9c5;
-  --color-ink-300: #a4a39e;
-  --color-ink-400: #777671;
-  --color-ink-500: #4f4e4a;
-  --color-ink-600: #353431;
-  --color-ink-700: #25241f;
-  --color-ink-800: #1a1916;
-  --color-ink-900: #100f0d;
-  --color-ink-950: #06060a;
-  --color-amber-50: #fbf6ea;
-  --color-amber-100: #f5e9c6;
-  --color-amber-200: #edd592;
-  --color-amber-300: #e1bb57;
-  --color-amber-400: #d29f2e;
-  --color-amber-500: #b5841f;
-  --color-amber-600: #946817;
-  --color-amber-700: #6e4d14;
-  --color-amber-800: #4d3611;
-  --color-amber-900: #2d1f08;
-  --color-amber-950: #1a1004;
-  --color-success-50: #ecf5ee;
-  --color-success-500: #2e7d44;
-  --color-success-600: #246336;
-  --color-success-700: #1b4b29;
-  --color-warning-50: #fdf5e6;
-  --color-warning-500: #b07a14;
-  --color-warning-600: #8b5f0f;
-  --color-warning-700: #65450a;
-  --color-danger-50: #f9eae8;
-  --color-danger-500: #b33c30;
-  --color-danger-600: #8e2f25;
-  --color-danger-700: #6a2118;
-  --color-info-50: #e8eff7;
-  --color-info-500: #2e5a99;
-  --color-info-600: #244773;
-  --color-info-700: #1a344e;
-  --color-canvas-base: #faf7f2;
+  --color-steep-50: oklch(96.93% 0.0058 153.8);
+  --color-steep-100: oklch(92.22% 0.0185 150.5);
+  --color-steep-200: oklch(82.47% 0.0379 150.2);
+  --color-steep-300: oklch(70.86% 0.0592 150.3);
+  --color-steep-400: oklch(59.31% 0.073 152.4);
+  --color-steep-500: oklch(49.5% 0.073 153.2);
+  --color-steep-600: oklch(42.33% 0.0609 156.3);
+  --color-steep-700: oklch(35.31% 0.0478 158.7);
+  --color-steep-800: oklch(29.72% 0.0375 161.2);
+  --color-steep-900: oklch(22.76% 0.0238 167.1);
+  --color-steep-950: oklch(17.1% 0.0163 173.7);
+  --color-stone-50: oklch(97.96% 0.0057 84.6);
+  --color-stone-100: oklch(95.28% 0.0086 84.6);
+  --color-stone-200: oklch(90.76% 0.0157 86.4);
+  --color-stone-300: oklch(83.4% 0.0232 87.2);
+  --color-stone-400: oklch(73.04% 0.0299 86.7);
+  --color-stone-500: oklch(61.66% 0.0315 84.6);
+  --color-stone-600: oklch(51.85% 0.0286 89.3);
+  --color-stone-700: oklch(42.99% 0.0255 85.9);
+  --color-stone-800: oklch(34.23% 0.0197 86.4);
+  --color-stone-900: oklch(25.28% 0.0135 87.6);
+  --color-stone-950: oklch(18.76% 0.0085 84.6);
+  --color-ink-50: oklch(96.99% 0.0013 106.4);
+  --color-ink-100: oklch(92.74% 0.0027 106.5);
+  --color-ink-200: oklch(83.48% 0.0055 106.5);
+  --color-ink-300: oklch(71.48% 0.0072 97.4);
+  --color-ink-400: oklch(56.52% 0.0077 97.4);
+  --color-ink-500: oklch(42.35% 0.0066 95.2);
+  --color-ink-600: oklch(32.5% 0.0054 91.5);
+  --color-ink-700: oklch(25.96% 0.0092 97.7);
+  --color-ink-800: oklch(21.34% 0.006 91.6);
+  --color-ink-900: oklch(16.88% 0.0044 84.6);
+  --color-ink-950: oklch(12.46% 0.0103 284.8);
+  --color-amber-50: oklch(97.38% 0.0167 88);
+  --color-amber-100: oklch(93.46% 0.0476 91.3);
+  --color-amber-200: oklch(87.77% 0.0893 90.6);
+  --color-amber-300: oklch(80.63% 0.1259 88.5);
+  --color-amber-400: oklch(73.19% 0.1362 82.6);
+  --color-amber-500: oklch(64.54% 0.1242 80);
+  --color-amber-600: oklch(54.97% 0.1067 77);
+  --color-amber-700: oklch(44.57% 0.0833 76.5);
+  --color-amber-800: oklch(35.14% 0.061 76);
+  --color-amber-900: oklch(25.1% 0.0418 77.2);
+  --color-amber-950: oklch(18.28% 0.0289 72.7);
+  --color-success-50: oklch(96.14% 0.0133 152.6);
+  --color-success-500: oklch(52.63% 0.1173 149.7);
+  --color-success-600: oklch(44.67% 0.0974 150);
+  --color-success-700: oklch(37% 0.078 150.4);
+  --color-danger-50: oklch(94.84% 0.0166 26.6);
+  --color-danger-500: oklch(52.52% 0.1567 29.2);
+  --color-danger-600: oklch(44.46% 0.1307 29.3);
+  --color-danger-700: oklch(36.04% 0.1062 30.1);
+  --color-canvas-base: oklch(97.71% 0.0074 80.7);
   --tv-bg-canvas: var(--color-canvas-base);
-  --tv-bg-surface: #fffffe;
-  --tv-bg-surface-raised: #fffffe;
+  --tv-bg-surface: oklch(99.97% 0.0013 106.4);
+  --tv-bg-surface-raised: oklch(99.97% 0.0013 106.4);
   --tv-bg-surface-sunken: var(--color-stone-100);
   --tv-bg-brand: var(--color-steep-700);
   --tv-bg-brand-strong: var(--color-steep-900);
@@ -144,17 +120,13 @@
   --tv-text-strong: var(--color-ink-900);
   --tv-text-muted: var(--color-ink-500);
   --tv-text-subtle: var(--color-ink-500);
-  --tv-text-disabled: var(--color-ink-300);
-  --tv-text-inverse: var(--color-canvas-base);
   --tv-text-on-brand: var(--color-canvas-base);
   --tv-text-brand: var(--color-steep-700);
   --tv-text-link: var(--color-steep-700);
   --tv-text-link-hover: var(--color-steep-900);
   --tv-text-accent: var(--color-amber-700);
-  --tv-accent-text: var(--color-amber-700);
   --tv-border-subtle: var(--color-ink-100);
   --tv-border-default: var(--color-ink-200);
-  --tv-border-strong: var(--color-ink-400);
   --tv-border-brand: var(--color-steep-700);
   --tv-border-focus: var(--color-amber-500);
   --tv-action-primary-bg: var(--color-ink-900);
@@ -170,99 +142,18 @@
   --tv-action-destructive-bg: var(--color-danger-500);
   --tv-action-destructive-bg-hover: var(--color-danger-600);
   --tv-action-destructive-text: var(--color-canvas-base);
-  --tv-success: var(--color-success-500);
   --tv-success-bg: var(--color-success-50);
   --tv-success-text: var(--color-success-700);
   --tv-success-border: var(--color-success-500);
-  --tv-warning: var(--color-warning-500);
-  --tv-warning-bg: var(--color-warning-50);
-  --tv-warning-text: var(--color-warning-700);
-  --tv-warning-border: var(--color-warning-500);
-  --tv-danger: var(--color-danger-500);
   --tv-danger-bg: var(--color-danger-50);
   --tv-danger-text: var(--color-danger-700);
   --tv-danger-border: var(--color-danger-500);
-  --tv-info: var(--color-info-500);
-  --tv-info-bg: var(--color-info-50);
-  --tv-info-text: var(--color-info-700);
-  --tv-info-border: var(--color-info-500);
   --tv-radius-xs: 2px;
   --tv-radius-sm: 4px;
   --tv-radius-md: 6px;
   --tv-radius-lg: 8px;
   --tv-radius-xl: 12px;
   --tv-radius-2xl: 16px;
-  --tv-shadow-1: 0 1px 2px rgb(15 15 13 / 4%), 0 1px 3px rgb(15 15 13 / 6%);
-  --tv-shadow-2: 0 4px 8px rgb(15 15 13 / 4%), 0 2px 4px rgb(15 15 13 / 4%);
-  --tv-shadow-3: 0 12px 24px rgb(15 15 13 / 6%), 0 4px 8px rgb(15 15 13 / 4%);
-  --tv-shadow-4: 0 24px 48px rgb(15 15 13 / 8%), 0 8px 16px rgb(15 15 13 / 6%);
-  --tv-shadow-focus: 0 0 0 3px rgb(181 132 31 / 35%);
-  --color-bg-canvas: var(--tv-bg-canvas);
-  --color-bg-surface: var(--tv-bg-surface);
-  --color-bg-surface-raised: var(--tv-bg-surface-raised);
-  --color-bg-surface-sunken: var(--tv-bg-surface-sunken);
-  --color-bg-brand: var(--tv-bg-brand);
-  --color-bg-brand-strong: var(--tv-bg-brand-strong);
-  --color-bg-brand-subtle: var(--tv-bg-brand-subtle);
-  --color-bg-accent: var(--tv-bg-accent);
-  --color-bg-accent-subtle: var(--tv-bg-accent-subtle);
-  --color-bg-inverse: var(--tv-bg-inverse);
-  --color-text-default: var(--tv-text-default);
-  --color-text-strong: var(--tv-text-strong);
-  --color-text-muted: var(--tv-text-muted);
-  --color-text-subtle: var(--tv-text-subtle);
-  --color-text-disabled: var(--tv-text-disabled);
-  --color-text-inverse: var(--tv-text-inverse);
-  --color-text-on-brand: var(--tv-text-on-brand);
-  --color-text-brand: var(--tv-text-brand);
-  --color-text-link: var(--tv-text-link);
-  --color-text-link-hover: var(--tv-text-link-hover);
-  --color-text-accent: var(--tv-text-accent);
-  --color-border-subtle: var(--tv-border-subtle);
-  --color-border-default: var(--tv-border-default);
-  --color-border-strong: var(--tv-border-strong);
-  --color-border-brand: var(--tv-border-brand);
-  --color-border-focus: var(--tv-border-focus);
-}
-[data-theme='dark'] {
-  --tv-bg-canvas: var(--color-ink-950);
-  --tv-bg-surface: var(--color-ink-900);
-  --tv-bg-surface-raised: var(--color-ink-800);
-  --tv-bg-surface-sunken: var(--color-ink-950);
-  --tv-bg-brand: var(--color-steep-800);
-  --tv-bg-brand-strong: var(--color-steep-950);
-  --tv-bg-brand-subtle: var(--color-ink-800);
-  --tv-bg-accent: var(--color-amber-400);
-  --tv-bg-accent-subtle: var(--color-ink-800);
-  --tv-bg-inverse: var(--color-canvas-base);
-  --tv-text-default: var(--color-stone-100);
-  --tv-text-strong: var(--color-canvas-base);
-  --tv-text-muted: var(--color-stone-300);
-  --tv-text-subtle: var(--color-stone-300);
-  --tv-text-disabled: var(--color-stone-500);
-  --tv-text-inverse: var(--color-ink-900);
-  --tv-text-on-brand: var(--color-canvas-base);
-  --tv-text-brand: var(--color-steep-300);
-  --tv-text-link: var(--color-steep-300);
-  --tv-text-link-hover: var(--color-steep-200);
-  --tv-text-accent: var(--color-amber-300);
-  --tv-accent-text: var(--color-amber-300);
-  --tv-border-subtle: var(--color-ink-700);
-  --tv-border-default: var(--color-ink-600);
-  --tv-border-strong: var(--color-ink-400);
-  --tv-border-brand: var(--color-steep-300);
-  --tv-border-focus: var(--color-amber-400);
-  --tv-action-primary-bg: var(--color-canvas-base);
-  --tv-action-primary-bg-hover: var(--color-stone-200);
-  --tv-action-primary-bg-active: var(--color-stone-300);
-  --tv-action-primary-text: var(--color-ink-900);
-  --tv-action-secondary-bg-hover: var(--color-ink-800);
-  --tv-action-secondary-border: var(--color-stone-100);
-  --tv-action-secondary-text: var(--color-stone-100);
-  --tv-shadow-1: 0 1px 2px rgb(0 0 0 / 16%), 0 1px 3px rgb(0 0 0 / 20%);
-  --tv-shadow-2: 0 4px 8px rgb(0 0 0 / 16%), 0 2px 4px rgb(0 0 0 / 16%);
-  --tv-shadow-3: 0 12px 24px rgb(0 0 0 / 24%), 0 4px 8px rgb(0 0 0 / 16%);
-  --tv-shadow-4: 0 24px 48px rgb(0 0 0 / 32%), 0 8px 16px rgb(0 0 0 / 24%);
 }
 @layer base {
   *,
@@ -337,12 +228,6 @@
   .text-subtle {
     color: var(--tv-text-subtle);
   }
-  .text-disabled {
-    color: var(--tv-text-disabled);
-  }
-  .text-inverse {
-    color: var(--tv-text-inverse);
-  }
   .text-brand {
     color: var(--tv-text-brand);
   }
@@ -355,14 +240,8 @@
   .border-default {
     border-color: var(--tv-border-default);
   }
-  .border-strong {
-    border-color: var(--tv-border-strong);
-  }
   .border-brand {
     border-color: var(--tv-border-brand);
-  }
-  .border-focus {
-    border-color: var(--tv-border-focus);
   }
   .type-display-01 {
     font-family: var(--font-display);
@@ -448,13 +327,6 @@
     letter-spacing: 0;
     line-height: 1rem;
   }
-  .type-code {
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.25rem;
-  }
   .type-eyebrow {
     font-family: var(--font-sans);
     font-size: 0.75rem;
@@ -462,60 +334,6 @@
     letter-spacing: 0.08em;
     line-height: 1rem;
     text-transform: uppercase;
-  }
-  .shadow-0 {
-    box-shadow: none;
-  }
-  .shadow-1 {
-    box-shadow: var(--tv-shadow-1);
-  }
-  .shadow-2 {
-    box-shadow: var(--tv-shadow-2);
-  }
-  .shadow-3 {
-    box-shadow: var(--tv-shadow-3);
-  }
-  .shadow-4 {
-    box-shadow: var(--tv-shadow-4);
-  }
-  .bg-success {
-    background-color: var(--tv-success-bg);
-  }
-  .text-success {
-    color: var(--tv-success-text);
-  }
-  .border-success {
-    border-color: var(--tv-success-border);
-  }
-  .bg-warning {
-    background-color: var(--tv-warning-bg);
-  }
-  .text-warning {
-    color: var(--tv-warning-text);
-  }
-  .border-warning {
-    border-color: var(--tv-warning-border);
-  }
-  .bg-danger {
-    background-color: var(--tv-danger-bg);
-  }
-  .text-danger {
-    color: var(--tv-danger-text);
-  }
-  .border-danger {
-    border-color: var(--tv-danger-border);
-  }
-  .bg-info {
-    background-color: var(--tv-info-bg);
-  }
-  .text-info {
-    color: var(--tv-info-text);
-  }
-  .border-info {
-    border-color: var(--tv-info-border);
-  }
-  .shadow-focus {
-    box-shadow: var(--tv-shadow-focus);
   }
 }
 @media (min-width: 48rem) {

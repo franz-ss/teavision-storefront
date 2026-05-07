@@ -1,3 +1,7 @@
+# Archived Legacy Reference
+
+For current runtime tokens and component guidance, use `app/globals.css` and `DESIGN.md`. This file preserves the earlier Figma/import setup and may mention dark themes, warning/info statuses, legacy aliases, hex values, and token scopes that are no longer part of the minimal runtime token surface.
+
 # Manual variables — fast track (15 minutes)
 
 The Tokens Studio plugin isn't applying. Skip it. Build the variables we actually need directly in Figma's Variables panel. This list strips the system to ~30 essentials — enough to build the first 5 components — and adds the rest later.

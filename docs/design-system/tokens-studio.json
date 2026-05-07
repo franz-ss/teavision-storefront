@@ -32,7 +32,10 @@
       "typography",
       "shadow",
       "shadow/dark"
-    ]
+    ],
+    "status": "archived legacy reference",
+    "canonicalRuntimeSource": "app/globals.css",
+    "designContract": "DESIGN.md"
   },
   "primitives": {
     "color": {

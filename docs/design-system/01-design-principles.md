@@ -1,5 +1,7 @@
 # Design Principles & Brand Direction
 
+> Archived legacy reference. For current runtime token choices, use `app/globals.css` and `DESIGN.md`. Notes below may still mention the earlier dark theme and warning/info status vocabulary that was removed from the minimal runtime token surface.
+
 ## The brief in one line
 
 A modern, minimal rebrand of Teavision — Australia's B2B wholesale tea, herb, and spice supplier — designed to feel like a trusted partner to cafés, restaurants, and F&B procurement teams worldwide.
@@ -13,11 +15,13 @@ A modern, minimal rebrand of Teavision — Australia's B2B wholesale tea, herb, 
 **Secondary:** End consumers and curious browsers who arrive via SEO and may eventually become wholesale customers.
 
 What both groups need from the site:
+
 - **Confidence** that Teavision is a serious, certified, established supplier
 - **Clarity** about what's available and how to get it
 - **A frictionless path to talking to a human** — most buying decisions start with an inquiry, not an "add to cart"
 
 What they do **not** need:
+
 - Consumer-style urgency (countdown timers, "only 3 left," gimmicks)
 - Decorative illustration that obscures the product range
 - Heavy onboarding before they can browse
@@ -87,9 +91,9 @@ We use color in three layers:
 2. **Action** — near-black ink is the workhorse of primary buttons and high-contrast actions. This is intentional: a black button feels more confident, more universal, and more wholesale-appropriate than a saturated brand-green button.
 3. **Accent** — a warm amber appears on certification badges, "limited" tags, and other small moments of energy. Never on full surfaces.
 
-Status colors (success, warning, danger, info) live outside the brand palette and are slightly desaturated so they read as functional, not decorative.
+Current runtime status colors cover success and danger only. Add warning or info only when a product surface needs them.
 
-A dark theme is included as a system-respecting option (and for image-overlay surfaces), but light is the default.
+The current runtime theme is light-only. Dark image-overlay surfaces should use local semantic tokens such as `bg-inverse` rather than a global theme toggle.
 
 ---
 
