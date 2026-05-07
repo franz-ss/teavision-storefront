@@ -112,6 +112,10 @@ export async function sendContactAction(
   }
 }
 
+export async function submitContactFormAction(formData: FormData) {
+  await sendContactAction(formData)
+}
+
 export async function sendNewsletterSignupAction(
   formData: FormData,
 ): Promise<NewsletterSignupActionResult> {
@@ -151,4 +155,8 @@ export async function sendNewsletterSignupAction(
     console.error('Newsletter signup failed', error)
     return { success: false, error: NEWSLETTER_SEND_ERROR }
   }
+}
+
+export async function submitNewsletterSignupFormAction(formData: FormData) {
+  await sendNewsletterSignupAction(formData)
 }
