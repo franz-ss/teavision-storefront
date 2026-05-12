@@ -11,7 +11,7 @@ export function ProductRange() {
           title="Explore Our Product Range"
           copy="We offer Wholesale products online direct to consumers and businesses or you can apply for a bulk wholesale account and receive further discounts on 100kg+ orders."
         />
-        <ul className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-3">
+        <ul className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {PRODUCT_RANGE.map((card) => (
             <li key={card.href}>
               <OverlayImageCard card={card} />

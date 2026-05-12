@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 
 import {
-  Catalogues,
   CertificationCoverage,
   Contact,
-  ExpertsHelp,
+  Cta,
   Faq,
   HomepageHero,
   HomepageNewsletter,
@@ -16,7 +15,11 @@ import {
   TeaJournal,
   Testimonials,
 } from '@/components/homepage'
-import { organizationJsonLd, websiteJsonLd } from '@/components/homepage/content'
+import {
+  ctaCatalogueData,
+  organizationJsonLd,
+  websiteJsonLd,
+} from '@/components/homepage/content'
 import {
   submitContactFormAction,
   submitNewsletterSignupFormAction,
@@ -49,18 +52,31 @@ export default function HomePage() {
 
       <div className="bg-canvas">
         <HomepageHero />
-        <CertificationCoverage />
         <ProofPoints />
+        <CertificationCoverage />
+        <SupplyChain />
+
         <ProductRange />
         <HomepageNewsletter action={submitNewsletterSignupFormAction} />
         <PrivateLabel />
         <OrganicHerbs />
-        <ExpertsHelp />
-        <SupplyChain />
+        <Cta
+          tone="brand"
+          intro={{
+            title: 'Let the experts help GROW your business',
+            copy: 'Let the experts help GROW your business',
+          }}
+          cta={{
+            children: 'Contact the team',
+            href: '/contact',
+            variant: 'inverseSecondary',
+          }}
+        />
+
         <Testimonials />
         <TeaJournal />
         <Contact action={submitContactFormAction} />
-        <Catalogues />
+        <Cta {...ctaCatalogueData} />
         <Faq />
       </div>
     </>

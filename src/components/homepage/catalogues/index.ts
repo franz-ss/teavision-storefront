@@ -1,1 +1,1 @@
-export * from './catalogues'
+export * from './cta'

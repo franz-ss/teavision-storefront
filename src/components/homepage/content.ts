@@ -1,3 +1,5 @@
+import { CtaProps } from './catalogues'
+
 export type ImageAsset = {
   src: string
   alt: string
@@ -6,7 +8,7 @@ export type ImageAsset = {
 }
 
 export type ProofPoint = {
-  icon: ImageAsset
+  icon: string
   title: string
   description: string
 }
@@ -46,6 +48,21 @@ export type CertificationCard = {
   details: string[]
 }
 
+export const ctaCatalogueData: CtaProps = {
+  tone: 'inverse',
+  intro: {
+    variant: 'compact',
+    title: 'Explore Tea and Herb Catalogues',
+    copy: 'Browse our catalogues to explore hundreds of options in black tea, green tea, herbal blends, and bulk spices. Each listing includes quality details to guide your wholesale orders.',
+  },
+  cta: {
+    children: 'Download Catalogue',
+    href: '/pages/download-catalogues',
+    variant: 'inverseSecondary',
+    size: 'cta',
+  },
+}
+
 const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
 const SHOPIFY_ARTICLE_BASE =
   'https://cdn.shopify.com/s/files/1/0786/8339/articles'
@@ -83,44 +100,24 @@ export const websiteJsonLd = {
 
 export const PROOF_POINTS = [
   {
-    icon: {
-      src: `${SHOPIFY_FILE_BASE}/Australian_Flag.svg?v=1760002446&width=80`,
-      alt: '',
-      width: 80,
-      height: 80,
-    },
-    title: 'Australian',
-    description: 'Owned & Operated',
+    icon: 'Users',
+    title: '2,500+',
+    description: 'Satisfied Customers',
   },
   {
-    icon: {
-      src: `${SHOPIFY_FILE_BASE}/Truck.svg?v=1760002333&width=80`,
-      alt: '',
-      width: 80,
-      height: 80,
-    },
+    icon: 'Award',
     title: '#1',
-    description: 'Tea and Herb Wholesale Supplier',
+    description: 'Rated and Most Trusted',
   },
   {
-    icon: {
-      src: `${SHOPIFY_FILE_BASE}/Flask.svg?v=1760002405&width=80`,
-      alt: '',
-      width: 80,
-      height: 80,
-    },
-    title: '1,000+',
-    description: 'Ingredient options including 500+ Certified Organic',
+    icon: 'Globe',
+    title: '40+',
+    description: 'Countries Worldwide',
   },
   {
-    icon: {
-      src: `${SHOPIFY_FILE_BASE}/Medal.svg?v=1760002426&width=80`,
-      alt: '',
-      width: 80,
-      height: 80,
-    },
-    title: '15+',
-    description: 'Awards',
+    icon: 'CheckCircle',
+    title: '100%',
+    description: 'Quality Satisfaction',
   },
 ] satisfies ProofPoint[]
 
@@ -295,48 +292,6 @@ export const HERBS_IMAGE = {
   alt: 'Organic herbs and spices',
   width: 1500,
   height: 1000,
-} satisfies ImageAsset
-
-export const HOMEPAGE_HERO_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/bulk_wholesale.jpg?v=1776400758&width=1600`,
-  alt: 'Wholesale loose leaf tea and botanicals prepared for bulk supply',
-  width: 1600,
-  height: 1068,
-} satisfies ImageAsset
-
-export const ORGANIC_CERTIFICATION_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/australian-organic.webp?v=1760701558&width=200`,
-  alt: 'Australian Certified Organic mark',
-  width: 200,
-  height: 200,
-} satisfies ImageAsset
-
-export const NEWSLETTER_LEFT_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/Frame_1000005882.png?v=1758816679&width=250`,
-  alt: '',
-  width: 250,
-  height: 250,
-} satisfies ImageAsset
-
-export const NEWSLETTER_RIGHT_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/label.png?v=1758816715&width=250`,
-  alt: '',
-  width: 250,
-  height: 250,
-} satisfies ImageAsset
-
-export const EXPERTS_LEFT_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/Group_1000005879_4d4f59df-0596-49a5-b6f6-6d99fe567e3e.png?v=1758533086&width=250`,
-  alt: '',
-  width: 250,
-  height: 250,
-} satisfies ImageAsset
-
-export const EXPERTS_RIGHT_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/Group_1000005865_ce5f113f-ca0c-485b-a89d-bfece6b4fb1d.png?v=1758533036&width=250`,
-  alt: '',
-  width: 250,
-  height: 250,
 } satisfies ImageAsset
 
 export const CATALOGUE_IMAGE = {
@@ -549,49 +504,53 @@ export const FAQS = [
   },
 ] satisfies FaqItem[]
 
-export const CERTIFICATION_COVERAGE = [
+export const CERTIFICATION_COVERAGE: CertificationCard[] = [
   {
-    eyebrow: 'Organic',
+    eyebrow: 'USDA NOP, EU & ACO Certified',
     title: 'Certified organic supply',
     description:
-      'ACO organic ingredients and documentation for buyers building compliant retail or wholesale ranges.',
+      'Our organic certification ensures all organic products meet strict international standards from farm to cup across multiple regulatory frameworks.',
     details: [
-      'Certified organic options across tea, herbs, and botanicals',
-      'Supplier documentation for account and procurement teams',
-      'Range guidance for bulk and private label programs',
+      'USDA NOP (National Organic Program)',
+      'EU Organic Regulation compliance',
+      'ACO (Australian Certified Organic)',
+      'Full supply chain traceability',
     ],
   },
   {
-    eyebrow: 'Safety',
-    title: 'Food safety systems',
+    eyebrow: 'Food Safety Management',
+    title: 'HACCP Certification',
     description:
-      'Quality controls support repeatable purchasing, production planning, and scaled fulfilment.',
+      'Hazard Analysis Critical Control Points system ensuring food safety at every production stage.',
     details: [
-      'Batch consistency checks before dispatch',
-      'Process controls for tea bag and packing services',
-      'Clear escalation path through the sales team',
+      'Comprehensive hazard analysis',
+      'Critical control point monitoring',
+      'Documented processes',
+      'Staff training programs',
     ],
   },
   {
-    eyebrow: 'Sourcing',
-    title: 'Traceable global network',
+    eyebrow: 'Kosher Australia',
+    title: 'Kosher Certification',
     description:
-      'A broad sourcing base gives wholesale teams range depth without losing ingredient accountability.',
+      'Products certified to meet strict kosher dietary requirements and standards.',
     details: [
-      'Ingredients sourced from more than 15 countries',
-      'Origin and category guidance for wholesale buyers',
-      'Freight and import handling across supply journeys',
+      'Rabbinical supervision',
+      'Ingredient verification',
+      'Production oversight',
+      'Dedicated certification',
     ],
   },
   {
-    eyebrow: 'Scale',
-    title: 'Wholesale programs',
+    eyebrow: 'Halal Certified',
+    title: 'Halal Certification',
     description:
-      'Account support covers custom blends, private label, cafe ranges, and 100kg+ purchasing paths.',
+      'Certification ensuring products meet Islamic dietary laws and requirements.',
     details: [
-      'Bulk account application for larger volumes',
-      'Custom blend and private label support',
-      'Catalogue-led discovery for procurement reviews',
+      'Islamic dietary compliance',
+      'Ingredient screening',
+      'Process verification',
+      'Regular auditing',
     ],
   },
-] satisfies CertificationCard[]
+]

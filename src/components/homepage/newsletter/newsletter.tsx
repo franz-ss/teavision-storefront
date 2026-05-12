@@ -1,8 +1,4 @@
-import Image from 'next/image'
-
 import { Button, Section } from '@/components/ui'
-
-import { NEWSLETTER_LEFT_IMAGE, NEWSLETTER_RIGHT_IMAGE } from '../content'
 
 type HomepageNewsletterProps = {
   action: (formData: FormData) => Promise<void>
@@ -10,31 +6,17 @@ type HomepageNewsletterProps = {
 
 export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
   return (
-    <Section.Root tone="brand" className="relative overflow-hidden">
-      <Image
-        src={NEWSLETTER_LEFT_IMAGE.src}
-        alt={NEWSLETTER_LEFT_IMAGE.alt}
-        width={NEWSLETTER_LEFT_IMAGE.width}
-        height={NEWSLETTER_LEFT_IMAGE.height}
-        className="absolute top-1/2 left-8 hidden h-48 w-56 -translate-y-1/2 rounded-lg object-cover opacity-80 lg:block"
-      />
-      <Image
-        src={NEWSLETTER_RIGHT_IMAGE.src}
-        alt={NEWSLETTER_RIGHT_IMAGE.alt}
-        width={NEWSLETTER_RIGHT_IMAGE.width}
-        height={NEWSLETTER_RIGHT_IMAGE.height}
-        className="absolute top-10 right-8 hidden h-44 w-44 rounded-lg object-cover opacity-80 lg:block"
-      />
-      <Section.Container className="relative z-10 text-center">
-        <h2 className="type-heading-02 text-on-brand">
-          Explore the World of Tea with Monthly Newsletters
-        </h2>
-        <p className="type-body text-on-brand/85 mt-4">
-          Stay informed with monthly updates on loose leaf tea, bulk tea bags,
+    <Section.Root tone="brand">
+      <Section.Container>
+        <Section.Intro
+          variant="compact"
+          title="Explore the World of Tea with Monthly Newsletters"
+          copy="Stay informed with monthly updates on loose leaf tea, bulk tea bags,
           herbs, and spices. From market insights to brewing tips, we share the
           latest news and trends from trusted tea suppliers in Australia and
-          beyond.
-        </p>
+          beyond."
+        />
+
         <form
           action={action}
           className="mx-auto mt-8 flex max-w-xl flex-col gap-2 sm:flex-row"
