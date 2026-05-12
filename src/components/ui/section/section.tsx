@@ -15,6 +15,7 @@ const sectionVariants = cva('', {
     },
     spacing: {
       default: 'py-10 md:py-24',
+      compact: 'py-4 md:py-8',
       none: '',
     },
   },
@@ -76,10 +77,11 @@ function Container({
   )
 }
 
-export interface IntroProps extends Omit<
+export interface SectionIntroProps extends Omit<
   React.ComponentPropsWithoutRef<'div'>,
   'title'
 > {
+  variant?: 'default' | 'compact'
   align?: 'center' | 'left'
   copy: React.ReactNode
   title: React.ReactNode
@@ -87,22 +89,23 @@ export interface IntroProps extends Omit<
 
 function Intro({
   align = 'center',
+  variant = 'default',
   className,
   copy,
   title,
   ...props
-}: IntroProps) {
+}: SectionIntroProps) {
   return (
     <div
       className={cn(
-        'max-w-prose',
+        variant === 'compact' && 'max-w-prose',
         align === 'center' && 'mx-auto text-center',
         className,
       )}
       {...props}
     >
-      <h2 className="type-heading-02 text-strong">{title}</h2>
-      <p className="type-body text-muted mt-4">{copy}</p>
+      <h2 className="type-heading-02 text-current">{title}</h2>
+      <p className="type-body mt-4 text-current/70">{copy}</p>
     </div>
   )
 }

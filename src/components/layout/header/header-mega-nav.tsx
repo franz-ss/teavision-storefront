@@ -59,8 +59,8 @@ const SHOP_SECTIONS = [
       },
       { href: '/collections/black-tea', label: 'Black Tea' },
       { href: '/collections/green-tea', label: 'Green Tea' },
-      { href: '/collections/bulk-wholesale-chai', label: 'Herbal Tea' },
-      { href: '/collections/bulk-wholesale-chai', label: 'Chai' },
+      { href: '/collections/chai', label: 'Herbal Tea' },
+      { href: '/collections/chai', label: 'Chai' },
       {
         href: '/collections/wellness-functional-tea',
         label: 'Health and Wellness Blends',
@@ -129,7 +129,7 @@ const SHOP_SECTIONS = [
 ] satisfies ShopSection[]
 
 const SERVICES_LINKS = [
-  { href: '/collections/custom-tea-blends', label: 'Custom Tea Blending' },
+  { href: '/pages/custom-tea-blends', label: 'Custom Tea Blending' },
   { href: '/pages/private-label-packing', label: 'Private Label Solutions' },
   { href: '/pages/tea-bag-manufacturer', label: 'Tea Bag Manufacture' },
   {
