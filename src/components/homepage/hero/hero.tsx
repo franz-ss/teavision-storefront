@@ -20,8 +20,8 @@ export function HomepageHero() {
         aria-hidden="true"
         className="bg-inverse/50 absolute inset-0 -z-10"
       />
-      <Section.Container className="grid gap-10 lg:grid-cols-2">
-        <div>
+      <Section.Container>
+        <div className="max-w-prose">
           <h1 className="type-display-01 text-on-brand mt-5">
             Certified Organic. Globally Sourced. Quality Assured
           </h1>

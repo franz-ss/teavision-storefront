@@ -30,7 +30,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   }, [emblaApi, onSelect])
 
   if (images.length === 0) {
-    return <div className="bg-surface aspect-[4/3] w-full rounded" />
+    return <div className="bg-surface aspect-4/3 w-full rounded" />
   }
 
   return (
@@ -40,7 +40,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           {images.map((image, i) => (
             <div
               key={image.url}
-              className="relative aspect-[4/3] min-w-0 flex-[0_0_100%]"
+              className="relative aspect-4/3 min-w-0 flex-[0_0_100%]"
             >
               {image.width && image.height ? (
                 <Image

@@ -15,7 +15,7 @@ export function ProofPoints() {
   return (
     <Section.Root tone="inverse" spacing="compact">
       <Section.Container>
-        <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-8 lg:grid-cols-4">
           {PROOF_POINTS.map((point) => {
             const IconComponent = ICON_MAP[point.icon]
             return (
