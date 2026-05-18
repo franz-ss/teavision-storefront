@@ -3,7 +3,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
-import { ArticleCard, Button, NewsletterSignup, Section } from '@/components/ui'
+import {
+  ArticleCard,
+  Button,
+  Card,
+  NewsletterSignup,
+  Section,
+} from '@/components/ui'
 import {
   filterArticles,
   findTagBySlug,
@@ -283,12 +289,12 @@ async function BlogListingContent({ params, searchParams }: BlogListingProps) {
           </nav>
 
           {paginated.totalArticles === 0 ? (
-            <div className="border-default bg-surface rounded-lg border px-6 py-12 text-center">
+            <Card className="px-6 py-12 text-center">
               <h2 className="type-heading-03 text-strong">No articles found</h2>
               <p className="type-body-sm text-muted mx-auto mt-3 max-w-lg">
                 Try a different search term or browse all Tea Journal articles.
               </p>
-            </div>
+            </Card>
           ) : (
             <ul
               className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"

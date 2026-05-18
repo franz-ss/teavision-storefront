@@ -10,7 +10,7 @@ import {
 } from '@/lib/shopify/operations/collection'
 import { ProductCollectionSortKeys } from '@/lib/shopify/types'
 import { SortSelect } from '@/components/collection'
-import { ProductCard, Section } from '@/components/ui'
+import { Card, ProductCard, Section } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 type Props = {
@@ -356,7 +356,7 @@ async function CollectionContent({
               role="list"
             >
               {products.length === 0 ? (
-                <li className="border-default bg-surface col-span-full rounded-lg border px-6 py-16 text-center">
+                <Card as="li" className="col-span-full px-6 py-16 text-center">
                   <h3 className="type-heading-03 text-strong">
                     No products listed yet
                   </h3>
@@ -371,7 +371,7 @@ async function CollectionContent({
                   >
                     Contact Teavision
                   </Link>
-                </li>
+                </Card>
               ) : (
                 products.map((product, i) => (
                   <li key={product.id}>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-import { Section } from '@/components/ui'
+import { Card, Section } from '@/components/ui'
 
 const WHOLESALE_STATS = [
   { stat: '1,000+', label: 'Ingredients' },
@@ -122,17 +122,17 @@ export default function WholesalePage() {
               aria-label="Wholesale service pathways"
             >
               {WHOLESALE_PATHS.map((path) => (
-                <li key={path.title}>
+                <Card as="li" key={path.title} interactive className="h-full">
                   <Link
                     href={path.href}
-                    className="border-default bg-surface hover:border-brand focus-visible:ring-ring block h-full rounded-lg border p-5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    className="focus-visible:ring-ring block h-full p-5 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
                     <h3 className="type-heading-04 text-strong">
                       {path.title}
                     </h3>
                     <p className="type-body-sm text-muted mt-3">{path.body}</p>
                   </Link>
-                </li>
+                </Card>
               ))}
             </ul>
           </Section.Root>

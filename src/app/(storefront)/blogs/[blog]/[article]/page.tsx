@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
-import { Section } from '@/components/ui'
+import { Card, Section } from '@/components/ui'
 import {
   formatArticleDate,
   getArticle,
@@ -172,9 +172,9 @@ async function ArticleContent({ params }: Props) {
           )}
 
         {article.excerpt && (
-          <p className="type-body-lg border-default bg-surface text-muted mx-auto mt-8 max-w-prose rounded-lg border p-5 italic">
-            {article.excerpt}
-          </p>
+          <Card className="mx-auto mt-8 max-w-prose" padding="md">
+            <p className="type-body-lg text-muted italic">{article.excerpt}</p>
+          </Card>
         )}
 
         <div
@@ -188,29 +188,35 @@ async function ArticleContent({ params }: Props) {
             className="border-default mx-auto mt-12 grid max-w-prose gap-4 border-t pt-8 sm:grid-cols-2"
           >
             {olderArticle ? (
-              <Link
-                href={getArticlePath(normalizedBlog, olderArticle.handle)}
-                className="border-default bg-surface hover:border-brand focus-visible:ring-ring rounded-lg border p-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                <span className="type-eyebrow text-muted">Previous Post</span>
-                <span className="type-heading-03 text-strong mt-2 block">
-                  {olderArticle.title}
-                </span>
-              </Link>
+              <Card interactive>
+                <Link
+                  href={getArticlePath(normalizedBlog, olderArticle.handle)}
+                  className="focus-visible:ring-ring block h-full p-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                >
+                  <span className="type-eyebrow text-muted">
+                    Previous Post
+                  </span>
+                  <span className="type-heading-03 text-strong mt-2 block">
+                    {olderArticle.title}
+                  </span>
+                </Link>
+              </Card>
             ) : (
               <span />
             )}
 
             {newerArticle && (
-              <Link
-                href={getArticlePath(normalizedBlog, newerArticle.handle)}
-                className="border-default bg-surface hover:border-brand focus-visible:ring-ring rounded-lg border p-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:text-right"
-              >
-                <span className="type-eyebrow text-muted">Next Post</span>
-                <span className="type-heading-03 text-strong mt-2 block">
-                  {newerArticle.title}
-                </span>
-              </Link>
+              <Card interactive className="sm:text-right">
+                <Link
+                  href={getArticlePath(normalizedBlog, newerArticle.handle)}
+                  className="focus-visible:ring-ring block h-full p-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                >
+                  <span className="type-eyebrow text-muted">Next Post</span>
+                  <span className="type-heading-03 text-strong mt-2 block">
+                    {newerArticle.title}
+                  </span>
+                </Link>
+              </Card>
             )}
           </nav>
         )}
@@ -226,16 +232,13 @@ async function ArticleContent({ params }: Props) {
             </h2>
             <ul className="mt-5 space-y-4" role="list">
               {article.comments.map((comment) => (
-                <li
-                  key={comment.id}
-                  className="border-default bg-surface rounded-lg border p-4"
-                >
+                <Card as="li" key={comment.id} padding="sm">
                   <p className="type-label text-strong">{comment.authorName}</p>
                   <div
                     className="type-body-sm text-default mt-3"
                     dangerouslySetInnerHTML={{ __html: comment.contentHtml }}
                   />
-                </li>
+                </Card>
               ))}
             </ul>
           </Section.Root>

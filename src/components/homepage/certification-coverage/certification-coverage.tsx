@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react'
 
-import { Section } from '@/components/ui'
+import { Card, Section } from '@/components/ui'
 
 import { CERTIFICATION_COVERAGE } from '../content'
 
@@ -20,9 +20,12 @@ export function CertificationCoverage() {
         </div>
         <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {CERTIFICATION_COVERAGE.map((card) => (
-            <li
+            <Card
+              as="li"
               key={card.title}
-              className="border-default bg-surface-sunken rounded-md border p-5"
+              padding="md"
+              radius="md"
+              tone="sunken"
             >
               <p className="type-eyebrow text-accent">{card.eyebrow}</p>
               <h3 className="type-heading-05 text-strong mt-3">{card.title}</h3>
@@ -43,7 +46,7 @@ export function CertificationCoverage() {
                   </li>
                 ))}
               </ul>
-            </li>
+            </Card>
           ))}
         </ul>
       </Section.Container>

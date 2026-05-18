@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { ContactForm } from '@/components/contact'
-import { Section } from '@/components/ui'
+import { Card, Section } from '@/components/ui'
 import { sendContactAction } from '@/lib/contact/actions'
 
 export const metadata: Metadata = {
@@ -243,13 +243,9 @@ export default function ContactPage() {
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)] lg:items-start">
-          <Section.Root
-            tone="surface"
-            spacing="none"
-            className="border-default rounded border p-5 sm:p-8"
-          >
+          <Card className="p-5 sm:p-8" radius="md">
             <ContactForm action={sendContactAction} />
-          </Section.Root>
+          </Card>
 
           <aside className="border-default border-y py-6 lg:sticky lg:top-8">
             <div>

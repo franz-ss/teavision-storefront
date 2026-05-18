@@ -12,7 +12,6 @@ export function TeaJournal() {
         <div className="flex items-end justify-between gap-8">
           <Section.Intro
             align="left"
-            variant="compact"
             title="Tea Journal"
             copy="Stay updated with insights, guides, and stories from the world of tea and spices. From the health benefits of herbal teas to sourcing bulk herbs and spices, our Tea Journal is here to inspire and educate."
           />

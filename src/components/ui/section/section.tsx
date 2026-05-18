@@ -83,13 +83,12 @@ export interface SectionIntroProps extends Omit<
 > {
   variant?: 'default' | 'compact'
   align?: 'center' | 'left'
-  copy: React.ReactNode
+  copy?: React.ReactNode
   title: React.ReactNode
 }
 
 function Intro({
   align = 'center',
-  variant = 'default',
   className,
   copy,
   title,
@@ -98,14 +97,14 @@ function Intro({
   return (
     <div
       className={cn(
-        variant === 'compact' && 'max-w-prose',
+        'max-w-prose',
         align === 'center' && 'mx-auto text-center',
         className,
       )}
       {...props}
     >
       <h2 className="type-heading-02 text-current">{title}</h2>
-      <p className="type-body mt-4 text-current/70">{copy}</p>
+      {copy ? <p className="type-body mt-4 text-current/70">{copy}</p> : null}
     </div>
   )
 }

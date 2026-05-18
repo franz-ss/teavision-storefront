@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/ui'
+import { Button, Card } from '@/components/ui'
 
 export default function Error({
   reset,
@@ -10,7 +10,7 @@ export default function Error({
 }) {
   return (
     <div className="bg-canvas flex min-h-[60vh] items-center justify-center px-4">
-      <div className="bg-surface w-full max-w-md rounded p-10 text-center">
+      <Card className="w-full max-w-md p-10 text-center" radius="md">
         <p className="type-display-02 text-danger-text">!</p>
         <h1 className="type-heading-03 text-default mt-4">
           Something went wrong
@@ -24,7 +24,7 @@ export default function Error({
             Go home
           </Button>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

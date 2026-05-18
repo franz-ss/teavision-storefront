@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Section } from '@/components/ui'
+import { Card, Section } from '@/components/ui'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 import type { CollectionSummary } from '@/lib/shopify/types'
 
@@ -194,10 +194,16 @@ export default async function CollectionsPage() {
               role="list"
             >
               {featuredCollections.map((collection) => (
-                <li key={collection.id}>
+                <Card
+                  as="li"
+                  key={collection.id}
+                  interactive
+                  overflow="hidden"
+                  className="group h-full"
+                >
                   <Link
                     href={collectionHref(collection.handle)}
-                    className="border-default bg-surface hover:border-brand focus-visible:ring-ring group block h-full overflow-hidden rounded-lg border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    className="focus-visible:ring-ring block h-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
                     <CollectionImage collection={collection} />
                     <div className="p-4">
@@ -209,7 +215,7 @@ export default async function CollectionsPage() {
                       </p>
                     </div>
                   </Link>
-                </li>
+                </Card>
               ))}
             </ul>
           </Section.Container>

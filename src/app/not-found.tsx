@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+
+import { Button, Card } from '@/components/ui'
 
 export const metadata: Metadata = {
   title: '404 — Page Not Found | Teavision',
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div className="bg-canvas flex min-h-[60vh] items-center justify-center px-4">
-      <div className="bg-surface w-full max-w-md rounded p-10 text-center">
+      <Card className="w-full max-w-md p-10 text-center" radius="md">
         <p className="text-brand text-7xl font-semibold">404</p>
         <h1 className="text-default mt-4 text-2xl font-semibold">
           This page doesn&rsquo;t exist
@@ -19,20 +20,14 @@ export default function NotFound() {
           The page you&rsquo;re looking for has moved or never existed.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Link
-            href="/"
-            className="bg-action-primary text-action-primary-text rounded px-5 py-2.5 text-sm font-medium hover:opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2"
-          >
+          <Button href="/">
             Go home
-          </Link>
-          <Link
-            href="/collections/all"
-            className="bg-canvas text-default rounded px-5 py-2.5 text-sm font-medium hover:opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2"
-          >
+          </Button>
+          <Button href="/collections/all" variant="secondary">
             Browse products
-          </Link>
+          </Button>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

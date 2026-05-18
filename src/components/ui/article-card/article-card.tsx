@@ -4,6 +4,8 @@ import Link from 'next/link'
 
 import { cn } from '@/lib/utils'
 
+import { Card } from '../card'
+
 type ArticleCardArticle = {
   title: string
   excerpt: string
@@ -73,11 +75,11 @@ export function ArticleCard({
     : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
 
   return (
-    <article
-      className={cn(
-        'border-default bg-surface group hover:border-brand focus-within:border-brand h-full overflow-hidden rounded-lg border transition-colors',
-        className,
-      )}
+    <Card
+      as="article"
+      interactive
+      overflow="hidden"
+      className={cn('group h-full', className)}
     >
       <Link
         href={href}
@@ -127,6 +129,6 @@ export function ArticleCard({
           </p>
         </div>
       </Link>
-    </article>
+    </Card>
   )
 }

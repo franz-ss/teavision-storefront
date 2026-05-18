@@ -6,73 +6,100 @@ const meta: Meta<typeof Section.Root> = {
   title: 'UI/Section',
   component: Section.Root,
   tags: ['autodocs'],
+  argTypes: {
+    spacing: {
+      control: 'select',
+      options: ['default', 'compact', 'none'],
+    },
+    tone: {
+      control: 'select',
+      options: [
+        'surface',
+        'sunken',
+        'brand',
+        'brandStrong',
+        'inverse',
+        'transparent',
+      ],
+    },
+  },
 }
 export default meta
 
 type Story = StoryObj<typeof Section.Root>
 
 export const Default: Story = {
-  render: () => (
-    <Section.Root tone="sunken">
-      <Section.Container>
-        <div className="border-default bg-surface rounded border p-6">
-          <p className="type-eyebrow text-muted">Section primitive</p>
-          <h2 className="type-heading-03 text-strong mt-3">
-            Content sits inside the shared container.
-          </h2>
-          <p className="type-body text-muted mt-3 max-w-2xl">
-            Use this primitive for page bands that need the project&rsquo;s
-            standard vertical spacing and container width.
-          </p>
-        </div>
-      </Section.Container>
-    </Section.Root>
-  ),
-}
-
-export const Compact: Story = {
-  render: () => (
-    <Section.Root tone="surface">
-      <Section.Container variant="compact">
-        <p className="type-eyebrow text-muted">Compact container</p>
-        <h2 className="type-heading-03 text-strong mt-3">
-          Editorial sections use prose width.
-        </h2>
-        <p className="type-body text-muted mt-3">
-          Use the compact container for blog introductions, newsletter blocks,
-          and other reading-focused content.
-        </p>
-      </Section.Container>
-    </Section.Root>
-  ),
-}
-
-export const WithIntro: Story = {
-  render: () => (
-    <Section.Root tone="sunken">
+  args: {
+    spacing: 'default',
+    tone: 'sunken',
+  },
+  render: (args) => (
+    <Section.Root {...args}>
       <Section.Container>
         <Section.Intro
-          title="Organic Herbs and Botanical Ingredients"
-          copy="Source botanical ingredients for wholesale tea, beverage, and wellness ranges."
+          title="Section.Root"
+          copy="Applies the semantic section element, tone, and vertical spacing."
         />
       </Section.Container>
     </Section.Root>
   ),
 }
 
-export const Inverse: Story = {
+export const CompactContainer: Story = {
   render: () => (
-    <Section.Root tone="inverse">
+    <Section.Root tone="surface">
       <Section.Container variant="compact">
-        <p className="type-eyebrow">Tone controls contrast</p>
-        <h2 className="type-heading-03 mt-3">
-          Dark section text inherits the right foreground.
-        </h2>
-        <p className="type-body mt-3">
-          Use tone variants for background and default text contrast instead of
-          pairing custom background and foreground utilities at each call site.
-        </p>
+        <Section.Intro
+          align="left"
+          title="Section.Container"
+          copy="Use the compact container when the section should keep to prose width."
+        />
       </Section.Container>
     </Section.Root>
+  ),
+}
+
+export const Intro: Story = {
+  render: () => (
+    <Section.Root spacing="compact" tone="sunken">
+      <Section.Container>
+        <Section.Intro
+          title="Section.Intro"
+          copy="Provides the shared heading and supporting copy treatment."
+        />
+      </Section.Container>
+    </Section.Root>
+  ),
+}
+
+export const Tones: Story = {
+  render: () => (
+    <>
+      <Section.Root spacing="compact" tone="surface">
+        <Section.Container>
+          <Section.Intro title="Surface" />
+        </Section.Container>
+      </Section.Root>
+      <Section.Root spacing="compact" tone="sunken">
+        <Section.Container>
+          <Section.Intro title="Sunken" />
+        </Section.Container>
+      </Section.Root>
+      <Section.Root spacing="compact" tone="brand">
+        <Section.Container>
+          <Section.Intro title="Brand" />
+        </Section.Container>
+      </Section.Root>
+      <Section.Root spacing="compact" tone="brandStrong">
+        <Section.Container>
+          <Section.Intro title="Brand Strong" />
+        </Section.Container>
+      </Section.Root>
+      <Section.Root spacing="compact" tone="inverse">
+        <Section.Container>
+          <Section.Intro title="Inverse" />
+        </Section.Container>
+      </Section.Root>
+    </>
   ),
 }

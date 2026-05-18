@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-import { Section } from '@/components/ui'
+import { Card, Section } from '@/components/ui'
 
 import { TESTIMONIALS } from '../content'
 import { TestimonialsSlider } from './testimonials-slider'
@@ -24,7 +24,12 @@ export function Testimonials() {
               aria-roledescription="slide"
               aria-label={`${testimonial.name} testimonial`}
             >
-              <article className="border-default bg-surface shadow-1 mx-auto max-w-3xl rounded-md border p-5 md:p-6">
+              <Card
+                as="article"
+                padding="lg"
+                radius="md"
+                className="mx-auto max-w-3xl"
+              >
                 <div className="grid gap-5 md:grid-cols-[9rem_1fr] md:gap-8">
                   <div className="flex items-center justify-between gap-4 md:flex-col md:items-start md:justify-start">
                     <Image
@@ -56,7 +61,7 @@ export function Testimonials() {
                     </footer>
                   </blockquote>
                 </div>
-              </article>
+              </Card>
             </div>
           ))}
         </TestimonialsSlider>

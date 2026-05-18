@@ -41,6 +41,14 @@ const buttonVariants = cva(
   },
 )
 
+function shouldUseNextLink(href: LinkProps['href']) {
+  return (
+    typeof href !== 'string' ||
+    (href.startsWith('/') && !href.startsWith('//')) ||
+    href.startsWith('#')
+  )
+}
+
 type ButtonVariantProps = VariantProps<typeof buttonVariants>
 
 type ButtonSharedProps = ButtonVariantProps & {
@@ -80,6 +88,18 @@ export const Button = React.forwardRef<
     const classes = cn(buttonVariants({ variant, size }), className)
 
     if (props.href !== undefined) {
+      if (!shouldUseNextLink(props.href)) {
+        return (
+          <a
+            ref={ref as React.Ref<HTMLAnchorElement>}
+            className={classes}
+            {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+          >
+            {children}
+          </a>
+        )
+      }
+
       return (
         <Link
           ref={ref as React.Ref<HTMLAnchorElement>}
@@ -108,7 +128,10 @@ export const Button = React.forwardRef<
         {...buttonProps}
       >
         {isLoading && (
-          <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+          <LoaderCircle
+            className="h-4 w-4 animate-spin motion-reduce:animate-none"
+            aria-hidden="true"
+          />
         )}
         {children}
       </button>

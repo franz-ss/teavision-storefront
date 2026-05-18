@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
+import { Card } from '@/components/ui'
+
 import { ContactForm } from './contact-form'
 
 const successAction = async () => ({ success: true })
@@ -15,9 +17,9 @@ const meta: Meta<typeof ContactForm> = {
   decorators: [
     (Story) => (
       <div className="bg-canvas p-6">
-        <div className="border-default bg-surface mx-auto max-w-3xl rounded border p-6">
+        <Card className="mx-auto max-w-3xl" padding="lg" radius="md">
           <Story />
-        </div>
+        </Card>
       </div>
     ),
   ],

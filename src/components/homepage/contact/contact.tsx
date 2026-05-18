@@ -1,4 +1,4 @@
-import { Section } from '@/components/ui'
+import { Card, Section } from '@/components/ui'
 
 import { HomepageContactForm } from '../contact-form'
 
@@ -16,9 +16,9 @@ export function Contact({ action }: ContactProps) {
             Speak with our Ingredients Experts Today.
           </h2>
         </div>
-        <div className="border-default bg-surface shadow-1 rounded-md border p-5 sm:p-6">
+        <Card padding="lg" radius="md">
           <HomepageContactForm action={action} />
-        </div>
+        </Card>
       </Section.Container>
     </Section.Root>
   )
