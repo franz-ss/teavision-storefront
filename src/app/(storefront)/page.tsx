@@ -4,15 +4,18 @@ import {
   Contact,
   Cta,
   Faq,
+  HomepageHero,
   HomepageNewsletter,
   OrganicHerbs,
   PrivateLabel,
+  ProofPoints,
   ProductRange,
   TeaJournal,
   Testimonials,
 } from '@/components/homepage'
 import {
   ctaCatalogueData,
+  HOMEPAGE_PROOF_POINTS,
   organizationJsonLd,
   websiteJsonLd,
 } from '@/components/homepage/content'
@@ -47,6 +50,8 @@ export default function HomePage() {
       />
 
       <div className="bg-canvas">
+        <HomepageHero />
+        <ProofPoints points={HOMEPAGE_PROOF_POINTS} />
         <ProductRange />
         <HomepageNewsletter action={submitNewsletterSignupFormAction} />
         <PrivateLabel />

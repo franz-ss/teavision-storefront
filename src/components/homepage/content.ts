@@ -8,9 +8,21 @@ export type ImageAsset = {
 }
 
 export type ProofPoint = {
-  icon: string
+  icon?: string
+  image?: ImageAsset
   title: string
   description: string
+}
+
+export type HomepageHeroContent = {
+  title: string
+  copy: string
+  cta: {
+    children: string
+    href: string
+  }
+  image: ImageAsset
+  trustMarks: ImageAsset
 }
 
 export type ImageCard = {
@@ -97,6 +109,55 @@ export const websiteJsonLd = {
     'query-input': 'required name=search_term_string',
   },
 }
+
+export const HOMEPAGE_HERO = {
+  title: "Australia's #1 tea company",
+  copy: "Discover a world of tea mastery in every cup. Handpicked from the finest leaves, our loose leaf teas, bulk tea bags, and organic herbs deliver rich flavor and freshness. Trusted by Australia's leading cafes, retailers, and wellness brands.",
+  cta: {
+    children: 'Explore Our Teas',
+    href: '/collections',
+  },
+  image: {
+    src: `${SHOPIFY_FILE_BASE}/image_2.png?v=1757407742&width=1920`,
+    alt: '',
+    width: 1920,
+    height: 1080,
+  },
+  trustMarks: {
+    src: `${SHOPIFY_FILE_BASE}/hero-logos.webp?v=1761037820&width=1126`,
+    alt: 'Teavision certification and trust marks',
+    width: 1126,
+    height: 226,
+  },
+} satisfies HomepageHeroContent
+
+export const HOMEPAGE_PROOF_POINTS = [
+  {
+    image: {
+      src: '/images/australian-flag.svg',
+      alt: '',
+      width: 1280,
+      height: 640,
+    },
+    title: 'Australian',
+    description: 'Owned & Operated',
+  },
+  {
+    icon: 'Truck',
+    title: '#1',
+    description: 'Tea and Herb Wholesale Supplier',
+  },
+  {
+    icon: 'FlaskConical',
+    title: '1,000+',
+    description: 'Ingredient options including 500+ Certified Organic',
+  },
+  {
+    icon: 'Medal',
+    title: '15+',
+    description: 'Awards',
+  },
+] satisfies ProofPoint[]
 
 export const PROOF_POINTS = [
   {

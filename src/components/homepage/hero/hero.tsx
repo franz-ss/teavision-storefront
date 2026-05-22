@@ -1,6 +1,8 @@
 import Image from 'next/image'
 
-import { Section } from '@/components/ui'
+import { Button, Section } from '@/components/ui'
+
+import { HOMEPAGE_HERO } from '../content'
 
 export function HomepageHero() {
   return (
@@ -9,7 +11,7 @@ export function HomepageHero() {
       className="relative isolate overflow-hidden"
     >
       <Image
-        src="/images/homepage-hero.jpg"
+        src={HOMEPAGE_HERO.image.src}
         alt=""
         fill
         sizes="100vw"
@@ -22,14 +24,25 @@ export function HomepageHero() {
       />
       <Section.Container>
         <div className="max-w-prose">
-          <h1 className="type-display-01 text-on-brand mt-5">
-            Certified Organic. Globally Sourced. Quality Assured
+          <h1 className="type-heading-01 text-on-brand md:type-display-02 mt-5">
+            {HOMEPAGE_HERO.title}
           </h1>
           <p className="type-body-lg text-on-brand/85 mt-6 max-w-prose">
-            From organic accreditation to food safety standards, our
-            certifications back every product we make. We pair rigorous quality
-            systems with world-class ingredients to deliver award-winning teas.
+            {HOMEPAGE_HERO.copy}
           </p>
+          <div className="mt-6">
+            <Button href={HOMEPAGE_HERO.cta.href} variant="brand" size="cta">
+              {HOMEPAGE_HERO.cta.children}
+            </Button>
+          </div>
+          <Image
+            src={HOMEPAGE_HERO.trustMarks.src}
+            alt={HOMEPAGE_HERO.trustMarks.alt}
+            width={HOMEPAGE_HERO.trustMarks.width}
+            height={HOMEPAGE_HERO.trustMarks.height}
+            sizes="(min-width: 768px) 36rem, 90vw"
+            className="mt-6 h-auto w-full max-w-md"
+          />
         </div>
       </Section.Container>
     </Section.Root>
