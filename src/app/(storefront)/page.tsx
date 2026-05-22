@@ -51,11 +51,6 @@ export default function HomePage() {
       />
 
       <div className="bg-canvas">
-        <HomepageHero />
-        <ProofPoints />
-        <CertificationCoverage />
-        <SupplyChain />
-
         <ProductRange />
         <HomepageNewsletter action={submitNewsletterSignupFormAction} />
         <PrivateLabel />
