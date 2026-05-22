@@ -1,17 +1,13 @@
 import type { Metadata } from 'next'
 
 import {
-  CertificationCoverage,
   Contact,
   Cta,
   Faq,
-  HomepageHero,
   HomepageNewsletter,
   OrganicHerbs,
   PrivateLabel,
   ProductRange,
-  ProofPoints,
-  SupplyChain,
   TeaJournal,
   Testimonials,
 } from '@/components/homepage'
