@@ -10,6 +10,7 @@ const meta: Meta<typeof Button> = {
     variant: {
       control: 'select',
       options: [
+        'brand',
         'primary',
         'secondary',
         'inverse',
@@ -38,6 +39,10 @@ const inverseStoryBackgrounds = {
 
 const inverseStoryGlobals = {
   backgrounds: { value: 'dark' },
+}
+
+export const Brand: Story = {
+  args: { children: 'Explore Our Teas', variant: 'brand' },
 }
 
 export const Primary: Story = {

@@ -16,6 +16,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        brand:
+          'bg-brand text-on-brand hover:bg-brand-strong active:bg-brand-strong',
         primary:
           'bg-action-primary text-action-primary-text hover:bg-action-primary-hover active:bg-action-primary-active',
         secondary:
