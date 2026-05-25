@@ -8,6 +8,7 @@ import {
   getProductRecommendations,
 } from '@/lib/shopify/operations/product'
 import { getCollectionProducts } from '@/lib/shopify/operations/collection'
+import { getTrustooProductRatings } from '@/lib/reviews/trustoo'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import { RichText } from '@/components/ui/rich-text'
 import { Section, StarRating } from '@/components/ui'
@@ -70,6 +71,7 @@ function getRelatedCollectionHandle(product: Product): string | null {
 
 async function getRelatedProducts(product: Product): Promise<ProductSummary[]> {
   const relatedCollectionHandle = getRelatedCollectionHandle(product)
+  let products: ProductSummary[]
 
   if (relatedCollectionHandle) {
     const collectionProducts = await getCollectionProducts(
@@ -77,12 +79,27 @@ async function getRelatedProducts(product: Product): Promise<ProductSummary[]> {
       RELATED_COLLECTION_FETCH_LIMIT,
     )
 
-    return collectionProducts
+    products = collectionProducts
       .filter((item) => item.handle !== product.handle)
       .slice(0, RELATED_COLLECTION_FETCH_LIMIT)
+  } else {
+    products = await getProductRecommendations(product.id, 'RELATED')
   }
 
-  return getProductRecommendations(product.id, 'RELATED')
+  const reviewSummaries = await getTrustooProductRatings(
+    products.map((relatedProduct) => relatedProduct.handle),
+  )
+
+  return products.map((relatedProduct) => {
+    const reviewSummary = reviewSummaries[relatedProduct.handle]
+    if (!reviewSummary) return relatedProduct
+
+    return {
+      ...relatedProduct,
+      rating: reviewSummary.rating,
+      reviewCount: reviewSummary.reviewCount,
+    }
+  })
 }
 
 async function RelatedProducts({ product }: { product: Product }) {
@@ -113,6 +130,13 @@ async function ProductContent({
   const productUrl = `${baseUrl}/products/${product.handle}`
   const hasAvailableVariant = product.variants.some((v) => v.availableForSale)
   const descriptionHtml = sanitizeShopifyCompactHtml(product.descriptionHtml)
+  const productReviewSummaries = await getTrustooProductRatings([
+    product.handle,
+  ])
+  const productReviewSummary = productReviewSummaries[product.handle] ?? {
+    rating: product.rating,
+    reviewCount: product.reviewCount,
+  }
 
   const productJsonLd = {
     '@context': 'https://schema.org',
@@ -224,10 +248,10 @@ async function ProductContent({
       >
         <div className="mb-6 flex flex-wrap items-baseline gap-3">
           <h2 className="text-xl font-semibold">Reviews</h2>
-          {product.rating !== undefined && (
+          {productReviewSummary.rating !== undefined && (
             <StarRating
-              rating={product.rating}
-              count={product.reviewCount}
+              rating={productReviewSummary.rating}
+              count={productReviewSummary.reviewCount}
               size="sm"
             />
           )}

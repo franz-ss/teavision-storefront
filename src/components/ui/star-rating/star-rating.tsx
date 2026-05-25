@@ -47,6 +47,7 @@ function Star({
       viewBox="0 0 20 20"
       aria-hidden="true"
       fill="none"
+      className={cn(fill === 'empty' ? 'text-muted' : 'text-accent')}
     >
       {fill === 'half' && (
         <defs>
@@ -94,7 +95,7 @@ export function StarRating({
       className={cn('inline-flex items-center gap-1.5', className)}
       aria-label={`${clamped.toFixed(1)} out of 5 stars${count !== undefined ? `, ${count} ${count === 1 ? 'review' : 'reviews'}` : ''}`}
     >
-      <div className="text-accent flex" role="img" aria-hidden="true">
+      <div className="flex" role="img" aria-hidden="true">
         {stars.map((fill, i) => (
           <Star
             key={i}
