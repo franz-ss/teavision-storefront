@@ -211,7 +211,16 @@ async function ProductContent({
         <ProductGallery images={product.images} title={product.title} />
 
         <div className="flex flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
-          <h1 className="type-heading-02">{product.title}</h1>
+          <div className="flex flex-col gap-2">
+            <h1 className="type-heading-02">{product.title}</h1>
+            {productReviewSummary.rating !== undefined && (
+              <StarRating
+                rating={productReviewSummary.rating}
+                count={productReviewSummary.reviewCount}
+                size="sm"
+              />
+            )}
+          </div>
           <ProductForm variants={product.variants} options={product.options} />
           <RichText
             html={descriptionHtml}
@@ -248,13 +257,6 @@ async function ProductContent({
       >
         <div className="mb-6 flex flex-wrap items-baseline gap-3">
           <h2 className="text-xl font-semibold">Reviews</h2>
-          {productReviewSummary.rating !== undefined && (
-            <StarRating
-              rating={productReviewSummary.rating}
-              count={productReviewSummary.reviewCount}
-              size="sm"
-            />
-          )}
         </div>
         <div id="shopify-product-reviews" data-id={numericProductId} />
       </Section.Root>
