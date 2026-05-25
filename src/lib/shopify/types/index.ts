@@ -17,6 +17,7 @@ export type ProductVariant = {
   title: string
   availableForSale: boolean
   price: Money
+  image?: ShopifyImage | null
 }
 
 export type ProductOption = {

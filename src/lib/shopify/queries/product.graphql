@@ -14,12 +14,24 @@ fragment ProductSummaryFields on Product {
       currencyCode
     }
   }
+  ratingMetafield: metafield(namespace: "reviews", key: "rating") {
+    value
+  }
+  ratingCountMetafield: metafield(namespace: "reviews", key: "rating_count") {
+    value
+  }
 }
 
 fragment ProductVariantFields on ProductVariant {
   id
   title
   availableForSale
+  image {
+    url
+    altText
+    width
+    height
+  }
   price {
     amount
     currencyCode

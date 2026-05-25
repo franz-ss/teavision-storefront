@@ -89,6 +89,12 @@ query GetCollectionProducts(
                 id
                 title
                 availableForSale
+                image {
+                  url
+                  altText
+                  width
+                  height
+                }
                 price {
                   amount
                   currencyCode

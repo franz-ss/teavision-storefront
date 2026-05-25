@@ -16,6 +16,15 @@ query SearchProducts($query: String!) {
           currencyCode
         }
       }
+      ratingMetafield: metafield(namespace: "reviews", key: "rating") {
+        value
+      }
+      ratingCountMetafield: metafield(
+        namespace: "reviews"
+        key: "rating_count"
+      ) {
+        value
+      }
     }
   }
 }

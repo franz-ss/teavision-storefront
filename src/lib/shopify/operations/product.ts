@@ -42,6 +42,8 @@ type ShopifyProductSummaryNode = {
   title: string
   featuredImage?: ShopifyImageLike | null
   priceRange: { minVariantPrice: MoneyLike }
+  ratingMetafield?: { value: string } | null
+  ratingCountMetafield?: { value: string } | null
 }
 
 function reshapeMoney(money: MoneyLike): Money {
@@ -60,6 +62,35 @@ function reshapeImage(image: ShopifyImageLike): ShopifyImage {
   }
 }
 
+function parseProductRating(product: ShopifyProductSummaryNode): {
+  rating?: number
+  reviewCount?: number
+} {
+  let rating: number | undefined
+  let reviewCount: number | undefined
+
+  if (product.ratingMetafield?.value) {
+    try {
+      const parsed: unknown = JSON.parse(product.ratingMetafield.value)
+      const value =
+        typeof parsed === 'object' && parsed !== null && 'value' in parsed
+          ? parsed.value
+          : undefined
+      const nextRating = parseFloat(typeof value === 'string' ? value : '')
+      if (!Number.isNaN(nextRating)) rating = nextRating
+    } catch {
+      // Rating metafields are optional and can be malformed in Shopify.
+    }
+  }
+
+  if (product.ratingCountMetafield?.value) {
+    const nextReviewCount = parseInt(product.ratingCountMetafield.value, 10)
+    if (!Number.isNaN(nextReviewCount)) reviewCount = nextReviewCount
+  }
+
+  return { rating, reviewCount }
+}
+
 function reshapeVariant(
   variant: ShopifyVariantNode,
 ): Product['variants'][number] {
@@ -68,6 +99,7 @@ function reshapeVariant(
     title: variant.title,
     availableForSale: variant.availableForSale,
     price: reshapeMoney(variant.price),
+    image: variant.image ? reshapeImage(variant.image) : null,
   }
 }
 
@@ -114,6 +146,8 @@ function reshapeProduct(
 }
 
 function reshapeProductSummary(p: ShopifyProductSummaryNode): ProductSummary {
+  const { rating, reviewCount } = parseProductRating(p)
+
   return {
     id: p.id,
     handle: p.handle,
@@ -122,6 +156,8 @@ function reshapeProductSummary(p: ShopifyProductSummaryNode): ProductSummary {
     priceRange: {
       minVariantPrice: reshapeMoney(p.priceRange.minVariantPrice),
     },
+    rating,
+    reviewCount,
   }
 }
 
