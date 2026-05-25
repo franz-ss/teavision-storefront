@@ -16,10 +16,14 @@ import {
   ProductForm,
   ProductGallery,
   RelatedProductsCarousel,
+  SearchaniseRecommendations,
 } from '@/components/product'
 import type { Product, ProductSummary } from '@/lib/shopify/types'
 
 const RELATED_COLLECTION_FETCH_LIMIT = 12
+const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
+const SEARCHANISE_ENABLED =
+  process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
 
 const RELATED_COLLECTION_BY_TAG = new Map<string, string>([
   ['categories_All Herbs', 'dried-herbs'],
@@ -102,17 +106,42 @@ async function getRelatedProducts(product: Product): Promise<ProductSummary[]> {
   })
 }
 
+function RelatedProductsFallback({ products }: { products: ProductSummary[] }) {
+  if (products.length === 0) return null
+
+  return (
+    <>
+      <h2 className="mb-6 text-xl font-semibold">Related Products</h2>
+      <RelatedProductsCarousel products={products} />
+    </>
+  )
+}
+
 async function RelatedProducts({ product }: { product: Product }) {
   const products = await getRelatedProducts(product)
-  if (products.length === 0) return null
+  const fallback = <RelatedProductsFallback products={products} />
+
+  if (!SEARCHANISE_ENABLED || !SEARCHANISE_API_KEY) {
+    if (products.length === 0) return null
+
+    return (
+      <Section.Root
+        tone="transparent"
+        spacing="none"
+        className="border-default border-t pt-10"
+      >
+        {fallback}
+      </Section.Root>
+    )
+  }
+
   return (
     <Section.Root
       tone="transparent"
       spacing="none"
       className="border-default border-t pt-10"
     >
-      <h2 className="mb-6 text-xl font-semibold">Related Products</h2>
-      <RelatedProductsCarousel products={products} />
+      <SearchaniseRecommendations fallback={fallback} />
     </Section.Root>
   )
 }
