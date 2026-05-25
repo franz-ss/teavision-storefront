@@ -3,6 +3,8 @@
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useCallback, type ChangeEvent } from 'react'
 
+import { Select } from '@/components/ui'
+
 const SORT_OPTIONS = [
   { value: 'featured', label: 'Featured' },
   { value: 'best-selling', label: 'Best selling' },
@@ -11,6 +13,7 @@ const SORT_OPTIONS = [
   { value: 'price-asc', label: 'Price: Low-High' },
   { value: 'price-desc', label: 'Price: High-Low' },
   { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
 ] as const
 
 export type SortValue = (typeof SORT_OPTIONS)[number]['value']
@@ -43,18 +46,18 @@ export function SortSelect({ currentSort }: { currentSort: string }) {
       <label htmlFor="sort-select" className="type-label text-strong">
         Sort by
       </label>
-      <select
+      <Select
         id="sort-select"
         value={currentSort}
         onChange={handleChange}
-        className="type-body-sm border-default bg-surface text-default focus-visible:ring-ring min-h-11 rounded-md border px-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        className="min-w-48"
       >
         {SORT_OPTIONS.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
           </option>
         ))}
-      </select>
+      </Select>
     </div>
   )
 }

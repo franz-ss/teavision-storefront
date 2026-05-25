@@ -23,7 +23,7 @@ const badgeVariants = cva(
 )
 
 const labels: Record<BadgeVariant, string> = {
-  outOfStock: 'Out of stock',
+  outOfStock: 'Sold out',
   sale: 'Sale',
   new: 'New',
 }

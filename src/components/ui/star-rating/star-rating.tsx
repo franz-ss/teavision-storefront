@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { cva } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
@@ -33,13 +34,12 @@ const ratingTextVariants = cva('text-muted tabular-nums', {
 function Star({
   fill,
   size,
-  index,
+  gradientId,
 }: {
   fill: 'full' | 'half' | 'empty'
   size: number
-  index: number
+  gradientId: string
 }) {
-  const id = `star-half-${index}`
   return (
     <svg
       width={size}
@@ -50,7 +50,7 @@ function Star({
     >
       {fill === 'half' && (
         <defs>
-          <linearGradient id={id}>
+          <linearGradient id={gradientId}>
             <stop offset="50%" stopColor="currentColor" />
             <stop offset="50%" stopColor="transparent" />
           </linearGradient>
@@ -62,7 +62,7 @@ function Star({
           fill === 'full'
             ? 'currentColor'
             : fill === 'half'
-              ? `url(#${id})`
+              ? `url(#${gradientId})`
               : 'none'
         }
         stroke="currentColor"
@@ -81,6 +81,7 @@ export function StarRating({
 }: StarRatingProps) {
   const starSize = starSizeBySize[size]
   const clamped = Math.min(5, Math.max(0, rating))
+  const gradientIdBase = useId().replace(/:/g, '')
 
   const stars = Array.from({ length: 5 }, (_, i) => {
     if (clamped >= i + 1) return 'full' as const
@@ -95,7 +96,12 @@ export function StarRating({
     >
       <div className="text-accent flex" role="img" aria-hidden="true">
         {stars.map((fill, i) => (
-          <Star key={i} fill={fill} size={starSize} index={i} />
+          <Star
+            key={i}
+            fill={fill}
+            size={starSize}
+            gradientId={`${gradientIdBase}-star-half-${i}`}
+          />
         ))}
       </div>
       {count !== undefined && (
