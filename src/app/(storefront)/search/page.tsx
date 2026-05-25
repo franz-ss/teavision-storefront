@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 
 import { searchProducts } from '@/lib/shopify/operations/search'
 import { ProductCard } from '@/components/ui'
+import { ProductQuickView } from '@/components/product'
 
 type Props = {
   searchParams: Promise<{ q?: string }>
@@ -48,7 +49,11 @@ async function SearchContent({
         <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3" role="list">
           {products.map((product, i) => (
             <li key={product.id}>
-              <ProductCard product={product} priority={i === 0} />
+              <ProductCard
+                product={product}
+                priority={i === 0}
+                quickViewAction={<ProductQuickView product={product} />}
+              />
             </li>
           ))}
         </ul>

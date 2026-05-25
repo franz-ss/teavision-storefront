@@ -10,7 +10,11 @@ import {
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import { RichText } from '@/components/ui/rich-text'
 import { ProductCard, Section, StarRating } from '@/components/ui'
-import { ProductForm, ProductGallery } from '@/components/product'
+import {
+  ProductForm,
+  ProductGallery,
+  ProductQuickView,
+} from '@/components/product'
 import type { ProductSummary } from '@/lib/shopify/types'
 
 // Mirrors the Liquid tag display logic from the Teavision theme:
@@ -57,7 +61,11 @@ function ProductGrid({ products }: { products: ProductSummary[] }) {
     >
       {products.map((product, i) => (
         <li key={product.id}>
-          <ProductCard product={product} priority={i === 0} />
+          <ProductCard
+            product={product}
+            priority={i === 0}
+            quickViewAction={<ProductQuickView product={product} />}
+          />
         </li>
       ))}
     </ul>

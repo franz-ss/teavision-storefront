@@ -1,68 +1,108 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 
 import type { ProductSummary } from '@/lib/shopify/types'
 
 import { Badge, type BadgeVariant } from '../badge'
 import { Card } from '../card'
 import { Price } from '../price'
+import { StarRating } from '../star-rating'
 
 type ProductCardProps = {
   product: ProductSummary
   badge?: BadgeVariant
   priority?: boolean
+  quickViewAction?: ReactNode
+}
+
+function getSizedImageUrl(url: string, width: number): string {
+  return `${url}${url.includes('?') ? '&' : '?'}width=${width}`
 }
 
 export function ProductCard({
   product,
   badge,
   priority = false,
+  quickViewAction,
 }: ProductCardProps) {
+  const productUrl = `/products/${product.handle}`
+
   return (
     <Card
       as="article"
       interactive
       overflow="hidden"
+      radius="md"
       className="group h-full"
     >
-      <Link
-        href={`/products/${product.handle}`}
-        className="focus-visible:ring-ring flex h-full flex-col focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-      >
-        <div className="bg-surface-sunken relative aspect-square">
-          {product.featuredImage &&
-          product.featuredImage.width &&
-          product.featuredImage.height ? (
-            <Image
-              src={`${product.featuredImage.url}&width=400`}
-              alt={product.featuredImage.altText ?? product.title}
-              width={product.featuredImage.width}
-              height={product.featuredImage.height}
-              priority={priority}
-              sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+      <div className="flex h-full flex-col">
+        <div className="bg-surface-sunken relative aspect-square overflow-hidden">
+          <Link
+            href={productUrl}
+            className="focus-visible:ring-ring absolute inset-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            aria-label={`View ${product.title}`}
+          >
+            {product.featuredImage &&
+            product.featuredImage.width &&
+            product.featuredImage.height ? (
+              <Image
+                src={getSizedImageUrl(product.featuredImage.url, 520)}
+                alt={product.featuredImage.altText ?? product.title}
+                width={product.featuredImage.width}
+                height={product.featuredImage.height}
+                priority={priority}
+                sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                className="h-full w-full object-cover transition-transform duration-300 ease-out group-focus-within:scale-[1.06] group-hover:scale-[1.06] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-focus-within:scale-100 motion-reduce:group-hover:scale-100"
+              />
+            ) : (
+              <div className="h-full w-full" aria-hidden="true" />
+            )}
+            <span
+              className="bg-inverse/0 group-hover:bg-inverse/20 group-focus-within:bg-inverse/20 absolute inset-0 transition-colors duration-300 ease-out motion-reduce:transition-none"
+              aria-hidden="true"
             />
-          ) : (
-            <div className="h-full w-full" aria-hidden="true" />
-          )}
+          </Link>
+
           {badge && (
             <div className="absolute top-2 left-2">
               <Badge variant={badge} />
             </div>
           )}
+
+          {quickViewAction && (
+            <div className="pointer-events-none absolute inset-3 flex items-center justify-center opacity-100 transition-opacity duration-200 ease-out motion-reduce:transition-none sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100">
+              <div className="pointer-events-auto">{quickViewAction}</div>
+            </div>
+          )}
         </div>
 
-        <div className="p-4">
-          <p className="type-label text-strong group-hover:text-brand line-clamp-2 transition-colors">
+        <div className="flex flex-1 flex-col gap-2 p-4">
+          <Link
+            href={productUrl}
+            className="type-label text-strong hover:text-brand focus-visible:ring-ring line-clamp-2 rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
             {product.title}
+          </Link>
+
+          {product.rating !== undefined && (
+            <StarRating
+              rating={product.rating}
+              count={product.reviewCount}
+              size="sm"
+            />
+          )}
+
+          <p className="type-body-sm mt-auto flex flex-wrap items-baseline gap-1.5">
+            <span className="text-muted">From</span>
+            <Price
+              price={product.priceRange.minVariantPrice}
+              size="sm"
+              className="text-strong"
+            />
           </p>
-          <Price
-            price={product.priceRange.minVariantPrice}
-            size="sm"
-            className="mt-2"
-          />
         </div>
-      </Link>
+      </div>
     </Card>
   )
 }
