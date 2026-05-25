@@ -7,15 +7,22 @@ import {
   getProduct,
   getProductRecommendations,
 } from '@/lib/shopify/operations/product'
+import { getCollectionProducts } from '@/lib/shopify/operations/collection'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import { RichText } from '@/components/ui/rich-text'
-import { ProductCard, Section, StarRating } from '@/components/ui'
+import { Section, StarRating } from '@/components/ui'
 import {
   ProductForm,
   ProductGallery,
-  ProductQuickView,
+  RelatedProductsCarousel,
 } from '@/components/product'
-import type { ProductSummary } from '@/lib/shopify/types'
+import type { Product, ProductSummary } from '@/lib/shopify/types'
+
+const RELATED_COLLECTION_FETCH_LIMIT = 12
+
+const RELATED_COLLECTION_BY_TAG = new Map<string, string>([
+  ['categories_All Herbs', 'dried-herbs'],
+])
 
 // Mirrors the Liquid tag display logic from the Teavision theme:
 // - Package_ tags are internal only, never shown
@@ -52,56 +59,43 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-function ProductGrid({ products }: { products: ProductSummary[] }) {
+function getRelatedCollectionHandle(product: Product): string | null {
+  for (const tag of product.tags) {
+    const handle = RELATED_COLLECTION_BY_TAG.get(tag)
+    if (handle) return handle
+  }
+
+  return null
+}
+
+async function getRelatedProducts(product: Product): Promise<ProductSummary[]> {
+  const relatedCollectionHandle = getRelatedCollectionHandle(product)
+
+  if (relatedCollectionHandle) {
+    const collectionProducts = await getCollectionProducts(
+      relatedCollectionHandle,
+      RELATED_COLLECTION_FETCH_LIMIT,
+    )
+
+    return collectionProducts
+      .filter((item) => item.handle !== product.handle)
+      .slice(0, RELATED_COLLECTION_FETCH_LIMIT)
+  }
+
+  return getProductRecommendations(product.id, 'RELATED')
+}
+
+async function RelatedProducts({ product }: { product: Product }) {
+  const products = await getRelatedProducts(product)
   if (products.length === 0) return null
   return (
-    <ul
-      className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
-      role="list"
-    >
-      {products.map((product, i) => (
-        <li key={product.id}>
-          <ProductCard
-            product={product}
-            priority={i === 0}
-            quickViewAction={<ProductQuickView product={product} />}
-          />
-        </li>
-      ))}
-    </ul>
-  )
-}
-
-async function RelatedProducts({ productId }: { productId: string }) {
-  const products = await getProductRecommendations(productId, 'RELATED')
-  const shown = products.slice(0, 4)
-  if (shown.length === 0) return null
-  return (
     <Section.Root
       tone="transparent"
       spacing="none"
       className="border-default border-t pt-10"
     >
-      <h2 className="mb-6 text-xl font-semibold">You May Also Like</h2>
-      <ProductGrid products={shown} />
-    </Section.Root>
-  )
-}
-
-async function ComplementaryProducts({ productId }: { productId: string }) {
-  const products = await getProductRecommendations(productId, 'COMPLEMENTARY')
-  const shown = products.slice(0, 4)
-  if (shown.length === 0) return null
-  return (
-    <Section.Root
-      tone="transparent"
-      spacing="none"
-      className="border-default border-t pt-10"
-    >
-      <h2 className="mb-6 text-xl font-semibold">
-        Customers Who Bought This Also Bought
-      </h2>
-      <ProductGrid products={shown} />
+      <h2 className="mb-6 text-xl font-semibold">Related Products</h2>
+      <RelatedProductsCarousel products={products} />
     </Section.Root>
   )
 }
@@ -241,13 +235,10 @@ async function ProductContent({
         <div id="shopify-product-reviews" data-id={numericProductId} />
       </Section.Root>
 
-      {/* Related products and complementary recommendations */}
+      {/* Related products */}
       <div className="mt-12 flex flex-col gap-10">
         <Suspense fallback={null}>
-          <RelatedProducts productId={product.id} />
-        </Suspense>
-        <Suspense fallback={null}>
-          <ComplementaryProducts productId={product.id} />
+          <RelatedProducts product={product} />
         </Suspense>
       </div>
     </>
