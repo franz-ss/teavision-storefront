@@ -9,6 +9,7 @@ import {
   getCollectionProductsWithFilters,
   getCollectionSummaries,
 } from '@/lib/shopify/operations/collection'
+import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import {
   FilterType,
   type CollectionProductFilter,
@@ -660,6 +661,8 @@ async function CollectionContent({
   const richDescriptionHtml = normalizeCollectionHtml(
     collection.descriptionHtml,
   )
+  const sanitizedRichDescriptionHtml =
+    sanitizeShopifyCompactHtml(richDescriptionHtml)
   const hasRichDescription = shouldRenderRichDescription(
     collection.descriptionHtml,
     collection.description,
@@ -760,7 +763,7 @@ async function CollectionContent({
             <Section.Container>
               <CollectionStoryDisclosure
                 title={`Read more about ${collection.title}`}
-                html={richDescriptionHtml}
+                html={sanitizedRichDescriptionHtml}
                 className="max-w-4xl"
               />
             </Section.Container>

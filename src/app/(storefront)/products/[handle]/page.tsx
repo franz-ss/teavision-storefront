@@ -7,6 +7,8 @@ import {
   getProduct,
   getProductRecommendations,
 } from '@/lib/shopify/operations/product'
+import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
+import { RichText } from '@/components/ui/rich-text'
 import { ProductCard, Section, StarRating } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 import type { ProductSummary } from '@/lib/shopify/types'
@@ -108,6 +110,7 @@ async function ProductContent({
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
   const productUrl = `${baseUrl}/products/${product.handle}`
   const hasAvailableVariant = product.variants.some((v) => v.availableForSale)
+  const descriptionHtml = sanitizeShopifyCompactHtml(product.descriptionHtml)
 
   const productJsonLd = {
     '@context': 'https://schema.org',
@@ -184,9 +187,10 @@ async function ProductContent({
         <div className="flex flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
           <h1 className="type-heading-02">{product.title}</h1>
           <ProductForm variants={product.variants} options={product.options} />
-          <div
-            className="text-muted [&_h2]:text-default [&_h3]:text-default [&_strong]:text-default max-w-prose text-sm leading-relaxed [&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:text-base [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_li]:mb-1 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_strong]:font-semibold [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
-            dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+          <RichText
+            html={descriptionHtml}
+            variant="compact"
+            className="max-w-prose"
           />
 
           {/* Tags */}

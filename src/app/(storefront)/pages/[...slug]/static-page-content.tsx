@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { Button, Card, Section } from '@/components/ui'
+import { Button, Section } from '@/components/ui'
 import { RichText } from '@/components/ui/rich-text'
 import { sanitizeShopifyPageBodyHtml } from '@/lib/shopify/html-content'
 import {
@@ -10,15 +10,8 @@ import {
 import { getSiteUrl } from '@/lib/seo/site-url'
 import { cn } from '@/lib/utils'
 
-import {
-  formatUpdatedDate,
-  getStaticPageLeadDescription,
-} from './page-formatting'
-import {
-  resolvePageProfile,
-  type PageLink,
-  type PageProfile,
-} from './page-profile'
+import { getStaticPageLeadDescription } from './page-formatting'
+import { resolvePageProfile, type PageProfile } from './page-profile'
 
 type StaticPageContentProps = {
   page: ShopifyPage
@@ -151,79 +144,21 @@ function PageHero({
             <ActionLinks profile={profile} />
           </div>
 
-          <SupportPanel page={page} profile={profile} />
         </div>
       </Section.Container>
     </Section.Root>
   )
 }
 
-function SupportPanel({
-  page,
-  profile,
-}: {
-  page: ShopifyPage
-  profile: PageProfile
-}) {
-  return (
-    <Card as="aside" padding="md">
-      <p className="type-heading-05 text-strong">{profile.supportTitle}</p>
-      <p className="type-body-sm text-muted mt-3">{profile.supportCopy}</p>
-      <dl className="mt-6 grid gap-5">
-        <div>
-          <dt className="type-eyebrow text-accent">Updated</dt>
-          <dd className="type-label text-default mt-1">
-            {formatUpdatedDate(page.updatedAt)}
-          </dd>
-        </div>
-        {profile.proofPoints.map((point) => (
-          <div key={point.term} className="border-default border-t pt-5">
-            <dt className="type-label text-strong">{point.term}</dt>
-            <dd className="type-body-sm text-muted mt-2">{point.detail}</dd>
-          </div>
-        ))}
-      </dl>
-    </Card>
-  )
-}
-
-function RelatedLinks({ links }: { links: PageLink[] }) {
-  return (
-    <aside className="lg:pl-8">
-      <div className="border-default border-t pt-6">
-        <p className="type-eyebrow text-accent">Useful next paths</p>
-        <ul className="mt-5 grid gap-5" role="list">
-          {links.map((link) => (
-            <li key={link.href} className="border-default border-t pt-5">
-              <Link
-                href={link.href}
-                className={cn(TEXT_LINK_CLASS_NAME, 'type-label')}
-              >
-                {link.label}
-              </Link>
-              <p className="type-body-sm text-muted mt-2">{link.description}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </aside>
-  )
-}
-
-function PageBody({
-  page,
-  profile,
-}: {
-  page: ShopifyPage
-  profile: PageProfile
-}) {
+function PageBody({ page }: { page: ShopifyPage }) {
   const bodyHtml = sanitizeShopifyPageBodyHtml(page.body)
 
   return (
-    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:px-6 lg:grid-cols-3 lg:py-16">
-      <RichText html={bodyHtml} className="max-w-prose lg:col-span-2" />
-      <RelatedLinks links={profile.relatedLinks} />
-    </div>
+    <Section.Root>
+      <Section.Container>
+        <RichText html={bodyHtml} variant="page" />
+      </Section.Container>
+    </Section.Root>
   )
 }
 
@@ -257,14 +192,10 @@ export function StaticPageContent({ page }: StaticPageContentProps) {
     <>
       <StaticPageJsonLd description={description} page={page} />
 
-      <article>
-        <PageHero description={description} page={page} profile={profile} />
+      <PageHero description={description} page={page} profile={profile} />
 
-        <div className="bg-canvas">
-          <PageBody page={page} profile={profile} />
-          <WholesaleSupportCta />
-        </div>
-      </article>
+      <PageBody page={page} />
+      <WholesaleSupportCta />
     </>
   )
 }

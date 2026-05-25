@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
+import { RichText } from '@/components/ui/rich-text'
 import { Card, Section } from '@/components/ui'
 import {
   formatArticleDate,
@@ -14,14 +15,11 @@ import {
   getTagPath,
   normalizeBlogHandle,
 } from '@/lib/blog/operations'
-import { cn } from '@/lib/utils'
+import { sanitizeShopifyArticleHtml } from '@/lib/shopify/html-content'
 
 type Props = {
   params: Promise<{ blog: string; article: string }>
 }
-
-const ARTICLE_BODY_CLASS_NAME =
-  'type-body space-y-6 break-words text-default [&_a]:text-link [&_a]:underline [&_a]:underline-offset-4 [&_blockquote]:type-body-lg [&_blockquote]:border [&_blockquote]:border-default [&_blockquote]:bg-surface [&_blockquote]:rounded-lg [&_blockquote]:p-5 [&_blockquote]:italic [&_h2]:type-heading-02 [&_h2]:mt-10 [&_h3]:type-heading-03 [&_h3]:mt-8 [&_img]:my-8 [&_img]:h-auto [&_img]:rounded-lg [&_img]:border [&_img]:border-default [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:text-default [&_strong]:type-label [&_ul]:list-disc [&_ul]:pl-6'
 
 function articleDescription(article: Awaited<ReturnType<typeof getArticle>>) {
   return article?.seo.description ?? article?.excerpt.slice(0, 160) ?? ''
@@ -79,6 +77,7 @@ async function ArticleContent({ params }: Props) {
       ? blogData.articles[articleIndex + 1]
       : null
   const description = articleDescription(article)
+  const contentHtml = sanitizeShopifyArticleHtml(article.contentHtml)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -177,9 +176,10 @@ async function ArticleContent({ params }: Props) {
           </Card>
         )}
 
-        <div
-          className={cn(ARTICLE_BODY_CLASS_NAME, 'mx-auto mt-10 max-w-prose')}
-          dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+        <RichText
+          html={contentHtml}
+          variant="article"
+          className="mx-auto mt-10 max-w-prose"
         />
 
         {(newerArticle || olderArticle) && (
@@ -193,9 +193,7 @@ async function ArticleContent({ params }: Props) {
                   href={getArticlePath(normalizedBlog, olderArticle.handle)}
                   className="focus-visible:ring-ring block h-full p-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <span className="type-eyebrow text-muted">
-                    Previous Post
-                  </span>
+                  <span className="type-eyebrow text-muted">Previous Post</span>
                   <span className="type-heading-03 text-strong mt-2 block">
                     {olderArticle.title}
                   </span>
@@ -234,9 +232,10 @@ async function ArticleContent({ params }: Props) {
               {article.comments.map((comment) => (
                 <Card as="li" key={comment.id} padding="sm">
                   <p className="type-label text-strong">{comment.authorName}</p>
-                  <div
-                    className="type-body-sm text-default mt-3"
-                    dangerouslySetInnerHTML={{ __html: comment.contentHtml }}
+                  <RichText
+                    html={sanitizeShopifyArticleHtml(comment.contentHtml)}
+                    variant="compact"
+                    className="mt-3"
                   />
                 </Card>
               ))}
