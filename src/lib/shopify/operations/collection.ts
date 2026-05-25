@@ -8,11 +8,18 @@ import {
   GetCollectionsDocument,
   ProductCollectionSortKeys,
   type Collection,
+  type CollectionProductFilter,
+  type CollectionProductsResult,
+  type CollectionProductSummary,
   type CollectionSummary,
   type GetCollectionQuery,
+  type GetCollectionProductsQuery,
   type GetCollectionSummariesQuery,
   type Money,
+  type ProductFilter,
+  type ProductOption,
   type ProductSummary,
+  type ProductVariant,
   type ShopifyImage,
 } from '@/lib/shopify/types'
 
@@ -36,7 +43,20 @@ type ShopifyProductSummaryNode = {
   title: string
   featuredImage?: ShopifyImageLike | null
   priceRange: { minVariantPrice: MoneyLike }
+  ratingMetafield?: { value: string } | null
+  ratingCountMetafield?: { value: string } | null
 }
+
+type ShopifyCollectionProductNode = NonNullable<
+  GetCollectionProductsQuery['collection']
+>['products']['edges'][number]['node']
+
+type ShopifyCollectionProductFilterNode = NonNullable<
+  GetCollectionProductsQuery['collection']
+>['products']['filters'][number]
+
+type ShopifyCollectionProductVariantNode =
+  ShopifyCollectionProductNode['variants']['edges'][number]['node']
 
 type ShopifyCollectionNode = NonNullable<GetCollectionQuery['collection']>
 
@@ -59,8 +79,37 @@ function reshapeImage(image: ShopifyImageLike): ShopifyImage {
   }
 }
 
+function parseProductRating(product: ShopifyProductSummaryNode): {
+  rating?: number
+  reviewCount?: number
+} {
+  let rating: number | undefined
+  let reviewCount: number | undefined
+
+  if (product.ratingMetafield?.value) {
+    try {
+      const parsed: unknown = JSON.parse(product.ratingMetafield.value)
+      const value =
+        typeof parsed === 'object' && parsed !== null && 'value' in parsed
+          ? parsed.value
+          : undefined
+      const nextRating = parseFloat(typeof value === 'string' ? value : '')
+      if (!Number.isNaN(nextRating)) rating = nextRating
+    } catch {
+      // Rating metafields are optional and can be malformed in Shopify.
+    }
+  }
+
+  if (product.ratingCountMetafield?.value) {
+    const nextReviewCount = parseInt(product.ratingCountMetafield.value, 10)
+    if (!Number.isNaN(nextReviewCount)) reviewCount = nextReviewCount
+  }
+
+  return { rating, reviewCount }
+}
+
 function textFromHtml(html: string): string {
-  return html
+  return removeCitationMarkers(html)
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
     .replace(/<style[\s\S]*?<\/style>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
@@ -72,6 +121,10 @@ function textFromHtml(html: string): string {
     .trim()
 }
 
+function removeCitationMarkers(value: string): string {
+  return value.replace(/:contentReference\[[^\]]+\]\{[^}]+\}/g, ' ')
+}
+
 function looksLikeCss(value: string): boolean {
   return /\/\*|--[a-z0-9-]+:|@media|#[a-z0-9_-]+\s*\{/i.test(value)
 }
@@ -81,12 +134,16 @@ function cleanCollectionDescription(
   descriptionHtml: string,
   seoDescription: string | null | undefined,
 ): string {
-  const trimmedSeoDescription = seoDescription?.replace(/\s+/g, ' ').trim()
+  const trimmedSeoDescription = seoDescription
+    ? removeCitationMarkers(seoDescription).replace(/\s+/g, ' ').trim()
+    : undefined
   if (trimmedSeoDescription && !looksLikeCss(trimmedSeoDescription)) {
     return trimmedSeoDescription
   }
 
-  const trimmedDescription = description.replace(/\s+/g, ' ').trim()
+  const trimmedDescription = removeCitationMarkers(description)
+    .replace(/\s+/g, ' ')
+    .trim()
   if (trimmedDescription && !looksLikeCss(trimmedDescription)) {
     return trimmedDescription
   }
@@ -102,6 +159,8 @@ function cleanCollectionDescription(
 function reshapeProductSummary(
   product: ShopifyProductSummaryNode,
 ): ProductSummary {
+  const { rating, reviewCount } = parseProductRating(product)
+
   return {
     id: product.id,
     handle: product.handle,
@@ -112,6 +171,57 @@ function reshapeProductSummary(
     priceRange: {
       minVariantPrice: reshapeMoney(product.priceRange.minVariantPrice),
     },
+    rating,
+    reviewCount,
+  }
+}
+
+function reshapeProductOption(option: ProductOption): ProductOption {
+  return {
+    name: option.name,
+    values: option.values,
+  }
+}
+
+function reshapeProductVariant(
+  variant: ShopifyCollectionProductVariantNode,
+): ProductVariant {
+  return {
+    id: variant.id,
+    title: variant.title,
+    availableForSale: variant.availableForSale,
+    price: reshapeMoney(variant.price),
+  }
+}
+
+function reshapeCollectionProductSummary(
+  product: ShopifyCollectionProductNode,
+): CollectionProductSummary {
+  return {
+    ...reshapeProductSummary(product),
+    availableForSale: product.availableForSale,
+    productType: product.productType,
+    tags: product.tags,
+    options: product.options.map(reshapeProductOption),
+    variants: product.variants.edges.map((edge) =>
+      reshapeProductVariant(edge.node),
+    ),
+  }
+}
+
+function reshapeCollectionProductFilter(
+  filter: ShopifyCollectionProductFilterNode,
+): CollectionProductFilter {
+  return {
+    id: filter.id,
+    label: filter.label,
+    type: filter.type,
+    values: filter.values.map((value) => ({
+      id: value.id,
+      label: value.label,
+      count: value.count,
+      input: JSON.stringify(value.input),
+    })),
   }
 }
 
@@ -242,30 +352,54 @@ export async function getCollectionProducts(
   sortKey = ProductCollectionSortKeys.CollectionDefault,
   reverse = false,
 ): Promise<ProductSummary[]> {
+  const result = await getCollectionProductsWithFilters(
+    handle,
+    first,
+    sortKey,
+    reverse,
+  )
+
+  return result.products
+}
+
+export async function getCollectionProductsWithFilters(
+  handle: string,
+  first = SHOPIFY_PAGE_SIZE,
+  sortKey = ProductCollectionSortKeys.CollectionDefault,
+  reverse = false,
+  filters: ProductFilter[] = [],
+): Promise<CollectionProductsResult> {
   'use cache'
   cacheTag('collection', `collection-${handle}`)
   cacheLife('hours')
 
-  const products: ProductSummary[] = []
+  const products: CollectionProductSummary[] = []
+  let productFilters: CollectionProductFilter[] = []
   let after: string | null | undefined
   let hasNextPage = true
 
   while (hasNextPage) {
     const data = await shopifyFetch({
       query: GetCollectionProductsDocument,
-      variables: { handle, first, after, sortKey, reverse },
+      variables: { handle, first, after, sortKey, reverse, filters },
     })
 
-    if (!data.collection) return []
+    if (!data.collection) return { products: [], filters: [] }
+
+    if (productFilters.length === 0) {
+      productFilters = data.collection.products.filters.map(
+        reshapeCollectionProductFilter,
+      )
+    }
 
     products.push(
       ...data.collection.products.edges.map((edge) =>
-        reshapeProductSummary(edge.node),
+        reshapeCollectionProductSummary(edge.node),
       ),
     )
     hasNextPage = data.collection.products.pageInfo.hasNextPage
     after = data.collection.products.pageInfo.endCursor
   }
 
-  return products
+  return { products, filters: productFilters }
 }

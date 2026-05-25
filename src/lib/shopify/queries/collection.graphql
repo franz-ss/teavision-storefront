@@ -25,6 +25,7 @@ query GetCollectionProducts(
   $after: String
   $sortKey: ProductCollectionSortKeys
   $reverse: Boolean
+  $filters: [ProductFilter!]
 ) {
   collection(handle: $handle) {
     products(
@@ -32,16 +33,31 @@ query GetCollectionProducts(
       after: $after
       sortKey: $sortKey
       reverse: $reverse
+      filters: $filters
     ) {
       pageInfo {
         hasNextPage
         endCursor
+      }
+      filters {
+        id
+        label
+        type
+        values {
+          id
+          label
+          count
+          input
+        }
       }
       edges {
         node {
           id
           handle
           title
+          availableForSale
+          productType
+          tags
           featuredImage {
             url
             altText
@@ -52,6 +68,32 @@ query GetCollectionProducts(
             minVariantPrice {
               amount
               currencyCode
+            }
+          }
+          options {
+            name
+            values
+          }
+          ratingMetafield: metafield(namespace: "reviews", key: "rating") {
+            value
+          }
+          ratingCountMetafield: metafield(
+            namespace: "reviews"
+            key: "rating_count"
+          ) {
+            value
+          }
+          variants(first: 10) {
+            edges {
+              node {
+                id
+                title
+                availableForSale
+                price {
+                  amount
+                  currencyCode
+                }
+              }
             }
           }
         }

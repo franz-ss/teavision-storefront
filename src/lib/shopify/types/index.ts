@@ -1,3 +1,5 @@
+import type { FilterType as ShopifyFilterType } from './generated/graphql'
+
 export type Money = {
   amount: string
   currencyCode: string
@@ -43,6 +45,36 @@ export type ProductSummary = {
   title: string
   featuredImage: ShopifyImage | null
   priceRange: { minVariantPrice: Money }
+  rating?: number
+  reviewCount?: number
+}
+
+export type CollectionProductSummary = ProductSummary & {
+  availableForSale: boolean
+  productType: string
+  tags: string[]
+  options: ProductOption[]
+  variants: ProductVariant[]
+}
+
+export type CollectionFilterValue = {
+  id: string
+  label: string
+  count: number
+  input: string
+  href?: string
+}
+
+export type CollectionProductFilter = {
+  id: string
+  label: string
+  type: ShopifyFilterType
+  values: CollectionFilterValue[]
+}
+
+export type CollectionProductsResult = {
+  products: CollectionProductSummary[]
+  filters: CollectionProductFilter[]
 }
 
 export type Collection = {
@@ -92,6 +124,7 @@ export {
   CartLinesAddDocument,
   CartLinesRemoveDocument,
   CartLinesUpdateDocument,
+  FilterType,
   GetArticleDocument,
   GetBlogDocument,
   GetCartDocument,
@@ -128,5 +161,6 @@ export type {
   GetProductRecommendationsQuery,
   GetProductsQuery,
   GetProductVariantsQuery,
+  ProductFilter,
   SearchProductsQuery,
 } from './generated/graphql'
