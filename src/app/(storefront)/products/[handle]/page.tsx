@@ -21,6 +21,8 @@ import {
 import type { Product, ProductSummary } from '@/lib/shopify/types'
 
 const RELATED_COLLECTION_FETCH_LIMIT = 12
+const PRODUCT_RECOMMENDATIONS_TITLE =
+  'Customers Who Bought This Product Also Bought'
 const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
 const SEARCHANISE_ENABLED =
   process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
@@ -111,7 +113,6 @@ function RelatedProductsFallback({ products }: { products: ProductSummary[] }) {
 
   return (
     <>
-      <h2 className="mb-6 text-xl font-semibold">Related Products</h2>
       <RelatedProductsCarousel products={products} />
     </>
   )
@@ -129,7 +130,14 @@ async function RelatedProducts({ product }: { product: Product }) {
         tone="transparent"
         spacing="none"
         className="border-default border-t pt-10"
+        aria-labelledby="product-recommendations-title"
       >
+        <h2
+          id="product-recommendations-title"
+          className="mb-6 text-xl font-semibold"
+        >
+          {PRODUCT_RECOMMENDATIONS_TITLE}
+        </h2>
         {fallback}
       </Section.Root>
     )
@@ -140,7 +148,14 @@ async function RelatedProducts({ product }: { product: Product }) {
       tone="transparent"
       spacing="none"
       className="border-default border-t pt-10"
+      aria-labelledby="product-recommendations-title"
     >
+      <h2
+        id="product-recommendations-title"
+        className="mb-6 text-xl font-semibold"
+      >
+        {PRODUCT_RECOMMENDATIONS_TITLE}
+      </h2>
       <SearchaniseRecommendations fallback={fallback} />
     </Section.Root>
   )

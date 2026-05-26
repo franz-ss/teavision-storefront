@@ -219,6 +219,7 @@
   }
   body .snize-recommendation .snize-recommendation-title {
     color: var(--tv-text-strong);
+    display: none;
     font-family: var(--font-display);
     font-size: 1.25rem;
     font-weight: 600;
