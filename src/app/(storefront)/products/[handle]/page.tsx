@@ -299,12 +299,12 @@ async function ProductContent({
         <div id="shopify-product-reviews" data-id={numericProductId} />
       </Section.Root>
 
-      {/* Related products */}
+      {/* Product recommendations */}
       <div className="mt-12 flex flex-col gap-10">
         <Suspense fallback={null}>
           <RelatedProducts product={product} />
+          <CustomersAlsoBought />
         </Suspense>
-        <CustomersAlsoBought />
       </div>
     </>
   )
