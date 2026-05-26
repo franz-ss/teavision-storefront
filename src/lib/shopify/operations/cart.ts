@@ -33,6 +33,9 @@ type ShopifyProduct = ShopifyProductVariant['product']
 
 type ShopifyCartLine = Cart['lines'][number]
 
+type ShopifyCartLineDiscountAllocation =
+  ShopifyCartLineNode['discountAllocations'][number]
+
 type ShopifyUserError = {
   field?: string[] | null
   message: string
@@ -66,6 +69,32 @@ function reshapeProduct(
   }
 }
 
+function getDiscountAllocationTitle(
+  discountAllocation: ShopifyCartLineDiscountAllocation,
+): string | null {
+  if (discountAllocation.__typename === 'CartCodeDiscountAllocation') {
+    return discountAllocation.code
+  }
+
+  if (
+    discountAllocation.__typename === 'CartAutomaticDiscountAllocation' ||
+    discountAllocation.__typename === 'CartCustomDiscountAllocation'
+  ) {
+    return discountAllocation.title
+  }
+
+  return null
+}
+
+function reshapeDiscountAllocation(
+  discountAllocation: ShopifyCartLineDiscountAllocation,
+): ShopifyCartLine['discountAllocations'][number] {
+  return {
+    title: getDiscountAllocationTitle(discountAllocation),
+    discountedAmount: reshapeMoney(discountAllocation.discountedAmount),
+  }
+}
+
 function reshapeMerchandise(
   merchandise: ShopifyProductVariant,
 ): ShopifyCartLine['merchandise'] {
@@ -89,6 +118,14 @@ function reshapeCart(cart: ShopifyCart): Cart {
     lines: cart.lines.edges.map((e) => ({
       id: e.node.id,
       quantity: e.node.quantity,
+      cost: {
+        amountPerQuantity: reshapeMoney(e.node.cost.amountPerQuantity),
+        subtotalAmount: reshapeMoney(e.node.cost.subtotalAmount),
+        totalAmount: reshapeMoney(e.node.cost.totalAmount),
+      },
+      discountAllocations: e.node.discountAllocations.map(
+        reshapeDiscountAllocation,
+      ),
       merchandise: reshapeMerchandise(e.node.merchandise),
     })),
   }

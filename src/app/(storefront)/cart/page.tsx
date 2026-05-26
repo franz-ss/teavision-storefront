@@ -46,6 +46,7 @@ async function CartContent() {
             line.quantity + 1,
           )
           const removeAction = removeCartLineAction.bind(null, line.id)
+          const hasDiscounts = line.discountAllocations.length > 0
 
           return (
             <li key={line.id} className="flex items-center gap-4 py-6">
@@ -86,8 +87,26 @@ async function CartContent() {
                 </form>
               </div>
 
-              <div className="w-20 text-right">
-                <Price price={line.merchandise.price} size="md" />
+              <div className="w-28 text-right">
+                <Price price={line.cost.totalAmount} size="md" />
+                {hasDiscounts ? (
+                  <div className="mt-1 flex flex-col gap-1">
+                    {line.discountAllocations.map((discount, index) => (
+                      <p
+                        key={`${discount.title ?? 'discount'}-${index}`}
+                        className="type-caption text-success-text flex justify-end gap-1"
+                      >
+                        <span className="truncate">
+                          {discount.title ?? 'Discount'}
+                        </span>
+                        <span className="inline-flex gap-0.5">
+                          <span aria-hidden="true">-</span>
+                          <Price price={discount.discountedAmount} size="sm" />
+                        </span>
+                      </p>
+                    ))}
+                  </div>
+                ) : null}
               </div>
 
               <form action={removeAction}>

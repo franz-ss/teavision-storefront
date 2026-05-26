@@ -17,6 +17,36 @@ fragment CartFields on Cart {
       node {
         id
         quantity
+        cost {
+          amountPerQuantity {
+            amount
+            currencyCode
+          }
+          subtotalAmount {
+            amount
+            currencyCode
+          }
+          totalAmount {
+            amount
+            currencyCode
+          }
+        }
+        discountAllocations {
+          __typename
+          discountedAmount {
+            amount
+            currencyCode
+          }
+          ... on CartAutomaticDiscountAllocation {
+            title
+          }
+          ... on CartCustomDiscountAllocation {
+            title
+          }
+          ... on CartCodeDiscountAllocation {
+            code
+          }
+        }
         merchandise {
           ... on ProductVariant {
             id

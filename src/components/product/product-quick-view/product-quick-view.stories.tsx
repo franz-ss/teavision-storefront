@@ -35,12 +35,14 @@ const quickViewProduct: Product = {
       values: ['50g Sample', '1kg', '5kg'],
     },
   ],
+  bulkPricingTiers: [],
   variants: [
     {
       id: 'gid://shopify/ProductVariant/masters-sencha-50g',
       title: '50g Sample',
       availableForSale: true,
       price: { amount: '12.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
       image: stubProduct.featuredImage,
     },
     {
@@ -48,12 +50,14 @@ const quickViewProduct: Product = {
       title: '1kg',
       availableForSale: true,
       price: { amount: '88.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
     },
     {
       id: 'gid://shopify/ProductVariant/masters-sencha-5kg',
       title: '5kg',
       availableForSale: false,
       price: { amount: '390.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
     },
   ],
 }

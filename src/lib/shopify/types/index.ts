@@ -5,6 +5,13 @@ export type Money = {
   currencyCode: string
 }
 
+export type BulkPricingTier = {
+  minimumQuantity: number
+  price?: Money
+  discountPercent?: number
+  label?: string
+}
+
 export type ShopifyImage = {
   url: string
   altText: string | null
@@ -17,6 +24,7 @@ export type ProductVariant = {
   title: string
   availableForSale: boolean
   price: Money
+  quantityPriceBreaks: BulkPricingTier[]
   image?: ShopifyImage | null
 }
 
@@ -35,6 +43,7 @@ export type Product = {
   images: ShopifyImage[]
   priceRange: { minVariantPrice: Money }
   variants: ProductVariant[]
+  bulkPricingTiers: BulkPricingTier[]
   options: ProductOption[]
   rating?: number
   reviewCount?: number
@@ -97,6 +106,12 @@ export type CollectionSummary = Omit<Collection, 'descriptionHtml'>
 export type CartLine = {
   id: string
   quantity: number
+  cost: {
+    amountPerQuantity: Money
+    subtotalAmount: Money
+    totalAmount: Money
+  }
+  discountAllocations: CartLineDiscountAllocation[]
   merchandise: {
     id: string
     title: string
@@ -107,6 +122,11 @@ export type CartLine = {
       featuredImage: ShopifyImage | null
     }
   }
+}
+
+export type CartLineDiscountAllocation = {
+  title: string | null
+  discountedAmount: Money
 }
 
 export type Cart = {

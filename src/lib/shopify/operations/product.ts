@@ -9,6 +9,7 @@ import {
   ProductRecommendationIntent,
   type GetProductQuery,
   type GetProductVariantsQuery,
+  type BulkPricingTier,
   type Money,
   type Product,
   type ProductOption,
@@ -44,6 +45,10 @@ type ShopifyProductSummaryNode = {
   priceRange: { minVariantPrice: MoneyLike }
   ratingMetafield?: { value: string } | null
   ratingCountMetafield?: { value: string } | null
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
 }
 
 function reshapeMoney(money: MoneyLike): Money {
@@ -91,6 +96,145 @@ function parseProductRating(product: ShopifyProductSummaryNode): {
   return { rating, reviewCount }
 }
 
+function readNumberField(
+  record: Record<string, unknown>,
+  keys: string[],
+): number | null {
+  for (const key of keys) {
+    const value = record[key]
+    const numericValue =
+      typeof value === 'number'
+        ? value
+        : typeof value === 'string'
+          ? Number.parseFloat(value)
+          : NaN
+
+    if (Number.isFinite(numericValue)) return numericValue
+  }
+
+  return null
+}
+
+function readStringField(
+  record: Record<string, unknown>,
+  keys: string[],
+): string | undefined {
+  for (const key of keys) {
+    const value = record[key]
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value.trim()
+    }
+  }
+
+  return undefined
+}
+
+function parseTierMoney(
+  value: unknown,
+  fallbackCurrencyCode: string,
+): Money | undefined {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return {
+      amount: value.toFixed(2),
+      currencyCode: fallbackCurrencyCode,
+    }
+  }
+
+  if (typeof value === 'string') {
+    const amount = Number.parseFloat(value)
+    if (!Number.isFinite(amount)) return undefined
+
+    return {
+      amount: amount.toFixed(2),
+      currencyCode: fallbackCurrencyCode,
+    }
+  }
+
+  if (!isRecord(value)) return undefined
+
+  const amountValue = value.amount
+  const amount =
+    typeof amountValue === 'number'
+      ? amountValue
+      : typeof amountValue === 'string'
+        ? Number.parseFloat(amountValue)
+        : NaN
+
+  if (!Number.isFinite(amount)) return undefined
+
+  const currencyCode =
+    typeof value.currencyCode === 'string' && value.currencyCode.length > 0
+      ? value.currencyCode
+      : fallbackCurrencyCode
+
+  return {
+    amount: amount.toFixed(2),
+    currencyCode,
+  }
+}
+
+function parseBulkPricingTier(
+  value: unknown,
+  fallbackCurrencyCode: string,
+): BulkPricingTier | null {
+  if (!isRecord(value)) return null
+
+  const minimumQuantity = readNumberField(value, [
+    'minimumQuantity',
+    'minQuantity',
+    'min',
+    'quantity',
+  ])
+  if (minimumQuantity === null || minimumQuantity < 1) return null
+
+  const discountPercent = readNumberField(value, [
+    'discountPercent',
+    'percentOff',
+    'discount',
+  ])
+  const price = parseTierMoney(value.price, fallbackCurrencyCode)
+  const label = readStringField(value, ['label', 'title'])
+
+  if (!price && discountPercent === null) return null
+
+  return {
+    minimumQuantity: Math.floor(minimumQuantity),
+    ...(price && { price }),
+    ...(discountPercent !== null && { discountPercent }),
+    ...(label && { label }),
+  }
+}
+
+export function parseBulkPricingTiers(
+  value: string | null | undefined,
+  fallbackCurrencyCode: string,
+): BulkPricingTier[] {
+  if (!value) return []
+
+  try {
+    const parsed: unknown = JSON.parse(value)
+    if (!Array.isArray(parsed)) return []
+
+    return parsed
+      .map((tier) => parseBulkPricingTier(tier, fallbackCurrencyCode))
+      .filter((tier): tier is BulkPricingTier => tier !== null)
+      .sort((a, b) => a.minimumQuantity - b.minimumQuantity)
+  } catch {
+    return []
+  }
+}
+
+function reshapeQuantityPriceBreaks(
+  variant: ShopifyVariantNode,
+): BulkPricingTier[] {
+  return variant.quantityPriceBreaks.nodes
+    .map((priceBreak) => ({
+      minimumQuantity: priceBreak.minimumQuantity,
+      price: reshapeMoney(priceBreak.price),
+    }))
+    .sort((a, b) => a.minimumQuantity - b.minimumQuantity)
+}
+
 function reshapeVariant(
   variant: ShopifyVariantNode,
 ): Product['variants'][number] {
@@ -99,6 +243,7 @@ function reshapeVariant(
     title: variant.title,
     availableForSale: variant.availableForSale,
     price: reshapeMoney(variant.price),
+    quantityPriceBreaks: reshapeQuantityPriceBreaks(variant),
     image: variant.image ? reshapeImage(variant.image) : null,
   }
 }
@@ -140,6 +285,10 @@ function reshapeProduct(
       values: [...option.values],
     })),
     variants: variants.map(reshapeVariant),
+    bulkPricingTiers: parseBulkPricingTiers(
+      p.bulkPricingTiersMetafield?.value,
+      String(p.priceRange.minVariantPrice.currencyCode),
+    ),
     rating,
     reviewCount,
   }

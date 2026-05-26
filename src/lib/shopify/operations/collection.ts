@@ -191,6 +191,7 @@ function reshapeProductVariant(
     title: variant.title,
     availableForSale: variant.availableForSale,
     price: reshapeMoney(variant.price),
+    quantityPriceBreaks: [],
     image: variant.image ? reshapeImage(variant.image) : null,
   }
 }

@@ -43,12 +43,14 @@ const quickViewProduct: Product = {
       values: ['50g Sample', '1kg', '5kg'],
     },
   ],
+  bulkPricingTiers: [],
   variants: [
     {
       id: 'gid://shopify/ProductVariant/1',
       title: '50g Sample',
       availableForSale: true,
       price: { amount: '18.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
       image: {
         url: 'https://cdn.shopify.com/s/files/1/0000/0001/products/tea-1.jpg?v=1',
         altText: 'English breakfast sample pouch',
@@ -61,6 +63,7 @@ const quickViewProduct: Product = {
       title: '1kg',
       availableForSale: true,
       price: { amount: '72.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
       image: {
         url: 'https://cdn.shopify.com/s/files/1/0000/0001/products/tea-1kg.jpg?v=1',
         altText: 'English breakfast one kilogram bulk pouch',
@@ -73,6 +76,7 @@ const quickViewProduct: Product = {
       title: '5kg',
       availableForSale: false,
       price: { amount: '315.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
     },
   ],
 }

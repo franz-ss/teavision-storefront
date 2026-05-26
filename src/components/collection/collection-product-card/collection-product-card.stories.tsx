@@ -34,18 +34,21 @@ const stubProduct: CollectionProductSummary = {
       title: '50g Sample',
       availableForSale: true,
       price: { amount: '12.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
     },
     {
       id: 'gid://shopify/ProductVariant/masters-sencha-1kg',
       title: '1kg',
       availableForSale: true,
       price: { amount: '88.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
     },
     {
       id: 'gid://shopify/ProductVariant/masters-sencha-5kg',
       title: '5kg',
       availableForSale: false,
       price: { amount: '390.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
     },
   ],
 }

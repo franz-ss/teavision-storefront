@@ -421,7 +421,11 @@ async function ProductContent({
               />
             )}
           </div>
-          <ProductForm variants={product.variants} options={product.options} />
+          <ProductForm
+            variants={product.variants}
+            options={product.options}
+            bulkPricingTiers={product.bulkPricingTiers}
+          />
           <RichText
             html={descriptionHtml}
             variant="compact"

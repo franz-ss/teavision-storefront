@@ -36,6 +36,15 @@ fragment ProductVariantFields on ProductVariant {
     amount
     currencyCode
   }
+  quantityPriceBreaks(first: 10) {
+    nodes {
+      minimumQuantity
+      price {
+        amount
+        currencyCode
+      }
+    }
+  }
 }
 
 query GetProduct($handle: String!, $variantFirst: Int!, $variantAfter: String) {
@@ -70,6 +79,12 @@ query GetProduct($handle: String!, $variantFirst: Int!, $variantAfter: String) {
       value
     }
     ratingCountMetafield: metafield(namespace: "reviews", key: "rating_count") {
+      value
+    }
+    bulkPricingTiersMetafield: metafield(
+      namespace: "custom"
+      key: "bulk_pricing_tiers"
+    ) {
       value
     }
     variants(first: $variantFirst, after: $variantAfter) {

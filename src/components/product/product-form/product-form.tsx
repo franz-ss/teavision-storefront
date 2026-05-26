@@ -1,31 +1,54 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useId, useState, useTransition } from 'react'
 
 import { addToCartAction } from '@/lib/cart/actions'
-import { Button, Price, ToggleButton } from '@/components/ui'
-import type { ProductOption, ProductVariant } from '@/lib/shopify/types'
+import {
+  Button,
+  FormLabel,
+  Price,
+  QuantityStepper,
+  ToggleButton,
+} from '@/components/ui'
+import type {
+  BulkPricingTier,
+  ProductOption,
+  ProductVariant,
+} from '@/lib/shopify/types'
+
+import { BulkSavings } from '../bulk-savings'
 
 type ProductFormProps = {
   variants: ProductVariant[]
   options: ProductOption[]
+  bulkPricingTiers?: BulkPricingTier[]
 }
 
-export function ProductForm({ variants, options }: ProductFormProps) {
+export function ProductForm({
+  variants,
+  options,
+  bulkPricingTiers = [],
+}: ProductFormProps) {
+  const quantityInputId = useId()
   const [selectedVariantId, setSelectedVariantId] = useState(
     variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id ?? '',
   )
+  const [quantity, setQuantity] = useState(1)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId)
   const canAddToCart = selectedVariant?.availableForSale === true
+  const selectedBulkPricingTiers =
+    selectedVariant && selectedVariant.quantityPriceBreaks.length > 0
+      ? selectedVariant.quantityPriceBreaks
+      : bulkPricingTiers
 
   function handleAddToCart() {
     if (!canAddToCart || !selectedVariant) return
     startTransition(async () => {
       try {
-        await addToCartAction(selectedVariant.id, 1)
+        await addToCartAction(selectedVariant.id, quantity)
         setError(null)
       } catch {
         setError('Unable to add to cart. Please try again.')
@@ -64,14 +87,38 @@ export function ProductForm({ variants, options }: ProductFormProps) {
         </div>
       </fieldset>
 
-      <Button
-        onClick={handleAddToCart}
-        isLoading={isPending}
-        disabled={!canAddToCart || isPending}
-        size="lg"
-      >
-        {canAddToCart ? 'Add to Cart' : 'Sold Out'}
-      </Button>
+      {selectedVariant && (
+        <BulkSavings
+          tiers={selectedBulkPricingTiers}
+          basePrice={selectedVariant.price}
+          selectedQuantity={quantity}
+        />
+      )}
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div className="flex flex-col gap-2">
+          <FormLabel htmlFor={quantityInputId}>Quantity</FormLabel>
+          <QuantityStepper
+            id={quantityInputId}
+            value={quantity}
+            onChange={setQuantity}
+            min={1}
+            disabled={!canAddToCart || isPending}
+          />
+        </div>
+
+        <div className="sm:flex-1">
+          <Button
+            onClick={handleAddToCart}
+            isLoading={isPending}
+            disabled={!canAddToCart || isPending}
+            size="lg"
+            className="w-full"
+          >
+            {canAddToCart ? 'Add to Cart' : 'Sold Out'}
+          </Button>
+        </div>
+      </div>
 
       {error && (
         <p role="alert" className="text-danger-text mt-1 text-sm">
