@@ -21,8 +21,9 @@ import {
 import type { Product, ProductSummary } from '@/lib/shopify/types'
 
 const RELATED_COLLECTION_FETCH_LIMIT = 12
-const PRODUCT_RECOMMENDATIONS_TITLE =
+const CUSTOMERS_ALSO_BOUGHT_TITLE =
   'Customers Who Bought This Product Also Bought'
+const RELATED_PRODUCTS_TITLE = 'Related Products'
 const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
 const SEARCHANISE_ENABLED =
   process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
@@ -108,55 +109,48 @@ async function getRelatedProducts(product: Product): Promise<ProductSummary[]> {
   })
 }
 
-function RelatedProductsFallback({ products }: { products: ProductSummary[] }) {
+function RelatedProductsContent({ products }: { products: ProductSummary[] }) {
   if (products.length === 0) return null
 
-  return (
-    <>
-      <RelatedProductsCarousel products={products} />
-    </>
-  )
+  return <RelatedProductsCarousel products={products} />
 }
 
 async function RelatedProducts({ product }: { product: Product }) {
   const products = await getRelatedProducts(product)
-  const fallback = <RelatedProductsFallback products={products} />
-
-  if (!SEARCHANISE_ENABLED || !SEARCHANISE_API_KEY) {
-    if (products.length === 0) return null
-
-    return (
-      <Section.Root
-        tone="transparent"
-        spacing="none"
-        className="border-default border-t pt-10"
-        aria-labelledby="product-recommendations-title"
-      >
-        <h2
-          id="product-recommendations-title"
-          className="mb-6 text-xl font-semibold"
-        >
-          {PRODUCT_RECOMMENDATIONS_TITLE}
-        </h2>
-        {fallback}
-      </Section.Root>
-    )
-  }
+  if (products.length === 0) return null
 
   return (
     <Section.Root
       tone="transparent"
       spacing="none"
       className="border-default border-t pt-10"
-      aria-labelledby="product-recommendations-title"
+      aria-labelledby="related-products-title"
+    >
+      <h2 id="related-products-title" className="mb-6 text-xl font-semibold">
+        {RELATED_PRODUCTS_TITLE}
+      </h2>
+      <RelatedProductsContent products={products} />
+    </Section.Root>
+  )
+}
+
+function CustomersAlsoBought() {
+  if (!SEARCHANISE_ENABLED || !SEARCHANISE_API_KEY) return null
+
+  return (
+    <Section.Root
+      tone="transparent"
+      spacing="none"
+      className="border-default border-t pt-10"
+      aria-labelledby="customers-also-bought-title"
     >
       <h2
-        id="product-recommendations-title"
+        id="customers-also-bought-title"
         className="mb-6 text-xl font-semibold"
       >
-        {PRODUCT_RECOMMENDATIONS_TITLE}
+        {CUSTOMERS_ALSO_BOUGHT_TITLE}
       </h2>
-      <SearchaniseRecommendations fallback={fallback} />
+      <SearchaniseRecommendations />
     </Section.Root>
   )
 }
@@ -310,6 +304,7 @@ async function ProductContent({
         <Suspense fallback={null}>
           <RelatedProducts product={product} />
         </Suspense>
+        <CustomersAlsoBought />
       </div>
     </>
   )
