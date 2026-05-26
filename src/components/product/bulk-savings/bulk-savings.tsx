@@ -1,10 +1,15 @@
 import type { BulkPricingTier, Money } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
+import { Button, ToggleButton } from '@/components/ui'
 
 type BulkSavingsProps = {
   tiers: BulkPricingTier[]
   basePrice: Money
   selectedQuantity: number
+  canAddToCart?: boolean
+  isPending?: boolean
+  onGrabDeal?: () => void
+  onSelectTier?: (quantity: number) => void
   className?: string
 }
 
@@ -26,6 +31,18 @@ function formatPercent(value: number): string {
   }).format(value)
 }
 
+function getTierLabel(tier: BulkPricingTier): string {
+  if (tier.label) return tier.label
+
+  if (tier.discountPercent !== undefined) {
+    return `Buy ${tier.minimumQuantity} for ${formatPercent(
+      tier.discountPercent,
+    )}% Off`
+  }
+
+  return `Buy ${tier.minimumQuantity}+`
+}
+
 function getTierPrice(tier: BulkPricingTier, basePrice: Money): Money | null {
   if (tier.price) return tier.price
   if (tier.discountPercent === undefined) return null
@@ -39,22 +56,11 @@ function getTierPrice(tier: BulkPricingTier, basePrice: Money): Money | null {
   }
 }
 
-function getSavingsLabel(tier: BulkPricingTier, basePrice: Money): string {
-  if (tier.discountPercent !== undefined) {
-    return `Save ${formatPercent(tier.discountPercent)}%`
+function getTotalPrice(price: Money, quantity: number): Money {
+  return {
+    amount: (parseAmount(price) * quantity).toFixed(2),
+    currencyCode: price.currencyCode,
   }
-
-  if (tier.price) {
-    const baseAmount = parseAmount(basePrice)
-    const tierAmount = parseAmount(tier.price)
-
-    if (baseAmount > 0 && tierAmount > 0 && tierAmount < baseAmount) {
-      const percent = ((baseAmount - tierAmount) / baseAmount) * 100
-      return `Save ${formatPercent(percent)}%`
-    }
-  }
-
-  return 'Bulk price'
 }
 
 function getActiveTier(
@@ -72,6 +78,10 @@ export function BulkSavings({
   tiers,
   basePrice,
   selectedQuantity,
+  canAddToCart = true,
+  isPending = false,
+  onGrabDeal,
+  onSelectTier,
   className,
 }: BulkSavingsProps) {
   const visibleTiers = tiers
@@ -82,64 +92,90 @@ export function BulkSavings({
   if (visibleTiers.length === 0) return null
 
   return (
-    <div
-      className={cn(
-        'border-default bg-surface flex flex-col gap-3 rounded-md border p-4',
-        className,
-      )}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="type-label text-strong">Buy in Bulk and Save</h2>
-        {activeTier ? (
-          <span className="type-eyebrow bg-success-bg text-success-text rounded-sm px-2 py-1">
-            Applied
-          </span>
-        ) : null}
-      </div>
+    <div className={cn('flex flex-col gap-4', className)}>
+      <h2 className="type-label text-strong">Buy in Bulk and Save</h2>
 
-      <ul
-        className="border-default overflow-hidden rounded-md border"
-        role="list"
-      >
-        {visibleTiers.map((tier, index) => {
+      <ul className="flex flex-col gap-2" role="list">
+        {visibleTiers.map((tier) => {
           const isActive = activeTier?.minimumQuantity === tier.minimumQuantity
           const tierPrice = getTierPrice(tier, basePrice)
+          const tierTotal = tierPrice
+            ? getTotalPrice(tierPrice, tier.minimumQuantity)
+            : null
+          const baseTotal = getTotalPrice(basePrice, tier.minimumQuantity)
 
           return (
             <li
               key={`${tier.minimumQuantity}-${tier.label ?? tierPrice?.amount ?? 'tier'}`}
-              className={cn(
-                'grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-3',
-                index > 0 && 'border-default border-t',
-                isActive && 'bg-brand-subtle',
-              )}
-              aria-current={isActive ? 'true' : undefined}
             >
-              <div className="min-w-0">
-                <p className="type-label text-strong">
-                  {tier.label ?? `Buy ${tier.minimumQuantity}+`}
-                </p>
-                <p className="type-caption text-muted">
-                  {getSavingsLabel(tier, basePrice)}
-                </p>
-              </div>
-
-              <div className="text-right">
-                {tierPrice ? (
-                  <>
-                    <p className="type-caption text-muted">Each</p>
-                    <p className="type-label text-strong tabular-nums">
-                      {formatCurrency(tierPrice)}
-                    </p>
-                  </>
-                ) : (
-                  <span className="type-caption text-muted">In cart</span>
+              <ToggleButton
+                type="button"
+                pressed={isActive}
+                className={cn(
+                  'border-default bg-canvas focus-visible:ring-ring grid min-h-[72px] w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-md border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:grid-cols-[auto_minmax(0,1fr)_auto]',
+                  onSelectTier && 'hover:border-brand',
+                  isActive && 'border-brand bg-brand-subtle',
                 )}
-              </div>
+                onClick={() => onSelectTier?.(tier.minimumQuantity)}
+              >
+                <span
+                  className={cn(
+                    'border-brand flex size-5 shrink-0 items-center justify-center rounded-full border-2',
+                    isActive && 'bg-brand-subtle',
+                  )}
+                  aria-hidden="true"
+                >
+                  {isActive ? (
+                    <span className="bg-brand size-2 rounded-full" />
+                  ) : null}
+                </span>
+
+                <span className="type-body-sm text-default min-w-0">
+                  {getTierLabel(tier)}
+                </span>
+
+                <span className="col-span-2 text-right sm:col-span-1">
+                  {tierPrice ? (
+                    <>
+                      <span className="flex items-baseline justify-end gap-2">
+                        <span className="type-label text-strong tabular-nums">
+                          {formatCurrency(tierPrice)}
+                        </span>
+                        <span className="type-caption text-muted tabular-nums line-through">
+                          {formatCurrency(basePrice)}
+                        </span>
+                      </span>
+                      {tierTotal ? (
+                        <span className="type-caption text-default block tabular-nums">
+                          Total {formatCurrency(tierTotal)}{' '}
+                          <span className="text-muted line-through">
+                            {formatCurrency(baseTotal)}
+                          </span>
+                        </span>
+                      ) : null}
+                    </>
+                  ) : (
+                    <span className="type-caption text-muted">In cart</span>
+                  )}
+                </span>
+              </ToggleButton>
             </li>
           )
         })}
       </ul>
+
+      {onGrabDeal ? (
+        <Button
+          variant="brand"
+          size="lg"
+          className="w-full"
+          onClick={onGrabDeal}
+          isLoading={isPending}
+          disabled={!canAddToCart || isPending}
+        >
+          GRAB THIS DEAL
+        </Button>
+      ) : null}
     </div>
   )
 }

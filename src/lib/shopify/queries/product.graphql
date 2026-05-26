@@ -55,6 +55,11 @@ query GetProduct($handle: String!, $variantFirst: Int!, $variantAfter: String) {
     description
     descriptionHtml
     tags
+    collections(first: 20) {
+      nodes {
+        id
+      }
+    }
     images(first: 10) {
       edges {
         node {

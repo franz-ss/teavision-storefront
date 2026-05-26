@@ -6,6 +6,11 @@ const meta: Meta<typeof BulkSavings> = {
   title: 'Product/BulkSavings',
   component: BulkSavings,
   tags: ['autodocs'],
+  args: {
+    canAddToCart: true,
+    onGrabDeal: () => undefined,
+    onSelectTier: () => undefined,
+  },
 }
 export default meta
 
@@ -66,6 +71,38 @@ export const FallbackPercentTiers: Story = {
         minimumQuantity: 12,
         discountPercent: 15,
         label: 'Wholesale carton',
+      },
+    ],
+  },
+}
+
+export const LegacyHulkOffer: Story = {
+  args: {
+    basePrice: {
+      amount: '40.65',
+      currencyCode: 'AUD',
+    },
+    selectedQuantity: 40,
+    tiers: [
+      {
+        minimumQuantity: 5,
+        discountPercent: 5,
+        label: 'Buy 5 for 5% Off',
+      },
+      {
+        minimumQuantity: 10,
+        discountPercent: 10,
+        label: 'Buy 10 for 10% Off',
+      },
+      {
+        minimumQuantity: 20,
+        discountPercent: 12,
+        label: 'Buy 20 for 12% Off',
+      },
+      {
+        minimumQuantity: 40,
+        discountPercent: 15,
+        label: 'Buy 40 for 15% Off',
       },
     ],
   },

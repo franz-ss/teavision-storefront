@@ -1,6 +1,8 @@
 import React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 
+import { cn } from '@/lib/utils'
+
 const toggleButtonVariants = cva(
   [
     'inline-flex cursor-pointer transition-colors',
@@ -29,7 +31,7 @@ type ToggleButtonVariantProps = VariantProps<typeof toggleButtonVariants>
 
 export type ToggleButtonProps = Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
-  'aria-pressed' | 'className'
+  'aria-pressed'
 > &
   ToggleButtonVariantProps & {
     children: React.ReactNode
@@ -39,18 +41,23 @@ export type ToggleButtonProps = Omit<
 export const ToggleButton = React.forwardRef<
   HTMLButtonElement,
   ToggleButtonProps
->(({ children, pressed, type = 'button', variant, ...props }, ref) => {
-  return (
-    <button
-      ref={ref}
-      type={type}
-      {...props}
-      aria-pressed={pressed}
-      className={toggleButtonVariants({ variant })}
-    >
-      {children}
-    </button>
-  )
-})
+>(
+  (
+    { children, className, pressed, type = 'button', variant, ...props },
+    ref,
+  ) => {
+    return (
+      <button
+        ref={ref}
+        type={type}
+        {...props}
+        aria-pressed={pressed}
+        className={cn(toggleButtonVariants({ variant }), className)}
+      >
+        {children}
+      </button>
+    )
+  },
+)
 
 ToggleButton.displayName = 'ToggleButton'

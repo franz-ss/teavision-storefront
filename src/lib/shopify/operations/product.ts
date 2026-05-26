@@ -18,6 +18,11 @@ import {
 } from '@/lib/shopify/types'
 
 const SHOPIFY_PAGE_SIZE = 250
+const HULK_VOLUME_DISCOUNT_ENDPOINT =
+  'https://volumediscount.hulkapps.com/api/v2/shop/get_offer_table'
+const HULK_PERCENT_DISCOUNT_TYPE = '% Off'
+const HULK_VOLUME_DISCOUNT_STORE_ID =
+  process.env.HULK_VOLUME_DISCOUNT_STORE_ID ?? 'mrteashop-com.myshopify.com'
 
 type MoneyLike = {
   amount: unknown
@@ -49,6 +54,19 @@ type ShopifyProductSummaryNode = {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
+}
+
+function getNumericShopifyId(gid: string): string | null {
+  const parts = gid.split('/')
+  const value = parts[parts.length - 1]
+
+  return value && /^\d+$/.test(value) ? value : null
+}
+
+function formatPercentLabel(value: number): string {
+  if (Number.isInteger(value)) return String(value)
+
+  return value.toFixed(2).replace(/\.?0+$/, '')
 }
 
 function reshapeMoney(money: MoneyLike): Money {
@@ -224,6 +242,85 @@ export function parseBulkPricingTiers(
   }
 }
 
+function parseHulkOfferLevel(level: unknown): BulkPricingTier | null {
+  if (!Array.isArray(level) || level.length < 3) return null
+
+  const minimumQuantityValue = level[0]
+  const discountValue = level[1]
+  const discountType = level[2]
+
+  if (
+    typeof discountType !== 'string' ||
+    discountType.trim() !== HULK_PERCENT_DISCOUNT_TYPE
+  ) {
+    return null
+  }
+
+  const minimumQuantity =
+    typeof minimumQuantityValue === 'number'
+      ? minimumQuantityValue
+      : typeof minimumQuantityValue === 'string'
+        ? Number.parseFloat(minimumQuantityValue)
+        : NaN
+  const discountPercent =
+    typeof discountValue === 'number'
+      ? discountValue
+      : typeof discountValue === 'string'
+        ? Number.parseFloat(discountValue)
+        : NaN
+
+  if (
+    !Number.isFinite(minimumQuantity) ||
+    !Number.isFinite(discountPercent) ||
+    minimumQuantity < 1 ||
+    discountPercent <= 0
+  ) {
+    return null
+  }
+
+  const roundedMinimumQuantity = Math.floor(minimumQuantity)
+
+  return {
+    minimumQuantity: roundedMinimumQuantity,
+    discountPercent,
+    label: `Buy ${roundedMinimumQuantity} for ${formatPercentLabel(
+      discountPercent,
+    )}% Off`,
+  }
+}
+
+function parseHulkOfferLevels(value: unknown): BulkPricingTier[] {
+  if (typeof value !== 'string') return []
+
+  try {
+    const parsed: unknown = JSON.parse(value)
+    if (!Array.isArray(parsed)) return []
+
+    return parsed
+      .map(parseHulkOfferLevel)
+      .filter((tier): tier is BulkPricingTier => tier !== null)
+      .sort((a, b) => a.minimumQuantity - b.minimumQuantity)
+  } catch {
+    return []
+  }
+}
+
+function parseLegacyHulkBulkPricingTiers(value: unknown): BulkPricingTier[] {
+  if (!isRecord(value) || value.charges_applied !== true) return []
+
+  const offer = value.eligible_offer
+  if (!isRecord(offer)) return []
+
+  if (
+    offer.main_offer_type !== 'volume' ||
+    offer.discount_type !== 'each_qty'
+  ) {
+    return []
+  }
+
+  return parseHulkOfferLevels(offer.offer_levels)
+}
+
 function reshapeQuantityPriceBreaks(
   variant: ShopifyVariantNode,
 ): BulkPricingTier[] {
@@ -310,6 +407,55 @@ function reshapeProductSummary(p: ShopifyProductSummaryNode): ProductSummary {
   }
 }
 
+function hasBulkPricingTiers(product: Product): boolean {
+  return (
+    product.bulkPricingTiers.length > 0 ||
+    product.variants.some((variant) => variant.quantityPriceBreaks.length > 0)
+  )
+}
+
+async function getLegacyHulkBulkPricingTiers(
+  product: ShopifyProductNode,
+  variants: ShopifyVariantNode[],
+): Promise<BulkPricingTier[]> {
+  const productId = getNumericShopifyId(product.id)
+  const productVariants = variants
+    .map((variant) => getNumericShopifyId(variant.id))
+    .filter((variantId): variantId is string => variantId !== null)
+
+  if (!productId || productVariants.length === 0) return []
+
+  const productCollections = product.collections.nodes
+    .map((collection) => getNumericShopifyId(collection.id))
+    .filter((collectionId): collectionId is string => collectionId !== null)
+
+  const params = new URLSearchParams({
+    pid: productId,
+    store_id: HULK_VOLUME_DISCOUNT_STORE_ID,
+    ctags: '',
+    product_variants: productVariants.join(','),
+    product_collections: productCollections.join(','),
+    product_tags: product.tags.join(', '),
+  })
+
+  try {
+    const response = await fetch(HULK_VOLUME_DISCOUNT_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params,
+    })
+
+    if (!response.ok) return []
+
+    const data: unknown = await response.json()
+    return parseLegacyHulkBulkPricingTiers(data)
+  } catch {
+    return []
+  }
+}
+
 async function getProductVariantNodes(
   handle: string,
   firstPage: ShopifyProductNode['variants'],
@@ -382,8 +528,21 @@ export async function getProduct(handle: string): Promise<Product | null> {
   if (!data.product) return null
 
   const variants = await getProductVariantNodes(handle, data.product.variants)
+  const product = reshapeProduct(data.product, variants)
 
-  return reshapeProduct(data.product, variants)
+  if (hasBulkPricingTiers(product)) return product
+
+  const legacyBulkPricingTiers = await getLegacyHulkBulkPricingTiers(
+    data.product,
+    variants,
+  )
+
+  if (legacyBulkPricingTiers.length === 0) return product
+
+  return {
+    ...product,
+    bulkPricingTiers: legacyBulkPricingTiers,
+  }
 }
 
 export async function getProducts(first = 24): Promise<ProductSummary[]> {

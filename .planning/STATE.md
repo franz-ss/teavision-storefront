@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-05-26)
 Phase: 1 of 1 (Bulk Savings PDP and Cart Parity)
 Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-05-26 - Bulk savings data, PDP UI, quantity add-to-cart, and cart discount display implemented and verified.
+Last activity: 2026-05-26 - Bulk savings data, legacy HulkApps fallback, PDP UI, quantity add-to-cart, and cart discount display implemented and verified.
 
 Progress: [##########] 100%
 
@@ -42,7 +42,7 @@ Progress: [##########] 100%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Phase 1: Use Shopify-native quantity price breaks first and a product metafield fallback second.
+- Phase 1: Use Shopify-native quantity price breaks first, a product metafield fallback second, and the legacy HulkApps volume-discount endpoint only when both are absent.
 - Phase 1: Preserve any pre-existing user edits in product page files.
 - Phase 1: Leave the sibling Liquid theme untouched; it remains a reference source only.
 
@@ -52,7 +52,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- HulkApps rules are not available to the Next app as a typed API; operator sync to Shopify-native price breaks or `custom.bulk_pricing_tiers` may be required for data to appear on every legacy-discounted product.
+- Legacy HulkApps volume tiers are available through the app offer-table endpoint, but that endpoint is an external compatibility dependency rather than a typed Shopify source of truth.
 - `src/app/(storefront)/products/[handle]/page.tsx` still has pre-existing unstaged layout edits that were intentionally preserved outside the Phase 1 commit.
 
 ## Deferred Items

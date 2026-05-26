@@ -56,6 +56,11 @@ export function ProductForm({
     })
   }
 
+  function handleSelectBulkTier(nextQuantity: number) {
+    setQuantity(nextQuantity)
+    setError(null)
+  }
+
   if (variants.length === 0) {
     return (
       <div className="text-muted rounded border border-dashed p-4 text-sm">
@@ -87,14 +92,6 @@ export function ProductForm({
         </div>
       </fieldset>
 
-      {selectedVariant && (
-        <BulkSavings
-          tiers={selectedBulkPricingTiers}
-          basePrice={selectedVariant.price}
-          selectedQuantity={quantity}
-        />
-      )}
-
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex flex-col gap-2">
           <FormLabel htmlFor={quantityInputId}>Quantity</FormLabel>
@@ -119,6 +116,18 @@ export function ProductForm({
           </Button>
         </div>
       </div>
+
+      {selectedVariant && (
+        <BulkSavings
+          tiers={selectedBulkPricingTiers}
+          basePrice={selectedVariant.price}
+          selectedQuantity={quantity}
+          canAddToCart={canAddToCart}
+          isPending={isPending}
+          onGrabDeal={handleAddToCart}
+          onSelectTier={handleSelectBulkTier}
+        />
+      )}
 
       {error && (
         <p role="alert" className="text-danger-text mt-1 text-sm">
