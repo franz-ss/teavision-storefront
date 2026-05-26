@@ -40,6 +40,8 @@ export function SearchaniseRecommendations({
   const widgetRef = useRef<HTMLDivElement>(null)
   const [renderState, setRenderState] =
     useState<SearchaniseRenderState>('waiting')
+  const hasFallback =
+    fallback !== undefined && fallback !== null && fallback !== false
 
   useEffect(() => {
     const widget = widgetRef.current
@@ -66,6 +68,8 @@ export function SearchaniseRecommendations({
         setRenderState('rendered')
         return
       }
+
+      if (!hasFallback) return
 
       setRenderState('fallback')
     }
@@ -121,7 +125,7 @@ export function SearchaniseRecommendations({
         handleSearchaniseFailed,
       )
     }
-  }, [fallbackDelayMs, widgetId])
+  }, [fallbackDelayMs, hasFallback, widgetId])
 
   return (
     <div

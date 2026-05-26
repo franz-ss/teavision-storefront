@@ -27,6 +27,7 @@ const RELATED_PRODUCTS_TITLE = 'Related Products'
 const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
 const SEARCHANISE_ENABLED =
   process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
+const SHOPIFY_ANALYTICS_SHOP_ID = 7868339
 
 const RELATED_COLLECTION_BY_TAG = new Map<string, string>([
   ['categories_All Herbs', 'dried-herbs'],
@@ -44,6 +45,40 @@ function formatTag(tag: string): string | null {
 
 type Props = {
   params: Promise<{ handle: string }>
+}
+
+type ShopifyAnalyticsMeta = {
+  product: {
+    id: number
+    gid: string
+    vendor: string
+    type: string
+    handle: string
+    variants: Array<{
+      id: number
+      price: number
+      name: string
+      public_title: string | null
+      sku: string
+    }>
+    remote: boolean
+  }
+  page: {
+    pageType: 'product'
+    resourceType: 'product'
+    resourceId: number
+    requestId: string
+  }
+}
+
+type ShopifyStorefrontContext = {
+  a: number
+  offset: number
+  reqid: string
+  pageurl: string
+  p: 'product'
+  rtyp: 'product'
+  rid: number
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -74,6 +109,101 @@ function getRelatedCollectionHandle(product: Product): string | null {
   }
 
   return null
+}
+
+function getNumericShopifyId(gid: string): number | null {
+  const id = gid.split('/').at(-1)
+  if (!id) return null
+
+  const numericId = Number(id)
+  return Number.isFinite(numericId) ? numericId : null
+}
+
+function getPriceCents(amount: string): number {
+  const numericAmount = Number.parseFloat(amount)
+  if (!Number.isFinite(numericAmount)) return 0
+
+  return Math.round(numericAmount * 100)
+}
+
+function getPageUrlWithoutProtocol(url: string): string {
+  return url.replace(/^https?:\/\//, '')
+}
+
+function serializeInlineJson(value: unknown): string {
+  return (JSON.stringify(value) ?? 'null').replace(/</g, '\\u003c')
+}
+
+function getShopifyAnalyticsMeta(
+  product: Product,
+  productId: number,
+): ShopifyAnalyticsMeta {
+  const variants = product.variants
+    .map((variant) => {
+      const variantId = getNumericShopifyId(variant.id)
+      if (!variantId) return null
+
+      const publicTitle =
+        variant.title === 'Default Title' ? null : variant.title
+
+      return {
+        id: variantId,
+        price: getPriceCents(variant.price.amount),
+        name: `${product.title} - ${variant.title}`,
+        public_title: publicTitle,
+        sku: '',
+      }
+    })
+    .filter((variant) => variant !== null)
+
+  return {
+    product: {
+      id: productId,
+      gid: product.id,
+      vendor: 'teavision.com.au',
+      type: '',
+      handle: product.handle,
+      variants,
+      remote: false,
+    },
+    page: {
+      pageType: 'product',
+      resourceType: 'product',
+      resourceId: productId,
+      requestId: `product-${productId}`,
+    },
+  }
+}
+
+function getShopifyStorefrontContext(
+  productUrl: string,
+  productId: number,
+  requestId: string,
+): ShopifyStorefrontContext {
+  return {
+    a: SHOPIFY_ANALYTICS_SHOP_ID,
+    offset: 36000,
+    reqid: requestId,
+    pageurl: getPageUrlWithoutProtocol(productUrl),
+    p: 'product',
+    rtyp: 'product',
+    rid: productId,
+  }
+}
+
+function getShopifyAnalyticsScript(
+  currencyCode: string,
+  meta: ShopifyAnalyticsMeta,
+): string {
+  return `
+window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
+window.ShopifyAnalytics.meta.currency = ${serializeInlineJson(currencyCode)};
+var meta = ${serializeInlineJson(meta)};
+for (var attr in meta) {
+  window.ShopifyAnalytics.meta[attr] = meta[attr];
+}
+`
 }
 
 async function getRelatedProducts(product: Product): Promise<ProductSummary[]> {
@@ -214,17 +344,49 @@ async function ProductContent({
   }
 
   const numericProductId = product.id.replace('gid://shopify/Product/', '')
+  const numericProductIdNumber = getNumericShopifyId(product.id)
+  const shopifyAnalyticsMeta = numericProductIdNumber
+    ? getShopifyAnalyticsMeta(product, numericProductIdNumber)
+    : null
+  const shopifyStorefrontContext =
+    shopifyAnalyticsMeta && numericProductIdNumber
+      ? getShopifyStorefrontContext(
+          productUrl,
+          numericProductIdNumber,
+          shopifyAnalyticsMeta.page.requestId,
+        )
+      : null
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeInlineJson(productJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: serializeInlineJson(breadcrumbJsonLd),
+        }}
       />
+      {shopifyAnalyticsMeta && shopifyStorefrontContext ? (
+        <>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: getShopifyAnalyticsScript(
+                product.priceRange.minVariantPrice.currencyCode,
+                shopifyAnalyticsMeta,
+              ),
+            }}
+          />
+          <script
+            id="__st"
+            dangerouslySetInnerHTML={{
+              __html: `var __st=${serializeInlineJson(shopifyStorefrontContext)};`,
+            }}
+          />
+        </>
+      ) : null}
 
       <nav aria-label="Breadcrumb" className="text-muted mb-6 text-sm">
         <Link
