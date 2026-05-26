@@ -42,6 +42,10 @@ type ShopifyVariantNode = NonNullable<
   GetProductVariantsQuery['product']
 >['variants']['edges'][number]['node']
 
+type LegacyVariantInventory = {
+  quantityAvailable: number
+}
+
 type ShopifyProductSummaryNode = {
   id: string
   handle: string
@@ -321,6 +325,55 @@ function parseLegacyHulkBulkPricingTiers(value: unknown): BulkPricingTier[] {
   return parseHulkOfferLevels(offer.offer_levels)
 }
 
+function parseLegacyVariantInventory(
+  value: unknown,
+): [string, LegacyVariantInventory] | null {
+  if (!isRecord(value)) return null
+
+  const variantId =
+    typeof value.id === 'number'
+      ? String(value.id)
+      : typeof value.id === 'string'
+        ? value.id
+        : null
+  const inventoryQuantity =
+    typeof value.inventory_quantity === 'number'
+      ? value.inventory_quantity
+      : typeof value.inventory_quantity === 'string'
+        ? Number.parseInt(value.inventory_quantity, 10)
+        : NaN
+
+  if (
+    !variantId ||
+    value.inventory_management !== 'shopify' ||
+    value.inventory_policy === 'continue' ||
+    !Number.isFinite(inventoryQuantity)
+  ) {
+    return null
+  }
+
+  return [
+    variantId,
+    {
+      quantityAvailable: Math.max(0, Math.floor(inventoryQuantity)),
+    },
+  ]
+}
+
+function parseLegacyProductInventory(
+  value: unknown,
+): Map<string, LegacyVariantInventory> {
+  if (!isRecord(value) || !Array.isArray(value.variants)) return new Map()
+
+  return new Map(
+    value.variants
+      .map(parseLegacyVariantInventory)
+      .filter(
+        (entry): entry is [string, LegacyVariantInventory] => entry !== null,
+      ),
+  )
+}
+
 function reshapeQuantityPriceBreaks(
   variant: ShopifyVariantNode,
 ): BulkPricingTier[] {
@@ -334,11 +387,24 @@ function reshapeQuantityPriceBreaks(
 
 function reshapeVariant(
   variant: ShopifyVariantNode,
+  legacyInventoryByVariantId: Map<string, LegacyVariantInventory>,
 ): Product['variants'][number] {
+  const variantId = getNumericShopifyId(variant.id)
+  const legacyInventory = variantId
+    ? legacyInventoryByVariantId.get(variantId)
+    : undefined
+
   return {
     id: variant.id,
     title: variant.title,
     availableForSale: variant.availableForSale,
+    currentlyNotInStock: variant.currentlyNotInStock,
+    quantityAvailable: legacyInventory?.quantityAvailable ?? null,
+    quantityRule: {
+      minimum: variant.quantityRule.minimum,
+      maximum: variant.quantityRule.maximum ?? null,
+      increment: variant.quantityRule.increment,
+    },
     price: reshapeMoney(variant.price),
     quantityPriceBreaks: reshapeQuantityPriceBreaks(variant),
     image: variant.image ? reshapeImage(variant.image) : null,
@@ -348,6 +414,7 @@ function reshapeVariant(
 function reshapeProduct(
   p: ShopifyProductNode,
   variants: ShopifyVariantNode[],
+  legacyInventoryByVariantId: Map<string, LegacyVariantInventory>,
 ): Product {
   // SPR rating metafield stores a JSON object: { "value": "4.8", "scale_min": "1.0", "scale_max": "5.0" }
   let rating: number | undefined
@@ -381,7 +448,9 @@ function reshapeProduct(
       name: option.name,
       values: [...option.values],
     })),
-    variants: variants.map(reshapeVariant),
+    variants: variants.map((variant) =>
+      reshapeVariant(variant, legacyInventoryByVariantId),
+    ),
     bulkPricingTiers: parseBulkPricingTiers(
       p.bulkPricingTiersMetafield?.value,
       String(p.priceRange.minVariantPrice.currencyCode),
@@ -453,6 +522,31 @@ async function getLegacyHulkBulkPricingTiers(
     return parseLegacyHulkBulkPricingTiers(data)
   } catch {
     return []
+  }
+}
+
+async function getLegacyProductInventory(
+  handle: string,
+  variants: ShopifyVariantNode[],
+): Promise<Map<string, LegacyVariantInventory>> {
+  const needsLegacyInventory = variants.some(
+    (variant) => variant.quantityRule.maximum === null,
+  )
+
+  if (!needsLegacyInventory) return new Map()
+
+  const storeDomain = process.env.SHOPIFY_STORE_DOMAIN
+  if (!storeDomain) return new Map()
+
+  try {
+    const response = await fetch(`https://${storeDomain}/products/${handle}.js`)
+
+    if (!response.ok) return new Map()
+
+    const data: unknown = await response.json()
+    return parseLegacyProductInventory(data)
+  } catch {
+    return new Map()
   }
 }
 
@@ -528,7 +622,15 @@ export async function getProduct(handle: string): Promise<Product | null> {
   if (!data.product) return null
 
   const variants = await getProductVariantNodes(handle, data.product.variants)
-  const product = reshapeProduct(data.product, variants)
+  const legacyInventoryByVariantId = await getLegacyProductInventory(
+    handle,
+    variants,
+  )
+  const product = reshapeProduct(
+    data.product,
+    variants,
+    legacyInventoryByVariantId,
+  )
 
   if (hasBulkPricingTiers(product)) return product
 

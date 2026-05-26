@@ -7,6 +7,7 @@ provides:
   - Shopify-native quantity price break data path
   - Product metafield fallback for bulk pricing tiers
   - Legacy HulkApps volume-discount fallback for live-theme parity
+  - Legacy product JSON inventory cap fallback for max quantity parity
   - PDP bulk savings display and quantity add-to-cart
   - Cart line discount allocation display
 affects: [product-detail, cart, shopify-storefront-api]
@@ -35,6 +36,7 @@ key-files:
 key-decisions:
   - 'Prefer native Shopify quantityPriceBreaks, with custom.bulk_pricing_tiers as fallback.'
   - 'Use the legacy HulkApps offer-table endpoint only when Shopify-native and metafield tiers are absent.'
+  - 'Use public product JSON inventory fields for max quantity when the Storefront token cannot read product inventory.'
   - 'Display savings only when Shopify or the configured product metafield returns tier data.'
   - 'Use Shopify cart discountAllocations as the authority for applied savings.'
 duration: not tracked
@@ -56,7 +58,8 @@ The headless storefront now has a typed bulk savings path from Shopify product d
 - Added `quantityPriceBreaks(first: 10)` to product variants and `custom.bulk_pricing_tiers` fallback parsing for product-level tier data.
 - Added a guarded legacy HulkApps offer-table fallback for products whose live-theme discounts still come from the volume-discount app.
 - Added `BulkSavings` with Storybook coverage for native price breaks and fallback percent tiers.
-- Updated `ProductForm` to render selected-variant tiers, select quantity with `QuantityStepper`, and submit that quantity to `addToCartAction`.
+- Updated `ProductForm` to render selected-variant tiers, select quantity with `QuantityStepper`, keep bulk-tier selection separate from the quantity input, and submit validated quantities to `addToCartAction`.
+- Added max quantity enforcement from Shopify quantity rules and legacy product JSON inventory where available.
 - Added cart line `cost` and `discountAllocations` to the Shopify cart query and cart reshaper.
 - Updated the cart page to display Shopify line totals and discount rows when discounts are returned.
 - Kept pre-existing product page layout edits unstaged and outside the feature commit.
@@ -82,6 +85,7 @@ The headless storefront now has a typed bulk savings path from Shopify product d
 
 - Shopify remains the authority for applied discount totals.
 - The PDP uses native variant price breaks first, product-level metafield tiers second, and legacy HulkApps volume tiers only when both headless-readable sources are absent.
+- Bulk tier selection no longer mutates the visible quantity input; `GRAB THIS DEAL` validates the selected tier quantity before adding it to cart.
 - Products with no configured tiers do not show a bulk savings block.
 
 **Deviations**
@@ -96,6 +100,7 @@ The headless storefront now has a typed bulk savings path from Shopify product d
 - `pnpm lint` - passed
 - `pnpm build` - passed
 - `http://localhost:3000/products/2003y-mini-ripe-pu-erh-tea-brick-250g-box` contains `Buy 5 for 5% Off` and `GRAB THIS DEAL` after dev-server restart.
+- `http://localhost:3000/products/2003y-mini-ripe-pu-erh-tea-brick-250g-box` contains `quantityAvailable: 2` from legacy product JSON after dev-cache reset.
 - Generated query text includes `quantityPriceBreaks(first: 10)`, `bulkPricingTiersMetafield`, and `discountAllocations`.
 - `BulkSavings` Storybook file exists with native, metafield, and legacy HulkApps examples.
 

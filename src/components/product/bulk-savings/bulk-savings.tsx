@@ -6,6 +6,7 @@ type BulkSavingsProps = {
   tiers: BulkPricingTier[]
   basePrice: Money
   selectedQuantity: number
+  selectedTierQuantity?: number | null
   canAddToCart?: boolean
   isPending?: boolean
   onGrabDeal?: () => void
@@ -78,6 +79,7 @@ export function BulkSavings({
   tiers,
   basePrice,
   selectedQuantity,
+  selectedTierQuantity = null,
   canAddToCart = true,
   isPending = false,
   onGrabDeal,
@@ -87,7 +89,14 @@ export function BulkSavings({
   const visibleTiers = tiers
     .filter((tier) => tier.minimumQuantity > 0)
     .sort((a, b) => a.minimumQuantity - b.minimumQuantity)
-  const activeTier = getActiveTier(visibleTiers, selectedQuantity)
+  const selectedTier =
+    selectedTierQuantity === null
+      ? null
+      : (visibleTiers.find(
+          (tier) => tier.minimumQuantity === selectedTierQuantity,
+        ) ?? null)
+  const activeTier =
+    selectedTier ?? getActiveTier(visibleTiers, selectedQuantity)
 
   if (visibleTiers.length === 0) return null
 

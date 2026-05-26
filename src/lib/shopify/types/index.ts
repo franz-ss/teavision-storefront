@@ -23,6 +23,13 @@ export type ProductVariant = {
   id: string
   title: string
   availableForSale: boolean
+  currentlyNotInStock?: boolean
+  quantityAvailable?: number | null
+  quantityRule?: {
+    minimum: number
+    maximum: number | null
+    increment: number
+  }
   price: Money
   quantityPriceBreaks: BulkPricingTier[]
   image?: ShopifyImage | null

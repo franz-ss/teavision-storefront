@@ -26,6 +26,12 @@ fragment ProductVariantFields on ProductVariant {
   id
   title
   availableForSale
+  currentlyNotInStock
+  quantityRule {
+    minimum
+    maximum
+    increment
+  }
   image {
     url
     altText
