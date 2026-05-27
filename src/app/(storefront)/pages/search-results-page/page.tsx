@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { connection } from 'next/server'
 
@@ -10,10 +11,20 @@ type Props = {
   searchParams: Promise<SearchParamsInput>
 }
 
-export default async function SearchResultsPageRedirect({
+async function SearchResultsPageRedirectContent({
   searchParams,
 }: Props) {
   await connection()
 
   redirect(createLegacySearchRedirectHref(await searchParams))
+
+  return null
+}
+
+export default function SearchResultsPageRedirect({ searchParams }: Props) {
+  return (
+    <Suspense fallback={null}>
+      <SearchResultsPageRedirectContent searchParams={searchParams} />
+    </Suspense>
+  )
 }
