@@ -1,0 +1,64 @@
+export const PHONE = '1300 729 617'
+export const PHONE_HREF = 'tel:1300729617'
+export const EMAIL = 'info@teavision.com.au'
+export const EMAIL_HREF = 'mailto:info@teavision.com.au'
+export const ADDRESS = '29 Palladium Circuit, Clyde North VIC 3978'
+
+export const SUPPLY_CUES = [
+  'Wholesale account support',
+  'Custom blending',
+  'Private label supply',
+] as const
+
+export const SUPPLY_NOTES = [
+  'Bulk tea, herbs, spices, and botanicals',
+  'Samples, quote requests, and ingredient availability',
+  'HACCP and ACO certified supply conversations',
+] as const
+
+export const CONTACT_METHODS = [
+  {
+    label: 'Phone',
+    value: PHONE,
+    href: PHONE_HREF,
+    icon: 'phone',
+    external: false,
+  },
+  {
+    label: 'Email',
+    value: EMAIL,
+    href: EMAIL_HREF,
+    icon: 'mail',
+    external: false,
+  },
+  {
+    label: 'Address',
+    value: ADDRESS,
+    href: 'https://www.google.com/maps/search/?api=1&query=29%20Palladium%20Circuit%2C%20Clyde%20North%20VIC%203978',
+    icon: 'pin',
+    external: true,
+  },
+] as const
+
+export const SOCIAL_LINKS = [
+  {
+    label: 'YouTube',
+    href: 'https://www.youtube.com/@teavision',
+    icon: 'youtube',
+  },
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/teavision/',
+    icon: 'instagram',
+  },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/teavision/',
+    icon: 'facebook',
+  },
+  { label: 'WhatsApp', href: 'https://wa.me/611300729617', icon: 'whatsapp' },
+] as const
+
+export type IconName =
+  | (typeof CONTACT_METHODS)[number]['icon']
+  | (typeof SOCIAL_LINKS)[number]['icon']
