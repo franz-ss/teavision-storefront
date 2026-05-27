@@ -20,13 +20,13 @@
 
 ### Search Results
 
-- **SEARCH-01**: Site search results use the Searchanise Search API as a data source instead of rendering Searchanise's injected `snize-*` widget DOM.
-- **SEARCH-02**: `/search` renders Teavision-owned search results UI with product grid, result count, empty state, sorting, pagination, and filters styled through existing Tailwind/design tokens.
-- **SEARCH-03**: Search filters and sort state are encoded in URL search params so results are shareable, back-button friendly, and server-rendered from the current query.
-- **SEARCH-04**: Legacy `/pages/search-results-page` and `/pages/search-results` URLs no longer render the Shopify-managed Searchanise app body below third-party results; they redirect or canonicalize to `/search`.
-- **SEARCH-05**: Searchanise widget script loading remains available for PDP recommendations but does not take over the headless search results route.
-- **SEARCH-06**: Searchanise API response parsing uses typed `unknown` narrowing, handles malformed/partial data safely, and never imports generated Shopify types directly.
-- **SEARCH-07**: Search UI components include Storybook coverage for results, empty, filtered, and loading/error states.
+- [x] **SEARCH-01**: Site search results use the Searchanise Search API as a data source instead of rendering Searchanise's injected `snize-*` widget DOM.
+- [x] **SEARCH-02**: `/search` renders Teavision-owned search results UI with product grid, result count, empty state, sorting, pagination, and filters styled through existing Tailwind/design tokens.
+- [x] **SEARCH-03**: Search filters and sort state are encoded in URL search params so results are shareable, back-button friendly, and server-rendered from the current query.
+- [x] **SEARCH-04**: Legacy `/pages/search-results-page` and `/pages/search-results` URLs no longer render the Shopify-managed Searchanise app body below third-party results; they redirect or canonicalize to `/search`.
+- [x] **SEARCH-05**: Searchanise widget script loading remains available for PDP recommendations but does not take over the headless search results route.
+- [x] **SEARCH-06**: Searchanise API response parsing uses typed `unknown` narrowing, handles malformed/partial data safely, and never imports generated Shopify types directly.
+- [x] **SEARCH-07**: Search UI components include Storybook coverage for results, empty, filtered, and loading/error states.
 
 ### Pricing Administration
 
@@ -53,13 +53,13 @@
 | BULK-06     | Phase 1 | Complete |
 | BULK-07     | Phase 1 | Complete |
 | BULK-08     | Phase 1 | Complete |
-| SEARCH-01   | Phase 2 | Planned  |
-| SEARCH-02   | Phase 2 | Planned  |
-| SEARCH-03   | Phase 2 | Planned  |
-| SEARCH-04   | Phase 2 | Planned  |
-| SEARCH-05   | Phase 2 | Planned  |
-| SEARCH-06   | Phase 2 | Planned  |
-| SEARCH-07   | Phase 2 | Planned  |
+| SEARCH-01   | Phase 2 | Complete |
+| SEARCH-02   | Phase 2 | Complete |
+| SEARCH-03   | Phase 2 | Complete |
+| SEARCH-04   | Phase 2 | Complete |
+| SEARCH-05   | Phase 2 | Complete |
+| SEARCH-06   | Phase 2 | Complete |
+| SEARCH-07   | Phase 2 | Complete |
 | BULK-09     | Deferred | Deferred |
 | BULK-10     | Deferred | Deferred |
 
@@ -74,4 +74,4 @@
 ---
 
 _Requirements defined: 2026-05-26_
-_Last updated: 2026-05-27 for Phase 2 Searchanise API planning_
+_Last updated: 2026-05-27 for Phase 2 Searchanise API execution_

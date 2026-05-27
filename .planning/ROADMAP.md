@@ -12,7 +12,7 @@ This milestone brings high-value legacy storefront behavior into the Next storef
 - Decimal phases are urgent insertions if a follow-up fix is needed.
 
 - [x] **Phase 1: Bulk Savings PDP and Cart Parity** - Render configured bulk tiers on product pages and reflect Shopify-applied discounts in cart.
-- [ ] **Phase 2: Searchanise API Search Results** - Render Searchanise-powered search results through first-class Next UI with owned filters, sorting, pagination, and legacy route cleanup.
+- [x] **Phase 2: Searchanise API Search Results** - Render Searchanise-powered search results through first-class Next UI with owned filters, sorting, pagination, and legacy route cleanup.
 
 ## Phase Details
 
@@ -54,7 +54,7 @@ Plans:
 
 Plans:
 
-- [ ] 02-01: Searchanise API search results
+- [x] 02-01: Searchanise API search results
 
 ## Progress
 
@@ -64,4 +64,4 @@ Phase 1, then Phase 2.
 | Phase                                    | Plans Complete | Status           | Completed  |
 | ---------------------------------------- | -------------- | ---------------- | ---------- |
 | 1. Bulk Savings PDP and Cart Parity      | 1/1            | Complete         | 2026-05-26 |
-| 2. Searchanise API Search Results        | 0/1            | Ready to execute |            |
+| 2. Searchanise API Search Results        | 1/1            | Complete         | 2026-05-27 |
