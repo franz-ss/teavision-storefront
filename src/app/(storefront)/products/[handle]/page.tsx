@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import Script from 'next/script'
 
 import {
   getProduct,
@@ -268,20 +269,12 @@ function CustomersAlsoBought() {
   if (!SEARCHANISE_ENABLED || !SEARCHANISE_API_KEY) return null
 
   return (
-    <Section.Root
-      tone="transparent"
-      spacing="none"
-      className="border-default border-t pt-10"
-      aria-labelledby="customers-also-bought-title"
-    >
-      <h2
-        id="customers-also-bought-title"
-        className="mb-6 text-xl font-semibold"
-      >
-        {CUSTOMERS_ALSO_BOUGHT_TITLE}
-      </h2>
-      <SearchaniseRecommendations />
-    </Section.Root>
+    <SearchaniseRecommendations
+      title={CUSTOMERS_ALSO_BOUGHT_TITLE}
+      titleId="customers-also-bought-title"
+      sectionClassName="border-default border-t pt-10"
+      headingClassName="mb-6 text-xl font-semibold"
+    />
   )
 }
 
@@ -371,7 +364,9 @@ async function ProductContent({
       />
       {shopifyAnalyticsMeta && shopifyStorefrontContext ? (
         <>
-          <script
+          <Script
+            id={`shopify-analytics-meta-${numericProductIdNumber}`}
+            strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: getShopifyAnalyticsScript(
                 product.priceRange.minVariantPrice.currencyCode,
@@ -379,8 +374,9 @@ async function ProductContent({
               ),
             }}
           />
-          <script
-            id="__st"
+          <Script
+            id={`shopify-storefront-context-${numericProductIdNumber}`}
+            strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `var __st=${serializeInlineJson(shopifyStorefrontContext)};`,
             }}
@@ -407,10 +403,12 @@ async function ProductContent({
       </nav>
 
       {/* Main product layout */}
-      <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
-        <ProductGallery images={product.images} title={product.title} />
+      <div className="grid min-w-0 gap-8 lg:grid-cols-2">
+        <div className="min-w-0">
+          <ProductGallery images={product.images} title={product.title} />
+        </div>
 
-        <div className="flex flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
+        <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
           <div className="flex flex-col gap-2">
             <h1 className="type-heading-02">{product.title}</h1>
             {productReviewSummary.rating !== undefined && (
@@ -478,7 +476,7 @@ async function ProductContent({
 
 export default function ProductPage({ params }: Props) {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="max-w-wide mx-auto w-full p-4 md:p-6 lg:p-8">
       <Suspense fallback={<div aria-live="polite">Loading product...</div>}>
         <ProductContent params={params} />
       </Suspense>

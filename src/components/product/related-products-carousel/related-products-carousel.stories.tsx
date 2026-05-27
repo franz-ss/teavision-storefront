@@ -108,3 +108,10 @@ type Story = StoryObj<typeof RelatedProductsCarousel>
 export const Default: Story = {
   args: { products },
 }
+
+export const CustomAccessibleLabel: Story = {
+  args: {
+    products,
+    ariaLabel: 'Customers also bought products',
+  },
+}

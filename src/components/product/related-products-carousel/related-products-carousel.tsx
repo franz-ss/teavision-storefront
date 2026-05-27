@@ -14,10 +14,12 @@ const AUTOPLAY_DELAY_MS = 4000
 
 type RelatedProductsCarouselProps = {
   products: ProductSummary[]
+  ariaLabel?: string
   className?: string
 }
 
 export function RelatedProductsCarousel({
+  ariaLabel = 'Related products',
   products,
   className,
 }: RelatedProductsCarouselProps) {
@@ -86,17 +88,17 @@ export function RelatedProductsCarousel({
       className={cn('relative', className)}
       role="region"
       aria-roledescription="carousel"
-      aria-label="Related products"
+      aria-label={ariaLabel}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
     >
-      <div className="absolute -top-14 right-0 flex gap-2">
+      <div className="mb-3 flex justify-end gap-2">
         <IconButton
           variant="ghost"
           size="sm"
-          aria-label="Show previous related products"
+          aria-label={`Show previous ${ariaLabel.toLowerCase()}`}
           disabled={!canScrollPrevious}
           onClick={scrollPrevious}
         >
@@ -105,7 +107,7 @@ export function RelatedProductsCarousel({
         <IconButton
           variant="ghost"
           size="sm"
-          aria-label="Show next related products"
+          aria-label={`Show next ${ariaLabel.toLowerCase()}`}
           disabled={!canScrollNext}
           onClick={scrollNext}
         >
@@ -132,7 +134,7 @@ export function RelatedProductsCarousel({
       </div>
 
       <p className="sr-only" aria-live="polite">
-        Related product {activeIndex + 1} of {products.length}
+        {ariaLabel} item {activeIndex + 1} of {products.length}
       </p>
     </div>
   )

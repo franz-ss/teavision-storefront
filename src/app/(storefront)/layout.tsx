@@ -1,11 +1,4 @@
-import { Suspense } from 'react'
-
 import { Footer, Header } from '@/components/layout'
-import { SearchaniseScriptLoader } from '@/components/product'
-
-const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
-const SEARCHANISE_ENABLED =
-  process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
 
 export default function StorefrontLayout({
   children,
@@ -17,11 +10,6 @@ export default function StorefrontLayout({
       <Header />
       <main>{children}</main>
       <Footer />
-      {SEARCHANISE_ENABLED && SEARCHANISE_API_KEY ? (
-        <Suspense fallback={null}>
-          <SearchaniseScriptLoader apiKey={SEARCHANISE_API_KEY} />
-        </Suspense>
-      ) : null}
     </>
   )
 }

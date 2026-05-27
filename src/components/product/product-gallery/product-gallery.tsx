@@ -34,13 +34,14 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full" role="region" aria-label={`${title} image gallery`}>
       <div className="w-full overflow-hidden rounded" ref={emblaRef}>
         <div className="flex">
           {images.map((image, i) => (
             <div
               key={image.url}
               className="relative aspect-4/3 min-w-0 flex-[0_0_100%]"
+              aria-hidden={selectedIndex !== i}
             >
               {image.width && image.height ? (
                 <Image
@@ -61,11 +62,12 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div className="mt-2 flex gap-2 overflow-x-auto">
+        <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(4rem,1fr))] gap-2">
           {images.map((image, i) => (
             <ToggleButton
               key={image.url}
               variant="thumbnail"
+              className="w-full"
               aria-label={`View image ${i + 1}`}
               pressed={selectedIndex === i}
               onClick={() => emblaApi?.scrollTo(i)}
@@ -86,6 +88,10 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           ))}
         </div>
       )}
+
+      <p className="sr-only" aria-live="polite">
+        Image {selectedIndex + 1} of {images.length}
+      </p>
     </div>
   )
 }

@@ -26,6 +26,19 @@ export const Default: Story = {
   },
 }
 
+export const ManyImages: Story = {
+  args: {
+    images: Array.from({ length: 10 }, (_, i) => MOCK_IMAGE(i + 1)),
+  },
+  decorators: [
+    (Story) => (
+      <div className="max-w-2xl">
+        <Story />
+      </div>
+    ),
+  ],
+}
+
 export const SingleImage: Story = {
   args: {
     images: [MOCK_IMAGE(1)],
