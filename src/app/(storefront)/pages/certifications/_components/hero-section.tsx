@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 import { Section } from '@/components/ui'
 
-export function CertificationsHeroSection() {
+export function HeroSection() {
   return (
     <Section.Root
       tone="brandStrong"

@@ -1,10 +1,10 @@
-export type CertificationTrustPoint = {
+export type TrustPoint = {
   description: string
   icon: 'shield' | 'users' | 'trophy'
   title: string
 }
 
-export const CERTIFICATION_TRUST_POINTS = [
+export const TRUST_POINTS = [
   {
     icon: 'shield',
     title: 'Quality Assurance',
@@ -22,7 +22,7 @@ export const CERTIFICATION_TRUST_POINTS = [
     title: 'Award-Winning Products',
     description: 'Multiple international awards for our premium tea blends',
   },
-] satisfies CertificationTrustPoint[]
+] satisfies TrustPoint[]
 
 export const AWARD_EXCELLENCE = {
   title: 'Award-Winning Excellence',
@@ -34,7 +34,7 @@ export const AWARD_EXCELLENCE = {
   detailSuffix: 'for various tea blends and industry recognition',
 }
 
-export const CERTIFICATIONS_CTA = {
+export const CTA = {
   title: 'Partner with a Certified Leader',
   copy: 'Experience the difference that comprehensive certification and award-winning quality makes. Our team is ready to discuss your private label tea requirements.',
   href: 'mailto:info@teavision.com.au',

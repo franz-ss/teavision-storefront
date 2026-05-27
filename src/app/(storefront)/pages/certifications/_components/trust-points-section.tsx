@@ -2,12 +2,9 @@ import { Shield, Trophy, Users, type LucideIcon } from 'lucide-react'
 
 import { Card, Section } from '@/components/ui'
 
-import { CERTIFICATION_TRUST_POINTS } from './certifications-data'
+import { TRUST_POINTS } from '../_lib/data'
 
-const ICON_MAP: Record<
-  (typeof CERTIFICATION_TRUST_POINTS)[number]['icon'],
-  LucideIcon
-> = {
+const ICON_MAP: Record<(typeof TRUST_POINTS)[number]['icon'], LucideIcon> = {
   shield: Shield,
   trophy: Trophy,
   users: Users,
@@ -18,7 +15,7 @@ export function TrustPointsSection() {
     <Section.Root tone="sunken">
       <Section.Container>
         <ul className="grid gap-5 md:grid-cols-3" role="list">
-          {CERTIFICATION_TRUST_POINTS.map((point) => {
+          {TRUST_POINTS.map((point) => {
             const Icon = ICON_MAP[point.icon]
 
             return (

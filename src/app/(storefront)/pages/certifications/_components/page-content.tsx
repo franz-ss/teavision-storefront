@@ -5,20 +5,20 @@ import {
 } from '@/components/homepage'
 
 import { AwardExcellenceSection } from './award-excellence-section'
-import { CertificationsHeroSection } from './certifications-hero-section'
-import { CertificationsCtaSection } from './certifications-cta-section'
+import { CtaSection } from './cta-section'
+import { HeroSection } from './hero-section'
 import { TrustPointsSection } from './trust-points-section'
 
-export function CertificationsPageContent() {
+export function PageContent() {
   return (
     <>
-      <CertificationsHeroSection />
+      <HeroSection />
       <ProofPoints />
       <CertificationCoverage />
       <SupplyChain />
       <TrustPointsSection />
       <AwardExcellenceSection />
-      <CertificationsCtaSection />
+      <CtaSection />
     </>
   )
 }

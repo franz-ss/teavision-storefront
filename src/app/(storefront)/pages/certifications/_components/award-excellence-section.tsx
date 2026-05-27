@@ -2,7 +2,7 @@ import { Star } from 'lucide-react'
 
 import { Card, Section } from '@/components/ui'
 
-import { AWARD_EXCELLENCE } from './certifications-data'
+import { AWARD_EXCELLENCE } from '../_lib/data'
 
 export function AwardExcellenceSection() {
   return (

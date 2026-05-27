@@ -1,5 +1,5 @@
-import { CertificationsPageContent } from './certifications-page'
+import { PageContent } from './_components/page-content'
 
-export default function CertificationsPage() {
-  return <CertificationsPageContent />
+export default function Page() {
+  return <PageContent />
 }
