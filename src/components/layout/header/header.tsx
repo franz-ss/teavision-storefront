@@ -1,12 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Mail, Phone, Search, ShoppingCart, User } from 'lucide-react'
+import { Mail, Phone, ShoppingCart, User } from 'lucide-react'
 import { Suspense } from 'react'
 
 import { getCartAction } from '@/lib/cart/actions'
 import { cn } from '@/lib/utils'
 
 import { HeaderMegaNav, HeaderMobileMegaNav } from './header-mega-nav'
+import { HeaderSearch } from './header-search'
+import { HeaderSearchForm } from './header-search-form'
 
 const ACTION_LINK_CLASS =
   'type-label focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
@@ -61,10 +63,10 @@ export function Header() {
         </div>
       </div>
 
-      <div className="max-w-wide mx-auto flex min-h-14 items-center justify-between gap-3 px-4 md:px-6 lg:min-h-18 lg:px-8">
+      <div className="max-w-wide mx-auto grid min-h-14 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-2 md:px-6 lg:min-h-18 lg:grid-cols-[minmax(10rem,1fr)_minmax(18rem,42rem)_minmax(7rem,1fr)] lg:px-8 lg:py-0">
         <Link
           href="/"
-          className="focus-visible:ring-ring inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="focus-visible:ring-ring col-start-1 row-start-1 inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           aria-label="Teavision home"
         >
           <Image
@@ -81,21 +83,13 @@ export function Header() {
           />
         </Link>
 
-        <div className="hidden lg:block">
-          <HeaderMegaNav />
+        <div className="col-span-2 row-start-2 min-w-0 lg:col-span-1 lg:col-start-2 lg:row-start-1">
+          <Suspense fallback={<HeaderSearchForm />}>
+            <HeaderSearch />
+          </Suspense>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <Link
-            href="/search"
-            className={cn(
-              ACTION_LINK_CLASS,
-              'text-action-tertiary hover:bg-surface-sunken hover:text-action-tertiary-hover hidden aspect-square p-0 sm:inline-flex',
-            )}
-          >
-            <Search className="size-4" aria-hidden="true" strokeWidth={1.8} />
-            <span className="sr-only">Search</span>
-          </Link>
+        <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2 lg:col-start-3">
           <a
             href="https://mrtea.com.au/account/login"
             className={cn(ACTION_LINK_CLASS, '')}
@@ -114,6 +108,12 @@ export function Header() {
               <CartCount />
             </Suspense>
           </Link>
+        </div>
+      </div>
+
+      <div className="border-subtle hidden border-t lg:block">
+        <div className="max-w-wide mx-auto flex justify-center px-8">
+          <HeaderMegaNav />
         </div>
       </div>
 

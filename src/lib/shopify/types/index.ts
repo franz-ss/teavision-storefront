@@ -60,6 +60,8 @@ export type ProductSummary = {
   id: string
   handle: string
   title: string
+  description?: string
+  availableForSale?: boolean
   featuredImage: ShopifyImage | null
   priceRange: { minVariantPrice: Money }
   rating?: number
@@ -168,7 +170,6 @@ export {
   GetProductVariantsDocument,
   ProductCollectionSortKeys,
   ProductRecommendationIntent,
-  SearchProductsDocument,
 } from './generated/graphql'
 
 export type {
@@ -190,5 +191,4 @@ export type {
   GetProductsQuery,
   GetProductVariantsQuery,
   ProductFilter,
-  SearchProductsQuery,
 } from './generated/graphql'
