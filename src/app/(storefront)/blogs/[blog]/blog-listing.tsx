@@ -369,7 +369,7 @@ async function BlogListingContent({ params, searchParams }: BlogListingProps) {
 
 export function BlogListingPage({ params, searchParams }: BlogListingProps) {
   return (
-    <div>
+    <>
       <Section.Root tone="surface">
         <Section.Container variant="compact" className="text-center">
           <p className="type-eyebrow text-muted">Tea Journal</p>
@@ -393,6 +393,6 @@ export function BlogListingPage({ params, searchParams }: BlogListingProps) {
       >
         <BlogListingContent params={params} searchParams={searchParams} />
       </Suspense>
-    </div>
+    </>
   )
 }

@@ -43,7 +43,10 @@ export function SortSelect({ currentSort }: { currentSort: string }) {
 
   return (
     <div className="flex items-center gap-3">
-      <label htmlFor="sort-select" className="type-label text-strong">
+      <label
+        htmlFor="sort-select"
+        className="type-label text-strong shrink-0 whitespace-nowrap"
+      >
         Sort by
       </label>
       <Select

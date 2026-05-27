@@ -81,9 +81,6 @@ export function CollectionProductCard({
               <Button href={productUrl} variant="secondary" size="sm">
                 More info
               </Button>
-              <Button href="/pages/contact" variant="ghost" size="sm">
-                Ask about this tea
-              </Button>
             </div>
           </div>
 
