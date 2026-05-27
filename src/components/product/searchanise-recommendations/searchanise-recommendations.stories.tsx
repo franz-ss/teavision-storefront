@@ -147,7 +147,7 @@ function getEmptySearchaniseMarkup(): string {
 
 type SearchaniseFixtureProps = {
   fallbackDelayMs?: number
-  result?: 'empty' | 'products'
+  result?: 'empty' | 'none' | 'products'
   withTitle?: boolean
 }
 
@@ -159,14 +159,16 @@ function SearchaniseFixture({
   useEffect(() => {
     const widget = document.getElementById(STORY_WIDGET_ID)
     if (!widget) return
+    widget.innerHTML = ''
+
+    if (result === 'none') return
+    if (result === 'empty') {
+      widget.innerHTML = getEmptySearchaniseMarkup()
+      return
+    }
 
     const timer = window.setTimeout(() => {
-      const markup =
-        result === 'products'
-          ? getSearchaniseMarkup()
-          : getEmptySearchaniseMarkup()
-
-      widget.innerHTML = markup
+      widget.innerHTML = getSearchaniseMarkup()
     }, 0)
 
     return () => {
@@ -185,6 +187,15 @@ function SearchaniseFixture({
       widgetId={STORY_WIDGET_ID}
     />
   )
+}
+
+async function waitForStoryText(canvasElement: HTMLElement, text: string) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    if (canvasElement.textContent?.includes(text)) return
+    await new Promise((resolve) => window.setTimeout(resolve, 50))
+  }
+
+  throw new Error(`Expected story text not found: ${text}`)
 }
 
 const meta: Meta<typeof SearchaniseRecommendations> = {
@@ -209,14 +220,35 @@ export const Default: Story = {
     fallbackDelayMs: 0,
     widgetId: '1T8K1Y6Q6G8R3B3',
   },
+  play: async ({ canvasElement }) => {
+    await waitForStoryText(
+      canvasElement,
+      'Native recommendation carousel fallback',
+    )
+  },
 }
 
 export const NativeCardsFromSearchaniseMarkup: Story = {
   render: () => <SearchaniseFixture withTitle />,
+  play: async ({ canvasElement }) => {
+    await waitForStoryText(canvasElement, 'Organic Chamomile Premium')
+  },
 }
 
 export const EmptySearchaniseMarkup: Story = {
   render: () => (
     <SearchaniseFixture fallbackDelayMs={0} result="empty" withTitle />
   ),
+  play: async ({ canvasElement }) => {
+    await waitForStoryText(canvasElement, 'No recommendations are available.')
+  },
+}
+
+export const Loading: Story = {
+  render: () => (
+    <SearchaniseFixture fallbackDelayMs={100000} result="none" withTitle />
+  ),
+  play: async ({ canvasElement }) => {
+    await waitForStoryText(canvasElement, 'Loading recommendations…')
+  },
 }
