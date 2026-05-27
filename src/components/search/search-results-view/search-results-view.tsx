@@ -106,7 +106,10 @@ function formatResultCount(result: SearchaniseSearchResult): string {
 
 function SearchPageSearchForm({ query = '' }: { query?: string }) {
   return (
-    <Form action="/search" className="mt-7 grid max-w-2xl gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+    <Form
+      action="/search"
+      className="mt-7 grid max-w-2xl gap-3 sm:grid-cols-[minmax(0,1fr)_auto]"
+    >
       <label htmlFor="search-page-query" className="sr-only">
         Search query
       </label>
@@ -115,7 +118,7 @@ function SearchPageSearchForm({ query = '' }: { query?: string }) {
         name="q"
         type="search"
         defaultValue={query}
-        placeholder="Find products, collections, and articles"
+        placeholder="Find products"
         enterKeyHint="search"
       />
       <Button type="submit" size="lg">
@@ -150,7 +153,7 @@ function SearchHero({
           <p className="type-body text-muted mt-4 max-w-2xl">
             {hasQuery
               ? countLabel
-              : 'Search bulk teas, herbs, spices, collections, and journal articles.'}
+              : 'Search bulk teas, herbs, and spices.'}
           </p>
           {!hasQuery && <SearchPageSearchForm />}
         </div>
@@ -203,7 +206,7 @@ function ActiveFilterChips({
         <Link
           key={filter.id}
           href={filter.href}
-          className="type-caption border-default bg-surface text-default inline-flex min-h-9 items-center gap-2 rounded-full border px-3 transition-colors hover:bg-surface-sunken focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="type-caption border-default bg-surface text-default hover:bg-surface-sunken focus-visible:ring-ring inline-flex min-h-9 items-center gap-2 rounded-full border px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <span className="text-muted">{filter.facetLabel}</span>
           <span>{filter.label}</span>
@@ -217,51 +220,7 @@ function ActiveFilterChips({
   )
 }
 
-function SecondaryResults({
-  result,
-}: {
-  result: SearchaniseSearchResult
-}) {
-  const groups = [
-    { label: 'Collections', values: result.categories },
-    { label: 'Articles and pages', values: result.pages },
-  ].filter((group) => group.values.length > 0)
-
-  if (groups.length === 0) return null
-
-  return (
-    <div className="border-default grid gap-5 border-t pt-8">
-      {groups.map((group) => (
-        <div key={group.label}>
-          <h2 className="type-heading-04 text-strong">{group.label}</h2>
-          <ul className="mt-3 grid gap-2 md:grid-cols-2" role="list">
-            {group.values.map((item) => (
-              <li key={item.id}>
-                <Link
-                  href={item.href}
-                  className="border-default bg-surface hover:bg-surface-sunken focus-visible:ring-ring block rounded-md border p-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                >
-                  <span className="type-label text-strong">{item.title}</span>
-                  {item.description && (
-                    <span className="type-body-sm text-muted mt-2 line-clamp-2">
-                      {item.description}
-                    </span>
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function ProductResults({
-  result,
-}: {
-  result: SearchaniseSearchResult
-}) {
+function ProductResults({ result }: { result: SearchaniseSearchResult }) {
   if (result.products.length === 0) {
     return (
       <SearchAlert
@@ -289,10 +248,7 @@ function ProductResults({
   )
 }
 
-export function SearchResultsView({
-  result,
-  state,
-}: SearchResultsViewProps) {
+export function SearchResultsView({ result, state }: SearchResultsViewProps) {
   const clearHref = createClearFiltersHref(state)
   const panelFacets = createPanelFacets(result.facets, state)
   const activeFilters = createActiveFilters(result.facets, state)
@@ -302,13 +258,13 @@ export function SearchResultsView({
     <>
       <SearchHero result={result} state={state} />
 
-      <Section.Root tone="surface">
+      <Section.Root tone="surface" spacing="compact">
         <Section.Container>
           {result.status === 'idle' ? (
             <div className="max-w-2xl">
               <SearchAlert
                 tone="empty"
-                message="Enter a search term to find matching products, collections, and articles."
+                message="Enter a search term to find matching products."
               />
             </div>
           ) : result.status === 'unavailable' || result.status === 'error' ? (
@@ -316,14 +272,13 @@ export function SearchResultsView({
               <SearchAlert
                 tone="error"
                 message={
-                  result.message ??
-                  'Search results are unavailable right now.'
+                  result.message ?? 'Search results are unavailable right now.'
                 }
               />
             </div>
           ) : (
-            <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-10">
-              <aside className="hidden lg:block">
+            <div className="grid items-start gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-10">
+              <aside className="hidden self-start lg:block">
                 <SearchFilterPanel
                   clearHref={clearHref}
                   facets={panelFacets}
@@ -332,7 +287,7 @@ export function SearchResultsView({
                 />
               </aside>
 
-              <div className="grid gap-8">
+              <div className="grid self-start gap-6">
                 <div className="border-default grid gap-5 border-b pb-6">
                   <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                     <div>
@@ -383,8 +338,6 @@ export function SearchResultsView({
                   pagination={result.pagination}
                   state={state}
                 />
-
-                <SecondaryResults result={result} />
               </div>
             </div>
           )}

@@ -11,7 +11,6 @@ import {
   type SearchaniseFacet,
   type SearchaniseFacetType,
   type SearchaniseFacetValue,
-  type SearchaniseLinkedResult,
   type SearchanisePagination,
   type SearchaniseSearchInput,
   type SearchaniseSearchResult,
@@ -60,8 +59,6 @@ function createEmptyResult(
     errorCode,
     products: [],
     facets: [],
-    categories: [],
-    pages: [],
     pagination,
   }
 }
@@ -274,26 +271,6 @@ function mapFacet(value: unknown): SearchaniseFacet | null {
   }
 }
 
-function mapLinkedResult(
-  value: unknown,
-  idKey: 'category_id' | 'page_id',
-): SearchaniseLinkedResult | null {
-  if (!isRecord(value)) return null
-
-  const title = cleanText(getString(value, 'title'))
-  const href = normalizeStorefrontHref(getString(value, 'link'))
-
-  if (!title || !href) return null
-
-  return {
-    id: getString(value, idKey) ?? href,
-    title,
-    href,
-    description: cleanText(getString(value, 'description')),
-    imageUrl: normalizeImageUrl(getString(value, 'image_link')),
-  }
-}
-
 function escapeRestrictValue(value: string): string {
   return value
     .replace(/\\/g, '\\\\')
@@ -331,13 +308,11 @@ function buildSearchaniseUrl(
   url.searchParams.set('output', 'json')
   url.searchParams.set('items', 'true')
   url.searchParams.set('facets', 'true')
-  url.searchParams.set('categories', 'true')
-  url.searchParams.set('pages', 'true')
+  url.searchParams.set('categories', 'false')
+  url.searchParams.set('pages', 'false')
   url.searchParams.set('facetsShowUnavailableOptions', 'false')
   url.searchParams.set('maxResults', String(pageSize))
   url.searchParams.set('startIndex', String(startIndex))
-  url.searchParams.set('categoriesMaxResults', '4')
-  url.searchParams.set('pagesMaxResults', '4')
   url.searchParams.set('sortBy', sortParams.sortBy)
 
   if (sortParams.sortOrder) {
@@ -412,14 +387,6 @@ function mapResponse(
     facets: getArray(response, 'facets')
       .map(mapFacet)
       .filter((facet): facet is SearchaniseFacet => facet !== null),
-    categories: getArray(response, 'categories')
-      .map((category) => mapLinkedResult(category, 'category_id'))
-      .filter(
-        (category): category is SearchaniseLinkedResult => category !== null,
-      ),
-    pages: getArray(response, 'pages')
-      .map((page) => mapLinkedResult(page, 'page_id'))
-      .filter((page): page is SearchaniseLinkedResult => page !== null),
     pagination: parsePagination(response, input),
   }
 }

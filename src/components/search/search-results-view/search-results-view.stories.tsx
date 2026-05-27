@@ -93,22 +93,6 @@ const baseResult: SearchaniseSearchResult = {
       ],
     },
   ],
-  categories: [
-    {
-      id: 'category-chai',
-      title: 'Chai Tea, Loose leaf & Instant',
-      href: '/collections/chai',
-      description: 'Bulk chai tea blends, powders, and spice ingredients.',
-    },
-  ],
-  pages: [
-    {
-      id: 'page-chai',
-      title: 'How to Blend Chai',
-      href: '/blogs/tea-journal/how-to-blend-chai',
-      description: 'A practical guide to balancing tea, spice, and sweetness.',
-    },
-  ],
   pagination: {
     currentPage: 1,
     pageSize: 24,
@@ -177,8 +161,6 @@ export const Empty: Story = {
     result: {
       ...baseResult,
       products: [],
-      categories: [],
-      pages: [],
       pagination: {
         ...baseResult.pagination,
         totalItems: 0,
@@ -201,8 +183,6 @@ export const NoQuery: Story = {
       query: '',
       products: [],
       facets: [],
-      categories: [],
-      pages: [],
       pagination: {
         currentPage: 1,
         pageSize: 24,
@@ -228,8 +208,6 @@ export const Unavailable: Story = {
       message: 'Search is unavailable while Searchanise is not configured.',
       products: [],
       facets: [],
-      categories: [],
-      pages: [],
       pagination: {
         ...baseResult.pagination,
         totalItems: 0,

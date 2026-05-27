@@ -43,14 +43,6 @@ export type SearchaniseFacet = {
   values: SearchaniseFacetValue[]
 }
 
-export type SearchaniseLinkedResult = {
-  id: string
-  title: string
-  href: string
-  description?: string
-  imageUrl?: string
-}
-
 export type SearchanisePagination = {
   currentPage: number
   pageSize: number
@@ -75,8 +67,6 @@ export type SearchaniseSearchResult = {
   errorCode?: string
   products: ProductSummary[]
   facets: SearchaniseFacet[]
-  categories: SearchaniseLinkedResult[]
-  pages: SearchaniseLinkedResult[]
   pagination: SearchanisePagination
 }
 
