@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { AlertCircle, Search, SlidersHorizontal, X } from 'lucide-react'
 
-import { CollectionProductCard } from '@/components/collection'
+import { ProductCard } from '@/components/collection'
 import { Button, Section, TextInput } from '@/components/ui'
 import {
   createClearFiltersHref,
@@ -234,7 +234,7 @@ function ProductResults({ result }: { result: SearchaniseSearchResult }) {
     <ul className="grid gap-4" role="list">
       {result.products.map((product, index) => (
         <li key={product.id}>
-          <CollectionProductCard product={product} priority={index === 0} />
+          <ProductCard product={product} priority={index === 0} />
         </li>
       ))}
     </ul>

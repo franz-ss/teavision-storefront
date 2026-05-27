@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import type { CollectionProductSummary } from '@/lib/shopify/types'
 
-import { CollectionProductCard } from './collection-product-card'
+import { ProductCard } from './product-card'
 
 const stubProduct: CollectionProductSummary = {
   id: 'gid://shopify/Product/masters-sencha',
@@ -53,9 +53,9 @@ const stubProduct: CollectionProductSummary = {
   ],
 }
 
-const meta: Meta<typeof CollectionProductCard> = {
-  title: 'Collection/CollectionProductCard',
-  component: CollectionProductCard,
+const meta: Meta<typeof ProductCard> = {
+  title: 'Collection/ProductCard',
+  component: ProductCard,
   tags: ['autodocs'],
   parameters: {
     nextjs: { appDirectory: true },
@@ -63,7 +63,7 @@ const meta: Meta<typeof CollectionProductCard> = {
 }
 export default meta
 
-type Story = StoryObj<typeof CollectionProductCard>
+type Story = StoryObj<typeof ProductCard>
 
 export const Default: Story = {
   args: {

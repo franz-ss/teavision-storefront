@@ -4,19 +4,19 @@ import { RichText } from '@/components/ui/rich-text'
 import type { SanitizedHtml } from '@/lib/shopify/html-content'
 import { cn } from '@/lib/utils'
 
-type CollectionStoryDisclosureProps = {
+type StoryDisclosureProps = {
   title: string
   html: SanitizedHtml
   defaultOpen?: boolean
   className?: string
 }
 
-export function CollectionStoryDisclosure({
+export function StoryDisclosure({
   title,
   html,
   defaultOpen = false,
   className,
-}: CollectionStoryDisclosureProps) {
+}: StoryDisclosureProps) {
   return (
     <details
       className={cn(

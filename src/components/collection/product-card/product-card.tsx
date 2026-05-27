@@ -5,19 +5,19 @@ import type { CollectionProductSummary } from '@/lib/shopify/types'
 import { Badge, Button, Card, StarRating } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
-import { CollectionProductPurchaseForm } from './collection-product-purchase-form'
+import { ProductPurchaseForm } from './product-purchase-form'
 
-type CollectionProductCardProps = {
+type ProductCardProps = {
   product: CollectionProductSummary
   priority?: boolean
   className?: string
 }
 
-export function CollectionProductCard({
+export function ProductCard({
   product,
   priority = false,
   className,
-}: CollectionProductCardProps) {
+}: ProductCardProps) {
   const productUrl = `/products/${product.handle}`
   const isSoldOut = !product.availableForSale
 
@@ -85,7 +85,7 @@ export function CollectionProductCard({
           </div>
 
           <div className="border-default border-t pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
-            <CollectionProductPurchaseForm
+            <ProductPurchaseForm
               variants={product.variants}
               productTitle={product.title}
             />

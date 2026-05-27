@@ -8,7 +8,7 @@ import { addToCartAction } from '@/lib/cart/actions'
 import type { ProductVariant } from '@/lib/shopify/types'
 import { Button, Price, QuantityStepper, Select } from '@/components/ui'
 
-type CollectionProductPurchaseFormProps = {
+type ProductPurchaseFormProps = {
   variants: ProductVariant[]
   productTitle: string
 }
@@ -21,10 +21,10 @@ function getInitialVariantId(variants: ProductVariant[]): string {
   )
 }
 
-export function CollectionProductPurchaseForm({
+export function ProductPurchaseForm({
   variants,
   productTitle,
-}: CollectionProductPurchaseFormProps) {
+}: ProductPurchaseFormProps) {
   const router = useRouter()
   const [selectedVariantId, setSelectedVariantId] = useState(() =>
     getInitialVariantId(variants),

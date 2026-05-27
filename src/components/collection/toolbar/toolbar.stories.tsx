@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import { FilterType, type CollectionProductFilter } from '@/lib/shopify/types'
 
-import { CollectionToolbar } from './collection-toolbar'
+import { Toolbar } from './toolbar'
 
 const filters: CollectionProductFilter[] = [
   {
@@ -26,9 +26,9 @@ const filters: CollectionProductFilter[] = [
   },
 ]
 
-const meta: Meta<typeof CollectionToolbar> = {
-  title: 'Collection/CollectionToolbar',
-  component: CollectionToolbar,
+const meta: Meta<typeof Toolbar> = {
+  title: 'Collection/Toolbar',
+  component: Toolbar,
   tags: ['autodocs'],
   parameters: {
     nextjs: { appDirectory: true },
@@ -36,7 +36,7 @@ const meta: Meta<typeof CollectionToolbar> = {
 }
 export default meta
 
-type Story = StoryObj<typeof CollectionToolbar>
+type Story = StoryObj<typeof Toolbar>
 
 export const Default: Story = {
   args: {

@@ -19,10 +19,10 @@ import {
   type ProductFilter,
 } from '@/lib/shopify/types'
 import {
-  CollectionFilterPanel,
-  CollectionProductCard,
-  CollectionStoryDisclosure,
-  CollectionToolbar,
+  FilterPanel,
+  ProductCard,
+  StoryDisclosure,
+  Toolbar,
 } from '@/components/collection'
 import { Button, Card, Section } from '@/components/ui'
 import { cn } from '@/lib/utils'
@@ -761,7 +761,7 @@ async function CollectionContent({
             className="border-default border-b"
           >
             <Section.Container>
-              <CollectionStoryDisclosure
+              <StoryDisclosure
                 title={`Read more about ${collection.title}`}
                 html={sanitizedRichDescriptionHtml}
                 className="max-w-4xl"
@@ -775,7 +775,7 @@ async function CollectionContent({
           aria-labelledby="collection-products-heading"
         >
           <Section.Container>
-            <CollectionToolbar
+            <Toolbar
               headingId="collection-products-heading"
               currentSort={sort}
               productCount={products.length}
@@ -810,7 +810,7 @@ async function CollectionContent({
                 </Card>
 
                 <Card as="aside" padding="md" radius="md">
-                  <CollectionFilterPanel
+                  <FilterPanel
                     filters={visibleFilters}
                     selectedFilters={activeSelectedFilters}
                     resultCount={products.length}
@@ -880,7 +880,7 @@ async function CollectionContent({
                 ) : (
                   products.map((product, index) => (
                     <li key={product.id}>
-                      <CollectionProductCard
+                      <ProductCard
                         product={product}
                         priority={index === 0}
                       />

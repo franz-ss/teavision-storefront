@@ -7,7 +7,7 @@ import type { CollectionProductFilter } from '@/lib/shopify/types'
 import { Button, Checkbox } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
-type CollectionFilterPanelProps = {
+type FilterPanelProps = {
   filters: CollectionProductFilter[]
   selectedFilters: string[]
   resultCount: number
@@ -23,13 +23,13 @@ function toSafeId(value: string): string {
   return value.replace(/[^a-zA-Z0-9_-]/g, '-')
 }
 
-export function CollectionFilterPanel({
+export function FilterPanel({
   filters,
   selectedFilters,
   resultCount,
   clearHref,
   className,
-}: CollectionFilterPanelProps) {
+}: FilterPanelProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()

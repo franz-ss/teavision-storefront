@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import { FilterType, type CollectionProductFilter } from '@/lib/shopify/types'
 
-import { CollectionFilterPanel } from './collection-filter-panel'
+import { FilterPanel } from './filter-panel'
 
 const organicInput = JSON.stringify({ tag: 'organic' })
 
@@ -47,9 +47,9 @@ const filters: CollectionProductFilter[] = [
   },
 ]
 
-const meta: Meta<typeof CollectionFilterPanel> = {
-  title: 'Collection/CollectionFilterPanel',
-  component: CollectionFilterPanel,
+const meta: Meta<typeof FilterPanel> = {
+  title: 'Collection/FilterPanel',
+  component: FilterPanel,
   tags: ['autodocs'],
   parameters: {
     nextjs: { appDirectory: true },
@@ -57,7 +57,7 @@ const meta: Meta<typeof CollectionFilterPanel> = {
 }
 export default meta
 
-type Story = StoryObj<typeof CollectionFilterPanel>
+type Story = StoryObj<typeof FilterPanel>
 
 export const Default: Story = {
   args: {

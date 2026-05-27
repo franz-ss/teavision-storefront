@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import type { SanitizedHtml } from '@/lib/shopify/html-content'
 
-import { CollectionStoryDisclosure } from './collection-story-disclosure'
+import { StoryDisclosure } from './story-disclosure'
 
 function sanitized(html: string): SanitizedHtml {
   return html as SanitizedHtml
@@ -17,14 +17,14 @@ const storyHtml = sanitized(`
   </ul>
 `)
 
-const meta: Meta<typeof CollectionStoryDisclosure> = {
-  title: 'Collection/CollectionStoryDisclosure',
-  component: CollectionStoryDisclosure,
+const meta: Meta<typeof StoryDisclosure> = {
+  title: 'Collection/StoryDisclosure',
+  component: StoryDisclosure,
   tags: ['autodocs'],
 }
 export default meta
 
-type Story = StoryObj<typeof CollectionStoryDisclosure>
+type Story = StoryObj<typeof StoryDisclosure>
 
 export const Default: Story = {
   args: {

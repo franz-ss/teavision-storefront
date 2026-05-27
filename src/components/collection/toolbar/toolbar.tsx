@@ -4,10 +4,10 @@ import { SlidersHorizontal } from 'lucide-react'
 import type { CollectionProductFilter } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
 
-import { CollectionFilterPanel } from '../collection-filter-panel'
+import { FilterPanel } from '../filter-panel'
 import { SortSelect } from '../sort-select'
 
-type CollectionToolbarProps = {
+type ToolbarProps = {
   headingId: string
   currentSort: string
   productCount: number
@@ -21,7 +21,7 @@ function getProductCountLabel(productCount: number): string {
   return `${productCount} ${productCount === 1 ? 'product' : 'products'}`
 }
 
-export function CollectionToolbar({
+export function Toolbar({
   headingId,
   currentSort,
   productCount,
@@ -29,7 +29,7 @@ export function CollectionToolbar({
   selectedFilters,
   clearHref,
   className,
-}: CollectionToolbarProps) {
+}: ToolbarProps) {
   const productCountLabel = getProductCountLabel(productCount)
 
   return (
@@ -66,7 +66,7 @@ export function CollectionToolbar({
           )}
         </summary>
         <div className="border-default border-t p-4">
-          <CollectionFilterPanel
+          <FilterPanel
             filters={filters}
             selectedFilters={selectedFilters}
             resultCount={productCount}
