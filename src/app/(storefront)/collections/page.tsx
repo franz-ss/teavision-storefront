@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/collections' },
 }
 
-const FEATURED_COLLECTION_HANDLES = [
+const FEATURED_HANDLES = [
   'wholesale-bulk-tea',
   'herbs-and-spices',
   'wellness-functional-tea',
@@ -30,7 +30,7 @@ const FEATURED_COLLECTION_HANDLES = [
   'australian-native-ingredients',
 ] as const
 
-const FEATURED_COLLECTION_COPY: Partial<Record<string, string>> = {
+const FEATURED_COPY: Partial<Record<string, string>> = {
   'wholesale-bulk-tea':
     'Bulk loose leaf teas, botanicals, organic blends, and everyday service staples.',
   'herbs-and-spices':
@@ -51,7 +51,7 @@ const FEATURED_COLLECTION_COPY: Partial<Record<string, string>> = {
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
 
-function collectionHref(handle: string): string {
+function hrefForHandle(handle: string): string {
   return `/collections/${handle}`
 }
 
@@ -62,27 +62,25 @@ function sortByTitle(
   return collectionA.title.localeCompare(collectionB.title)
 }
 
-function getCollectionDescription(collection: CollectionSummary): string {
+function getDescription(collection: CollectionSummary): string {
   return (
-    FEATURED_COLLECTION_COPY[collection.handle] ??
+    FEATURED_COPY[collection.handle] ??
     collection.description ??
     `Browse ${collection.title} from Teavision.`
   )
 }
 
-function getFeaturedCollections(
-  collections: CollectionSummary[],
-): CollectionSummary[] {
+function getFeatured(collections: CollectionSummary[]): CollectionSummary[] {
   const byHandle = new Map(
     collections.map((collection) => [collection.handle, collection]),
   )
 
-  return FEATURED_COLLECTION_HANDLES.map((handle) =>
-    byHandle.get(handle),
-  ).filter((collection): collection is CollectionSummary => Boolean(collection))
+  return FEATURED_HANDLES.map((handle) => byHandle.get(handle)).filter(
+    (collection): collection is CollectionSummary => Boolean(collection),
+  )
 }
 
-function CollectionImage({ collection }: { collection: CollectionSummary }) {
+function CardImage({ collection }: { collection: CollectionSummary }) {
   if (
     !collection.featuredImage ||
     !collection.featuredImage.width ||
@@ -103,9 +101,9 @@ function CollectionImage({ collection }: { collection: CollectionSummary }) {
   )
 }
 
-export default async function CollectionsPage() {
+export default async function Page() {
   const collections = await getCollectionSummaries()
-  const featuredCollections = getFeaturedCollections(collections)
+  const featuredCollections = getFeatured(collections)
   const directoryCollections = collections
     .filter((collection) => collection.handle !== 'all')
     .sort(sortByTitle)
@@ -124,7 +122,7 @@ export default async function CollectionsPage() {
           '@type': 'ListItem',
           position: index + 1,
           name: collection.title,
-          url: `${BASE_URL}${collectionHref(collection.handle)}`,
+          url: `${BASE_URL}${hrefForHandle(collection.handle)}`,
         })),
     },
   }
@@ -202,16 +200,16 @@ export default async function CollectionsPage() {
                   className="group h-full"
                 >
                   <Link
-                    href={collectionHref(collection.handle)}
+                    href={hrefForHandle(collection.handle)}
                     className="focus-visible:ring-ring block h-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
-                    <CollectionImage collection={collection} />
+                    <CardImage collection={collection} />
                     <div className="p-4">
                       <h3 className="type-heading-04 text-strong group-hover:text-brand transition-colors">
                         {collection.title}
                       </h3>
                       <p className="type-body-sm text-muted mt-3">
-                        {getCollectionDescription(collection)}
+                        {getDescription(collection)}
                       </p>
                     </div>
                   </Link>
@@ -242,7 +240,7 @@ export default async function CollectionsPage() {
               {directoryCollections.map((collection) => (
                 <li key={collection.id} className="border-default border-b">
                   <Link
-                    href={collectionHref(collection.handle)}
+                    href={hrefForHandle(collection.handle)}
                     className="focus-visible:ring-ring hover:text-brand grid min-h-16 gap-2 py-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
                     <span className="type-label text-strong">
