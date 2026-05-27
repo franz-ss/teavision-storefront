@@ -142,6 +142,42 @@ export default meta
 
 type Story = StoryObj<typeof SearchResultsView>
 
+const activeFilterResult: SearchaniseSearchResult = {
+  ...baseResult,
+  facets: [
+    {
+      ...baseResult.facets[0],
+      values: baseResult.facets[0].values.map((value) => ({
+        ...value,
+        selected: value.value === 'Chai Tea, Loose leaf & Instant',
+      })),
+    },
+    baseResult.facets[1],
+  ],
+  pagination: {
+    ...baseResult.pagination,
+    totalItems: 9,
+    totalPages: 1,
+    hasNextPage: false,
+  },
+}
+
+const activeFilterState: SearchRouteState = {
+  ...baseState,
+  filters: [
+    {
+      attribute: 'collections',
+      value: 'Chai Tea, Loose leaf & Instant',
+    },
+  ],
+}
+
+function expectStoryText(canvasElement: HTMLElement, text: string) {
+  if (!canvasElement.textContent?.includes(text)) {
+    throw new Error(`Expected story text not found: ${text}`)
+  }
+}
+
 export const Default: Story = {
   args: {
     result: baseResult,
@@ -151,33 +187,23 @@ export const Default: Story = {
 
 export const WithActiveFilter: Story = {
   args: {
-    result: {
-      ...baseResult,
-      facets: [
-        {
-          ...baseResult.facets[0],
-          values: baseResult.facets[0].values.map((value) => ({
-            ...value,
-            selected: value.value === 'Chai Tea, Loose leaf & Instant',
-          })),
-        },
-        baseResult.facets[1],
-      ],
-      pagination: {
-        ...baseResult.pagination,
-        totalItems: 9,
-        totalPages: 1,
-        hasNextPage: false,
-      },
-    },
-    state: {
-      ...baseState,
-      filters: [
-        {
-          attribute: 'collections',
-          value: 'Chai Tea, Loose leaf & Instant',
-        },
-      ],
+    result: activeFilterResult,
+    state: activeFilterState,
+  },
+  play: ({ canvasElement }) => {
+    expectStoryText(canvasElement, 'Chai Tea, Loose leaf & Instant')
+    expectStoryText(canvasElement, 'Clear all')
+  },
+}
+
+export const MobileFiltered: Story = {
+  args: {
+    result: activeFilterResult,
+    state: activeFilterState,
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
     },
   },
 }
@@ -242,6 +268,28 @@ export const Unavailable: Story = {
       },
     },
     state: baseState,
+  },
+}
+
+export const ErrorState: Story = {
+  args: {
+    result: {
+      ...baseResult,
+      status: 'error',
+      message: 'Search request failed. Please try again.',
+      products: [],
+      facets: [],
+      pagination: {
+        ...baseResult.pagination,
+        totalItems: 0,
+        totalPages: 1,
+        hasNextPage: false,
+      },
+    },
+    state: baseState,
+  },
+  play: ({ canvasElement }) => {
+    expectStoryText(canvasElement, 'Search request failed. Please try again.')
   },
 }
 
