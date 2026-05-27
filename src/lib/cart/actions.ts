@@ -12,6 +12,35 @@ import {
 import type { Cart } from '@/lib/shopify/types'
 
 const CART_COOKIE = 'teavision_cart'
+const MAXIMUM_QUANTITY_ERROR = 'Maximum quantity available reached.'
+const MAXIMUM_QUANTITY_ERROR_PATTERNS = [
+  'maximum quantity',
+  'quantity available',
+  'not enough merchandise',
+]
+
+function normalizeCartQuantity(quantity: number): number {
+  if (!Number.isFinite(quantity)) {
+    throw new Error('Quantity must be a whole number.')
+  }
+
+  const normalizedQuantity = Math.trunc(quantity)
+  if (normalizedQuantity < 1) {
+    throw new Error('Quantity must be at least 1.')
+  }
+
+  return normalizedQuantity
+}
+
+function isMaximumQuantityError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false
+
+  const message = error.message.toLowerCase()
+
+  return MAXIMUM_QUANTITY_ERROR_PATTERNS.some((pattern) =>
+    message.includes(pattern),
+  )
+}
 
 async function getOrCreateCart(): Promise<Cart> {
   const cookieStore = await cookies()
@@ -44,8 +73,20 @@ export async function addToCartAction(
   variantId: string,
   quantity: number,
 ): Promise<Cart> {
+  const normalizedQuantity = normalizeCartQuantity(quantity)
   const cart = await getOrCreateCart()
-  return addCartLines(cart.id, [{ merchandiseId: variantId, quantity }])
+
+  try {
+    return await addCartLines(cart.id, [
+      { merchandiseId: variantId, quantity: normalizedQuantity },
+    ])
+  } catch (error) {
+    if (isMaximumQuantityError(error)) {
+      throw new Error(MAXIMUM_QUANTITY_ERROR)
+    }
+
+    throw error
+  }
 }
 
 export async function updateCartLineAction(

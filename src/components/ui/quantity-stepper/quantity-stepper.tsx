@@ -14,11 +14,12 @@ type QuantityStepperProps = {
   disabled?: boolean
   label?: string
   id?: string
+  describedBy?: string
   className?: string
 }
 
 function clampQuantity(value: number, min: number, max?: number): number {
-  const safeValue = Number.isFinite(value) ? value : min
+  const safeValue = Number.isFinite(value) ? Math.trunc(value) : min
   const lowerBounded = Math.max(min, safeValue)
   return max === undefined ? lowerBounded : Math.min(max, lowerBounded)
 }
@@ -31,6 +32,7 @@ export function QuantityStepper({
   disabled = false,
   label = 'Quantity',
   id,
+  describedBy,
   className,
 }: QuantityStepperProps) {
   const quantity = clampQuantity(value, min, max)
@@ -62,11 +64,13 @@ export function QuantityStepper({
         inputMode="numeric"
         min={min}
         max={max}
+        step={1}
         value={quantity}
         onChange={(event) => updateQuantity(event.currentTarget.valueAsNumber)}
         disabled={disabled}
         className="type-label border-default bg-canvas text-strong focus-visible:ring-ring h-11 w-16 rounded-md border px-2 text-center tabular-nums focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
         aria-label={label}
+        aria-describedby={describedBy}
       />
       <IconButton
         aria-label={`Increase ${label.toLowerCase()}`}

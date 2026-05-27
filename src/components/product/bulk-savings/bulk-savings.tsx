@@ -7,6 +7,7 @@ type BulkSavingsProps = {
   basePrice: Money
   selectedQuantity: number
   selectedTierQuantity?: number | null
+  maximumQuantity?: number
   canAddToCart?: boolean
   isPending?: boolean
   onGrabDeal?: () => void
@@ -80,6 +81,7 @@ export function BulkSavings({
   basePrice,
   selectedQuantity,
   selectedTierQuantity = null,
+  maximumQuantity,
   canAddToCart = true,
   isPending = false,
   onGrabDeal,
@@ -87,7 +89,12 @@ export function BulkSavings({
   className,
 }: BulkSavingsProps) {
   const visibleTiers = tiers
-    .filter((tier) => tier.minimumQuantity > 0)
+    .filter(
+      (tier) =>
+        tier.minimumQuantity > 0 &&
+        (maximumQuantity === undefined ||
+          tier.minimumQuantity <= maximumQuantity),
+    )
     .sort((a, b) => a.minimumQuantity - b.minimumQuantity)
   const selectedTier =
     selectedTierQuantity === null
@@ -101,7 +108,7 @@ export function BulkSavings({
   if (visibleTiers.length === 0) return null
 
   return (
-    <div className={cn('flex flex-col gap-4', className)}>
+    <div className={cn('flex min-w-0 flex-col gap-4', className)}>
       <h2 className="type-label text-strong">Buy in Bulk and Save</h2>
 
       <ul className="flex flex-col gap-2" role="list">
@@ -121,7 +128,7 @@ export function BulkSavings({
                 type="button"
                 pressed={isActive}
                 className={cn(
-                  'border-default bg-canvas focus-visible:ring-ring grid min-h-[72px] w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-md border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:grid-cols-[auto_minmax(0,1fr)_auto]',
+                  'border-default bg-canvas focus-visible:ring-ring aria-pressed:border-brand aria-pressed:bg-brand-subtle aria-pressed:text-default grid min-h-[72px] w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-md border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:grid-cols-[auto_minmax(0,1fr)_auto]',
                   onSelectTier && 'hover:border-brand',
                   isActive && 'border-brand bg-brand-subtle',
                 )}
@@ -139,25 +146,27 @@ export function BulkSavings({
                   ) : null}
                 </span>
 
-                <span className="type-body-sm text-default min-w-0">
+                <span className="type-body-sm text-default min-w-0 break-words">
                   {getTierLabel(tier)}
                 </span>
 
-                <span className="col-span-2 text-right sm:col-span-1">
+                <span className="col-start-2 min-w-0 text-left sm:col-start-3 sm:row-start-1 sm:text-right">
                   {tierPrice ? (
                     <>
-                      <span className="flex items-baseline justify-end gap-2">
-                        <span className="type-label text-strong tabular-nums">
+                      <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 sm:justify-end">
+                        <span className="type-label text-strong whitespace-nowrap tabular-nums">
                           {formatCurrency(tierPrice)}
                         </span>
-                        <span className="type-caption text-muted tabular-nums line-through">
+                        <span className="type-caption text-muted whitespace-nowrap tabular-nums line-through">
                           {formatCurrency(basePrice)}
                         </span>
                       </span>
                       {tierTotal ? (
-                        <span className="type-caption text-default block tabular-nums">
-                          Total {formatCurrency(tierTotal)}{' '}
-                          <span className="text-muted line-through">
+                        <span className="type-caption text-default flex min-w-0 flex-wrap gap-x-1 tabular-nums sm:justify-end">
+                          <span className="whitespace-nowrap">
+                            Total {formatCurrency(tierTotal)}
+                          </span>
+                          <span className="text-muted whitespace-nowrap line-through">
                             {formatCurrency(baseTotal)}
                           </span>
                         </span>
@@ -174,16 +183,23 @@ export function BulkSavings({
       </ul>
 
       {onGrabDeal ? (
-        <Button
-          variant="brand"
-          size="lg"
-          className="w-full"
-          onClick={onGrabDeal}
-          isLoading={isPending}
-          disabled={!canAddToCart || isPending}
-        >
-          GRAB THIS DEAL
-        </Button>
+        <>
+          <Button
+            variant="brand"
+            size="lg"
+            className="w-full"
+            onClick={onGrabDeal}
+            isLoading={isPending}
+            disabled={!canAddToCart || isPending}
+          >
+            GRAB THIS DEAL
+          </Button>
+          <p className="type-caption text-brand text-center">
+            Note: When ordering in sizes over 1kg, your package may not be
+            packed in individual 1kg bags and will instead come in bulk packed
+            bags (2kg 5kg 10kg etc)
+          </p>
+        </>
       ) : null}
     </div>
   )

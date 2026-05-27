@@ -52,12 +52,23 @@ function clampQuantity(
   minimumQuantity: number,
   maximumQuantity: number | undefined,
 ): number {
-  const safeValue = Number.isFinite(value) ? value : minimumQuantity
+  const safeValue = Number.isFinite(value) ? Math.trunc(value) : minimumQuantity
   const lowerBounded = Math.max(minimumQuantity, safeValue)
 
   return maximumQuantity === undefined
     ? lowerBounded
     : Math.min(maximumQuantity, lowerBounded)
+}
+
+function getAddToCartErrorMessage(error: unknown): string {
+  if (
+    error instanceof Error &&
+    error.message.includes('Maximum quantity available reached.')
+  ) {
+    return 'Maximum quantity available reached.'
+  }
+
+  return 'Unable to add to cart. Please try again.'
 }
 
 export function ProductForm({
@@ -66,6 +77,7 @@ export function ProductForm({
   bulkPricingTiers = [],
 }: ProductFormProps) {
   const quantityInputId = useId()
+  const quantityErrorId = useId()
   const [selectedVariantId, setSelectedVariantId] = useState(
     variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id ?? '',
   )
@@ -89,6 +101,19 @@ export function ProductForm({
     selectedVariant && selectedVariant.quantityPriceBreaks.length > 0
       ? selectedVariant.quantityPriceBreaks
       : bulkPricingTiers
+  const availableBulkPricingTiers = selectedBulkPricingTiers.filter(
+    (tier) =>
+      maximumQuantity === undefined || tier.minimumQuantity <= maximumQuantity,
+  )
+  const activeBulkTier =
+    availableBulkPricingTiers
+      .filter((tier) => effectiveQuantity >= tier.minimumQuantity)
+      .sort((a, b) => b.minimumQuantity - a.minimumQuantity)[0] ?? null
+  const bulkDealQuantity =
+    selectedBulkTierQuantity ?? activeBulkTier?.minimumQuantity ?? null
+  const showVariantSelector =
+    variants.length > 1 ||
+    variants.some((variant) => variant.title !== 'Default Title')
 
   function canUseQuantity(nextQuantity: number): boolean {
     if (maximumQuantity !== undefined && nextQuantity > maximumQuantity) {
@@ -107,8 +132,8 @@ export function ProductForm({
       try {
         await addToCartAction(selectedVariant.id, nextQuantity)
         setError(null)
-      } catch {
-        setError('Unable to add to cart. Please try again.')
+      } catch (addError) {
+        setError(getAddToCartErrorMessage(addError))
       }
     })
   }
@@ -127,13 +152,13 @@ export function ProductForm({
 
   function handleSelectBulkTier(nextQuantity: number) {
     setSelectedBulkTierQuantity(nextQuantity)
-    if (!canUseQuantity(nextQuantity)) return
-
     setError(null)
   }
 
   function handleGrabDeal() {
-    addQuantityToCart(selectedBulkTierQuantity ?? effectiveQuantity)
+    if (bulkDealQuantity === null) return
+
+    addQuantityToCart(bulkDealQuantity)
   }
 
   if (variants.length === 0) {
@@ -145,30 +170,30 @@ export function ProductForm({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      {selectedVariant && <Price price={selectedVariant.price} size="lg" />}
+    <div className="flex min-w-0 flex-col gap-4">
+      {showVariantSelector && (
+        <fieldset className="min-w-0">
+          <legend className="mb-2 text-sm font-medium">
+            {options[0]?.name ?? 'Option'}
+          </legend>
+          <div className="flex min-w-0 flex-wrap gap-2">
+            {variants.map((v) => (
+              <ToggleButton
+                key={v.id}
+                pressed={selectedVariantId === v.id}
+                disabled={!v.availableForSale}
+                aria-label={`${v.title}${!v.availableForSale ? ', out of stock' : ''}`}
+                onClick={() => handleSelectVariant(v.id)}
+              >
+                {v.title}
+              </ToggleButton>
+            ))}
+          </div>
+        </fieldset>
+      )}
 
-      <fieldset>
-        <legend className="mb-2 text-sm font-medium">
-          {options[0]?.name ?? 'Option'}
-        </legend>
-        <div className="flex flex-wrap gap-2">
-          {variants.map((v) => (
-            <ToggleButton
-              key={v.id}
-              pressed={selectedVariantId === v.id}
-              disabled={!v.availableForSale}
-              aria-label={`${v.title}${!v.availableForSale ? ', out of stock' : ''}`}
-              onClick={() => handleSelectVariant(v.id)}
-            >
-              {v.title}
-            </ToggleButton>
-          ))}
-        </div>
-      </fieldset>
-
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="flex flex-col gap-2">
+      <div className="bg-surface flex min-w-0 flex-col gap-3 p-4 sm:grid sm:grid-cols-[auto_auto_minmax(0,1fr)] sm:items-center sm:gap-6">
+        <div className="flex min-w-0 flex-col gap-2">
           <FormLabel htmlFor={quantityInputId}>Quantity</FormLabel>
           <QuantityStepper
             id={quantityInputId}
@@ -177,39 +202,52 @@ export function ProductForm({
             min={minimumQuantity}
             max={maximumQuantity}
             disabled={!canAddToCart || isPending}
+            describedBy={error ? quantityErrorId : undefined}
           />
         </div>
 
-        <div className="sm:flex-1">
+        {selectedVariant && (
+          <Price
+            price={selectedVariant.price}
+            size="lg"
+            className="text-brand"
+          />
+        )}
+
+        <div className="min-w-0 sm:flex-1">
           <Button
             onClick={() => addQuantityToCart(effectiveQuantity)}
             isLoading={isPending}
             disabled={!canAddToCart || isPending}
             size="lg"
-            className="w-full"
+            className="w-full sm:ml-auto sm:max-w-44"
           >
             {canAddToCart ? 'Add to Cart' : 'Sold Out'}
           </Button>
         </div>
+
+        {error && (
+          <p
+            id={quantityErrorId}
+            role="alert"
+            className="text-danger-text type-caption sm:col-span-3"
+          >
+            {error}
+          </p>
+        )}
       </div>
 
       {selectedVariant && (
         <BulkSavings
-          tiers={selectedBulkPricingTiers}
+          tiers={availableBulkPricingTiers}
           basePrice={selectedVariant.price}
           selectedQuantity={effectiveQuantity}
           selectedTierQuantity={selectedBulkTierQuantity}
-          canAddToCart={canAddToCart}
+          canAddToCart={canAddToCart && bulkDealQuantity !== null}
           isPending={isPending}
           onGrabDeal={handleGrabDeal}
           onSelectTier={handleSelectBulkTier}
         />
-      )}
-
-      {error && (
-        <p role="alert" className="text-danger-text mt-1 text-sm">
-          {error}
-        </p>
       )}
     </div>
   )

@@ -107,3 +107,26 @@ export const LegacyHulkOffer: Story = {
     ],
   },
 }
+
+export const RequiresTierSelection: Story = {
+  args: {
+    ...NativePriceBreaks.args,
+    selectedTierQuantity: null,
+    canAddToCart: false,
+  },
+}
+
+export const Pending: Story = {
+  args: {
+    ...NativePriceBreaks.args,
+    selectedTierQuantity: 5,
+    isPending: true,
+  },
+}
+
+export const LimitedQuantity: Story = {
+  args: {
+    ...NativePriceBreaks.args,
+    maximumQuantity: 5,
+  },
+}
