@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Script from 'next/script'
+import { usePathname } from 'next/navigation'
 
 export const SEARCHANISE_READY_EVENT = 'teavision:searchanise-ready'
 export const SEARCHANISE_FAILED_EVENT = 'teavision:searchanise-failed'
@@ -13,6 +14,21 @@ type SearchaniseStateWindow = Window & {
 
 type SearchaniseScriptLoaderProps = {
   apiKey: string
+}
+
+const SEARCHANISE_SKIP_PATHS = [
+  '/search',
+  '/pages/search-results',
+  '/pages/search-results-page',
+]
+
+const SEARCHANISE_STICKY_SEARCH_SELECTORS =
+  '.snize-sticky-searchbox, #snize-modal-sticky-searchbox'
+
+function shouldSkipSearchaniseScript(pathname: string): boolean {
+  return SEARCHANISE_SKIP_PATHS.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
+  )
 }
 
 function getSearchaniseWindow(): SearchaniseStateWindow {
@@ -38,6 +54,12 @@ function markSearchaniseFailed() {
   dispatchSearchaniseEvent(SEARCHANISE_FAILED_EVENT)
 }
 
+function removeSearchaniseStickySearch() {
+  document
+    .querySelectorAll(SEARCHANISE_STICKY_SEARCH_SELECTORS)
+    .forEach((element) => element.remove())
+}
+
 export function isSearchaniseReady(): boolean {
   if (typeof window === 'undefined') return false
 
@@ -53,13 +75,33 @@ export function isSearchaniseFailed(): boolean {
 export function SearchaniseScriptLoader({
   apiKey,
 }: SearchaniseScriptLoaderProps) {
+  const pathname = usePathname()
+  const shouldLoadScript = !shouldSkipSearchaniseScript(pathname)
+
   useEffect(() => {
+    removeSearchaniseStickySearch()
+
+    const observer = new MutationObserver(removeSearchaniseStickySearch)
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!shouldLoadScript) return
+
     document.addEventListener('Searchanise.Loaded', markSearchaniseReady)
 
     return () => {
       document.removeEventListener('Searchanise.Loaded', markSearchaniseReady)
     }
-  }, [])
+  }, [shouldLoadScript])
+
+  if (!shouldLoadScript) return null
 
   return (
     <Script

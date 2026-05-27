@@ -1,13 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
+import type { SearchRouteState } from '@/lib/searchanise/types'
+
 import { SearchPagination } from './search-pagination'
 
-const state = {
+const state: SearchRouteState = {
   query: 'chai',
   page: 3,
   sort: 'relevance',
   filters: [{ attribute: 'collections', value: 'Chai Tea' }],
-} as const
+}
 
 const meta: Meta<typeof SearchPagination> = {
   title: 'Search/SearchPagination',

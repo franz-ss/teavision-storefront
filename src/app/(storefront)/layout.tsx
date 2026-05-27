@@ -1,3 +1,5 @@
+import { Suspense } from 'react'
+
 import { Footer, Header } from '@/components/layout'
 import { SearchaniseScriptLoader } from '@/components/product'
 
@@ -16,7 +18,9 @@ export default function StorefrontLayout({
       <main>{children}</main>
       <Footer />
       {SEARCHANISE_ENABLED && SEARCHANISE_API_KEY ? (
-        <SearchaniseScriptLoader apiKey={SEARCHANISE_API_KEY} />
+        <Suspense fallback={null}>
+          <SearchaniseScriptLoader apiKey={SEARCHANISE_API_KEY} />
+        </Suspense>
       ) : null}
     </>
   )

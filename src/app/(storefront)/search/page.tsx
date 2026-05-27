@@ -1,23 +1,28 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
-import { searchProducts } from '@/lib/shopify/operations/search'
-import { ProductCard } from '@/components/ui'
-import { ProductQuickView } from '@/components/product'
+import { SearchResultsView } from '@/components/search'
+import { Section } from '@/components/ui'
+import {
+  parseSearchParams,
+  type SearchParamsInput,
+} from '@/lib/searchanise/params'
+import { getSearchaniseSearchResults } from '@/lib/searchanise/search'
 
 type Props = {
-  searchParams: Promise<{ q?: string }>
+  searchParams: Promise<SearchParamsInput>
 }
 
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
-  const { q } = await searchParams
-  const title = q ? `Search: "${q}"` : 'Search'
+  const state = parseSearchParams(await searchParams)
+  const title = state.query ? `Search: "${state.query}"` : 'Search'
+
   return {
     title,
-    description: q
-      ? `Search results for "${q}" on Teavision — Australia's bulk tea and herb supplier.`
+    description: state.query
+      ? `Search results for "${state.query}" on Teavision, Australia's bulk tea and herb supplier.`
       : 'Search Teavision for bulk tea, herbs, and spices.',
     robots: { index: false },
   }
@@ -26,48 +31,33 @@ export async function generateMetadata({
 async function SearchContent({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>
+  searchParams: Props['searchParams']
 }) {
-  const { q } = await searchParams
-  const products = q ? await searchProducts(q) : []
+  const state = parseSearchParams(await searchParams)
+  const result = await getSearchaniseSearchResults(state)
 
+  return <SearchResultsView result={result} state={state} />
+}
+
+function SearchFallback() {
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-medium">
-        {q ? `Search results for "${q}"` : 'Search'}
-      </h1>
-
-      {!q && (
-        <p className="text-muted">Enter a search term to find products.</p>
-      )}
-
-      {q && products.length === 0 && (
-        <p className="text-muted">No products found for &ldquo;{q}&rdquo;.</p>
-      )}
-
-      {products.length > 0 && (
-        <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3" role="list">
-          {products.map((product, i) => (
-            <li key={product.id}>
-              <ProductCard
-                product={product}
-                priority={i === 0}
-                quickViewAction={<ProductQuickView product={product} />}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <Section.Root tone="sunken" spacing="compact">
+      <Section.Container>
+        <div className="py-10" role="status" aria-live="polite">
+          <p className="type-eyebrow text-accent">Search results</p>
+          <p className="type-heading-03 text-strong mt-3">
+            Loading search results...
+          </p>
+        </div>
+      </Section.Container>
+    </Section.Root>
   )
 }
 
 export default function SearchPage({ searchParams }: Props) {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <Suspense fallback={<div aria-live="polite">Loading…</div>}>
-        <SearchContent searchParams={searchParams} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<SearchFallback />}>
+      <SearchContent searchParams={searchParams} />
+    </Suspense>
   )
 }
