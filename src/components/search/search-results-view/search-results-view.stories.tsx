@@ -14,6 +14,8 @@ const product = {
   description:
     'A warming spice blend with black tea, cinnamon, cardamom, and clove.',
   availableForSale: true,
+  productType: 'Tea & Tea Products',
+  tags: ['chai', 'black tea'],
   featuredImage: {
     url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/organic-masala-chai.jpg?v=1700000000',
     altText: 'Organic Masala Chai',
@@ -23,6 +25,30 @@ const product = {
   priceRange: {
     minVariantPrice: { amount: '12.40', currencyCode: 'AUD' },
   },
+  options: [
+    {
+      name: 'Size',
+      values: ['100g', '500g'],
+    },
+  ],
+  variants: [
+    {
+      id: 'gid://shopify/ProductVariant/100',
+      title: '100g',
+      availableForSale: true,
+      price: { amount: '12.40', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
+      image: null,
+    },
+    {
+      id: 'gid://shopify/ProductVariant/500',
+      title: '500g',
+      availableForSale: true,
+      price: { amount: '48.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
+      image: null,
+    },
+  ],
 }
 
 const baseState: SearchRouteState = {

@@ -1,4 +1,4 @@
-import type { ProductSummary } from '@/lib/shopify/types'
+import type { CollectionProductSummary } from '@/lib/shopify/types'
 
 export const SEARCH_RESULTS_PAGE_SIZE = 24
 
@@ -65,7 +65,7 @@ export type SearchaniseSearchResult = {
   correctedQuery?: string
   message?: string
   errorCode?: string
-  products: ProductSummary[]
+  products: CollectionProductSummary[]
   facets: SearchaniseFacet[]
   pagination: SearchanisePagination
 }

@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { AlertCircle, Search, SlidersHorizontal, X } from 'lucide-react'
 
-import { ProductQuickView } from '@/components/product'
-import { Button, ProductCard, Section, TextInput } from '@/components/ui'
+import { CollectionProductCard } from '@/components/collection'
+import { Button, Section, TextInput } from '@/components/ui'
 import {
   createClearFiltersHref,
   createFilterToggleHref,
@@ -231,17 +231,10 @@ function ProductResults({ result }: { result: SearchaniseSearchResult }) {
   }
 
   return (
-    <ul
-      className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
-      role="list"
-    >
+    <ul className="grid gap-4" role="list">
       {result.products.map((product, index) => (
         <li key={product.id}>
-          <ProductCard
-            product={product}
-            priority={index < 4}
-            quickViewAction={<ProductQuickView product={product} />}
-          />
+          <CollectionProductCard product={product} priority={index === 0} />
         </li>
       ))}
     </ul>

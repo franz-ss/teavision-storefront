@@ -2,7 +2,13 @@ import 'server-only'
 
 import sanitizeHtml from 'sanitize-html'
 
-import type { Money, ProductSummary, ShopifyImage } from '@/lib/shopify/types'
+import type {
+  CollectionProductSummary,
+  Money,
+  ProductOption,
+  ProductVariant,
+  ShopifyImage,
+} from '@/lib/shopify/types'
 
 import {
   SEARCH_RESULTS_PAGE_SIZE,
@@ -94,6 +100,15 @@ function getArray(
   return Array.isArray(value) ? value : []
 }
 
+function getRecord(
+  record: Record<string, unknown>,
+  key: string,
+): Record<string, unknown> | undefined {
+  const value = record[key]
+
+  return isRecord(value) ? value : undefined
+}
+
 function parseNumber(value: unknown): number | undefined {
   if (typeof value === 'number' && Number.isFinite(value)) return value
 
@@ -101,6 +116,20 @@ function parseNumber(value: unknown): number | undefined {
     const parsed = parseFloat(value)
 
     if (Number.isFinite(parsed)) return parsed
+  }
+
+  return undefined
+}
+
+function parseBoolean(value: unknown): boolean | undefined {
+  if (typeof value === 'boolean') return value
+  if (typeof value === 'number') return value > 0
+
+  if (typeof value === 'string') {
+    const normalizedValue = value.trim().toLowerCase()
+
+    if (['1', 'true', 'yes'].includes(normalizedValue)) return true
+    if (['0', 'false', 'no'].includes(normalizedValue)) return false
   }
 
   return undefined
@@ -163,6 +192,13 @@ function normalizePrice(value: unknown): Money {
   }
 }
 
+function normalizeShopifyVariantId(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  if (value.startsWith('gid://shopify/ProductVariant/')) return value
+
+  return `gid://shopify/ProductVariant/${value}`
+}
+
 function parseAvailability(record: Record<string, unknown>): boolean | undefined {
   const quantityTotal = parseNumber(record.quantity_total)
   const quantity = parseNumber(record.quantity)
@@ -173,7 +209,103 @@ function parseAvailability(record: Record<string, unknown>): boolean | undefined
   return nextQuantity > 0
 }
 
-function mapProduct(value: unknown): ProductSummary | null {
+function createVariantTitle(options: Record<string, unknown> | undefined): string {
+  if (!options) return 'Default Title'
+
+  const values = Object.values(options)
+    .filter((value): value is string => typeof value === 'string')
+    .map((value) => value.trim())
+    .filter(Boolean)
+
+  return values.length > 0 ? values.join(' / ') : 'Default Title'
+}
+
+function mapVariant(value: unknown): ProductVariant | null {
+  if (!isRecord(value)) return null
+
+  const id = normalizeShopifyVariantId(getString(value, 'variant_id'))
+
+  if (!id) return null
+
+  const quantity = parseNumber(value.quantity_total)
+  const imageUrl = normalizeImageUrl(getString(value, 'image_link'))
+  const image: ShopifyImage | null = imageUrl
+    ? {
+        url: imageUrl,
+        altText: cleanText(getString(value, 'image_alt')) ?? null,
+        width: 640,
+        height: 640,
+      }
+    : null
+
+  return {
+    id,
+    title: createVariantTitle(getRecord(value, 'options')),
+    availableForSale: parseBoolean(value.available) ?? (quantity ?? 0) > 0,
+    quantityAvailable: quantity,
+    price: normalizePrice(value.price),
+    quantityPriceBreaks: [],
+    image,
+  }
+}
+
+function createFallbackVariant(
+  record: Record<string, unknown>,
+): ProductVariant | null {
+  const id = normalizeShopifyVariantId(getString(record, 'add_to_cart_id'))
+
+  if (!id) return null
+
+  const quantity = parseNumber(record.quantity_total)
+
+  return {
+    id,
+    title: 'Default Title',
+    availableForSale: parseAvailability(record) ?? true,
+    quantityAvailable: quantity,
+    price: normalizePrice(record.price),
+    quantityPriceBreaks: [],
+    image: null,
+  }
+}
+
+function createProductOptions(variants: unknown[]): ProductOption[] {
+  const optionsByName = new Map<string, Set<string>>()
+
+  variants.forEach((variant) => {
+    if (!isRecord(variant)) return
+
+    const options = getRecord(variant, 'options')
+
+    if (!options) return
+
+    Object.entries(options).forEach(([name, rawValue]) => {
+      if (typeof rawValue !== 'string' || !rawValue.trim()) return
+
+      const values = optionsByName.get(name) ?? new Set<string>()
+
+      values.add(rawValue.trim())
+      optionsByName.set(name, values)
+    })
+  })
+
+  return Array.from(optionsByName, ([name, values]) => ({
+    name,
+    values: Array.from(values),
+  }))
+}
+
+function parseTags(value: unknown): string[] {
+  const rawTags = Array.isArray(value) ? value : [value]
+
+  return rawTags
+    .filter((tag): tag is string => typeof tag === 'string')
+    .flatMap((tag) => tag.split('[:ATTR:]'))
+    .map((tag) => tag.trim())
+    .filter(Boolean)
+}
+
+function mapProduct(value: unknown): CollectionProductSummary | null {
   if (!isRecord(value)) return null
 
   const title = cleanText(getString(value, 'title'))
@@ -181,6 +313,13 @@ function mapProduct(value: unknown): ProductSummary | null {
 
   if (!title || !handle) return null
 
+  const rawVariants = getArray(value, 'shopify_variants')
+  const variants = rawVariants
+    .map(mapVariant)
+    .filter((variant): variant is ProductVariant => variant !== null)
+  const fallbackVariant =
+    variants.length === 0 ? createFallbackVariant(value) : null
+  const productVariants = fallbackVariant ? [fallbackVariant] : variants
   const imageUrl = normalizeImageUrl(getString(value, 'image_link'))
   const featuredImage: ShopifyImage | null = imageUrl
     ? {
@@ -196,11 +335,17 @@ function mapProduct(value: unknown): ProductSummary | null {
     handle,
     title,
     description: cleanText(getString(value, 'description')),
-    availableForSale: parseAvailability(value),
+    availableForSale:
+      parseAvailability(value) ??
+      productVariants.some((variant) => variant.availableForSale),
     featuredImage,
     priceRange: {
       minVariantPrice: normalizePrice(value.price),
     },
+    productType: cleanText(getString(value, 'product_type')) ?? '',
+    tags: parseTags(value.tags),
+    options: createProductOptions(rawVariants),
+    variants: productVariants,
   }
 }
 
@@ -383,7 +528,7 @@ function mapResponse(
     correctedQuery: getString(response, 'correctedQuery'),
     products: getArray(response, 'items')
       .map(mapProduct)
-      .filter((product): product is ProductSummary => product !== null),
+      .filter((product): product is CollectionProductSummary => product !== null),
     facets: getArray(response, 'facets')
       .map(mapFacet)
       .filter((facet): facet is SearchaniseFacet => facet !== null),
