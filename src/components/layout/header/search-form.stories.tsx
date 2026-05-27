@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import type { ProductSummary } from '@/lib/shopify/types'
 
-import { HeaderSearchForm } from './header-search-form'
+import { SearchForm } from './search-form'
 
 const suggestions: ProductSummary[] = [
   {
@@ -41,9 +41,9 @@ const suggestions: ProductSummary[] = [
   },
 ]
 
-const meta: Meta<typeof HeaderSearchForm> = {
+const meta: Meta<typeof SearchForm> = {
   title: 'Layout/Header/Search Form',
-  component: HeaderSearchForm,
+  component: SearchForm,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -59,7 +59,7 @@ const meta: Meta<typeof HeaderSearchForm> = {
 
 export default meta
 
-type Story = StoryObj<typeof HeaderSearchForm>
+type Story = StoryObj<typeof SearchForm>
 
 export const Empty: Story = {}
 

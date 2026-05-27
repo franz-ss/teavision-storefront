@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import {
   useEffect,
   useState,
@@ -13,10 +13,8 @@ import {
 
 import type { ProductSummary } from '@/lib/shopify/types'
 
-import {
-  HeaderSearchForm,
-  type HeaderSearchSuggestionsStatus,
-} from './header-search-form'
+import { SearchForm } from './search-form'
+import type { SearchSuggestionsStatus } from './search-types'
 
 const SUGGESTION_DEBOUNCE_MS = 180
 const MIN_SUGGESTION_QUERY_LENGTH = 2
@@ -25,19 +23,12 @@ type SearchSuggestionsResponse = {
   products: ProductSummary[]
 }
 
-export function HeaderSearch() {
-  const searchParams = useSearchParams()
-  const urlQuery = searchParams.get('q') ?? ''
-
-  return <HeaderSearchAutocomplete key={urlQuery} initialQuery={urlQuery} />
-}
-
-function HeaderSearchAutocomplete({ initialQuery }: { initialQuery: string }) {
+export function SearchAutocomplete({ initialQuery }: { initialQuery: string }) {
   const router = useRouter()
   const [inputValue, setInputValue] = useState(initialQuery)
   const [suggestions, setSuggestions] = useState<ProductSummary[]>([])
   const [suggestionsStatus, setSuggestionsStatus] =
-    useState<HeaderSearchSuggestionsStatus>('idle')
+    useState<SearchSuggestionsStatus>('idle')
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false)
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1)
 
@@ -149,7 +140,7 @@ function HeaderSearchAutocomplete({ initialQuery }: { initialQuery: string }) {
 
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     const input = event.currentTarget.querySelector<HTMLInputElement>(
-      '[data-header-search-input]',
+      '[data-search-input]',
     )
 
     if (event.key === 'Escape') {
@@ -196,7 +187,7 @@ function HeaderSearchAutocomplete({ initialQuery }: { initialQuery: string }) {
   }
 
   return (
-    <HeaderSearchForm
+    <SearchForm
       activeSuggestionIndex={activeSuggestionIndex}
       isSuggestionsOpen={isSuggestionsOpen}
       onBlur={handleBlur}

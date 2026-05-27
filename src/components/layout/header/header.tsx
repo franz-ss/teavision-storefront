@@ -3,32 +3,16 @@ import Link from 'next/link'
 import { Mail, Phone, ShoppingCart, User } from 'lucide-react'
 import { Suspense } from 'react'
 
-import { getCartAction } from '@/lib/cart/actions'
-import { cn } from '@/lib/utils'
-
-import { HeaderMegaNav, HeaderMobileMegaNav } from './header-mega-nav'
-import { HeaderSearch } from './header-search'
-import { HeaderSearchForm } from './header-search-form'
+import { CartCount } from './cart-count'
+import { MegaNav, MobileMegaNav } from './mega-nav'
+import { Search } from './search'
+import { SearchForm } from './search-form'
 
 const ACTION_LINK_CLASS =
   'type-label focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
 
 const ANNOUNCEMENT_LINK_CLASS =
   'focus-visible:ring-ring focus-visible:ring-offset-brand inline-flex min-h-11 items-center gap-1 rounded-md text-on-brand underline-offset-4 transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-8'
-
-async function CartCount() {
-  const cart = await getCartAction()
-  const count = cart?.totalQuantity ?? 0
-
-  if (count === 0) return null
-
-  return (
-    <span className="type-caption bg-action-primary text-action-primary-text absolute -top-1 -right-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1">
-      {count}
-      <span className="sr-only"> items in cart</span>
-    </span>
-  )
-}
 
 export function Header() {
   return (
@@ -84,20 +68,20 @@ export function Header() {
         </Link>
 
         <div className="col-span-2 row-start-2 min-w-0 lg:col-span-1 lg:col-start-2 lg:row-start-1">
-          <Suspense fallback={<HeaderSearchForm />}>
-            <HeaderSearch />
+          <Suspense fallback={<SearchForm />}>
+            <Search />
           </Suspense>
         </div>
 
         <div className="col-start-2 row-start-1 flex shrink-0 items-center justify-end gap-2 lg:col-start-3">
           <a
             href="https://mrtea.com.au/account/login"
-            className={cn(ACTION_LINK_CLASS, '')}
+            className={ACTION_LINK_CLASS}
           >
             <User className="size-4" aria-hidden="true" strokeWidth={1.8} />
             <span className="sr-only">Log in</span>
           </a>
-          <Link href="/cart" className={cn(ACTION_LINK_CLASS, '')}>
+          <Link href="/cart" className={ACTION_LINK_CLASS}>
             <ShoppingCart
               className="size-4"
               aria-hidden="true"
@@ -113,11 +97,11 @@ export function Header() {
 
       <div className="border-subtle hidden border-t lg:block">
         <div className="max-w-wide mx-auto flex justify-center px-8">
-          <HeaderMegaNav />
+          <MegaNav />
         </div>
       </div>
 
-      <HeaderMobileMegaNav />
+      <MobileMegaNav />
     </header>
   )
 }

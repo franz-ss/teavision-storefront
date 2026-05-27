@@ -1,51 +1,23 @@
-import Form from 'next/form'
 import Image from 'next/image'
 import Link from 'next/link'
-import { LoaderCircle, Search } from 'lucide-react'
-import type {
-  ChangeEventHandler,
-  FocusEventHandler,
-  FormEventHandler,
-  KeyboardEventHandler,
-  MouseEventHandler,
-} from 'react'
+import { LoaderCircle } from 'lucide-react'
+import type { MouseEventHandler } from 'react'
 
-import { IconButton, Price, TextInput } from '@/components/ui'
+import { Price } from '@/components/ui'
 import type { ProductSummary } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
 
-export type HeaderSearchSuggestionsStatus =
-  | 'idle'
-  | 'loading'
-  | 'results'
-  | 'empty'
-  | 'error'
-
-type HeaderSearchFormProps = {
-  activeSuggestionIndex?: number
-  className?: string
-  defaultQuery?: string
-  isSuggestionsOpen?: boolean
-  onBlur?: FocusEventHandler<HTMLFormElement>
-  onInputChange?: ChangeEventHandler<HTMLInputElement>
-  onInputFocus?: FocusEventHandler<HTMLInputElement>
-  onKeyDown?: KeyboardEventHandler<HTMLFormElement>
-  onSubmit?: FormEventHandler<HTMLFormElement>
-  onSuggestionMouseDown?: MouseEventHandler<HTMLAnchorElement>
-  onSuggestionMouseEnter?: (index: number) => void
-  suggestions?: ProductSummary[]
-  suggestionsStatus?: HeaderSearchSuggestionsStatus
-  value?: string
-}
-
-const SUGGESTIONS_PANEL_ID = 'site-search-suggestions'
-const SUGGESTIONS_LISTBOX_ID = 'site-search-suggestions-listbox'
+import {
+  SUGGESTIONS_LISTBOX_ID,
+  SUGGESTIONS_PANEL_ID,
+} from './search-constants'
+import type { SearchSuggestionsStatus } from './search-types'
 
 function getSizedImageUrl(url: string, width: number): string {
   return `${url}${url.includes('?') ? '&' : '?'}width=${width}`
 }
 
-function HeaderSearchSuggestions({
+export function SearchSuggestions({
   activeSuggestionIndex = -1,
   onSuggestionMouseDown,
   onSuggestionMouseEnter,
@@ -56,7 +28,7 @@ function HeaderSearchSuggestions({
   onSuggestionMouseDown?: MouseEventHandler<HTMLAnchorElement>
   onSuggestionMouseEnter?: (index: number) => void
   suggestions: ProductSummary[]
-  status: HeaderSearchSuggestionsStatus
+  status: SearchSuggestionsStatus
 }) {
   return (
     <div
@@ -190,87 +162,5 @@ function HeaderSearchSuggestions({
         </ul>
       )}
     </div>
-  )
-}
-
-export function HeaderSearchForm({
-  activeSuggestionIndex = -1,
-  className,
-  defaultQuery = '',
-  isSuggestionsOpen = false,
-  onBlur,
-  onInputChange,
-  onInputFocus,
-  onKeyDown,
-  onSubmit,
-  onSuggestionMouseDown,
-  onSuggestionMouseEnter,
-  suggestions = [],
-  suggestionsStatus = 'idle',
-  value,
-}: HeaderSearchFormProps) {
-  const activeDescendant =
-    isSuggestionsOpen &&
-    suggestionsStatus === 'results' &&
-    activeSuggestionIndex >= 0
-      ? `${SUGGESTIONS_LISTBOX_ID}-${activeSuggestionIndex}`
-      : undefined
-  const shouldShowSuggestions =
-    isSuggestionsOpen && suggestionsStatus !== 'idle'
-  const controls =
-    suggestionsStatus === 'results' && suggestions.length > 0
-      ? SUGGESTIONS_LISTBOX_ID
-      : undefined
-
-  return (
-    <Form
-      action="/search"
-      role="search"
-      aria-label="Site search"
-      className={cn('relative w-full', className)}
-      onBlur={onBlur}
-      onKeyDown={onKeyDown}
-      onSubmit={onSubmit}
-    >
-      <TextInput
-        key={value === undefined ? defaultQuery : undefined}
-        role="combobox"
-        aria-label="Search products and articles"
-        aria-autocomplete="list"
-        aria-controls={controls}
-        aria-expanded={isSuggestionsOpen}
-        aria-activedescendant={activeDescendant}
-        autoComplete="off"
-        className="border-default bg-canvas min-h-12 rounded-lg py-0 pr-12 pl-5"
-        data-header-search-input
-        defaultValue={value === undefined ? defaultQuery : undefined}
-        enterKeyHint="search"
-        inputMode="search"
-        name="q"
-        onChange={onInputChange}
-        onFocus={onInputFocus}
-        placeholder="Find products and articles"
-        type="search"
-        value={value}
-      />
-      <IconButton
-        type="submit"
-        variant="ghost"
-        size="sm"
-        className="absolute top-1/2 right-1 size-10 -translate-y-1/2"
-        aria-label="Submit search"
-      >
-        <Search className="size-4" aria-hidden="true" strokeWidth={1.8} />
-      </IconButton>
-      {shouldShowSuggestions && (
-        <HeaderSearchSuggestions
-          activeSuggestionIndex={activeSuggestionIndex}
-          onSuggestionMouseDown={onSuggestionMouseDown}
-          onSuggestionMouseEnter={onSuggestionMouseEnter}
-          suggestions={suggestions}
-          status={suggestionsStatus}
-        />
-      )}
-    </Form>
   )
 }
