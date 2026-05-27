@@ -3,21 +3,21 @@ import Link from 'next/link'
 
 import { Card, Section } from '@/components/ui'
 
-const WHOLESALE_STATS = [
+const STATS = [
   { stat: '1,000+', label: 'Ingredients' },
   { stat: '500+', label: 'Certified Organic' },
   { stat: '15+', label: 'Countries sourced' },
   { stat: '15+', label: 'Industry awards' },
 ]
 
-const WHOLESALE_INCLUSIONS = [
+const INCLUSIONS = [
   'Trade pricing on commercial bulk orders',
   'Custom blending and private label pathways',
   'HACCP and ACO certified supply conversations',
   'Catalogue support, sample packs, and account guidance',
 ]
 
-const WHOLESALE_PATHS = [
+const PATHS = [
   {
     title: 'Custom blending',
     body: 'Develop signature blends with product development support and practical commercial guidance.',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/pages/wholesale' },
 }
 
-export default function WholesalePage() {
+export default function Page() {
   return (
     <>
       <Section.Root tone="sunken" className="border-default border-b">
@@ -98,7 +98,7 @@ export default function WholesalePage() {
             </div>
 
             <dl className="border-default bg-surface grid grid-cols-2 gap-px overflow-hidden rounded-lg border">
-              {WHOLESALE_STATS.map(({ stat, label }) => (
+              {STATS.map(({ stat, label }) => (
                 <div key={label} className="bg-surface p-4">
                   <dt className="type-caption text-muted">{label}</dt>
                   <dd className="type-heading-03 text-brand mt-2">{stat}</dd>
@@ -121,7 +121,7 @@ export default function WholesalePage() {
               role="list"
               aria-label="Wholesale service pathways"
             >
-              {WHOLESALE_PATHS.map((path) => (
+              {PATHS.map((path) => (
                 <Card as="li" key={path.title} interactive className="h-full">
                   <Link
                     href={path.href}
@@ -140,7 +140,7 @@ export default function WholesalePage() {
           <aside className="border-default border-y py-6">
             <p className="type-eyebrow text-muted">What&rsquo;s included</p>
             <ul className="mt-5 grid gap-4" role="list">
-              {WHOLESALE_INCLUSIONS.map((item) => (
+              {INCLUSIONS.map((item) => (
                 <li key={item} className="type-body-sm flex gap-3">
                   <span
                     className="bg-brand mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
