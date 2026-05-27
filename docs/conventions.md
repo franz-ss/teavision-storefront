@@ -12,6 +12,7 @@ Canonical reference for this codebase. Check here before adding files.
 | `src/components/layout/`           | Page structure shells — Header, Footer, nav                              | Feature components, data fetching          |
 | `src/components/product/`          | Product-domain feature components                                        | Reusable primitives, Shopify queries       |
 | `src/components/collection/`       | Collection-domain feature components                                     | Reusable primitives                        |
+| `src/components/search/`           | Search-page feature components, facets, sorting, and result presentation | Reusable primitives, data fetching         |
 | `src/components/cart/`             | Cart-domain feature components                                           | Reusable primitives                        |
 | `src/components/contact/`          | Contact-page feature components and enquiry form UI                      | Reusable primitives, Server Actions        |
 | `src/components/homepage/`         | Homepage feature sections, homepage-only UI helpers, and static content  | Reusable primitives, data fetching         |
