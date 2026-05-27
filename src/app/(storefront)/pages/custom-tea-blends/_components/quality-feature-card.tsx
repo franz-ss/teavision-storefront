@@ -1,0 +1,12 @@
+import { Card } from '@/components/ui'
+
+import type { QualityCard } from '../_lib/data'
+
+export function QualityFeatureCard({ card }: { card: QualityCard }) {
+  return (
+    <Card as="article" padding="md" className="h-full">
+      <h3 className="type-heading-05 text-strong">{card.title}</h3>
+      <p className="type-body-sm text-muted mt-3">{card.description}</p>
+    </Card>
+  )
+}

@@ -5,13 +5,13 @@ import {
 } from '@/lib/contact/custom-tea-blend'
 import { getSiteUrl } from '@/lib/seo/site-url'
 
-import { FAQS } from './custom-tea-blends-data'
+import { FAQS } from '../_lib/data'
 
 function serializeJsonLd(value: unknown): string {
   return (JSON.stringify(value) ?? '').replace(/</g, '\\u003c')
 }
 
-export function CustomTeaBlendJsonLd() {
+export function JsonLd() {
   const pageUrl = getSiteUrl(CUSTOM_TEA_BLEND_PAGE_PATH)
   const jsonLd = {
     '@context': 'https://schema.org',

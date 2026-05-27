@@ -1,6 +1,6 @@
 import { Accordion, Section } from '@/components/ui'
 
-import { FAQS } from './custom-tea-blends-data'
+import { FAQS } from '../_lib/data'
 
 export function FaqSection() {
   return (

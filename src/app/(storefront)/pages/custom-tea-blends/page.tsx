@@ -6,7 +6,7 @@ import {
   CUSTOM_TEA_BLEND_PAGE_PATH,
 } from '@/lib/contact/custom-tea-blend'
 
-import { CustomTeaBlendsPageContent } from './custom-tea-blends-page'
+import { PageContent } from './_components/page-content'
 
 export const metadata: Metadata = {
   title: CUSTOM_TEA_BLEND_META_TITLE,
@@ -20,6 +20,6 @@ export const metadata: Metadata = {
   alternates: { canonical: CUSTOM_TEA_BLEND_PAGE_PATH },
 }
 
-export default function CustomTeaBlendsPage() {
-  return <CustomTeaBlendsPageContent />
+export default function Page() {
+  return <PageContent />
 }

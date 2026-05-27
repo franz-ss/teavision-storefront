@@ -3,12 +3,12 @@ import { Phone } from 'lucide-react'
 import { Card, Section } from '@/components/ui'
 import { sendCustomTeaBlendFormAction } from '@/lib/contact/actions'
 
-import { CustomTeaBlendForm } from './custom-tea-blend-form'
+import { Form } from './form'
 
 export function CtaSection() {
   return (
     <Section.Root
-      id="custom-tea-blend-brief"
+      id="blend-brief"
       tone="sunken"
       className="border-default scroll-mt-24 border-y"
     >
@@ -48,7 +48,7 @@ export function CtaSection() {
           </div>
 
           <Card padding="lg">
-            <CustomTeaBlendForm action={sendCustomTeaBlendFormAction} />
+            <Form action={sendCustomTeaBlendFormAction} />
           </Card>
         </div>
       </Section.Container>

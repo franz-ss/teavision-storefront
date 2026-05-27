@@ -1,15 +1,7 @@
-import { Card, Section } from '@/components/ui'
+import { Section } from '@/components/ui'
 
-import { QUALITY_CARDS, type QualityCard } from './custom-tea-blends-data'
-
-function QualityFeatureCard({ card }: { card: QualityCard }) {
-  return (
-    <Card as="article" padding="md" className="h-full">
-      <h3 className="type-heading-05 text-strong">{card.title}</h3>
-      <p className="type-body-sm text-muted mt-3">{card.description}</p>
-    </Card>
-  )
-}
+import { QUALITY_CARDS } from '../_lib/data'
+import { QualityFeatureCard } from './quality-feature-card'
 
 export function QualitySection() {
   return (

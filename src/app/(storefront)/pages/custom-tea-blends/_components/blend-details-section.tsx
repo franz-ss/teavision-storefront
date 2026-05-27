@@ -1,27 +1,7 @@
-import { Card, Section } from '@/components/ui'
+import { Section } from '@/components/ui'
 
-import {
-  CAPABILITY_CARDS,
-  type CustomTeaBlendCard,
-} from './custom-tea-blends-data'
-import { BlendImage } from './blend-image'
-
-function BlendDetailCard({ card }: { card: CustomTeaBlendCard }) {
-  return (
-    <Card as="article" overflow="hidden" className="h-full">
-      <div className="aspect-4/3">
-        <BlendImage
-          image={card.image}
-          sizes="(min-width: 1024px) 24rem, (min-width: 640px) 50vw, 100vw"
-        />
-      </div>
-      <div className="p-5">
-        <h3 className="type-heading-05 text-strong">{card.title}</h3>
-        <p className="type-body-sm text-muted mt-3">{card.description}</p>
-      </div>
-    </Card>
-  )
-}
+import { CAPABILITY_CARDS } from '../_lib/data'
+import { BlendDetailCard } from './blend-detail-card'
 
 export function BlendDetailsSection() {
   return (

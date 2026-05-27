@@ -1,6 +1,6 @@
 import { Button, Card, Section } from '@/components/ui'
 
-import { PROCESS_STEPS } from './custom-tea-blends-data'
+import { PROCESS_STEPS } from '../_lib/data'
 
 export function ProcessSection() {
   return (
@@ -13,7 +13,7 @@ export function ProcessSection() {
               From idea to shelf in six practical steps.
             </h2>
           </div>
-          <Button href="#custom-tea-blend-brief" variant="secondary">
+          <Button href="#blend-brief" variant="secondary">
             Start a brief
           </Button>
         </div>

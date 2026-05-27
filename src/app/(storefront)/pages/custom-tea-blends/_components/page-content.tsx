@@ -1,16 +1,16 @@
 import { BlendDetailsSection } from './blend-details-section'
 import { CtaSection } from './cta-section'
-import { CustomTeaBlendJsonLd } from './custom-tea-blend-json-ld'
+import { JsonLd } from './json-ld'
 import { FaqSection } from './faq-section'
 import { HeroSection } from './hero-section'
 import { IntroSection } from './intro-section'
 import { ProcessSection } from './process-section'
 import { QualitySection } from './quality-section'
 
-export function CustomTeaBlendsPageContent() {
+export function PageContent() {
   return (
     <>
-      <CustomTeaBlendJsonLd />
+      <JsonLd />
       <HeroSection />
       <IntroSection />
       <BlendDetailsSection />

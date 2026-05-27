@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useRef, useState } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
 import { Mail } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -16,36 +16,17 @@ import {
   CUSTOM_TEA_BLEND_PACK_FORMATS,
 } from '@/lib/contact/custom-tea-blend'
 
-type CustomTeaBlendActionResult = {
-  success: boolean
-  error?: string
-}
+import type { Action, ActionResult } from './form-types'
 
-type CustomTeaBlendFormProps = {
-  action: (
-    previousState: CustomTeaBlendActionResult,
-    formData: FormData,
-  ) => Promise<CustomTeaBlendActionResult>
-}
+const INITIAL_STATE: ActionResult = { success: false }
 
-const INITIAL_STATE: CustomTeaBlendActionResult = { success: false }
-
-export function CustomTeaBlendForm({ action }: CustomTeaBlendFormProps) {
-  const [formKey, setFormKey] = useState(0)
-
-  return (
-    <CustomTeaBlendFormFields
-      key={formKey}
-      action={action}
-      onReset={() => setFormKey((key) => key + 1)}
-    />
-  )
-}
-
-function CustomTeaBlendFormFields({
+export function FormFields({
   action,
   onReset,
-}: CustomTeaBlendFormProps & { onReset: () => void }) {
+}: {
+  action: Action
+  onReset: () => void
+}) {
   const errorRef = useRef<HTMLParagraphElement>(null)
   const [state, formAction, isPending] = useActionState(action, INITIAL_STATE)
 
@@ -90,9 +71,9 @@ function CustomTeaBlendFormFields({
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
-          <FormLabel htmlFor="custom-blend-name">Full name</FormLabel>
+          <FormLabel htmlFor="brief-name">Full name</FormLabel>
           <TextInput
-            id="custom-blend-name"
+            id="brief-name"
             name="name"
             type="text"
             autoComplete="name"
@@ -102,9 +83,9 @@ function CustomTeaBlendFormFields({
         </div>
 
         <div className="grid gap-2">
-          <FormLabel htmlFor="custom-blend-email">Email</FormLabel>
+          <FormLabel htmlFor="brief-email">Email</FormLabel>
           <TextInput
-            id="custom-blend-email"
+            id="brief-email"
             name="email"
             type="email"
             inputMode="email"
@@ -116,9 +97,9 @@ function CustomTeaBlendFormFields({
         </div>
 
         <div className="grid gap-2">
-          <FormLabel htmlFor="custom-blend-company">Company</FormLabel>
+          <FormLabel htmlFor="brief-company">Company</FormLabel>
           <TextInput
-            id="custom-blend-company"
+            id="brief-company"
             name="company"
             type="text"
             autoComplete="organization"
@@ -127,9 +108,9 @@ function CustomTeaBlendFormFields({
         </div>
 
         <div className="grid gap-2">
-          <FormLabel htmlFor="custom-blend-phone">Phone</FormLabel>
+          <FormLabel htmlFor="brief-phone">Phone</FormLabel>
           <TextInput
-            id="custom-blend-phone"
+            id="brief-phone"
             name="phone"
             type="tel"
             inputMode="tel"
@@ -139,9 +120,9 @@ function CustomTeaBlendFormFields({
         </div>
 
         <div className="grid gap-2">
-          <FormLabel htmlFor="custom-blend-category">Blend category</FormLabel>
+          <FormLabel htmlFor="brief-category">Blend category</FormLabel>
           <Select
-            id="custom-blend-category"
+            id="brief-category"
             name="blendCategory"
             defaultValue={CUSTOM_TEA_BLEND_CATEGORIES[0]}
           >
@@ -152,9 +133,9 @@ function CustomTeaBlendFormFields({
         </div>
 
         <div className="grid gap-2">
-          <FormLabel htmlFor="custom-blend-format">Preferred format</FormLabel>
+          <FormLabel htmlFor="brief-format">Preferred format</FormLabel>
           <Select
-            id="custom-blend-format"
+            id="brief-format"
             name="packFormat"
             defaultValue={CUSTOM_TEA_BLEND_PACK_FORMATS[0]}
           >
@@ -194,9 +175,9 @@ function CustomTeaBlendFormFields({
       </fieldset>
 
       <div className="grid gap-2">
-        <FormLabel htmlFor="custom-blend-brief">Project brief</FormLabel>
+        <FormLabel htmlFor="brief-notes">Project brief</FormLabel>
         <Textarea
-          id="custom-blend-brief"
+          id="brief-notes"
           name="brief"
           rows={6}
           required
@@ -206,9 +187,9 @@ function CustomTeaBlendFormFields({
       </div>
 
       <div hidden>
-        <label htmlFor="custom-blend-website">Website</label>
+        <label htmlFor="brief-website">Website</label>
         <input
-          id="custom-blend-website"
+          id="brief-website"
           name="website"
           type="text"
           tabIndex={-1}
@@ -219,7 +200,7 @@ function CustomTeaBlendFormFields({
       {state.error && (
         <p
           ref={errorRef}
-          id="custom-blend-form-error"
+          id="brief-form-error"
           role="alert"
           tabIndex={-1}
           className="type-body-sm border-danger-border bg-danger-bg text-danger-text rounded-md border p-4"
@@ -238,9 +219,7 @@ function CustomTeaBlendFormFields({
             size="lg"
             isLoading={isPending}
             disabled={isPending}
-            aria-describedby={
-              state.error ? 'custom-blend-form-error' : undefined
-            }
+            aria-describedby={state.error ? 'brief-form-error' : undefined}
           >
             <Mail className="size-4" aria-hidden="true" />
             {isPending ? 'Sending brief…' : 'Send custom blend brief'}

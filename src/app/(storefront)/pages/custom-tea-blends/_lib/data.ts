@@ -1,37 +1,37 @@
-export type CustomTeaBlendImage = {
+export type ImageAsset = {
   src: string
   alt: string
   width: number
   height: number
 }
 
-export type CustomTeaBlendCard = {
+export type CapabilityCard = {
   title: string
   description: string
-  image: CustomTeaBlendImage
+  image: ImageAsset
 }
 
-export type CustomTeaBlendTextCard = {
+export type TextCard = {
   title: string
   description: string
 }
 
 export type QualityCardIcon = 'naturopath' | 'certification' | 'commercial'
 
-export type QualityCard = CustomTeaBlendTextCard & {
+export type QualityCard = TextCard & {
   icon: QualityCardIcon
 }
 
 const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
 
-export const CUSTOM_TEA_BLEND_HERO_IMAGE = {
+export const HERO_IMAGE = {
   src: `${SHOPIFY_FILE_BASE}/rose_and_green_tea.png?v=1761280323`,
   alt: 'Green tea blended with rose petals',
   width: 1400,
   height: 900,
-} satisfies CustomTeaBlendImage
+} satisfies ImageAsset
 
-export const CUSTOM_TEA_BLEND_THUMBNAILS = [
+export const THUMBNAILS = [
   {
     src: `${SHOPIFY_FILE_BASE}/LGandG.png?v=1761280324`,
     alt: 'Lemongrass, ginger, and turmeric blend',
@@ -56,7 +56,7 @@ export const CUSTOM_TEA_BLEND_THUMBNAILS = [
     width: 900,
     height: 600,
   },
-] satisfies CustomTeaBlendImage[]
+] satisfies ImageAsset[]
 
 export const HERO_PROOF_POINTS = [
   'Low MOQ pathways',
@@ -131,7 +131,7 @@ export const CAPABILITY_CARDS = [
       height: 900,
     },
   },
-] satisfies CustomTeaBlendCard[]
+] satisfies CapabilityCard[]
 
 export const QUALITY_CARDS = [
   {
@@ -179,7 +179,7 @@ export const PROCESS_STEPS = [
     title: 'Dispatch',
     description: 'National delivery, export preparation, and 3PL support.',
   },
-] satisfies CustomTeaBlendTextCard[]
+] satisfies TextCard[]
 
 export const FAQS = [
   {
@@ -202,4 +202,4 @@ export const FAQS = [
     description:
       'Yes. The team can support export documentation and global dispatch planning.',
   },
-] satisfies CustomTeaBlendTextCard[]
+] satisfies TextCard[]

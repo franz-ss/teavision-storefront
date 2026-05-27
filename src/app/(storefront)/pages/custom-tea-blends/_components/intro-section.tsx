@@ -2,7 +2,7 @@ import { CheckCircle2 } from 'lucide-react'
 
 import { Section } from '@/components/ui'
 
-import { VALUE_POINTS } from './custom-tea-blends-data'
+import { VALUE_POINTS } from '../_lib/data'
 
 export function IntroSection() {
   return (
