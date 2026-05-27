@@ -9,18 +9,14 @@ import {
   type ShopifyPage,
 } from '@/lib/shopify/operations/storefront-page'
 
-import { getStaticPageMetaDescription } from './page-formatting'
-import { StaticPageContent } from './static-page-content'
+import { Content } from './_components/content'
+import { getMetaDescription } from './_lib/page-formatting'
 
 type Props = {
   params: Promise<{ slug: string[] }>
 }
 
-const STATIC_PAGE_HANDLES = new Set([
-  'contact',
-  'custom-tea-blends',
-  'wholesale',
-])
+const RESERVED_HANDLES = new Set(['contact', 'custom-tea-blends', 'wholesale'])
 
 async function getRequestedPage(
   params: Props['params'],
@@ -40,7 +36,7 @@ export async function generateStaticParams() {
   const pages = await getPages()
 
   return pages
-    .filter((page) => !STATIC_PAGE_HANDLES.has(page.handle))
+    .filter((page) => !RESERVED_HANDLES.has(page.handle))
     .map((page) => ({
       slug: [page.handle],
     }))
@@ -53,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Page Not Found' }
   }
 
-  const description = getStaticPageMetaDescription(page)
+  const description = getMetaDescription(page)
   const title = page.seo.title ?? page.title
   const canonical = getPagePath(page.handle)
 
@@ -70,12 +66,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function StaticPage({ params }: Props) {
+export default async function Page({ params }: Props) {
   const page = await getRequestedPage(params)
 
   if (!page) {
     notFound()
   }
 
-  return <StaticPageContent page={page} />
+  return <Content page={page} />
 }

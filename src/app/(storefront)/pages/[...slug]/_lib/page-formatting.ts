@@ -5,24 +5,22 @@ const PAGE_DESCRIPTION_MAX_LENGTH = 180
 
 type PageDescriptionSource = Pick<ShopifyPage, 'body'>
 
-export function getStaticPageDescription({
-  body,
-}: PageDescriptionSource): string {
+export function getDescription({ body }: PageDescriptionSource): string {
   return truncateDescription(
     plainTextFromHtml(body),
     PAGE_DESCRIPTION_MAX_LENGTH,
   )
 }
 
-export function getStaticPageLeadDescription(page: ShopifyPage): string {
+export function getLeadDescription(page: ShopifyPage): string {
   const seoDescription = plainTextFromHtml(page.seo.description ?? '')
 
-  return seoDescription || getStaticPageDescription(page)
+  return seoDescription || getDescription(page)
 }
 
-export function getStaticPageMetaDescription(page: ShopifyPage): string {
+export function getMetaDescription(page: ShopifyPage): string {
   const fallbackDescription =
-    getStaticPageLeadDescription(page) ||
+    getLeadDescription(page) ||
     `${page.title} from Teavision, Australia's wholesale tea, herb, and spice supplier.`
 
   return truncateMetaDescription(fallbackDescription)
