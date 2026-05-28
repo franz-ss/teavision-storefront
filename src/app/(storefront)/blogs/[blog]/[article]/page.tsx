@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
+import { PortableTextContent } from '@/components/blog'
 import { RichText } from '@/components/ui/rich-text'
 import { Card, Section } from '@/components/ui'
 import {
@@ -33,22 +34,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description = articleDescription(article)
   const title = article.seo.title ?? article.title
-  const canonical = getArticlePath(normalizedBlog, handle)
+  const canonical =
+    article.seo.canonicalPath ?? getArticlePath(normalizedBlog, handle)
+  const openGraphImage = article.seo.ogImage ?? article.featuredImage
 
   return {
     title,
     description,
+    robots: article.seo.noIndex ? { index: false, follow: false } : undefined,
     openGraph: {
       title,
       description,
       url: canonical,
       type: 'article',
       publishedTime: article.publishedAt,
-      images: article.featuredImage
+      images: openGraphImage
         ? [
             {
-              url: article.featuredImage.url,
-              alt: article.featuredImage.altText ?? article.title,
+              url: openGraphImage.url,
+              alt: openGraphImage.altText ?? article.title,
             },
           ]
         : undefined,
@@ -84,7 +88,7 @@ async function ArticleContent({ params }: Props) {
     headline: article.title,
     description,
     datePublished: article.publishedAt,
-    dateModified: article.publishedAt,
+    dateModified: article.updatedAt,
     author: {
       '@type': 'Person',
       name: article.authorName ?? 'Teavision Team',
@@ -163,7 +167,7 @@ async function ArticleContent({ params }: Props) {
                 alt={article.featuredImage.altText ?? article.title}
                 width={article.featuredImage.width}
                 height={article.featuredImage.height}
-                priority
+                preload
                 sizes="(min-width: 1024px) 896px, 100vw"
                 className="h-auto w-full object-cover"
               />
@@ -176,11 +180,18 @@ async function ArticleContent({ params }: Props) {
           </Card>
         )}
 
-        <RichText
-          html={contentHtml}
-          variant="article"
-          className="mx-auto mt-10 max-w-prose"
-        />
+        {article.body.length > 0 ? (
+          <PortableTextContent
+            value={article.body}
+            className="mx-auto mt-10 max-w-prose"
+          />
+        ) : (
+          <RichText
+            html={contentHtml}
+            variant="article"
+            className="mx-auto mt-10 max-w-prose"
+          />
+        )}
 
         {(newerArticle || olderArticle) && (
           <nav
@@ -264,7 +275,7 @@ export default function ArticlePage({ params }: Props) {
           className="type-body text-muted mx-auto max-w-4xl px-4 py-12"
           aria-live="polite"
         >
-          Loading article...
+          Loading article…
         </div>
       }
     >

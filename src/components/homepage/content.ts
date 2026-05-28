@@ -40,14 +40,6 @@ export type Testimonial = {
   quote: string
 }
 
-export type JournalArticle = {
-  image: ImageAsset
-  date: string
-  title: string
-  excerpt: string
-  href: string
-}
-
 export type FaqItem = {
   question: string
   answer: string
@@ -76,8 +68,6 @@ export const ctaCatalogueData: CtaProps = {
 }
 
 const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
-const SHOPIFY_ARTICLE_BASE =
-  'https://cdn.shopify.com/s/files/1/0786/8339/articles'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
 
@@ -457,90 +447,6 @@ export const TESTIMONIALS = [
       'Brewing Better Together with Teavision. As Australia’s leading “better-for-you” beverage manufacturer, here at Remedy Drinks we consider quality, consistency, and trusted partnerships to be at the heart of everything we do. Our long-standing relationship with Teavision has been vital in supporting our growth and upholding the high standards our consumers expect. Teavision reliably provides us with high-quality ingredients which are key to our product range. Their exceptional service and support is always responsive, proactive, and collaborative, making them a true partner in our success. Thanks to their efficient sourcing strategies and deep understanding of our supply chain, we’ve achieved significant cost savings without compromising quality. Their consistent, on-time, and in-full deliveries ensure uninterrupted production and guarantee our amazing drinks reach consumers exactly as intended. Teavision has made a powerful and positive impact on Remedy Drinks, helping us scale sustainably, control costs, and strengthen our supply chain. We value this partnership and look forward to many more years of successful collaboration.',
   },
 ] satisfies Testimonial[]
-
-export const JOURNAL_ARTICLES = [
-  {
-    image: {
-      src: `${SHOPIFY_ARTICLE_BASE}/woman_mixing_tea_ingredients.jpg?v=1776324634&width=440`,
-      alt: 'Woman mixing tea ingredients',
-      width: 440,
-      height: 293,
-    },
-    date: 'April 30, 2026',
-    title:
-      'How Cafés and Restaurants can Create Signature Blends Using Bulk Spices',
-    excerpt:
-      'The right combination of spices can transform any meal into an unforgettable experience, and a carefully crafted spice blend unique to your cafe or...',
-    href: '/blogs/teavision-blogs/how-cafes-and-restaurants-can-create-signature-blends-using-bulk-spices',
-  },
-  {
-    image: {
-      src: `${SHOPIFY_ARTICLE_BASE}/piles_of_spice.jpg?v=1776324548&width=440`,
-      alt: 'Piles of spice',
-      width: 440,
-      height: 293,
-    },
-    date: 'April 30, 2026',
-    title:
-      'Why Buying Spices in Bulk Helps Reduce Waste and Boost Profit Margins',
-    excerpt:
-      'Waste reduction and managing expenses are always at the forefront of any food business, just as much as maintaining quality. From restaurants to sp...',
-    href: '/blogs/teavision-blogs/why-buying-spices-in-bulk-helps-reduce-waste-and-boost-profit-margins',
-  },
-  {
-    image: {
-      src: `${SHOPIFY_ARTICLE_BASE}/spices_and_herbs_in_bowls.jpg?v=1776324467&width=440`,
-      alt: 'Spices and herbs in bowls',
-      width: 440,
-      height: 293,
-    },
-    date: 'April 23, 2026',
-    title: 'Wholesale Herbs and Spices: The Secret to Consistent Menu Flavour',
-    excerpt:
-      'In the competitive world of restaurants, consistency in your quality is key and diners expect their favourite dish to taste just as delicious every...',
-    href: '/blogs/teavision-blogs/wholesale-herbs-and-spices-the-secret-to-consistent-menu-flavour',
-  },
-  {
-    image: {
-      src: `${SHOPIFY_ARTICLE_BASE}/assortment_of_spices.jpg?v=1776324360&width=440`,
-      alt: 'Assortment of spices',
-      width: 440,
-      height: 293,
-    },
-    date: 'April 23, 2026',
-    title: 'How to Streamline Ingredient Costs with Bulk Spice Purchasing',
-    excerpt:
-      'For cafés, restaurants and food businesses, maintaining ingredient costs can be a challenge. Spices may seem like a small element of the budget, bu...',
-    href: '/blogs/teavision-blogs/how-to-streamline-ingredient-costs-with-bulk-spice-purchasing',
-  },
-  {
-    image: {
-      src: `${SHOPIFY_ARTICLE_BASE}/bottled_spices_in_jars_on_shelf.jpg?v=1776324381&width=440`,
-      alt: 'Bottled spices in jars on shelf',
-      width: 440,
-      height: 294,
-    },
-    date: 'April 16, 2026',
-    title: 'Essential Spices Every Café and Restaurant Should Keep in Stock',
-    excerpt:
-      'Running a café or restaurant isn’t just about great customer service and quality ingredients, it’s also about flavour and taste, and working with t...',
-    href: '/blogs/teavision-blogs/essential-spices-every-cafe-and-restaurant-should-keep-in-stock',
-  },
-  {
-    image: {
-      src: `${SHOPIFY_ARTICLE_BASE}/large_piles_of_spice_d7fdd254-e77d-4c21-b542-f5d46dc7b393.jpg?v=1776323431&width=440`,
-      alt: 'Large piles of spice',
-      width: 440,
-      height: 293,
-    },
-    date: 'April 16, 2026',
-    title:
-      'Understanding Spice Grades and Quality Standards for Wholesale Buyers',
-    excerpt:
-      'For wholesale buyers of spices in Australia, sourcing high-quality products from an experienced tea company is about a lot more than simply finding...',
-    href: '/blogs/teavision-blogs/understanding-spice-grades-and-quality-standards-for-wholesale-buyers',
-  },
-] satisfies JournalArticle[]
 
 export const FAQS = [
   {

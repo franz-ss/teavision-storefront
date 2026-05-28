@@ -28,7 +28,7 @@ export type ArticleCardProps = {
   publishedLabel: string
   variant?: ArticleCardVariant
   headingLevel?: 'h2' | 'h3'
-  priority?: boolean
+  preload?: boolean
   className?: string
 }
 
@@ -65,7 +65,7 @@ export function ArticleCard({
   publishedLabel,
   variant = 'default',
   headingLevel = 'h2',
-  priority = false,
+  preload = false,
   className,
 }: ArticleCardProps) {
   const isFeatured = variant === 'featured'
@@ -94,7 +94,7 @@ export function ArticleCard({
               alt={article.featuredImage.altText ?? article.title}
               width={article.featuredImage.width}
               height={article.featuredImage.height}
-              priority={priority}
+              preload={preload}
               sizes={imageSizes}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />

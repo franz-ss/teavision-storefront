@@ -31,7 +31,7 @@ export function FeaturedArticles({
                 publishedLabel={formatArticleDate(article.publishedAt)}
                 variant="featured"
                 headingLevel="h3"
-                priority={index === 0}
+                preload={index === 0}
               />
             </li>
           ))}

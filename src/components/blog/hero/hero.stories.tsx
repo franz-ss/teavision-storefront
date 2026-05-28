@@ -34,3 +34,29 @@ export const WithoutRss: Story = {
     searchAction: '/blogs/teavision-blogs',
   },
 }
+
+export const CmsContent: Story = {
+  args: {
+    title: 'Wholesale Tea Education for Sourcing Teams',
+    description:
+      'Sanity-authored listing copy can introduce a seasonal editorial focus while keeping search and feed actions available.',
+    image: {
+      url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/blog-hero.webp?v=1764582604&width=1600',
+      altText: 'Loose leaf tea on a tasting bench',
+      width: 1600,
+      height: 900,
+    },
+    rssHref: '/blogs/teavision-blogs/atom',
+    searchAction: '/blogs/teavision-blogs',
+  },
+}
+
+export const LongCmsCopy: Story = {
+  args: {
+    title:
+      'Wholesale Botanical Tea Intelligence for Product, Procurement, Compliance, and Brand Teams',
+    description:
+      'A deliberately long CMS description checks that the hero keeps a readable measure, wraps safely on small screens, and preserves the search workflow.',
+    searchAction: '/blogs/teavision-blogs',
+  },
+}

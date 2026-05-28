@@ -26,7 +26,10 @@ export async function ListingContent({ params, searchParams }: ListingProps) {
   const activeTag = findTagBySlug(tags, tag)
   if (tag && !activeTag) notFound()
 
-  const featuredArticles = getFeaturedArticles(blogData.articles)
+  const featuredArticles = getFeaturedArticles(
+    blogData.articles,
+    blogData.featuredArticles,
+  )
   const featuredIds = new Set(featuredArticles.map((article) => article.id))
   const filteredArticles = filterArticles({
     articles: blogData.articles,

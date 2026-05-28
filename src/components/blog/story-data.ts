@@ -15,6 +15,9 @@ export const sampleArticles: BlogArticleSummary[] = [
       title: 'The Complete Guide to Tea Bags',
       description:
         'Discover everything you need to know about tea bags, quality, and bulk purchasing.',
+      canonicalPath: null,
+      noIndex: false,
+      ogImage: null,
     },
     readingTimeMinutes: 5,
   },
@@ -32,6 +35,9 @@ export const sampleArticles: BlogArticleSummary[] = [
       title: 'Wholesale Japanese Tea',
       description:
         'Choose Japanese tea formats for cafes, retailers, and hospitality.',
+      canonicalPath: null,
+      noIndex: false,
+      ogImage: null,
     },
     readingTimeMinutes: 6,
   },
@@ -48,6 +54,9 @@ export const sampleArticles: BlogArticleSummary[] = [
     seo: {
       title: 'Best Herbal Tea Brands',
       description: 'Compare herbal tea suppliers and buying considerations.',
+      canonicalPath: null,
+      noIndex: false,
+      ogImage: null,
     },
     readingTimeMinutes: 4,
   },
