@@ -32,12 +32,16 @@ export async function generateListingMetadata({
   ].filter((part): part is string => Boolean(part))
   const title = titleParts.join(' | ') || blogData.title
   const description = blogData.seo.description ?? DEFAULT_LISTING_DESCRIPTION
-  const canonical = getListingHref({
-    blogHandle: normalizedBlog,
-    activeTag,
-    query: null,
-    page: currentPage,
-  })
+  const canonical =
+    !activeTag && currentPage === 1 && blogData.seo.canonicalPath
+      ? blogData.seo.canonicalPath
+      : getListingHref({
+          blogHandle: normalizedBlog,
+          activeTag,
+          query: null,
+          page: currentPage,
+        })
+  const noIndex = blogData.seo.noIndex || Boolean(q?.trim())
 
   return {
     title,
@@ -47,8 +51,18 @@ export async function generateListingMetadata({
       description,
       url: canonical,
       type: 'website',
+      images: blogData.seo.ogImage
+        ? [
+            {
+              url: blogData.seo.ogImage.url,
+              alt: blogData.seo.ogImage.altText ?? title,
+            },
+          ]
+        : undefined,
     },
     alternates: { canonical },
-    robots: q?.trim() ? { index: false, follow: true } : undefined,
+    robots: noIndex
+      ? { index: false, follow: !blogData.seo.noIndex }
+      : undefined,
   }
 }

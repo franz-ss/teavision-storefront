@@ -2,6 +2,7 @@ import {
   getArticlePath,
   getBlog,
   getBlogPath,
+  isLocalCanonicalPath,
   normalizeBlogHandle,
 } from '@/lib/blog/operations'
 
@@ -30,8 +31,16 @@ export async function GET(_request: Request, { params }: Props) {
   }
 
   const blogPath = getBlogPath(normalizedBlog)
-  const updated = blogData.articles[0]?.publishedAt ?? new Date().toISOString()
-  const entries = blogData.articles
+  const articles = blogData.articles.filter((article) => {
+    const localPath = getArticlePath(normalizedBlog, article.handle)
+
+    return (
+      !article.seo.noIndex &&
+      isLocalCanonicalPath(article.seo.canonicalPath, localPath, baseUrl)
+    )
+  })
+  const updated = articles[0]?.publishedAt ?? new Date().toISOString()
+  const entries = articles
     .map((article) => {
       const url = `${baseUrl}${getArticlePath(normalizedBlog, article.handle)}`
 

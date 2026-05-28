@@ -7,6 +7,7 @@ import {
   getBlogPath,
   getTagPath,
   getUniqueArticleTags,
+  isLocalCanonicalPath,
 } from '@/lib/blog/operations'
 import { getAllProducts } from '@/lib/shopify/operations/product'
 import { getCollections } from '@/lib/shopify/operations/collection'
@@ -22,12 +23,6 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
   },
   {
     url: `${baseUrl}/search`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: 0.5,
-  },
-  {
-    url: `${baseUrl}${getBlogPath(DEFAULT_BLOG_HANDLE)}`,
     lastModified: new Date(),
     changeFrequency: 'monthly',
     priority: 0.5,
@@ -75,29 +70,52 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   )
 
-  const articleUrls: MetadataRoute.Sitemap =
-    blog?.articles.map((article) => ({
-      url: `${baseUrl}${getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}`,
-      lastModified: new Date(article.publishedAt),
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    })) ?? []
+  const indexedArticles =
+    blog?.articles.filter((article) => {
+      const localPath = getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)
 
-  const latestArticleDate = blog?.articles[0]?.publishedAt
-    ? new Date(blog.articles[0].publishedAt)
+      return (
+        !article.seo.noIndex &&
+        isLocalCanonicalPath(article.seo.canonicalPath, localPath, baseUrl)
+      )
+    }) ?? []
+
+  const blogUrls: MetadataRoute.Sitemap =
+    blog && !blog.seo.noIndex
+      ? [
+          {
+            url: `${baseUrl}${getBlogPath(DEFAULT_BLOG_HANDLE)}`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.5,
+          },
+        ]
+      : []
+
+  const articleUrls: MetadataRoute.Sitemap = indexedArticles.map((article) => ({
+    url: `${baseUrl}${getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}`,
+    lastModified: new Date(article.publishedAt),
+    changeFrequency: 'monthly',
+    priority: 0.5,
+  }))
+
+  const latestArticleDate = indexedArticles[0]?.publishedAt
+    ? new Date(indexedArticles[0].publishedAt)
     : new Date()
 
-  const tagUrls: MetadataRoute.Sitemap = blog
-    ? getUniqueArticleTags(blog.articles).map((tag) => ({
-        url: `${baseUrl}${getTagPath(DEFAULT_BLOG_HANDLE, tag)}`,
-        lastModified: latestArticleDate,
-        changeFrequency: 'monthly',
-        priority: 0.4,
-      }))
-    : []
+  const tagUrls: MetadataRoute.Sitemap =
+    blog && !blog.seo.noIndex
+      ? getUniqueArticleTags(indexedArticles).map((tag) => ({
+          url: `${baseUrl}${getTagPath(DEFAULT_BLOG_HANDLE, tag)}`,
+          lastModified: latestArticleDate,
+          changeFrequency: 'monthly',
+          priority: 0.4,
+        }))
+      : []
 
   return [
     ...STATIC_PAGES,
+    ...blogUrls,
     ...productUrls,
     ...collectionUrls,
     ...articleUrls,
