@@ -1,36 +1,36 @@
+import type { PortableTextBlock } from '@portabletext/react'
+import type { SanityImageSource } from '@sanity/image-url'
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { shopifyFetch } from '@/lib/shopify/client'
 import {
-  GetArticleDocument,
-  GetBlogDocument,
-  type GetArticleQuery,
-  type GetBlogQuery,
-  type ShopifyImage,
-} from '@/lib/shopify/types'
+  blogArticleQuery,
+  blogListingQuery,
+  homepageBlogPostsQuery,
+} from '@/lib/sanity/queries/blog'
+import { getSanityImageUrl, sanityFetch } from '@/lib/sanity/client'
+import type {
+  SanityBlogPost,
+  SanityBlogPostSummary,
+  SanityBlogListingResult,
+  SanityBlogPostResult,
+  SanityImageWithAlt,
+  SanitySeo,
+} from '@/lib/sanity/types'
+import type { ShopifyImage } from '@/lib/shopify/types'
 
-const SHOPIFY_ARTICLE_PAGE_SIZE = 250
 const WORDS_PER_MINUTE = 220
+const FALLBACK_PUBLISHED_AT = '1970-01-01T00:00:00.000Z'
 
 export const DEFAULT_BLOG_HANDLE = 'teavision-blogs'
 export const LEGACY_BLOG_HANDLE = 'journal'
 export const ARTICLES_PER_PAGE = 6
 
-const FEATURED_ARTICLE_HANDLES = [
-  'the-complete-guide-to-tea-bags-types-quality-and-bulk-options',
-  'where-to-find-the-best-herbal-tea-brands',
-]
-
-type BlogNode = NonNullable<GetBlogQuery['blog']>
-type BlogArticleNode = BlogNode['articles']['edges'][number]['node']
-type ArticleNode = NonNullable<
-  NonNullable<GetArticleQuery['blog']>['articleByHandle']
->
-type CommentNode = ArticleNode['comments']['nodes'][number]
-
 export type BlogSeo = {
   title: string | null
   description: string | null
+  canonicalPath: string | null
+  noIndex: boolean
+  ogImage: ShopifyImage | null
 }
 
 export type BlogComment = {
@@ -53,16 +53,21 @@ export type BlogArticleSummary = {
 }
 
 export type BlogArticle = BlogArticleSummary & {
+  body: PortableTextBlock[]
   contentHtml: string
   comments: BlogComment[]
+  updatedAt: string
 }
 
 export type BlogIndex = {
   id: string
   handle: string
   title: string
+  description: string
+  heroImage: ShopifyImage | null
   seo: BlogSeo
   articles: BlogArticleSummary[]
+  featuredArticles: BlogArticleSummary[]
 }
 
 export type PaginatedArticles = {
@@ -72,24 +77,18 @@ export type PaginatedArticles = {
   totalArticles: number
 }
 
-function reshapeImage(image: BlogArticleNode['image']): ShopifyImage | null {
-  if (!image) return null
-
-  return {
-    url: String(image.url),
-    altText: image.altText ?? null,
-    width: image.width ?? null,
-    height: image.height ?? null,
-  }
+function isNonEmpty(value: string | null | undefined): value is string {
+  return Boolean(value?.trim())
 }
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
+function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text
+
+  return `${text.slice(0, maxLength).trimEnd()}…`
+}
+
+function normalizeBodyText(bodyText: string | null): string {
+  return bodyText?.replace(/\s+/g, ' ').trim() ?? ''
 }
 
 function estimateReadingTime(text: string): number {
@@ -97,56 +96,109 @@ function estimateReadingTime(text: string): number {
   return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE))
 }
 
-function reshapeSeo(seo: BlogNode['seo'] | ArticleNode['seo']): BlogSeo {
+function reshapeImage(image: SanityImageWithAlt | null): ShopifyImage | null {
+  const source = image?.image
+  const asset = source?.asset
+  if (!asset?._id && !asset?.url) return null
+
+  let url = asset.url
+  if (asset._id && source) {
+    try {
+      url = getSanityImageUrl(source as SanityImageSource)
+    } catch {
+      url = asset.url
+    }
+  }
+
+  if (!url) return null
+
   return {
-    title: seo?.title ?? null,
-    description: seo?.description ?? null,
+    url,
+    altText: image?.alt ?? null,
+    width: asset.metadata?.dimensions?.width ?? null,
+    height: asset.metadata?.dimensions?.height ?? null,
   }
 }
 
-function reshapeArticleSummary(article: BlogArticleNode): BlogArticleSummary {
-  const excerpt = article.excerpt?.trim() || article.content.trim()
+function reshapeSeo(
+  seo: SanitySeo | null,
+  fallbackDescription?: string,
+): BlogSeo {
+  return {
+    title: seo?.metaTitle ?? null,
+    description: seo?.metaDescription ?? fallbackDescription ?? null,
+    canonicalPath: seo?.canonicalPath ?? null,
+    noIndex: seo?.noIndex ?? false,
+    ogImage: reshapeImage(seo?.ogImage ?? null),
+  }
+}
+
+function uniqueLabels(labels: string[]): string[] {
+  const seen = new Set<string>()
+  const unique: string[] = []
+
+  for (const label of labels) {
+    const normalized = label.trim()
+    const key = normalized.toLowerCase()
+    if (!normalized || seen.has(key)) continue
+
+    seen.add(key)
+    unique.push(normalized)
+  }
+
+  return unique
+}
+
+function reshapeTags(article: SanityBlogPostSummary): string[] {
+  return uniqueLabels([
+    ...(article.categories ?? [])
+      .map((category) => category.title)
+      .filter(isNonEmpty),
+    ...(article.tags ?? []).filter(isNonEmpty),
+  ])
+}
+
+function reshapeArticleSummary(
+  article: SanityBlogPostSummary,
+): BlogArticleSummary {
+  const bodyText = normalizeBodyText(article.bodyText)
+  const excerpt = article.excerpt?.trim() || truncateText(bodyText, 180)
+  const title = article.title?.trim() || 'Untitled article'
 
   return {
-    id: article.id,
-    handle: article.handle,
-    title: article.title,
+    id: article._id,
+    handle: article.slug ?? article._id,
+    title,
     excerpt,
-    featuredImage: reshapeImage(article.image),
-    publishedAt: String(article.publishedAt),
-    tags: [...article.tags],
-    authorName: article.authorV2?.name ?? null,
-    seo: reshapeSeo(article.seo),
-    readingTimeMinutes: estimateReadingTime(article.content || excerpt),
+    featuredImage: reshapeImage(article.featuredImage),
+    publishedAt: article.publishedAt ?? FALLBACK_PUBLISHED_AT,
+    tags: reshapeTags(article),
+    authorName: article.author?.name ?? null,
+    seo: reshapeSeo(article.seo, excerpt),
+    readingTimeMinutes: estimateReadingTime(bodyText || excerpt),
   }
 }
 
-function reshapeComment(comment: CommentNode): BlogComment {
+function reshapeComment(
+  comment: NonNullable<SanityBlogPost['legacyComments']>[number],
+  index: number,
+): BlogComment {
   return {
-    id: comment.id,
-    authorName: comment.author.name,
-    contentHtml: String(comment.contentHtml),
+    id: comment.id ?? comment._key ?? `legacy-comment-${index}`,
+    authorName: comment.authorName?.trim() || 'Reader',
+    contentHtml: comment.contentHtml ?? '',
   }
 }
 
-function reshapeArticle(article: ArticleNode): BlogArticle {
-  const summaryText = article.excerpt?.trim() || article.content.trim()
+function reshapeArticle(article: SanityBlogPost): BlogArticle {
+  const summary = reshapeArticleSummary(article)
 
   return {
-    id: article.id,
-    handle: article.handle,
-    title: article.title,
-    excerpt: summaryText,
-    featuredImage: reshapeImage(article.image),
-    publishedAt: String(article.publishedAt),
-    tags: [...article.tags],
-    authorName: article.authorV2?.name ?? null,
-    seo: reshapeSeo(article.seo),
-    readingTimeMinutes: estimateReadingTime(
-      stripHtml(String(article.contentHtml)),
-    ),
-    contentHtml: String(article.contentHtml),
-    comments: article.comments.nodes.map(reshapeComment),
+    ...summary,
+    body: article.body ?? [],
+    contentHtml: article.legacy?.contentHtml ?? '',
+    comments: (article.legacyComments ?? []).map(reshapeComment),
+    updatedAt: article._updatedAt ?? summary.publishedAt,
   }
 }
 
@@ -176,6 +228,18 @@ export function slugifyTag(tag: string): string {
 
 export function getTagPath(blogHandle: string, tag: string): string {
   return `${getBlogPath(blogHandle)}/tagged/${slugifyTag(tag)}`
+}
+
+export function isLocalCanonicalPath(
+  canonicalPath: string | null,
+  localPath: string,
+  baseUrl: string,
+): boolean {
+  return (
+    !canonicalPath ||
+    canonicalPath === localPath ||
+    canonicalPath === `${baseUrl}${localPath}`
+  )
 }
 
 export function findTagBySlug(tags: string[], slug?: string): string | null {
@@ -252,18 +316,29 @@ export function paginateArticles({
 
 export function getFeaturedArticles(
   articles: BlogArticleSummary[],
+  preferredArticles: BlogArticleSummary[] = [],
 ): BlogArticleSummary[] {
-  const featured = FEATURED_ARTICLE_HANDLES.map((handle) =>
-    articles.find((article) => article.handle === handle),
-  ).filter((article): article is BlogArticleSummary => Boolean(article))
+  const byId = new Map(articles.map((article) => [article.id, article]))
+  const featured: BlogArticleSummary[] = []
+  const seen = new Set<string>()
 
-  if (featured.length >= 2) return featured.slice(0, 2)
+  for (const article of preferredArticles) {
+    const publishedArticle = byId.get(article.id)
+    if (!publishedArticle || seen.has(publishedArticle.id)) continue
 
-  const seen = new Set(featured.map((article) => article.id))
-  return [
-    ...featured,
-    ...articles.filter((article) => !seen.has(article.id)),
-  ].slice(0, 2)
+    seen.add(publishedArticle.id)
+    featured.push(publishedArticle)
+  }
+
+  for (const article of articles) {
+    if (featured.length >= 2) break
+    if (seen.has(article.id)) continue
+
+    seen.add(article.id)
+    featured.push(article)
+  }
+
+  return featured
 }
 
 export async function getBlog(handle: string): Promise<BlogIndex | null> {
@@ -272,44 +347,28 @@ export async function getBlog(handle: string): Promise<BlogIndex | null> {
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
-  const articles: BlogArticleSummary[] = []
-  let blogDetails: Omit<BlogIndex, 'articles'> | null = null
-  let after: string | null | undefined
-  let hasNextPage = true
+  const data = await sanityFetch<SanityBlogListingResult>(blogListingQuery, {
+    blogHandle: normalizedHandle,
+  })
 
-  while (hasNextPage) {
-    const data = await shopifyFetch({
-      query: GetBlogDocument,
-      variables: {
-        handle: normalizedHandle,
-        first: SHOPIFY_ARTICLE_PAGE_SIZE,
-        after,
-      },
-    })
+  if (!data.blog) return null
 
-    if (!data.blog) return null
-
-    blogDetails ??= {
-      id: data.blog.id,
-      handle: data.blog.handle,
-      title: data.blog.title,
-      seo: reshapeSeo(data.blog.seo),
-    }
-
-    articles.push(
-      ...data.blog.articles.edges.map((edge) =>
-        reshapeArticleSummary(edge.node),
-      ),
-    )
-    hasNextPage = data.blog.articles.pageInfo.hasNextPage
-    after = data.blog.articles.pageInfo.endCursor
-  }
-
-  if (!blogDetails) return null
+  const articles = data.articles.map(reshapeArticleSummary)
+  const featuredArticles = getFeaturedArticles(
+    articles,
+    (data.blog.featuredPosts ?? []).map(reshapeArticleSummary),
+  )
+  const description = data.blog.description?.trim() ?? ''
 
   return {
-    ...blogDetails,
+    id: data.blog._id,
+    handle: data.blog.slug ?? normalizedHandle,
+    title: data.blog.title?.trim() || 'Tea Journal',
+    description,
+    heroImage: reshapeImage(data.blog.heroImage),
+    seo: reshapeSeo(data.blog.seo, description),
     articles,
+    featuredArticles,
   }
 }
 
@@ -326,15 +385,26 @@ export async function getArticle(
   )
   cacheLife('hours')
 
-  const data = await shopifyFetch({
-    query: GetArticleDocument,
-    variables: {
-      blogHandle: normalizedHandle,
-      articleHandle,
-    },
+  const data = await sanityFetch<SanityBlogPostResult>(blogArticleQuery, {
+    articleHandle,
+    blogHandle: normalizedHandle,
   })
 
-  return data.blog?.articleByHandle
-    ? reshapeArticle(data.blog.articleByHandle)
-    : null
+  return data.article ? reshapeArticle(data.article) : null
+}
+
+export async function getHomepageArticles(
+  blogHandle = DEFAULT_BLOG_HANDLE,
+): Promise<BlogArticleSummary[]> {
+  'use cache'
+  const normalizedHandle = normalizeBlogHandle(blogHandle)
+  cacheTag('blog', `blog-${normalizedHandle}`)
+  cacheLife('hours')
+
+  const articles = await sanityFetch<SanityBlogPostSummary[]>(
+    homepageBlogPostsQuery,
+    { blogHandle: normalizedHandle },
+  )
+
+  return articles.map(reshapeArticleSummary)
 }
