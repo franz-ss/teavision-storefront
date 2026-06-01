@@ -18,7 +18,7 @@ export function QualityColumn() {
         width={QUALITY_IMAGE.width}
         height={QUALITY_IMAGE.height}
         alt={QUALITY_IMAGE.alt}
-        className="mt-5 h-auto w-45.25 max-w-full"
+        className="mt-5 h-17.5 w-45.25 max-w-full object-contain"
       />
     </div>
   )

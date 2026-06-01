@@ -117,7 +117,7 @@ export function RelatedProductsCarousel({
 
       <div ref={emblaRef} className="overflow-hidden">
         <ul className="-ml-4 flex" role="list">
-          {products.map((product, index) => (
+          {products.map((product) => (
             <li
               key={product.id}
               className="min-w-0 flex-[0_0_100%] pl-4 min-[360px]:flex-[0_0_50%] sm:flex-[0_0_33.333333%] lg:flex-[0_0_25%]"
@@ -125,7 +125,6 @@ export function RelatedProductsCarousel({
             >
               <ProductCard
                 product={product}
-                priority={index === activeIndex}
                 quickViewAction={<ProductQuickView product={product} />}
               />
             </li>

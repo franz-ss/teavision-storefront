@@ -15,7 +15,8 @@ export function HomepageHero() {
         alt=""
         fill
         sizes="100vw"
-        preload
+        loading="eager"
+        fetchPriority="high"
         className="absolute inset-0 -z-20 object-cover"
       />
       <div

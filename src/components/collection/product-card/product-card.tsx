@@ -43,7 +43,8 @@ export function ProductCard({
               alt={product.featuredImage.altText ?? product.title}
               width={product.featuredImage.width}
               height={product.featuredImage.height}
-              priority={priority}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : 'auto'}
               sizes="(min-width: 1024px) 14rem, (min-width: 640px) 12rem, 7.5rem"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />

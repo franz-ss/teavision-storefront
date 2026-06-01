@@ -51,8 +51,9 @@ export function ProductCard({
                 alt={product.featuredImage.altText ?? product.title}
                 width={product.featuredImage.width}
                 height={product.featuredImage.height}
-                priority={priority}
-                sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                loading={priority ? 'eager' : 'lazy'}
+                fetchPriority={priority ? 'high' : 'auto'}
+                sizes="(min-width: 1280px) 18rem, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, (min-width: 360px) calc(50vw - 1.5rem), calc(100vw - 2rem)"
                 className="h-full w-full object-cover transition-transform duration-300 ease-out group-focus-within:scale-[1.06] group-hover:scale-[1.06] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-focus-within:scale-100 motion-reduce:group-hover:scale-100"
               />
             ) : (

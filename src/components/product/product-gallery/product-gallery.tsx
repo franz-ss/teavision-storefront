@@ -49,8 +49,9 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   alt={image.altText ?? title}
                   width={image.width}
                   height={image.height}
-                  priority={i === 0}
-                  sizes="(min-width: 1024px) calc(100vw - 464px), 100vw"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={i === 0 ? 'high' : 'auto'}
+                  sizes="(min-width: 1280px) 38rem, (min-width: 1024px) calc(50vw - 3.5rem), calc(100vw - 2rem)"
                   className="h-full w-full object-cover"
                 />
               ) : (

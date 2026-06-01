@@ -477,7 +477,46 @@ async function ProductContent({
 export default function ProductPage({ params }: Props) {
   return (
     <div className="max-w-wide mx-auto w-full p-4 md:p-6 lg:p-8">
-      <Suspense fallback={<div aria-live="polite">Loading product...</div>}>
+      <Suspense
+        fallback={
+          <div
+            className="grid min-h-screen gap-8 lg:grid-cols-2"
+            role="status"
+            aria-live="polite"
+          >
+            <span className="sr-only">Loading product</span>
+            <div className="min-w-0">
+              <div className="bg-surface-sunken aspect-4/3 w-full animate-pulse rounded motion-reduce:animate-none" />
+              <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(4rem,1fr))] gap-2">
+                {Array.from({ length: 4 }, (_, index) => (
+                  <div
+                    key={index}
+                    className="bg-surface-sunken aspect-square animate-pulse rounded motion-reduce:animate-none"
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="flex min-w-0 flex-col gap-4">
+              <div className="bg-surface-sunken h-10 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="bg-surface-sunken h-5 w-36 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="border-default bg-surface flex flex-col gap-3 rounded border p-4">
+                <div className="bg-surface-sunken h-5 w-24 animate-pulse rounded motion-reduce:animate-none" />
+                <div className="bg-surface-sunken h-12 w-full animate-pulse rounded motion-reduce:animate-none" />
+                <div className="bg-surface-sunken h-12 w-full animate-pulse rounded motion-reduce:animate-none" />
+              </div>
+              <div className="flex flex-col gap-2">
+                <div className="bg-surface-sunken h-4 w-full animate-pulse rounded motion-reduce:animate-none" />
+                <div className="bg-surface-sunken h-4 w-11/12 animate-pulse rounded motion-reduce:animate-none" />
+                <div className="bg-surface-sunken h-4 w-2/3 animate-pulse rounded motion-reduce:animate-none" />
+              </div>
+            </div>
+            <div className="border-default flex flex-col gap-6 border-t pt-10 lg:col-span-2">
+              <div className="bg-surface-sunken h-7 w-32 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="bg-surface-sunken h-24 w-full animate-pulse rounded motion-reduce:animate-none" />
+            </div>
+          </div>
+        }
+      >
         <ProductContent params={params} />
       </Suspense>
     </div>
