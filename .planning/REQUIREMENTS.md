@@ -33,6 +33,16 @@
 - **BULK-09**: Provide an operator workflow for syncing HulkApps tiers into Shopify-native price breaks, metaobjects, or product metafields.
 - **BULK-10**: Support authenticated B2B/customer-specific price lists and quantity rules.
 
+## v3 Requirements
+
+### Footer Parity
+
+- [x] **FOOTER-01**: The Next storefront footer preserves the live Shopify-theme footer's visible top-level structure: Main Menu, Footer, Quality, Keep in Touch, bottom copyright/Popular Searches row, and payment method marks. The hidden keyword-link block was removed during implementation review to avoid shipping non-visible keyword stuffing in the headless storefront.
+- [x] **FOOTER-02**: All live footer links are rendered with exact labels and hrefs, including external, `tel:`, `mailto:`, root, collection, product, page, blog, hash, and legacy trailing-slash URLs.
+- [x] **FOOTER-03**: Footer visual styling and responsive behavior match the live footer at desktop, tablet, and mobile breakpoints without raw hex/rgb Tailwind class names or inline styles.
+- [x] **FOOTER-04**: Newsletter signup and contact links remain functional through existing server/action boundaries, validation, honeypot protection, and accessible feedback.
+- [x] **FOOTER-05**: Footer parity is verified through Storybook coverage plus browser checks/screenshot comparison against the live footer.
+
 ## Out of Scope
 
 | Feature                                                | Reason                                                                                 |
@@ -43,23 +53,28 @@
 
 ## Traceability
 
-| Requirement | Phase   | Status   |
-| ----------- | ------- | -------- |
-| BULK-01     | Phase 1 | Complete |
-| BULK-02     | Phase 1 | Complete |
-| BULK-03     | Phase 1 | Complete |
-| BULK-04     | Phase 1 | Complete |
-| BULK-05     | Phase 1 | Complete |
-| BULK-06     | Phase 1 | Complete |
-| BULK-07     | Phase 1 | Complete |
-| BULK-08     | Phase 1 | Complete |
-| SEARCH-01   | Phase 2 | Complete |
-| SEARCH-02   | Phase 2 | Complete |
-| SEARCH-03   | Phase 2 | Complete |
-| SEARCH-04   | Phase 2 | Complete |
-| SEARCH-05   | Phase 2 | Complete |
-| SEARCH-06   | Phase 2 | Complete |
-| SEARCH-07   | Phase 2 | Complete |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| BULK-01     | Phase 1  | Complete |
+| BULK-02     | Phase 1  | Complete |
+| BULK-03     | Phase 1  | Complete |
+| BULK-04     | Phase 1  | Complete |
+| BULK-05     | Phase 1  | Complete |
+| BULK-06     | Phase 1  | Complete |
+| BULK-07     | Phase 1  | Complete |
+| BULK-08     | Phase 1  | Complete |
+| SEARCH-01   | Phase 2  | Complete |
+| SEARCH-02   | Phase 2  | Complete |
+| SEARCH-03   | Phase 2  | Complete |
+| SEARCH-04   | Phase 2  | Complete |
+| SEARCH-05   | Phase 2  | Complete |
+| SEARCH-06   | Phase 2  | Complete |
+| SEARCH-07   | Phase 2  | Complete |
+| FOOTER-01   | Phase 4  | Complete |
+| FOOTER-02   | Phase 4  | Complete |
+| FOOTER-03   | Phase 4  | Complete |
+| FOOTER-04   | Phase 4  | Complete |
+| FOOTER-05   | Phase 4  | Complete |
 | BULK-09     | Deferred | Deferred |
 | BULK-10     | Deferred | Deferred |
 
@@ -67,11 +82,12 @@
 
 - v1 requirements: 8 total
 - v2 search requirements: 7 total
+- v3 footer requirements: 5 total
 - Deferred pricing requirements: 2 total
-- Mapped to phases: 15
+- Mapped to phases: 20
 - Unmapped active/planned requirements: 0
 
 ---
 
 _Requirements defined: 2026-05-26_
-_Last updated: 2026-05-27 for Phase 2 Searchanise API execution_
+_Last updated: 2026-05-29 for Phase 4 footer parity completion_

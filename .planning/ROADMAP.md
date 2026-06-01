@@ -2,7 +2,7 @@
 
 ## Overview
 
-This milestone brings high-value legacy storefront behavior into the Next storefront without depending on legacy Shopify app browser scripts. Phase 1 covers "Buy in Bulk and Save" parity. Phase 2 replaces the legacy Searchanise search-results widget page with a headless Searchanise API integration rendered through Teavision-owned UI.
+This milestone brings high-value legacy storefront behavior into the Next storefront without depending on legacy Shopify app browser scripts. Phase 1 covers "Buy in Bulk and Save" parity. Phase 2 replaces the legacy Searchanise search-results widget page with a headless Searchanise API integration rendered through Teavision-owned UI. Phase 4 ports the live Shopify-theme footer into the Next storefront with strict visible content, link, responsive, and visual parity.
 
 ## Phases
 
@@ -13,6 +13,7 @@ This milestone brings high-value legacy storefront behavior into the Next storef
 
 - [x] **Phase 1: Bulk Savings PDP and Cart Parity** - Render configured bulk tiers on product pages and reflect Shopify-applied discounts in cart.
 - [x] **Phase 2: Searchanise API Search Results** - Render Searchanise-powered search results through first-class Next UI with owned filters, sorting, pagination, and legacy route cleanup.
+- [x] **Phase 4: Footer 1:1 Parity** - Replace the compact Next footer with a faithful port of the live `https://www.teavision.com.au/` footer, including menu columns, quality/trust content, newsletter/contact block, bottom copyright/search/payment row, and responsive layout. The hidden keyword-link block was removed after review.
 
 ## Phase Details
 
@@ -56,12 +57,32 @@ Plans:
 
 - [x] 02-01: Searchanise API search results
 
+### Phase 4: Footer 1:1 Parity
+
+**Goal:** The Next storefront footer matches the live Shopify-theme footer from `https://www.teavision.com.au/` in visible content, link destinations, layout, responsive behavior, newsletter/contact affordances, copyright row, Popular Searches link, and payment marks.
+**Requirements**: [FOOTER-01, FOOTER-02, FOOTER-03, FOOTER-04, FOOTER-05]
+**Depends on:** Phase 2
+**Success Criteria** (what must be TRUE):
+
+1. `src/components/layout/footer/footer.tsx` renders the live visible footer structure: Main Menu, Footer, Quality, Keep in Touch, and bottom payment/copyright row.
+2. All visible live footer links are preserved with exact labels and hrefs, including the `https://mrtea.com.au/account/login` footer Login URL.
+3. Footer visual styling matches the live footer at desktop, tablet, and mobile breakpoints, while expressing colors through design tokens or semantic utilities rather than raw hex values in class names.
+4. Newsletter signup continues to use the existing server-action boundary and preserves honeypot/rate-limit validation with accessible success/error feedback.
+5. Storybook coverage and browser checks prove parity for the default footer, mobile layout, newsletter states, and payment marks.
+
+**Plans:** 1 plan
+
+Plans:
+
+- [x] 04-01: Footer 1:1 parity
+
 ## Progress
 
 **Execution Order:**
-Phase 1, then Phase 2.
+Phase 1, then Phase 2, then Phase 4.
 
-| Phase                                    | Plans Complete | Status           | Completed  |
-| ---------------------------------------- | -------------- | ---------------- | ---------- |
-| 1. Bulk Savings PDP and Cart Parity      | 1/1            | Complete         | 2026-05-26 |
-| 2. Searchanise API Search Results        | 1/1            | Complete         | 2026-05-27 |
+| Phase                               | Plans Complete | Status   | Completed  |
+| ----------------------------------- | -------------- | -------- | ---------- |
+| 1. Bulk Savings PDP and Cart Parity | 1/1            | Complete | 2026-05-26 |
+| 2. Searchanise API Search Results   | 1/1            | Complete | 2026-05-27 |
+| 4. Footer 1:1 Parity                | 1/1            | Complete | 2026-05-29 |
