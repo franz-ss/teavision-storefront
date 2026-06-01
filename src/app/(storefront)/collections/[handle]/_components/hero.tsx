@@ -57,7 +57,7 @@ export function Hero({
             <div
               className={cn(
                 'relative w-full overflow-hidden',
-                heroImage.layout === 'legacy-banner' ? 'h-52' : 'aspect-[16/7]',
+                heroImage.layout === 'legacy-banner' ? 'h-52' : 'aspect-video',
               )}
             >
               <Image
@@ -74,11 +74,11 @@ export function Hero({
 
         <div className="max-w-4xl">
           <p className="type-eyebrow text-accent">Wholesale collection</p>
-          <h1 className="type-heading-02 md:type-display-01 text-strong mt-5 text-balance break-words">
+          <h1 className="type-heading-02 md:type-display-01 text-strong mt-5 text-balance wrap-break-word">
             {collectionTitle}
           </h1>
           {heroDescription && (
-            <p className="type-body-lg text-muted mt-6 max-w-prose break-words">
+            <p className="type-body-lg text-muted mt-6 max-w-prose wrap-break-word">
               {heroDescription}
             </p>
           )}

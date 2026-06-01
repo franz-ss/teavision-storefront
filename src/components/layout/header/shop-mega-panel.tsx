@@ -85,7 +85,7 @@ export function ShopMegaPanel({
                   alt={activeShop.imageAlt}
                   width={420}
                   height={405}
-                  className="aspect-[4/3] w-full rounded-md object-cover"
+                  className="aspect-4/3 w-full rounded-md object-cover"
                   sizes="288px"
                 />
               )}

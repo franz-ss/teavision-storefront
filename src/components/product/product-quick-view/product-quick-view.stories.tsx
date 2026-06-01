@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, userEvent, within } from 'storybook/test'
 
 import type { Product, ProductSummary } from '@/lib/shopify/types'
 
@@ -62,6 +63,14 @@ const quickViewProduct: Product = {
   ],
 }
 
+const soldOutProduct: Product = {
+  ...quickViewProduct,
+  variants: quickViewProduct.variants.map((variant) => ({
+    ...variant,
+    availableForSale: false,
+  })),
+}
+
 const meta: Meta<typeof ProductQuickView> = {
   title: 'Product/ProductQuickView',
   component: ProductQuickView,
@@ -78,5 +87,41 @@ export const Default: Story = {
   args: {
     product: stubProduct,
     initialProduct: quickViewProduct,
+  },
+}
+
+export const SoldOut: Story = {
+  args: {
+    product: stubProduct,
+    initialProduct: soldOutProduct,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'Quick View' }))
+
+    await expect(
+      canvas.getByRole('button', { name: 'Sold Out' }),
+    ).toBeDisabled()
+  },
+}
+
+export const FetchError: Story = {
+  args: {
+    product: stubProduct,
+  },
+  play: async ({ canvasElement }) => {
+    const originalFetch = window.fetch
+    window.fetch = async () => new Response(null, { status: 500 })
+
+    try {
+      const canvas = within(canvasElement)
+      await userEvent.click(canvas.getByRole('button', { name: 'Quick View' }))
+
+      await expect(await canvas.findByRole('alert')).toHaveTextContent(
+        'Unable to load product details. Please try again.',
+      )
+    } finally {
+      window.fetch = originalFetch
+    }
   },
 }

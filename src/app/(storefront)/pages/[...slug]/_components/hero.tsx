@@ -26,7 +26,7 @@ export function Hero({
               {page.title}
             </h1>
             {description && (
-              <p className="type-body-lg text-muted mt-6 max-w-prose break-words">
+              <p className="type-body-lg text-muted mt-6 max-w-prose wrap-break-word">
                 {description}
               </p>
             )}

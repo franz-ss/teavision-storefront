@@ -45,7 +45,7 @@ export function OrganicHerbs() {
             width={HERBS_IMAGE.width}
             height={HERBS_IMAGE.height}
             sizes="(min-width: 1024px) 50vw, 100vw"
-            className="aspect-[3/2] h-full w-full object-cover"
+            className="aspect-3/2 h-full w-full object-cover"
           />
         </div>
       </Section.Container>

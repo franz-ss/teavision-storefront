@@ -18,7 +18,7 @@ function noop() {}
 
 function StoryPanelFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="relative min-h-[34rem]">
+    <div className="relative min-h-136">
       <div className="relative h-0">{children}</div>
     </div>
   )

@@ -25,7 +25,7 @@ export function SearchHero({
       <Section.Container>
         <div className="max-w-4xl py-8 md:py-12">
           <p className="type-eyebrow text-accent">{eyebrow}</p>
-          <h1 className="type-heading-01 text-strong mt-3 break-words">
+          <h1 className="type-heading-01 text-strong mt-3 wrap-break-word">
             {title}
           </h1>
           <p className="type-body text-muted mt-4 max-w-2xl">

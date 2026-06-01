@@ -117,6 +117,31 @@ export const LongContent: Story = {
   },
 }
 
+export const LongUnbrokenContentMobile: Story = {
+  args: {
+    articles: [
+      {
+        ...articles[0],
+        title:
+          'WholesaleTeaProcurementComplianceSourcingIntelligenceForAustralianBrands',
+        excerpt:
+          'LongUnbrokenSanityAuthoredExcerptContentShouldWrapInsideTheMobileViewportWithoutCreatingHorizontalOverflow',
+      },
+      ...articles.slice(1),
+    ],
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  play: ({ canvasElement }) => {
+    if (canvasElement.scrollWidth > canvasElement.clientWidth) {
+      throw new Error('Long Tea Journal copy overflows the mobile canvas')
+    }
+  },
+}
+
 export const AllImagesMissing: Story = {
   args: {
     articles: articles.map((article) => ({

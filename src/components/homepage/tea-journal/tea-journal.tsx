@@ -67,10 +67,10 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
                   <p className="type-caption text-muted">
                     {formatArticleDate(article.publishedAt)}
                   </p>
-                  <h3 className="type-heading-05 text-strong group-hover:text-brand mt-3 line-clamp-2 break-words transition-colors">
+                  <h3 className="type-heading-05 text-strong group-hover:text-brand mt-3 line-clamp-2 wrap-break-word transition-colors">
                     {article.title}
                   </h3>
-                  <p className="type-body-sm text-muted mt-3 line-clamp-3 break-words">
+                  <p className="type-body-sm text-muted mt-3 line-clamp-3 wrap-break-word">
                     {article.excerpt}
                   </p>
                   <span className="type-label text-brand mt-auto inline-flex pt-5">

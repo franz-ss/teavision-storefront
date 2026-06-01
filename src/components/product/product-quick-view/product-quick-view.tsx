@@ -1,7 +1,6 @@
 'use client'
 
 import { useMemo, useState, useTransition } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Eye, ShoppingCart } from 'lucide-react'
 
@@ -10,7 +9,6 @@ import type {
   Product,
   ProductSummary,
   ProductVariant,
-  ShopifyImage,
 } from '@/lib/shopify/types'
 import {
   Button,
@@ -19,6 +17,8 @@ import {
   StarRating,
   ToggleButton,
 } from '@/components/ui'
+
+import { ProductQuickViewImage } from './product-quick-view-image'
 
 type ProductQuickViewProps = {
   product: ProductSummary
@@ -33,35 +33,9 @@ function getInitialVariantId(variants: ProductVariant[]): string {
   )
 }
 
-function getSizedImageUrl(url: string, width: number): string {
-  return `${url}${url.includes('?') ? '&' : '?'}width=${width}`
-}
-
 function getVariantLabel(product: Product, variant: ProductVariant): string {
   const optionName = product.options[0]?.name ?? 'Size'
   return `${optionName}: ${variant.title}`
-}
-
-function ProductImage({
-  image,
-  title,
-}: {
-  image: ShopifyImage | null
-  title: string
-}) {
-  if (!image) {
-    return <div className="h-full w-full" aria-hidden="true" />
-  }
-
-  return (
-    <Image
-      src={getSizedImageUrl(image.url, 900)}
-      alt={image.altText ?? title}
-      fill
-      sizes="(min-width: 1024px) min(50vw, 36rem), calc(100vw - 2rem)"
-      className="object-cover"
-    />
-  )
 }
 
 export function ProductQuickView({
@@ -178,8 +152,11 @@ export function ProductQuickView({
           </div>
         ) : productData ? (
           <div className="grid gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)] lg:gap-7">
-            <div className="bg-surface-sunken relative mx-auto aspect-square w-full max-w-[36rem] overflow-hidden rounded-md">
-              <ProductImage image={selectedImage} title={productData.title} />
+            <div className="bg-surface-sunken relative mx-auto aspect-square w-full max-w-xl overflow-hidden rounded-md">
+              <ProductQuickViewImage
+                image={selectedImage}
+                title={productData.title}
+              />
             </div>
 
             <div className="grid content-start gap-5">

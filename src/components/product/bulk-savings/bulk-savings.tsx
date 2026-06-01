@@ -128,7 +128,7 @@ export function BulkSavings({
                 type="button"
                 pressed={isActive}
                 className={cn(
-                  'border-default bg-canvas focus-visible:ring-ring aria-pressed:border-brand aria-pressed:bg-brand-subtle aria-pressed:text-default grid min-h-[72px] w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-md border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:grid-cols-[auto_minmax(0,1fr)_auto]',
+                  'border-default bg-canvas focus-visible:ring-ring aria-pressed:border-brand aria-pressed:bg-brand-subtle aria-pressed:text-default grid min-h-18 w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-md border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:grid-cols-[auto_minmax(0,1fr)_auto]',
                   onSelectTier && 'hover:border-brand',
                   isActive && 'border-brand bg-brand-subtle',
                 )}
@@ -146,7 +146,7 @@ export function BulkSavings({
                   ) : null}
                 </span>
 
-                <span className="type-body-sm text-default min-w-0 break-words">
+                <span className="type-body-sm text-default min-w-0 wrap-break-word">
                   {getTierLabel(tier)}
                 </span>
 

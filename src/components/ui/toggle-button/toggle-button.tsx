@@ -14,7 +14,7 @@ const toggleButtonVariants = cva(
       variant: {
         chip: 'min-h-11 items-center justify-center gap-2 rounded border border-default px-4 py-2 text-sm font-medium text-default hover:border-brand aria-pressed:border-brand aria-pressed:bg-action-primary aria-pressed:text-action-primary-text',
         menuCard:
-          'group min-h-[72px] w-full items-start justify-between gap-4 rounded-md border border-transparent p-3 text-left text-default hover:bg-surface hover:text-brand aria-pressed:border-subtle aria-pressed:bg-surface-raised aria-pressed:text-brand',
+          'group min-h-18 w-full items-start justify-between gap-4 rounded-md border border-transparent p-3 text-left text-default hover:bg-surface hover:text-brand aria-pressed:border-subtle aria-pressed:bg-surface-raised aria-pressed:text-brand',
         menuRow:
           'type-label min-h-11 items-center justify-between gap-2 rounded-md border border-transparent px-3 text-left text-default hover:bg-surface-sunken hover:text-brand aria-pressed:border-subtle aria-pressed:bg-brand-subtle aria-pressed:text-brand md:w-full',
         thumbnail:

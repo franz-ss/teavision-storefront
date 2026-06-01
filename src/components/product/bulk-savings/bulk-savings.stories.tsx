@@ -130,3 +130,33 @@ export const LimitedQuantity: Story = {
     maximumQuantity: 5,
   },
 }
+
+export const LongUnbrokenTierLabelMobile: Story = {
+  args: {
+    basePrice: {
+      amount: '32.50',
+      currencyCode: 'AUD',
+    },
+    selectedQuantity: 3,
+    tiers: [
+      {
+        minimumQuantity: 3,
+        discountPercent: 5,
+        label:
+          'WholesaleTeaProcurementComplianceSourcingIntelligenceCartonOffer',
+      },
+    ],
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  play: ({ canvasElement }) => {
+    if (canvasElement.scrollWidth > canvasElement.clientWidth) {
+      throw new Error(
+        'Long bulk-savings tier label overflows the mobile canvas',
+      )
+    }
+  },
+}

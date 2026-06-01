@@ -6,7 +6,7 @@ export function ServicesMegaPanel({ onClose, open }: ServicesMenuProps) {
   return (
     <div
       id="services-menu"
-      className="absolute top-full left-0 z-50 w-[34rem]"
+      className="absolute top-full left-0 z-50 w-136"
       hidden={!open}
     >
       <div className="border-subtle bg-surface-raised max-h-[min(34rem,calc(100vh-8rem))] overflow-y-auto rounded-lg border p-4 shadow-xl">

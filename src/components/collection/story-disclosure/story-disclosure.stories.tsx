@@ -40,3 +40,22 @@ export const Open: Story = {
     defaultOpen: true,
   },
 }
+
+export const LongUnbrokenTitleMobile: Story = {
+  args: {
+    title:
+      'WholesaleTeaProcurementComplianceSourcingIntelligenceForAustralianBrands',
+    html: storyHtml,
+    defaultOpen: true,
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  play: ({ canvasElement }) => {
+    if (canvasElement.scrollWidth > canvasElement.clientWidth) {
+      throw new Error('Long story disclosure title overflows the mobile canvas')
+    }
+  },
+}

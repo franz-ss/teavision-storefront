@@ -208,6 +208,29 @@ export const MobileFiltered: Story = {
   },
 }
 
+export const LongQueryMobile: Story = {
+  args: {
+    result: {
+      ...baseResult,
+      query: 'wholesaleteaprocurementcompliancesourcingintelligence',
+    },
+    state: {
+      ...baseState,
+      query: 'wholesaleteaprocurementcompliancesourcingintelligence',
+    },
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  play: ({ canvasElement }) => {
+    if (canvasElement.scrollWidth > canvasElement.clientWidth) {
+      throw new Error('Long search query overflows the mobile canvas')
+    }
+  },
+}
+
 export const Empty: Story = {
   args: {
     result: {

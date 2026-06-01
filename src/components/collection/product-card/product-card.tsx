@@ -59,7 +59,7 @@ export function ProductCard({
 
         <div className="grid min-w-0 gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:p-6">
           <div className="min-w-0">
-            <h3 className="type-heading-04 text-strong break-words">
+            <h3 className="type-heading-04 text-strong wrap-break-word">
               <Link
                 href={productUrl}
                 className="focus-visible:ring-ring hover:text-brand rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"

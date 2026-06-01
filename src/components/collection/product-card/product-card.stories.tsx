@@ -98,3 +98,22 @@ export const SoldOut: Story = {
     },
   },
 }
+
+export const LongUnbrokenTitleMobile: Story = {
+  args: {
+    product: {
+      ...stubProduct,
+      title: 'WholesaleTeaProcurementComplianceSourcingIntelligenceSenchaBlend',
+    },
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  play: ({ canvasElement }) => {
+    if (canvasElement.scrollWidth > canvasElement.clientWidth) {
+      throw new Error('Long product title overflows the mobile canvas')
+    }
+  },
+}

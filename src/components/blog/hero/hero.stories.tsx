@@ -60,3 +60,23 @@ export const LongCmsCopy: Story = {
     searchAction: '/blogs/teavision-blogs',
   },
 }
+
+export const LongUnbrokenCopyMobile: Story = {
+  args: {
+    title:
+      'WholesaleTeaProcurementComplianceSourcingIntelligenceForAustralianBrands',
+    description:
+      'Long unbroken CMS terms should wrap inside the mobile viewport without forcing horizontal overflow.',
+    searchAction: '/blogs/teavision-blogs',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  play: ({ canvasElement }) => {
+    if (canvasElement.scrollWidth > canvasElement.clientWidth) {
+      throw new Error('Long blog hero copy overflows the mobile canvas')
+    }
+  },
+}

@@ -54,10 +54,10 @@ export function Hero({
         variant="compact"
         className="relative flex flex-col items-center justify-center py-16 text-center md:py-24"
       >
-        <h1 className="type-heading-01 text-on-brand md:type-display-01 break-words">
+        <h1 className="type-heading-01 text-on-brand md:type-display-01 wrap-break-word">
           {title}
         </h1>
-        <p className="type-body-lg text-on-brand mt-5 max-w-2xl break-words">
+        <p className="type-body-lg text-on-brand mt-5 max-w-2xl wrap-break-word">
           {description}
         </p>
 

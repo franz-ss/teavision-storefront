@@ -26,7 +26,7 @@ export function StoryDisclosure({
       open={defaultOpen}
     >
       <summary className="focus-visible:ring-ring flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 rounded-md px-4 py-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-5">
-        <span className="type-label text-strong min-w-0 break-words">
+        <span className="type-label text-strong min-w-0 wrap-break-word">
           {title}
         </span>
         <ChevronDown
