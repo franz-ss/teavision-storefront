@@ -26,6 +26,10 @@ export function getSanityConfig(): SanityRuntimeConfig {
   }
 }
 
+export function getSanityReadToken(): string | undefined {
+  return process.env.SANITY_API_READ_TOKEN?.trim() || undefined
+}
+
 export function getSanityRevalidateSecret(): string {
   return required('SANITY_REVALIDATE_SECRET')
 }

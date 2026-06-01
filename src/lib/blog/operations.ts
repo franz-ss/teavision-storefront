@@ -16,7 +16,6 @@ import type {
   SanityImageWithAlt,
   SanitySeo,
 } from '@/lib/sanity/types'
-import type { ShopifyImage } from '@/lib/shopify/types'
 
 const WORDS_PER_MINUTE = 220
 const FALLBACK_PUBLISHED_AT = '1970-01-01T00:00:00.000Z'
@@ -25,12 +24,19 @@ export const DEFAULT_BLOG_HANDLE = 'teavision-blogs'
 export const LEGACY_BLOG_HANDLE = 'journal'
 export const ARTICLES_PER_PAGE = 6
 
+export type BlogImage = {
+  url: string
+  altText: string | null
+  width: number | null
+  height: number | null
+}
+
 export type BlogSeo = {
   title: string | null
   description: string | null
   canonicalPath: string | null
   noIndex: boolean
-  ogImage: ShopifyImage | null
+  ogImage: BlogImage | null
 }
 
 export type BlogComment = {
@@ -44,7 +50,7 @@ export type BlogArticleSummary = {
   handle: string
   title: string
   excerpt: string
-  featuredImage: ShopifyImage | null
+  featuredImage: BlogImage | null
   publishedAt: string
   tags: string[]
   authorName: string | null
@@ -64,7 +70,7 @@ export type BlogIndex = {
   handle: string
   title: string
   description: string
-  heroImage: ShopifyImage | null
+  heroImage: BlogImage | null
   seo: BlogSeo
   articles: BlogArticleSummary[]
   featuredArticles: BlogArticleSummary[]
@@ -96,7 +102,7 @@ function estimateReadingTime(text: string): number {
   return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE))
 }
 
-function reshapeImage(image: SanityImageWithAlt | null): ShopifyImage | null {
+function reshapeImage(image: SanityImageWithAlt | null): BlogImage | null {
   const source = image?.image
   const asset = source?.asset
   if (!asset?._id && !asset?.url) return null

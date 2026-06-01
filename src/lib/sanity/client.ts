@@ -6,13 +6,15 @@ import {
 } from '@sanity/image-url'
 import { createClient } from 'next-sanity'
 
-import { getSanityConfig } from './env'
+import { getSanityConfig, getSanityReadToken } from './env'
 
 export function getSanityClient() {
   const config = getSanityConfig()
+  const token = getSanityReadToken()
 
   return createClient({
     ...config,
+    ...(token ? { token } : {}),
     useCdn: false,
     perspective: 'published',
     stega: false,
