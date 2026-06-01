@@ -8,12 +8,10 @@ import {
 } from 'react'
 
 import { Button } from '@/components/ui'
+import type { ContactActionResult } from '@/lib/contact/types'
 import { cn } from '@/lib/utils'
 
-export type ContactActionResult = {
-  success: boolean
-  error?: string
-}
+export type { ContactActionResult } from '@/lib/contact/types'
 
 type ContactFormProps = {
   action: (formData: FormData) => Promise<ContactActionResult>
@@ -229,7 +227,7 @@ export function ContactForm({
             status === 'error' ? 'contact-form-error' : undefined
           }
         >
-          {isPending ? 'Sending enquiry' : 'Send enquiry'}
+          {isPending ? 'Sending enquiry…' : 'Send enquiry'}
         </Button>
       </div>
     </form>

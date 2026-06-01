@@ -7,7 +7,7 @@ import {
   type FormEvent,
 } from 'react'
 
-import type { NewsletterSignupActionResult } from '@/lib/contact/actions'
+import type { NewsletterSignupActionResult } from '@/lib/contact/types'
 import { cn } from '@/lib/utils'
 
 import { Button } from '../button'
@@ -127,14 +127,17 @@ export function NewsletterSignup({
           name="email"
           type="email"
           inputMode="email"
+          autoCapitalize="off"
           autoComplete="email"
+          autoCorrect="off"
+          spellCheck={false}
           required
           maxLength={254}
           value={email}
           onChange={handleEmailChange}
-          placeholder="Enter Email"
+          placeholder="you@example.com"
           className={cn(
-            'type-body focus:ring-ring min-h-11 flex-1 rounded-md border px-4 transition-colors focus:ring-2 focus:outline-none',
+            'type-body focus-visible:ring-ring min-h-11 flex-1 rounded-md border px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none',
             tone === 'brand'
               ? 'border-on-brand bg-brand text-on-brand placeholder:text-on-brand'
               : 'border-default bg-canvas text-default placeholder:text-muted',
@@ -156,7 +159,7 @@ export function NewsletterSignup({
         </div>
 
         <Button type="submit" isLoading={isPending} disabled={isPending}>
-          {isPending ? 'Subscribing' : 'Subscribe'}
+          {isPending ? 'Subscribing…' : 'Subscribe'}
         </Button>
       </form>
 

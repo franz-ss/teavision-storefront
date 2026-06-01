@@ -9,13 +9,10 @@ import {
   isCustomTeaBlendFlavour,
   isCustomTeaBlendPackFormat,
 } from '@/lib/contact/custom-tea-blend'
-
-export type ContactActionResult = {
-  success: boolean
-  error?: string
-}
-
-export type NewsletterSignupActionResult = ContactActionResult
+import type {
+  ContactActionResult,
+  NewsletterSignupActionResult,
+} from '@/lib/contact/types'
 
 type ContactSubmission = {
   name: string
@@ -355,6 +352,13 @@ export async function sendNewsletterSignupAction(
     console.error('Newsletter signup failed', error)
     return { success: false, error: NEWSLETTER_SEND_ERROR }
   }
+}
+
+export async function sendNewsletterSignupFormAction(
+  _previousState: NewsletterSignupActionResult,
+  formData: FormData,
+): Promise<NewsletterSignupActionResult> {
+  return sendNewsletterSignupAction(formData)
 }
 
 export async function submitNewsletterSignupFormAction(formData: FormData) {
