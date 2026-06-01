@@ -24,8 +24,7 @@ const cardVariants = cva('border text-default', {
       hidden: 'overflow-hidden',
     },
     interactive: {
-      true:
-        'transition-colors hover:border-brand focus-within:border-brand focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+      true: 'transition-colors hover:border-brand focus-within:border-brand focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
       false: '',
     },
   },
@@ -50,10 +49,7 @@ type CardAsDivProps = CardOwnProps &
   }
 
 type CardAsArticleProps = CardOwnProps &
-  Omit<
-    React.ComponentPropsWithoutRef<'article'>,
-    keyof CardOwnProps | 'as'
-  > & {
+  Omit<React.ComponentPropsWithoutRef<'article'>, keyof CardOwnProps | 'as'> & {
     as: 'article'
   }
 
