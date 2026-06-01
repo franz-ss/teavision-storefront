@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'www.teavision.com.au',
+        pathname: '/cdn/shop/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'cdn.sanity.io',
         pathname: '/images/**',
       },

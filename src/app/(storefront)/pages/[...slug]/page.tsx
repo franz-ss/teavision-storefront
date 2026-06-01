@@ -16,7 +16,12 @@ type Props = {
   params: Promise<{ slug: string[] }>
 }
 
-const RESERVED_HANDLES = new Set(['contact', 'custom-tea-blends', 'wholesale'])
+const RESERVED_HANDLES = new Set([
+  'contact',
+  'custom-tea-blends',
+  'our-story',
+  'wholesale',
+])
 
 async function getRequestedPage(
   params: Props['params'],

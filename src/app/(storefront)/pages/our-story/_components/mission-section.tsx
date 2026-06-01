@@ -1,0 +1,23 @@
+import { Card, Section } from '@/components/ui'
+
+import { STORY_VALUES } from '../_lib/data'
+import { SectionHeading } from './section-heading'
+import { StoryValuesAccordion } from './story-values-accordion'
+
+export function MissionSection() {
+  return (
+    <Section.Root tone="sunken">
+      <Section.Container className="flex flex-col gap-10">
+        <SectionHeading
+          title="Our Mission &"
+          highlight="Core Values"
+          copy="Teavision is committed to making tea more than just a drink — it's a way to inspire health, mindfulness, and connection. Our five core values guide everything we do as leading wholesale tea suppliers."
+        />
+
+        <Card overflow="hidden" radius="md">
+          <StoryValuesAccordion values={STORY_VALUES} />
+        </Card>
+      </Section.Container>
+    </Section.Root>
+  )
+}
