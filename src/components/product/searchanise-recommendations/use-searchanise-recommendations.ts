@@ -19,12 +19,14 @@ export type SearchaniseRenderState =
   | 'empty'
 
 type UseSearchaniseRecommendationsProps = {
+  enabled: boolean
   fallbackDelayMs: number
   hasFallback: boolean
   widgetId: string
 }
 
 export function useSearchaniseRecommendations({
+  enabled,
   fallbackDelayMs,
   hasFallback,
   widgetId,
@@ -35,6 +37,8 @@ export function useSearchaniseRecommendations({
   const [products, setProducts] = useState<ProductSummary[]>([])
 
   useEffect(() => {
+    if (!enabled) return
+
     const widget = widgetRef.current
     if (!widget) return
     const searchaniseWidget = widget
@@ -142,7 +146,7 @@ export function useSearchaniseRecommendations({
         handleSearchaniseFailed,
       )
     }
-  }, [fallbackDelayMs, hasFallback, widgetId])
+  }, [enabled, fallbackDelayMs, hasFallback, widgetId])
 
   return { products, renderState, widgetRef }
 }

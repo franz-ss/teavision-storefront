@@ -65,7 +65,7 @@ export function SearchaniseScriptLoader({
     <Script
       id="searchanise-shopify-init"
       src={`https://searchserverapi.com/widgets/shopify/init.js?a=${encodeURIComponent(apiKey)}`}
-      strategy="afterInteractive"
+      strategy="lazyOnload"
       onReady={markSearchaniseReady}
       onError={markSearchaniseFailed}
     />

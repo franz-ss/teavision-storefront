@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, type ReactNode } from 'react'
+import { Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
 
 import { cn } from '@/lib/utils'
 import { Section } from '@/components/ui'
@@ -11,6 +11,7 @@ import { useSearchaniseRecommendations } from './use-searchanise-recommendations
 
 const DEFAULT_WIDGET_ID = '1T8K1Y6Q6G8R3B3'
 const DEFAULT_FALLBACK_DELAY_MS = 2500
+const LOAD_ROOT_MARGIN = '800px 0px'
 const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
 const SEARCHANISE_ENABLED =
   process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
@@ -38,16 +39,45 @@ export function SearchaniseRecommendations({
   titleId,
   widgetId = DEFAULT_WIDGET_ID,
 }: SearchaniseRecommendationsProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [shouldLoad, setShouldLoad] = useState(false)
   const hasFallback =
     fallback !== undefined && fallback !== null && fallback !== false
   const { products, renderState, widgetRef } = useSearchaniseRecommendations({
+    enabled: shouldLoad,
     fallbackDelayMs,
     hasFallback,
     widgetId,
   })
 
+  useEffect(() => {
+    if (shouldLoad) return
+
+    const container = containerRef.current
+    if (!container) return
+
+    if (typeof IntersectionObserver === 'undefined') {
+      const frame = window.requestAnimationFrame(() => setShouldLoad(true))
+      return () => window.cancelAnimationFrame(frame)
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+
+        setShouldLoad(true)
+        observer.disconnect()
+      },
+      { rootMargin: LOAD_ROOT_MARGIN },
+    )
+
+    observer.observe(container)
+
+    return () => observer.disconnect()
+  }, [shouldLoad])
+
   const visibleContent =
-    renderState === 'waiting' ? (
+    !shouldLoad ? null : renderState === 'waiting' ? (
       <p className="type-body-sm text-muted" role="status" aria-live="polite">
         Loading recommendations…
       </p>
@@ -66,26 +96,29 @@ export function SearchaniseRecommendations({
 
   return (
     <div
+      ref={containerRef}
       className={cn('relative min-w-0', className)}
       data-searchanise-state={renderState}
     >
-      {SEARCHANISE_ENABLED && SEARCHANISE_API_KEY ? (
+      {shouldLoad && SEARCHANISE_ENABLED && SEARCHANISE_API_KEY ? (
         <Suspense fallback={null}>
           <SearchaniseScriptLoader apiKey={SEARCHANISE_API_KEY} />
         </Suspense>
       ) : null}
 
-      <div
-        className="pointer-events-none absolute top-0 left-0 h-0 w-full overflow-hidden opacity-0"
-        aria-hidden="true"
-        inert
-      >
+      {shouldLoad ? (
         <div
-          ref={widgetRef}
-          className="searchanise-recommendations"
-          id={widgetId}
-        />
-      </div>
+          className="pointer-events-none absolute top-0 left-0 h-0 w-full overflow-hidden opacity-0"
+          aria-hidden="true"
+          inert
+        >
+          <div
+            ref={widgetRef}
+            className="searchanise-recommendations"
+            id={widgetId}
+          />
+        </div>
+      ) : null}
 
       {visibleContent && title ? (
         <Section.Root
