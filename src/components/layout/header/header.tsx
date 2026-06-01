@@ -9,10 +9,10 @@ import { Search } from './search'
 import { SearchForm } from './search-form'
 
 const ACTION_LINK_CLASS =
-  'type-label focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
+  'type-label focus-visible:ring-ring relative inline-flex min-h-11 items-center justify-center rounded-md px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
 
 const ANNOUNCEMENT_LINK_CLASS =
-  'focus-visible:ring-ring focus-visible:ring-offset-brand inline-flex min-h-11 items-center gap-1 rounded-md text-on-brand underline-offset-4 transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-8'
+  'focus-visible:ring-ring focus-visible:ring-offset-brand inline-flex min-h-11 items-center gap-1 rounded-md text-on-brand underline-offset-4 transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none lg:min-h-8'
 
 export function Header() {
   return (
