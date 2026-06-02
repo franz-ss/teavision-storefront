@@ -68,6 +68,34 @@ export const sanityPortableTextBodyFields = groq`
         crop,
         hotspot
       }
+    },
+    _type == "table" => {
+      caption,
+      rows[]{
+        _key,
+        cells[]{
+          _key,
+          text,
+          alt,
+          sourceUrl,
+          image{
+            asset->{
+              _id,
+              url,
+              metadata{
+                dimensions{
+                  width,
+                  height,
+                  aspectRatio
+                },
+                lqip
+              }
+            },
+            crop,
+            hotspot
+          }
+        }
+      }
     }
   }
 `

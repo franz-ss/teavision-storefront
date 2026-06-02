@@ -37,6 +37,49 @@ export type SanityImageWithAlt = {
   image: SanityImage | null
 }
 
+export type SanityPortableTextImageValue = {
+  _key?: string
+  _type: 'image' | 'imageWithAlt'
+  alt?: string | null
+  caption?: string | null
+  attribution?: string | null
+  asset?: SanityImageAsset | null
+  image?: SanityImage | null
+}
+
+export type SanityPortableTextCalloutValue = {
+  _key?: string
+  _type: 'callout'
+  title?: string | null
+  body?: string | null
+}
+
+export type SanityPortableTextTableCell = {
+  _key?: string
+  text?: string | null
+  image?: SanityImage | null
+  alt?: string | null
+  sourceUrl?: string | null
+}
+
+export type SanityPortableTextTableRow = {
+  _key?: string
+  cells?: SanityPortableTextTableCell[] | null
+}
+
+export type SanityPortableTextTableValue = {
+  _key?: string
+  _type: 'table'
+  caption?: string | null
+  rows?: SanityPortableTextTableRow[] | null
+}
+
+export type SanityPortableTextBlock =
+  | (PortableTextBlock & { _type: 'block' })
+  | SanityPortableTextImageValue
+  | SanityPortableTextCalloutValue
+  | SanityPortableTextTableValue
+
 export type SanityAuthor = {
   name: string | null
 }
@@ -78,7 +121,7 @@ export type SanityBlogPostSummary = {
 
 export type SanityBlogPost = SanityBlogPostSummary & {
   _updatedAt: string | null
-  body: PortableTextBlock[] | null
+  body: SanityPortableTextBlock[] | null
   legacyComments: SanityLegacyComment[] | null
   legacy: {
     contentHtml: string | null

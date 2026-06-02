@@ -1,5 +1,10 @@
-import type { PortableTextBlock } from '@portabletext/react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, within } from 'storybook/test'
+
+import type {
+  SanityPortableTextBlock,
+  SanityPortableTextTableCell,
+} from '@/lib/sanity/types'
 
 import { PortableTextContent } from './portable-text'
 
@@ -14,6 +19,10 @@ const meta: Meta<typeof PortableTextContent> = {
 export default meta
 
 type Story = StoryObj<typeof PortableTextContent>
+
+function tableCell(text: string | null): SanityPortableTextTableCell {
+  return { text }
+}
 
 const RICH_ARTICLE_BODY = [
   {
@@ -197,7 +206,7 @@ const RICH_ARTICLE_BODY = [
       },
     ],
   },
-] as unknown as PortableTextBlock[]
+] satisfies SanityPortableTextBlock[]
 
 const MEDIA_BODY = [
   {
@@ -222,12 +231,15 @@ const MEDIA_BODY = [
     attribution: 'Teavision',
     image: {
       asset: {
+        _id: 'image-blog-hero-webp',
         url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/blog-hero.webp?v=1764582604&width=1200',
         metadata: {
           dimensions: {
             width: 1200,
             height: 800,
+            aspectRatio: 1.5,
           },
+          lqip: null,
         },
       },
     },
@@ -238,7 +250,161 @@ const MEDIA_BODY = [
     title: 'Buyer note',
     body: 'Ask for origin, cut size, and microbial documentation before confirming production volumes.',
   },
-] as unknown as PortableTextBlock[]
+] satisfies SanityPortableTextBlock[]
+
+const HEADING_LEVELS_BODY = [
+  {
+    _type: 'block',
+    _key: 'authored-h1',
+    style: 'h1',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: 'authored-h1-text',
+        text: 'Authored H1 Becomes Section Heading',
+        marks: [],
+      },
+    ],
+  },
+  {
+    _type: 'block',
+    _key: 'authored-h3',
+    style: 'h3',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: 'authored-h3-text',
+        text: 'Blending Program',
+        marks: [],
+      },
+    ],
+  },
+  {
+    _type: 'block',
+    _key: 'authored-h4',
+    style: 'h4',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: 'authored-h4-text',
+        text: 'Origin Detail',
+        marks: [],
+      },
+    ],
+  },
+  {
+    _type: 'block',
+    _key: 'authored-h5',
+    style: 'h5',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: 'authored-h5-text',
+        text: 'Compact Sourcing Note',
+        marks: [],
+      },
+    ],
+  },
+  {
+    _type: 'block',
+    _key: 'authored-h6',
+    style: 'h6',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: 'authored-h6-text',
+        text: 'QA Label',
+        marks: [],
+      },
+    ],
+  },
+] satisfies SanityPortableTextBlock[]
+
+const TABLE_BODY = [
+  {
+    _type: 'block',
+    _key: 'table-intro',
+    style: 'normal',
+    markDefs: [],
+    children: [
+      {
+        _type: 'span',
+        _key: 'table-intro-text',
+        text: 'Tables should keep buying details scannable on wide and narrow screens.',
+        marks: [],
+      },
+    ],
+  },
+  {
+    _type: 'table',
+    _key: 'spec-table',
+    caption: 'Tea Specification Table',
+    rows: [
+      {
+        _key: 'table-header',
+        cells: [
+          tableCell('Format'),
+          tableCell('Typical use'),
+          tableCell('MOQ'),
+          tableCell('Lead time'),
+          tableCell('Notes'),
+        ],
+      },
+      {
+        _key: 'loose-leaf-row',
+        cells: [
+          tableCell('Loose Leaf'),
+          tableCell('Retail tins and refill pouches'),
+          tableCell('25 kg'),
+          tableCell('10 business days'),
+          tableCell('Blend code printed on carton labels'),
+        ],
+      },
+      {
+        _key: 'private-label-row',
+        cells: [
+          tableCell('Private Label Sachets'),
+          tableCell('Food service and hospitality'),
+          tableCell('50,000 units'),
+          tableCell('4 weeks'),
+          tableCell('Artwork approval required before production'),
+        ],
+      },
+      {
+        _key: 'empty-cell-row',
+        cells: [
+          tableCell('Sample Pack'),
+          tableCell('Buyer trial'),
+          tableCell(''),
+          tableCell('5 business days'),
+          tableCell(null),
+        ],
+      },
+    ],
+  },
+] satisfies SanityPortableTextBlock[]
+
+const CAPTIONLESS_TABLE_BODY = [
+  {
+    _type: 'table',
+    _key: 'captionless-table',
+    rows: [
+      {
+        _key: 'captionless-header',
+        cells: [tableCell('Lot'), tableCell('Status'), tableCell('Notes')],
+      },
+      {
+        _key: 'captionless-row',
+        cells: [tableCell('A-104'), tableCell('Approved'), tableCell('')],
+      },
+    ],
+  },
+] satisfies SanityPortableTextBlock[]
 
 const MISSING_IMAGE_BODY = [
   {
@@ -250,7 +416,7 @@ const MISSING_IMAGE_BODY = [
       asset: null,
     },
   },
-] as unknown as PortableTextBlock[]
+] satisfies SanityPortableTextBlock[]
 
 const UNSAFE_LINK_BODY = [
   {
@@ -273,7 +439,7 @@ const UNSAFE_LINK_BODY = [
       },
     ],
   },
-] as PortableTextBlock[]
+] satisfies SanityPortableTextBlock[]
 
 export const RichArticleBody: Story = {
   args: {
@@ -286,6 +452,85 @@ export const WithMediaAndCallout: Story = {
   args: {
     value: MEDIA_BODY,
     className: 'mx-auto max-w-prose',
+  },
+}
+
+export const HeadingLevels: Story = {
+  args: {
+    value: HEADING_LEVELS_BODY,
+    className: 'mx-auto max-w-prose',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.queryByRole('heading', { level: 1 })).toBeNull()
+    await expect(
+      canvas.getByRole('heading', {
+        level: 2,
+        name: 'Authored H1 Becomes Section Heading',
+      }),
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('heading', { level: 3, name: 'Blending Program' }),
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('heading', { level: 4, name: 'Origin Detail' }),
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('heading', {
+        level: 5,
+        name: 'Compact Sourcing Note',
+      }),
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('heading', { level: 6, name: 'QA Label' }),
+    ).toBeInTheDocument()
+  },
+}
+
+export const WithTable: Story = {
+  args: {
+    value: TABLE_BODY,
+    className: 'mx-auto max-w-prose',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.getByRole('table', { name: 'Tea Specification Table' }),
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('cell', { name: 'Format' }),
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('cell', { name: 'Private Label Sachets' }),
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getByText('Blend code printed on carton labels'),
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('table', { name: 'Tea Specification Table' })
+        .parentElement,
+    ).toHaveAttribute('tabindex', '0')
+  },
+}
+
+export const CaptionlessTable: Story = {
+  args: {
+    value: CAPTIONLESS_TABLE_BODY,
+    className: 'mx-auto max-w-prose',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const table = canvas.getByRole('table')
+
+    await expect(table).toBeInTheDocument()
+    await expect(canvas.getByRole('cell', { name: 'Lot' })).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('cell', { name: 'A-104' }),
+    ).toBeInTheDocument()
+    await expect(table.parentElement).toHaveAttribute('tabindex', '0')
+    await expect(table.parentElement).not.toHaveAttribute('role')
   },
 }
 

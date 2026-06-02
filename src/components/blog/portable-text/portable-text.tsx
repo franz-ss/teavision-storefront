@@ -1,47 +1,22 @@
 import {
   PortableText as ReactPortableText,
-  type PortableTextBlock,
   type PortableTextComponents,
 } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import type {
+  SanityPortableTextBlock,
+  SanityPortableTextCalloutValue,
+  SanityPortableTextTableCell,
+  SanityPortableTextImageValue,
+  SanityPortableTextTableValue,
+} from '@/lib/sanity/types'
 import { cn } from '@/lib/utils'
 
 type PortableTextContentProps = {
-  value: PortableTextBlock[] | null
+  value: SanityPortableTextBlock[] | null
   className?: string
-}
-
-type PortableTextImageValue = {
-  alt?: string | null
-  caption?: string | null
-  attribution?: string | null
-  asset?: {
-    url?: string | null
-    metadata?: {
-      dimensions?: {
-        width?: number | null
-        height?: number | null
-      } | null
-    } | null
-  } | null
-  image?: {
-    asset?: {
-      url?: string | null
-      metadata?: {
-        dimensions?: {
-          width?: number | null
-          height?: number | null
-        } | null
-      } | null
-    } | null
-  } | null
-}
-
-type PortableTextCalloutValue = {
-  title?: string | null
-  body?: string | null
 }
 
 type SafeLink = {
@@ -82,7 +57,7 @@ function getSafeLink(rawHref: unknown): SafeLink | null {
   }
 }
 
-function getPortableTextImage(value: PortableTextImageValue) {
+function getPortableTextImage(value: SanityPortableTextImageValue) {
   const asset = value.image?.asset ?? value.asset
   const dimensions = asset?.metadata?.dimensions
 
@@ -99,7 +74,7 @@ function getPortableTextImage(value: PortableTextImageValue) {
 }
 
 function PortableTextImageBlock({ value }: { value: unknown }) {
-  const image = value as PortableTextImageValue
+  const image = value as SanityPortableTextImageValue
   const resolvedImage = getPortableTextImage(image)
 
   if (!resolvedImage) return null
@@ -125,8 +100,34 @@ function PortableTextImageBlock({ value }: { value: unknown }) {
   )
 }
 
-const components: PortableTextComponents = {
+function getTableCell(cell: unknown): SanityPortableTextTableCell {
+  if (typeof cell === 'string') return { text: cell }
+  if (!cell || typeof cell !== 'object') return {}
+
+  return cell as SanityPortableTextTableCell
+}
+
+function getTableCellImage(cell: SanityPortableTextTableCell) {
+  const asset = cell.image?.asset
+  const dimensions = asset?.metadata?.dimensions
+
+  if (!asset?.url || !dimensions?.width || !dimensions.height) return null
+
+  return {
+    alt: cell.alt ?? '',
+    height: dimensions.height,
+    url: asset.url,
+    width: dimensions.width,
+  }
+}
+
+const components: PortableTextComponents<SanityPortableTextBlock> = {
   block: {
+    h1: ({ children }) => (
+      <h2 className="type-heading-02 text-strong mt-10 first:mt-0">
+        {children}
+      </h2>
+    ),
     h2: ({ children }) => (
       <h2 className="type-heading-02 text-strong mt-10 first:mt-0">
         {children}
@@ -141,6 +142,14 @@ const components: PortableTextComponents = {
       <h4 className="type-heading-04 text-strong mt-7 first:mt-0">
         {children}
       </h4>
+    ),
+    h5: ({ children }) => (
+      <h5 className="type-heading-05 text-strong mt-6 first:mt-0">
+        {children}
+      </h5>
+    ),
+    h6: ({ children }) => (
+      <h6 className="type-label text-strong mt-6 first:mt-0">{children}</h6>
     ),
     blockquote: ({ children }) => (
       <blockquote className="type-body-lg border-default bg-surface text-default my-8 rounded-md border p-5 italic">
@@ -205,7 +214,7 @@ const components: PortableTextComponents = {
     image: PortableTextImageBlock,
     imageWithAlt: PortableTextImageBlock,
     callout: ({ value }) => {
-      const callout = value as PortableTextCalloutValue
+      const callout = value as SanityPortableTextCalloutValue
 
       return (
         <aside className="border-default bg-surface my-8 rounded-md border p-5">
@@ -216,6 +225,61 @@ const components: PortableTextComponents = {
             <p className="type-body text-default mt-3">{callout.body}</p>
           )}
         </aside>
+      )
+    },
+    table: ({ value }) => {
+      const table = value as SanityPortableTextTableValue
+      const rows = table.rows?.filter((row) => row.cells?.length) ?? []
+      const caption = table.caption?.trim()
+
+      if (rows.length === 0) return null
+
+      return (
+        <div
+          aria-label={caption ? `${caption} scroll area` : undefined}
+          className="focus-visible:ring-ring my-8 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          role={caption ? 'region' : undefined}
+          tabIndex={0}
+        >
+          <table className="type-body-sm border-default w-full min-w-full border-collapse border text-left">
+            {caption && (
+              <caption className="type-body-sm text-muted mb-3 text-left">
+                {caption}
+              </caption>
+            )}
+            <tbody>
+              {rows.map((row, rowIndex) => (
+                <tr key={row._key ?? rowIndex}>
+                  {(row.cells ?? []).map((cell, cellIndex) => {
+                    const tableCell = getTableCell(cell)
+                    const cellText = tableCell.text?.trim() ?? ''
+                    const cellImage = getTableCellImage(tableCell)
+                    const cellKey = `${row._key ?? rowIndex}-${cellIndex}`
+
+                    return (
+                      <td
+                        className="border-default border px-3 py-2 align-top"
+                        key={cellKey}
+                      >
+                        {cellImage && (
+                          <Image
+                            src={cellImage.url}
+                            alt={cellImage.alt}
+                            width={cellImage.width}
+                            height={cellImage.height}
+                            sizes="96px"
+                            className="mb-2 h-auto w-24 rounded object-cover"
+                          />
+                        )}
+                        {cellText}
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )
     },
   },
@@ -230,7 +294,10 @@ export function PortableTextContent({
 
   return (
     <div className={cn('wrap-break-word', className)}>
-      <ReactPortableText value={value} components={components} />
+      <ReactPortableText<SanityPortableTextBlock>
+        value={value}
+        components={components}
+      />
     </div>
   )
 }

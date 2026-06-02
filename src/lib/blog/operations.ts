@@ -1,4 +1,3 @@
-import type { PortableTextBlock } from '@portabletext/react'
 import type { SanityImageSource } from '@sanity/image-url'
 import { cacheLife, cacheTag } from 'next/cache'
 
@@ -14,6 +13,7 @@ import type {
   SanityBlogListingResult,
   SanityBlogPostResult,
   SanityImageWithAlt,
+  SanityPortableTextBlock,
   SanitySeo,
 } from '@/lib/sanity/types'
 
@@ -59,7 +59,7 @@ export type BlogArticleSummary = {
 }
 
 export type BlogArticle = BlogArticleSummary & {
-  body: PortableTextBlock[]
+  body: SanityPortableTextBlock[]
   contentHtml: string
   comments: BlogComment[]
   updatedAt: string
