@@ -29,6 +29,8 @@ import {
   normalizeHtml,
   paramValues,
   parseSelectedFilterParams,
+  shouldAlwaysShowRichDescription,
+  shouldShowCollectionIntroContent,
   shouldRenderRichDescription,
   SORT_MAP,
 } from '../_lib/page-helpers'
@@ -125,12 +127,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
         !isCategoryFilter(filter),
     ),
   ].filter((filter): filter is CollectionProductFilter => Boolean(filter))
-  const heroImage = getHeroImage(
-    handle,
-    collection.featuredImage,
-    collection.descriptionHtml,
-    collection.title,
-  )
+  const heroImage = getHeroImage(handle, collection.featuredImage)
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
   const collectionPath = category
@@ -141,10 +138,14 @@ export async function PageContent({ params, searchParams }: PageProps) {
   const richDescriptionHtml = normalizeHtml(collection.descriptionHtml)
   const sanitizedRichDescriptionHtml =
     sanitizeShopifyCompactHtml(richDescriptionHtml)
-  const hasRichDescription = shouldRenderRichDescription(
-    collection.descriptionHtml,
-    collection.description,
-  )
+  const showIntroContent = shouldShowCollectionIntroContent(handle)
+  const hasRichDescription =
+    shouldRenderRichDescription(
+      collection.descriptionHtml,
+      collection.description,
+    ) ||
+    (shouldAlwaysShowRichDescription(handle) &&
+      richDescriptionHtml.trim().length > 0)
 
   return (
     <>
@@ -159,25 +160,19 @@ export async function PageContent({ params, searchParams }: PageProps) {
         collectionTitle={collection.title}
         heroDescription={heroDescription}
         heroImage={heroImage}
+        belowHeroImage={
+          hasRichDescription ? (
+            <StoryDisclosure
+              title={`Read more about ${collection.title}`}
+              html={sanitizedRichDescriptionHtml}
+              className="max-w-4xl"
+            />
+          ) : null
+        }
+        showIntro={showIntroContent}
       />
 
       <div className="bg-canvas w-full max-w-full overflow-x-hidden">
-        {hasRichDescription && (
-          <Section.Root
-            tone="surface"
-            spacing="compact"
-            className="border-default border-b"
-          >
-            <Section.Container>
-              <StoryDisclosure
-                title={`Read more about ${collection.title}`}
-                html={sanitizedRichDescriptionHtml}
-                className="max-w-4xl"
-              />
-            </Section.Container>
-          </Section.Root>
-        )}
-
         <Section.Root tone="transparent" aria-labelledby="products-heading">
           <Section.Container>
             <Toolbar

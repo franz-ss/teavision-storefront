@@ -13,7 +13,6 @@ export type HeroImage = {
   altText: string | null
   width: number | null
   height: number | null
-  layout?: 'standard' | 'legacy-banner'
 }
 
 const LEGACY_COLLECTION_BANNER_BLOCK_PATTERN =
@@ -50,9 +49,16 @@ const HERO_IMAGE_OVERRIDES: Record<string, HeroImage> = {
     altText: 'Tea Masters Selection loose leaf tea being prepared by hand',
     width: 1894,
     height: 830,
-    layout: 'standard',
   },
 }
+
+const HIDDEN_HERO_INTRO_HANDLES = new Set([
+  'tea-masters-selection-worlds-best-teas',
+])
+
+const FORCED_RICH_DESCRIPTION_HANDLES = new Set([
+  'tea-masters-selection-worlds-best-teas',
+])
 
 export function truncateMetaDescription(value: string): string {
   return value.length > 160 ? `${value.slice(0, 157).trimEnd()}…` : value
@@ -75,20 +81,6 @@ function removeCitationMarkers(value: string): string {
   return value.replace(/:contentReference\[[^\]]+\]\{[^}]+\}/g, ' ')
 }
 
-function decodeHtmlEntities(value: string): string {
-  return value
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'")
-    .replace(/&nbsp;/g, ' ')
-}
-
-function normalizeShopifyImageUrl(url: string): string {
-  const decodedUrl = decodeHtmlEntities(url).trim()
-  return decodedUrl.startsWith('//') ? `https:${decodedUrl}` : decodedUrl
-}
-
 function truncateHeroDescription(value: string): string {
   if (value.length <= 280) return value
   return `${value.slice(0, 277).trimEnd()}…`
@@ -106,35 +98,6 @@ export function cleanHeroDescription(value: string): string {
       : withoutMarkers
 
   return truncateHeroDescription(cleaned)
-}
-
-function getLegacyBannerImage(
-  html: string,
-  collectionTitle: string,
-): HeroImage | null {
-  const blockMatch = html.match(LEGACY_COLLECTION_BANNER_BLOCK_PATTERN)
-  const block = blockMatch?.[0]
-  if (!block) return null
-
-  const backgroundImageMatch = block.match(
-    /background-image\s*:\s*url\(\s*["']?([^"')]+)["']?\s*\)/i,
-  )
-  const imgMatch = block.match(/\bsrc=["']([^"']+)["']/i)
-  const rawUrl = backgroundImageMatch?.[1] ?? imgMatch?.[1] ?? null
-  if (!rawUrl) return null
-
-  const headingMatch = block.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)
-  const legacyTitle = headingMatch?.[1]
-    ? plainTextFromHtml(headingMatch[1])
-    : collectionTitle
-
-  return {
-    url: normalizeShopifyImageUrl(rawUrl),
-    altText: `${legacyTitle} collection banner`,
-    width: null,
-    height: null,
-    layout: 'legacy-banner',
-  }
 }
 
 export function normalizeHtml(html: string): string {
@@ -395,7 +358,8 @@ export function findCategoryTagForPath(
   if (!category) return null
   const normalizedCategory = normalizeCategoryPathSegment(category)
   const categoryTags = getCategoryTagsFromFilters(filters)
-  const tags = categoryTags.length > 0 ? categoryTags : getCategoryTags(products)
+  const tags =
+    categoryTags.length > 0 ? categoryTags : getCategoryTags(products)
 
   return (
     tags.find((tag) => toCategoryPathSegment(tag) === normalizedCategory) ??
@@ -518,12 +482,14 @@ export function parseSelectedFilterParams(values: string[]): {
 export function getHeroImage(
   handle: string,
   featuredImage: HeroImage | null,
-  descriptionHtml: string,
-  collectionTitle: string,
 ): HeroImage | null {
-  return (
-    HERO_IMAGE_OVERRIDES[handle] ??
-    getLegacyBannerImage(descriptionHtml, collectionTitle) ??
-    featuredImage
-  )
+  return HERO_IMAGE_OVERRIDES[handle] ?? featuredImage
+}
+
+export function shouldShowCollectionIntroContent(handle: string): boolean {
+  return !HIDDEN_HERO_INTRO_HANDLES.has(handle)
+}
+
+export function shouldAlwaysShowRichDescription(handle: string): boolean {
+  return FORCED_RICH_DESCRIPTION_HANDLES.has(handle)
 }
