@@ -56,10 +56,25 @@ export type Product = {
   reviewCount?: number
 }
 
+export type ProductQuickViewDetails = Pick<
+  Product,
+  | 'description'
+  | 'handle'
+  | 'id'
+  | 'images'
+  | 'options'
+  | 'priceRange'
+  | 'rating'
+  | 'reviewCount'
+  | 'title'
+  | 'variants'
+>
+
 export type ProductSummary = {
   id: string
   handle: string
   title: string
+  updatedAt?: string
   description?: string
   availableForSale?: boolean
   featuredImage: ShopifyImage | null
@@ -72,8 +87,6 @@ export type CollectionProductSummary = ProductSummary & {
   availableForSale: boolean
   productType: string
   tags: string[]
-  options: ProductOption[]
-  variants: ProductVariant[]
 }
 
 export type CollectionFilterValue = {
@@ -94,6 +107,10 @@ export type CollectionProductFilter = {
 export type CollectionProductsResult = {
   products: CollectionProductSummary[]
   filters: CollectionProductFilter[]
+  pageInfo: {
+    hasNextPage: boolean
+    endCursor: string | null
+  }
 }
 
 export type Collection = {

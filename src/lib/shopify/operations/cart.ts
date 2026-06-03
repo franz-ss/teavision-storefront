@@ -7,21 +7,9 @@ import {
   GetCartDocument,
   type Cart,
   type GetCartQuery,
-  type Money,
-  type ShopifyImage,
 } from '@/lib/shopify/types'
 
-type MoneyLike = {
-  amount: unknown
-  currencyCode: string
-}
-
-type ShopifyImageLike = {
-  url: unknown
-  altText?: string | null
-  width?: number | null
-  height?: number | null
-}
+import { reshapeImage, reshapeMoney } from './mappers'
 
 type ShopifyCart = NonNullable<GetCartQuery['cart']>
 
@@ -39,22 +27,6 @@ type ShopifyCartLineDiscountAllocation =
 type ShopifyUserError = {
   field?: string[] | null
   message: string
-}
-
-function reshapeMoney(money: MoneyLike): Money {
-  return {
-    amount: String(money.amount),
-    currencyCode: String(money.currencyCode),
-  }
-}
-
-function reshapeImage(image: ShopifyImageLike): ShopifyImage {
-  return {
-    url: String(image.url),
-    altText: image.altText ?? null,
-    width: image.width ?? null,
-    height: image.height ?? null,
-  }
 }
 
 function reshapeProduct(

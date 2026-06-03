@@ -60,7 +60,6 @@ export type BlogArticleSummary = {
 
 export type BlogArticle = BlogArticleSummary & {
   body: SanityPortableTextBlock[]
-  contentHtml: string
   comments: BlogComment[]
   updatedAt: string
 }
@@ -202,7 +201,6 @@ function reshapeArticle(article: SanityBlogPost): BlogArticle {
   return {
     ...summary,
     body: article.body ?? [],
-    contentHtml: article.legacy?.contentHtml ?? '',
     comments: (article.legacyComments ?? []).map(reshapeComment),
     updatedAt: article._updatedAt ?? summary.publishedAt,
   }

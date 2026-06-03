@@ -162,9 +162,6 @@ export const blogArticleQuery = groq`
         id,
         authorName,
         contentHtml
-      },
-      legacy{
-        contentHtml
       }
     }
   }

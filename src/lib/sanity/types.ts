@@ -123,9 +123,6 @@ export type SanityBlogPost = SanityBlogPostSummary & {
   _updatedAt: string | null
   body: SanityPortableTextBlock[] | null
   legacyComments: SanityLegacyComment[] | null
-  legacy: {
-    contentHtml: string | null
-  } | null
 }
 
 export type SanityBlogListingResult = {

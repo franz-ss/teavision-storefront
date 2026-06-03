@@ -2,6 +2,7 @@ fragment ProductSummaryFields on Product {
   id
   handle
   title
+  updatedAt
   featuredImage {
     url
     altText

@@ -15,27 +15,20 @@ import {
   type GetCollectionQuery,
   type GetCollectionProductsQuery,
   type GetCollectionSummariesQuery,
-  type Money,
   type ProductFilter,
-  type ProductOption,
   type ProductSummary,
-  type ProductVariant,
-  type ShopifyImage,
 } from '@/lib/shopify/types'
 
+import {
+  parseProductRating,
+  reshapeImage,
+  reshapeMoney,
+  type MoneyLike,
+  type ShopifyImageLike,
+} from './mappers'
+
 const SHOPIFY_PAGE_SIZE = 250
-
-type MoneyLike = {
-  amount: unknown
-  currencyCode: string
-}
-
-type ShopifyImageLike = {
-  url: unknown
-  altText?: string | null
-  width?: number | null
-  height?: number | null
-}
+export const COLLECTION_PRODUCT_PAGE_SIZE = 24
 
 type ShopifyProductSummaryNode = {
   id: string
@@ -55,58 +48,10 @@ type ShopifyCollectionProductFilterNode = NonNullable<
   GetCollectionProductsQuery['collection']
 >['products']['filters'][number]
 
-type ShopifyCollectionProductVariantNode =
-  ShopifyCollectionProductNode['variants']['edges'][number]['node']
-
 type ShopifyCollectionNode = NonNullable<GetCollectionQuery['collection']>
 
 type ShopifyCollectionSummaryNode =
   GetCollectionSummariesQuery['collections']['edges'][number]['node']
-
-function reshapeMoney(money: MoneyLike): Money {
-  return {
-    amount: String(money.amount),
-    currencyCode: String(money.currencyCode),
-  }
-}
-
-function reshapeImage(image: ShopifyImageLike): ShopifyImage {
-  return {
-    url: String(image.url),
-    altText: image.altText ?? null,
-    width: image.width ?? null,
-    height: image.height ?? null,
-  }
-}
-
-function parseProductRating(product: ShopifyProductSummaryNode): {
-  rating?: number
-  reviewCount?: number
-} {
-  let rating: number | undefined
-  let reviewCount: number | undefined
-
-  if (product.ratingMetafield?.value) {
-    try {
-      const parsed: unknown = JSON.parse(product.ratingMetafield.value)
-      const value =
-        typeof parsed === 'object' && parsed !== null && 'value' in parsed
-          ? parsed.value
-          : undefined
-      const nextRating = parseFloat(typeof value === 'string' ? value : '')
-      if (!Number.isNaN(nextRating)) rating = nextRating
-    } catch {
-      // Rating metafields are optional and can be malformed in Shopify.
-    }
-  }
-
-  if (product.ratingCountMetafield?.value) {
-    const nextReviewCount = parseInt(product.ratingCountMetafield.value, 10)
-    if (!Number.isNaN(nextReviewCount)) reviewCount = nextReviewCount
-  }
-
-  return { rating, reviewCount }
-}
 
 function textFromHtml(html: string): string {
   return removeCitationMarkers(html)
@@ -176,26 +121,6 @@ function reshapeProductSummary(
   }
 }
 
-function reshapeProductOption(option: ProductOption): ProductOption {
-  return {
-    name: option.name,
-    values: option.values,
-  }
-}
-
-function reshapeProductVariant(
-  variant: ShopifyCollectionProductVariantNode,
-): ProductVariant {
-  return {
-    id: variant.id,
-    title: variant.title,
-    availableForSale: variant.availableForSale,
-    price: reshapeMoney(variant.price),
-    quantityPriceBreaks: [],
-    image: variant.image ? reshapeImage(variant.image) : null,
-  }
-}
-
 function reshapeCollectionProductSummary(
   product: ShopifyCollectionProductNode,
 ): CollectionProductSummary {
@@ -204,10 +129,6 @@ function reshapeCollectionProductSummary(
     availableForSale: product.availableForSale,
     productType: product.productType,
     tags: product.tags,
-    options: product.options.map(reshapeProductOption),
-    variants: product.variants.edges.map((edge) =>
-      reshapeProductVariant(edge.node),
-    ),
   }
 }
 
@@ -350,7 +271,7 @@ export async function getCollectionSummaries(
 
 export async function getCollectionProducts(
   handle: string,
-  first = SHOPIFY_PAGE_SIZE,
+  first = COLLECTION_PRODUCT_PAGE_SIZE,
   sortKey = ProductCollectionSortKeys.CollectionDefault,
   reverse = false,
 ): Promise<ProductSummary[]> {
@@ -366,42 +287,42 @@ export async function getCollectionProducts(
 
 export async function getCollectionProductsWithFilters(
   handle: string,
-  first = SHOPIFY_PAGE_SIZE,
+  first = COLLECTION_PRODUCT_PAGE_SIZE,
   sortKey = ProductCollectionSortKeys.CollectionDefault,
   reverse = false,
   filters: ProductFilter[] = [],
+  after?: string | null,
 ): Promise<CollectionProductsResult> {
   'use cache'
   cacheTag('collection', `collection-${handle}`)
   cacheLife('hours')
 
-  const products: CollectionProductSummary[] = []
-  let productFilters: CollectionProductFilter[] = []
-  let after: string | null | undefined
-  let hasNextPage = true
+  const data = await shopifyFetch({
+    query: GetCollectionProductsDocument,
+    variables: { handle, first, after, sortKey, reverse, filters },
+  })
 
-  while (hasNextPage) {
-    const data = await shopifyFetch({
-      query: GetCollectionProductsDocument,
-      variables: { handle, first, after, sortKey, reverse, filters },
-    })
-
-    if (!data.collection) return { products: [], filters: [] }
-
-    if (productFilters.length === 0) {
-      productFilters = data.collection.products.filters.map(
-        reshapeCollectionProductFilter,
-      )
+  if (!data.collection) {
+    return {
+      products: [],
+      filters: [],
+      pageInfo: { hasNextPage: false, endCursor: null },
     }
-
-    products.push(
-      ...data.collection.products.edges.map((edge) =>
-        reshapeCollectionProductSummary(edge.node),
-      ),
-    )
-    hasNextPage = data.collection.products.pageInfo.hasNextPage
-    after = data.collection.products.pageInfo.endCursor
   }
 
-  return { products, filters: productFilters }
+  const products = data.collection.products.edges.map((edge) =>
+    reshapeCollectionProductSummary(edge.node),
+  )
+  const productFilters = data.collection.products.filters.map(
+    reshapeCollectionProductFilter,
+  )
+
+  return {
+    products,
+    filters: productFilters,
+    pageInfo: {
+      hasNextPage: data.collection.products.pageInfo.hasNextPage,
+      endCursor: data.collection.products.pageInfo.endCursor ?? null,
+    },
+  }
 }

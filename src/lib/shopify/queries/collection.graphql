@@ -83,25 +83,6 @@ query GetCollectionProducts(
           ) {
             value
           }
-          variants(first: 10) {
-            edges {
-              node {
-                id
-                title
-                availableForSale
-                image {
-                  url
-                  altText
-                  width
-                  height
-                }
-                price {
-                  amount
-                  currencyCode
-                }
-              }
-            }
-          }
         }
       }
     }

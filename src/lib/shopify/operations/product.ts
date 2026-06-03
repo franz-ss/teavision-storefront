@@ -14,8 +14,15 @@ import {
   type Product,
   type ProductOption,
   type ProductSummary,
-  type ShopifyImage,
 } from '@/lib/shopify/types'
+
+import {
+  parseProductRating,
+  reshapeImage,
+  reshapeMoney,
+  type MoneyLike,
+  type ShopifyImageLike,
+} from './mappers'
 
 const SHOPIFY_PAGE_SIZE = 250
 const HULK_VOLUME_DISCOUNT_ENDPOINT =
@@ -23,18 +30,6 @@ const HULK_VOLUME_DISCOUNT_ENDPOINT =
 const HULK_PERCENT_DISCOUNT_TYPE = '% Off'
 const HULK_VOLUME_DISCOUNT_STORE_ID =
   process.env.HULK_VOLUME_DISCOUNT_STORE_ID ?? 'mrteashop-com.myshopify.com'
-
-type MoneyLike = {
-  amount: unknown
-  currencyCode: string
-}
-
-type ShopifyImageLike = {
-  url: unknown
-  altText?: string | null
-  width?: number | null
-  height?: number | null
-}
 
 type ShopifyProductNode = NonNullable<GetProductQuery['product']>
 
@@ -46,10 +41,16 @@ type LegacyVariantInventory = {
   quantityAvailable: number
 }
 
+type LegacyBulkPricingResult = {
+  tiers: BulkPricingTier[]
+  degraded: boolean
+}
+
 type ShopifyProductSummaryNode = {
   id: string
   handle: string
   title: string
+  updatedAt?: string
   featuredImage?: ShopifyImageLike | null
   priceRange: { minVariantPrice: MoneyLike }
   ratingMetafield?: { value: string } | null
@@ -71,51 +72,6 @@ function formatPercentLabel(value: number): string {
   if (Number.isInteger(value)) return String(value)
 
   return value.toFixed(2).replace(/\.?0+$/, '')
-}
-
-function reshapeMoney(money: MoneyLike): Money {
-  return {
-    amount: String(money.amount),
-    currencyCode: String(money.currencyCode),
-  }
-}
-
-function reshapeImage(image: ShopifyImageLike): ShopifyImage {
-  return {
-    url: String(image.url),
-    altText: image.altText ?? null,
-    width: image.width ?? null,
-    height: image.height ?? null,
-  }
-}
-
-function parseProductRating(product: ShopifyProductSummaryNode): {
-  rating?: number
-  reviewCount?: number
-} {
-  let rating: number | undefined
-  let reviewCount: number | undefined
-
-  if (product.ratingMetafield?.value) {
-    try {
-      const parsed: unknown = JSON.parse(product.ratingMetafield.value)
-      const value =
-        typeof parsed === 'object' && parsed !== null && 'value' in parsed
-          ? parsed.value
-          : undefined
-      const nextRating = parseFloat(typeof value === 'string' ? value : '')
-      if (!Number.isNaN(nextRating)) rating = nextRating
-    } catch {
-      // Rating metafields are optional and can be malformed in Shopify.
-    }
-  }
-
-  if (product.ratingCountMetafield?.value) {
-    const nextReviewCount = parseInt(product.ratingCountMetafield.value, 10)
-    if (!Number.isNaN(nextReviewCount)) reviewCount = nextReviewCount
-  }
-
-  return { rating, reviewCount }
 }
 
 function readNumberField(
@@ -467,6 +423,7 @@ function reshapeProductSummary(p: ShopifyProductSummaryNode): ProductSummary {
     id: p.id,
     handle: p.handle,
     title: p.title,
+    ...(p.updatedAt && { updatedAt: String(p.updatedAt) }),
     featuredImage: p.featuredImage ? reshapeImage(p.featuredImage) : null,
     priceRange: {
       minVariantPrice: reshapeMoney(p.priceRange.minVariantPrice),
@@ -486,13 +443,15 @@ function hasBulkPricingTiers(product: Product): boolean {
 async function getLegacyHulkBulkPricingTiers(
   product: ShopifyProductNode,
   variants: ShopifyVariantNode[],
-): Promise<BulkPricingTier[]> {
+): Promise<LegacyBulkPricingResult> {
   const productId = getNumericShopifyId(product.id)
   const productVariants = variants
     .map((variant) => getNumericShopifyId(variant.id))
     .filter((variantId): variantId is string => variantId !== null)
 
-  if (!productId || productVariants.length === 0) return []
+  if (!productId || productVariants.length === 0) {
+    return { tiers: [], degraded: false }
+  }
 
   const productCollections = product.collections.nodes
     .map((collection) => getNumericShopifyId(collection.id))
@@ -516,12 +475,24 @@ async function getLegacyHulkBulkPricingTiers(
       body: params,
     })
 
-    if (!response.ok) return []
+    if (!response.ok) {
+      console.warn('HulkApps volume discount request failed', {
+        status: response.status,
+        productId,
+      })
+      return { tiers: [], degraded: true }
+    }
 
     const data: unknown = await response.json()
-    return parseLegacyHulkBulkPricingTiers(data)
+    return {
+      tiers: parseLegacyHulkBulkPricingTiers(data),
+      degraded: false,
+    }
   } catch {
-    return []
+    console.warn('HulkApps volume discount request threw before completion', {
+      productId,
+    })
+    return { tiers: [], degraded: true }
   }
 }
 
@@ -608,7 +579,6 @@ async function fetchProductSummaryPages(
 export async function getProduct(handle: string): Promise<Product | null> {
   'use cache'
   cacheTag('product', `product-${handle}`)
-  cacheLife('hours')
 
   const data = await shopifyFetch({
     query: GetProductDocument,
@@ -619,7 +589,10 @@ export async function getProduct(handle: string): Promise<Product | null> {
     },
   })
 
-  if (!data.product) return null
+  if (!data.product) {
+    cacheLife('minutes')
+    return null
+  }
 
   const variants = await getProductVariantNodes(handle, data.product.variants)
   const legacyInventoryByVariantId = await getLegacyProductInventory(
@@ -632,18 +605,28 @@ export async function getProduct(handle: string): Promise<Product | null> {
     legacyInventoryByVariantId,
   )
 
-  if (hasBulkPricingTiers(product)) return product
+  if (hasBulkPricingTiers(product)) {
+    cacheLife('hours')
+    return product
+  }
 
-  const legacyBulkPricingTiers = await getLegacyHulkBulkPricingTiers(
+  const legacyBulkPricing = await getLegacyHulkBulkPricingTiers(
     data.product,
     variants,
   )
 
-  if (legacyBulkPricingTiers.length === 0) return product
+  if (legacyBulkPricing.degraded) {
+    cacheLife('minutes')
+    return product
+  }
+
+  cacheLife('hours')
+
+  if (legacyBulkPricing.tiers.length === 0) return product
 
   return {
     ...product,
-    bulkPricingTiers: legacyBulkPricingTiers,
+    bulkPricingTiers: legacyBulkPricing.tiers,
   }
 }
 

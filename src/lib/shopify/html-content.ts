@@ -132,7 +132,7 @@ const SHOPIFY_HTML_CLASS_NAMES: Record<
     li: 'type-body text-default pl-1',
     ol: 'list-decimal pl-6',
     p: 'type-body text-default',
-    table: 'my-8 block w-full overflow-x-auto border-collapse',
+    table: 'w-full min-w-full border-collapse',
     td: 'type-body-sm border border-default p-3 align-top',
     th: 'type-label border border-default bg-surface-sunken p-3 text-left align-top',
     ul: 'list-disc pl-6',
@@ -153,7 +153,7 @@ const SHOPIFY_HTML_CLASS_NAMES: Record<
     li: 'type-body text-default pl-1',
     ol: 'list-decimal pl-6',
     p: 'type-body text-default',
-    table: 'my-8 block w-full overflow-x-auto border-collapse',
+    table: 'w-full min-w-full border-collapse',
     td: 'type-body-sm border border-default p-3 align-top',
     th: 'type-label border border-default bg-surface-sunken p-3 text-left align-top',
     ul: 'list-disc pl-6',
@@ -174,12 +174,21 @@ const SHOPIFY_HTML_CLASS_NAMES: Record<
     li: 'type-body-sm text-default pl-1',
     ol: 'list-decimal pl-6',
     p: 'type-body-sm text-default',
-    table: 'my-6 block w-full overflow-x-auto border-collapse',
+    table: 'w-full min-w-full border-collapse',
     td: 'type-body-sm border border-default p-3 align-top',
     th: 'type-label border border-default bg-surface-sunken p-3 text-left align-top',
     ul: 'list-disc pl-6',
   },
 }
+
+const SHOPIFY_HTML_TABLE_REGION_CLASS_NAMES: Record<ShopifyHtmlVariant, string> =
+  {
+    page: 'focus-visible:ring-ring my-8 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+    article:
+      'focus-visible:ring-ring my-8 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+    compact:
+      'focus-visible:ring-ring my-6 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+  }
 
 const SHOPIFY_HTML_LINK_CLASS_NAME =
   'text-link hover:text-link-hover focus-visible:ring-ring rounded underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
@@ -319,16 +328,40 @@ function buildShopifyHtmlOptions(
   }
 }
 
+function wrapTablesWithScrollRegion(
+  html: string,
+  variant: ShopifyHtmlVariant,
+): string {
+  if (!html.includes('<table')) return html
+
+  const className = SHOPIFY_HTML_TABLE_REGION_CLASS_NAMES[variant]
+  const regionOpen = `<div class="${className}" role="region" tabindex="0" aria-label="Scrollable rich text table">`
+
+  return html
+    .replace(/<table class="([^"]*)">/g, `${regionOpen}<table class="$1">`)
+    .replace(/<table>/g, `${regionOpen}<table>`)
+    .replace(/<\/table>/g, '</table></div>')
+}
+
+function sanitizeShopifyHtml(
+  html: string,
+  variant: ShopifyHtmlVariant,
+): SanitizedHtml {
+  const sanitized = sanitizeHtml(html, buildShopifyHtmlOptions(variant))
+
+  return wrapTablesWithScrollRegion(sanitized, variant) as SanitizedHtml
+}
+
 export function sanitizeShopifyPageBodyHtml(html: string): SanitizedHtml {
-  return sanitizeHtml(html, buildShopifyHtmlOptions('page')) as SanitizedHtml
+  return sanitizeShopifyHtml(html, 'page')
 }
 
 export function sanitizeShopifyArticleHtml(html: string): SanitizedHtml {
-  return sanitizeHtml(html, buildShopifyHtmlOptions('article')) as SanitizedHtml
+  return sanitizeShopifyHtml(html, 'article')
 }
 
 export function sanitizeShopifyCompactHtml(html: string): SanitizedHtml {
-  return sanitizeHtml(html, buildShopifyHtmlOptions('compact')) as SanitizedHtml
+  return sanitizeShopifyHtml(html, 'compact')
 }
 
 export function plainTextFromHtml(html: string): string {
