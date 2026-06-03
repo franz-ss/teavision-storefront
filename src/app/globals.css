@@ -20,7 +20,6 @@
   --color-footer: var(--tv-bg-footer-legacy);
   --color-footer-accent: var(--tv-bg-footer-accent);
   --color-footer-accent-hover: var(--tv-bg-footer-accent-hover);
-  --color-footer-bottom: var(--tv-bg-footer-bottom);
   --color-footer-muted: var(--tv-text-footer-muted);
   --color-footer-placeholder: var(--tv-text-footer-placeholder);
   --color-border: var(--tv-border-default);
@@ -256,6 +255,14 @@
 
 @utility text-footer-placeholder {
   color: var(--tv-text-footer-placeholder);
+}
+
+@utility bg-footer-bottom {
+  background-color: var(--tv-bg-footer-bottom);
+}
+
+@utility ring-offset-footer-bottom {
+  --tw-ring-offset-color: var(--tv-bg-footer-bottom);
 }
 
 @utility bg-brand {
