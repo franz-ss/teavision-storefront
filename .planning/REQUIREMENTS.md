@@ -43,6 +43,21 @@
 - [x] **FOOTER-04**: Newsletter signup and contact links remain functional through existing server/action boundaries, validation, honeypot protection, and accessible feedback.
 - [x] **FOOTER-05**: Footer parity is verified through Storybook coverage plus browser checks/screenshot comparison against the live footer.
 
+## v4 Requirements
+
+### Codebase Review Remediation
+
+- [x] **AUDIT-01**: Core conversion paths are corrected and observable: homepage CTA routes to the real contact page, homepage contact/newsletter submissions expose pending/success/error feedback, and PDP add-to-cart refreshes visible cart state with an accessible success announcement.
+- [x] **AUDIT-02**: Release-relevant accessibility issues are fixed, including bypass navigation, nested landmarks, autoplay motion control, async status announcements, rating labels, rich-text table keyboard access, touch target sizing, decorative icon hiding, and breadcrumb overflow.
+- [x] **AUDIT-03**: Inline structured-data scripts and SEO-critical metadata are safe and consistent across home, collection, product, article, page, sitemap, and robots surfaces.
+- [x] **AUDIT-04**: Automated quality gates exist for typechecking, contract tests, Storybook/a11y coverage, and core cart/product/form interactions.
+- [x] **AUDIT-05**: Production reliability and abuse-resistance gaps are closed for contact/newsletter rate limiting, search suggestions, Shopify page cache invalidation, quick-view failures, codegen env validation, and third-party enrichment degradation.
+- [x] **AUDIT-06**: Collection and storefront performance risks are reduced by limiting PLP fetch/render work, pushing filters closer to the data layer, lazy-loading expensive client islands, and standardizing image handling.
+- [x] **AUDIT-07**: Component and route boundaries follow project conventions: broad route files are split, domain components leave `ui`, add-to-cart behavior is centralized, primitives are reused by forms, public component APIs are documented, and Storybook coverage fills gaps.
+- [x] **AUDIT-08**: TypeScript/runtime maintainability gaps are reduced by replacing unsafe JSON assertions with guards, extracting shared Shopify mappers, tightening Portable Text rendering, avoiding client-side barrel ambiguity, and fixing scaffold templates.
+- [x] **AUDIT-09**: Sitemap and canonical URL hygiene reflects real routes and durable modification dates rather than stale paths or request-time `new Date()` values.
+- [x] **AUDIT-10**: Final verification records lint, typecheck, build, contract tests, Storybook build, targeted browser checks, accessibility checks, and a production-readiness summary.
+
 ## Out of Scope
 
 | Feature                                                | Reason                                                                                 |
@@ -75,6 +90,16 @@
 | FOOTER-03   | Phase 4  | Complete |
 | FOOTER-04   | Phase 4  | Complete |
 | FOOTER-05   | Phase 4  | Complete |
+| AUDIT-01    | Phase 5  | Complete |
+| AUDIT-02    | Phase 5  | Complete |
+| AUDIT-03    | Phase 5  | Complete |
+| AUDIT-04    | Phase 5  | Complete |
+| AUDIT-05    | Phase 5  | Complete |
+| AUDIT-06    | Phase 5  | Complete |
+| AUDIT-07    | Phase 5  | Complete |
+| AUDIT-08    | Phase 5  | Complete |
+| AUDIT-09    | Phase 5  | Complete |
+| AUDIT-10    | Phase 5  | Complete |
 | BULK-09     | Deferred | Deferred |
 | BULK-10     | Deferred | Deferred |
 
@@ -83,11 +108,12 @@
 - v1 requirements: 8 total
 - v2 search requirements: 7 total
 - v3 footer requirements: 5 total
+- v4 audit remediation requirements: 10 total
 - Deferred pricing requirements: 2 total
-- Mapped to phases: 20
+- Mapped to phases: 30
 - Unmapped active/planned requirements: 0
 
 ---
 
 _Requirements defined: 2026-05-26_
-_Last updated: 2026-05-29 for Phase 4 footer parity completion_
+_Last updated: 2026-06-02 for Phase 5 codebase review remediation completion_
