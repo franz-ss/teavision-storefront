@@ -58,6 +58,17 @@
 - [x] **AUDIT-09**: Sitemap and canonical URL hygiene reflects real routes and durable modification dates rather than stale paths or request-time `new Date()` values.
 - [x] **AUDIT-10**: Final verification records lint, typecheck, build, contract tests, Storybook build, targeted browser checks, accessibility checks, and a production-readiness summary.
 
+## v5 Requirements
+
+### Optimized Collection Quick Add
+
+- [x] **CQA-01**: Collection and search product cards restore a visible add-to-cart affordance for products that can be safely added from listing context.
+- [x] **CQA-02**: Multi-variant products must not silently add an arbitrary variant; they continue to route customers through Quick View or the PDP for variant selection.
+- [x] **CQA-03**: Listing product data remains bounded and lightweight; quick-add support may fetch only the minimum variant fields needed to decide eligibility and add one variant.
+- [x] **CQA-04**: Listing quick-add uses the existing Shopify cart Server Action path and preserves accessible pending, success, error, and cart-refresh feedback.
+- [x] **CQA-05**: Product-card Storybook coverage proves quick-add success/error/pending states, multi-variant fallback behavior, and sold-out behavior without hitting Shopify.
+- [x] **CQA-06**: Verification proves the restored affordance does not reintroduce full per-card purchase-form hydration or unbounded PLP payload growth.
+
 ## Out of Scope
 
 | Feature                                                | Reason                                                                                 |
@@ -100,6 +111,12 @@
 | AUDIT-08    | Phase 5  | Complete |
 | AUDIT-09    | Phase 5  | Complete |
 | AUDIT-10    | Phase 5  | Complete |
+| CQA-01      | Phase 8  | Complete |
+| CQA-02      | Phase 8  | Complete |
+| CQA-03      | Phase 8  | Complete |
+| CQA-04      | Phase 8  | Complete |
+| CQA-05      | Phase 8  | Complete |
+| CQA-06      | Phase 8  | Complete |
 | BULK-09     | Deferred | Deferred |
 | BULK-10     | Deferred | Deferred |
 
@@ -109,11 +126,12 @@
 - v2 search requirements: 7 total
 - v3 footer requirements: 5 total
 - v4 audit remediation requirements: 10 total
+- v5 optimized collection quick-add requirements: 6 total
 - Deferred pricing requirements: 2 total
-- Mapped to phases: 30
+- Mapped to phases: 36
 - Unmapped active/planned requirements: 0
 
 ---
 
 _Requirements defined: 2026-05-26_
-_Last updated: 2026-06-02 for Phase 5 codebase review remediation completion_
+_Last updated: 2026-06-03 for Phase 8 optimized collection quick-add completion_

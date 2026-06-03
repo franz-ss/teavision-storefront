@@ -2,7 +2,7 @@
 
 ## Overview
 
-This milestone brings high-value legacy storefront behavior into the Next storefront without depending on legacy Shopify app browser scripts. Phase 1 covers "Buy in Bulk and Save" parity. Phase 2 replaces the legacy Searchanise search-results widget page with a headless Searchanise API integration rendered through Teavision-owned UI. Phase 4 ports the live Shopify-theme footer into the Next storefront with strict visible content, link, responsive, and visual parity. Phase 5 remediates the production-readiness issues found during the full-codebase review. Phase 6 prevents the storefront from being indexed before launch readiness is confirmed.
+This milestone brings high-value legacy storefront behavior into the Next storefront without depending on legacy Shopify app browser scripts. Phase 1 covers "Buy in Bulk and Save" parity. Phase 2 replaces the legacy Searchanise search-results widget page with a headless Searchanise API integration rendered through Teavision-owned UI. Phase 4 ports the live Shopify-theme footer into the Next storefront with strict visible content, link, responsive, and visual parity. Phase 5 remediates the production-readiness issues found during the full-codebase review. Phase 6 prevents the storefront from being indexed before launch readiness is confirmed. Phase 8 restores listing-page add-to-cart in an optimized form after the Phase 5 PLP performance work removed the full per-card purchase form.
 
 ## Phases
 
@@ -16,6 +16,7 @@ This milestone brings high-value legacy storefront behavior into the Next storef
 - [x] **Phase 4: Footer 1:1 Parity** - Replace the compact Next footer with a faithful port of the live `https://www.teavision.com.au/` footer, including menu columns, quality/trust content, newsletter/contact block, bottom copyright/search/payment row, and responsive layout. The hidden keyword-link block was removed after review.
 - [x] **Phase 5: Codebase Review Remediation** - Fix the production-readiness issues from `CODEBASE_REVIEW.md`, including conversion-path correctness, accessibility, JSON-LD safety, testing gates, reliability/security hardening, PLP performance, component boundaries, type/runtime guardrails, sitemap hygiene, and final verification evidence.
 - [x] **Phase 6: Prevent the site from being indexed** - Add temporary noindex/no-crawl controls across robots, metadata, and sitemap surfaces until launch. (completed 2026-06-03)
+- [x] **Phase 8: Optimized Collection Quick Add** - Restore a visible listing-card add-to-cart affordance for safe single-variant products without reintroducing full per-card purchase forms, variant payload bloat, or hydration-heavy PLP rendering. (completed 2026-06-03)
 
 ## Phase Details
 
@@ -81,7 +82,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6.
+Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8.
 
 | Phase                               | Plans Complete | Status   | Completed  |
 | ----------------------------------- | -------------- | -------- | ---------- |
@@ -89,7 +90,8 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6.
 | 2. Searchanise API Search Results   | 1/1            | Complete | 2026-05-27 |
 | 4. Footer 1:1 Parity                | 1/1            | Complete | 2026-05-29 |
 | 5. Codebase Review Remediation      | 5/5            | Complete | 2026-06-02 |
-| 6. Prevent site indexing            | 1/1 | Complete   | 2026-06-03 |
+| 6. Prevent site indexing            | 1/1            | Complete | 2026-06-03 |
+| 8. Optimized Collection Quick Add   | 1/1            | Complete | 2026-06-03 |
 
 ### Phase 5: Codebase Review Remediation
 
@@ -133,3 +135,23 @@ Plans:
 
 Plans:
 - [x] 06-01: Environment-controlled noindex mode across metadata, robots, sitemap, and verification
+
+### Phase 8: Optimized Collection Quick Add
+
+**Goal:** Listing cards regain a visible add-to-cart affordance where it is safe to add directly, while preserving the bounded PLP payload and low-hydration goals from Phase 5.
+**Requirements**: [CQA-01, CQA-02, CQA-03, CQA-04, CQA-05, CQA-06]
+**Depends on:** Phase 5
+**Success Criteria** (what must be TRUE):
+
+1. Single-variant, available collection/search products render a visible `Add to cart` action on the card.
+2. Multi-variant products do not quick-add a guessed variant; they keep `Quick View` and PDP paths for variant selection.
+3. Collection/search listing queries only add minimal quick-add variant fields and keep bounded pagination.
+4. Quick-add uses the existing cart Server Action and shared `useAddToCart` behavior for pending/success/error feedback and route refresh.
+5. Storybook interaction coverage proves quick-add success, error, pending, sold-out, and multi-variant fallback states.
+6. `pnpm codegen`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and Storybook build pass, with source checks confirming the old full `ProductPurchaseForm` is not reattached to every card.
+
+**Plans:** 1 plan
+
+Plans:
+
+- [x] 08-01: Optimized listing quick-add affordance

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 06 context gathered
-last_updated: "2026-06-03T02:22:13.725Z"
-last_activity: 2026-06-03 -- Phase 6 marked complete
+stopped_at: Phase 08 complete
+last_updated: "2026-06-03T17:09:15+08:00"
+last_activity: 2026-06-03 -- Phase 8 completed
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 9
-  completed_plans: 9
+  total_phases: 6
+  completed_phases: 6
+  total_plans: 10
+  completed_plans: 10
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-27)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Milestone complete
+**Current focus:** Phase 8 optimized listing quick-add is complete.
 
 ## Current Position
 
-Phase: 6 — COMPLETE
+Phase: 8 — Optimized Collection Quick Add
 Plan: 1 of 1
-Status: Phase 6 complete
-Last activity: 2026-06-03 -- Phase 6 marked complete
+Status: Complete
+Last activity: 2026-06-03 -- Phase 8 completed
 
 Progress: [##########] 100%
 
@@ -36,7 +36,7 @@ Progress: [##########] 100%
 
 **Velocity:**
 
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: not tracked
 - Total execution time: not tracked
 
@@ -48,13 +48,16 @@ Progress: [##########] 100%
 | 2. Searchanise API Search Results   | 1/1   | not tracked | not tracked |
 | 4. Footer 1:1 Parity                | 1/1   | not tracked | not tracked |
 | 5. Codebase Review Remediation      | 5/5   | not tracked | not tracked |
+| 6. Prevent site indexing            | 1/1   | not tracked | not tracked |
+| 8. Optimized Collection Quick Add   | 1/1   | not tracked | not tracked |
 
 **Recent Trend:**
 
-- Last 5 plans: 05-02 complete, 05-03 complete, 05-04 complete, 05-05 complete, 06-01 complete
+- Last 5 plans: 05-03 complete, 05-04 complete, 05-05 complete, 06-01 complete, 08-01 complete
 - Trend: stable
 
 | Phase 6 P06-01 | not tracked | 4 tasks | 20 files |
+| Phase 8 P08-01 | complete | 4 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -74,6 +77,7 @@ Recent decisions affecting current work:
 - Phase 2: Next 16 Cache Components needs Suspense around runtime route reads such as the Searchanise loader path check and legacy redirect `searchParams`.
 - Phase 4: The live footer from `https://www.teavision.com.au/` is the canonical reference for visible footer parity, including exact labels/hrefs for visible links, the `mrtea.com.au` footer Login link, and payment marks. The hidden keyword-link markup was removed during implementation review to keep the headless footer lean and user-facing.
 - Phase 4: Use Phase 04 rather than Phase 03 because `.planning/phases/03-blog-sanity-cms-migration/` already exists locally and must not be overwritten.
+- Phase 8: Restore listing-card direct add only through a minimal `quickAdd` contract (`variants(first: 2)` with id/title/availability) and a small `QuickAddButton` client leaf; multi-variant products keep Quick View/PDP selection.
 
 ### Roadmap Evolution
 
@@ -81,10 +85,11 @@ Recent decisions affecting current work:
 - Phase 4 added: Footer 1:1 Parity
 - Phase 5 added: Codebase Review Remediation
 - Phase 6 added: Prevent the site from being indexed
+- Phase 8 added: Optimized Collection Quick Add
 
 ### Pending Todos
 
-- None for the current milestone.
+- None.
 
 ### Blockers/Concerns
 
@@ -93,6 +98,7 @@ Recent decisions affecting current work:
 - `src/app/(storefront)/products/[handle]/page.tsx` still has pre-existing unstaged layout edits that were intentionally preserved outside the Phase 1 commit.
 - Searchanise's API key is public and already present locally, but API response shape should still be narrowed defensively because Searchanise returns JSON outside the Shopify generated type system.
 - Phase 5 remediated the production-readiness gaps found in `CODEBASE_REVIEW.md`. See `.planning/phases/05-codebase-review-remediation/05-VERIFICATION.md` and the `05-*-SUMMARY.md` files for evidence and accepted residual risks.
+- Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
 
 ## Deferred Items
 
@@ -103,6 +109,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-03T01:40:21.736Z
-Stopped at: Phase 06 context gathered
-Resume file: .planning/phases/06-prevent-the-site-from-being-indexed/06-CONTEXT.md
+Last session: 2026-06-03T17:09:15+08:00
+Stopped at: Phase 08 complete
+Resume file: .planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md
