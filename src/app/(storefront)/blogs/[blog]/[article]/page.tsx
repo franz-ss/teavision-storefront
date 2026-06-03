@@ -16,6 +16,7 @@ import {
   getTagPath,
   normalizeBlogHandle,
 } from '@/lib/blog/operations'
+import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 import { sanitizeShopifyArticleHtml } from '@/lib/shopify/html-content'
 
 type Props = {
@@ -81,7 +82,6 @@ async function ArticleContent({ params }: Props) {
       ? blogData.articles[articleIndex + 1]
       : null
   const description = articleDescription(article)
-  const contentHtml = sanitizeShopifyArticleHtml(article.contentHtml)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -105,13 +105,13 @@ async function ArticleContent({ params }: Props) {
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeInlineJson(jsonLd) }}
       />
 
       <article className="mx-auto max-w-prose px-4 py-12">
         <nav aria-label="Breadcrumb" className="type-body-sm text-muted mb-8">
-          <ol className="flex items-center gap-2" role="list">
-            <li>
+          <ol className="flex min-w-0 items-center gap-2" role="list">
+            <li className="shrink-0">
               <Link
                 href={getBlogPath(normalizedBlog)}
                 className="text-link hover:text-link-hover focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -120,7 +120,7 @@ async function ArticleContent({ params }: Props) {
               </Link>
             </li>
             <li aria-hidden="true">/</li>
-            <li className="text-default truncate" aria-current="page">
+            <li className="text-default min-w-0 truncate" aria-current="page">
               {article.title}
             </li>
           </ol>
@@ -180,18 +180,10 @@ async function ArticleContent({ params }: Props) {
           </Card>
         )}
 
-        {article.body.length > 0 ? (
-          <PortableTextContent
-            value={article.body}
-            className="mx-auto mt-10 max-w-prose"
-          />
-        ) : (
-          <RichText
-            html={contentHtml}
-            variant="article"
-            className="mx-auto mt-10 max-w-prose"
-          />
-        )}
+        <PortableTextContent
+          value={article.body}
+          className="mx-auto mt-10 max-w-prose"
+        />
 
         {(newerArticle || olderArticle) && (
           <nav
@@ -273,6 +265,7 @@ export default function ArticlePage({ params }: Props) {
       fallback={
         <div
           className="type-body text-muted mx-auto max-w-4xl px-4 py-12"
+          role="status"
           aria-live="polite"
         >
           Loading article…

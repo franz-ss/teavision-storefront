@@ -12,7 +12,7 @@ const ACTION_LINK_CLASS =
   'type-label focus-visible:ring-ring relative inline-flex min-h-11 items-center justify-center rounded-md px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
 
 const ANNOUNCEMENT_LINK_CLASS =
-  'focus-visible:ring-ring focus-visible:ring-offset-brand inline-flex min-h-11 items-center gap-1 rounded-md text-on-brand underline-offset-4 transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none lg:min-h-8'
+  'focus-visible:ring-ring focus-visible:ring-offset-brand inline-flex min-h-11 items-center gap-1 rounded-md text-on-brand underline-offset-4 transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none lg:min-h-10'
 
 export function Header() {
   return (
@@ -41,8 +41,8 @@ export function Header() {
             </a>
           </div>
           <p className="text-on-brand/85 max-w-2xl">
-            We&apos;re committed to delivering the greatest value and customer
-            service on the planet.
+            Wholesale tea, herbs, and spices with local support for sampling,
+            blending, and repeat supply.
           </p>
         </div>
       </div>
@@ -59,7 +59,6 @@ export function Header() {
             width={188}
             height={44}
             className="h-6 w-auto sm:h-8 lg:h-9"
-            priority
           />
           <span
             className="bg-accent hidden h-1.5 w-1.5 rounded-full sm:block"

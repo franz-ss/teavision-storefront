@@ -25,6 +25,69 @@ type SafeLink = {
   useNextLink: boolean
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function isOptionalString(
+  value: unknown,
+): value is string | null | undefined {
+  return value === undefined || value === null || typeof value === 'string'
+}
+
+function isPortableTextImageValue(
+  value: unknown,
+): value is SanityPortableTextImageValue {
+  if (!isRecord(value)) return false
+
+  return value._type === 'image' || value._type === 'imageWithAlt'
+}
+
+function isPortableTextCalloutValue(
+  value: unknown,
+): value is SanityPortableTextCalloutValue {
+  if (!isRecord(value) || value._type !== 'callout') return false
+
+  return isOptionalString(value.title) && isOptionalString(value.body)
+}
+
+function isTableCell(value: unknown): value is SanityPortableTextTableCell {
+  if (!isRecord(value)) return false
+
+  return (
+    isOptionalString(value._key) &&
+    isOptionalString(value.text) &&
+    isOptionalString(value.alt) &&
+    isOptionalString(value.sourceUrl)
+  )
+}
+
+function isTableRow(
+  value: unknown,
+): value is NonNullable<SanityPortableTextTableValue['rows']>[number] {
+  if (!isRecord(value)) return false
+
+  return (
+    isOptionalString(value._key) &&
+    (value.cells === undefined ||
+      value.cells === null ||
+      Array.isArray(value.cells))
+  )
+}
+
+function isPortableTextTableValue(
+  value: unknown,
+): value is SanityPortableTextTableValue {
+  if (!isRecord(value) || value._type !== 'table') return false
+
+  return (
+    isOptionalString(value.caption) &&
+    (value.rows === undefined ||
+      value.rows === null ||
+      (Array.isArray(value.rows) && value.rows.every(isTableRow)))
+  )
+}
+
 function getLinkRel(
   isExternal: boolean,
   openInNewTab?: boolean,
@@ -74,8 +137,9 @@ function getPortableTextImage(value: SanityPortableTextImageValue) {
 }
 
 function PortableTextImageBlock({ value }: { value: unknown }) {
-  const image = value as SanityPortableTextImageValue
-  const resolvedImage = getPortableTextImage(image)
+  if (!isPortableTextImageValue(value)) return null
+
+  const resolvedImage = getPortableTextImage(value)
 
   if (!resolvedImage) return null
 
@@ -102,9 +166,9 @@ function PortableTextImageBlock({ value }: { value: unknown }) {
 
 function getTableCell(cell: unknown): SanityPortableTextTableCell {
   if (typeof cell === 'string') return { text: cell }
-  if (!cell || typeof cell !== 'object') return {}
+  if (!isTableCell(cell)) return {}
 
-  return cell as SanityPortableTextTableCell
+  return cell
 }
 
 function getTableCellImage(cell: SanityPortableTextTableCell) {
@@ -214,23 +278,24 @@ const components: PortableTextComponents<SanityPortableTextBlock> = {
     image: PortableTextImageBlock,
     imageWithAlt: PortableTextImageBlock,
     callout: ({ value }) => {
-      const callout = value as SanityPortableTextCalloutValue
+      if (!isPortableTextCalloutValue(value)) return null
 
       return (
         <aside className="border-default bg-surface my-8 rounded-md border p-5">
-          {callout.title && (
-            <p className="type-label text-strong">{callout.title}</p>
+          {value.title && (
+            <p className="type-label text-strong">{value.title}</p>
           )}
-          {callout.body && (
-            <p className="type-body text-default mt-3">{callout.body}</p>
+          {value.body && (
+            <p className="type-body text-default mt-3">{value.body}</p>
           )}
         </aside>
       )
     },
     table: ({ value }) => {
-      const table = value as SanityPortableTextTableValue
-      const rows = table.rows?.filter((row) => row.cells?.length) ?? []
-      const caption = table.caption?.trim()
+      if (!isPortableTextTableValue(value)) return null
+
+      const rows = value.rows?.filter((row) => row.cells?.length) ?? []
+      const caption = value.caption?.trim()
 
       if (rows.length === 0) return null
 

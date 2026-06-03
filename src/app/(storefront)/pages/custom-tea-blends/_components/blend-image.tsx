@@ -19,7 +19,7 @@ export function BlendImage({
       alt={image.alt}
       width={image.width}
       height={image.height}
-      priority={priority}
+      preload={priority}
       quality={68}
       sizes={sizes}
       className="border-default h-full w-full rounded-lg border object-cover"
