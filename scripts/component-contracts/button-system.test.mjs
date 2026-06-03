@@ -104,25 +104,21 @@ test('Button variants stay limited to action styles', async () => {
   }
 })
 
-test('homepage dark-surface CTAs use inverse button variants', async () => {
+test('homepage CTAs use approved brand and inverse button variants', async () => {
   const heroSource = await readFile(
     sourcePath('src', 'components', 'homepage', 'hero', 'hero.tsx'),
     'utf8',
   )
-  const cataloguesSource = await readFile(
-    sourcePath(
-      'src',
-      'components',
-      'homepage',
-      'catalogues',
-      'catalogues.tsx',
-    ),
+  const homepageContentSource = await readFile(
+    sourcePath('src', 'components', 'homepage', 'content.ts'),
     'utf8',
   )
 
-  assert.match(heroSource, /<Button href="\/pages\/wholesale" variant="inverse"/)
-  assert.match(heroSource, /variant="inverseSecondary"/)
-  assert.match(cataloguesSource, /variant="inverseSecondary"/)
+  assert.match(heroSource, /variant="brand"/)
+  assert.match(
+    homepageContentSource,
+    /ctaCatalogueData[\s\S]*variant: 'inverseSecondary'/,
+  )
 })
 
 test('Button inverse stories render on the dark Storybook background', async () => {
@@ -150,7 +146,14 @@ test('Button inverse stories render on the dark Storybook background', async () 
 
 test('hover zoom image treatments respect reduced motion', async () => {
   const files = [
-    sourcePath('src', 'app', '(storefront)', 'collections', 'page.tsx'),
+    sourcePath(
+      'src',
+      'app',
+      '(storefront)',
+      'collections',
+      '_components',
+      'collection-card-image.tsx',
+    ),
     sourcePath(
       'src',
       'components',
@@ -166,7 +169,13 @@ test('hover zoom image treatments respect reduced motion', async () => {
       'tea-journal.tsx',
     ),
     sourcePath('src', 'components', 'ui', 'article-card', 'article-card.tsx'),
-    sourcePath('src', 'components', 'ui', 'product-card', 'product-card.tsx'),
+    sourcePath(
+      'src',
+      'components',
+      'product',
+      'recommendation-product-card',
+      'recommendation-product-card.tsx',
+    ),
   ]
 
   for (const file of files) {

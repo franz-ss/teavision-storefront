@@ -1,11 +1,27 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
+function readRequiredEnv(name: string): string {
+  const value = process.env[name]?.trim()
+
+  if (!value) {
+    throw new Error(
+      `Missing ${name}. Add it to .env.local before running pnpm codegen.`,
+    )
+  }
+
+  return value
+}
+
+const shopifyStoreDomain = readRequiredEnv('SHOPIFY_STORE_DOMAIN')
+const shopifyStorefrontAccessToken = readRequiredEnv(
+  'SHOPIFY_STOREFRONT_ACCESS_TOKEN',
+)
+
 const config: CodegenConfig = {
   schema: {
-    [`https://${process.env.SHOPIFY_STORE_DOMAIN}/api/2026-04/graphql.json`]: {
+    [`https://${shopifyStoreDomain}/api/2026-04/graphql.json`]: {
       headers: {
-        'X-Shopify-Storefront-Access-Token':
-          process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ?? '',
+        'X-Shopify-Storefront-Access-Token': shopifyStorefrontAccessToken,
       },
     },
   },

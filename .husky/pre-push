@@ -1,2 +1,5 @@
 #!/bin/sh
 pnpm lint
+pnpm typecheck
+pnpm test:contracts
+pnpm build

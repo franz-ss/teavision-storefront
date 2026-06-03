@@ -126,6 +126,17 @@ Only on Server Actions files (`src/lib/*/actions.ts`). Never on a component file
 | Cart/checkout mutation                               | `src/lib/cart/actions.ts`                   |
 | New exported type                                    | `src/lib/shopify/types/index.ts`            |
 | SEO helper                                           | `src/lib/seo/`                              |
+| Server-side rate-limit helper                        | `src/lib/rate-limit/`                       |
+
+---
+
+## Production Rate Limiting
+
+- Public form and search surfaces use `src/lib/rate-limit/index.ts`.
+- The helper exposes a `RateLimitStore` interface and currently ships with an in-memory fallback for local development.
+- In production, configure provider-level or durable-store rate limiting and set `RATE_LIMIT_EXTERNAL_PROTECTION=true`.
+- If a production deployment intentionally accepts the per-instance memory fallback, set `RATE_LIMIT_ALLOW_MEMORY_FALLBACK=true` so the choice is explicit.
+- Never log request bodies, credentials, or submitted form values from limiter code.
 
 ---
 

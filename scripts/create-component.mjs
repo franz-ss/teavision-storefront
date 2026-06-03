@@ -55,16 +55,14 @@ mkdirSync(componentDir, { recursive: true })
 
 writeFileSync(
   componentPath,
-  `type ${componentName}Props = {
+  `import { cn } from '@/lib/utils'
+
+type ${componentName}Props = {
   className?: string
 }
 
-export function ${componentName}({ className = '' }: ${componentName}Props) {
-  return (
-    <div className={className}>
-      {/* ${componentName} */}
-    </div>
-  )
+export function ${componentName}({ className }: ${componentName}Props) {
+  return <div className={cn('grid gap-4', className)} />
 }
 `,
 )
