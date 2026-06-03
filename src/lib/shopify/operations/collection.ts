@@ -147,7 +147,7 @@ function reshapeCollectionProductVariant(
     title: variant.title,
     availableForSale: variant.availableForSale,
     currentlyNotInStock: variant.currentlyNotInStock,
-    quantityAvailable: variant.quantityAvailable ?? null,
+    quantityAvailable: null,
     quantityRule: {
       minimum: variant.quantityRule.minimum,
       maximum: variant.quantityRule.maximum ?? null,

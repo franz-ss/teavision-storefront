@@ -77,7 +77,6 @@ query GetCollectionProducts(
                 title
                 availableForSale
                 currentlyNotInStock
-                quantityAvailable
                 quantityRule {
                   minimum
                   maximum
