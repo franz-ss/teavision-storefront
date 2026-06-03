@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: phase_complete
-stopped_at: Phase 4 completed and verified.
-last_updated: '2026-05-29T18:51:50.804+08:00'
-last_activity: 2026-05-29 -- Phase 04 footer 1:1 parity completed
+status: completed
+stopped_at: Phase 06 context gathered
+last_updated: "2026-06-03T01:40:21.745Z"
+last_activity: 2026-06-02 -- Phase 5 completed and verified; codebase review remediation is production-ready
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 3
-  completed_plans: 3
+  total_phases: 5
+  completed_phases: 4
+  total_plans: 8
+  completed_plans: 8
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-27)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 04 — Footer 1:1 Parity complete
+**Current focus:** Milestone complete
 
 ## Current Position
 
-Phase: 04 (Footer 1:1 Parity) — COMPLETE
-Plan: 1 of 1
-Status: Implemented and verified
-Last activity: 2026-05-29 -- Phase 04 footer 1:1 parity completed
+Phase: 5 — COMPLETE
+Plan: 5 of 5
+Status: Phase 5 complete
+Last activity: 2026-06-02 -- Phase 5 completed and verified; codebase review remediation is production-ready
 
 Progress: [##########] 100%
 
@@ -36,7 +36,7 @@ Progress: [##########] 100%
 
 **Velocity:**
 
-- Total plans completed: 3
+- Total plans completed: 8
 - Average duration: not tracked
 - Total execution time: not tracked
 
@@ -47,10 +47,11 @@ Progress: [##########] 100%
 | 1. Bulk Savings PDP and Cart Parity | 1/1   | not tracked | not tracked |
 | 2. Searchanise API Search Results   | 1/1   | not tracked | not tracked |
 | 4. Footer 1:1 Parity                | 1/1   | not tracked | not tracked |
+| 5. Codebase Review Remediation      | 5/5   | not tracked | not tracked |
 
 **Recent Trend:**
 
-- Last 5 plans: 01-01 complete, 02-01 complete, 04-01 complete
+- Last 5 plans: 05-01 complete, 05-02 complete, 05-03 complete, 05-04 complete, 05-05 complete
 - Trend: stable
 
 ## Accumulated Context
@@ -76,10 +77,12 @@ Recent decisions affecting current work:
 
 - Phase 2 added: Searchanise API Search Results
 - Phase 4 added: Footer 1:1 Parity
+- Phase 5 added: Codebase Review Remediation
+- Phase 6 added: Prevent the site from being indexed
 
 ### Pending Todos
 
-- None.
+- None for the current milestone.
 
 ### Blockers/Concerns
 
@@ -87,6 +90,7 @@ Recent decisions affecting current work:
 - Legacy product JSON exposes `inventory_quantity` for old-theme parity, but it remains a compatibility fallback until inventory is available through the Storefront token or a first-party API path.
 - `src/app/(storefront)/products/[handle]/page.tsx` still has pre-existing unstaged layout edits that were intentionally preserved outside the Phase 1 commit.
 - Searchanise's API key is public and already present locally, but API response shape should still be narrowed defensively because Searchanise returns JSON outside the Shopify generated type system.
+- Phase 5 remediated the production-readiness gaps found in `CODEBASE_REVIEW.md`. See `.planning/phases/05-codebase-review-remediation/05-VERIFICATION.md` and the `05-*-SUMMARY.md` files for evidence and accepted residual risks.
 
 ## Deferred Items
 
@@ -97,6 +101,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-27
-Stopped at: Phase 2 completed and verified.
-Resume file: None
+Last session: 2026-06-03T01:40:21.736Z
+Stopped at: Phase 06 context gathered
+Resume file: .planning/phases/06-prevent-the-site-from-being-indexed/06-CONTEXT.md
