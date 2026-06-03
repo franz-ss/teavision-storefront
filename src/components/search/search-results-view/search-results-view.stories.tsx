@@ -25,6 +25,36 @@ const product = {
   priceRange: {
     minVariantPrice: { amount: '12.40', currencyCode: 'AUD' },
   },
+  variants: [
+    {
+      id: 'gid://shopify/ProductVariant/organic-masala-chai-250g',
+      title: '250g',
+      availableForSale: true,
+      quantityAvailable: 12,
+      quantityRule: {
+        minimum: 1,
+        maximum: 12,
+        increment: 1,
+      },
+      price: { amount: '12.40', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
+      image: null,
+    },
+    {
+      id: 'gid://shopify/ProductVariant/organic-masala-chai-1kg',
+      title: '1kg',
+      availableForSale: true,
+      quantityAvailable: 6,
+      quantityRule: {
+        minimum: 1,
+        maximum: 6,
+        increment: 1,
+      },
+      price: { amount: '42.00', currencyCode: 'AUD' },
+      quantityPriceBreaks: [],
+      image: null,
+    },
+  ],
 }
 
 const baseState: SearchRouteState = {

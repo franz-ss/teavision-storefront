@@ -17,6 +17,7 @@ import {
   type GetCollectionSummariesQuery,
   type ProductFilter,
   type ProductSummary,
+  type ProductVariant,
 } from '@/lib/shopify/types'
 
 import {
@@ -43,6 +44,9 @@ type ShopifyProductSummaryNode = {
 type ShopifyCollectionProductNode = NonNullable<
   GetCollectionProductsQuery['collection']
 >['products']['edges'][number]['node']
+
+type ShopifyCollectionProductVariantNode =
+  ShopifyCollectionProductNode['variants']['edges'][number]['node']
 
 type ShopifyCollectionProductFilterNode = NonNullable<
   GetCollectionProductsQuery['collection']
@@ -129,6 +133,29 @@ function reshapeCollectionProductSummary(
     availableForSale: product.availableForSale,
     productType: product.productType,
     tags: product.tags,
+    variants: product.variants.edges.map((edge) =>
+      reshapeCollectionProductVariant(edge.node),
+    ),
+  }
+}
+
+function reshapeCollectionProductVariant(
+  variant: ShopifyCollectionProductVariantNode,
+): ProductVariant {
+  return {
+    id: variant.id,
+    title: variant.title,
+    availableForSale: variant.availableForSale,
+    currentlyNotInStock: variant.currentlyNotInStock,
+    quantityAvailable: variant.quantityAvailable ?? null,
+    quantityRule: {
+      minimum: variant.quantityRule.minimum,
+      maximum: variant.quantityRule.maximum ?? null,
+      increment: variant.quantityRule.increment,
+    },
+    price: reshapeMoney(variant.price),
+    quantityPriceBreaks: [],
+    image: variant.image ? reshapeImage(variant.image) : null,
   }
 }
 

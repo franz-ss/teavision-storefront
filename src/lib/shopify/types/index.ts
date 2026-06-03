@@ -87,6 +87,7 @@ export type CollectionProductSummary = ProductSummary & {
   availableForSale: boolean
   productType: string
   tags: string[]
+  variants: ProductVariant[]
 }
 
 export type CollectionFilterValue = {

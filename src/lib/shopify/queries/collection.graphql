@@ -70,6 +70,32 @@ query GetCollectionProducts(
               currencyCode
             }
           }
+          variants(first: 20) {
+            edges {
+              node {
+                id
+                title
+                availableForSale
+                currentlyNotInStock
+                quantityAvailable
+                quantityRule {
+                  minimum
+                  maximum
+                  increment
+                }
+                price {
+                  amount
+                  currencyCode
+                }
+                image {
+                  url
+                  altText
+                  width
+                  height
+                }
+              }
+            }
+          }
           ratingMetafield: metafield(namespace: "reviews", key: "rating") {
             value
           }

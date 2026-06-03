@@ -317,6 +317,7 @@ function mapProduct(value: unknown): CollectionProductSummary | null {
     },
     productType: cleanText(getString(value, 'product_type')) ?? '',
     tags: parseTags(value.tags),
+    variants: productVariants,
   }
 }
 

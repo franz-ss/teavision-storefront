@@ -1,11 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { ProductQuickView } from '@/components/product'
 import type { CollectionProductSummary } from '@/lib/shopify/types'
 import { Badge, Button, Card, Price, StarRating } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { cn } from '@/lib/utils'
+
+import { ProductPurchaseForm } from './product-purchase-form'
 
 type ProductCardProps = {
   product: CollectionProductSummary
@@ -91,11 +92,9 @@ export function ProductCard({
                 More info
               </Button>
               {product.availableForSale ? (
-                <ProductQuickView
-                  product={product}
-                  buttonIcon="cart"
-                  buttonLabel="Add to cart"
-                  buttonVariant="secondary"
+                <ProductPurchaseForm
+                  variants={product.variants}
+                  productTitle={product.title}
                 />
               ) : null}
             </div>

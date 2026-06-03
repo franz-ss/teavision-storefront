@@ -1,9 +1,43 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
 
-import type { CollectionProductSummary } from '@/lib/shopify/types'
+import type {
+  CollectionProductSummary,
+  ProductVariant,
+} from '@/lib/shopify/types'
 
 import { ProductCard } from './product-card'
+
+const variants: ProductVariant[] = [
+  {
+    id: 'gid://shopify/ProductVariant/masters-sencha-50g',
+    title: '50g Sample',
+    availableForSale: true,
+    quantityAvailable: 10,
+    quantityRule: {
+      minimum: 1,
+      maximum: 10,
+      increment: 1,
+    },
+    price: { amount: '12.00', currencyCode: 'AUD' },
+    quantityPriceBreaks: [],
+    image: null,
+  },
+  {
+    id: 'gid://shopify/ProductVariant/masters-sencha-1kg',
+    title: '1kg',
+    availableForSale: true,
+    quantityAvailable: 4,
+    quantityRule: {
+      minimum: 1,
+      maximum: 4,
+      increment: 1,
+    },
+    price: { amount: '88.00', currencyCode: 'AUD' },
+    quantityPriceBreaks: [],
+    image: null,
+  },
+]
 
 const stubProduct: CollectionProductSummary = {
   id: 'gid://shopify/Product/masters-sencha',
@@ -23,6 +57,7 @@ const stubProduct: CollectionProductSummary = {
   },
   rating: 4.8,
   reviewCount: 37,
+  variants,
 }
 
 const meta: Meta<typeof ProductCard> = {
@@ -45,7 +80,17 @@ export const Default: Story = {
     const canvas = within(canvasElement)
 
     await expect(
-      canvas.getByRole('button', { name: 'Add to cart' }),
+      canvas.getByRole('combobox', {
+        name: 'Select pack size for Tea Masters Sencha Green Tea',
+      }),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('spinbutton', {
+        name: 'Quantity for Tea Masters Sencha Green Tea',
+      }),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('button', { name: /^Add to cart$/ }),
     ).toBeVisible()
   },
 }
@@ -75,7 +120,17 @@ export const MultiVariant: Story = {
     const canvas = within(canvasElement)
 
     await expect(
-      canvas.getByRole('button', { name: 'Add to cart' }),
+      canvas.getByRole('combobox', {
+        name: 'Select pack size for Tea Masters Breakfast Blend',
+      }),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('spinbutton', {
+        name: 'Quantity for Tea Masters Breakfast Blend',
+      }),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('button', { name: /^Add to cart$/ }),
     ).toBeVisible()
   },
 }

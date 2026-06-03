@@ -15,6 +15,7 @@ commits:
   - aa38d15 feat(08-01): add collection quick-add button
   - 986a5bc feat(08-01): restore optimized collection card quick-add
   - 1477a39 fix(08-01): show add trigger on available product cards
+  - be35fda fix(08-01): restore optimized listing purchase controls
 ---
 
 # 08-01 Summary: Optimized Listing Quick Add
@@ -22,29 +23,30 @@ commits:
 ## What Changed
 
 Collection and search listing products no longer carry a listing-level
-`quickAdd` contract. The final optimized path keeps `ProductCard` lean by
-removing the bounded listing variant probe and deferring full purchase data
-until the customer asks to buy.
+`quickAdd` contract. The final optimized path restores the old inline purchase
+controls on `ProductCard` while fetching only the variant fields those controls
+need.
 
 Implemented flow:
 
 - Shopify collection listings no longer query `variants(first: 2)` for quick-add eligibility.
+- Shopify collection listings query `variants(first: 20)` with purchase-form fields only.
 - Searchanise summaries no longer synthesize listing quick-add data from `add_to_cart_id`.
-- `ProductCard` remains a Server Component and renders an `Add to cart` trigger for every available product.
-- The trigger opens `ProductQuickView`, which lazily fetches `/api/products/[handle]/quick-view`.
-- Inside the modal, customers select pack size with `Select`, adjust quantity with `QuantityStepper`, and submit through `addItem(selectedVariant.id, quantity)`.
+- Searchanise summaries retain parsed `shopify_variants` or fallback `add_to_cart_id` as `variants`.
+- `ProductCard` remains a Server Component and renders `ProductPurchaseForm` for every available product.
+- Inside the card, customers select pack size with `Select`, adjust quantity with `QuantityStepper`, and submit through `addItem(selectedVariant.id, quantity)`.
 - Sold-out products render no purchase action, while `More info` remains available for every product.
 
-`ProductQuickView` is the only purchase client leaf used from listing cards. It reuses `useAddToCart`, calls the existing cart Server Action path through that hook, and renders accessible pending, success, and error feedback. `ProductCard` renders:
+`ProductPurchaseForm` is the purchase client leaf used from listing cards. It reuses `useAddToCart`, calls the existing cart Server Action path through that hook, and renders accessible pending, success, and error feedback. `ProductCard` renders:
 
-- `Add to cart` for all available products, opening Quick View for explicit size and quantity selection.
+- pack-size `Select`, `QuantityStepper`, price, and `Add to cart` for available products.
 - no purchase action for sold-out products.
 - `More info` for all products.
 
-The old purchase behavior was restored without restoring the full
-`ProductPurchaseForm` to listing cards. This preserves pack-size and quantity
-selection while avoiding extra variant data in every collection/search listing
-payload.
+The old purchase behavior is restored on listing cards. The optimization is no
+longer a direct quantity-1 quick-add; it is a slimmer listing data contract that
+fetches variant purchase fields without fetching full product detail,
+description HTML, images, options, bulk pricing tiers, or recommendation data.
 
 ## Verification
 
@@ -60,33 +62,30 @@ Passed:
 Targeted source checks passed:
 
 - `collection.graphql` no longer contains `variants(first: 2)`.
+- `collection.graphql` contains `variants(first: 20)` with only purchase-form fields.
 - `collection.graphql` no longer fetches listing `options`.
-- `ProductCard` has no `ProductPurchaseForm` import/render.
+- `ProductCard` renders `ProductPurchaseForm` for available products.
 - `ProductCard` has no `'use client'` directive.
 - `src` contains no `quickAdd`, `ProductQuickAdd`, `QuickAddButton`, `quick-add-button`, or `variants(first: 2)` references.
-- `ProductQuickView` renders `Select` and `QuantityStepper`, and calls `addItem(selectedVariant.id, quantity)`.
+- `ProductPurchaseForm` renders `Select` and `QuantityStepper`, and calls `addItem(selectedVariant.id, quantity)`.
 
 Automated Chrome checks against the built Storybook bundle passed:
 
-- `Product/ProductQuickView Add To Cart Trigger`: selected the 1kg variant, increased quantity to 2, submitted, and rendered `Added to cart`.
-- `Collection/ProductCard Default`: `Add to cart` trigger shown.
-- `Collection/ProductCard Multi Variant`: `Add to cart` trigger shown.
+- `Collection/ProductCard Default`: pack-size dropdown, quantity stepper, and `Add to cart` render inline.
+- `Collection/ProductCard Multi Variant`: pack-size dropdown, quantity stepper, and `Add to cart` render inline.
 - `Collection/ProductCard Sold Out`: purchase actions absent, `More info` remains.
 
-Live app smoke check against the built production server on `localhost:3001` passed:
+Automated Chrome check against the built Storybook bundle passed:
 
-- `/collections/all` rendered enabled ProductCard `Add to cart` triggers.
-- Clicking the first trigger fetched `/api/products/2003y-mini-ripe-pu-erh-tea-brick-250g-box/quick-view` with HTTP 200.
-- The modal rendered a pack-size `Select`, a `QuantityStepper`, and the final `Add to Cart` action.
+- `Collection/ProductCard Default` rendered `Pack size`, options `50g Sample` and `1kg`, quantity value `1`, and the inline `Add to cart` button.
 
 ## Residual Risk
 
-The restored affordance still creates one tiny `ProductQuickView` client island
-per available listing card. That is intentionally much lighter than restoring
-`ProductPurchaseForm` or fetching variant/options data for every listing item,
-but a future optimization could consolidate list-level modal state if listing
-hydration budgets tighten further.
+The restored affordance creates one `ProductPurchaseForm` client island per
+available listing card. That is the cost of keeping the old inline size and
+quantity controls. A future optimization could consolidate list-level cart
+state, but should not remove the visible pack-size and quantity controls.
 
-The lazy modal now depends on the quick-view API route being available for
-listing purchase. If that route fails, the modal shows retryable error feedback
-instead of guessing a variant.
+Collection listings fetch the first 20 variants. If products can exceed that
+variant count on listing pages, pagination or a product-level fallback should be
+added before increasing merchandising coverage.
