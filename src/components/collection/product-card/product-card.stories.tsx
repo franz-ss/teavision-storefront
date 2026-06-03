@@ -20,7 +20,11 @@ const stubProduct: CollectionProductSummary = {
   priceRange: {
     minVariantPrice: { amount: '12.00', currencyCode: 'AUD' },
   },
-  quickAdd: null,
+  quickAdd: {
+    variantId: 'gid://shopify/ProductVariant/masters-sencha-default',
+    variantTitle: 'Default Title',
+    availableForSale: true,
+  },
   rating: 4.8,
   reviewCount: 37,
 }
@@ -55,6 +59,18 @@ export const NoImage: Story = {
   },
 }
 
+export const MultiVariant: Story = {
+  args: {
+    product: {
+      ...stubProduct,
+      id: 'gid://shopify/Product/masters-breakfast',
+      handle: 'tea-masters-breakfast',
+      title: 'Tea Masters Breakfast Blend',
+      quickAdd: null,
+    },
+  },
+}
+
 export const SoldOut: Story = {
   args: {
     product: {
@@ -63,6 +79,7 @@ export const SoldOut: Story = {
       handle: 'premium-rwandan-black-tea',
       title: 'Premium Rwandan Black Tea CTC BP',
       availableForSale: false,
+      quickAdd: null,
     },
   },
 }

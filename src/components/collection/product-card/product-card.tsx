@@ -7,6 +7,8 @@ import { Badge, Button, Card, Price, StarRating } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { cn } from '@/lib/utils'
 
+import { QuickAddButton } from '../quick-add-button'
+
 type ProductCardProps = {
   product: CollectionProductSummary
   priority?: boolean
@@ -20,6 +22,12 @@ export function ProductCard({
 }: ProductCardProps) {
   const productUrl = `/products/${product.handle}`
   const isSoldOut = !product.availableForSale
+  const quickAddVariantId =
+    product.availableForSale && product.quickAdd?.availableForSale
+      ? product.quickAdd.variantId
+      : null
+  const shouldShowQuickView =
+    product.availableForSale && quickAddVariantId === null
 
   return (
     <Card
@@ -90,7 +98,15 @@ export function ProductCard({
               <Button href={productUrl} variant="secondary" size="sm">
                 More info
               </Button>
-              <ProductQuickView product={product} buttonVariant="secondary" />
+              {quickAddVariantId ? (
+                <QuickAddButton
+                  productTitle={product.title}
+                  variantId={quickAddVariantId}
+                />
+              ) : null}
+              {shouldShowQuickView ? (
+                <ProductQuickView product={product} buttonVariant="secondary" />
+              ) : null}
             </div>
           </div>
         </div>
