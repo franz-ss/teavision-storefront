@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import { Contact } from './contact'
 
-const noopAction = async () => {}
+const noopAction = async () => ({ success: true })
 
 const meta: Meta<typeof Contact> = {
   title: 'Homepage/Contact',

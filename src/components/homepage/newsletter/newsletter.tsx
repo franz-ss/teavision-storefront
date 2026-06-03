@@ -1,7 +1,10 @@
-import { Button, Section } from '@/components/ui'
+import { Section } from '@/components/ui'
+import type { NewsletterSignupActionResult } from '@/lib/contact/types'
+
+import { HomepageNewsletterForm } from './newsletter-form'
 
 type HomepageNewsletterProps = {
-  action: (formData: FormData) => Promise<void>
+  action: (formData: FormData) => Promise<NewsletterSignupActionResult>
 }
 
 export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
@@ -16,37 +19,7 @@ export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
           beyond."
         />
 
-        <form
-          action={action}
-          className="mx-auto mt-8 flex max-w-xl flex-col gap-2 sm:flex-row"
-        >
-          <label className="sr-only" htmlFor="homepage-newsletter-email">
-            Enter Email
-          </label>
-          <input
-            id="homepage-newsletter-email"
-            name="email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            required
-            maxLength={254}
-            placeholder="Enter Email"
-            className="type-body-sm focus-visible:ring-ring border-on-brand/30 bg-canvas text-strong placeholder:text-muted min-h-12 flex-1 rounded-md border px-4 focus-visible:ring-2 focus-visible:outline-none"
-          />
-          <div className="sr-only" aria-hidden="true">
-            <input
-              id="homepage-newsletter-website"
-              name="website"
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-            />
-          </div>
-          <Button type="submit" size="cta">
-            Subscribe
-          </Button>
-        </form>
+        <HomepageNewsletterForm action={action} />
       </Section.Container>
     </Section.Root>
   )

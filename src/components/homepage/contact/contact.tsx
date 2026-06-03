@@ -1,9 +1,10 @@
 import { Card, Section } from '@/components/ui'
+import type { ContactActionResult } from '@/lib/contact/types'
 
 import { HomepageContactForm } from '../contact-form'
 
 type ContactProps = {
-  action: (formData: FormData) => Promise<void>
+  action: (formData: FormData) => Promise<ContactActionResult>
 }
 
 export function Contact({ action }: ContactProps) {

@@ -1,46 +1,98 @@
-import { Button } from '@/components/ui'
+'use client'
+
+import {
+  useRef,
+  useState,
+  useTransition,
+  type FormEvent,
+} from 'react'
+
+import { Button, FormLabel, Textarea, TextInput } from '@/components/ui'
+import type { ContactActionResult } from '@/lib/contact/types'
+import { cn } from '@/lib/utils'
 
 type HomepageContactFormProps = {
-  action: (formData: FormData) => Promise<void>
+  action: (formData: FormData) => Promise<ContactActionResult>
 }
 
+const DEFAULT_ERROR =
+  'Unable to send your message right now. Please try again shortly.'
+
 export function HomepageContactForm({ action }: HomepageContactFormProps) {
+  const formRef = useRef<HTMLFormElement>(null)
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [error, setError] = useState('')
+  const [isPending, startTransition] = useTransition()
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+
+    startTransition(async () => {
+      try {
+        const result = await action(formData)
+
+        if (result.success) {
+          formRef.current?.reset()
+          setStatus('success')
+          setError('')
+          return
+        }
+
+        setStatus('error')
+        setError(result.error ?? DEFAULT_ERROR)
+      } catch {
+        setStatus('error')
+        setError(DEFAULT_ERROR)
+      }
+    })
+  }
+
+  const messageId =
+    status === 'success'
+      ? 'homepage-contact-success'
+      : 'homepage-contact-error'
+  const hasMessage = status === 'success' || Boolean(error)
+
   return (
-    <form action={action} className="grid gap-4">
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      aria-busy={isPending}
+      className="grid gap-4"
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
-          <label className="type-label text-strong" htmlFor="contact-name">
+          <FormLabel htmlFor="contact-name">
             Name
-          </label>
-          <input
+          </FormLabel>
+          <TextInput
             id="contact-name"
             name="name"
             required
             maxLength={100}
             placeholder="Enter Name"
-            className="type-body-sm border-default focus-visible:ring-ring bg-canvas text-strong placeholder:text-muted min-h-12 w-full rounded-md border px-4 focus-visible:ring-2 focus-visible:outline-none"
           />
         </div>
         <div className="grid gap-2">
-          <label className="type-label text-strong" htmlFor="contact-phone">
+          <FormLabel htmlFor="contact-phone">
             Number
-          </label>
-          <input
+          </FormLabel>
+          <TextInput
             id="contact-phone"
             name="phone"
             inputMode="tel"
             autoComplete="tel"
             maxLength={20}
             placeholder="Enter Number"
-            className="type-body-sm border-default focus-visible:ring-ring bg-canvas text-strong placeholder:text-muted min-h-12 w-full rounded-md border px-4 focus-visible:ring-2 focus-visible:outline-none"
           />
         </div>
       </div>
       <div className="grid gap-2">
-        <label className="type-label text-strong" htmlFor="contact-email">
+        <FormLabel htmlFor="contact-email">
           Email
-        </label>
-        <input
+        </FormLabel>
+        <TextInput
           id="contact-email"
           name="email"
           type="email"
@@ -49,21 +101,19 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
           required
           maxLength={254}
           placeholder="Enter Email"
-          className="type-body-sm border-default focus-visible:ring-ring bg-canvas text-strong placeholder:text-muted min-h-12 w-full rounded-md border px-4 focus-visible:ring-2 focus-visible:outline-none"
         />
       </div>
       <div className="grid gap-2">
-        <label className="type-label text-strong" htmlFor="contact-message">
+        <FormLabel htmlFor="contact-message">
           Message
-        </label>
-        <textarea
+        </FormLabel>
+        <Textarea
           id="contact-message"
           name="message"
           required
           maxLength={2000}
           rows={5}
           placeholder="Enter Message"
-          className="type-body-sm border-default focus-visible:ring-ring bg-canvas text-strong placeholder:text-muted w-full rounded-md border px-4 py-3 focus-visible:ring-2 focus-visible:outline-none"
         />
       </div>
       <div className="sr-only" aria-hidden="true">
@@ -75,9 +125,31 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
           autoComplete="off"
         />
       </div>
-      <Button type="submit" size="cta">
-        Submit
+      <Button
+        type="submit"
+        size="cta"
+        isLoading={isPending}
+        disabled={isPending}
+      >
+        {isPending ? 'Sending…' : 'Submit'}
       </Button>
+      {hasMessage ? (
+        <p
+          id={messageId}
+          role={status === 'success' ? 'status' : 'alert'}
+          aria-live="polite"
+          className={cn(
+            'type-body-sm rounded-md border p-3',
+            status === 'success'
+              ? 'border-success-border bg-success-bg text-success-text'
+              : 'border-danger-border bg-danger-bg text-danger-text',
+          )}
+        >
+          {status === 'success'
+            ? 'Thanks. The Teavision team will review your enquiry shortly.'
+            : error}
+        </p>
+      ) : null}
     </form>
   )
 }

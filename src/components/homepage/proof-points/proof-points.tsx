@@ -48,7 +48,10 @@ export function ProofPoints({ points = PROOF_POINTS }: ProofPointsProps) {
                     />
                   ) : null}
                   {!point.image && IconComponent ? (
-                    <IconComponent className="text-on-brand size-10 shrink-0" />
+                    <IconComponent
+                      className="text-on-brand size-10 shrink-0"
+                      aria-hidden="true"
+                    />
                   ) : null}
                 </div>
                 <div>

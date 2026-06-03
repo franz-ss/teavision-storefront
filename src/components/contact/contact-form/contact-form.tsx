@@ -7,9 +7,8 @@ import {
   type FormEvent,
 } from 'react'
 
-import { Button } from '@/components/ui'
+import { Button, FormLabel, Textarea, TextInput } from '@/components/ui'
 import type { ContactActionResult } from '@/lib/contact/types'
-import { cn } from '@/lib/utils'
 
 export type { ContactActionResult } from '@/lib/contact/types'
 
@@ -39,9 +38,6 @@ const DEFAULT_ERROR =
   'Unable to send your message right now. Please try again shortly.'
 
 const labelClassName = 'text-muted type-eyebrow'
-
-const inputClassName =
-  'type-body mt-2 min-h-11 w-full rounded border border-default bg-canvas px-4 py-3 text-default transition-colors placeholder:text-muted/70 focus:border-brand focus:ring-2 focus:ring-ring/20 focus:outline-none'
 
 export function ContactForm({
   action,
@@ -124,10 +120,10 @@ export function ContactForm({
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label className={labelClassName} htmlFor="contact-name">
+          <FormLabel className={labelClassName} htmlFor="contact-name">
             Name
-          </label>
-          <input
+          </FormLabel>
+          <TextInput
             id="contact-name"
             name="name"
             type="text"
@@ -136,15 +132,15 @@ export function ContactForm({
             maxLength={100}
             value={values.name}
             onChange={updateField('name')}
-            className={inputClassName}
+            className="mt-2 rounded"
           />
         </div>
 
         <div>
-          <label className={labelClassName} htmlFor="contact-phone">
+          <FormLabel className={labelClassName} htmlFor="contact-phone">
             Phone
-          </label>
-          <input
+          </FormLabel>
+          <TextInput
             id="contact-phone"
             name="phone"
             type="tel"
@@ -152,16 +148,16 @@ export function ContactForm({
             maxLength={20}
             value={values.phone}
             onChange={updateField('phone')}
-            className={inputClassName}
+            className="mt-2 rounded"
           />
         </div>
       </div>
 
       <div>
-        <label className={labelClassName} htmlFor="contact-email">
+        <FormLabel className={labelClassName} htmlFor="contact-email">
           Email
-        </label>
-        <input
+        </FormLabel>
+        <TextInput
           id="contact-email"
           name="email"
           type="email"
@@ -170,15 +166,15 @@ export function ContactForm({
           maxLength={254}
           value={values.email}
           onChange={updateField('email')}
-          className={inputClassName}
+          className="mt-2 rounded"
         />
       </div>
 
       <div>
-        <label className={labelClassName} htmlFor="contact-message">
+        <FormLabel className={labelClassName} htmlFor="contact-message">
           Message
-        </label>
-        <textarea
+        </FormLabel>
+        <Textarea
           id="contact-message"
           name="message"
           required
@@ -186,7 +182,7 @@ export function ContactForm({
           maxLength={2000}
           value={values.message}
           onChange={updateField('message')}
-          className={cn(inputClassName, 'resize-y')}
+          className="mt-2 min-h-40 rounded"
           placeholder="Wholesale account, custom blend, private label, sample request, or general supply question."
         />
       </div>

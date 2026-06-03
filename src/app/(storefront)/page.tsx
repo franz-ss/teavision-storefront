@@ -23,6 +23,7 @@ import {
   submitContactFormAction,
   submitNewsletterSignupFormAction,
 } from '@/lib/contact/actions'
+import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 
 export const metadata: Metadata = {
   title: 'Teavision | Teas Australia: Online Wholesale Store',
@@ -42,11 +43,13 @@ export default function HomePage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: serializeInlineJson(organizationJsonLd),
+        }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeInlineJson(websiteJsonLd) }}
       />
 
       <div className="bg-canvas">
@@ -59,12 +62,12 @@ export default function HomePage() {
         <Cta
           tone="brand"
           intro={{
-            title: 'Let the experts help GROW your business',
-            copy: 'Let the experts help GROW your business',
+            title: 'Source wholesale ingredients with Teavision',
+            copy: 'Talk with our team about samples, bulk supply, private-label packing, or custom blending for your range.',
           }}
           cta={{
             children: 'Contact the team',
-            href: '/contact',
+            href: '/pages/contact',
             variant: 'inverseSecondary',
           }}
         />
