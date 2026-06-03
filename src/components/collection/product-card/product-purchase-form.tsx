@@ -15,6 +15,7 @@ type ProductPurchaseFormProps = {
   productTitle: string
   addToCart?: AddToCart
   onCartChanged?: () => void
+  showQuantity?: boolean
 }
 
 function getInitialVariantId(variants: ProductVariant[]): string {
@@ -30,6 +31,7 @@ export function ProductPurchaseForm({
   productTitle,
   addToCart,
   onCartChanged,
+  showQuantity,
 }: ProductPurchaseFormProps) {
   const [selectedVariantId, setSelectedVariantId] = useState(() =>
     getInitialVariantId(variants),
@@ -96,15 +98,17 @@ export function ProductPurchaseForm({
       )}
 
       <div className="flex flex-wrap items-center gap-3">
-        <QuantityStepper
-          value={quantity}
-          onChange={(nextQuantity) => {
-            setQuantity(nextQuantity)
-            resetFeedback()
-          }}
-          disabled={isPending || !canAddToCart}
-          label={`Quantity for ${productTitle}`}
-        />
+        {showQuantity !== false && (
+          <QuantityStepper
+            value={quantity}
+            onChange={(nextQuantity) => {
+              setQuantity(nextQuantity)
+              resetFeedback()
+            }}
+            disabled={isPending || !canAddToCart}
+            label={`Quantity for ${productTitle}`}
+          />
+        )}
         <div className="min-w-36 flex-1 sm:flex-none">
           <Button
             type="submit"
