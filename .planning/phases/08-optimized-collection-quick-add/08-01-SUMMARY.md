@@ -32,7 +32,7 @@ Implemented eligibility rule:
 `QuickAddButton` is the only new client leaf. It reuses `useAddToCart`, calls the existing cart Server Action path through that hook, and renders accessible pending, success, and error feedback. `ProductCard` remains a Server Component and renders:
 
 - `Add to cart` for available products with `quickAdd`.
-- `Quick View` for available products without `quickAdd`.
+- an `Add to cart` trigger for available products without `quickAdd`; this opens Quick View for explicit variant selection instead of adding a guessed variant.
 - no purchase action for sold-out products.
 - `More info` for all products.
 

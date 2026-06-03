@@ -105,7 +105,12 @@ export function ProductCard({
                 />
               ) : null}
               {shouldShowQuickView ? (
-                <ProductQuickView product={product} buttonVariant="secondary" />
+                <ProductQuickView
+                  product={product}
+                  buttonIcon="cart"
+                  buttonLabel="Add to cart"
+                  buttonVariant="secondary"
+                />
               ) : null}
             </div>
           </div>

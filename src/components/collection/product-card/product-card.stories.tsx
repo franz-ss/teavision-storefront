@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, within } from 'storybook/test'
 
 import type { CollectionProductSummary } from '@/lib/shopify/types'
 
@@ -45,6 +46,15 @@ export const Default: Story = {
   args: {
     product: stubProduct,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.getByRole('button', {
+        name: 'Add Tea Masters Sencha Green Tea to cart',
+      }),
+    ).toBeVisible()
+  },
 }
 
 export const NoImage: Story = {
@@ -69,6 +79,13 @@ export const MultiVariant: Story = {
       quickAdd: null,
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.getByRole('button', { name: 'Add to cart' }),
+    ).toBeVisible()
+  },
 }
 
 export const SoldOut: Story = {
@@ -81,6 +98,13 @@ export const SoldOut: Story = {
       availableForSale: false,
       quickAdd: null,
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.queryByRole('button', { name: /add to cart/i }),
+    ).not.toBeInTheDocument()
   },
 }
 

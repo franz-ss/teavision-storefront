@@ -24,6 +24,8 @@ import { useAddToCart } from '../use-add-to-cart'
 
 type ProductQuickViewProps = {
   product: ProductSummary
+  buttonIcon?: 'cart' | 'eye'
+  buttonLabel?: string
   buttonVariant?: NonNullable<ButtonProps['variant']>
   initialProduct?: ProductQuickViewDetails
 }
@@ -108,6 +110,8 @@ function getVariantLabel(
 }
 
 export function ProductQuickView({
+  buttonIcon = 'eye',
+  buttonLabel = 'Quick View',
   buttonVariant = 'inverse',
   product,
   initialProduct,
@@ -149,6 +153,7 @@ export function ProductQuickView({
     null
   const canAddToCart = selectedVariant?.availableForSale === true
   const hasVariants = (productData?.variants.length ?? 0) > 0
+  const TriggerIcon = buttonIcon === 'cart' ? ShoppingCart : Eye
 
   async function loadProduct() {
     if (productData || isLoading) return
@@ -200,8 +205,8 @@ export function ProductQuickView({
         aria-haspopup="dialog"
         aria-expanded={open}
       >
-        <Eye className="h-4 w-4" aria-hidden="true" />
-        Quick View
+        <TriggerIcon className="h-4 w-4" aria-hidden="true" />
+        {buttonLabel}
       </Button>
 
       <Dialog

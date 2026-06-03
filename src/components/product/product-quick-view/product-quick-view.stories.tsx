@@ -90,6 +90,23 @@ export const Default: Story = {
   },
 }
 
+export const AddToCartTrigger: Story = {
+  args: {
+    product: stubProduct,
+    initialProduct: quickViewProduct,
+    buttonIcon: 'cart',
+    buttonLabel: 'Add to cart',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to cart' }))
+
+    await expect(
+      canvas.getByRole('button', { name: 'Add to Cart' }),
+    ).toBeVisible()
+  },
+}
+
 export const SoldOut: Story = {
   args: {
     product: stubProduct,
