@@ -165,7 +165,6 @@ export async function PageContent({ params, searchParams }: PageProps) {
             <StoryDisclosure
               title={`Read more about ${collection.title}`}
               html={sanitizedRichDescriptionHtml}
-              className="max-w-4xl"
             />
           ) : null
         }
@@ -173,10 +172,9 @@ export async function PageContent({ params, searchParams }: PageProps) {
       />
 
       <div className="bg-canvas w-full max-w-full overflow-x-hidden">
-        <Section.Root tone="transparent" aria-labelledby="products-heading">
+        <Section.Root tone="transparent">
           <Section.Container>
             <Toolbar
-              headingId="products-heading"
               currentSort={sort}
               productCount={products.length}
               filters={visibleFilters}
