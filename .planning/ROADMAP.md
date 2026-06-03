@@ -15,7 +15,7 @@ This milestone brings high-value legacy storefront behavior into the Next storef
 - [x] **Phase 2: Searchanise API Search Results** - Render Searchanise-powered search results through first-class Next UI with owned filters, sorting, pagination, and legacy route cleanup.
 - [x] **Phase 4: Footer 1:1 Parity** - Replace the compact Next footer with a faithful port of the live `https://www.teavision.com.au/` footer, including menu columns, quality/trust content, newsletter/contact block, bottom copyright/search/payment row, and responsive layout. The hidden keyword-link block was removed after review.
 - [x] **Phase 5: Codebase Review Remediation** - Fix the production-readiness issues from `CODEBASE_REVIEW.md`, including conversion-path correctness, accessibility, JSON-LD safety, testing gates, reliability/security hardening, PLP performance, component boundaries, type/runtime guardrails, sitemap hygiene, and final verification evidence.
-- [ ] **Phase 6: Prevent the site from being indexed** - Add temporary noindex/no-crawl controls across robots, metadata, and sitemap surfaces until launch.
+- [x] **Phase 6: Prevent the site from being indexed** - Add temporary noindex/no-crawl controls across robots, metadata, and sitemap surfaces until launch. (completed 2026-06-03)
 
 ## Phase Details
 
@@ -89,7 +89,7 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6.
 | 2. Searchanise API Search Results   | 1/1            | Complete | 2026-05-27 |
 | 4. Footer 1:1 Parity                | 1/1            | Complete | 2026-05-29 |
 | 5. Codebase Review Remediation      | 5/5            | Complete | 2026-06-02 |
-| 6. Prevent site indexing            | 0/1            | Planned     | -          |
+| 6. Prevent site indexing            | 1/1 | Complete   | 2026-06-03 |
 
 ### Phase 5: Codebase Review Remediation
 
@@ -129,7 +129,7 @@ Plans:
 3. Sitemap output does not invite indexing while noindex mode is active.
 4. Verification confirms the built app exposes the expected robots, metadata, and sitemap behavior.
 
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 06-01: Environment-controlled noindex mode across metadata, robots, sitemap, and verification
+- [x] 06-01: Environment-controlled noindex mode across metadata, robots, sitemap, and verification

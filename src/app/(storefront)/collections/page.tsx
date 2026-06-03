@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { Card, Section } from '@/components/ui'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 import type { CollectionSummary } from '@/lib/shopify/types'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 
 import { CollectionCardImage } from './_components/collection-card-image'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withNoindexRobots({
   title: 'Wholesale Tea Collections | Teavision',
   description:
     'Browse Teavision wholesale tea, herbs, spices, tea bags, superfood powders, wellness blends, and Australian native ingredient collections.',
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     url: '/collections',
   },
   alternates: { canonical: '/collections' },
-}
+})
 
 const FEATURED_HANDLES = [
   'wholesale-bulk-tea',

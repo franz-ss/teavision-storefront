@@ -4,14 +4,15 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 import { getCartAction } from '@/lib/cart/actions'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { Button, Price } from '@/components/ui'
 
 import { CartLineActions } from './_components/cart-line-actions'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withNoindexRobots({
   title: 'Your Cart',
-}
+})
 
 async function CartContent() {
   const cart = await getCartAction()

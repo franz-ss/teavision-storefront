@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google'
 
+import { withNoindexRobots } from '@/lib/seo/noindex'
 import { cn } from '@/lib/utils'
 
 import './globals.css'
@@ -25,7 +26,7 @@ const jetBrainsMono = JetBrains_Mono({
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withNoindexRobots({
   metadataBase: new URL(BASE_URL),
   title: {
     template: '%s | Teavision',
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
   },
-}
+})
 
 export default function RootLayout({
   children,

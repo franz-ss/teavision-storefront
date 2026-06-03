@@ -23,9 +23,10 @@ import {
   submitContactFormAction,
   submitNewsletterSignupFormAction,
 } from '@/lib/contact/actions'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withNoindexRobots({
   title: 'Teavision | Teas Australia: Online Wholesale Store',
   description:
     'Looking to Buy Tea Online at Wholesale Prices? Our award-winning Australian tea company provide Organic, Natural & Healthy ingredients. Visit our site today!',
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     url: '/',
   },
   alternates: { canonical: '/' },
-}
+})
 
 export default function HomePage() {
   return (

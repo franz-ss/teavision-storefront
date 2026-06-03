@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import Script from 'next/script'
 
 import { getProduct } from '@/lib/shopify/operations/product'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 import { getTrustooProductRatings } from '@/lib/reviews/trustoo'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
@@ -38,12 +39,12 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params
   const product = await getProduct(handle)
-  if (!product) return { title: 'Product not found' }
+  if (!product) return withNoindexRobots({ title: 'Product not found' })
   const description = product.description
     ? product.description.slice(0, 160)
     : `Buy ${product.title} from Teavision, Australia's bulk tea and herb supplier.`
   const imageUrl = product.images[0]?.url
-  return {
+  return withNoindexRobots({
     title: product.title,
     description,
     openGraph: {
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ...(imageUrl && { images: [{ url: imageUrl }] }),
     },
     alternates: { canonical: `/products/${handle}` },
-  }
+  })
 }
 
 async function ProductContent({

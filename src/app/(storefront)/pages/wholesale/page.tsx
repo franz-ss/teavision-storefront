@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 
+import { withNoindexRobots } from '@/lib/seo/noindex'
+
 import { SupplyPaths } from './_components/supply-paths'
 import { WholesaleHero } from './_components/wholesale-hero'
 import { WholesaleInclusions } from './_components/wholesale-inclusions'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withNoindexRobots({
   title: 'Wholesale Accounts | Teavision',
   description:
     'Apply for a Teavision wholesale account. Bulk tea, herbs and spices for cafes, restaurants, and retailers across Australia.',
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
     url: '/pages/wholesale',
   },
   alternates: { canonical: '/pages/wholesale' },
-}
+})
 
 export default function Page() {
   return (

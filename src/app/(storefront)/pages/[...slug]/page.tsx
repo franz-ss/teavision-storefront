@@ -8,6 +8,7 @@ import {
   getPages,
   type ShopifyPage,
 } from '@/lib/shopify/operations/storefront-page'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 
 import { Content } from './_components/content'
 import { getMetaDescription } from './_lib/page-formatting'
@@ -51,14 +52,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = await getRequestedPage(params)
 
   if (!page) {
-    return { title: 'Page Not Found' }
+    return withNoindexRobots({ title: 'Page Not Found' })
   }
 
   const description = getMetaDescription(page)
   const title = page.seo.title ?? page.title
   const canonical = getPagePath(page.handle)
 
-  return {
+  return withNoindexRobots({
     title,
     description,
     openGraph: {
@@ -68,7 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'website',
     },
     alternates: { canonical },
-  }
+  })
 }
 
 export default async function Page({ params }: Props) {

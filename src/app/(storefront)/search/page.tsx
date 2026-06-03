@@ -8,6 +8,7 @@ import {
   type SearchParamsInput,
 } from '@/lib/searchanise/params'
 import { getSearchaniseSearchResults } from '@/lib/searchanise/search'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 
 type Props = {
   searchParams: Promise<SearchParamsInput>
@@ -19,13 +20,13 @@ export async function generateMetadata({
   const state = parseSearchParams(await searchParams)
   const title = state.query ? `Search: "${state.query}"` : 'Search'
 
-  return {
+  return withNoindexRobots({
     title,
     description: state.query
       ? `Search results for "${state.query}" on Teavision, Australia's bulk tea and herb supplier.`
       : 'Search Teavision for bulk tea, herbs, and spices.',
     robots: { index: false },
-  }
+  })
 }
 
 async function SearchContent({

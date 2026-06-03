@@ -11,6 +11,7 @@ import {
   getUniqueArticleTags,
   normalizeBlogHandle,
 } from '@/lib/blog/operations'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 
 import type { ListingProps } from './types'
 
@@ -43,7 +44,7 @@ export async function generateListingMetadata({
         })
   const noIndex = blogData.seo.noIndex || Boolean(q?.trim())
 
-  return {
+  return withNoindexRobots({
     title,
     description,
     openGraph: {
@@ -64,5 +65,5 @@ export async function generateListingMetadata({
     robots: noIndex
       ? { index: false, follow: !blogData.seo.noIndex }
       : undefined,
-  }
+  })
 }

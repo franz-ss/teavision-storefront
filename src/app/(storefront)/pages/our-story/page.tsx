@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 
+import { withNoindexRobots } from '@/lib/seo/noindex'
+
 import { HERO_IMAGE } from './_lib/data'
 import { PageContent } from './_components/page-content'
 
 const DESCRIPTION =
   'Born in Melbourne, Teavision was founded by Lucas and Belinda in 2014 to make a meaningful difference through quality teas, herbs, and healthy living.'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withNoindexRobots({
   title: 'Our Story',
   description: DESCRIPTION,
   openGraph: {
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
     ],
   },
   alternates: { canonical: '/pages/our-story' },
-}
+})
 
 export default function Page() {
   return <PageContent />

@@ -9,6 +9,7 @@ import {
   getUniqueArticleTags,
   isLocalCanonicalPath,
 } from '@/lib/blog/operations'
+import { isNoindexModeEnabled } from '@/lib/seo/noindex'
 import { getAllProducts } from '@/lib/shopify/operations/product'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 
@@ -49,6 +50,10 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (isNoindexModeEnabled()) {
+    return []
+  }
+
   const [products, collections, blog] = await Promise.all([
     getAllProducts(),
     getCollectionSummaries(250),

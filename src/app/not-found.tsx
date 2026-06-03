@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 
 import { Button, Card } from '@/components/ui'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withNoindexRobots({
   title: '404 — Page Not Found | Teavision',
   description: "The page you're looking for has moved or never existed.",
   robots: { index: false },
-}
+})
 
 export default function NotFound() {
   return (

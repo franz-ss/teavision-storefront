@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
+import { withNoindexRobots } from '@/lib/seo/noindex'
 import { getCollection } from '@/lib/shopify/operations/collection'
 
 import { PageContent } from './_components/page-content'
@@ -16,7 +17,7 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { handle, category } = await params
   const collection = await getCollection(handle)
-  if (!collection) return { title: 'Collection not found' }
+  if (!collection) return withNoindexRobots({ title: 'Collection not found' })
   const description = truncateMetaDescription(
     collection.seo.description ??
       collection.description ??
@@ -33,7 +34,7 @@ export async function generateMetadata({
     collection.title,
   )
 
-  return {
+  return withNoindexRobots({
     title,
     description,
     openGraph: {
@@ -50,7 +51,7 @@ export async function generateMetadata({
         : undefined,
     },
     alternates: { canonical: collectionPath },
-  }
+  })
 }
 
 export default function Page({ params, searchParams }: PageProps) {

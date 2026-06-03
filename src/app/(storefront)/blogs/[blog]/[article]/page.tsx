@@ -16,6 +16,7 @@ import {
   getTagPath,
   normalizeBlogHandle,
 } from '@/lib/blog/operations'
+import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 import { sanitizeShopifyArticleHtml } from '@/lib/shopify/html-content'
 
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { blog, article: handle } = await params
   const normalizedBlog = normalizeBlogHandle(blog)
   const article = await getArticle(normalizedBlog, handle)
-  if (!article) return { title: 'Article not found' }
+  if (!article) return withNoindexRobots({ title: 'Article not found' })
 
   const description = articleDescription(article)
   const title = article.seo.title ?? article.title
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     article.seo.canonicalPath ?? getArticlePath(normalizedBlog, handle)
   const openGraphImage = article.seo.ogImage ?? article.featuredImage
 
-  return {
+  return withNoindexRobots({
     title,
     description,
     robots: article.seo.noIndex ? { index: false, follow: false } : undefined,
@@ -59,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : undefined,
     },
     alternates: { canonical },
-  }
+  })
 }
 
 async function ArticleContent({ params }: Props) {
