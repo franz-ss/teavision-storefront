@@ -30,7 +30,7 @@ export function Hero({
   showIntro = true,
 }: HeroProps) {
   return (
-    <Section.Root tone="sunken" spacing="compact">
+    <Section.Root tone="transparent" spacing="compact">
       <Section.Container>
         <nav
           aria-label="Breadcrumb"

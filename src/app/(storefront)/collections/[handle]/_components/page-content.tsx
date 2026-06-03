@@ -171,33 +171,31 @@ export async function PageContent({ params, searchParams }: PageProps) {
         showIntro={showIntroContent}
       />
 
-      <div className="bg-canvas w-full max-w-full overflow-x-hidden">
-        <Section.Root tone="transparent">
-          <Section.Container>
-            <Toolbar
-              currentSort={sort}
-              productCount={products.length}
-              filters={visibleFilters}
-              selectedFilters={activeSelectedFilters}
-              clearHref={clearFiltersHref}
-              className="mb-8"
+      <Section.Root tone="transparent" className="pt-0 md:pt-0">
+        <Section.Container>
+          <Toolbar
+            currentSort={sort}
+            productCount={products.length}
+            filters={visibleFilters}
+            selectedFilters={activeSelectedFilters}
+            clearHref={clearFiltersHref}
+            className="mb-8"
+          />
+
+          <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
+            <Sidebar
+              activeSelectedFilters={activeSelectedFilters}
+              clearFiltersHref={clearFiltersHref}
+              handle={handle}
+              productsLength={products.length}
+              sidebarCollections={sidebarCollections}
+              visibleFilters={visibleFilters}
             />
 
-            <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
-              <Sidebar
-                activeSelectedFilters={activeSelectedFilters}
-                clearFiltersHref={clearFiltersHref}
-                handle={handle}
-                productsLength={products.length}
-                sidebarCollections={sidebarCollections}
-                visibleFilters={visibleFilters}
-              />
-
-              <ProductList products={products} nextPageHref={nextPageHref} />
-            </div>
-          </Section.Container>
-        </Section.Root>
-      </div>
+            <ProductList products={products} nextPageHref={nextPageHref} />
+          </div>
+        </Section.Container>
+      </Section.Root>
     </>
   )
 }
