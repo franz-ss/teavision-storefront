@@ -78,7 +78,7 @@ export function Sidebar({
                         href={getPath(sidebarCollection.handle)}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'type-body-sm focus-visible:ring-ring flex min-h-9 items-center rounded px-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                          'type-body-sm focus-visible:ring-ring flex min-h-10 items-center rounded px-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                           isActive
                             ? 'bg-surface-sunken text-strong'
                             : 'text-link hover:bg-surface-sunken',

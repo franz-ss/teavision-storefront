@@ -46,7 +46,7 @@ function SearchFallback() {
         <div className="py-10" role="status" aria-live="polite">
           <p className="type-eyebrow text-accent">Search results</p>
           <p className="type-heading-03 text-strong mt-3">
-            Loading search results...
+            Loading search results…
           </p>
         </div>
       </Section.Container>

@@ -1,5 +1,6 @@
 import {
   FilterType,
+  type CollectionFilterValue,
   type CollectionProductFilter,
   type CollectionProductSummary,
   type CollectionSummary,
@@ -276,10 +277,12 @@ function withQuery(
   href: string,
   sort: string,
   selectedFilters: string[] = [],
+  cursor?: string | null,
 ): string {
   const params = new URLSearchParams()
   if (sort !== 'featured') params.set('sort', sort)
   selectedFilters.forEach((filter) => params.append('filter', filter))
+  if (cursor) params.set('cursor', cursor)
   const queryString = params.toString()
 
   return queryString ? `${href}?${queryString}` : href
@@ -306,6 +309,24 @@ function getCategoryHref(
   )
 }
 
+export function getPaginationHref({
+  category,
+  cursor,
+  handle,
+  selectedFilters,
+  sort,
+}: {
+  category: string | undefined
+  cursor: string
+  handle: string
+  selectedFilters: string[]
+  sort: string
+}): string {
+  const path = category ? `${getPath(handle)}/${category}` : getPath(handle)
+
+  return withQuery(path, sort, selectedFilters, cursor)
+}
+
 function compareSidebarCollections(
   first: CollectionSummary,
   second: CollectionSummary,
@@ -329,6 +350,35 @@ function getCategoryTags(products: CollectionProductSummary[]): string[] {
   )
 }
 
+function getCategoryTagFromFilterValue(
+  value: CollectionFilterValue,
+): string | null {
+  try {
+    const parsed: unknown = JSON.parse(value.input)
+    if (!isProductFilterInput(parsed) || !isCategoryProductFilter(parsed)) {
+      return null
+    }
+
+    return parsed.tag ?? null
+  } catch {
+    return null
+  }
+}
+
+function getCategoryTagsFromFilters(
+  filters: CollectionProductFilter[],
+): string[] {
+  return Array.from(
+    new Set(
+      filters.flatMap((filter) =>
+        filter.values
+          .map(getCategoryTagFromFilterValue)
+          .filter((tag): tag is string => tag !== null),
+      ),
+    ),
+  )
+}
+
 function normalizeCategoryPathSegment(value: string): string {
   try {
     return decodeURIComponent(value).toLowerCase()
@@ -339,43 +389,75 @@ function normalizeCategoryPathSegment(value: string): string {
 
 export function findCategoryTagForPath(
   category: string | undefined,
-  products: CollectionProductSummary[],
+  filters: CollectionProductFilter[],
+  products: CollectionProductSummary[] = [],
 ): string | null {
   if (!category) return null
   const normalizedCategory = normalizeCategoryPathSegment(category)
+  const categoryTags = getCategoryTagsFromFilters(filters)
+  const tags = categoryTags.length > 0 ? categoryTags : getCategoryTags(products)
 
   return (
-    getCategoryTags(products).find(
-      (tag) => toCategoryPathSegment(tag) === normalizedCategory,
-    ) ?? null
+    tags.find((tag) => toCategoryPathSegment(tag) === normalizedCategory) ??
+    null
   )
 }
 
 export function buildCategoryFilter({
   products,
+  sourceFilter,
   handle,
   selectedCategoryTag,
   sort,
   selectedFilters,
 }: {
   products: CollectionProductSummary[]
+  sourceFilter?: CollectionProductFilter | null
   handle: string
   selectedCategoryTag: string | null
   sort: string
   selectedFilters: string[]
 }): CollectionProductFilter | null {
-  const counts = new Map<string, number>()
+  const sourceValues =
+    sourceFilter?.values
+      .map((value) => {
+        const tag = getCategoryTagFromFilterValue(value)
+        if (!tag) return null
 
-  products.forEach((product) => {
-    product.tags.filter(isCategoryTag).forEach((tag) => {
-      counts.set(tag, (counts.get(tag) ?? 0) + 1)
+        return {
+          count: value.count,
+          id: value.id,
+          label: value.label || formatCategoryLabel(tag),
+          tag,
+        }
+      })
+      .filter((value): value is NonNullable<typeof value> => value !== null) ??
+    []
+
+  const fallbackCounts = new Map<string, number>()
+
+  if (sourceValues.length === 0) {
+    products.forEach((product) => {
+      product.tags.filter(isCategoryTag).forEach((tag) => {
+        fallbackCounts.set(tag, (fallbackCounts.get(tag) ?? 0) + 1)
+      })
     })
-  })
+  }
 
-  const values = Array.from(counts.entries())
-    .map(([tag, count]) => ({
-      id: `filter.p.tag.${toFilterId(tag)}`,
-      label: formatCategoryLabel(tag),
+  const categoryValues =
+    sourceValues.length > 0
+      ? sourceValues
+      : Array.from(fallbackCounts.entries()).map(([tag, count]) => ({
+          count,
+          id: `filter.p.tag.${toFilterId(tag)}`,
+          label: formatCategoryLabel(tag),
+          tag,
+        }))
+
+  const values = categoryValues
+    .map(({ count, id, label, tag }) => ({
+      id,
+      label,
       count,
       input: getCategoryFilterInput(tag),
       href:
@@ -444,8 +526,4 @@ export function getHeroImage(
     getLegacyBannerImage(descriptionHtml, collectionTitle) ??
     featuredImage
   )
-}
-
-export function getResizedShopifyImageUrl(url: string, width: number): string {
-  return `${url}${url.includes('?') ? '&' : '?'}width=${width}`
 }

@@ -3,10 +3,11 @@ import { Button, Card } from '@/components/ui'
 import type { CollectionProductSummary } from '@/lib/shopify/types'
 
 type ProductListProps = {
+  nextPageHref?: string | null
   products: CollectionProductSummary[]
 }
 
-export function ProductList({ products }: ProductListProps) {
+export function ProductList({ nextPageHref = null, products }: ProductListProps) {
   if (products.length === 0) {
     return (
       <ul className="grid gap-4" role="list">
@@ -27,12 +28,22 @@ export function ProductList({ products }: ProductListProps) {
   }
 
   return (
-    <ul className="grid gap-4" role="list">
-      {products.map((product, index) => (
-        <li key={product.id}>
-          <ProductCard product={product} priority={index === 0} />
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul className="grid gap-4" role="list">
+        {products.map((product, index) => (
+          <li key={product.id}>
+            <ProductCard product={product} priority={index === 0} />
+          </li>
+        ))}
+      </ul>
+
+      {nextPageHref && (
+        <div className="mt-8 flex justify-center">
+          <Button href={nextPageHref} variant="secondary">
+            Next products
+          </Button>
+        </div>
+      )}
+    </div>
   )
 }

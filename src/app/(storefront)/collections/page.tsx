@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 
 import { Card, Section } from '@/components/ui'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 import type { CollectionSummary } from '@/lib/shopify/types'
+import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
+
+import { CollectionCardImage } from './_components/collection-card-image'
 
 export const metadata: Metadata = {
   title: 'Wholesale Tea Collections | Teavision',
@@ -80,27 +82,6 @@ function getFeatured(collections: CollectionSummary[]): CollectionSummary[] {
   )
 }
 
-function CardImage({ collection }: { collection: CollectionSummary }) {
-  if (
-    !collection.featuredImage ||
-    !collection.featuredImage.width ||
-    !collection.featuredImage.height
-  ) {
-    return <div className="bg-surface-sunken aspect-4/3 w-full" />
-  }
-
-  return (
-    <Image
-      src={`${collection.featuredImage.url}&width=640`}
-      alt={collection.featuredImage.altText ?? collection.title}
-      width={collection.featuredImage.width}
-      height={collection.featuredImage.height}
-      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-      className="aspect-4/3 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-    />
-  )
-}
-
 export default async function Page() {
   const collections = await getCollectionSummaries()
   const featuredCollections = getFeatured(collections)
@@ -131,10 +112,10 @@ export default async function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeInlineJson(structuredData) }}
       />
 
-      <main className="bg-canvas">
+      <div className="bg-canvas">
         <Section.Root tone="sunken" className="border-default border-b">
           <Section.Container>
             <nav
@@ -203,7 +184,7 @@ export default async function Page() {
                     href={hrefForHandle(collection.handle)}
                     className="focus-visible:ring-ring block h-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
-                    <CardImage collection={collection} />
+                    <CollectionCardImage collection={collection} />
                     <div className="p-4">
                       <h3 className="type-heading-04 text-strong group-hover:text-brand transition-colors">
                         {collection.title}
@@ -257,7 +238,7 @@ export default async function Page() {
             </ul>
           </Section.Container>
         </Section.Root>
-      </main>
+      </div>
     </>
   )
 }

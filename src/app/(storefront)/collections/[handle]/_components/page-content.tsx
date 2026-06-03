@@ -4,6 +4,7 @@ import { StoryDisclosure, Toolbar } from '@/components/collection'
 import { Section } from '@/components/ui'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import {
+  COLLECTION_PRODUCT_PAGE_SIZE,
   getCollection,
   getCollectionProductsWithFilters,
   getCollectionSummaries,
@@ -19,6 +20,7 @@ import {
   getCategoryFilterInput,
   getHeroImage,
   getHref,
+  getPaginationHref,
   getPath,
   getSidebarCollections,
   isAvailabilityFilter,
@@ -44,20 +46,22 @@ export async function PageContent({ params, searchParams }: PageProps) {
 
   const sortParam = firstParam(resolvedSearchParams.sort)
   const sort = sortParam && sortParam in SORT_MAP ? sortParam : 'featured'
+  const cursor = firstParam(resolvedSearchParams.cursor)
   const { sortKey, reverse } = SORT_MAP[sort]
   const { selectedFilters, productFilters } = parseSelectedFilterParams(
     paramValues(resolvedSearchParams.filter),
   )
 
-  const [collection, collectionProductsResult, collectionSummaries] =
+  const [collection, initialProductsResult, collectionSummaries] =
     await Promise.all([
       getCollection(handle),
       getCollectionProductsWithFilters(
         handle,
-        250,
+        COLLECTION_PRODUCT_PAGE_SIZE,
         sortKey,
         reverse,
         productFilters,
+        category ? null : cursor,
       ),
       getCollectionSummaries(),
     ])
@@ -67,16 +71,31 @@ export async function PageContent({ params, searchParams }: PageProps) {
   const sidebarCollections = getSidebarCollections(collectionSummaries)
   const selectedCategoryTag = findCategoryTagForPath(
     category,
-    collectionProductsResult.products,
+    initialProductsResult.filters,
+    initialProductsResult.products,
   )
   if (category && !selectedCategoryTag) notFound()
 
+  const activeProductFilters = selectedCategoryTag
+    ? [{ tag: selectedCategoryTag }, ...productFilters]
+    : productFilters
+  const collectionProductsResult = selectedCategoryTag
+    ? await getCollectionProductsWithFilters(
+        handle,
+        COLLECTION_PRODUCT_PAGE_SIZE,
+        sortKey,
+        reverse,
+        activeProductFilters,
+        cursor,
+      )
+    : initialProductsResult
   const activeSelectedFilters = selectedCategoryTag
     ? [getCategoryFilterInput(selectedCategoryTag), ...selectedFilters]
     : selectedFilters
   const clearFiltersHref = getHref(handle, sort)
   const categoryFilter = buildCategoryFilter({
-    products: collectionProductsResult.products,
+    products: initialProductsResult.products,
+    sourceFilter: initialProductsResult.filters.find(isCategoryFilter),
     handle,
     selectedCategoryTag,
     sort,
@@ -86,6 +105,17 @@ export async function PageContent({ params, searchParams }: PageProps) {
     collectionProductsResult.products,
     selectedCategoryTag,
   )
+  const nextPageHref =
+    collectionProductsResult.pageInfo.hasNextPage &&
+    collectionProductsResult.pageInfo.endCursor
+      ? getPaginationHref({
+          category,
+          cursor: collectionProductsResult.pageInfo.endCursor,
+          handle,
+          selectedFilters,
+          sort,
+        })
+      : null
   const visibleFilters = [
     categoryFilter,
     ...collectionProductsResult.filters.filter(
@@ -170,7 +200,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
                 visibleFilters={visibleFilters}
               />
 
-              <ProductList products={products} />
+              <ProductList products={products} nextPageHref={nextPageHref} />
             </div>
           </Section.Container>
         </Section.Root>

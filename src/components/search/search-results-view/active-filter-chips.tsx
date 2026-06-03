@@ -23,7 +23,7 @@ export function ActiveFilterChips({
           key={filter.id}
           href={filter.href}
           aria-label={`Remove ${filter.facetLabel} filter: ${filter.label}`}
-          className="type-caption border-default bg-surface text-default hover:bg-surface-sunken focus-visible:ring-ring inline-flex min-h-9 items-center gap-2 rounded-full border px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="type-caption border-default bg-surface text-default hover:bg-surface-sunken focus-visible:ring-ring inline-flex min-h-10 items-center gap-2 rounded-full border px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <span className="text-muted">{filter.facetLabel}</span>
           <span>{filter.label}</span>

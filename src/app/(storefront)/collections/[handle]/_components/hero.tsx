@@ -2,9 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { Section } from '@/components/ui'
+import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { cn } from '@/lib/utils'
 
-import { type HeroImage, getResizedShopifyImageUrl } from '../_lib/page-helpers'
+import { type HeroImage } from '../_lib/page-helpers'
 
 type HeroProps = {
   collectionTitle: string
@@ -61,10 +62,10 @@ export function Hero({
               )}
             >
               <Image
-                src={getResizedShopifyImageUrl(heroImage.url, 1440)}
+                src={getSizedShopifyImageUrl(heroImage.url, 1440)}
                 alt={heroImage.altText ?? collectionTitle}
                 fill
-                priority
+                preload
                 sizes="(min-width: 1280px) 1200px, 100vw"
                 className="object-cover"
               />

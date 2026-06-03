@@ -52,7 +52,7 @@ export function SearchSuggestions({
             className="size-4 animate-spin motion-reduce:animate-none"
             aria-hidden="true"
           />
-          <span className="type-body-sm">Searching products</span>
+          <span className="type-body-sm">Searching products…</span>
         </div>
       )}
 

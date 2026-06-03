@@ -57,7 +57,11 @@ export default function Page({ params, searchParams }: PageProps) {
   return (
     <Suspense
       fallback={
-        <div className="type-body text-muted mx-auto max-w-7xl px-4 py-12 md:px-6">
+        <div
+          className="type-body text-muted mx-auto max-w-7xl px-4 py-12 md:px-6"
+          role="status"
+          aria-live="polite"
+        >
           Loading collection…
         </div>
       }
