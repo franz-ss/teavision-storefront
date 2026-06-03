@@ -83,9 +83,16 @@ export type ProductSummary = {
   reviewCount?: number
 }
 
+export type ProductQuickAdd = {
+  variantId: string
+  variantTitle: string
+  availableForSale: boolean
+}
+
 export type CollectionProductSummary = ProductSummary & {
   availableForSale: boolean
   productType: string
+  quickAdd: ProductQuickAdd | null
   tags: string[]
 }
 

@@ -20,6 +20,7 @@ const stubProduct: CollectionProductSummary = {
   priceRange: {
     minVariantPrice: { amount: '12.00', currencyCode: 'AUD' },
   },
+  quickAdd: null,
   rating: 4.8,
   reviewCount: 37,
 }

@@ -25,6 +25,7 @@ const product = {
   priceRange: {
     minVariantPrice: { amount: '12.40', currencyCode: 'AUD' },
   },
+  quickAdd: null,
 }
 
 const baseState: SearchRouteState = {

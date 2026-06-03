@@ -16,6 +16,7 @@ import {
   type GetCollectionProductsQuery,
   type GetCollectionSummariesQuery,
   type ProductFilter,
+  type ProductQuickAdd,
   type ProductSummary,
 } from '@/lib/shopify/types'
 
@@ -47,6 +48,9 @@ type ShopifyCollectionProductNode = NonNullable<
 type ShopifyCollectionProductFilterNode = NonNullable<
   GetCollectionProductsQuery['collection']
 >['products']['filters'][number]
+
+type ShopifyCollectionProductVariantNode =
+  ShopifyCollectionProductNode['variants']['edges'][number]['node']
 
 type ShopifyCollectionNode = NonNullable<GetCollectionQuery['collection']>
 
@@ -121,6 +125,27 @@ function reshapeProductSummary(
   }
 }
 
+function reshapeQuickAddVariant(
+  variant: ShopifyCollectionProductVariantNode,
+): ProductQuickAdd | null {
+  if (!variant.availableForSale) return null
+
+  return {
+    variantId: variant.id,
+    variantTitle: variant.title,
+    availableForSale: variant.availableForSale,
+  }
+}
+
+function reshapeQuickAdd(
+  product: ShopifyCollectionProductNode,
+): ProductQuickAdd | null {
+  const variants = product.variants.edges.map((edge) => edge.node)
+  if (variants.length !== 1) return null
+
+  return reshapeQuickAddVariant(variants[0])
+}
+
 function reshapeCollectionProductSummary(
   product: ShopifyCollectionProductNode,
 ): CollectionProductSummary {
@@ -128,6 +153,7 @@ function reshapeCollectionProductSummary(
     ...reshapeProductSummary(product),
     availableForSale: product.availableForSale,
     productType: product.productType,
+    quickAdd: reshapeQuickAdd(product),
     tags: product.tags,
   }
 }

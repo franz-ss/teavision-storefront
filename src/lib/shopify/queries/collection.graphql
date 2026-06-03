@@ -70,9 +70,14 @@ query GetCollectionProducts(
               currencyCode
             }
           }
-          options {
-            name
-            values
+          variants(first: 2) {
+            edges {
+              node {
+                id
+                title
+                availableForSale
+              }
+            }
           }
           ratingMetafield: metafield(namespace: "reviews", key: "rating") {
             value
