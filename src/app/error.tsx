@@ -1,13 +1,18 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import { Button, Card } from '@/components/ui'
 
 export default function Error({
-  reset,
+  error,
 }: {
   error: Error & { digest?: string }
-  reset: () => void
 }) {
+  useEffect(() => {
+    console.error(error)
+  }, [error])
+
   return (
     <div className="bg-canvas flex min-h-[60vh] items-center justify-center px-4">
       <Card className="w-full max-w-md p-10 text-center" radius="md">
@@ -19,7 +24,6 @@ export default function Error({
           An unexpected error occurred. Please try again.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button onClick={reset}>Try again</Button>
           <Button href="/" variant="secondary">
             Go home
           </Button>

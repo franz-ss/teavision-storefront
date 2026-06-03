@@ -1,9 +1,15 @@
 import { getSearchaniseSearchResults } from '@/lib/searchanise/search'
 import type { ProductSummary } from '@/lib/shopify/types'
+import {
+  checkRateLimit,
+  getClientIpFromHeaders,
+} from '@/lib/rate-limit'
 
 const MAX_QUERY_LENGTH = 100
 const MAX_SUGGESTIONS = 10
 const MAX_DESCRIPTION_LENGTH = 140
+const RATE_LIMIT_WINDOW_MS = 60_000
+const RATE_LIMIT_MAX_REQUESTS = 60
 
 function mapSuggestionProduct(product: ProductSummary): ProductSummary {
   return {
@@ -23,6 +29,23 @@ export async function GET(request: Request) {
 
   if (!query) {
     return Response.json({ products: [] })
+  }
+
+  const rateLimit = await checkRateLimit({
+    namespace: 'search-suggestions',
+    identifier: getClientIpFromHeaders(request.headers),
+    limit: RATE_LIMIT_MAX_REQUESTS,
+    windowMs: RATE_LIMIT_WINDOW_MS,
+  })
+
+  if (rateLimit.limited) {
+    return Response.json(
+      {
+        message: 'Too many search requests. Please wait a moment.',
+        products: [],
+      },
+      { status: 429 },
+    )
   }
 
   try {

@@ -5,7 +5,6 @@ import sanitizeHtml from 'sanitize-html'
 import type {
   CollectionProductSummary,
   Money,
-  ProductOption,
   ProductVariant,
   ShopifyImage,
 } from '@/lib/shopify/types'
@@ -269,32 +268,6 @@ function createFallbackVariant(
   }
 }
 
-function createProductOptions(variants: unknown[]): ProductOption[] {
-  const optionsByName = new Map<string, Set<string>>()
-
-  variants.forEach((variant) => {
-    if (!isRecord(variant)) return
-
-    const options = getRecord(variant, 'options')
-
-    if (!options) return
-
-    Object.entries(options).forEach(([name, rawValue]) => {
-      if (typeof rawValue !== 'string' || !rawValue.trim()) return
-
-      const values = optionsByName.get(name) ?? new Set<string>()
-
-      values.add(rawValue.trim())
-      optionsByName.set(name, values)
-    })
-  })
-
-  return Array.from(optionsByName, ([name, values]) => ({
-    name,
-    values: Array.from(values),
-  }))
-}
-
 function parseTags(value: unknown): string[] {
   const rawTags = Array.isArray(value) ? value : [value]
 
@@ -344,8 +317,6 @@ function mapProduct(value: unknown): CollectionProductSummary | null {
     },
     productType: cleanText(getString(value, 'product_type')) ?? '',
     tags: parseTags(value.tags),
-    options: createProductOptions(rawVariants),
-    variants: productVariants,
   }
 }
 

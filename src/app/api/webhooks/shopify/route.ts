@@ -63,6 +63,13 @@ export async function POST(request: NextRequest): Promise<Response> {
       revalidateTag('product', { expire: 0 })
       break
 
+    case 'pages/create':
+    case 'pages/update':
+    case 'pages/delete':
+      revalidateTag('page', { expire: 0 })
+      revalidateTag('pages', { expire: 0 })
+      break
+
     default:
       // Unknown topics are accepted but ignored
       break

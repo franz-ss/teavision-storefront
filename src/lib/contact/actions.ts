@@ -13,6 +13,10 @@ import type {
   ContactActionResult,
   NewsletterSignupActionResult,
 } from '@/lib/contact/types'
+import {
+  checkRateLimit,
+  getClientIpFromHeaders,
+} from '@/lib/rate-limit'
 
 type ContactSubmission = {
   name: string
@@ -50,11 +54,6 @@ const CONTACT_MESSAGE_MAX_LENGTH = 2000
 const RATE_LIMIT_WINDOW_MS = 60_000
 const RATE_LIMIT_MAX_SUBMISSIONS = 5
 
-const submissionRateLimits = new Map<
-  string,
-  { count: number; resetAt: number }
->()
-
 function readStringField(formData: FormData, field: string) {
   const value = formData.get(field)
   return typeof value === 'string' ? value.trim() : ''
@@ -74,41 +73,20 @@ function readStringList(formData: FormData, field: string) {
 
 async function getRateLimitKey(): Promise<string> {
   const requestHeaders = await headers()
-  const forwardedFor = requestHeaders.get('x-forwarded-for')
-  const ipAddress =
-    forwardedFor?.split(',')[0]?.trim() ||
-    requestHeaders.get('x-real-ip') ||
-    'unknown'
 
-  return `contact:${ipAddress}`
+  return getClientIpFromHeaders(requestHeaders)
 }
 
 async function isRateLimited(): Promise<boolean> {
-  const key = await getRateLimitKey()
-  const now = Date.now()
+  const identifier = await getRateLimitKey()
+  const result = await checkRateLimit({
+    namespace: 'contact',
+    identifier,
+    limit: RATE_LIMIT_MAX_SUBMISSIONS,
+    windowMs: RATE_LIMIT_WINDOW_MS,
+  })
 
-  for (const [rateLimitKey, bucket] of submissionRateLimits) {
-    if (bucket.resetAt <= now) {
-      submissionRateLimits.delete(rateLimitKey)
-    }
-  }
-
-  const bucket = submissionRateLimits.get(key)
-
-  if (!bucket) {
-    submissionRateLimits.set(key, {
-      count: 1,
-      resetAt: now + RATE_LIMIT_WINDOW_MS,
-    })
-    return false
-  }
-
-  if (bucket.count >= RATE_LIMIT_MAX_SUBMISSIONS) {
-    return true
-  }
-
-  bucket.count += 1
-  return false
+  return result.limited
 }
 
 function readSubmission(formData: FormData): ContactSubmission {
@@ -302,8 +280,10 @@ export async function sendCustomTeaBlendFormAction(
   return sendCustomTeaBlendAction(formData)
 }
 
-export async function submitContactFormAction(formData: FormData) {
-  await sendContactAction(formData)
+export async function submitContactFormAction(
+  formData: FormData,
+): Promise<ContactActionResult> {
+  return sendContactAction(formData)
 }
 
 export async function sendNewsletterSignupAction(
@@ -361,6 +341,8 @@ export async function sendNewsletterSignupFormAction(
   return sendNewsletterSignupAction(formData)
 }
 
-export async function submitNewsletterSignupFormAction(formData: FormData) {
-  await sendNewsletterSignupAction(formData)
+export async function submitNewsletterSignupFormAction(
+  formData: FormData,
+): Promise<NewsletterSignupActionResult> {
+  return sendNewsletterSignupAction(formData)
 }

@@ -1,14 +1,11 @@
 import type { Collection, CollectionProductSummary } from '@/lib/shopify/types'
+import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 
 type JsonLdProps = {
   baseUrl: string
   collection: Collection
   collectionUrl: string
   products: CollectionProductSummary[]
-}
-
-function serializeJsonLd(value: unknown): string {
-  return (JSON.stringify(value) ?? '').replace(/</g, '\\u003c')
 }
 
 export function JsonLd({
@@ -75,7 +72,7 @@ export function JsonLd({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
+      dangerouslySetInnerHTML={{ __html: serializeInlineJson(structuredData) }}
     />
   )
 }

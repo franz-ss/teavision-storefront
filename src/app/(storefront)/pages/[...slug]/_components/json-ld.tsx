@@ -1,10 +1,7 @@
 import type { ShopifyPage } from '@/lib/shopify/operations/storefront-page'
 import { getPagePath } from '@/lib/shopify/operations/storefront-page'
+import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 import { getSiteUrl } from '@/lib/seo/site-url'
-
-function serializeJsonLd(value: unknown): string {
-  return (JSON.stringify(value) ?? '').replace(/</g, '\\u003c')
-}
 
 export function JsonLd({
   description,
@@ -52,7 +49,7 @@ export function JsonLd({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeInlineJson(jsonLd) }}
     />
   )
 }

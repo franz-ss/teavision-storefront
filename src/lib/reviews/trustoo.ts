@@ -56,12 +56,14 @@ export async function getTrustooProductRatings(
 ): Promise<Record<string, ProductReviewSummary>> {
   'use cache'
   cacheTag('trustoo-reviews')
-  cacheLife('hours')
 
   const shop = process.env.NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN
   const uniqueHandles = Array.from(new Set(handles.filter(Boolean)))
 
-  if (!shop || uniqueHandles.length === 0) return {}
+  if (!shop || uniqueHandles.length === 0) {
+    cacheLife('minutes')
+    return {}
+  }
 
   const searchParams = new URLSearchParams({
     shop,
@@ -74,11 +76,25 @@ export async function getTrustooProductRatings(
       { cache: 'no-store' },
     )
 
-    if (!response.ok) return {}
+    if (!response.ok) {
+      cacheLife('minutes')
+      console.warn('Trustoo ratings request failed', {
+        status: response.status,
+        handleCount: uniqueHandles.length,
+      })
+      return {}
+    }
 
     const json = (await response.json()) as TrustooRatingsResponse
-    if (json.code !== 0 || !Array.isArray(json.data)) return {}
+    if (json.code !== 0 || !Array.isArray(json.data)) {
+      cacheLife('minutes')
+      console.warn('Trustoo ratings response was not usable', {
+        handleCount: uniqueHandles.length,
+      })
+      return {}
+    }
 
+    cacheLife('hours')
     return json.data.reduce<Record<string, ProductReviewSummary>>(
       (ratings, row, index) => {
         if (!isTrustooRatingRow(row)) return ratings
@@ -92,6 +108,10 @@ export async function getTrustooProductRatings(
       {},
     )
   } catch {
+    cacheLife('minutes')
+    console.warn('Trustoo ratings request threw before completion', {
+      handleCount: uniqueHandles.length,
+    })
     return {}
   }
 }

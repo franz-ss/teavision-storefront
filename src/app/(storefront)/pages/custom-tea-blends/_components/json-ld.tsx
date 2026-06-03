@@ -3,13 +3,10 @@ import {
   CUSTOM_TEA_BLEND_PAGE_PATH,
   CUSTOM_TEA_BLEND_PAGE_TITLE,
 } from '@/lib/contact/custom-tea-blend'
+import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 import { getSiteUrl } from '@/lib/seo/site-url'
 
 import { FAQS } from '../_lib/data'
-
-function serializeJsonLd(value: unknown): string {
-  return (JSON.stringify(value) ?? '').replace(/</g, '\\u003c')
-}
 
 export function JsonLd() {
   const pageUrl = getSiteUrl(CUSTOM_TEA_BLEND_PAGE_PATH)
@@ -61,7 +58,7 @@ export function JsonLd() {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeInlineJson(jsonLd) }}
     />
   )
 }
