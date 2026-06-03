@@ -89,13 +89,19 @@ export function StarRating({
     if (clamped >= i + 0.5) return 'half' as const
     return 'empty' as const
   })
+  const ratingLabel = `${clamped.toFixed(1)} out of 5 stars${
+    count !== undefined
+      ? `, ${count} ${count === 1 ? 'review' : 'reviews'}`
+      : ''
+  }`
 
   return (
     <div
       className={cn('inline-flex items-center gap-1.5', className)}
-      aria-label={`${clamped.toFixed(1)} out of 5 stars${count !== undefined ? `, ${count} ${count === 1 ? 'review' : 'reviews'}` : ''}`}
+      role="img"
+      aria-label={ratingLabel}
     >
-      <div className="flex" role="img" aria-hidden="true">
+      <div className="flex" aria-hidden="true">
         {stars.map((fill, i) => (
           <Star
             key={i}
@@ -106,7 +112,7 @@ export function StarRating({
         ))}
       </div>
       {count !== undefined && (
-        <span className={ratingTextVariants({ size })}>
+        <span className={ratingTextVariants({ size })} aria-hidden="true">
           ({count.toLocaleString()})
         </span>
       )}

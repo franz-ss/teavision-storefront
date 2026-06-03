@@ -192,7 +192,7 @@ export function BulkSavings({
             isLoading={isPending}
             disabled={!canAddToCart || isPending}
           >
-            GRAB THIS DEAL
+            Add bulk quantity to cart
           </Button>
           <p className="type-caption text-brand text-center">
             Note: When ordering in sizes over 1kg, your package may not be

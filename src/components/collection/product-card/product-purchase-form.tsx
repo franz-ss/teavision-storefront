@@ -1,16 +1,20 @@
 'use client'
 
-import { useMemo, useState, useTransition, type FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
+import { useMemo, useState, type FormEvent } from 'react'
 import { ShoppingCart } from 'lucide-react'
 
-import { addToCartAction } from '@/lib/cart/actions'
 import type { ProductVariant } from '@/lib/shopify/types'
 import { Button, Price, QuantityStepper, Select } from '@/components/ui'
+import {
+  type AddToCart,
+  useAddToCart,
+} from '@/components/product/use-add-to-cart'
 
 type ProductPurchaseFormProps = {
   variants: ProductVariant[]
   productTitle: string
+  addToCart?: AddToCart
+  onCartChanged?: () => void
 }
 
 function getInitialVariantId(variants: ProductVariant[]): string {
@@ -24,15 +28,17 @@ function getInitialVariantId(variants: ProductVariant[]): string {
 export function ProductPurchaseForm({
   variants,
   productTitle,
+  addToCart,
+  onCartChanged,
 }: ProductPurchaseFormProps) {
-  const router = useRouter()
   const [selectedVariantId, setSelectedVariantId] = useState(() =>
     getInitialVariantId(variants),
   )
   const [quantity, setQuantity] = useState(1)
-  const [isPending, startTransition] = useTransition()
-  const [message, setMessage] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const { addItem, error, isPending, message, resetFeedback } = useAddToCart({
+    addToCart,
+    onCartChanged,
+  })
 
   const selectedVariant = useMemo(
     () =>
@@ -47,17 +53,7 @@ export function ProductPurchaseForm({
     event.preventDefault()
     if (!selectedVariant || !canAddToCart) return
 
-    startTransition(async () => {
-      try {
-        await addToCartAction(selectedVariant.id, quantity)
-        setMessage(`${quantity} added to cart`)
-        setError(null)
-        router.refresh()
-      } catch {
-        setMessage(null)
-        setError('Unable to add to cart. Please try again.')
-      }
-    })
+    addItem(selectedVariant.id, quantity)
   }
 
   if (variants.length === 0) {
@@ -84,8 +80,7 @@ export function ProductPurchaseForm({
             value={selectedVariantId}
             onChange={(event) => {
               setSelectedVariantId(event.currentTarget.value)
-              setMessage(null)
-              setError(null)
+              resetFeedback()
             }}
             disabled={isPending}
             aria-label={`Select pack size for ${productTitle}`}
@@ -105,8 +100,7 @@ export function ProductPurchaseForm({
           value={quantity}
           onChange={(nextQuantity) => {
             setQuantity(nextQuantity)
-            setMessage(null)
-            setError(null)
+            resetFeedback()
           }}
           disabled={isPending || !canAddToCart}
           label={`Quantity for ${productTitle}`}

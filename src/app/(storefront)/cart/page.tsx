@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 import { getCartAction } from '@/lib/cart/actions'
+import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { Button, Price } from '@/components/ui'
 
 import { CartLineActions } from './_components/cart-line-actions'
@@ -70,7 +71,7 @@ async function CartContent() {
                 >
                   {productImage ? (
                     <Image
-                      src={`${productImage.url}&width=200`}
+                      src={getSizedShopifyImageUrl(productImage.url, 200)}
                       alt=""
                       width={productImage.width ?? 200}
                       height={productImage.height ?? 200}

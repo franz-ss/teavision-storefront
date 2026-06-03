@@ -4,13 +4,12 @@ import { useCallback, useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import { IconButton, ProductCard } from '@/components/ui'
+import { IconButton } from '@/components/ui'
 import type { ProductSummary } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
 
 import { ProductQuickView } from '../product-quick-view'
-
-const AUTOPLAY_DELAY_MS = 4000
+import { RecommendationProductCard } from '../recommendation-product-card'
 
 type RelatedProductsCarouselProps = {
   products: ProductSummary[]
@@ -32,7 +31,6 @@ export function RelatedProductsCarousel({
   const [activeIndex, setActiveIndex] = useState(0)
   const [canScrollPrevious, setCanScrollPrevious] = useState(false)
   const [canScrollNext, setCanScrollNext] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return
@@ -64,23 +62,6 @@ export function RelatedProductsCarousel({
     }
   }, [emblaApi, onSelect])
 
-  useEffect(() => {
-    if (!emblaApi || isPaused || !canScrollNext) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    const intervalId = window.setInterval(() => {
-      if (emblaApi.canScrollNext()) {
-        emblaApi.scrollNext()
-      } else {
-        window.clearInterval(intervalId)
-      }
-    }, AUTOPLAY_DELAY_MS)
-
-    return () => {
-      window.clearInterval(intervalId)
-    }
-  }, [canScrollNext, emblaApi, isPaused])
-
   if (products.length === 0) return null
 
   return (
@@ -89,10 +70,6 @@ export function RelatedProductsCarousel({
       role="region"
       aria-roledescription="carousel"
       aria-label={ariaLabel}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onFocus={() => setIsPaused(true)}
-      onBlur={() => setIsPaused(false)}
     >
       <div className="mb-3 flex justify-end gap-2">
         <IconButton
@@ -123,7 +100,7 @@ export function RelatedProductsCarousel({
               className="min-w-0 flex-[0_0_100%] pl-4 min-[360px]:flex-[0_0_50%] sm:flex-[0_0_33.333333%] lg:flex-[0_0_25%]"
               aria-roledescription="slide"
             >
-              <ProductCard
+              <RecommendationProductCard
                 product={product}
                 quickViewAction={<ProductQuickView product={product} />}
               />

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, userEvent, within } from 'storybook/test'
 
 import type {
   BulkPricingTier,
@@ -7,6 +8,18 @@ import type {
 } from '@/lib/shopify/types'
 
 import { ProductForm } from './product-form'
+
+async function successfulAddToCart() {}
+
+async function failingAddToCart() {
+  throw new Error('Maximum quantity available reached.')
+}
+
+function pendingAddToCart() {
+  return new Promise<never>(() => undefined)
+}
+
+function noopCartRefresh() {}
 
 const options: ProductOption[] = [
   {
@@ -142,5 +155,59 @@ export const NoVariants: Story = {
   args: {
     variants: [],
     options: [],
+  },
+}
+
+export const AddToCartSuccess: Story = {
+  args: {
+    variants: [baseVariant],
+    options: [],
+    bulkPricingTiers,
+    addToCart: successfulAddToCart,
+    onCartChanged: noopCartRefresh,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to Cart' }))
+
+    await expect(await canvas.findByRole('status')).toHaveTextContent(
+      '1 added to cart',
+    )
+  },
+}
+
+export const AddToCartError: Story = {
+  args: {
+    variants: [baseVariant],
+    options: [],
+    bulkPricingTiers,
+    addToCart: failingAddToCart,
+    onCartChanged: noopCartRefresh,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to Cart' }))
+
+    await expect(await canvas.findByRole('alert')).toHaveTextContent(
+      'Maximum quantity available reached.',
+    )
+  },
+}
+
+export const AddToCartPending: Story = {
+  args: {
+    variants: [baseVariant],
+    options: [],
+    bulkPricingTiers,
+    addToCart: pendingAddToCart,
+    onCartChanged: noopCartRefresh,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to Cart' }))
+
+    await expect(
+      await canvas.findByRole('button', { name: 'Add to Cart' }),
+    ).toBeDisabled()
   },
 }

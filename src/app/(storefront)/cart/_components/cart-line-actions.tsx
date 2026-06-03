@@ -17,15 +17,17 @@ type CartLineActionsProps = {
   lineId: string
   productTitle: string
   quantity: number
+  action?: typeof cartLineFormAction
 }
 
 export function CartLineActions({
   lineId,
   productTitle,
   quantity,
+  action = cartLineFormAction,
 }: CartLineActionsProps) {
   const [state, formAction, isPending] = useActionState(
-    cartLineFormAction,
+    action,
     INITIAL_CART_LINE_FORM_STATE,
   )
   const canDecrease = quantity > 1

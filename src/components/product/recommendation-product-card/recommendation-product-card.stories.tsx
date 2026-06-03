@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import type { Product, ProductSummary } from '@/lib/shopify/types'
-import { ProductQuickView } from '@/components/product'
+import { ProductQuickView } from '@/components/product/product-quick-view'
 
-import { ProductCard } from './product-card'
+import { RecommendationProductCard } from './recommendation-product-card'
 
 const stubProduct: ProductSummary = {
   id: 'gid://shopify/Product/1',
   handle: 'english-breakfast',
-  title: 'English Breakfast — Bulk Loose Leaf',
+  title: 'English Breakfast - Bulk Loose Leaf',
   featuredImage: {
     url: 'https://cdn.shopify.com/s/files/1/0000/0001/products/tea-1.jpg?v=1',
     altText: 'English breakfast loose leaf tea',
@@ -81,9 +81,9 @@ const quickViewProduct: Product = {
   ],
 }
 
-const meta: Meta<typeof ProductCard> = {
-  title: 'UI/ProductCard',
-  component: ProductCard,
+const meta: Meta<typeof RecommendationProductCard> = {
+  title: 'Product/RecommendationProductCard',
+  component: RecommendationProductCard,
   tags: ['autodocs'],
   parameters: {
     nextjs: { appDirectory: true },
@@ -91,7 +91,7 @@ const meta: Meta<typeof ProductCard> = {
 }
 export default meta
 
-type Story = StoryObj<typeof ProductCard>
+type Story = StoryObj<typeof RecommendationProductCard>
 
 export const Default: Story = {
   args: { product: stubProduct },
@@ -102,7 +102,7 @@ export const WithQuickView: Story = {
     product: stubProduct,
   },
   render: (args) => (
-    <ProductCard
+    <RecommendationProductCard
       {...args}
       quickViewAction={
         <ProductQuickView
@@ -118,10 +118,6 @@ export const WithSaleBadge: Story = {
   args: { product: stubProduct, badge: 'sale' },
 }
 
-export const WithNewBadge: Story = {
-  args: { product: stubProduct, badge: 'new' },
-}
-
-export const OutOfStock: Story = {
-  args: { product: stubProduct, badge: 'outOfStock' },
+export const NoImage: Story = {
+  args: { product: { ...stubProduct, featuredImage: null } },
 }

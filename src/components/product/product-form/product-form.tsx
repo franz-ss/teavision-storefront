@@ -1,8 +1,7 @@
 'use client'
 
-import { useId, useState, useTransition } from 'react'
+import { useId, useState } from 'react'
 
-import { addToCartAction } from '@/lib/cart/actions'
 import {
   Button,
   FormLabel,
@@ -17,11 +16,14 @@ import type {
 } from '@/lib/shopify/types'
 
 import { BulkSavings } from '../bulk-savings'
+import { type AddToCart, useAddToCart } from '../use-add-to-cart'
 
 type ProductFormProps = {
   variants: ProductVariant[]
   options: ProductOption[]
   bulkPricingTiers?: BulkPricingTier[]
+  addToCart?: AddToCart
+  onCartChanged?: () => void
 }
 
 function getVariantMinimumQuantity(
@@ -75,9 +77,12 @@ export function ProductForm({
   variants,
   options,
   bulkPricingTiers = [],
+  addToCart,
+  onCartChanged,
 }: ProductFormProps) {
   const quantityInputId = useId()
   const quantityErrorId = useId()
+  const quantityStatusId = useId()
   const [selectedVariantId, setSelectedVariantId] = useState(
     variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id ?? '',
   )
@@ -85,8 +90,18 @@ export function ProductForm({
   const [selectedBulkTierQuantity, setSelectedBulkTierQuantity] = useState<
     number | null
   >(null)
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
+  const {
+    addItem,
+    error,
+    isPending,
+    message,
+    reportError,
+    resetFeedback,
+  } = useAddToCart({
+    addToCart,
+    getErrorMessage: getAddToCartErrorMessage,
+    onCartChanged,
+  })
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId)
   const canAddToCart = selectedVariant?.availableForSale === true
@@ -117,7 +132,7 @@ export function ProductForm({
 
   function canUseQuantity(nextQuantity: number): boolean {
     if (maximumQuantity !== undefined && nextQuantity > maximumQuantity) {
-      setError('Maximum quantity available reached.')
+      reportError('Maximum quantity available reached.')
       return false
     }
 
@@ -128,31 +143,24 @@ export function ProductForm({
     if (!canAddToCart || !selectedVariant) return
     if (!canUseQuantity(nextQuantity)) return
 
-    startTransition(async () => {
-      try {
-        await addToCartAction(selectedVariant.id, nextQuantity)
-        setError(null)
-      } catch (addError) {
-        setError(getAddToCartErrorMessage(addError))
-      }
-    })
+    addItem(selectedVariant.id, nextQuantity)
   }
 
   function handleQuantityChange(nextQuantity: number) {
     setQuantity(clampQuantity(nextQuantity, minimumQuantity, maximumQuantity))
     setSelectedBulkTierQuantity(null)
-    setError(null)
+    resetFeedback()
   }
 
   function handleSelectVariant(nextVariantId: string) {
     setSelectedVariantId(nextVariantId)
     setSelectedBulkTierQuantity(null)
-    setError(null)
+    resetFeedback()
   }
 
   function handleSelectBulkTier(nextQuantity: number) {
     setSelectedBulkTierQuantity(nextQuantity)
-    setError(null)
+    resetFeedback()
   }
 
   function handleGrabDeal() {
@@ -233,6 +241,15 @@ export function ProductForm({
             className="text-danger-text type-caption sm:col-span-3"
           >
             {error}
+          </p>
+        )}
+        {message && (
+          <p
+            id={quantityStatusId}
+            role="status"
+            className="text-brand type-caption sm:col-span-3"
+          >
+            {message}
           </p>
         )}
       </div>

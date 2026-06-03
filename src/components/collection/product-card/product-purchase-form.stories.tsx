@@ -1,0 +1,138 @@
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, userEvent, within } from 'storybook/test'
+
+import type { ProductVariant } from '@/lib/shopify/types'
+
+import { ProductPurchaseForm } from './product-purchase-form'
+
+const variants: ProductVariant[] = [
+  {
+    id: 'gid://shopify/ProductVariant/tea-masters-sencha-50g',
+    title: '50g Sample',
+    availableForSale: true,
+    quantityAvailable: 10,
+    quantityRule: {
+      minimum: 1,
+      maximum: 10,
+      increment: 1,
+    },
+    price: { amount: '12.00', currencyCode: 'AUD' },
+    quantityPriceBreaks: [],
+    image: null,
+  },
+  {
+    id: 'gid://shopify/ProductVariant/tea-masters-sencha-1kg',
+    title: '1kg',
+    availableForSale: true,
+    quantityAvailable: 4,
+    quantityRule: {
+      minimum: 1,
+      maximum: 4,
+      increment: 1,
+    },
+    price: { amount: '88.00', currencyCode: 'AUD' },
+    quantityPriceBreaks: [],
+    image: null,
+  },
+  {
+    id: 'gid://shopify/ProductVariant/tea-masters-sencha-5kg',
+    title: '5kg',
+    availableForSale: false,
+    quantityAvailable: 0,
+    quantityRule: {
+      minimum: 1,
+      maximum: 0,
+      increment: 1,
+    },
+    price: { amount: '390.00', currencyCode: 'AUD' },
+    quantityPriceBreaks: [],
+    image: null,
+  },
+]
+
+async function successfulAddToCart() {}
+
+async function failingAddToCart() {
+  throw new Error('Unable to add to cart.')
+}
+
+function pendingAddToCart() {
+  return new Promise<never>(() => undefined)
+}
+
+function noopCartRefresh() {}
+
+const meta: Meta<typeof ProductPurchaseForm> = {
+  title: 'Collection/ProductPurchaseForm',
+  component: ProductPurchaseForm,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'centered',
+    nextjs: { appDirectory: true },
+  },
+  args: {
+    variants,
+    productTitle: 'Tea Masters Sencha',
+    addToCart: successfulAddToCart,
+    onCartChanged: noopCartRefresh,
+  },
+  decorators: [
+    (Story) => (
+      <div className="w-[min(24rem,calc(100vw-2rem))]">
+        <Story />
+      </div>
+    ),
+  ],
+}
+export default meta
+
+type Story = StoryObj<typeof ProductPurchaseForm>
+
+export const Default: Story = {
+  args: {},
+}
+
+export const QuantitySuccess: Story = {
+  args: {},
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Increase quantity for tea masters sencha',
+      }),
+    )
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to cart' }))
+
+    await expect(await canvas.findByRole('status')).toHaveTextContent(
+      '2 added to cart',
+    )
+  },
+}
+
+export const AddToCartError: Story = {
+  args: {
+    addToCart: failingAddToCart,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to cart' }))
+
+    await expect(await canvas.findByRole('alert')).toHaveTextContent(
+      'Unable to add to cart. Please try again.',
+    )
+  },
+}
+
+export const AddToCartPending: Story = {
+  args: {
+    addToCart: pendingAddToCart,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to cart' }))
+
+    await expect(
+      await canvas.findByRole('button', { name: 'Add to cart' }),
+    ).toBeDisabled()
+  },
+}

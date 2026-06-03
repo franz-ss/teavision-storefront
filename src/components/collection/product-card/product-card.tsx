@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { ProductQuickView } from '@/components/product'
 import type { CollectionProductSummary } from '@/lib/shopify/types'
-import { Badge, Button, Card, StarRating } from '@/components/ui'
+import { Badge, Button, Card, Price, StarRating } from '@/components/ui'
+import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { cn } from '@/lib/utils'
-
-import { ProductPurchaseForm } from './product-purchase-form'
 
 type ProductCardProps = {
   product: CollectionProductSummary
@@ -39,7 +39,7 @@ export function ProductCard({
           product.featuredImage.width &&
           product.featuredImage.height ? (
             <Image
-              src={`${product.featuredImage.url}&width=520`}
+              src={getSizedShopifyImageUrl(product.featuredImage.url, 520)}
               alt={product.featuredImage.altText ?? product.title}
               width={product.featuredImage.width}
               height={product.featuredImage.height}
@@ -58,7 +58,7 @@ export function ProductCard({
           )}
         </Link>
 
-        <div className="grid min-w-0 gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:p-6">
+        <div className="grid min-w-0 content-start gap-5 p-4 sm:p-5 lg:p-6">
           <div className="min-w-0">
             <h3 className="type-heading-04 text-strong wrap-break-word">
               <Link
@@ -79,17 +79,19 @@ export function ProductCard({
             )}
 
             <div className="mt-4 flex flex-wrap gap-2">
+              <p className="type-body-sm mr-auto flex min-h-11 items-center gap-1.5">
+                <span className="text-muted">From</span>
+                <Price
+                  price={product.priceRange.minVariantPrice}
+                  size="sm"
+                  className="text-strong"
+                />
+              </p>
               <Button href={productUrl} variant="secondary" size="sm">
                 More info
               </Button>
+              <ProductQuickView product={product} buttonVariant="secondary" />
             </div>
-          </div>
-
-          <div className="border-default border-t pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
-            <ProductPurchaseForm
-              variants={product.variants}
-              productTitle={product.title}
-            />
           </div>
         </div>
       </div>

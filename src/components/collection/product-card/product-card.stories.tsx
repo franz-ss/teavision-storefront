@@ -22,35 +22,6 @@ const stubProduct: CollectionProductSummary = {
   },
   rating: 4.8,
   reviewCount: 37,
-  options: [
-    {
-      name: 'Size',
-      values: ['50g Sample', '1kg', '5kg'],
-    },
-  ],
-  variants: [
-    {
-      id: 'gid://shopify/ProductVariant/masters-sencha-50g',
-      title: '50g Sample',
-      availableForSale: true,
-      price: { amount: '12.00', currencyCode: 'AUD' },
-      quantityPriceBreaks: [],
-    },
-    {
-      id: 'gid://shopify/ProductVariant/masters-sencha-1kg',
-      title: '1kg',
-      availableForSale: true,
-      price: { amount: '88.00', currencyCode: 'AUD' },
-      quantityPriceBreaks: [],
-    },
-    {
-      id: 'gid://shopify/ProductVariant/masters-sencha-5kg',
-      title: '5kg',
-      availableForSale: false,
-      price: { amount: '390.00', currencyCode: 'AUD' },
-      quantityPriceBreaks: [],
-    },
-  ],
 }
 
 const meta: Meta<typeof ProductCard> = {
@@ -91,10 +62,6 @@ export const SoldOut: Story = {
       handle: 'premium-rwandan-black-tea',
       title: 'Premium Rwandan Black Tea CTC BP',
       availableForSale: false,
-      variants: stubProduct.variants.map((variant) => ({
-        ...variant,
-        availableForSale: false,
-      })),
     },
   },
 }

@@ -6,6 +6,7 @@ import Image from 'next/image'
 
 import { ToggleButton } from '@/components/ui'
 import type { ShopifyImage } from '@/lib/shopify/types'
+import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 
 type ProductGalleryProps = {
   images: ShopifyImage[]
@@ -45,12 +46,13 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
             >
               {image.width && image.height ? (
                 <Image
-                  src={`${image.url}&width=800`}
+                  src={getSizedShopifyImageUrl(image.url, 800)}
                   alt={image.altText ?? title}
                   width={image.width}
                   height={image.height}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   fetchPriority={i === 0 ? 'high' : 'auto'}
+                  preload={i === 0}
                   sizes="(min-width: 1280px) 38rem, (min-width: 1024px) calc(50vw - 3.5rem), calc(100vw - 2rem)"
                   className="h-full w-full object-cover"
                 />
@@ -75,7 +77,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
             >
               {image.width && image.height ? (
                 <Image
-                  src={`${image.url}&width=120`}
+                  src={getSizedShopifyImageUrl(image.url, 120)}
                   alt={image.altText ?? `${title} ${i + 1}`}
                   width={image.width}
                   height={image.height}

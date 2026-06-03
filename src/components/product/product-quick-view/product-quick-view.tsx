@@ -1,17 +1,18 @@
 'use client'
 
-import { useMemo, useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import { useMemo, useState } from 'react'
 import { Eye, ShoppingCart } from 'lucide-react'
 
-import { addToCartAction } from '@/lib/cart/actions'
 import type {
-  Product,
+  Money,
+  ProductQuickViewDetails,
   ProductSummary,
+  ShopifyImage,
   ProductVariant,
 } from '@/lib/shopify/types'
 import {
   Button,
+  type ButtonProps,
   Dialog,
   Price,
   StarRating,
@@ -19,10 +20,12 @@ import {
 } from '@/components/ui'
 
 import { ProductQuickViewImage } from './product-quick-view-image'
+import { useAddToCart } from '../use-add-to-cart'
 
 type ProductQuickViewProps = {
   product: ProductSummary
-  initialProduct?: Product
+  buttonVariant?: NonNullable<ButtonProps['variant']>
+  initialProduct?: ProductQuickViewDetails
 }
 
 function getInitialVariantId(variants: ProductVariant[]): string {
@@ -33,27 +36,100 @@ function getInitialVariantId(variants: ProductVariant[]): string {
   )
 }
 
-function getVariantLabel(product: Product, variant: ProductVariant): string {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function isMoney(value: unknown): value is Money {
+  return (
+    isRecord(value) &&
+    typeof value.amount === 'string' &&
+    typeof value.currencyCode === 'string'
+  )
+}
+
+function isShopifyImage(value: unknown): value is ShopifyImage {
+  return (
+    isRecord(value) &&
+    typeof value.url === 'string' &&
+    (typeof value.altText === 'string' || value.altText === null) &&
+    (typeof value.width === 'number' || value.width === null) &&
+    (typeof value.height === 'number' || value.height === null)
+  )
+}
+
+function isProductVariant(value: unknown): value is ProductVariant {
+  return (
+    isRecord(value) &&
+    typeof value.id === 'string' &&
+    typeof value.title === 'string' &&
+    typeof value.availableForSale === 'boolean' &&
+    isMoney(value.price) &&
+    Array.isArray(value.quantityPriceBreaks) &&
+    (value.image === undefined ||
+      value.image === null ||
+      isShopifyImage(value.image))
+  )
+}
+
+function isProductOption(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value.name === 'string' &&
+    Array.isArray(value.values) &&
+    value.values.every((optionValue) => typeof optionValue === 'string')
+  )
+}
+
+function isQuickViewDetails(value: unknown): value is ProductQuickViewDetails {
+  return (
+    isRecord(value) &&
+    typeof value.description === 'string' &&
+    typeof value.handle === 'string' &&
+    typeof value.id === 'string' &&
+    typeof value.title === 'string' &&
+    isRecord(value.priceRange) &&
+    isMoney(value.priceRange.minVariantPrice) &&
+    Array.isArray(value.images) &&
+    value.images.every(isShopifyImage) &&
+    Array.isArray(value.options) &&
+    value.options.every(isProductOption) &&
+    Array.isArray(value.variants) &&
+    value.variants.every(isProductVariant)
+  )
+}
+
+function getVariantLabel(
+  product: ProductQuickViewDetails,
+  variant: ProductVariant,
+): string {
   const optionName = product.options[0]?.name ?? 'Size'
   return `${optionName}: ${variant.title}`
 }
 
 export function ProductQuickView({
+  buttonVariant = 'inverse',
   product,
   initialProduct,
 }: ProductQuickViewProps) {
-  const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [productData, setProductData] = useState<Product | null>(
+  const [productData, setProductData] = useState<ProductQuickViewDetails | null>(
     initialProduct ?? null,
   )
   const [selectedVariantId, setSelectedVariantId] = useState(() =>
     initialProduct ? getInitialVariantId(initialProduct.variants) : '',
   )
   const [isLoading, setIsLoading] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const [message, setMessage] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const {
+    addItem,
+    error,
+    isPending,
+    message,
+    reportError,
+    resetFeedback,
+  } = useAddToCart({
+    getSuccessMessage: () => 'Added to cart',
+  })
 
   const selectedVariant = useMemo(() => {
     if (!productData) return null
@@ -78,7 +154,7 @@ export function ProductQuickView({
     if (productData || isLoading) return
 
     setIsLoading(true)
-    setError(null)
+    resetFeedback()
 
     try {
       const response = await fetch(
@@ -89,11 +165,15 @@ export function ProductQuickView({
         throw new Error('Unable to load product')
       }
 
-      const nextProduct = (await response.json()) as Product
+      const nextProduct: unknown = await response.json()
+      if (!isQuickViewDetails(nextProduct)) {
+        throw new Error('Invalid quick-view product')
+      }
+
       setProductData(nextProduct)
       setSelectedVariantId(getInitialVariantId(nextProduct.variants))
     } catch {
-      setError('Unable to load product details. Please try again.')
+      reportError('Unable to load product details. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -107,24 +187,14 @@ export function ProductQuickView({
   function handleAddToCart() {
     if (!selectedVariant || !canAddToCart) return
 
-    startTransition(async () => {
-      try {
-        await addToCartAction(selectedVariant.id, 1)
-        setMessage('Added to cart')
-        setError(null)
-        router.refresh()
-      } catch {
-        setMessage(null)
-        setError('Unable to add to cart. Please try again.')
-      }
-    })
+    addItem(selectedVariant.id, 1)
   }
 
   return (
     <>
       <Button
         type="button"
-        variant="inverse"
+        variant={buttonVariant}
         size="sm"
         onClick={handleOpen}
         aria-haspopup="dialog"
@@ -142,7 +212,13 @@ export function ProductQuickView({
         className="sm:max-h-[88vh]"
       >
         {isLoading && !productData ? (
-          <div className="grid gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)]">
+          <div
+            className="grid gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)]"
+            role="status"
+            aria-live="polite"
+            aria-label="Loading product details"
+          >
+            <span className="sr-only">Loading product details…</span>
             <div className="bg-surface-sunken aspect-square animate-pulse rounded-md motion-reduce:animate-none" />
             <div className="grid content-start gap-4">
               <div className="bg-surface-sunken h-8 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
@@ -203,8 +279,7 @@ export function ProductQuickView({
                         }`}
                         onClick={() => {
                           setSelectedVariantId(variant.id)
-                          setMessage(null)
-                          setError(null)
+                          resetFeedback()
                         }}
                       >
                         {variant.title}

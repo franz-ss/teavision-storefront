@@ -3,29 +3,25 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 
 import type { ProductSummary } from '@/lib/shopify/types'
+import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
+import { Badge, type BadgeVariant } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
+import { Price } from '@/components/ui/price'
+import { StarRating } from '@/components/ui/star-rating'
 
-import { Badge, type BadgeVariant } from '../badge'
-import { Card } from '../card'
-import { Price } from '../price'
-import { StarRating } from '../star-rating'
-
-type ProductCardProps = {
+export type RecommendationProductCardProps = {
   product: ProductSummary
   badge?: BadgeVariant
   priority?: boolean
   quickViewAction?: ReactNode
 }
 
-function getSizedImageUrl(url: string, width: number): string {
-  return `${url}${url.includes('?') ? '&' : '?'}width=${width}`
-}
-
-export function ProductCard({
+export function RecommendationProductCard({
   product,
   badge,
   priority = false,
   quickViewAction,
-}: ProductCardProps) {
+}: RecommendationProductCardProps) {
   const productUrl = `/products/${product.handle}`
 
   return (
@@ -47,7 +43,7 @@ export function ProductCard({
             product.featuredImage.width &&
             product.featuredImage.height ? (
               <Image
-                src={getSizedImageUrl(product.featuredImage.url, 520)}
+                src={getSizedShopifyImageUrl(product.featuredImage.url, 520)}
                 alt={product.featuredImage.altText ?? product.title}
                 width={product.featuredImage.width}
                 height={product.featuredImage.height}
