@@ -14,29 +14,37 @@ commits:
   - 78fd865 feat(08-01): add listing quick-add data contract
   - aa38d15 feat(08-01): add collection quick-add button
   - 986a5bc feat(08-01): restore optimized collection card quick-add
+  - 1477a39 fix(08-01): show add trigger on available product cards
 ---
 
 # 08-01 Summary: Optimized Listing Quick Add
 
 ## What Changed
 
-Collection and search listing products now carry a minimal `quickAdd` contract. `CollectionProductSummary.quickAdd` is populated only when the listing source can prove a product has exactly one available variant; otherwise it is `null`.
+Collection and search listing products no longer carry a listing-level
+`quickAdd` contract. The final optimized path keeps `ProductCard` lean by
+removing the bounded listing variant probe and deferring full purchase data
+until the customer asks to buy.
 
-Implemented eligibility rule:
+Implemented flow:
 
-- Shopify collection listings query `variants(first: 2)` with only `id`, `title`, and `availableForSale`.
-- If that bounded probe returns exactly one variant and it is available, `quickAdd` contains that variant id/title.
-- If the probe returns zero, two, or an unavailable variant, `quickAdd` is `null`.
-- Searchanise summaries follow the same rule after defensive `unknown` narrowing, using fallback `add_to_cart_id` only when it can form a single available variant.
+- Shopify collection listings no longer query `variants(first: 2)` for quick-add eligibility.
+- Searchanise summaries no longer synthesize listing quick-add data from `add_to_cart_id`.
+- `ProductCard` remains a Server Component and renders an `Add to cart` trigger for every available product.
+- The trigger opens `ProductQuickView`, which lazily fetches `/api/products/[handle]/quick-view`.
+- Inside the modal, customers select pack size with `Select`, adjust quantity with `QuantityStepper`, and submit through `addItem(selectedVariant.id, quantity)`.
+- Sold-out products render no purchase action, while `More info` remains available for every product.
 
-`QuickAddButton` is the only new client leaf. It reuses `useAddToCart`, calls the existing cart Server Action path through that hook, and renders accessible pending, success, and error feedback. `ProductCard` remains a Server Component and renders:
+`ProductQuickView` is the only purchase client leaf used from listing cards. It reuses `useAddToCart`, calls the existing cart Server Action path through that hook, and renders accessible pending, success, and error feedback. `ProductCard` renders:
 
-- `Add to cart` for available products with `quickAdd`.
-- an `Add to cart` trigger for available products without `quickAdd`; this opens Quick View for explicit variant selection instead of adding a guessed variant.
+- `Add to cart` for all available products, opening Quick View for explicit size and quantity selection.
 - no purchase action for sold-out products.
 - `More info` for all products.
 
-The old full `ProductPurchaseForm` was not restored to listing cards.
+The old purchase behavior was restored without restoring the full
+`ProductPurchaseForm` to listing cards. This preserves pack-size and quantity
+selection while avoiding extra variant data in every collection/search listing
+payload.
 
 ## Verification
 
@@ -51,30 +59,34 @@ Passed:
 
 Targeted source checks passed:
 
-- `collection.graphql` contains `variants(first: 2)`.
+- `collection.graphql` no longer contains `variants(first: 2)`.
 - `collection.graphql` no longer fetches listing `options`.
 - `ProductCard` has no `ProductPurchaseForm` import/render.
 - `ProductCard` has no `'use client'` directive.
-- `QuickAddButton` uses `useAddToCart` and renders `role="status"` / `role="alert"` feedback.
+- `src` contains no `quickAdd`, `ProductQuickAdd`, `QuickAddButton`, `quick-add-button`, or `variants(first: 2)` references.
+- `ProductQuickView` renders `Select` and `QuantityStepper`, and calls `addItem(selectedVariant.id, quantity)`.
 
 Automated Chrome checks against the built Storybook bundle passed:
 
-- `Collection/ProductCard Default`: `Add to cart` shown, `Quick View` absent, screenshot non-empty.
-- `Collection/ProductCard Multi Variant`: `Quick View` shown, `Add to cart` absent, screenshot non-empty.
-- `Collection/ProductCard Sold Out`: purchase actions absent, `More info` remains, screenshot non-empty.
-- `Collection/QuickAddButton Success`: mocked add shows `Added to cart`.
-- `Collection/QuickAddButton Add To Cart Error`: mocked failure shows retryable error.
-- `Collection/QuickAddButton Pending`: button disables during pending mock action.
-- `Collection/QuickAddButton Sold Out`: disabled sold-out state renders.
+- `Product/ProductQuickView Add To Cart Trigger`: selected the 1kg variant, increased quantity to 2, submitted, and rendered `Added to cart`.
+- `Collection/ProductCard Default`: `Add to cart` trigger shown.
+- `Collection/ProductCard Multi Variant`: `Add to cart` trigger shown.
+- `Collection/ProductCard Sold Out`: purchase actions absent, `More info` remains.
 
-Live app smoke checks on the existing `localhost:3000` dev server passed:
+Live app smoke check against the built production server on `localhost:3001` passed:
 
-- `/collections/all` rendered 4 enabled `Add to cart` buttons, 15 `Quick View` buttons, and 24 `More info` links.
-- `/search?q=tea` rendered 9 enabled `Add to cart` buttons, 15 `Quick View` buttons, and 24 `More info` links.
-- On `/collections/all`, Chrome clicked `Add 2003Y Mini Ripe Pu-erh Tea Brick (250g/box) to cart` and the page rendered `Added to cart`.
+- `/collections/all` rendered enabled ProductCard `Add to cart` triggers.
+- Clicking the first trigger fetched `/api/products/2003y-mini-ripe-pu-erh-tea-brick-250g-box/quick-view` with HTTP 200.
+- The modal rendered a pack-size `Select`, a `QuantityStepper`, and the final `Add to Cart` action.
 
 ## Residual Risk
 
-The restored affordance still creates one tiny client island per eligible card. That is intentionally much lighter than restoring `ProductPurchaseForm`, but a future optimization could consolidate list-level cart feedback if eligible-card counts grow substantially.
+The restored affordance still creates one tiny `ProductQuickView` client island
+per available listing card. That is intentionally much lighter than restoring
+`ProductPurchaseForm` or fetching variant/options data for every listing item,
+but a future optimization could consolidate list-level modal state if listing
+hydration budgets tighten further.
 
-The shared `ProductQuickView` remains per-card for multi-variant products. A shared list-level Quick View controller is a reasonable follow-up if PLP hydration budgets tighten further.
+The lazy modal now depends on the quick-view API route being available for
+listing purchase. If that route fails, the modal shows retryable error feedback
+instead of guessing a variant.

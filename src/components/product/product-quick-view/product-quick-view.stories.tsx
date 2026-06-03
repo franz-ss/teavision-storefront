@@ -4,6 +4,7 @@ import { expect, userEvent, within } from 'storybook/test'
 import type { Product, ProductSummary } from '@/lib/shopify/types'
 
 import { ProductQuickView } from './product-quick-view'
+import type { AddToCart } from '../use-add-to-cart'
 
 const stubProduct: ProductSummary = {
   id: 'gid://shopify/Product/masters-sencha',
@@ -71,6 +72,18 @@ const soldOutProduct: Product = {
   })),
 }
 
+const addSelectedPackQuantityToCart: AddToCart = async (
+  variantId,
+  quantity,
+) => {
+  if (
+    variantId !== 'gid://shopify/ProductVariant/masters-sencha-1kg' ||
+    quantity !== 2
+  ) {
+    throw new Error(`Unexpected cart payload: ${variantId} x ${quantity}`)
+  }
+}
+
 const meta: Meta<typeof ProductQuickView> = {
   title: 'Product/ProductQuickView',
   component: ProductQuickView,
@@ -94,6 +107,7 @@ export const AddToCartTrigger: Story = {
   args: {
     product: stubProduct,
     initialProduct: quickViewProduct,
+    addToCart: addSelectedPackQuantityToCart,
     buttonIcon: 'cart',
     buttonLabel: 'Add to cart',
   },
@@ -101,9 +115,28 @@ export const AddToCartTrigger: Story = {
     const canvas = within(canvasElement)
     await userEvent.click(canvas.getByRole('button', { name: 'Add to cart' }))
 
+    await userEvent.selectOptions(
+      await canvas.findByRole('combobox', {
+        name: 'Select pack size for Tea Masters Sencha Green Tea',
+      }),
+      'gid://shopify/ProductVariant/masters-sencha-1kg',
+    )
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Increase quantity for tea masters sencha green tea',
+      }),
+    )
+
     await expect(
-      canvas.getByRole('button', { name: 'Add to Cart' }),
-    ).toBeVisible()
+      canvas.getByRole('spinbutton', {
+        name: 'Quantity for Tea Masters Sencha Green Tea',
+      }),
+    ).toHaveValue(2)
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to Cart' }))
+    await expect(await canvas.findByRole('status')).toHaveTextContent(
+      'Added to cart',
+    )
   },
 }
 

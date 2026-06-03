@@ -15,15 +15,17 @@ import {
   type ButtonProps,
   Dialog,
   Price,
+  QuantityStepper,
   StarRating,
-  ToggleButton,
+  Select,
 } from '@/components/ui'
 
 import { ProductQuickViewImage } from './product-quick-view-image'
-import { useAddToCart } from '../use-add-to-cart'
+import { type AddToCart, useAddToCart } from '../use-add-to-cart'
 
 type ProductQuickViewProps = {
   product: ProductSummary
+  addToCart?: AddToCart
   buttonIcon?: 'cart' | 'eye'
   buttonLabel?: string
   buttonVariant?: NonNullable<ButtonProps['variant']>
@@ -101,15 +103,8 @@ function isQuickViewDetails(value: unknown): value is ProductQuickViewDetails {
   )
 }
 
-function getVariantLabel(
-  product: ProductQuickViewDetails,
-  variant: ProductVariant,
-): string {
-  const optionName = product.options[0]?.name ?? 'Size'
-  return `${optionName}: ${variant.title}`
-}
-
 export function ProductQuickView({
+  addToCart,
   buttonIcon = 'eye',
   buttonLabel = 'Quick View',
   buttonVariant = 'inverse',
@@ -123,6 +118,7 @@ export function ProductQuickView({
   const [selectedVariantId, setSelectedVariantId] = useState(() =>
     initialProduct ? getInitialVariantId(initialProduct.variants) : '',
   )
+  const [quantity, setQuantity] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const {
     addItem,
@@ -132,6 +128,7 @@ export function ProductQuickView({
     reportError,
     resetFeedback,
   } = useAddToCart({
+    addToCart,
     getSuccessMessage: () => 'Added to cart',
   })
 
@@ -192,7 +189,17 @@ export function ProductQuickView({
   function handleAddToCart() {
     if (!selectedVariant || !canAddToCart) return
 
-    addItem(selectedVariant.id, 1)
+    addItem(selectedVariant.id, quantity)
+  }
+
+  function handleSelectVariant(nextVariantId: string) {
+    setSelectedVariantId(nextVariantId)
+    resetFeedback()
+  }
+
+  function handleQuantityChange(nextQuantity: number) {
+    setQuantity(nextQuantity)
+    resetFeedback()
   }
 
   return (
@@ -269,30 +276,35 @@ export function ProductQuickView({
               )}
 
               {hasVariants && (
-                <fieldset className="grid gap-2">
-                  <legend className="type-label text-strong">
-                    Available sizes
-                  </legend>
-                  <div className="flex flex-wrap gap-2">
+                <label className="grid gap-2">
+                  <span className="type-caption text-muted">Pack size</span>
+                  <Select
+                    value={selectedVariantId}
+                    onChange={(event) =>
+                      handleSelectVariant(event.currentTarget.value)
+                    }
+                    disabled={isPending}
+                    aria-label={`Select pack size for ${productData.title}`}
+                  >
                     {productData.variants.map((variant) => (
-                      <ToggleButton
-                        key={variant.id}
-                        pressed={selectedVariantId === variant.id}
-                        disabled={!variant.availableForSale || isPending}
-                        aria-label={`${getVariantLabel(productData, variant)}${
-                          !variant.availableForSale ? ', sold out' : ''
-                        }`}
-                        onClick={() => {
-                          setSelectedVariantId(variant.id)
-                          resetFeedback()
-                        }}
-                      >
+                      <option key={variant.id} value={variant.id}>
                         {variant.title}
-                      </ToggleButton>
+                        {!variant.availableForSale ? ' - sold out' : ''}
+                      </option>
                     ))}
-                  </div>
-                </fieldset>
+                  </Select>
+                </label>
               )}
+
+              <div className="grid gap-2">
+                <span className="type-caption text-muted">Quantity</span>
+                <QuantityStepper
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  disabled={isPending || !canAddToCart}
+                  label={`Quantity for ${productData.title}`}
+                />
+              </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <Button

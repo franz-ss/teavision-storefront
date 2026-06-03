@@ -5,7 +5,6 @@ import sanitizeHtml from 'sanitize-html'
 import type {
   CollectionProductSummary,
   Money,
-  ProductQuickAdd,
   ProductVariant,
   ShopifyImage,
 } from '@/lib/shopify/types'
@@ -269,19 +268,6 @@ function createFallbackVariant(
   }
 }
 
-function createQuickAdd(variants: ProductVariant[]): ProductQuickAdd | null {
-  if (variants.length !== 1) return null
-
-  const [variant] = variants
-  if (!variant.availableForSale) return null
-
-  return {
-    variantId: variant.id,
-    variantTitle: variant.title,
-    availableForSale: variant.availableForSale,
-  }
-}
-
 function parseTags(value: unknown): string[] {
   const rawTags = Array.isArray(value) ? value : [value]
 
@@ -330,7 +316,6 @@ function mapProduct(value: unknown): CollectionProductSummary | null {
       minVariantPrice: normalizePrice(value.price),
     },
     productType: cleanText(getString(value, 'product_type')) ?? '',
-    quickAdd: createQuickAdd(productVariants),
     tags: parseTags(value.tags),
   }
 }
