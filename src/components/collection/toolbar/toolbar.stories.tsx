@@ -40,7 +40,6 @@ type Story = StoryObj<typeof Toolbar>
 
 export const Default: Story = {
   args: {
-    headingId: 'storybook-collection-products',
     currentSort: 'featured',
     productCount: 20,
     filters,
@@ -50,7 +49,6 @@ export const Default: Story = {
 
 export const WithActiveFilter: Story = {
   args: {
-    headingId: 'storybook-collection-products-filtered',
     currentSort: 'best-selling',
     productCount: 8,
     filters,
