@@ -79,19 +79,32 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
+    // Eyebrow renders for non-empty productType
+    await expect(canvas.getByText('Green tea')).toBeVisible()
+
+    // Pack size select still renders (multi-variant product)
     await expect(
       canvas.getByRole('combobox', {
         name: 'Select pack size for Tea Masters Sencha Green Tea',
       }),
     ).toBeVisible()
+
+    // QuantityStepper is hidden in listing context (showQuantity={false})
     await expect(
-      canvas.getByRole('spinbutton', {
+      canvas.queryByRole('spinbutton', {
         name: 'Quantity for Tea Masters Sencha Green Tea',
       }),
-    ).toBeVisible()
+    ).not.toBeInTheDocument()
+
+    // Add to cart button still renders
     await expect(
       canvas.getByRole('button', { name: /^Add to cart$/ }),
     ).toBeVisible()
+
+    // More info link is gone
+    await expect(
+      canvas.queryByRole('link', { name: /more info/i }),
+    ).not.toBeInTheDocument()
   },
 }
 
@@ -124,11 +137,14 @@ export const MultiVariant: Story = {
         name: 'Select pack size for Tea Masters Breakfast Blend',
       }),
     ).toBeVisible()
+
+    // QuantityStepper is hidden in listing context (showQuantity={false})
     await expect(
-      canvas.getByRole('spinbutton', {
+      canvas.queryByRole('spinbutton', {
         name: 'Quantity for Tea Masters Breakfast Blend',
       }),
-    ).toBeVisible()
+    ).not.toBeInTheDocument()
+
     await expect(
       canvas.getByRole('button', { name: /^Add to cart$/ }),
     ).toBeVisible()
@@ -151,6 +167,55 @@ export const SoldOut: Story = {
     await expect(
       canvas.queryByRole('button', { name: /add to cart/i }),
     ).not.toBeInTheDocument()
+  },
+}
+
+export const WithCertBadges: Story = {
+  args: {
+    product: {
+      ...stubProduct,
+      id: 'gid://shopify/Product/organic-sencha',
+      handle: 'organic-sencha',
+      title: 'Organic Sencha Green Tea',
+      productType: 'Green tea',
+      tags: ['Organic', 'ACO Certified', 'Wholesale'],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Both cert badges render (Organic and ACO match first two keywords)
+    await expect(canvas.getByText('Organic')).toBeVisible()
+    await expect(canvas.getByText('ACO')).toBeVisible()
+
+    // Cap at 2 — Certified badge would be third, should NOT render
+    await expect(canvas.queryByText('Certified')).not.toBeInTheDocument()
+  },
+}
+
+export const NoBrandingInfo: Story = {
+  args: {
+    product: {
+      ...stubProduct,
+      id: 'gid://shopify/Product/plain-tea',
+      handle: 'plain-tea',
+      title: 'House Blend Black Tea',
+      productType: '',
+      tags: ['Wholesale'],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // No eyebrow when productType is empty
+    await expect(canvas.queryByText('Green tea')).not.toBeInTheDocument()
+
+    // No cert badge spans
+    await expect(canvas.queryByText('Organic')).not.toBeInTheDocument()
+    await expect(canvas.queryByText('ACO')).not.toBeInTheDocument()
+
+    // Product title still renders
+    await expect(canvas.getByText('House Blend Black Tea')).toBeVisible()
   },
 }
 
