@@ -35,6 +35,8 @@ export type ProductVariant = {
   image?: ShopifyImage | null
 }
 
+export type ShopifyQuantityRule = NonNullable<ProductVariant['quantityRule']>
+
 export type ProductOption = {
   name: string
   values: string[]
@@ -142,7 +144,10 @@ export type CartLine = {
   merchandise: {
     id: string
     title: string
+    currentlyNotInStock?: boolean
     price: Money
+    quantityAvailable?: number | null
+    quantityRule?: ShopifyQuantityRule
     product: {
       handle: string
       title: string

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import type { ProductVariant } from '@/lib/shopify/types'
 
@@ -50,6 +50,20 @@ const variants: ProductVariant[] = [
   },
 ]
 
+const minimumQuantityVariants: ProductVariant[] = [
+  {
+    ...variants[0],
+    id: 'gid://shopify/ProductVariant/tea-masters-sencha-carton',
+    title: 'Carton',
+    quantityAvailable: 20,
+    quantityRule: {
+      minimum: 5,
+      maximum: 20,
+      increment: 5,
+    },
+  },
+]
+
 async function successfulAddToCart() {}
 
 async function failingAddToCart() {
@@ -61,6 +75,15 @@ function pendingAddToCart() {
 }
 
 function noopCartRefresh() {}
+
+const capturedPurchasePayloads: Array<{
+  quantity: number
+  variantId: string
+}> = []
+
+const capturePurchasePayload = async (variantId: string, quantity: number) => {
+  capturedPurchasePayloads.push({ variantId, quantity })
+}
 
 const meta: Meta<typeof ProductPurchaseForm> = {
   title: 'Collection/ProductPurchaseForm',
@@ -134,5 +157,108 @@ export const AddToCartPending: Story = {
     await expect(
       await canvas.findByRole('button', { name: 'Add to cart' }),
     ).toBeDisabled()
+  },
+}
+
+export const SelectedVariantPayload: Story = {
+  args: {
+    addToCart: capturePurchasePayload,
+  },
+  play: async ({ canvasElement }) => {
+    capturedPurchasePayloads.length = 0
+    const canvas = within(canvasElement)
+
+    await userEvent.selectOptions(
+      canvas.getByRole('combobox', {
+        name: 'Select pack size for Tea Masters Sencha',
+      }),
+      'gid://shopify/ProductVariant/tea-masters-sencha-1kg',
+    )
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to cart' }))
+
+    await waitFor(() => {
+      expect(capturedPurchasePayloads.at(-1)).toEqual({
+        variantId: 'gid://shopify/ProductVariant/tea-masters-sencha-1kg',
+        quantity: 1,
+      })
+    })
+  },
+}
+
+export const NoQuantityStepper: Story = {
+  args: {
+    layout: 'inline',
+    showPrice: false,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.queryByRole('spinbutton', {
+        name: 'Quantity for Tea Masters Sencha',
+      }),
+    ).not.toBeInTheDocument()
+    await expect(
+      canvas.getByRole('combobox', {
+        name: 'Select pack size for Tea Masters Sencha',
+      }),
+    ).toBeVisible()
+  },
+}
+
+export const InlineMinimumQuantityPayload: Story = {
+  args: {
+    variants: minimumQuantityVariants,
+    addToCart: capturePurchasePayload,
+    layout: 'inline',
+    showPrice: false,
+  },
+  play: async ({ canvasElement }) => {
+    capturedPurchasePayloads.length = 0
+    const canvas = within(canvasElement)
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to cart' }))
+
+    await waitFor(() => {
+      expect(capturedPurchasePayloads.at(-1)).toEqual({
+        variantId: 'gid://shopify/ProductVariant/tea-masters-sencha-carton',
+        quantity: 5,
+      })
+    })
+  },
+}
+
+export const InlineSoldOutVariant: Story = {
+  args: {
+    addToCart: capturePurchasePayload,
+    layout: 'inline',
+    showPrice: false,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await userEvent.selectOptions(
+      canvas.getByRole('combobox', {
+        name: 'Select pack size for Tea Masters Sencha',
+      }),
+      'gid://shopify/ProductVariant/tea-masters-sencha-5kg',
+    )
+
+    await expect(
+      canvas.getByRole('button', { name: 'Sold out' }),
+    ).toBeDisabled()
+  },
+}
+
+export const NoVariants: Story = {
+  args: {
+    variants: [],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.getByText('No purchasable variants are currently available.'),
+    ).toBeVisible()
   },
 }

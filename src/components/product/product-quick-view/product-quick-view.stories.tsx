@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import type { Product, ProductSummary } from '@/lib/shopify/types'
 
@@ -72,6 +72,32 @@ const soldOutProduct: Product = {
   })),
 }
 
+const minimumQuantityProduct: Product = {
+  ...quickViewProduct,
+  variants: [
+    {
+      ...quickViewProduct.variants[0]!,
+      id: 'gid://shopify/ProductVariant/masters-sencha-carton',
+      title: 'Carton',
+      quantityAvailable: 20,
+      quantityRule: {
+        minimum: 5,
+        maximum: 20,
+        increment: 5,
+      },
+    },
+  ],
+}
+
+const capturedQuickViewPayloads: Array<{
+  quantity: number
+  variantId: string
+}> = []
+
+const captureQuickViewPayload: AddToCart = async (variantId, quantity) => {
+  capturedQuickViewPayloads.push({ variantId, quantity })
+}
+
 const addSelectedPackQuantityToCart: AddToCart = async (
   variantId,
   quantity,
@@ -81,6 +107,17 @@ const addSelectedPackQuantityToCart: AddToCart = async (
     quantity !== 2
   ) {
     throw new Error(`Unexpected cart payload: ${variantId} x ${quantity}`)
+  }
+}
+
+function createRecoveringAddToCart(): AddToCart {
+  let attempts = 0
+
+  return async () => {
+    attempts += 1
+    if (attempts === 1) {
+      throw new Error('Temporary add failure')
+    }
   }
 }
 
@@ -95,6 +132,17 @@ const meta: Meta<typeof ProductQuickView> = {
 export default meta
 
 type Story = StoryObj<typeof ProductQuickView>
+
+async function openQuickViewDialog(
+  canvasElement: HTMLElement,
+  triggerName = 'Quick View',
+) {
+  const canvas = within(canvasElement)
+
+  await userEvent.click(canvas.getByRole('button', { name: triggerName }))
+
+  return within(await within(document.body).findByRole('dialog'))
+}
 
 export const Default: Story = {
   args: {
@@ -112,29 +160,28 @@ export const AddToCartTrigger: Story = {
     buttonLabel: 'Add to cart',
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await userEvent.click(canvas.getByRole('button', { name: 'Add to cart' }))
+    const dialog = await openQuickViewDialog(canvasElement, 'Add to cart')
 
     await userEvent.selectOptions(
-      await canvas.findByRole('combobox', {
+      await dialog.findByRole('combobox', {
         name: 'Select pack size for Tea Masters Sencha Green Tea',
       }),
       'gid://shopify/ProductVariant/masters-sencha-1kg',
     )
     await userEvent.click(
-      canvas.getByRole('button', {
+      dialog.getByRole('button', {
         name: 'Increase quantity for tea masters sencha green tea',
       }),
     )
 
     await expect(
-      canvas.getByRole('spinbutton', {
+      dialog.getByRole('spinbutton', {
         name: 'Quantity for Tea Masters Sencha Green Tea',
       }),
     ).toHaveValue(2)
 
-    await userEvent.click(canvas.getByRole('button', { name: 'Add to Cart' }))
-    await expect(await canvas.findByRole('status')).toHaveTextContent(
+    await userEvent.click(dialog.getByRole('button', { name: 'Add to Cart' }))
+    await expect(await dialog.findByRole('status')).toHaveTextContent(
       'Added to cart',
     )
   },
@@ -146,11 +193,10 @@ export const SoldOut: Story = {
     initialProduct: soldOutProduct,
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await userEvent.click(canvas.getByRole('button', { name: 'Quick View' }))
+    const dialog = await openQuickViewDialog(canvasElement)
 
     await expect(
-      canvas.getByRole('button', { name: 'Sold Out' }),
+      dialog.getByRole('button', { name: 'Sold Out' }),
     ).toBeDisabled()
   },
 }
@@ -164,14 +210,112 @@ export const FetchError: Story = {
     window.fetch = async () => new Response(null, { status: 500 })
 
     try {
-      const canvas = within(canvasElement)
-      await userEvent.click(canvas.getByRole('button', { name: 'Quick View' }))
+      const dialog = await openQuickViewDialog(canvasElement)
 
-      await expect(await canvas.findByRole('alert')).toHaveTextContent(
+      await expect(await dialog.findByRole('alert')).toHaveTextContent(
         'Unable to load product details. Please try again.',
       )
     } finally {
       window.fetch = originalFetch
     }
+  },
+}
+
+export const InvalidResponse: Story = {
+  args: {
+    product: stubProduct,
+  },
+  play: async ({ canvasElement }) => {
+    const originalFetch = window.fetch
+    window.fetch = async () =>
+      Response.json({
+        id: 'gid://shopify/Product/invalid',
+        title: 'Invalid product',
+      })
+
+    try {
+      const dialog = await openQuickViewDialog(canvasElement)
+
+      await expect(await dialog.findByRole('alert')).toHaveTextContent(
+        'Unable to load product details. Please try again.',
+      )
+    } finally {
+      window.fetch = originalFetch
+    }
+  },
+}
+
+export const RetrySuccess: Story = {
+  args: {
+    product: stubProduct,
+  },
+  play: async ({ canvasElement }) => {
+    const originalFetch = window.fetch
+    let attempts = 0
+    window.fetch = async () => {
+      attempts += 1
+      if (attempts === 1) return new Response(null, { status: 500 })
+
+      return Response.json(quickViewProduct)
+    }
+
+    try {
+      const dialog = await openQuickViewDialog(canvasElement)
+      await expect(await dialog.findByRole('alert')).toHaveTextContent(
+        'Unable to load product details. Please try again.',
+      )
+
+      await userEvent.click(dialog.getByRole('button', { name: 'Try again' }))
+      await expect(
+        await dialog.findByRole('heading', {
+          name: 'Tea Masters Sencha Green Tea',
+        }),
+      ).toBeVisible()
+    } finally {
+      window.fetch = originalFetch
+    }
+  },
+}
+
+export const AddFailureRecovery: Story = {
+  args: {
+    product: stubProduct,
+    initialProduct: quickViewProduct,
+  },
+  render: (args) => (
+    <ProductQuickView {...args} addToCart={createRecoveringAddToCart()} />
+  ),
+  play: async ({ canvasElement }) => {
+    const dialog = await openQuickViewDialog(canvasElement)
+    await userEvent.click(dialog.getByRole('button', { name: 'Add to Cart' }))
+    await expect(await dialog.findByRole('alert')).toHaveTextContent(
+      'Unable to add to cart. Please try again.',
+    )
+
+    await userEvent.click(dialog.getByRole('button', { name: 'Add to Cart' }))
+    await expect(await dialog.findByRole('status')).toHaveTextContent(
+      'Added to cart',
+    )
+  },
+}
+
+export const MinimumQuantityPayload: Story = {
+  args: {
+    product: stubProduct,
+    initialProduct: minimumQuantityProduct,
+    addToCart: captureQuickViewPayload,
+  },
+  play: async ({ canvasElement }) => {
+    capturedQuickViewPayloads.length = 0
+    const dialog = await openQuickViewDialog(canvasElement)
+
+    await userEvent.click(dialog.getByRole('button', { name: 'Add to Cart' }))
+
+    await waitFor(() => {
+      expect(capturedQuickViewPayloads.at(-1)).toEqual({
+        variantId: 'gid://shopify/ProductVariant/masters-sencha-carton',
+        quantity: 5,
+      })
+    })
   },
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { addToCartAction } from '@/lib/cart/actions'
@@ -26,7 +26,7 @@ export function useAddToCart({
   onCartChanged,
 }: UseAddToCartOptions = {}) {
   const router = useRouter()
-  const [isPending, startTransition] = useTransition()
+  const [isPending, setIsPending] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -41,7 +41,9 @@ export function useAddToCart({
   }
 
   function addItem(variantId: string, quantity: number) {
-    startTransition(async () => {
+    setIsPending(true)
+
+    void (async () => {
       try {
         await addToCart(variantId, quantity)
         setMessage(getSuccessMessage(quantity))
@@ -54,8 +56,10 @@ export function useAddToCart({
       } catch (addError) {
         setMessage(null)
         setError(getErrorMessage(addError))
+      } finally {
+        setIsPending(false)
       }
-    })
+    })()
   }
 
   return {

@@ -69,6 +69,18 @@
 - [x] **CQA-05**: Product-card Storybook coverage proves quick-add success/error/pending states, multi-variant fallback behavior, and sold-out behavior without hitting Shopify.
 - [x] **CQA-06**: Verification proves the restored affordance does not reintroduce full per-card purchase-form hydration or unbounded PLP payload growth.
 
+## v6 Requirements
+
+### Collection Product Card Improvements
+
+- [ ] **CARD-01**: Collection product cards display a wider image column that gives product photography more visual weight at all breakpoints (mobile ≥ 10rem, sm ≥ 16rem, lg ≥ 20rem).
+- [ ] **CARD-02**: Each card surfaces `productType` as a compact eyebrow label above the product title when the field is non-empty.
+- [ ] **CARD-03**: Cards extract organic and certification signals from product tags and render up to 2 compact certification badges below the title.
+- [ ] **CARD-04**: The redundant "More info" secondary button is removed; the product title link is the sole navigation path to the PDP.
+- [ ] **CARD-05**: The right-column content uses a structured two-zone layout that always places product identity (eyebrow, title, badges, rating) at the top and purchase controls at the bottom.
+- [ ] **CARD-06**: `ProductPurchaseForm` accepts a `showQuantity` prop (default `true`); the collection card passes `showQuantity={false}` to hide the quantity stepper in listing context.
+- [ ] **CARD-07**: Storybook story for `ProductCard` is updated to reflect the new layout, including eyebrow, badge, and no-quantity-stepper states.
+
 ## Out of Scope
 
 | Feature                                                | Reason                                                                                 |
@@ -117,6 +129,13 @@
 | CQA-04      | Phase 8  | Complete |
 | CQA-05      | Phase 8  | Complete |
 | CQA-06      | Phase 8  | Complete |
+| CARD-01     | Phase 9  | Planned  |
+| CARD-02     | Phase 9  | Planned  |
+| CARD-03     | Phase 9  | Planned  |
+| CARD-04     | Phase 9  | Planned  |
+| CARD-05     | Phase 9  | Planned  |
+| CARD-06     | Phase 9  | Planned  |
+| CARD-07     | Phase 9  | Planned  |
 | BULK-09     | Deferred | Deferred |
 | BULK-10     | Deferred | Deferred |
 
@@ -127,8 +146,9 @@
 - v3 footer requirements: 5 total
 - v4 audit remediation requirements: 10 total
 - v5 optimized collection quick-add requirements: 6 total
+- v6 collection product card improvement requirements: 7 total
 - Deferred pricing requirements: 2 total
-- Mapped to phases: 36
+- Mapped to phases: 43
 - Unmapped active/planned requirements: 0
 
 ---

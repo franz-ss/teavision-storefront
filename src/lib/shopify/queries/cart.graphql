@@ -51,6 +51,12 @@ fragment CartFields on Cart {
           ... on ProductVariant {
             id
             title
+            currentlyNotInStock
+            quantityRule {
+              minimum
+              maximum
+              increment
+            }
             price {
               amount
               currencyCode

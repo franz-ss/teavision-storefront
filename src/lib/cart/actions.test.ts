@@ -1,0 +1,267 @@
+import type { Mock } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
+
+import {
+  addCartLines,
+  createCart,
+  getCart,
+  removeCartLines,
+  updateCartLines,
+} from '@/lib/shopify/operations/cart'
+import { makeCart } from '@/tests/fixtures/shopify/cart'
+
+import {
+  addToCartAction,
+  cartLineFormAction,
+  removeCartLineAction,
+  updateCartLineAction,
+} from './actions'
+
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(),
+}))
+
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+}))
+
+vi.mock('@/lib/shopify/operations/cart', () => ({
+  addCartLines: vi.fn(),
+  createCart: vi.fn(),
+  getCart: vi.fn(),
+  removeCartLines: vi.fn(),
+  updateCartLines: vi.fn(),
+}))
+
+type CookieStore = {
+  delete: Mock<(name: string) => void>
+  get: Mock<(name: string) => { value: string } | undefined>
+  set: Mock<
+    (
+      name: string,
+      value: string,
+      options: {
+        httpOnly: boolean
+        path: string
+        sameSite: 'lax'
+        secure: boolean
+      },
+    ) => void
+  >
+}
+
+function makeCookieStore(cartId?: string): CookieStore {
+  return {
+    delete: vi.fn(),
+    get: vi.fn((name) =>
+      name === 'teavision_cart' && cartId ? { value: cartId } : undefined,
+    ),
+    set: vi.fn(),
+  }
+}
+
+const cookiesMock = cookies as unknown as Mock<() => Promise<CookieStore>>
+const revalidatePathMock = revalidatePath as unknown as Mock<
+  (path: string) => void
+>
+const getCartMock = getCart as unknown as Mock<
+  (cartId: string) => Promise<ReturnType<typeof makeCart> | null>
+>
+const createCartMock = createCart as unknown as Mock<
+  () => Promise<ReturnType<typeof makeCart>>
+>
+const addCartLinesMock = addCartLines as unknown as Mock<
+  (
+    cartId: string,
+    lines: Array<{ merchandiseId: string; quantity: number }>,
+  ) => Promise<ReturnType<typeof makeCart>>
+>
+const updateCartLinesMock = updateCartLines as unknown as Mock<
+  (
+    cartId: string,
+    lines: Array<{ id: string; quantity: number }>,
+  ) => Promise<ReturnType<typeof makeCart>>
+>
+const removeCartLinesMock = removeCartLines as unknown as Mock<
+  (cartId: string, lineIds: string[]) => Promise<ReturnType<typeof makeCart>>
+>
+
+describe('cart Server Actions', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.stubEnv('NODE_ENV', 'test')
+  })
+
+  test('addToCartAction creates a cart, sets the cookie, adds a line, and revalidates cart', async () => {
+    const cookieStore = makeCookieStore()
+    const createdCart = makeCart({ id: 'gid://shopify/Cart/new-cart' })
+    const nextCart = makeCart({ id: createdCart.id, totalQuantity: 2 })
+    cookiesMock.mockResolvedValue(cookieStore)
+    createCartMock.mockResolvedValue(createdCart)
+    addCartLinesMock.mockResolvedValue(nextCart)
+
+    await expect(
+      addToCartAction('gid://shopify/ProductVariant/1', 2),
+    ).resolves.toBe(nextCart)
+
+    expect(createCartMock).toHaveBeenCalledTimes(1)
+    expect(cookieStore.set).toHaveBeenCalledWith(
+      'teavision_cart',
+      createdCart.id,
+      {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: false,
+      },
+    )
+    expect(addCartLinesMock).toHaveBeenCalledWith(createdCart.id, [
+      { merchandiseId: 'gid://shopify/ProductVariant/1', quantity: 2 },
+    ])
+    expect(revalidatePathMock).toHaveBeenCalledWith('/cart')
+  })
+
+  test('addToCartAction reuses an existing cart cookie', async () => {
+    const cookieStore = makeCookieStore('gid://shopify/Cart/existing')
+    const existingCart = makeCart({ id: 'gid://shopify/Cart/existing' })
+    cookiesMock.mockResolvedValue(cookieStore)
+    getCartMock.mockResolvedValue(existingCart)
+    addCartLinesMock.mockResolvedValue(makeCart({ id: existingCart.id }))
+
+    await addToCartAction('gid://shopify/ProductVariant/1', 1)
+
+    expect(createCartMock).not.toHaveBeenCalled()
+    expect(addCartLinesMock).toHaveBeenCalledWith(existingCart.id, [
+      { merchandiseId: 'gid://shopify/ProductVariant/1', quantity: 1 },
+    ])
+  })
+
+  test('addToCartAction deletes stale null carts and creates a replacement', async () => {
+    const cookieStore = makeCookieStore('gid://shopify/Cart/stale')
+    const replacementCart = makeCart({ id: 'gid://shopify/Cart/replacement' })
+    cookiesMock.mockResolvedValue(cookieStore)
+    getCartMock.mockResolvedValue(null)
+    createCartMock.mockResolvedValue(replacementCart)
+    addCartLinesMock.mockResolvedValue(replacementCart)
+
+    await addToCartAction('gid://shopify/ProductVariant/1', 1)
+
+    expect(cookieStore.delete).toHaveBeenCalledWith('teavision_cart')
+    expect(cookieStore.set).toHaveBeenCalledWith(
+      'teavision_cart',
+      replacementCart.id,
+      expect.objectContaining({ httpOnly: true }),
+    )
+  })
+
+  test('addToCartAction documents quantity normalization and safe max-quantity error mapping', async () => {
+    const cookieStore = makeCookieStore()
+    const cart = makeCart()
+    cookiesMock.mockResolvedValue(cookieStore)
+    createCartMock.mockResolvedValue(cart)
+    addCartLinesMock.mockResolvedValue(cart)
+
+    await addToCartAction('gid://shopify/ProductVariant/1', 1.9)
+    expect(addCartLinesMock).toHaveBeenCalledWith(cart.id, [
+      { merchandiseId: 'gid://shopify/ProductVariant/1', quantity: 1 },
+    ])
+
+    await expect(
+      addToCartAction('gid://shopify/ProductVariant/1', 0),
+    ).rejects.toThrow('Quantity must be at least 1.')
+    await expect(
+      addToCartAction('gid://shopify/ProductVariant/1', -1),
+    ).rejects.toThrow('Quantity must be at least 1.')
+    await expect(
+      addToCartAction('gid://shopify/ProductVariant/1', Number.NaN),
+    ).rejects.toThrow('Quantity must be a whole number.')
+    await expect(
+      addToCartAction('gid://shopify/ProductVariant/1', Infinity),
+    ).rejects.toThrow('Quantity must be a whole number.')
+
+    addCartLinesMock.mockRejectedValueOnce(
+      new Error('not enough merchandise available'),
+    )
+    await expect(
+      addToCartAction('gid://shopify/ProductVariant/1', 1),
+    ).rejects.toThrow('Maximum quantity available reached.')
+  })
+
+  test('stale cart read errors are surfaced instead of hidden', async () => {
+    const cookieStore = makeCookieStore('gid://shopify/Cart/stale')
+    cookiesMock.mockResolvedValue(cookieStore)
+    getCartMock.mockRejectedValue(new Error('Cart does not exist'))
+
+    await expect(
+      addToCartAction('gid://shopify/ProductVariant/1', 1),
+    ).rejects.toThrow('Cart does not exist')
+  })
+
+  test('update and remove require a cart cookie and revalidate after mutation', async () => {
+    const cookieStore = makeCookieStore('gid://shopify/Cart/existing')
+    cookiesMock.mockResolvedValue(cookieStore)
+    updateCartLinesMock.mockResolvedValue(makeCart())
+    removeCartLinesMock.mockResolvedValue(makeCart())
+
+    await updateCartLineAction('gid://shopify/CartLine/1', 3)
+    await removeCartLineAction('gid://shopify/CartLine/1')
+
+    expect(updateCartLinesMock).toHaveBeenCalledWith(
+      'gid://shopify/Cart/existing',
+      [{ id: 'gid://shopify/CartLine/1', quantity: 3 }],
+    )
+    expect(removeCartLinesMock).toHaveBeenCalledWith(
+      'gid://shopify/Cart/existing',
+      ['gid://shopify/CartLine/1'],
+    )
+    expect(revalidatePathMock).toHaveBeenCalledWith('/cart')
+
+    cookiesMock.mockResolvedValue(makeCookieStore())
+    await expect(
+      updateCartLineAction('gid://shopify/CartLine/1', 2),
+    ).rejects.toThrow('Your cart session has expired')
+    await expect(
+      removeCartLineAction('gid://shopify/CartLine/1'),
+    ).rejects.toThrow('Your cart session has expired')
+  })
+
+  test('cartLineFormAction handles intents, invalid form data, and thrown errors safely', async () => {
+    const cookieStore = makeCookieStore('gid://shopify/Cart/existing')
+    cookiesMock.mockResolvedValue(cookieStore)
+    updateCartLinesMock.mockResolvedValue(makeCart())
+    removeCartLinesMock.mockResolvedValue(makeCart())
+
+    const updateForm = new FormData()
+    updateForm.set('intent', 'update')
+    updateForm.set('lineId', 'gid://shopify/CartLine/1')
+    updateForm.set('quantity', '2')
+    await expect(
+      cartLineFormAction({ message: 'old' }, updateForm),
+    ).resolves.toEqual({ message: null })
+
+    const removeForm = new FormData()
+    removeForm.set('intent', 'remove')
+    removeForm.set('lineId', 'gid://shopify/CartLine/1')
+    await expect(
+      cartLineFormAction({ message: null }, removeForm),
+    ).resolves.toEqual({ message: null })
+
+    const invalidForm = new FormData()
+    invalidForm.set('intent', 'update')
+    await expect(
+      cartLineFormAction({ message: null }, invalidForm),
+    ).resolves.toEqual({
+      message:
+        'We could not read that cart request. Refresh the page and try again.',
+    })
+
+    updateCartLinesMock.mockRejectedValueOnce(new Error('network down'))
+    await expect(
+      cartLineFormAction({ message: null }, updateForm),
+    ).resolves.toEqual({
+      message: 'We could not update your cart. Please try again.',
+    })
+  })
+})

@@ -17,7 +17,13 @@ pnpm codegen      # Regenerate GraphQL types from Shopify schema
 pnpm storybook    # Component dev/docs on port 6006
 ```
 
-No test runner outside Storybook. To run a single Storybook story in isolation, open `http://localhost:6006/?path=/story/<story-id>`.
+Storybook remains the preferred component documentation and interaction surface. Phase 10 adds an approved exception for revenue-critical cart and checkout-handoff coverage:
+
+- `pnpm test:unit` for pure helpers, Shopify transport, and Shopify operation tests.
+- `pnpm test:integration` for Server Actions and route-handler boundaries.
+- `pnpm test:e2e` for fake-Shopify browser coverage of the local cart-to-checkout handoff only.
+
+Do not run real Shopify hosted checkout, payment, shipping-rate, tax, order-creation, or success-redirect tests until the Shopify dev store is configured and the store owner explicitly approves checkout testing. To run a single Storybook story in isolation, open `http://localhost:6006/?path=/story/<story-id>`.
 
 ## Architecture
 

@@ -11,6 +11,12 @@ import type {
   ProductVariant,
 } from '@/lib/shopify/types'
 import {
+  clampQuantity,
+  getVariantMaximumQuantity,
+  getVariantMinimumQuantity,
+  getVariantQuantityIncrement,
+} from '@/lib/shopify/quantity-rules'
+import {
   Button,
   type ButtonProps,
   Dialog,
@@ -32,12 +38,14 @@ type ProductQuickViewProps = {
   initialProduct?: ProductQuickViewDetails
 }
 
+function getInitialVariant(
+  variants: ProductVariant[],
+): ProductVariant | undefined {
+  return variants.find((variant) => variant.availableForSale) ?? variants[0]
+}
+
 function getInitialVariantId(variants: ProductVariant[]): string {
-  return (
-    variants.find((variant) => variant.availableForSale)?.id ??
-    variants[0]?.id ??
-    ''
-  )
+  return getInitialVariant(variants)?.id ?? ''
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -112,25 +120,22 @@ export function ProductQuickView({
   initialProduct,
 }: ProductQuickViewProps) {
   const [open, setOpen] = useState(false)
-  const [productData, setProductData] = useState<ProductQuickViewDetails | null>(
-    initialProduct ?? null,
-  )
+  const [productData, setProductData] =
+    useState<ProductQuickViewDetails | null>(initialProduct ?? null)
   const [selectedVariantId, setSelectedVariantId] = useState(() =>
     initialProduct ? getInitialVariantId(initialProduct.variants) : '',
   )
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(() =>
+    initialProduct
+      ? getVariantMinimumQuantity(getInitialVariant(initialProduct.variants))
+      : 1,
+  )
   const [isLoading, setIsLoading] = useState(false)
-  const {
-    addItem,
-    error,
-    isPending,
-    message,
-    reportError,
-    resetFeedback,
-  } = useAddToCart({
-    addToCart,
-    getSuccessMessage: () => 'Added to cart',
-  })
+  const { addItem, error, isPending, message, reportError, resetFeedback } =
+    useAddToCart({
+      addToCart,
+      getSuccessMessage: () => 'Added to cart',
+    })
 
   const selectedVariant = useMemo(() => {
     if (!productData) return null
@@ -149,6 +154,23 @@ export function ProductQuickView({
     product.featuredImage ??
     null
   const canAddToCart = selectedVariant?.availableForSale === true
+  const minimumQuantity = getVariantMinimumQuantity(
+    selectedVariant ?? undefined,
+  )
+  const maximumQuantity = getVariantMaximumQuantity(
+    selectedVariant ?? undefined,
+  )
+  const quantityIncrement = getVariantQuantityIncrement(
+    selectedVariant ?? undefined,
+  )
+  const effectiveQuantity = clampQuantity({
+    maximumQuantity,
+    minimumQuantity,
+    quantityIncrement,
+    value: quantity,
+  })
+  const canUseSelectedVariantQuantity =
+    maximumQuantity === undefined || maximumQuantity >= minimumQuantity
   const hasVariants = (productData?.variants.length ?? 0) > 0
   const TriggerIcon = buttonIcon === 'cart' ? ShoppingCart : Eye
 
@@ -174,6 +196,9 @@ export function ProductQuickView({
 
       setProductData(nextProduct)
       setSelectedVariantId(getInitialVariantId(nextProduct.variants))
+      setQuantity(
+        getVariantMinimumQuantity(getInitialVariant(nextProduct.variants)),
+      )
     } catch {
       reportError('Unable to load product details. Please try again.')
     } finally {
@@ -187,18 +212,32 @@ export function ProductQuickView({
   }
 
   function handleAddToCart() {
-    if (!selectedVariant || !canAddToCart) return
+    if (!selectedVariant || !canAddToCart || !canUseSelectedVariantQuantity) {
+      return
+    }
 
-    addItem(selectedVariant.id, quantity)
+    addItem(selectedVariant.id, effectiveQuantity)
   }
 
   function handleSelectVariant(nextVariantId: string) {
+    const nextVariant =
+      productData?.variants.find((variant) => variant.id === nextVariantId) ??
+      productData?.variants[0]
+
     setSelectedVariantId(nextVariantId)
+    setQuantity(getVariantMinimumQuantity(nextVariant))
     resetFeedback()
   }
 
   function handleQuantityChange(nextQuantity: number) {
-    setQuantity(nextQuantity)
+    setQuantity(
+      clampQuantity({
+        maximumQuantity,
+        minimumQuantity,
+        quantityIncrement,
+        value: nextQuantity,
+      }),
+    )
     resetFeedback()
   }
 
@@ -299,8 +338,11 @@ export function ProductQuickView({
               <div className="grid gap-2">
                 <span className="type-caption text-muted">Quantity</span>
                 <QuantityStepper
-                  value={quantity}
+                  value={effectiveQuantity}
                   onChange={handleQuantityChange}
+                  min={minimumQuantity}
+                  max={maximumQuantity}
+                  step={quantityIncrement}
                   disabled={isPending || !canAddToCart}
                   label={`Quantity for ${productData.title}`}
                 />
@@ -311,7 +353,9 @@ export function ProductQuickView({
                   type="button"
                   size="lg"
                   isLoading={isPending}
-                  disabled={!canAddToCart || isPending}
+                  disabled={
+                    !canAddToCart || !canUseSelectedVariantQuantity || isPending
+                  }
                   onClick={handleAddToCart}
                 >
                   <ShoppingCart className="h-4 w-4" aria-hidden="true" />

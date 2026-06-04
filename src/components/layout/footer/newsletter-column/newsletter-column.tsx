@@ -25,13 +25,13 @@ export function NewsletterColumn({
       <FooterNewsletterForm action={action} />
       <div className="mt-6 flex flex-col gap-4">
         {phoneLink ? (
-          <p className="text-on-brand flex items-start gap-2 text-base leading-[1.4]">
+          <p className="text-on-brand flex items-center gap-2 text-base leading-[1.4]">
             <PhoneIcon />
             <FooterTextLink {...phoneLink} className={MENU_LINK_CLASS} />
           </p>
         ) : null}
         {emailLink ? (
-          <p className="text-on-brand flex items-start gap-2 text-base leading-[1.4]">
+          <p className="text-on-brand flex items-center gap-2 text-base leading-[1.4]">
             <MailIcon />
             <FooterTextLink {...emailLink} className={MENU_LINK_CLASS} />
           </p>

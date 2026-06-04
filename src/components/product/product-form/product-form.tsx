@@ -14,6 +14,12 @@ import type {
   ProductOption,
   ProductVariant,
 } from '@/lib/shopify/types'
+import {
+  clampQuantity,
+  getVariantMaximumQuantity,
+  getVariantMinimumQuantity,
+  getVariantQuantityIncrement,
+} from '@/lib/shopify/quantity-rules'
 
 import { BulkSavings } from '../bulk-savings'
 import { type AddToCart, useAddToCart } from '../use-add-to-cart'
@@ -24,42 +30,6 @@ type ProductFormProps = {
   bulkPricingTiers?: BulkPricingTier[]
   addToCart?: AddToCart
   onCartChanged?: () => void
-}
-
-function getVariantMinimumQuantity(
-  variant: ProductVariant | undefined,
-): number {
-  return variant?.quantityRule?.minimum ?? 1
-}
-
-function getVariantMaximumQuantity(
-  variant: ProductVariant | undefined,
-): number | undefined {
-  if (!variant) return undefined
-
-  const candidates = [
-    variant.quantityRule?.maximum ?? undefined,
-    variant.currentlyNotInStock === true
-      ? undefined
-      : (variant.quantityAvailable ?? undefined),
-  ].filter((value): value is number => value !== undefined && value >= 0)
-
-  if (candidates.length === 0) return undefined
-
-  return Math.min(...candidates)
-}
-
-function clampQuantity(
-  value: number,
-  minimumQuantity: number,
-  maximumQuantity: number | undefined,
-): number {
-  const safeValue = Number.isFinite(value) ? Math.trunc(value) : minimumQuantity
-  const lowerBounded = Math.max(minimumQuantity, safeValue)
-
-  return maximumQuantity === undefined
-    ? lowerBounded
-    : Math.min(maximumQuantity, lowerBounded)
 }
 
 function getAddToCartErrorMessage(error: unknown): string {
@@ -90,28 +60,26 @@ export function ProductForm({
   const [selectedBulkTierQuantity, setSelectedBulkTierQuantity] = useState<
     number | null
   >(null)
-  const {
-    addItem,
-    error,
-    isPending,
-    message,
-    reportError,
-    resetFeedback,
-  } = useAddToCart({
-    addToCart,
-    getErrorMessage: getAddToCartErrorMessage,
-    onCartChanged,
-  })
+  const { addItem, error, isPending, message, reportError, resetFeedback } =
+    useAddToCart({
+      addToCart,
+      getErrorMessage: getAddToCartErrorMessage,
+      onCartChanged,
+    })
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId)
   const canAddToCart = selectedVariant?.availableForSale === true
   const minimumQuantity = getVariantMinimumQuantity(selectedVariant)
   const maximumQuantity = getVariantMaximumQuantity(selectedVariant)
-  const effectiveQuantity = clampQuantity(
-    quantity,
-    minimumQuantity,
+  const quantityIncrement = getVariantQuantityIncrement(selectedVariant)
+  const effectiveQuantity = clampQuantity({
     maximumQuantity,
-  )
+    minimumQuantity,
+    quantityIncrement,
+    value: quantity,
+  })
+  const canUseSelectedVariantQuantity =
+    maximumQuantity === undefined || maximumQuantity >= minimumQuantity
   const selectedBulkPricingTiers =
     selectedVariant && selectedVariant.quantityPriceBreaks.length > 0
       ? selectedVariant.quantityPriceBreaks
@@ -140,14 +108,23 @@ export function ProductForm({
   }
 
   function addQuantityToCart(nextQuantity: number) {
-    if (!canAddToCart || !selectedVariant) return
+    if (!canAddToCart || !selectedVariant || !canUseSelectedVariantQuantity) {
+      return
+    }
     if (!canUseQuantity(nextQuantity)) return
 
     addItem(selectedVariant.id, nextQuantity)
   }
 
   function handleQuantityChange(nextQuantity: number) {
-    setQuantity(clampQuantity(nextQuantity, minimumQuantity, maximumQuantity))
+    setQuantity(
+      clampQuantity({
+        maximumQuantity,
+        minimumQuantity,
+        quantityIncrement,
+        value: nextQuantity,
+      }),
+    )
     setSelectedBulkTierQuantity(null)
     resetFeedback()
   }
@@ -209,6 +186,7 @@ export function ProductForm({
             onChange={handleQuantityChange}
             min={minimumQuantity}
             max={maximumQuantity}
+            step={quantityIncrement}
             disabled={!canAddToCart || isPending}
             describedBy={error ? quantityErrorId : undefined}
           />
@@ -226,7 +204,9 @@ export function ProductForm({
           <Button
             onClick={() => addQuantityToCart(effectiveQuantity)}
             isLoading={isPending}
-            disabled={!canAddToCart || isPending}
+            disabled={
+              !canAddToCart || !canUseSelectedVariantQuantity || isPending
+            }
             size="lg"
             className="w-full sm:ml-auto sm:max-w-44"
           >

@@ -1,0 +1,44 @@
+import { defineConfig, devices } from '@playwright/test'
+
+const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 4173)
+const BASE_URL = `http://localhost:${PORT}`
+const FAKE_SHOPIFY_PORT = Number(process.env.FAKE_SHOPIFY_PORT ?? 4517)
+const FAKE_SHOPIFY_URL = `http://127.0.0.1:${FAKE_SHOPIFY_PORT}/graphql`
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: false,
+  workers: 1,
+  retries: process.env.CI ? 2 : 0,
+  use: {
+    baseURL: BASE_URL,
+    trace: 'retain-on-failure',
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
+  webServer: [
+    {
+      command: 'node --import tsx tests/mocks/run-fake-shopify-server.ts',
+      url: `http://127.0.0.1:${FAKE_SHOPIFY_PORT}/health`,
+      reuseExistingServer: false,
+      env: {
+        FAKE_SHOPIFY_PORT: String(FAKE_SHOPIFY_PORT),
+      },
+    },
+    {
+      command: `corepack pnpm exec next dev -p ${PORT}`,
+      url: BASE_URL,
+      reuseExistingServer: false,
+      env: {
+        SHOPIFY_STOREFRONT_TEST_MODE: 'true',
+        SHOPIFY_STOREFRONT_TEST_URL: FAKE_SHOPIFY_URL,
+        SHOPIFY_STORE_DOMAIN: 'fake-shopify.test',
+        SHOPIFY_STOREFRONT_ACCESS_TOKEN: 'test-token',
+      },
+    },
+  ],
+})

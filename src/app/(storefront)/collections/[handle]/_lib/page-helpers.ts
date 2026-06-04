@@ -50,10 +50,17 @@ const HERO_IMAGE_OVERRIDES: Record<string, HeroImage> = {
     width: 1894,
     height: 830,
   },
+  'australian-certified-organic-tea': {
+    url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/organic_tea_6d641d5d-32cf-4674-8426-4ac32368ad8c.png?v=1779248409',
+    altText: 'Australian Certified Organic loose leaf tea',
+    width: 1774,
+    height: 887,
+  },
 }
 
 const HIDDEN_HERO_INTRO_HANDLES = new Set([
   'tea-masters-selection-worlds-best-teas',
+  'australian-certified-organic-tea',
 ])
 
 const FORCED_RICH_DESCRIPTION_HANDLES = new Set([

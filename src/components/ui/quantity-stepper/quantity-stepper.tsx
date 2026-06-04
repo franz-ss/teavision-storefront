@@ -11,17 +11,33 @@ type QuantityStepperProps = {
   onChange: (value: number) => void
   min?: number
   max?: number
+  step?: number
   disabled?: boolean
   label?: string
   id?: string
+  name?: string
   describedBy?: string
   className?: string
 }
 
-function clampQuantity(value: number, min: number, max?: number): number {
+function getSafeStep(step: number): number {
+  return Math.max(1, Math.trunc(step))
+}
+
+function clampQuantity(
+  value: number,
+  min: number,
+  max: number | undefined,
+  step: number,
+): number {
+  if (max !== undefined && max < min) return min
+
   const safeValue = Number.isFinite(value) ? Math.trunc(value) : min
   const lowerBounded = Math.max(min, safeValue)
-  return max === undefined ? lowerBounded : Math.min(max, lowerBounded)
+  const upperBounded =
+    max === undefined ? lowerBounded : Math.min(max, lowerBounded)
+
+  return min + Math.floor((upperBounded - min) / step) * step
 }
 
 export function QuantityStepper({
@@ -29,18 +45,22 @@ export function QuantityStepper({
   onChange,
   min = 1,
   max,
+  step = 1,
   disabled = false,
   label = 'Quantity',
   id,
+  name,
   describedBy,
   className,
 }: QuantityStepperProps) {
-  const quantity = clampQuantity(value, min, max)
+  const quantityStep = getSafeStep(step)
+  const quantity = clampQuantity(value, min, max, quantityStep)
   const canDecrease = quantity > min && !disabled
-  const canIncrease = max === undefined ? !disabled : quantity < max && !disabled
+  const canIncrease =
+    max === undefined ? !disabled : quantity + quantityStep <= max && !disabled
 
   function updateQuantity(nextValue: number) {
-    onChange(clampQuantity(nextValue, min, max))
+    onChange(clampQuantity(nextValue, min, max, quantityStep))
   }
 
   return (
@@ -49,7 +69,7 @@ export function QuantityStepper({
         aria-label={`Decrease ${label.toLowerCase()}`}
         title={`Decrease ${label.toLowerCase()}`}
         disabled={!canDecrease}
-        onClick={() => updateQuantity(quantity - 1)}
+        onClick={() => updateQuantity(quantity - quantityStep)}
         size="sm"
         variant="outline"
       >
@@ -60,11 +80,12 @@ export function QuantityStepper({
       </label>
       <input
         id={id}
+        name={name}
         type="number"
         inputMode="numeric"
         min={min}
         max={max}
-        step={1}
+        step={quantityStep}
         value={quantity}
         onChange={(event) => updateQuantity(event.currentTarget.valueAsNumber)}
         disabled={disabled}
@@ -76,7 +97,7 @@ export function QuantityStepper({
         aria-label={`Increase ${label.toLowerCase()}`}
         title={`Increase ${label.toLowerCase()}`}
         disabled={!canIncrease}
-        onClick={() => updateQuantity(quantity + 1)}
+        onClick={() => updateQuantity(quantity + quantityStep)}
         size="sm"
         variant="outline"
       >

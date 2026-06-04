@@ -73,7 +73,13 @@ function reshapeMerchandise(
   return {
     id: merchandise.id,
     title: merchandise.title,
+    currentlyNotInStock: merchandise.currentlyNotInStock,
     price: reshapeMoney(merchandise.price),
+    quantityRule: {
+      minimum: merchandise.quantityRule.minimum,
+      maximum: merchandise.quantityRule.maximum ?? null,
+      increment: merchandise.quantityRule.increment,
+    },
     product: reshapeProduct(merchandise.product),
   }
 }

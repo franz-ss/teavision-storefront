@@ -39,6 +39,12 @@ const variants: ProductVariant[] = [
   },
 ]
 
+const firstPageVariantLimit = Array.from({ length: 20 }, (_, index) => ({
+  ...variants[0],
+  id: `gid://shopify/ProductVariant/masters-sencha-pack-${index + 1}`,
+  title: `Pack ${index + 1}`,
+}))
+
 const stubProduct: CollectionProductSummary = {
   id: 'gid://shopify/Product/masters-sencha',
   handle: 'tea-masters-sencha',
@@ -89,7 +95,7 @@ export const Default: Story = {
       }),
     ).toBeVisible()
 
-    // QuantityStepper is hidden in listing context (showQuantity={false})
+    // QuantityStepper is hidden in the inline listing-card layout
     await expect(
       canvas.queryByRole('spinbutton', {
         name: 'Quantity for Tea Masters Sencha Green Tea',
@@ -138,7 +144,7 @@ export const MultiVariant: Story = {
       }),
     ).toBeVisible()
 
-    // QuantityStepper is hidden in listing context (showQuantity={false})
+    // QuantityStepper is hidden in the inline listing-card layout
     await expect(
       canvas.queryByRole('spinbutton', {
         name: 'Quantity for Tea Masters Breakfast Blend',
@@ -167,6 +173,27 @@ export const SoldOut: Story = {
     await expect(
       canvas.queryByRole('button', { name: /add to cart/i }),
     ).not.toBeInTheDocument()
+  },
+}
+
+export const VariantLimitFallback: Story = {
+  args: {
+    product: {
+      ...stubProduct,
+      variants: firstPageVariantLimit,
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.queryByRole('combobox', {
+        name: 'Select pack size for Tea Masters Sencha Green Tea',
+      }),
+    ).not.toBeInTheDocument()
+    await expect(
+      canvas.getByRole('link', { name: 'View options' }),
+    ).toHaveAttribute('href', '/products/tea-masters-sencha')
   },
 }
 

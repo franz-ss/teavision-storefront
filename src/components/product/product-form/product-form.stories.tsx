@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import type {
   BulkPricingTier,
@@ -20,6 +20,15 @@ function pendingAddToCart() {
 }
 
 function noopCartRefresh() {}
+
+const capturedAddToCartPayloads: Array<{
+  quantity: number
+  variantId: string
+}> = []
+
+const captureAddToCart = async (variantId: string, quantity: number) => {
+  capturedAddToCartPayloads.push({ variantId, quantity })
+}
 
 const options: ProductOption[] = [
   {
@@ -209,5 +218,107 @@ export const AddToCartPending: Story = {
     await expect(
       await canvas.findByRole('button', { name: 'Add to Cart' }),
     ).toBeDisabled()
+  },
+}
+
+export const SelectedQuantityPayload: Story = {
+  args: {
+    variants: [baseVariant],
+    options: [],
+    addToCart: captureAddToCart,
+    onCartChanged: noopCartRefresh,
+  },
+  play: async ({ canvasElement }) => {
+    capturedAddToCartPayloads.length = 0
+    const canvas = within(canvasElement)
+
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Increase quantity' }),
+    )
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to Cart' }))
+
+    await waitFor(() => {
+      expect(capturedAddToCartPayloads.at(-1)).toEqual({
+        variantId: baseVariant.id,
+        quantity: 2,
+      })
+    })
+  },
+}
+
+export const SelectedVariantPayload: Story = {
+  args: {
+    variants: multiVariants,
+    options,
+    addToCart: captureAddToCart,
+    onCartChanged: noopCartRefresh,
+  },
+  play: async ({ canvasElement }) => {
+    capturedAddToCartPayloads.length = 0
+    const canvas = within(canvasElement)
+
+    await userEvent.click(canvas.getByRole('button', { name: '1kg' }))
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to Cart' }))
+
+    await waitFor(() => {
+      expect(capturedAddToCartPayloads.at(-1)).toEqual({
+        variantId: 'gid://shopify/ProductVariant/organic-chamomile-1kg',
+        quantity: 1,
+      })
+    })
+  },
+}
+
+export const BulkTierPayload: Story = {
+  args: {
+    variants: [baseVariant],
+    options: [],
+    bulkPricingTiers,
+    addToCart: captureAddToCart,
+    onCartChanged: noopCartRefresh,
+  },
+  play: async ({ canvasElement }) => {
+    capturedAddToCartPayloads.length = 0
+    const canvas = within(canvasElement)
+
+    await userEvent.click(canvas.getByRole('button', { name: /Buy 5\+/ }))
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Add bulk quantity to cart' }),
+    )
+
+    await waitFor(() => {
+      expect(capturedAddToCartPayloads.at(-1)).toEqual({
+        variantId: baseVariant.id,
+        quantity: 5,
+      })
+    })
+  },
+}
+
+export const FeedbackResetsOnQuantityChange: Story = {
+  args: {
+    variants: [baseVariant],
+    options: [],
+    addToCart: failingAddToCart,
+    onCartChanged: noopCartRefresh,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'Add to Cart' }))
+    await expect(await canvas.findByRole('alert')).toHaveTextContent(
+      'Maximum quantity available reached.',
+    )
+
+    await waitFor(() => {
+      expect(
+        canvas.getByRole('button', { name: 'Increase quantity' }),
+      ).toBeEnabled()
+    })
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Increase quantity' }),
+    )
+    await waitFor(() => {
+      expect(canvas.queryByRole('alert')).not.toBeInTheDocument()
+    })
   },
 }

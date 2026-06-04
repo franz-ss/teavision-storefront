@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 
 import { CartLineActions } from './cart-line-actions'
 
@@ -14,8 +14,14 @@ const errorAction: CartLineAction = async () => ({
   message: 'We could not update your cart. Please try again.',
 })
 
-const pendingAction: CartLineAction = () =>
-  new Promise<never>(() => undefined)
+const pendingAction: CartLineAction = () => new Promise<never>(() => undefined)
+
+const capturedActions: Array<Record<string, FormDataEntryValue>> = []
+
+const captureAction: CartLineAction = async (_previousState, formData) => {
+  capturedActions.push(Object.fromEntries(formData.entries()))
+  return { message: null }
+}
 
 const meta: Meta<typeof CartLineActions> = {
   title: 'Cart/CartLineActions',
@@ -48,7 +54,9 @@ export const Default: Story = {
 
 export const MinimumQuantity: Story = {
   args: {
-    quantity: 1,
+    minimumQuantity: 5,
+    quantity: 5,
+    quantityIncrement: 5,
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -58,6 +66,107 @@ export const MinimumQuantity: Story = {
         name: 'Decrease quantity of Tea Masters Sencha',
       }),
     ).toBeDisabled()
+  },
+}
+
+export const QuantityRulePayloads: Story = {
+  args: {
+    action: captureAction,
+    maximumQuantity: 12,
+    minimumQuantity: 5,
+    quantity: 5,
+    quantityIncrement: 5,
+  },
+  play: async ({ canvasElement }) => {
+    capturedActions.length = 0
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Increase quantity of Tea Masters Sencha',
+      }),
+    )
+
+    await waitFor(() => {
+      expect(capturedActions.at(-1)).toEqual({
+        intent: 'update',
+        lineId: 'gid://shopify/CartLine/1',
+        quantity: '10',
+      })
+    })
+
+    await expect(
+      canvas.getByRole('button', {
+        name: 'Decrease quantity of Tea Masters Sencha',
+      }),
+    ).toBeDisabled()
+  },
+}
+
+export const IncreasePayload: Story = {
+  args: {
+    action: captureAction,
+  },
+  play: async ({ canvasElement }) => {
+    capturedActions.length = 0
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Increase quantity of Tea Masters Sencha',
+      }),
+    )
+
+    await waitFor(() => {
+      expect(capturedActions.at(-1)).toEqual({
+        intent: 'update',
+        lineId: 'gid://shopify/CartLine/1',
+        quantity: '3',
+      })
+    })
+  },
+}
+
+export const DecreasePayload: Story = {
+  args: {
+    action: captureAction,
+  },
+  play: async ({ canvasElement }) => {
+    capturedActions.length = 0
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Decrease quantity of Tea Masters Sencha',
+      }),
+    )
+
+    await waitFor(() => {
+      expect(capturedActions.at(-1)).toEqual({
+        intent: 'update',
+        lineId: 'gid://shopify/CartLine/1',
+        quantity: '1',
+      })
+    })
+  },
+}
+
+export const RemovePayload: Story = {
+  args: {
+    action: captureAction,
+  },
+  play: async ({ canvasElement }) => {
+    capturedActions.length = 0
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Remove Tea Masters Sencha from cart',
+      }),
+    )
+
+    await waitFor(() => {
+      expect(capturedActions.at(-1)).toEqual({
+        intent: 'remove',
+        lineId: 'gid://shopify/CartLine/1',
+      })
+    })
   },
 }
 
@@ -79,16 +188,42 @@ export const UpdateError: Story = {
   },
 }
 
+export const UpdatePending: Story = {
+  args: {
+    action: pendingAction,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Increase quantity of Tea Masters Sencha',
+      }),
+    )
+
+    await expect(
+      await canvas.findByRole('button', {
+        name: 'Increase quantity of Tea Masters Sencha',
+      }),
+    ).toBeDisabled()
+  },
+}
+
 export const RemovePending: Story = {
   args: {
     action: pendingAction,
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await userEvent.click(canvas.getByRole('button', { name: 'Remove' }))
+    await userEvent.click(
+      canvas.getByRole('button', {
+        name: 'Remove Tea Masters Sencha from cart',
+      }),
+    )
 
     await expect(
-      await canvas.findByRole('button', { name: 'Remove' }),
+      await canvas.findByRole('button', {
+        name: 'Remove Tea Masters Sencha from cart',
+      }),
     ).toBeDisabled()
   },
 }

@@ -17,6 +17,7 @@ This milestone brings high-value legacy storefront behavior into the Next storef
 - [x] **Phase 5: Codebase Review Remediation** - Fix the production-readiness issues from `CODEBASE_REVIEW.md`, including conversion-path correctness, accessibility, JSON-LD safety, testing gates, reliability/security hardening, PLP performance, component boundaries, type/runtime guardrails, sitemap hygiene, and final verification evidence.
 - [x] **Phase 6: Prevent the site from being indexed** - Add temporary noindex/no-crawl controls across robots, metadata, and sitemap surfaces until launch. (completed 2026-06-03)
 - [x] **Phase 8: Optimized Collection Quick Add** - Restore a visible listing-card add-to-cart affordance for safe single-variant products without reintroducing full per-card purchase forms, variant payload bloat, or hydration-heavy PLP rendering. (completed 2026-06-03)
+- [ ] **Phase 9: Collection Product Card Improvements** - Improve the collection product card layout to better serve B2B buyers: wider image column, product-type eyebrow, organic/certification badges from tags, two-zone content hierarchy, removal of redundant "More info" button, and a `showQuantity` prop to suppress the quantity stepper in listing context.
 
 ## Phase Details
 
@@ -82,16 +83,38 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8.
+Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, then Phase 9.
 
-| Phase                               | Plans Complete | Status   | Completed  |
-| ----------------------------------- | -------------- | -------- | ---------- |
-| 1. Bulk Savings PDP and Cart Parity | 1/1            | Complete | 2026-05-26 |
-| 2. Searchanise API Search Results   | 1/1            | Complete | 2026-05-27 |
-| 4. Footer 1:1 Parity                | 1/1            | Complete | 2026-05-29 |
-| 5. Codebase Review Remediation      | 5/5            | Complete | 2026-06-02 |
-| 6. Prevent site indexing            | 1/1            | Complete | 2026-06-03 |
-| 8. Optimized Collection Quick Add   | 1/1            | Complete | 2026-06-03 |
+| Phase                                      | Plans Complete | Status   | Completed  |
+| ------------------------------------------ | -------------- | -------- | ---------- |
+| 1. Bulk Savings PDP and Cart Parity        | 1/1            | Complete | 2026-05-26 |
+| 2. Searchanise API Search Results          | 1/1            | Complete | 2026-05-27 |
+| 4. Footer 1:1 Parity                       | 1/1            | Complete | 2026-05-29 |
+| 5. Codebase Review Remediation             | 5/5            | Complete | 2026-06-02 |
+| 6. Prevent site indexing                   | 1/1            | Complete | 2026-06-03 |
+| 8. Optimized Collection Quick Add          | 1/1            | Complete | 2026-06-03 |
+| 9. Collection Product Card Improvements    | 0/1            | Planned  | —          |
+
+### Phase 9: Collection Product Card Improvements
+
+**Goal:** Collection product cards better serve B2B buyers scanning catalogue listings by surfacing stronger product photography, product-type and certification context, a cleaner two-zone content hierarchy, and focused purchase controls.
+**Requirements**: [CARD-01, CARD-02, CARD-03, CARD-04, CARD-05, CARD-06, CARD-07]
+**Depends on:** Phase 8
+**Success Criteria** (what must be TRUE):
+
+1. The image column is visibly wider at all breakpoints (mobile ≥ 10rem, sm ≥ 16rem, lg ≥ 20rem) in the rendered card.
+2. Cards with a non-empty `productType` render an eyebrow label above the product title.
+3. Cards extract organic/certification tags and render up to 2 certification badges.
+4. The "More info" secondary button is absent from all collection card renders.
+5. The right-column content uses a two-zone grid — product identity top, purchase controls bottom — so cards with and without purchase forms have consistent rhythm.
+6. `ProductPurchaseForm` accepts `showQuantity` and the quantity stepper is absent from collection card renders.
+7. `ProductCard.stories.tsx` covers eyebrow, badge, and no-quantity-stepper states; lint, typecheck, and build pass.
+
+**Plans:** 1 plan
+
+Plans:
+
+- [ ] 09-01: Collection product card layout improvements
 
 ### Phase 5: Codebase Review Remediation
 
