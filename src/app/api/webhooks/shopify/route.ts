@@ -10,13 +10,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     const arrayBuffer = await request.arrayBuffer()
     rawBody = Buffer.from(arrayBuffer)
   } catch {
-    return Response.json({ error: 'Failed to read request body' }, { status: 400 })
+    return Response.json(
+      { error: 'Failed to read request body' },
+      { status: 400 },
+    )
   }
 
   // Verify HMAC signature
   const secret = process.env.SHOPIFY_WEBHOOK_SECRET
   if (!secret) {
-    return Response.json({ error: 'Webhook secret not configured' }, { status: 401 })
+    return Response.json(
+      { error: 'Webhook secret not configured' },
+      { status: 401 },
+    )
   }
 
   const shopifyHmac = request.headers.get('x-shopify-hmac-sha256')

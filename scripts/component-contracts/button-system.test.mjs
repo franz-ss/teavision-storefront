@@ -136,8 +136,14 @@ test('Button inverse stories render on the dark Storybook background', async () 
     /const inverseStoryGlobals[\s\S]*backgrounds: \{ value: 'dark' \}/,
   )
   assert.match(storiesSource, /Inverse[\s\S]*globals: inverseStoryGlobals/)
-  assert.match(storiesSource, /Inverse[\s\S]*backgrounds: inverseStoryBackgrounds/)
-  assert.match(storiesSource, /InverseSecondary[\s\S]*globals: inverseStoryGlobals/)
+  assert.match(
+    storiesSource,
+    /Inverse[\s\S]*backgrounds: inverseStoryBackgrounds/,
+  )
+  assert.match(
+    storiesSource,
+    /InverseSecondary[\s\S]*globals: inverseStoryGlobals/,
+  )
   assert.match(
     storiesSource,
     /InverseSecondary[\s\S]*backgrounds: inverseStoryBackgrounds/,

@@ -13,10 +13,7 @@ import type {
   ContactActionResult,
   NewsletterSignupActionResult,
 } from '@/lib/contact/types'
-import {
-  checkRateLimit,
-  getClientIpFromHeaders,
-} from '@/lib/rate-limit'
+import { checkRateLimit, getClientIpFromHeaders } from '@/lib/rate-limit'
 
 type ContactSubmission = {
   name: string

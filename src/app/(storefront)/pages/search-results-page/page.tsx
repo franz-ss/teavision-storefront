@@ -11,9 +11,7 @@ type Props = {
   searchParams: Promise<SearchParamsInput>
 }
 
-async function SearchResultsPageRedirectContent({
-  searchParams,
-}: Props) {
+async function SearchResultsPageRedirectContent({ searchParams }: Props) {
   await connection()
 
   redirect(createLegacySearchRedirectHref(await searchParams))

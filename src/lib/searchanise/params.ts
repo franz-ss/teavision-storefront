@@ -6,10 +6,7 @@ import {
   type SearchSortValue,
 } from './types'
 
-export type SearchParamsInput = Record<
-  string,
-  string | string[] | undefined
->
+export type SearchParamsInput = Record<string, string | string[] | undefined>
 
 type SearchHrefOptions = Partial<SearchRouteState> & {
   pathname?: string

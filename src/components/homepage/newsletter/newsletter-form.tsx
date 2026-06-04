@@ -1,11 +1,6 @@
 'use client'
 
-import {
-  useRef,
-  useState,
-  useTransition,
-  type FormEvent,
-} from 'react'
+import { useRef, useState, useTransition, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui'
 import type { NewsletterSignupActionResult } from '@/lib/contact/types'
@@ -102,9 +97,7 @@ export function HomepageNewsletterForm({
           aria-live="polite"
           className={cn(
             'type-body-sm border-on-brand/30 w-full rounded-md border p-3 text-center',
-            status === 'success'
-              ? 'text-on-brand'
-              : 'bg-surface text-strong',
+            status === 'success' ? 'text-on-brand' : 'bg-surface text-strong',
           )}
         >
           {status === 'success' ? 'Thanks for signing up.' : error}

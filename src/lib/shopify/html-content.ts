@@ -181,14 +181,16 @@ const SHOPIFY_HTML_CLASS_NAMES: Record<
   },
 }
 
-const SHOPIFY_HTML_TABLE_REGION_CLASS_NAMES: Record<ShopifyHtmlVariant, string> =
-  {
-    page: 'focus-visible:ring-ring my-8 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-    article:
-      'focus-visible:ring-ring my-8 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-    compact:
-      'focus-visible:ring-ring my-6 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-  }
+const SHOPIFY_HTML_TABLE_REGION_CLASS_NAMES: Record<
+  ShopifyHtmlVariant,
+  string
+> = {
+  page: 'focus-visible:ring-ring my-8 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+  article:
+    'focus-visible:ring-ring my-8 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+  compact:
+    'focus-visible:ring-ring my-6 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+}
 
 const SHOPIFY_HTML_LINK_CLASS_NAME =
   'text-link hover:text-link-hover focus-visible:ring-ring rounded underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'

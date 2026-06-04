@@ -48,10 +48,7 @@ export type IconButtonProps = Omit<
   }
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  (
-    { children, className, size, type = 'button', variant, ...props },
-    ref,
-  ) => {
+  ({ children, className, size, type = 'button', variant, ...props }, ref) => {
     return (
       <button
         ref={ref}

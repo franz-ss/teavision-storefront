@@ -77,7 +77,7 @@ export function SearchFilterPanel({
                     href={value.href}
                     aria-current={value.selected ? 'page' : undefined}
                     className={cn(
-                      'flex min-h-10 items-center gap-3 rounded px-1 transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                      'focus-visible:ring-ring flex min-h-10 items-center gap-3 rounded px-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       value.selected
                         ? 'bg-surface-sunken text-strong'
                         : 'text-default hover:bg-surface-sunken',
@@ -86,8 +86,7 @@ export function SearchFilterPanel({
                     <span
                       className={cn(
                         'border-default flex size-4 shrink-0 items-center justify-center rounded border',
-                        value.selected &&
-                          'border-brand bg-brand text-on-brand',
+                        value.selected && 'border-brand bg-brand text-on-brand',
                       )}
                       aria-hidden="true"
                     >

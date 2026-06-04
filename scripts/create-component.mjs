@@ -101,7 +101,9 @@ if (!existsSync(barrelPath)) {
   }
 }
 
-console.log(`✓ src/components/${domain}/${componentKebab}/${componentKebab}.tsx`)
+console.log(
+  `✓ src/components/${domain}/${componentKebab}/${componentKebab}.tsx`,
+)
 console.log(`✓ src/components/${domain}/${componentKebab}/index.ts`)
 console.log(
   `✓ src/components/${domain}/${componentKebab}/${componentKebab}.stories.tsx`,

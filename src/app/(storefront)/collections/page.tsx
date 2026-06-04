@@ -113,133 +113,133 @@ export default async function Page() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeInlineJson(structuredData) }}
+        dangerouslySetInnerHTML={{
+          __html: serializeInlineJson(structuredData),
+        }}
       />
 
-      <div className="bg-canvas">
-        <Section.Root tone="sunken" className="border-default border-b">
-          <Section.Container>
-            <nav
-              aria-label="Breadcrumb"
-              className="type-body-sm text-muted mb-8 flex flex-wrap items-center gap-2"
+      <Section.Root tone="sunken" className="border-default border-b">
+        <Section.Container>
+          <nav
+            aria-label="Breadcrumb"
+            className="type-body-sm text-muted mb-8 flex flex-wrap items-center gap-2"
+          >
+            <Link
+              href="/"
+              className="focus-visible:ring-ring inline-flex min-h-10 items-center rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
-              <Link
-                href="/"
-                className="focus-visible:ring-ring inline-flex min-h-10 items-center rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                Home
-              </Link>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page" className="text-default">
-                Collections
-              </span>
-            </nav>
+              Home
+            </Link>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page" className="text-default">
+              Collections
+            </span>
+          </nav>
 
-            <p className="type-eyebrow text-accent">Wholesale range</p>
-            <h1 className="type-display-01 text-strong mt-5 max-w-4xl text-balance">
-              Tea, herb, spice, and ingredient collections
-            </h1>
-            <p className="type-body-lg text-muted mt-6 max-w-prose">
-              Start with a category, compare adjacent ranges, then move into
-              samples or bulk ordering with the Teavision team.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/collections/all"
-                className="type-label bg-action-primary text-action-primary-text hover:bg-action-primary-hover focus-visible:ring-ring inline-flex min-h-11 w-full items-center justify-center rounded-md px-5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-auto"
-              >
-                Browse all products
-              </Link>
-              <Link
-                href="/pages/wholesale-account-request"
-                className="type-label border-action-secondary-border text-action-secondary-text hover:bg-action-secondary-hover focus-visible:ring-ring inline-flex min-h-11 w-full items-center justify-center rounded-md border px-5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-auto"
-              >
-                Request wholesale access
-              </Link>
-            </div>
-          </Section.Container>
-        </Section.Root>
+          <p className="type-eyebrow text-accent">Wholesale range</p>
+          <h1 className="type-display-01 text-strong mt-5 max-w-4xl text-balance">
+            Tea, herb, spice, and ingredient collections
+          </h1>
+          <p className="type-body-lg text-muted mt-6 max-w-prose">
+            Start with a category, compare adjacent ranges, then move into
+            samples or bulk ordering with the Teavision team.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/collections/all"
+              className="type-label bg-action-primary text-action-primary-text hover:bg-action-primary-hover focus-visible:ring-ring inline-flex min-h-11 w-full items-center justify-center rounded-md px-5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-auto"
+            >
+              Browse all products
+            </Link>
+            <Link
+              href="/pages/wholesale-account-request"
+              className="type-label border-action-secondary-border text-action-secondary-text hover:bg-action-secondary-hover focus-visible:ring-ring inline-flex min-h-11 w-full items-center justify-center rounded-md border px-5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-auto"
+            >
+              Request wholesale access
+            </Link>
+          </div>
+        </Section.Container>
+      </Section.Root>
 
-        <Section.Root tone="transparent">
-          <Section.Container>
-            <div className="max-w-prose">
-              <p className="type-eyebrow text-accent">Popular paths</p>
+      <Section.Root tone="transparent">
+        <Section.Container>
+          <div className="max-w-prose">
+            <p className="type-eyebrow text-accent">Popular paths</p>
+            <h2 className="type-heading-02 text-strong mt-3">
+              Find the right range faster
+            </h2>
+          </div>
+
+          <ul
+            className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+            role="list"
+          >
+            {featuredCollections.map((collection) => (
+              <Card
+                as="li"
+                key={collection.id}
+                interactive
+                overflow="hidden"
+                className="group h-full"
+              >
+                <Link
+                  href={hrefForHandle(collection.handle)}
+                  className="focus-visible:ring-ring block h-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                >
+                  <CollectionCardImage collection={collection} />
+                  <div className="p-4">
+                    <h3 className="type-heading-04 text-strong group-hover:text-brand transition-colors">
+                      {collection.title}
+                    </h3>
+                    <p className="type-body-sm text-muted mt-3">
+                      {getDescription(collection)}
+                    </p>
+                  </div>
+                </Link>
+              </Card>
+            ))}
+          </ul>
+        </Section.Container>
+      </Section.Root>
+
+      <Section.Root tone="surface" className="border-default border-t">
+        <Section.Container>
+          <div className="border-default mb-6 flex flex-col gap-3 border-b pb-6 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="type-eyebrow text-accent">Directory</p>
               <h2 className="type-heading-02 text-strong mt-3">
-                Find the right range faster
+                All collections
               </h2>
             </div>
+            <p className="type-body-sm text-muted">
+              {directoryCollections.length} wholesale ranges
+            </p>
+          </div>
 
-            <ul
-              className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-              role="list"
-            >
-              {featuredCollections.map((collection) => (
-                <Card
-                  as="li"
-                  key={collection.id}
-                  interactive
-                  overflow="hidden"
-                  className="group h-full"
+          <ul
+            className="grid gap-x-8 md:grid-cols-2 xl:grid-cols-3"
+            role="list"
+          >
+            {directoryCollections.map((collection) => (
+              <li key={collection.id} className="border-default border-b">
+                <Link
+                  href={hrefForHandle(collection.handle)}
+                  className="focus-visible:ring-ring hover:text-brand grid min-h-16 gap-2 py-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <Link
-                    href={hrefForHandle(collection.handle)}
-                    className="focus-visible:ring-ring block h-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                  >
-                    <CollectionCardImage collection={collection} />
-                    <div className="p-4">
-                      <h3 className="type-heading-04 text-strong group-hover:text-brand transition-colors">
-                        {collection.title}
-                      </h3>
-                      <p className="type-body-sm text-muted mt-3">
-                        {getDescription(collection)}
-                      </p>
-                    </div>
-                  </Link>
-                </Card>
-              ))}
-            </ul>
-          </Section.Container>
-        </Section.Root>
-
-        <Section.Root tone="surface" className="border-default border-t">
-          <Section.Container>
-            <div className="border-default mb-6 flex flex-col gap-3 border-b pb-6 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p className="type-eyebrow text-accent">Directory</p>
-                <h2 className="type-heading-02 text-strong mt-3">
-                  All collections
-                </h2>
-              </div>
-              <p className="type-body-sm text-muted">
-                {directoryCollections.length} wholesale ranges
-              </p>
-            </div>
-
-            <ul
-              className="grid gap-x-8 md:grid-cols-2 xl:grid-cols-3"
-              role="list"
-            >
-              {directoryCollections.map((collection) => (
-                <li key={collection.id} className="border-default border-b">
-                  <Link
-                    href={hrefForHandle(collection.handle)}
-                    className="focus-visible:ring-ring hover:text-brand grid min-h-16 gap-2 py-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                  >
-                    <span className="type-label text-strong">
-                      {collection.title}
+                  <span className="type-label text-strong">
+                    {collection.title}
+                  </span>
+                  {collection.description && (
+                    <span className="type-body-sm text-muted line-clamp-2">
+                      {collection.description}
                     </span>
-                    {collection.description && (
-                      <span className="type-body-sm text-muted line-clamp-2">
-                        {collection.description}
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </Section.Container>
-        </Section.Root>
-      </div>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section.Container>
+      </Section.Root>
     </>
   )
 }

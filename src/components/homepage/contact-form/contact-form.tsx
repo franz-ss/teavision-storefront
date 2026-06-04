@@ -1,11 +1,6 @@
 'use client'
 
-import {
-  useRef,
-  useState,
-  useTransition,
-  type FormEvent,
-} from 'react'
+import { useRef, useState, useTransition, type FormEvent } from 'react'
 
 import { Button, FormLabel, Textarea, TextInput } from '@/components/ui'
 import type { ContactActionResult } from '@/lib/contact/types'
@@ -49,9 +44,7 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
   }
 
   const messageId =
-    status === 'success'
-      ? 'homepage-contact-success'
-      : 'homepage-contact-error'
+    status === 'success' ? 'homepage-contact-success' : 'homepage-contact-error'
   const hasMessage = status === 'success' || Boolean(error)
 
   return (
@@ -63,9 +56,7 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
-          <FormLabel htmlFor="contact-name">
-            Name
-          </FormLabel>
+          <FormLabel htmlFor="contact-name">Name</FormLabel>
           <TextInput
             id="contact-name"
             name="name"
@@ -75,9 +66,7 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
           />
         </div>
         <div className="grid gap-2">
-          <FormLabel htmlFor="contact-phone">
-            Number
-          </FormLabel>
+          <FormLabel htmlFor="contact-phone">Number</FormLabel>
           <TextInput
             id="contact-phone"
             name="phone"
@@ -89,9 +78,7 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
         </div>
       </div>
       <div className="grid gap-2">
-        <FormLabel htmlFor="contact-email">
-          Email
-        </FormLabel>
+        <FormLabel htmlFor="contact-email">Email</FormLabel>
         <TextInput
           id="contact-email"
           name="email"
@@ -104,9 +91,7 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
         />
       </div>
       <div className="grid gap-2">
-        <FormLabel htmlFor="contact-message">
-          Message
-        </FormLabel>
+        <FormLabel htmlFor="contact-message">Message</FormLabel>
         <Textarea
           id="contact-message"
           name="message"

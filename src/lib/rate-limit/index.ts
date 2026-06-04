@@ -8,7 +8,11 @@ type RateLimitBucket = {
 }
 
 export type RateLimitStore = {
-  increment: (key: string, windowMs: number, now: number) => Promise<RateLimitBucket>
+  increment: (
+    key: string,
+    windowMs: number,
+    now: number,
+  ) => Promise<RateLimitBucket>
 }
 
 type RateLimitOptions = {
@@ -96,7 +100,11 @@ export async function checkRateLimit({
   const safeLimit = Math.max(1, Math.trunc(limit))
   const safeWindowMs = Math.max(1, Math.trunc(windowMs))
   const key = `${namespace}:${identifier}`
-  const bucket = await getDefaultStore().increment(key, safeWindowMs, Date.now())
+  const bucket = await getDefaultStore().increment(
+    key,
+    safeWindowMs,
+    Date.now(),
+  )
   const remaining = Math.max(0, safeLimit - bucket.count)
 
   return {

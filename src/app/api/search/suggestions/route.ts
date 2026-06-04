@@ -1,9 +1,6 @@
 import { getSearchaniseSearchResults } from '@/lib/searchanise/search'
 import type { ProductSummary } from '@/lib/shopify/types'
-import {
-  checkRateLimit,
-  getClientIpFromHeaders,
-} from '@/lib/rate-limit'
+import { checkRateLimit, getClientIpFromHeaders } from '@/lib/rate-limit'
 
 const MAX_QUERY_LENGTH = 100
 const MAX_SUGGESTIONS = 10

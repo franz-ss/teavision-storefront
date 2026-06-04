@@ -76,23 +76,22 @@ export function SearchaniseRecommendations({
     return () => observer.disconnect()
   }, [shouldLoad])
 
-  const visibleContent =
-    !shouldLoad ? null : renderState === 'waiting' ? (
-      <p className="type-body-sm text-muted" role="status" aria-live="polite">
-        Loading recommendations…
-      </p>
-    ) : renderState === 'rendered' && products.length > 0 ? (
-      <RelatedProductsCarousel
-        products={products}
-        ariaLabel="Customers also bought products"
-      />
-    ) : renderState === 'fallback' && fallback ? (
-      <div data-searchanise-fallback>{fallback}</div>
-    ) : renderState === 'empty' ? (
-      <p className="type-body-sm text-muted" role="status">
-        No recommendations are available.
-      </p>
-    ) : null
+  const visibleContent = !shouldLoad ? null : renderState === 'waiting' ? (
+    <p className="type-body-sm text-muted" role="status" aria-live="polite">
+      Loading recommendations…
+    </p>
+  ) : renderState === 'rendered' && products.length > 0 ? (
+    <RelatedProductsCarousel
+      products={products}
+      ariaLabel="Customers also bought products"
+    />
+  ) : renderState === 'fallback' && fallback ? (
+    <div data-searchanise-fallback>{fallback}</div>
+  ) : renderState === 'empty' ? (
+    <p className="type-body-sm text-muted" role="status">
+      No recommendations are available.
+    </p>
+  ) : null
 
   return (
     <div

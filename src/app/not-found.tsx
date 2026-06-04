@@ -21,9 +21,7 @@ export default function NotFound() {
           The page you&rsquo;re looking for has moved or never existed.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button href="/">
-            Go home
-          </Button>
+          <Button href="/">Go home</Button>
           <Button href="/collections/all" variant="secondary">
             Browse products
           </Button>

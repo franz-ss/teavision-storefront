@@ -24,7 +24,10 @@ type PageItem =
       id: string
     }
 
-function createVisiblePages(currentPage: number, totalPages: number): PageItem[] {
+function createVisiblePages(
+  currentPage: number,
+  totalPages: number,
+): PageItem[] {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, index) => ({
       type: 'page',

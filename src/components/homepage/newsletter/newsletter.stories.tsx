@@ -34,7 +34,10 @@ export const Success: Story = {
   args: {},
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await userEvent.type(canvas.getByLabelText('Enter Email'), 'buyer@example.com')
+    await userEvent.type(
+      canvas.getByLabelText('Enter Email'),
+      'buyer@example.com',
+    )
     await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))
 
     await expect(await canvas.findByRole('status')).toHaveTextContent(
@@ -49,7 +52,10 @@ export const Error: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await userEvent.type(canvas.getByLabelText('Enter Email'), 'buyer@example.com')
+    await userEvent.type(
+      canvas.getByLabelText('Enter Email'),
+      'buyer@example.com',
+    )
     await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))
 
     await expect(await canvas.findByRole('alert')).toHaveTextContent(
@@ -64,7 +70,10 @@ export const Pending: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await userEvent.type(canvas.getByLabelText('Enter Email'), 'buyer@example.com')
+    await userEvent.type(
+      canvas.getByLabelText('Enter Email'),
+      'buyer@example.com',
+    )
     await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))
 
     await expect(

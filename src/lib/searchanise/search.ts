@@ -22,8 +22,7 @@ import {
   type SearchaniseSearchStatus,
 } from './types'
 
-const SEARCHANISE_RESULTS_ENDPOINT =
-  'https://searchserverapi1.com/getresults'
+const SEARCHANISE_RESULTS_ENDPOINT = 'https://searchserverapi1.com/getresults'
 const MAX_SEARCHANISE_RESULTS = 48
 const SEARCHANISE_CURRENCY_CODE = 'AUD'
 
@@ -90,10 +89,7 @@ function getString(
   return undefined
 }
 
-function getArray(
-  record: Record<string, unknown>,
-  key: string,
-): unknown[] {
+function getArray(record: Record<string, unknown>, key: string): unknown[] {
   const value = record[key]
 
   return Array.isArray(value) ? value : []
@@ -161,7 +157,9 @@ function normalizeImageUrl(value: string | undefined): string | undefined {
   return undefined
 }
 
-function normalizeStorefrontHref(value: string | undefined): string | undefined {
+function normalizeStorefrontHref(
+  value: string | undefined,
+): string | undefined {
   if (!value) return undefined
 
   try {
@@ -191,14 +189,18 @@ function normalizePrice(value: unknown): Money {
   }
 }
 
-function normalizeShopifyVariantId(value: string | undefined): string | undefined {
+function normalizeShopifyVariantId(
+  value: string | undefined,
+): string | undefined {
   if (!value) return undefined
   if (value.startsWith('gid://shopify/ProductVariant/')) return value
 
   return `gid://shopify/ProductVariant/${value}`
 }
 
-function parseAvailability(record: Record<string, unknown>): boolean | undefined {
+function parseAvailability(
+  record: Record<string, unknown>,
+): boolean | undefined {
   const quantityTotal = parseNumber(record.quantity_total)
   const quantity = parseNumber(record.quantity)
   const nextQuantity = quantityTotal ?? quantity
@@ -208,7 +210,9 @@ function parseAvailability(record: Record<string, unknown>): boolean | undefined
   return nextQuantity > 0
 }
 
-function createVariantTitle(options: Record<string, unknown> | undefined): string {
+function createVariantTitle(
+  options: Record<string, unknown> | undefined,
+): string {
   if (!options) return 'Default Title'
 
   const values = Object.values(options)
@@ -389,15 +393,10 @@ function mapFacet(value: unknown): SearchaniseFacet | null {
 }
 
 function escapeRestrictValue(value: string): string {
-  return value
-    .replace(/\\/g, '\\\\')
-    .replace(/\|/g, '\\|')
-    .replace(/,/g, '\\,')
+  return value.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/,/g, '\\,')
 }
 
-function groupFilters(
-  filters: SearchFilterSelection[],
-): Map<string, string[]> {
+function groupFilters(filters: SearchFilterSelection[]): Map<string, string[]> {
   const groupedFilters = new Map<string, string[]>()
 
   filters.forEach((filter) => {
@@ -452,7 +451,10 @@ function parsePagination(
 ): SearchanisePagination {
   const pageSize = clampPageSize(input.pageSize)
   const totalItems = parseInteger(response.totalItems, 0)
-  const startIndex = parseInteger(response.startIndex, (input.page - 1) * pageSize)
+  const startIndex = parseInteger(
+    response.startIndex,
+    (input.page - 1) * pageSize,
+  )
   const itemsPerPage = parseInteger(response.itemsPerPage, pageSize) || pageSize
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage))
   const currentPage = Math.min(
@@ -500,7 +502,9 @@ function mapResponse(
     correctedQuery: getString(response, 'correctedQuery'),
     products: getArray(response, 'items')
       .map(mapProduct)
-      .filter((product): product is CollectionProductSummary => product !== null),
+      .filter(
+        (product): product is CollectionProductSummary => product !== null,
+      ),
     facets: getArray(response, 'facets')
       .map(mapFacet)
       .filter((facet): facet is SearchaniseFacet => facet !== null),
