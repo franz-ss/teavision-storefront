@@ -1,7 +1,7 @@
 ---
 phase: 05-codebase-review-remediation
 status: passed
-verified_at: "2026-06-02T16:35:44.668Z"
+verified_at: '2026-06-02T16:35:44.668Z'
 requirements:
   - AUDIT-01
   - AUDIT-02

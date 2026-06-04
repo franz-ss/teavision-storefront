@@ -2,7 +2,7 @@
 phase: 05-codebase-review-remediation
 plan: 03
 status: complete
-completed_at: "2026-06-02T15:56:19.247Z"
+completed_at: '2026-06-02T15:56:19.247Z'
 requirements:
   - AUDIT-06
   - AUDIT-10

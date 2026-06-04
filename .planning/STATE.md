@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: completed
 stopped_at: Phase 08 complete
-last_updated: "2026-06-03T17:09:15+08:00"
+last_updated: '2026-06-03T17:09:15+08:00'
 last_activity: 2026-06-03 -- Phase 8 completed
 progress:
   total_phases: 6

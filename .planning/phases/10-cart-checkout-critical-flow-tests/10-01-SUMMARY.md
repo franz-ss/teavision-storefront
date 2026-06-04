@@ -34,4 +34,3 @@ Completed. The repo now has an approved Phase 10 test runner exception, Vitest a
 
 - The plan mentioned `SHOPIFY_STOREFRONT_GRAPHQL_URL`; implementation uses `SHOPIFY_STOREFRONT_TEST_URL` to make the test-only purpose explicit.
 - `pnpm exec vitest --version` and `pnpm exec playwright --version` were flaky in this Windows shell, so local `.cmd` shims were used for version confirmation.
-

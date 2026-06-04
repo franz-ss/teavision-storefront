@@ -12,18 +12,18 @@
 
 ## Existing Card-Like Patterns
 
-| Pattern | Current locations | Current styling | Plan |
-|---|---|---|---|
-| Product card shell | `src/components/ui/product-card/product-card.tsx`, duplicated collection card shell in `src/app/(storefront)/collections/page.tsx` | `border-default bg-surface ... rounded-lg border overflow-hidden transition-colors` | Use `Card` with `interactive` and `overflow="hidden"`; keep image/body layout local. Consider extracting the collection card later if it keeps growing. |
-| Article card shell | `src/components/ui/article-card/article-card.tsx` | `border-default bg-surface ... rounded-lg border overflow-hidden transition-colors` | Use `Card as="article"` with `interactive` and `overflow="hidden"`. |
-| Repeated feature cards | `src/app/(storefront)/pages/custom-tea-blends/quality-section.tsx`, `process-section.tsx`, `blend-details-section.tsx`, `src/components/homepage/certification-coverage/certification-coverage.tsx` | Mostly `border-default bg-surface rounded-lg border p-5`; certification uses `bg-surface-sunken rounded-md` | Use `Card as="article" | "li"` with `padding="md"`; allow `tone="sunken"` for certification cards. |
-| Form and support panels | `src/components/homepage/contact/contact.tsx`, `src/app/(storefront)/pages/custom-tea-blends/cta-section.tsx`, `src/app/(storefront)/pages/[...slug]/static-page-content.tsx`, `src/app/(storefront)/pages/contact/page.tsx` | `border-default bg-surface rounded-lg/md border p-5 sm:p-6`; contact page form uses `Section.Root` plus card styling | Use `Card` for simple wrappers around forms/support copy. Keep `Section.Root` for page bands only. |
-| Empty states and simple message panels | `src/app/error.tsx`, `src/app/not-found.tsx`, `src/app/(storefront)/collections/[handle]/page.tsx`, `src/app/(storefront)/blogs/[blog]/blog-listing.tsx` | `bg-surface ... rounded p-10`, `border-default bg-surface rounded-lg border px-6 py-12/16` | Use `Card` where the element is a contained message surface. Migrate button styling separately only if already touching those files. |
-| Blog article adjacent/comment/excerpt panels | `src/app/(storefront)/blogs/[blog]/[article]/page.tsx` | `border-default bg-surface rounded-lg border p-4/p-5`, optional hover border | Use `Card` for previous/next links and comments. Leave rich text blockquote class strings as-is because they target generated HTML. |
-| Wholesale stat/path blocks | `src/app/(storefront)/pages/wholesale/page.tsx` | `dl` shell with `border-default bg-surface ... rounded-lg border`; path links as rounded bordered cards | Use `Card` for path links. Treat the stat `dl` as a specialized stat grid; migrate only if `Card` does not complicate its internal `gap-px` layout. |
-| Mega menu popovers | `src/components/layout/header/header-mega-nav.tsx` | `border-subtle bg-surface-raised rounded-lg border shadow-xl` | Do not migrate in first pass. This is a popover/dropdown surface, not a content card, and it currently uses non-card elevation. |
-| Form controls, chips, icons, images | inputs, tags, pagination, social buttons, product thumbnails, fieldsets | Rounded/bordered but function as controls or media frames | Do not consolidate into `Card`; these should remain with their control/media primitives. |
-| Newsletter signup state panels | `src/components/ui/newsletter-signup/newsletter-signup.tsx` | `rounded-lg border p-6`, tone-dependent brand/success styling | Do not migrate initially. It is already a UI component with tone-specific success/error states, and forcing `Card` into it may blur responsibilities. |
+| Pattern                                      | Current locations                                                                                                                                                                                                            | Current styling                                                                                                      | Plan                                                                                                                                                    |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Product card shell                           | `src/components/ui/product-card/product-card.tsx`, duplicated collection card shell in `src/app/(storefront)/collections/page.tsx`                                                                                           | `border-default bg-surface ... rounded-lg border overflow-hidden transition-colors`                                  | Use `Card` with `interactive` and `overflow="hidden"`; keep image/body layout local. Consider extracting the collection card later if it keeps growing. |
+| Article card shell                           | `src/components/ui/article-card/article-card.tsx`                                                                                                                                                                            | `border-default bg-surface ... rounded-lg border overflow-hidden transition-colors`                                  | Use `Card as="article"` with `interactive` and `overflow="hidden"`.                                                                                     |
+| Repeated feature cards                       | `src/app/(storefront)/pages/custom-tea-blends/quality-section.tsx`, `process-section.tsx`, `blend-details-section.tsx`, `src/components/homepage/certification-coverage/certification-coverage.tsx`                          | Mostly `border-default bg-surface rounded-lg border p-5`; certification uses `bg-surface-sunken rounded-md`          | Use `Card as="article"                                                                                                                                  | "li"`with`padding="md"`; allow `tone="sunken"` for certification cards. |
+| Form and support panels                      | `src/components/homepage/contact/contact.tsx`, `src/app/(storefront)/pages/custom-tea-blends/cta-section.tsx`, `src/app/(storefront)/pages/[...slug]/static-page-content.tsx`, `src/app/(storefront)/pages/contact/page.tsx` | `border-default bg-surface rounded-lg/md border p-5 sm:p-6`; contact page form uses `Section.Root` plus card styling | Use `Card` for simple wrappers around forms/support copy. Keep `Section.Root` for page bands only.                                                      |
+| Empty states and simple message panels       | `src/app/error.tsx`, `src/app/not-found.tsx`, `src/app/(storefront)/collections/[handle]/page.tsx`, `src/app/(storefront)/blogs/[blog]/blog-listing.tsx`                                                                     | `bg-surface ... rounded p-10`, `border-default bg-surface rounded-lg border px-6 py-12/16`                           | Use `Card` where the element is a contained message surface. Migrate button styling separately only if already touching those files.                    |
+| Blog article adjacent/comment/excerpt panels | `src/app/(storefront)/blogs/[blog]/[article]/page.tsx`                                                                                                                                                                       | `border-default bg-surface rounded-lg border p-4/p-5`, optional hover border                                         | Use `Card` for previous/next links and comments. Leave rich text blockquote class strings as-is because they target generated HTML.                     |
+| Wholesale stat/path blocks                   | `src/app/(storefront)/pages/wholesale/page.tsx`                                                                                                                                                                              | `dl` shell with `border-default bg-surface ... rounded-lg border`; path links as rounded bordered cards              | Use `Card` for path links. Treat the stat `dl` as a specialized stat grid; migrate only if `Card` does not complicate its internal `gap-px` layout.     |
+| Mega menu popovers                           | `src/components/layout/header/header-mega-nav.tsx`                                                                                                                                                                           | `border-subtle bg-surface-raised rounded-lg border shadow-xl`                                                        | Do not migrate in first pass. This is a popover/dropdown surface, not a content card, and it currently uses non-card elevation.                         |
+| Form controls, chips, icons, images          | inputs, tags, pagination, social buttons, product thumbnails, fieldsets                                                                                                                                                      | Rounded/bordered but function as controls or media frames                                                            | Do not consolidate into `Card`; these should remain with their control/media primitives.                                                                |
+| Newsletter signup state panels               | `src/components/ui/newsletter-signup/newsletter-signup.tsx`                                                                                                                                                                  | `rounded-lg border p-6`, tone-dependent brand/success styling                                                        | Do not migrate initially. It is already a UI component with tone-specific success/error states, and forcing `Card` into it may blur responsibilities.   |
 
 ---
 
@@ -31,12 +31,12 @@
 
 Create:
 
-| File | Purpose |
-|---|---|
-| `src/components/ui/card/card.tsx` | `Card` primitive and types |
+| File                                      | Purpose                                |
+| ----------------------------------------- | -------------------------------------- |
+| `src/components/ui/card/card.tsx`         | `Card` primitive and types             |
 | `src/components/ui/card/card.stories.tsx` | Storybook coverage for supported cases |
-| `src/components/ui/card/index.ts` | Barrel export |
-| `src/components/ui/index.ts` | Add `export * from './card'` |
+| `src/components/ui/card/index.ts`         | Barrel export                          |
+| `src/components/ui/index.ts`              | Add `export * from './card'`           |
 
 Suggested API:
 
@@ -50,14 +50,14 @@ Suggested API:
 
 Keep the implementation small:
 
-| Prop | Values | Why |
-|---|---|---|
-| `as` | `div`, `article`, `aside`, `section`, `li`, `a` | Covers current semantic wrappers without adding a broad polymorphic abstraction. |
-| `tone` | `surface`, `sunken` | Matches observed reusable surfaces. Brand/success/danger panels stay specialized. |
-| `padding` | `none`, `sm`, `md`, `lg` | Current cards use no padding for media cards, `p-4`, `p-5`, and `p-5 sm:p-6`/`p-6`. |
-| `radius` | `md`, `lg` | Current content cards use both; default should be `lg` because most reusable card shells do. |
-| `overflow` | `visible`, `hidden` | Needed for media cards without making media a Card concern. |
-| `interactive` | boolean | Adds `hover:border-brand`, focus ring, and transition for clickable card shells. |
+| Prop          | Values                                          | Why                                                                                          |
+| ------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `as`          | `div`, `article`, `aside`, `section`, `li`, `a` | Covers current semantic wrappers without adding a broad polymorphic abstraction.             |
+| `tone`        | `surface`, `sunken`                             | Matches observed reusable surfaces. Brand/success/danger panels stay specialized.            |
+| `padding`     | `none`, `sm`, `md`, `lg`                        | Current cards use no padding for media cards, `p-4`, `p-5`, and `p-5 sm:p-6`/`p-6`.          |
+| `radius`      | `md`, `lg`                                      | Current content cards use both; default should be `lg` because most reusable card shells do. |
+| `overflow`    | `visible`, `hidden`                             | Needed for media cards without making media a Card concern.                                  |
+| `interactive` | boolean                                         | Adds `hover:border-brand`, focus ring, and transition for clickable card shells.             |
 
 Base styling should be token-only:
 
@@ -79,24 +79,24 @@ No initial `shadow` variant. The design docs conflict slightly with current impl
 
 Migrate first:
 
-| Area | Files |
-|---|---|
-| Core reusable cards | `src/components/ui/product-card/product-card.tsx`, `src/components/ui/article-card/article-card.tsx` |
-| Homepage/content cards | `src/components/homepage/contact/contact.tsx`, `src/components/homepage/testimonials/testimonials.tsx`, `src/components/homepage/certification-coverage/certification-coverage.tsx` |
-| Custom tea blends repeated cards | `src/app/(storefront)/pages/custom-tea-blends/quality-section.tsx`, `process-section.tsx`, `blend-details-section.tsx`, `cta-section.tsx` |
-| Page support/message cards | `src/app/(storefront)/pages/[...slug]/static-page-content.tsx`, `src/app/error.tsx`, `src/app/not-found.tsx` |
-| Blog local cards | `src/app/(storefront)/blogs/[blog]/[article]/page.tsx`, `src/app/(storefront)/blogs/[blog]/blog-listing.tsx` |
-| Wholesale path cards | `src/app/(storefront)/pages/wholesale/page.tsx` path links |
+| Area                             | Files                                                                                                                                                                               |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core reusable cards              | `src/components/ui/product-card/product-card.tsx`, `src/components/ui/article-card/article-card.tsx`                                                                                |
+| Homepage/content cards           | `src/components/homepage/contact/contact.tsx`, `src/components/homepage/testimonials/testimonials.tsx`, `src/components/homepage/certification-coverage/certification-coverage.tsx` |
+| Custom tea blends repeated cards | `src/app/(storefront)/pages/custom-tea-blends/quality-section.tsx`, `process-section.tsx`, `blend-details-section.tsx`, `cta-section.tsx`                                           |
+| Page support/message cards       | `src/app/(storefront)/pages/[...slug]/static-page-content.tsx`, `src/app/error.tsx`, `src/app/not-found.tsx`                                                                        |
+| Blog local cards                 | `src/app/(storefront)/blogs/[blog]/[article]/page.tsx`, `src/app/(storefront)/blogs/[blog]/blog-listing.tsx`                                                                        |
+| Wholesale path cards             | `src/app/(storefront)/pages/wholesale/page.tsx` path links                                                                                                                          |
 
 Defer or skip:
 
-| Area | Reason |
-|---|---|
-| Header mega menu popovers | Popover surface, not a Card. It needs a future `Popover`/menu surface decision. |
-| Rich text blockquote/table/image selectors | Generated HTML styling is better centralized in `RichText`, not in `Card`. |
-| Inputs, chips, pagination buttons, social icon buttons | These are controls; card styling would make the primitive too broad. |
-| NewsletterSignup | Already a UI component with tone/status state. Revisit after base Card migration. |
-| Cart summary | Page currently uses older styling conventions; migrate only after cart page has a broader cleanup, so Card does not hide unrelated design drift. |
+| Area                                                   | Reason                                                                                                                                           |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Header mega menu popovers                              | Popover surface, not a Card. It needs a future `Popover`/menu surface decision.                                                                  |
+| Rich text blockquote/table/image selectors             | Generated HTML styling is better centralized in `RichText`, not in `Card`.                                                                       |
+| Inputs, chips, pagination buttons, social icon buttons | These are controls; card styling would make the primitive too broad.                                                                             |
+| NewsletterSignup                                       | Already a UI component with tone/status state. Revisit after base Card migration.                                                                |
+| Cart summary                                           | Page currently uses older styling conventions; migrate only after cart page has a broader cleanup, so Card does not hide unrelated design drift. |
 
 ---
 
@@ -126,6 +126,7 @@ Defer or skip:
 ### Task 1: Confirm Design Surface Rules
 
 Files:
+
 - Read: `DESIGN.md`
 - Read: `docs/design-system/03-components.md`
 - Read: `src/app/globals.css`
@@ -137,6 +138,7 @@ Files:
 ### Task 2: Scaffold `Card`
 
 Files:
+
 - Create: `src/components/ui/card/card.tsx`
 - Create: `src/components/ui/card/card.stories.tsx`
 - Create: `src/components/ui/card/index.ts`
@@ -151,6 +153,7 @@ Files:
 ### Task 3: Migrate Reusable Card Components
 
 Files:
+
 - Modify: `src/components/ui/product-card/product-card.tsx`
 - Modify: `src/components/ui/article-card/article-card.tsx`
 
@@ -162,6 +165,7 @@ Files:
 ### Task 4: Migrate Repeated Feature/Content Cards
 
 Files:
+
 - Modify: `src/components/homepage/certification-coverage/certification-coverage.tsx`
 - Modify: `src/components/homepage/contact/contact.tsx`
 - Modify: `src/components/homepage/testimonials/testimonials.tsx`
@@ -178,6 +182,7 @@ Files:
 ### Task 5: Migrate Page-Level Local Cards
 
 Files:
+
 - Modify: `src/app/(storefront)/pages/[...slug]/static-page-content.tsx`
 - Modify: `src/app/(storefront)/blogs/[blog]/[article]/page.tsx`
 - Modify: `src/app/(storefront)/blogs/[blog]/blog-listing.tsx`

@@ -15,6 +15,7 @@ The original `ProductPurchaseForm` was removed from `src/components/collection/p
 This phase partially reverses the UX outcome, not the performance decision.
 
 **In scope:**
+
 - Add a card-level quick-add button for products that are safe to add directly from listing context.
 - Extend collection/search summary types with a tiny quick-add eligibility payload.
 - Use the existing `addToCartAction` and `useAddToCart` behavior.
@@ -22,6 +23,7 @@ This phase partially reverses the UX outcome, not the performance decision.
 - Add Storybook interaction coverage for quick-add states.
 
 **Out of scope:**
+
 - Reattaching the old `ProductPurchaseForm` to every card.
 - Adding a quantity stepper or variant selector directly to every listing card.
 - Changing PDP bulk purchase behavior.
@@ -85,6 +87,7 @@ export type ProductQuickAdd = {
 Then add `quickAdd: ProductQuickAdd | null` to `CollectionProductSummary`.
 
 Rules:
+
 - exactly one available variant and no meaningful multi-option choice -> `quickAdd`
 - multiple variants/options or unavailable only -> `null`
 - malformed Searchanise variants -> `null`
@@ -108,6 +111,7 @@ export function QuickAddButton({
 ```
 
 `ProductCard` renders:
+
 - price and `Add to cart` for eligible single-variant products
 - `Quick View` for multi-variant products
 - `More info` remains for all products
@@ -171,5 +175,5 @@ If layout gets cramped, prefer `Add to cart` + compact `More info` for eligible 
 
 ---
 
-*Phase: 08-optimized-collection-quick-add*
-*Context gathered: 2026-06-03 via optimized quick-add planning*
+_Phase: 08-optimized-collection-quick-add_
+_Context gathered: 2026-06-03 via optimized quick-add planning_

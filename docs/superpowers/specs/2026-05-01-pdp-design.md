@@ -9,6 +9,7 @@
 ## Problem
 
 The current PDP:
+
 - Shows only `featuredImage` — no multi-image gallery
 - Hardcodes "Size" as the variant option label
 - Shows `priceRange.minVariantPrice` always — doesn't update when a variant is selected
@@ -19,6 +20,7 @@ The current PDP:
 ## Solution
 
 Approach A — core fix:
+
 1. Fetch `images` array and `options` from Shopify
 2. New `ProductGallery` client component: Embla carousel (main image) + thumbnail strip (fills full width, maintains aspect ratio)
 3. Fix `ProductForm`: real option label + price updates when variant selected
@@ -55,6 +57,7 @@ Approach A — core fix:
 ### `lib/shopify/types/index.ts`
 
 Add `ProductOption` type:
+
 ```ts
 export type ProductOption = {
   name: string
@@ -63,13 +66,14 @@ export type ProductOption = {
 ```
 
 Update `Product` type — add `images` and `options`, remove `featuredImage`:
+
 ```ts
 export type Product = {
   id: string
   handle: string
   title: string
   description: string
-  images: ShopifyImage[]          // replaces featuredImage
+  images: ShopifyImage[] // replaces featuredImage
   priceRange: { minVariantPrice: Money }
   variants: ProductVariant[]
   options: ProductOption[]
@@ -81,6 +85,7 @@ export type Product = {
 ### `lib/shopify/operations/product.ts`
 
 Add to `GET_PRODUCT_QUERY`:
+
 ```graphql
 images(first: 10) {
   edges {
@@ -117,6 +122,7 @@ Update `generateMetadata` in `page.tsx` to use `product.images[0]?.url` instead 
 Client component (`'use client'`). Uses Embla Carousel.
 
 **Props:**
+
 ```ts
 type ProductGalleryProps = {
   images: ShopifyImage[]
@@ -125,6 +131,7 @@ type ProductGalleryProps = {
 ```
 
 **Behaviour:**
+
 - Embla instance on main image area
 - Main image: `aspect-ratio: 4/3`, `object-cover`, full width
 - Thumbnail strip: `grid-template-columns: repeat(N, 1fr)` where N = `images.length` (capped at 8 for display), `gap-2`, each thumbnail `aspect-square object-cover`
@@ -142,6 +149,7 @@ type ProductGalleryProps = {
 ### Modified: `components/product/product-form.tsx`
 
 **New props:**
+
 ```ts
 type ProductFormProps = {
   variants: ProductVariant[]
@@ -150,6 +158,7 @@ type ProductFormProps = {
 ```
 
 **Changes:**
+
 1. **Variant label**: replace hardcoded `<legend>Size</legend>` with `<legend>{options[0]?.name ?? 'Option'}</legend>`
 2. **Price display**: add `<Price>` inside this component showing the selected variant's price. Derive it as:
    ```ts
@@ -163,6 +172,7 @@ type ProductFormProps = {
 ### Modified: `app/(storefront)/products/[handle]/page.tsx`
 
 **Changes:**
+
 1. Remove `Image` import (gallery component handles this)
 2. Remove `Price` import (now inside `ProductForm`)
 3. Add `Link` import from `next/link`

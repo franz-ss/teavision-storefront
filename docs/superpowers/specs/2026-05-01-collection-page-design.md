@@ -9,6 +9,7 @@
 ## Problem
 
 The current `/collections/[handle]` page:
+
 - Fetches only 24 products — misses most of the catalogue
 - Has no breadcrumb UI (only JSON-LD structured data)
 - Has no product count display
@@ -70,8 +71,9 @@ The existing card (square image, `bg-surface` info block, `border-border` border
 ## Component Snippets
 
 **Breadcrumb:**
+
 ```tsx
-<nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
+<nav aria-label="Breadcrumb" className="text-text-muted mb-6 text-sm">
   <Link href="/">Home</Link>
   <span aria-hidden="true"> › </span>
   <Link href="/collections/all">Collections</Link>
@@ -81,9 +83,10 @@ The existing card (square image, `bg-surface` info block, `border-border` border
 ```
 
 **Toolbar row:**
+
 ```tsx
-<div className="border-t border-border mt-4 pt-3 mb-6 flex items-center justify-between">
-  <span className="text-sm text-text-muted">{products.length} products</span>
+<div className="border-border mt-4 mb-6 flex items-center justify-between border-t pt-3">
+  <span className="text-text-muted text-sm">{products.length} products</span>
   <Suspense fallback={null}>
     <SortSelect currentSort={sort} />
   </Suspense>
@@ -91,12 +94,15 @@ The existing card (square image, `bg-surface` info block, `border-border` border
 ```
 
 **Empty state (inside grid `<ul>`):**
+
 ```tsx
-{products.length === 0 && (
-  <li className="col-span-full py-16 text-center text-text-muted">
-    No products in this collection yet.
-  </li>
-)}
+{
+  products.length === 0 && (
+    <li className="text-text-muted col-span-full py-16 text-center">
+      No products in this collection yet.
+    </li>
+  )
+}
 ```
 
 ---

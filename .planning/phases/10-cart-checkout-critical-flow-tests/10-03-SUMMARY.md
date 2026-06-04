@@ -31,4 +31,3 @@ Completed. Cart rendering is now fixture-driven through a presentational `CartVi
 
 - Storybook stories are behavior-oriented and fixture-backed; they do not call Shopify.
 - `CartView` remains route-local under `src/app/(storefront)/cart/_components` because it is not a shared component library primitive.
-

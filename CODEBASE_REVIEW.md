@@ -20,7 +20,7 @@ Runtime note: six requested subagents completed. The platform refused the sevent
 
 ### Critical Performance Risk: Collection Pages Fetch and Render Too Much Upfront
 
-`getCollectionProductsWithFilters()` loops through Shopify pages in [collection.ts](<D:/Work/teavision/teavision.com.au/src/lib/shopify/operations/collection.ts:383>), [page-content.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/collections/[handle]/_components/page-content.tsx:55>) requests 250-product chunks, then category filtering happens locally at [page-content.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/collections/[handle]/_components/page-content.tsx:85>).
+`getCollectionProductsWithFilters()` loops through Shopify pages in [collection.ts](D:/Work/teavision/teavision.com.au/src/lib/shopify/operations/collection.ts:383), [page-content.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/collections/[handle]/_components/page-content.tsx:55>) requests 250-product chunks, then category filtering happens locally at [page-content.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/collections/[handle]/_components/page-content.tsx:85>).
 
 Why it matters: this can balloon Shopify latency, RSC payload, image discovery, and hydrated add-to-cart islands on large PLPs.
 
@@ -30,7 +30,7 @@ Priority: Critical
 
 ### High: Homepage Conversion Paths Are Fragile
 
-The homepage CTA points to `/contact` in [page.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/page.tsx:67>), while the real route is `/pages/contact`. Homepage form actions discard results in [actions.ts](<D:/Work/teavision/teavision.com.au/src/lib/contact/actions.ts:305>) and [actions.ts](<D:/Work/teavision/teavision.com.au/src/lib/contact/actions.ts:364>), leaving [contact-form.tsx](<D:/Work/teavision/teavision.com.au/src/components/homepage/contact-form/contact-form.tsx:9>) and [newsletter.tsx](<D:/Work/teavision/teavision.com.au/src/components/homepage/newsletter/newsletter.tsx:19>) without success/error feedback.
+The homepage CTA points to `/contact` in [page.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/page.tsx:67>), while the real route is `/pages/contact`. Homepage form actions discard results in [actions.ts](D:/Work/teavision/teavision.com.au/src/lib/contact/actions.ts:305) and [actions.ts](D:/Work/teavision/teavision.com.au/src/lib/contact/actions.ts:364), leaving [contact-form.tsx](D:/Work/teavision/teavision.com.au/src/components/homepage/contact-form/contact-form.tsx:9) and [newsletter.tsx](D:/Work/teavision/teavision.com.au/src/components/homepage/newsletter/newsletter.tsx:19) without success/error feedback.
 
 Why it matters: the storefront can lose leads or make users think a failed submission succeeded.
 
@@ -40,7 +40,7 @@ Priority: High
 
 ### High: PDP Add-to-Cart Feedback Is Incomplete
 
-[product-form.tsx](<D:/Work/teavision/teavision.com.au/src/components/product/product-form/product-form.tsx:133>) calls `addToCartAction()` but does not `router.refresh()`, unlike [product-purchase-form.tsx](<D:/Work/teavision/teavision.com.au/src/components/collection/product-card/product-purchase-form.tsx:55>) and [product-quick-view.tsx](<D:/Work/teavision/teavision.com.au/src/components/product/product-quick-view/product-quick-view.tsx:115>). It also lacks a success `role="status"`.
+[product-form.tsx](D:/Work/teavision/teavision.com.au/src/components/product/product-form/product-form.tsx:133) calls `addToCartAction()` but does not `router.refresh()`, unlike [product-purchase-form.tsx](D:/Work/teavision/teavision.com.au/src/components/collection/product-card/product-purchase-form.tsx:55) and [product-quick-view.tsx](D:/Work/teavision/teavision.com.au/src/components/product/product-quick-view/product-quick-view.tsx:115). It also lacks a success `role="status"`.
 
 Why it matters: the header cart badge can stay stale, and assistive tech users get no reliable confirmation of the purchase action.
 
@@ -50,7 +50,7 @@ Priority: High
 
 ### High: Testing Is Not Production-Grade Yet
 
-[package.json](<D:/Work/teavision/teavision.com.au/package.json:7>) has build/lint/storybook scripts but no `test` or `typecheck`; the stale contract test references removed `catalogues.tsx` in [button-system.test.mjs](<D:/Work/teavision/teavision.com.au/scripts/component-contracts/button-system.test.mjs:118>).
+[package.json](D:/Work/teavision/teavision.com.au/package.json:7) has build/lint/storybook scripts but no `test` or `typecheck`; the stale contract test references removed `catalogues.tsx` in [button-system.test.mjs](D:/Work/teavision/teavision.com.au/scripts/component-contracts/button-system.test.mjs:118).
 
 Why it matters: lint passing does not prove cart, form, search, webhook, or GraphQL behavior.
 
@@ -70,7 +70,7 @@ Priority: High
 
 ### High/Medium: Security Controls Are Mostly Good, but Rate Limiting Is Weak
 
-Contact/newsletter limits are module-local memory in [actions.ts](<D:/Work/teavision/teavision.com.au/src/lib/contact/actions.ts:53>) and keyed from request headers at [actions.ts](<D:/Work/teavision/teavision.com.au/src/lib/contact/actions.ts:77>). Search suggestions limit query length but have no server-side rate limit in [route.ts](<D:/Work/teavision/teavision.com.au/src/app/api/search/suggestions/route.ts:20>).
+Contact/newsletter limits are module-local memory in [actions.ts](D:/Work/teavision/teavision.com.au/src/lib/contact/actions.ts:53) and keyed from request headers at [actions.ts](D:/Work/teavision/teavision.com.au/src/lib/contact/actions.ts:77). Search suggestions limit query length but have no server-side rate limit in [route.ts](D:/Work/teavision/teavision.com.au/src/app/api/search/suggestions/route.ts:20).
 
 Why it matters: serverless or multi-instance deployments can bypass module-local limits, and public APIs can be abused to hammer third-party services.
 
@@ -80,14 +80,14 @@ Priority: High/Medium
 
 ## Top Strengths
 
-- Strong Next 16 foundation: `cacheComponents` in [next.config.ts](<D:/Work/teavision/teavision.com.au/next.config.ts:4>), cached Shopify operations, and mostly correct Server/Client boundaries.
-- Good data safety patterns: Shopify fails fast on missing credentials in [client.ts](<D:/Work/teavision/teavision.com.au/src/lib/shopify/client.ts:22>), cart cookies are `httpOnly`/`sameSite`/production-secure in [actions.ts](<D:/Work/teavision/teavision.com.au/src/lib/cart/actions.ts:97>), and webhooks verify signatures.
+- Strong Next 16 foundation: `cacheComponents` in [next.config.ts](D:/Work/teavision/teavision.com.au/next.config.ts:4), cached Shopify operations, and mostly correct Server/Client boundaries.
+- Good data safety patterns: Shopify fails fast on missing credentials in [client.ts](D:/Work/teavision/teavision.com.au/src/lib/shopify/client.ts:22), cart cookies are `httpOnly`/`sameSite`/production-secure in [actions.ts](D:/Work/teavision/teavision.com.au/src/lib/cart/actions.ts:97), and webhooks verify signatures.
 - Senior-level guardrails: strict TypeScript, generated Shopify types routed through the barrel, custom ESLint rules, Tailwind token discipline, branded `SanitizedHtml`, and broad Storybook coverage.
 
 ## Top Weaknesses
 
 - The most valuable flows, product add-to-cart, homepage lead capture, cart mutation, and search, are not protected by executable tests.
-- Some route files and operation files are too broad, especially [products/[handle]/page.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/products/[handle]/page.tsx:281>) and [product.ts](<D:/Work/teavision/teavision.com.au/src/lib/shopify/operations/product.ts:608>).
+- Some route files and operation files are too broad, especially [products/[handle]/page.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/products/[handle]/page.tsx:281>) and [product.ts](D:/Work/teavision/teavision.com.au/src/lib/shopify/operations/product.ts:608).
 - Accessibility misses are concentrated in bypass navigation, carousel motion, live async feedback, and small touch targets.
 
 ## Areas That Feel Senior-Level
@@ -96,7 +96,7 @@ Cache/tag strategy, webhook verification, HTML sanitization, generated GraphQL t
 
 ## Areas That Feel Junior, Rushed, or Fragile
 
-The broken `/contact` CTA, homepage form result swallowing, stale hidden contract test, nested `<main>` in [collections/page.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/collections/page.tsx:137>), root `error.tsx` still using `reset` in [error.tsx](<D:/Work/teavision/teavision.com.au/src/app/error.tsx:6>), and raw JSON-LD serialization all feel like late-stage polish gaps that can affect real users.
+The broken `/contact` CTA, homepage form result swallowing, stale hidden contract test, nested `<main>` in [collections/page.tsx](<D:/Work/teavision/teavision.com.au/src/app/(storefront)/collections/page.tsx:137>), root `error.tsx` still using `reset` in [error.tsx](D:/Work/teavision/teavision.com.au/src/app/error.tsx:6), and raw JSON-LD serialization all feel like late-stage polish gaps that can affect real users.
 
 ## Prioritized Improvement Roadmap
 

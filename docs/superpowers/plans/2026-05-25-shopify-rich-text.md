@@ -36,6 +36,7 @@
 ## Task 1: Define Sanitizer Profiles
 
 **Files:**
+
 - Modify: `src/lib/shopify/html-content.ts`
 
 - [ ] **Step 1: Split sanitizer options into reusable profile builders**
@@ -143,6 +144,7 @@ Expected: both commands pass without introducing `any`, direct generated type im
 ## Task 2: Upgrade `RichText` API And Styles
 
 **Files:**
+
 - Modify: `src/components/ui/rich-text/rich-text.tsx`
 
 - [ ] **Step 1: Add variants**
@@ -258,6 +260,7 @@ Expected: no type errors, no `className` concatenation, no raw color classes.
 ## Task 3: Expand Storybook Coverage
 
 **Files:**
+
 - Modify: `src/components/ui/rich-text/rich-text.stories.tsx`
 
 - [ ] **Step 1: Add reusable cast helper for story fixtures**
@@ -368,6 +371,7 @@ Expected: text wraps, links focus visibly, tables scroll on narrow viewports, im
 ## Task 4: Consolidate Callers
 
 **Files:**
+
 - Modify: `src/app/(storefront)/pages/[...slug]/static-page-content.tsx`
 - Modify: `src/app/(storefront)/blogs/[blog]/[article]/page.tsx`
 - Modify: `src/components/collection/collection-story-disclosure/collection-story-disclosure.tsx`
@@ -449,6 +453,7 @@ Expected: `dangerouslySetInnerHTML` remains only in trusted infrastructure place
 ## Task 5: Security Review Pass
 
 **Files:**
+
 - Modify only if review finds gaps:
   - `src/lib/shopify/html-content.ts`
   - `src/components/ui/rich-text/rich-text.tsx`
@@ -458,8 +463,10 @@ Expected: `dangerouslySetInnerHTML` remains only in trusted infrastructure place
 Use these malicious or risky inputs as review fixtures:
 
 ```html
-<script>alert(1)</script>
-<img src="x" onerror="alert(1)">
+<script>
+  alert(1)
+</script>
+<img src="x" onerror="alert(1)" />
 <a href="javascript:alert(1)">Bad link</a>
 <a href="//evil.example/path">Protocol relative</a>
 <iframe src="https://www.youtube.com/embed/demo"></iframe>
@@ -469,7 +476,6 @@ Use these malicious or risky inputs as review fixtures:
 Expected sanitized behavior:
 
 ```html
-
 <img alt="" loading="lazy" />
 <a>Bad link</a>
 <a>Protocol relative</a>
@@ -496,6 +502,7 @@ Expected: every `html` prop is either already `SanitizedHtml` or is sanitized im
 ## Task 6: Final Verification
 
 **Files:**
+
 - No code changes unless verification fails.
 
 - [ ] **Step 1: Run static checks**

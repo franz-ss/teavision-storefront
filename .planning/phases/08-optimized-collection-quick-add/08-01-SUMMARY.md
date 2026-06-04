@@ -2,7 +2,7 @@
 phase: 08-optimized-collection-quick-add
 plan: 01
 status: complete
-completed_at: "2026-06-03T17:09:15+08:00"
+completed_at: '2026-06-03T17:09:15+08:00'
 requirements:
   - CQA-01
   - CQA-02

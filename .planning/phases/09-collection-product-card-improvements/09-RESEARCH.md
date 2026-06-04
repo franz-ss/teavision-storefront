@@ -7,6 +7,7 @@
 ---
 
 <user_constraints>
+
 ## User Constraints (from CONTEXT.md)
 
 ### Locked Decisions
@@ -31,20 +32,22 @@
 - Short `description` excerpt on the card
 - Progressive purchase form disclosure (hover to expand)
 - Image aspect-ratio locking (`aspect-[X/Y]`)
-</user_constraints>
+  </user_constraints>
 
 <phase_requirements>
+
 ## Phase Requirements
 
-| ID | Description | Research Support |
-|----|-------------|------------------|
-| CARD-01 | Wider image column (mobile ≥ 10rem, sm ≥ 16rem, lg ≥ 20rem) | Grid col template strings verified in current component; new values are straight Tailwind arbitrary values |
-| CARD-02 | `productType` eyebrow label above title when non-empty | `type-eyebrow` utility confirmed in globals.css; `productType: string` confirmed on `CollectionProductSummary` |
-| CARD-03 | Certification badges from tags, up to 2 | `tags: string[]` confirmed on `CollectionProductSummary`; Badge component has `type-eyebrow` base class but fixed variant set — implementation requires extending `BadgeVariant` or using `className` override |
-| CARD-04 | Remove "More info" button | Button identified at line 91–93 of product-card.tsx; straightforward deletion |
-| CARD-05 | Two-zone content layout | Current content column is `grid content-start gap-5`; new structure needs identity zone + purchase zone separation |
-| CARD-06 | `showQuantity` prop on `ProductPurchaseForm` (default `true`) | `QuantityStepper` block confirmed at lines 98–107 of product-purchase-form.tsx; prop addition is straightforward |
-| CARD-07 | Updated Storybook stories | Existing stories identified; `Default` and `MultiVariant` play tests check for `spinbutton` role — those assertions must be updated |
+| ID      | Description                                                   | Research Support                                                                                                                                                                                               |
+| ------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CARD-01 | Wider image column (mobile ≥ 10rem, sm ≥ 16rem, lg ≥ 20rem)   | Grid col template strings verified in current component; new values are straight Tailwind arbitrary values                                                                                                     |
+| CARD-02 | `productType` eyebrow label above title when non-empty        | `type-eyebrow` utility confirmed in globals.css; `productType: string` confirmed on `CollectionProductSummary`                                                                                                 |
+| CARD-03 | Certification badges from tags, up to 2                       | `tags: string[]` confirmed on `CollectionProductSummary`; Badge component has `type-eyebrow` base class but fixed variant set — implementation requires extending `BadgeVariant` or using `className` override |
+| CARD-04 | Remove "More info" button                                     | Button identified at line 91–93 of product-card.tsx; straightforward deletion                                                                                                                                  |
+| CARD-05 | Two-zone content layout                                       | Current content column is `grid content-start gap-5`; new structure needs identity zone + purchase zone separation                                                                                             |
+| CARD-06 | `showQuantity` prop on `ProductPurchaseForm` (default `true`) | `QuantityStepper` block confirmed at lines 98–107 of product-purchase-form.tsx; prop addition is straightforward                                                                                               |
+| CARD-07 | Updated Storybook stories                                     | Existing stories identified; `Default` and `MultiVariant` play tests check for `spinbutton` role — those assertions must be updated                                                                            |
+
 </phase_requirements>
 
 ---
@@ -63,13 +66,13 @@ The `type-eyebrow` utility exists in globals.css and is already used as the base
 
 ## Architectural Responsibility Map
 
-| Capability | Primary Tier | Secondary Tier | Rationale |
-|------------|-------------|----------------|-----------|
-| Card layout (image widths, two-zone) | Frontend Server (RSC) | — | `ProductCard` is a Server Component; layout is pure markup |
-| Eyebrow label rendering | Frontend Server (RSC) | — | Reads `productType` string from prop; no interactivity |
-| Certification badge extraction | Frontend Server (RSC) | — | Pure function over `tags[]` prop; no browser API needed |
-| Purchase form (`showQuantity` prop) | Browser / Client | — | `ProductPurchaseForm` is already `'use client'`; `showQuantity` is a new render branch inside it |
-| Storybook story fixtures | Build-time | — | Static mock data; no runtime tier |
+| Capability                           | Primary Tier          | Secondary Tier | Rationale                                                                                        |
+| ------------------------------------ | --------------------- | -------------- | ------------------------------------------------------------------------------------------------ |
+| Card layout (image widths, two-zone) | Frontend Server (RSC) | —              | `ProductCard` is a Server Component; layout is pure markup                                       |
+| Eyebrow label rendering              | Frontend Server (RSC) | —              | Reads `productType` string from prop; no interactivity                                           |
+| Certification badge extraction       | Frontend Server (RSC) | —              | Pure function over `tags[]` prop; no browser API needed                                          |
+| Purchase form (`showQuantity` prop)  | Browser / Client      | —              | `ProductPurchaseForm` is already `'use client'`; `showQuantity` is a new render branch inside it |
+| Storybook story fixtures             | Build-time            | —              | Static mock data; no runtime tier                                                                |
 
 ---
 
@@ -77,13 +80,13 @@ The `type-eyebrow` utility exists in globals.css and is already used as the base
 
 ### Core (all already installed)
 
-| Library | Version | Purpose | Why Standard |
-|---------|---------|---------|--------------|
-| React 19 | 19.x | Component model | Project baseline [VERIFIED: codebase] |
-| Next.js 16 App Router | 16.x | Server Components | Project baseline [VERIFIED: AGENTS.md] |
-| Tailwind 4 | 4.x | Utility styling | Project baseline [VERIFIED: AGENTS.md] |
-| class-variance-authority (cva) | installed | Variant class maps | Already used in Badge [VERIFIED: badge.tsx] |
-| `cn()` from `@/lib/utils` | — | className composition | Project convention [VERIFIED: CLAUDE.md] |
+| Library                        | Version   | Purpose               | Why Standard                                |
+| ------------------------------ | --------- | --------------------- | ------------------------------------------- |
+| React 19                       | 19.x      | Component model       | Project baseline [VERIFIED: codebase]       |
+| Next.js 16 App Router          | 16.x      | Server Components     | Project baseline [VERIFIED: AGENTS.md]      |
+| Tailwind 4                     | 4.x       | Utility styling       | Project baseline [VERIFIED: AGENTS.md]      |
+| class-variance-authority (cva) | installed | Variant class maps    | Already used in Badge [VERIFIED: badge.tsx] |
+| `cn()` from `@/lib/utils`      | —         | className composition | Project convention [VERIFIED: CLAUDE.md]    |
 
 ### No new installs needed
 
@@ -227,18 +230,20 @@ When `showQuantity` is `false`, `quantity` state still exists (initialized to `1
 ```tsx
 // Source: badge.tsx — BadgeVariant = 'outOfStock' | 'sale' | 'new'; children omitted
 // Using the same CVA base class manually:
-{certBadges.length > 0 && (
-  <div className="mt-2 flex flex-wrap gap-1.5">
-    {certBadges.map((label) => (
-      <span
-        key={label}
-        className="type-eyebrow inline-block rounded-sm border border-default bg-surface-sunken px-1.5 py-0.5 text-muted"
-      >
-        {label}
-      </span>
-    ))}
-  </div>
-)}
+{
+  certBadges.length > 0 && (
+    <div className="mt-2 flex flex-wrap gap-1.5">
+      {certBadges.map((label) => (
+        <span
+          key={label}
+          className="type-eyebrow border-default bg-surface-sunken text-muted inline-block rounded-sm border px-1.5 py-0.5"
+        >
+          {label}
+        </span>
+      ))}
+    </div>
+  )
+}
 ```
 
 This matches the `new` Badge variant styling (`border-default bg-surface-sunken text-muted`) and uses the `type-eyebrow` base — visually consistent without modifying the shared Badge component.
@@ -257,11 +262,11 @@ This matches the `new` Badge variant styling (`border-default bg-surface-sunken 
 
 ## Don't Hand-Roll
 
-| Problem | Don't Build | Use Instead | Why |
-|---------|-------------|-------------|-----|
-| Variant class maps | Manual string interpolation | `cva` (already used in badge.tsx) | Type-safe, already installed |
-| className composition | Template literals / filter-join | `cn()` from `@/lib/utils` | Project rule; Tailwind merge safe |
-| Typography tokens | Hardcoded font-size/weight | `type-eyebrow`, `type-caption` from globals.css | Token already exists; matches Badge base class exactly |
+| Problem               | Don't Build                     | Use Instead                                     | Why                                                    |
+| --------------------- | ------------------------------- | ----------------------------------------------- | ------------------------------------------------------ |
+| Variant class maps    | Manual string interpolation     | `cva` (already used in badge.tsx)               | Type-safe, already installed                           |
+| className composition | Template literals / filter-join | `cn()` from `@/lib/utils`                       | Project rule; Tailwind merge safe                      |
+| Typography tokens     | Hardcoded font-size/weight      | `type-eyebrow`, `type-caption` from globals.css | Token already exists; matches Badge base class exactly |
 
 ---
 
@@ -354,7 +359,7 @@ This matches the `new` Badge variant styling (`border-default bg-surface-sunken 
 /* Source: src/app/globals.css lines 392-399 [VERIFIED] */
 @utility type-eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.75rem;      /* 12px */
+  font-size: 0.75rem; /* 12px */
   font-weight: 600;
   letter-spacing: 0.08em;
   line-height: 1rem;
@@ -390,8 +395,8 @@ This is identical to the base class already applied inside `badgeVariants` in ba
 // Source: product-card.stories.tsx lines 43-60 [VERIFIED]
 const stubProduct: CollectionProductSummary = {
   // ...
-  productType: 'Green tea',            // already present — eyebrow will render from Default story
-  tags: ['Wholesale', 'Loose leaf'],   // no cert tags — Default story will show no cert badges
+  productType: 'Green tea', // already present — eyebrow will render from Default story
+  tags: ['Wholesale', 'Loose leaf'], // no cert tags — Default story will show no cert badges
   // ...
 }
 ```
@@ -402,20 +407,20 @@ The Default story already tests the eyebrow scenario (non-empty `productType: 'G
 
 ## State of the Art
 
-| Old Approach | Current Approach | When Changed | Impact |
-|--------------|------------------|--------------|--------|
-| Flat `grid content-start gap-5` content column | Two-zone flex column (this phase) | Phase 9 | Purchase controls pinned to bottom of card |
-| Full `ProductPurchaseForm` (with quantity stepper) on every card | `showQuantity={false}` suppresses stepper in listing context | Phase 9 | Shorter cards; stepper still available on PDP |
-| "More info" button next to price | Title link is sole PDP navigation | Phase 9 | Reduces noise; focuses CTA |
+| Old Approach                                                     | Current Approach                                             | When Changed | Impact                                        |
+| ---------------------------------------------------------------- | ------------------------------------------------------------ | ------------ | --------------------------------------------- |
+| Flat `grid content-start gap-5` content column                   | Two-zone flex column (this phase)                            | Phase 9      | Purchase controls pinned to bottom of card    |
+| Full `ProductPurchaseForm` (with quantity stepper) on every card | `showQuantity={false}` suppresses stepper in listing context | Phase 9      | Shorter cards; stepper still available on PDP |
+| "More info" button next to price                                 | Title link is sole PDP navigation                            | Phase 9      | Reduces noise; focuses CTA                    |
 
 ---
 
 ## Assumptions Log
 
-| # | Claim | Section | Risk if Wrong |
-|---|-------|---------|---------------|
-| A1 | Word-boundary regex (`\baco\b`, `\bhaccp\b`) is appropriate for tag matching | Pattern 1 code example | Could miss or over-match tags if Shopify stores them differently (e.g., "ACO Certified" as a single tag) — adjust pattern to check the whole tag for substring match instead |
-| A2 | `flex-col` + `flex-1` identity zone achieves the two-zone pinned-bottom layout equivalent to `grid grid-rows-[auto_1fr]` | Pattern 3 | Both achieve the goal; if browser wrapping behavior differs at narrow widths the grid-rows approach is the fallback |
+| #   | Claim                                                                                                                    | Section                | Risk if Wrong                                                                                                                                                                |
+| --- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1  | Word-boundary regex (`\baco\b`, `\bhaccp\b`) is appropriate for tag matching                                             | Pattern 1 code example | Could miss or over-match tags if Shopify stores them differently (e.g., "ACO Certified" as a single tag) — adjust pattern to check the whole tag for substring match instead |
+| A2  | `flex-col` + `flex-1` identity zone achieves the two-zone pinned-bottom layout equivalent to `grid grid-rows-[auto_1fr]` | Pattern 3              | Both achieve the goal; if browser wrapping behavior differs at narrow widths the grid-rows approach is the fallback                                                          |
 
 ---
 
@@ -445,24 +450,24 @@ No dedicated test runner outside Storybook (per AGENTS.md). Validation is Storyb
 
 ### Test Framework
 
-| Property | Value |
-|----------|-------|
-| Framework | Storybook (`@storybook/nextjs-vite`) with `@storybook/test` |
-| Config file | `.storybook/` (existing) |
-| Quick run command | `pnpm storybook` (dev, port 6006) |
-| Full suite command | `pnpm build-storybook` |
+| Property           | Value                                                       |
+| ------------------ | ----------------------------------------------------------- |
+| Framework          | Storybook (`@storybook/nextjs-vite`) with `@storybook/test` |
+| Config file        | `.storybook/` (existing)                                    |
+| Quick run command  | `pnpm storybook` (dev, port 6006)                           |
+| Full suite command | `pnpm build-storybook`                                      |
 
 ### Phase Requirements → Test Map
 
-| Req ID | Behavior | Test Type | Automated Command | File Exists? |
-|--------|----------|-----------|-------------------|-------------|
-| CARD-01 | Image column is wider at all breakpoints | Visual / manual | Storybook visual check | Story exists (Default) |
-| CARD-02 | Eyebrow label renders when `productType` non-empty | Storybook play | `canvas.getByText('Green tea')` in updated Default story | Update existing |
-| CARD-03 | Up to 2 cert badges render when tags match | Storybook play | New `WithCertBadges` story; assert badge text visible | New story needed |
-| CARD-04 | "More info" button absent | Storybook play | `queryByRole('link', { name: /more info/i })` not in document | Update existing Default play |
-| CARD-05 | Two-zone layout: identity top, purchase bottom | Visual / manual | Storybook visual check | Existing stories |
-| CARD-06 | No QuantityStepper in collection card context | Storybook play | `queryByRole('spinbutton')` not in document in Default story | Update existing Default play |
-| CARD-07 | Stories cover eyebrow, badges, no-eyebrow, sold-out, no-stepper | Storybook story | New stories: WithCertBadges, NoBrandingInfo | New stories needed |
+| Req ID  | Behavior                                                        | Test Type       | Automated Command                                             | File Exists?                 |
+| ------- | --------------------------------------------------------------- | --------------- | ------------------------------------------------------------- | ---------------------------- |
+| CARD-01 | Image column is wider at all breakpoints                        | Visual / manual | Storybook visual check                                        | Story exists (Default)       |
+| CARD-02 | Eyebrow label renders when `productType` non-empty              | Storybook play  | `canvas.getByText('Green tea')` in updated Default story      | Update existing              |
+| CARD-03 | Up to 2 cert badges render when tags match                      | Storybook play  | New `WithCertBadges` story; assert badge text visible         | New story needed             |
+| CARD-04 | "More info" button absent                                       | Storybook play  | `queryByRole('link', { name: /more info/i })` not in document | Update existing Default play |
+| CARD-05 | Two-zone layout: identity top, purchase bottom                  | Visual / manual | Storybook visual check                                        | Existing stories             |
+| CARD-06 | No QuantityStepper in collection card context                   | Storybook play  | `queryByRole('spinbutton')` not in document in Default story  | Update existing Default play |
+| CARD-07 | Stories cover eyebrow, badges, no-eyebrow, sold-out, no-stepper | Storybook story | New stories: WithCertBadges, NoBrandingInfo                   | New stories needed           |
 
 ### Wave 0 Gaps
 

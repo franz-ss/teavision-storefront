@@ -85,15 +85,15 @@ Plans:
 **Execution Order:**
 Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, then Phase 9.
 
-| Phase                                      | Plans Complete | Status   | Completed  |
-| ------------------------------------------ | -------------- | -------- | ---------- |
-| 1. Bulk Savings PDP and Cart Parity        | 1/1            | Complete | 2026-05-26 |
-| 2. Searchanise API Search Results          | 1/1            | Complete | 2026-05-27 |
-| 4. Footer 1:1 Parity                       | 1/1            | Complete | 2026-05-29 |
-| 5. Codebase Review Remediation             | 5/5            | Complete | 2026-06-02 |
-| 6. Prevent site indexing                   | 1/1            | Complete | 2026-06-03 |
-| 8. Optimized Collection Quick Add          | 1/1            | Complete | 2026-06-03 |
-| 9. Collection Product Card Improvements    | 0/1            | Planned  | —          |
+| Phase                                   | Plans Complete | Status   | Completed  |
+| --------------------------------------- | -------------- | -------- | ---------- |
+| 1. Bulk Savings PDP and Cart Parity     | 1/1            | Complete | 2026-05-26 |
+| 2. Searchanise API Search Results       | 1/1            | Complete | 2026-05-27 |
+| 4. Footer 1:1 Parity                    | 1/1            | Complete | 2026-05-29 |
+| 5. Codebase Review Remediation          | 5/5            | Complete | 2026-06-02 |
+| 6. Prevent site indexing                | 1/1            | Complete | 2026-06-03 |
+| 8. Optimized Collection Quick Add       | 1/1            | Complete | 2026-06-03 |
+| 9. Collection Product Card Improvements | 0/1            | Planned  | —          |
 
 ### Phase 9: Collection Product Card Improvements
 
@@ -157,6 +157,7 @@ Plans:
 **Plans:** 1/1 plans complete
 
 Plans:
+
 - [x] 06-01: Environment-controlled noindex mode across metadata, robots, sitemap, and verification
 
 ### Phase 8: Optimized Collection Quick Add

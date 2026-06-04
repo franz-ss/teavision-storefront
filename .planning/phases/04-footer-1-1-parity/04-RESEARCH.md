@@ -37,24 +37,24 @@ The live Shopify footer is much denser than the current Next footer. It has a da
 
 ## Primary Footer Links
 
-| Area | Label | Href |
-| --- | --- | --- |
-| Main Menu | Tea | `/collections/wholesale-bulk-tea` |
-| Main Menu | Tea Bags | `/collections/bulk-tea-bags` |
-| Main Menu | Herbs & Spices | `/collections/herbs-and-spices` |
-| Main Menu | Services | `/pages/services` |
-| Main Menu | Tea Journal | `/blogs/teavision-blogs` |
-| Main Menu | Our Story | `/pages/our-story` |
-| Footer | Search | `/search` |
-| Footer | Login | `https://mrtea.com.au/account/login` |
-| Footer | T's & C's | `https://www.teavision.com.au/pages/terms-conditions-1` |
-| Footer | Contact us | `/pages/contact` |
-| Footer | Refund Policy | `/pages/refund-policy` |
-| Footer | Terms of Service | `/pages/terms-of-service` |
-| Keep in Touch | 1300 729 617 | `tel:1300 729 617` |
-| Keep in Touch | info@teavision.com.au | `mailto:info@teavision.com.au` |
-| Bottom | Teavision | `/` |
-| Bottom | Popular Searches | `#popular-searches` |
+| Area          | Label                 | Href                                                    |
+| ------------- | --------------------- | ------------------------------------------------------- |
+| Main Menu     | Tea                   | `/collections/wholesale-bulk-tea`                       |
+| Main Menu     | Tea Bags              | `/collections/bulk-tea-bags`                            |
+| Main Menu     | Herbs & Spices        | `/collections/herbs-and-spices`                         |
+| Main Menu     | Services              | `/pages/services`                                       |
+| Main Menu     | Tea Journal           | `/blogs/teavision-blogs`                                |
+| Main Menu     | Our Story             | `/pages/our-story`                                      |
+| Footer        | Search                | `/search`                                               |
+| Footer        | Login                 | `https://mrtea.com.au/account/login`                    |
+| Footer        | T's & C's             | `https://www.teavision.com.au/pages/terms-conditions-1` |
+| Footer        | Contact us            | `/pages/contact`                                        |
+| Footer        | Refund Policy         | `/pages/refund-policy`                                  |
+| Footer        | Terms of Service      | `/pages/terms-of-service`                               |
+| Keep in Touch | 1300 729 617          | `tel:1300 729 617`                                      |
+| Keep in Touch | info@teavision.com.au | `mailto:info@teavision.com.au`                          |
+| Bottom        | Teavision             | `/`                                                     |
+| Bottom        | Popular Searches      | `#popular-searches`                                     |
 
 ## Quality and Newsletter Copy
 
@@ -69,105 +69,105 @@ The live Shopify footer is much denser than the current Next footer. It has a da
 
 The hidden keyword block has 97 keyword/search links. Preserve labels and hrefs exactly.
 
-| Label | Href |
-| --- | --- |
-| teas australia | `/` |
-| tea shop australia | `/` |
-| organic tea australia | `/collections/organic-tea` |
-| loose leaf tea | `/collections/loose-leaf-tea` |
-| Chinese Tea | `/collections/chinese-tea` |
-| green tea leaves | `/collections/green-tea` |
-| black tea | `/collections/black-tea` |
-| burdock root | `/collections/burdock-root` |
-| dandelion tea | `/collections/dandelion-tea` |
-| sleep tea | `/collections/organic-sleepy-tea/` |
-| probiotic tea | `/collections/organic-probiotic-tea` |
-| herb tea | `/collections/herbal-tea` |
-| tea blends | `/collections/custom-tea-blend` |
-| detox tea | `/collections/wholesale-detox-tea/` |
-| spearmint tea | `/products/spearmint-organic` |
-| buy spearmint tea | `/collections/spearmint-tea` |
-| peppermint and licorice tea | `/collections/licorice-mint` |
-| lemon myrtle tea | `/collections/lemon-myrtle` |
-| lemon balm tea | `/collections/organic-lemon-balm` |
-| assam tea | `/collections/organic-black-assam-tea` |
-| chai tea powder | `/products/instant-chai-powder` |
-| chai tea | `/collections/chai` |
-| chai leaves | `/collections/chai` |
-| japanese green tea | `/collections/japanese-green-tea` |
-| sencha tea | `/collections/japanese-sencha-tea` |
-| australian tea | `/collections/australian-grown-tea` |
-| marshmallow root tea | `/collections/marshmallow-root` |
-| matcha | `/collections/matcha-tea` |
-| matcha powder | `/collections/matcha-tea` |
-| olive leaf tea | `/collections/olive-leaf-wholesale` |
-| cold & flu tea | `/collections/organic-cold-flu` |
-| buy rooibos tea | `/collections/organic-rooibos-tea` |
-| yerba mate tea | `/collections/yerba-mate` |
-| chamomile leaves | `/collections/chamomile` |
-| chamomile teas | `/collections/chamomile` |
-| chamomile tea bags | `/products/organic-chamomile-pyramid-tea-bags` |
-| buy oolong tea | `/collections/oolong-tea-wholesale` |
-| tea packaging | `/pages/tea-packaging` |
-| organic herbal colon cleanse | `/collections/organic-body-colon-cleanse` |
-| organic turmeric powder | `/collections/organic-turmeric-powder` |
-| bulk cinnamon | `/collections/organic-cinnamon-powder` |
-| dried hibiscus flowers | `/collections/organic-hibiscus` |
-| import herbs to australias | `/pages/import-tea-herbs-australia` |
-| tea importers australia | `/pages/tea-importers-australia` |
-| buy white tea | `/collections/white-tea` |
-| honeybush tea | `/collections/organic-honeybush` |
-| pu erh tea australia | `/collections/pu-erh-tea` |
-| scullcap | `/collections/scullcap` |
-| breakfast tea | `/collections/english-breakfast-tea` |
-| clove tea | `/collections/cloves` |
-| calendula flowers | `/collections/organic-calendula-petals` |
-| digestive tea | `/collections/organic-digestive-tea` |
-| organic earl grey tea | `/collections/organic-earl-grey` |
-| speciality tea | `/collections/speciality-tea` |
-| cocoa tea | `/collections/cocoa-tea-shells` |
-| cloves wholesale | `/collections/cloves-wholesale` |
-| loose leaf peppermint tea | `/collections/organic-wholesale-peppermint-tea` |
-| licorice root tea | `/collections/licorice-tea` |
-| aniseed tea | `/collections/aniseed-tea` |
-| rose bud tea | `/collections/rose-tea` |
-| wholesale rose buds | `/collections/rose-buds` |
-| nettle leaf | `/collections/nettle-leaf` |
-| pekoe tea | `/collections/pekoe-tea` |
-| siberian ginseng | `/collections/siberian-ginseng` |
-| ginseng tea | `/collections/ginseng-tea` |
-| elderberries | `/collections/elderberries` |
-| blooming tea | `/collections/blooming-tea` |
-| lemongrass and ginger tea | `/collections/lemongrass-ginger-tea` |
-| lemon verbena tea | `/collections/lemon-verbena-tea` |
-| genmaicha tea | `/collections/genmaicha-tea` |
-| lapsang souchong tea | `/collections/lapsang-souchong` |
-| longjing tea | `/collections/longjing-tea` |
-| silver needle | `/collections/silver-needle` |
-| buy tulsi tea | `/collections/tulsi-tea` |
-| buy hibiscus tea | `/collections/hibiscus-tea` |
-| white peony tea | `/collections/white-peony` |
-| ginger tea bags | `/collections/ginger-tea-bags` |
-| ginkgo biloba tea | `/collections/ginkgo-biloba-tea` |
-| keemun tea | `/collections/keemun-tea` |
-| damiana tea | `/collections/damiana-tea` |
-| complexion tea | `/collections/complexion-tea` |
-| cinnamon cassia | `/collections/cinnamon-cassia` |
-| calendula tea | `/collections/calendula-tea` |
-| darjeeling tea online australia | `/collections/darjeeling-tea` |
-| ceylon tea | `/collections/ceylon-tea` |
-| jasmine tea | `/collections/jasmine-tea` |
-| moringa leaf | `/collections/moringa-leaves` |
-| cardamom pods | `/collections/cardamom-pods` |
-| cardamom powder | `/collections/cardamom-powder` |
-| passionflower | `/collections/passionflower` |
-| raspberry leaf | `/collections/raspberry-leaf` |
-| vervain wholesale | `/collections/vervain` |
-| ginger powder | `/collections/ginger` |
-| dried ginger | `/collections/ginger` |
-| star anise | `/collections/star-anise` |
-| cinnamon chips | `/collections/cinnamon-chips` |
-| japanese matcha | `/collections/japanese-matcha` |
+| Label                           | Href                                            |
+| ------------------------------- | ----------------------------------------------- |
+| teas australia                  | `/`                                             |
+| tea shop australia              | `/`                                             |
+| organic tea australia           | `/collections/organic-tea`                      |
+| loose leaf tea                  | `/collections/loose-leaf-tea`                   |
+| Chinese Tea                     | `/collections/chinese-tea`                      |
+| green tea leaves                | `/collections/green-tea`                        |
+| black tea                       | `/collections/black-tea`                        |
+| burdock root                    | `/collections/burdock-root`                     |
+| dandelion tea                   | `/collections/dandelion-tea`                    |
+| sleep tea                       | `/collections/organic-sleepy-tea/`              |
+| probiotic tea                   | `/collections/organic-probiotic-tea`            |
+| herb tea                        | `/collections/herbal-tea`                       |
+| tea blends                      | `/collections/custom-tea-blend`                 |
+| detox tea                       | `/collections/wholesale-detox-tea/`             |
+| spearmint tea                   | `/products/spearmint-organic`                   |
+| buy spearmint tea               | `/collections/spearmint-tea`                    |
+| peppermint and licorice tea     | `/collections/licorice-mint`                    |
+| lemon myrtle tea                | `/collections/lemon-myrtle`                     |
+| lemon balm tea                  | `/collections/organic-lemon-balm`               |
+| assam tea                       | `/collections/organic-black-assam-tea`          |
+| chai tea powder                 | `/products/instant-chai-powder`                 |
+| chai tea                        | `/collections/chai`                             |
+| chai leaves                     | `/collections/chai`                             |
+| japanese green tea              | `/collections/japanese-green-tea`               |
+| sencha tea                      | `/collections/japanese-sencha-tea`              |
+| australian tea                  | `/collections/australian-grown-tea`             |
+| marshmallow root tea            | `/collections/marshmallow-root`                 |
+| matcha                          | `/collections/matcha-tea`                       |
+| matcha powder                   | `/collections/matcha-tea`                       |
+| olive leaf tea                  | `/collections/olive-leaf-wholesale`             |
+| cold & flu tea                  | `/collections/organic-cold-flu`                 |
+| buy rooibos tea                 | `/collections/organic-rooibos-tea`              |
+| yerba mate tea                  | `/collections/yerba-mate`                       |
+| chamomile leaves                | `/collections/chamomile`                        |
+| chamomile teas                  | `/collections/chamomile`                        |
+| chamomile tea bags              | `/products/organic-chamomile-pyramid-tea-bags`  |
+| buy oolong tea                  | `/collections/oolong-tea-wholesale`             |
+| tea packaging                   | `/pages/tea-packaging`                          |
+| organic herbal colon cleanse    | `/collections/organic-body-colon-cleanse`       |
+| organic turmeric powder         | `/collections/organic-turmeric-powder`          |
+| bulk cinnamon                   | `/collections/organic-cinnamon-powder`          |
+| dried hibiscus flowers          | `/collections/organic-hibiscus`                 |
+| import herbs to australias      | `/pages/import-tea-herbs-australia`             |
+| tea importers australia         | `/pages/tea-importers-australia`                |
+| buy white tea                   | `/collections/white-tea`                        |
+| honeybush tea                   | `/collections/organic-honeybush`                |
+| pu erh tea australia            | `/collections/pu-erh-tea`                       |
+| scullcap                        | `/collections/scullcap`                         |
+| breakfast tea                   | `/collections/english-breakfast-tea`            |
+| clove tea                       | `/collections/cloves`                           |
+| calendula flowers               | `/collections/organic-calendula-petals`         |
+| digestive tea                   | `/collections/organic-digestive-tea`            |
+| organic earl grey tea           | `/collections/organic-earl-grey`                |
+| speciality tea                  | `/collections/speciality-tea`                   |
+| cocoa tea                       | `/collections/cocoa-tea-shells`                 |
+| cloves wholesale                | `/collections/cloves-wholesale`                 |
+| loose leaf peppermint tea       | `/collections/organic-wholesale-peppermint-tea` |
+| licorice root tea               | `/collections/licorice-tea`                     |
+| aniseed tea                     | `/collections/aniseed-tea`                      |
+| rose bud tea                    | `/collections/rose-tea`                         |
+| wholesale rose buds             | `/collections/rose-buds`                        |
+| nettle leaf                     | `/collections/nettle-leaf`                      |
+| pekoe tea                       | `/collections/pekoe-tea`                        |
+| siberian ginseng                | `/collections/siberian-ginseng`                 |
+| ginseng tea                     | `/collections/ginseng-tea`                      |
+| elderberries                    | `/collections/elderberries`                     |
+| blooming tea                    | `/collections/blooming-tea`                     |
+| lemongrass and ginger tea       | `/collections/lemongrass-ginger-tea`            |
+| lemon verbena tea               | `/collections/lemon-verbena-tea`                |
+| genmaicha tea                   | `/collections/genmaicha-tea`                    |
+| lapsang souchong tea            | `/collections/lapsang-souchong`                 |
+| longjing tea                    | `/collections/longjing-tea`                     |
+| silver needle                   | `/collections/silver-needle`                    |
+| buy tulsi tea                   | `/collections/tulsi-tea`                        |
+| buy hibiscus tea                | `/collections/hibiscus-tea`                     |
+| white peony tea                 | `/collections/white-peony`                      |
+| ginger tea bags                 | `/collections/ginger-tea-bags`                  |
+| ginkgo biloba tea               | `/collections/ginkgo-biloba-tea`                |
+| keemun tea                      | `/collections/keemun-tea`                       |
+| damiana tea                     | `/collections/damiana-tea`                      |
+| complexion tea                  | `/collections/complexion-tea`                   |
+| cinnamon cassia                 | `/collections/cinnamon-cassia`                  |
+| calendula tea                   | `/collections/calendula-tea`                    |
+| darjeeling tea online australia | `/collections/darjeeling-tea`                   |
+| ceylon tea                      | `/collections/ceylon-tea`                       |
+| jasmine tea                     | `/collections/jasmine-tea`                      |
+| moringa leaf                    | `/collections/moringa-leaves`                   |
+| cardamom pods                   | `/collections/cardamom-pods`                    |
+| cardamom powder                 | `/collections/cardamom-powder`                  |
+| passionflower                   | `/collections/passionflower`                    |
+| raspberry leaf                  | `/collections/raspberry-leaf`                   |
+| vervain wholesale               | `/collections/vervain`                          |
+| ginger powder                   | `/collections/ginger`                           |
+| dried ginger                    | `/collections/ginger`                           |
+| star anise                      | `/collections/star-anise`                       |
+| cinnamon chips                  | `/collections/cinnamon-chips`                   |
+| japanese matcha                 | `/collections/japanese-matcha`                  |
 
 ## Payment Marks
 

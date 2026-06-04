@@ -25,4 +25,3 @@ No real Shopify hosted checkout tests were run. The only E2E checkout assertion 
 
 - Vitest emitted Vite's non-fatal warning that `vite-tsconfig-paths` can eventually be replaced by Vite's native `resolve.tsconfigPaths` option.
 - Playwright's Next dev server emitted non-fatal cache bypass messages for `/products/[handle]` and `/cart`.
-

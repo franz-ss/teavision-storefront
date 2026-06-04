@@ -107,15 +107,15 @@ Plan impact:
 
 ## Highest-Risk Seams
 
-| Risk | Impact | Evidence | Test response |
-|------|--------|----------|---------------|
-| Stale cart cookie recovery is inconsistent | User cannot add or view cart after Shopify invalidates cart | `src/lib/cart/actions.ts` | Server-action integration tests with missing, null, and thrown cart reads |
-| Header badge can stay stale | Users doubt add-to-cart worked | `src/components/product/use-add-to-cart.ts`, header `CartCount` | Playwright add-to-cart flow with fake Shopify |
-| Checkout URL may be stale or malformed | Revenue loss at checkout handoff | `src/lib/shopify/operations/cart.ts`, `/cart/page.tsx` | Mapper contract plus cart view/E2E handoff assertion |
-| Bulk savings UI can overpromise | Price trust and conversion loss | `BulkSavings`, Shopify cart discounts | Fixture tests plus real staged Shopify UAT |
-| Inventory races and removed variants | Add-to-cart failures near purchase intent | `addToCartAction`, Shopify `userErrors` | Server-action error mapping and UI failure stories |
-| Cart line cap hides lines over 100 | Wholesale cart management risk | `cart.graphql lines(first: 100)` | Contract test documenting cap and product decision note |
-| Hosted checkout is outside repo | False confidence if local tests pretend to validate payment | Project reference, cart page link | Explicit staged checkout UAT checklist |
+| Risk                                       | Impact                                                      | Evidence                                                        | Test response                                                             |
+| ------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Stale cart cookie recovery is inconsistent | User cannot add or view cart after Shopify invalidates cart | `src/lib/cart/actions.ts`                                       | Server-action integration tests with missing, null, and thrown cart reads |
+| Header badge can stay stale                | Users doubt add-to-cart worked                              | `src/components/product/use-add-to-cart.ts`, header `CartCount` | Playwright add-to-cart flow with fake Shopify                             |
+| Checkout URL may be stale or malformed     | Revenue loss at checkout handoff                            | `src/lib/shopify/operations/cart.ts`, `/cart/page.tsx`          | Mapper contract plus cart view/E2E handoff assertion                      |
+| Bulk savings UI can overpromise            | Price trust and conversion loss                             | `BulkSavings`, Shopify cart discounts                           | Fixture tests plus real staged Shopify UAT                                |
+| Inventory races and removed variants       | Add-to-cart failures near purchase intent                   | `addToCartAction`, Shopify `userErrors`                         | Server-action error mapping and UI failure stories                        |
+| Cart line cap hides lines over 100         | Wholesale cart management risk                              | `cart.graphql lines(first: 100)`                                | Contract test documenting cap and product decision note                   |
+| Hosted checkout is outside repo            | False confidence if local tests pretend to validate payment | Project reference, cart page link                               | Explicit staged checkout UAT checklist                                    |
 
 ## Recommended Test Stack
 

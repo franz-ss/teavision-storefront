@@ -77,6 +77,7 @@ admin configuration. Searchanise remains the search engine; Next owns rendering.
 </decisions>
 
 <canonical_refs>
+
 ## Canonical References
 
 ### Project Planning

@@ -48,6 +48,7 @@ This phase adds temporary crawl and indexing controls for the headless storefron
 </decisions>
 
 <canonical_refs>
+
 ## Canonical References
 
 **Downstream agents MUST read these before planning or implementing.**
@@ -80,6 +81,7 @@ This phase adds temporary crawl and indexing controls for the headless storefron
 </canonical_refs>
 
 <code_context>
+
 ## Existing Code Insights
 
 ### Reusable Assets
@@ -125,5 +127,5 @@ None - discussion stayed within phase scope.
 
 ---
 
-*Phase: 06-prevent-the-site-from-being-indexed*
-*Context gathered: 2026-06-03T09:38:25+08:00*
+_Phase: 06-prevent-the-site-from-being-indexed_
+_Context gathered: 2026-06-03T09:38:25+08:00_

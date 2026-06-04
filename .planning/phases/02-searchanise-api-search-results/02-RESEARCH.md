@@ -129,13 +129,13 @@ Relevant findings:
 
 ## Risks and Mitigations
 
-| Risk | Mitigation |
-| ---- | ---------- |
-| Searchanise response includes unexpected custom fields or malformed values | Narrow from `unknown`; drop invalid products/facets; render error/empty states safely |
-| Filter URL encoding becomes hard to maintain | Centralize parse/build helpers and acceptance-check common filter/sort/page cases |
-| Searchanise widget script still injects UI into `/search` | Skip loader by pathname and verify in browser that no `snize-search-results` output appears |
-| PDP recommendations regress | Verify a PDP with Searchanise enabled and disabled/fallback behavior |
-| Searchanise API key missing in local env | Build route to show setup/unavailable state only when a search fetch is attempted; do not expose secrets |
+| Risk                                                                       | Mitigation                                                                                               |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Searchanise response includes unexpected custom fields or malformed values | Narrow from `unknown`; drop invalid products/facets; render error/empty states safely                    |
+| Filter URL encoding becomes hard to maintain                               | Centralize parse/build helpers and acceptance-check common filter/sort/page cases                        |
+| Searchanise widget script still injects UI into `/search`                  | Skip loader by pathname and verify in browser that no `snize-search-results` output appears              |
+| PDP recommendations regress                                                | Verify a PDP with Searchanise enabled and disabled/fallback behavior                                     |
+| Searchanise API key missing in local env                                   | Build route to show setup/unavailable state only when a search fetch is attempted; do not expose secrets |
 
 ## Open Questions for Execution
 

@@ -29,4 +29,3 @@ Completed. Cart transport, Shopify cart operations, cart Server Actions, and qui
 
 - The `lines(first: 100)` cart query cap is documented in the cart operation test as a known contract, not changed in this phase.
 - These tests verify local business logic and Storefront API boundaries, not Shopify hosted checkout behavior.
-

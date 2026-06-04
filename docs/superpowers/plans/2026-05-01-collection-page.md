@@ -12,9 +12,9 @@
 
 ## File Map
 
-| File | Change |
-|---|---|
-| `lib/shopify/operations/collection.ts` | Bump `first` default `24` → `250` |
+| File                                             | Change                                                    |
+| ------------------------------------------------ | --------------------------------------------------------- |
+| `lib/shopify/operations/collection.ts`           | Bump `first` default `24` → `250`                         |
 | `app/(storefront)/collections/[handle]/page.tsx` | Add `Link` import; restructure `CollectionContent` return |
 
 ---
@@ -22,6 +22,7 @@
 ### Task 1: Bump collection product fetch limit
 
 **Files:**
+
 - Modify: `lib/shopify/operations/collection.ts`
 
 - [ ] **Step 1: Edit the default parameter**
@@ -68,6 +69,7 @@ git commit -m "feat: bump collection product fetch limit to 250"
 ### Task 2: Restructure collection page — breadcrumb, toolbar, grid, empty state
 
 **Files:**
+
 - Modify: `app/(storefront)/collections/[handle]/page.tsx`
 
 - [ ] **Step 1: Add `Link` import**
@@ -101,57 +103,62 @@ Expected: no errors. (`import/order` requires a blank line between the `next/*` 
 Find the `return (` inside `CollectionContent` (currently after the `breadcrumbJsonLd` definition). Replace the entire return statement with:
 
 ```tsx
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+return (
+  <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+    />
 
-      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-text-muted">
-        <Link href="/">Home</Link>
-        <span aria-hidden="true"> › </span>
-        <Link href="/collections/all">Collections</Link>
-        <span aria-hidden="true"> › </span>
-        <span>{collection.title}</span>
-      </nav>
+    <nav aria-label="Breadcrumb" className="text-text-muted mb-6 text-sm">
+      <Link href="/">Home</Link>
+      <span aria-hidden="true"> › </span>
+      <Link href="/collections/all">Collections</Link>
+      <span aria-hidden="true"> › </span>
+      <span>{collection.title}</span>
+    </nav>
 
-      <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
-      {collection.description && (
-        <p className="text-text-muted mb-0">{collection.description}</p>
-      )}
+    <h1 className="mb-2 text-2xl font-bold">{collection.title}</h1>
+    {collection.description && (
+      <p className="text-text-muted mb-0">{collection.description}</p>
+    )}
 
-      <div className="border-border mt-4 mb-6 flex items-center justify-between border-t pt-3">
-        <span className="text-text-muted text-sm">{products.length} products</span>
-        <Suspense fallback={null}>
-          <SortSelect currentSort={sort} />
-        </Suspense>
-      </div>
+    <div className="border-border mt-4 mb-6 flex items-center justify-between border-t pt-3">
+      <span className="text-text-muted text-sm">
+        {products.length} products
+      </span>
+      <Suspense fallback={null}>
+        <SortSelect currentSort={sort} />
+      </Suspense>
+    </div>
 
-      <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4" role="list">
-        {products.length === 0 ? (
-          <li className="col-span-full py-16 text-center text-text-muted">
-            No products in this collection yet.
+    <ul
+      className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4"
+      role="list"
+    >
+      {products.length === 0 ? (
+        <li className="text-text-muted col-span-full py-16 text-center">
+          No products in this collection yet.
+        </li>
+      ) : (
+        products.map((product, i) => (
+          <li key={product.id}>
+            <ProductCard product={product} priority={i === 0} />
           </li>
-        ) : (
-          products.map((product, i) => (
-            <li key={product.id}>
-              <ProductCard product={product} priority={i === 0} />
-            </li>
-          ))
-        )}
-      </ul>
-    </>
-  )
+        ))
+      )}
+    </ul>
+  </>
+)
 ```
 
 Also update the `getCollectionProducts` call inside `CollectionContent` to pass `250` explicitly (so the call site is clear regardless of the default):
 
 ```tsx
-  const [collection, products] = await Promise.all([
-    getCollection(handle),
-    getCollectionProducts(handle, 250, sortKey, reverse),
-  ])
+const [collection, products] = await Promise.all([
+  getCollection(handle),
+  getCollectionProducts(handle, 250, sortKey, reverse),
+])
 ```
 
 - [ ] **Step 4: Verify lint passes**
@@ -171,6 +178,7 @@ pnpm run dev
 Open `http://localhost:3000/collections/black-tea` (or any valid handle from the Shopify store).
 
 Verify:
+
 - Breadcrumb shows: `Home › Collections › [Collection Title]`
 - Title and description render below breadcrumb
 - Toolbar row shows product count on the left and sort dropdown on the right, separated by a thin top border

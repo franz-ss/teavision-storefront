@@ -33,4 +33,3 @@ Hosted Shopify checkout, payment, order creation, shipping-rate, tax, billing, a
 ## Deviations
 
 - The E2E suite uses `next dev` with fake Shopify instead of a production web server. The production build was run separately and passed.
-

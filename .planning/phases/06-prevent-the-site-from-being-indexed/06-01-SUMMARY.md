@@ -2,7 +2,7 @@
 phase: 06-prevent-the-site-from-being-indexed
 plan: 01
 status: complete
-completed_at: "2026-06-03T10:20:42+08:00"
+completed_at: '2026-06-03T10:20:42+08:00'
 requirements:
   - ROADMAP-06
 key-files:
@@ -74,8 +74,8 @@ The temporary production server on port 3008 was stopped after verification. The
 
 ## Commits
 
-| Commit | Description |
-| ------ | ----------- |
+| Commit      | Description                                                                                                                                                                                                    |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Not created | Commit deferred because the git index already contained a large pre-existing staged Phase 5/source bundle before Phase 6 execution began. Creating a Phase 6 commit would have included unrelated staged work. |
 
 ## Deviations from Plan

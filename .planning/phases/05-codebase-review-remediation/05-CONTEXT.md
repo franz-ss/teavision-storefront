@@ -89,33 +89,33 @@ Downstream agents must read these before planning or implementing.
 
 ## Issue-To-Plan Map
 
-| Review issue | Covered by |
-| --- | --- |
-| Broken homepage `/contact` CTA | 05-01 |
-| Homepage form result swallowing | 05-01 |
-| PDP add-to-cart stale cart / no success status | 05-01 |
-| Root error boundary uses `reset` | 05-01 |
-| Nested `/collections` `main` | 05-01 |
-| Missing skip link | 05-01 |
-| Unsafe/raw JSON-LD serialization | 05-01 |
-| Autoplay carousel without persistent pause | 05-01, 05-05 |
-| Missing typecheck/test scripts and stale contract test | 05-02 |
-| Missing interaction coverage for cart/product/forms | 05-02 |
-| In-memory rate limiting and public suggestion abuse risk | 05-02 |
-| Shopify page cache invalidation missing | 05-02 |
-| Quick-view API uncaught Shopify failures | 05-02 |
-| Codegen env validation opaque | 05-02 |
-| Third-party enrichment failures cached as empty | 05-02 |
-| PLP overfetch, local category filtering, list hydration | 05-03 |
-| Header mega-nav, quick-view, gallery, image handling performance | 05-03 |
-| PDP/route monoliths and domain component drift | 05-04 |
-| Accordion/form primitive/add-to-cart duplication | 05-04 |
-| Shared Shopify mappers, runtime guards, Portable Text casts | 05-04 |
-| Storybook/API coverage gaps and scaffold drift | 05-04 |
-| StarRating, loading status, rich-text tables, touch targets | 05-05 |
-| Decorative icons, breadcrumb overflow, brand copy | 05-05 |
-| Sitemap `/pages/about`, `lastModified`, canonical hygiene | 05-05 |
-| Final production-readiness verification | 05-05 |
+| Review issue                                                     | Covered by   |
+| ---------------------------------------------------------------- | ------------ |
+| Broken homepage `/contact` CTA                                   | 05-01        |
+| Homepage form result swallowing                                  | 05-01        |
+| PDP add-to-cart stale cart / no success status                   | 05-01        |
+| Root error boundary uses `reset`                                 | 05-01        |
+| Nested `/collections` `main`                                     | 05-01        |
+| Missing skip link                                                | 05-01        |
+| Unsafe/raw JSON-LD serialization                                 | 05-01        |
+| Autoplay carousel without persistent pause                       | 05-01, 05-05 |
+| Missing typecheck/test scripts and stale contract test           | 05-02        |
+| Missing interaction coverage for cart/product/forms              | 05-02        |
+| In-memory rate limiting and public suggestion abuse risk         | 05-02        |
+| Shopify page cache invalidation missing                          | 05-02        |
+| Quick-view API uncaught Shopify failures                         | 05-02        |
+| Codegen env validation opaque                                    | 05-02        |
+| Third-party enrichment failures cached as empty                  | 05-02        |
+| PLP overfetch, local category filtering, list hydration          | 05-03        |
+| Header mega-nav, quick-view, gallery, image handling performance | 05-03        |
+| PDP/route monoliths and domain component drift                   | 05-04        |
+| Accordion/form primitive/add-to-cart duplication                 | 05-04        |
+| Shared Shopify mappers, runtime guards, Portable Text casts      | 05-04        |
+| Storybook/API coverage gaps and scaffold drift                   | 05-04        |
+| StarRating, loading status, rich-text tables, touch targets      | 05-05        |
+| Decorative icons, breadcrumb overflow, brand copy                | 05-05        |
+| Sitemap `/pages/about`, `lastModified`, canonical hygiene        | 05-05        |
+| Final production-readiness verification                          | 05-05        |
 
 </specifics>
 
@@ -132,5 +132,5 @@ Downstream agents must read these before planning or implementing.
 
 ---
 
-*Phase: 05-codebase-review-remediation*
-*Context gathered: 2026-06-02 via codebase review remediation planning*
+_Phase: 05-codebase-review-remediation_
+_Context gathered: 2026-06-02 via codebase review remediation planning_

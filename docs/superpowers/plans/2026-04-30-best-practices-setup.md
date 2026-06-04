@@ -12,33 +12,34 @@
 
 ## File Map
 
-| File | Action | Purpose |
-|---|---|---|
-| `package.json` | Modify | Add `eslint-plugin-import` dep + `create:component`, `create:lib` scripts |
-| `eslint.config.mjs` | Modify | Add import/order, no-default-export, react-hooks/exhaustive-deps rules |
-| `components/ui/index.ts` | Create | Barrel — re-exports all ui components |
-| `components/layout/index.ts` | Create | Barrel — re-exports Header, Footer |
-| `components/product/index.ts` | Create | Barrel — re-exports ProductForm, VariantSelector |
-| `components/collection/index.ts` | Create | Barrel — re-exports SortSelect |
-| `components/cart/index.ts` | Create | Barrel — empty placeholder |
-| `app/(storefront)/layout.tsx` | Modify | Use layout barrel import |
-| `app/(storefront)/page.tsx` | Modify | Use ui barrel import |
-| `app/(storefront)/cart/page.tsx` | Modify | Use ui barrel import |
-| `app/(storefront)/collections/[handle]/page.tsx` | Modify | Use ui + collection barrel imports |
-| `app/(storefront)/products/[handle]/page.tsx` | Modify | Use ui + product barrel imports |
-| `app/(storefront)/search/page.tsx` | Modify | Use ui barrel import |
-| `components/product/product-form.tsx` | Modify | Use ui barrel import |
-| `components/ui/product-card.tsx` | Modify | Use relative imports within domain |
-| `scripts/create-component.mjs` | Create | Scaffold component + story + barrel update |
-| `scripts/create-lib.mjs` | Create | Scaffold lib module |
-| `docs/conventions.md` | Create | Canonical conventions reference |
-| `CLAUDE.md` | Modify | Add @docs/conventions.md, do-not section, checklist, scripts ref |
+| File                                             | Action | Purpose                                                                   |
+| ------------------------------------------------ | ------ | ------------------------------------------------------------------------- |
+| `package.json`                                   | Modify | Add `eslint-plugin-import` dep + `create:component`, `create:lib` scripts |
+| `eslint.config.mjs`                              | Modify | Add import/order, no-default-export, react-hooks/exhaustive-deps rules    |
+| `components/ui/index.ts`                         | Create | Barrel — re-exports all ui components                                     |
+| `components/layout/index.ts`                     | Create | Barrel — re-exports Header, Footer                                        |
+| `components/product/index.ts`                    | Create | Barrel — re-exports ProductForm, VariantSelector                          |
+| `components/collection/index.ts`                 | Create | Barrel — re-exports SortSelect                                            |
+| `components/cart/index.ts`                       | Create | Barrel — empty placeholder                                                |
+| `app/(storefront)/layout.tsx`                    | Modify | Use layout barrel import                                                  |
+| `app/(storefront)/page.tsx`                      | Modify | Use ui barrel import                                                      |
+| `app/(storefront)/cart/page.tsx`                 | Modify | Use ui barrel import                                                      |
+| `app/(storefront)/collections/[handle]/page.tsx` | Modify | Use ui + collection barrel imports                                        |
+| `app/(storefront)/products/[handle]/page.tsx`    | Modify | Use ui + product barrel imports                                           |
+| `app/(storefront)/search/page.tsx`               | Modify | Use ui barrel import                                                      |
+| `components/product/product-form.tsx`            | Modify | Use ui barrel import                                                      |
+| `components/ui/product-card.tsx`                 | Modify | Use relative imports within domain                                        |
+| `scripts/create-component.mjs`                   | Create | Scaffold component + story + barrel update                                |
+| `scripts/create-lib.mjs`                         | Create | Scaffold lib module                                                       |
+| `docs/conventions.md`                            | Create | Canonical conventions reference                                           |
+| `CLAUDE.md`                                      | Modify | Add @docs/conventions.md, do-not section, checklist, scripts ref          |
 
 ---
 
 ## Task 1: Install eslint-plugin-import
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install the plugin**
@@ -69,6 +70,7 @@ git commit -m "chore: add eslint-plugin-import"
 ## Task 2: Update ESLint config with new rules
 
 **Files:**
+
 - Modify: `eslint.config.mjs`
 
 - [ ] **Step 1: Replace the entire eslint.config.mjs with the hardened config**
@@ -108,7 +110,9 @@ const eslintConfig = defineConfig([
             'internal',
             ['parent', 'sibling', 'index'],
           ],
-          pathGroups: [{ pattern: '@/**', group: 'internal', position: 'before' }],
+          pathGroups: [
+            { pattern: '@/**', group: 'internal', position: 'before' },
+          ],
           pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
         },
@@ -173,6 +177,7 @@ git commit -m "chore: harden eslint — import order, no-default-export, exhaust
 ## Task 3: Fix existing ESLint violations
 
 **Files:**
+
 - Modify: any files reported by `npm run lint` after Task 2
 
 The violations will almost all be `import/order` — missing blank lines between import groups. Fix each file by adding blank lines between the groups.
@@ -186,12 +191,14 @@ npm run lint
 - [ ] **Step 2: Fix import order in app/(storefront)/layout.tsx**
 
 Current:
+
 ```tsx
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 ```
 
 Correct (these are both internal — no change needed to grouping, just verify no external imports are mixed in without blank lines):
+
 ```tsx
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
@@ -204,6 +211,7 @@ If there are external imports (e.g. `import Link from 'next/link'`) above the in
 Pattern: anywhere you see external packages (`react`, `next/*`, npm packages) followed immediately by internal (`@/`) or relative (`./`) imports with no blank line — add the blank line.
 
 Example fix:
+
 ```tsx
 // Before (violation)
 import { useState } from 'react'
@@ -235,6 +243,7 @@ git commit -m "fix: correct import order to satisfy new eslint rules"
 ## Task 4: Create barrel files for all component domains
 
 **Files:**
+
 - Create: `components/ui/index.ts`
 - Create: `components/layout/index.ts`
 - Create: `components/product/index.ts`
@@ -295,6 +304,7 @@ git commit -m "feat: add barrel index.ts to all component domains"
 ## Task 5: Update existing imports to use barrels
 
 **Files:**
+
 - Modify: `app/(storefront)/layout.tsx`
 - Modify: `app/(storefront)/page.tsx`
 - Modify: `app/(storefront)/cart/page.tsx`
@@ -307,11 +317,14 @@ git commit -m "feat: add barrel index.ts to all component domains"
 - [ ] **Step 1: Update app/(storefront)/layout.tsx**
 
 Change:
+
 ```tsx
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 ```
+
 To:
+
 ```tsx
 import { Footer, Header } from '@/components/layout'
 ```
@@ -319,10 +332,13 @@ import { Footer, Header } from '@/components/layout'
 - [ ] **Step 2: Update app/(storefront)/page.tsx**
 
 Change:
+
 ```tsx
 import { ProductCard } from '@/components/ui/product-card'
 ```
+
 To:
+
 ```tsx
 import { ProductCard } from '@/components/ui'
 ```
@@ -330,11 +346,14 @@ import { ProductCard } from '@/components/ui'
 - [ ] **Step 3: Update app/(storefront)/cart/page.tsx**
 
 Change:
+
 ```tsx
 import { Button } from '@/components/ui/button'
 import { Price } from '@/components/ui/price'
 ```
+
 To:
+
 ```tsx
 import { Button, Price } from '@/components/ui'
 ```
@@ -342,11 +361,14 @@ import { Button, Price } from '@/components/ui'
 - [ ] **Step 4: Update app/(storefront)/collections/[handle]/page.tsx**
 
 Change:
+
 ```tsx
 import { ProductCard } from '@/components/ui/product-card'
 import { SortSelect } from '@/components/collection/sort-select'
 ```
+
 To:
+
 ```tsx
 import { SortSelect } from '@/components/collection'
 import { ProductCard } from '@/components/ui'
@@ -357,11 +379,14 @@ import { ProductCard } from '@/components/ui'
 - [ ] **Step 5: Update app/(storefront)/products/[handle]/page.tsx**
 
 Change:
+
 ```tsx
 import { ProductForm } from '@/components/product/product-form'
 import { Price } from '@/components/ui/price'
 ```
+
 To:
+
 ```tsx
 import { ProductForm } from '@/components/product'
 import { Price } from '@/components/ui'
@@ -370,10 +395,13 @@ import { Price } from '@/components/ui'
 - [ ] **Step 6: Update app/(storefront)/search/page.tsx**
 
 Change:
+
 ```tsx
 import { ProductCard } from '@/components/ui/product-card'
 ```
+
 To:
+
 ```tsx
 import { ProductCard } from '@/components/ui'
 ```
@@ -381,10 +409,13 @@ import { ProductCard } from '@/components/ui'
 - [ ] **Step 7: Update components/product/product-form.tsx**
 
 Change:
+
 ```tsx
 import { Button } from '@/components/ui/button'
 ```
+
 To:
+
 ```tsx
 import { Button } from '@/components/ui'
 ```
@@ -392,11 +423,14 @@ import { Button } from '@/components/ui'
 - [ ] **Step 8: Update components/ui/product-card.tsx — switch to relative imports within domain**
 
 Within the same `components/ui/` domain, use relative imports to avoid any future circular-import risk. Change:
+
 ```tsx
 import { Badge, type BadgeVariant } from '@/components/ui/badge'
 import { Price } from '@/components/ui/price'
 ```
+
 To:
+
 ```tsx
 import { Badge, type BadgeVariant } from './badge'
 import { Price } from './price'
@@ -422,6 +456,7 @@ git commit -m "refactor: use barrel imports for all component domains"
 ## Task 6: Create scripts/create-component.mjs
 
 **Files:**
+
 - Create: `scripts/create-component.mjs`
 
 - [ ] **Step 1: Create the scripts/ directory and the script file**
@@ -434,7 +469,12 @@ Create `scripts/create-component.mjs`:
 
 ```js
 #!/usr/bin/env node
-import { existsSync, readFileSync, writeFileSync, appendFileSync } from 'node:fs'
+import {
+  existsSync,
+  readFileSync,
+  writeFileSync,
+  appendFileSync,
+} from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -532,6 +572,7 @@ node scripts/create-component.mjs ui/test-widget
 ```
 
 Expected output:
+
 ```
 ✓ components/ui/test-widget.tsx
 ✓ components/ui/test-widget.stories.tsx
@@ -539,6 +580,7 @@ Expected output:
 ```
 
 Verify the files exist:
+
 ```bash
 cat components/ui/test-widget.tsx
 cat components/ui/test-widget.stories.tsx
@@ -589,6 +631,7 @@ git commit -m "feat: add create:component scaffold script"
 ## Task 7: Create scripts/create-lib.mjs
 
 **Files:**
+
 - Create: `scripts/create-lib.mjs`
 
 - [ ] **Step 1: Create the script**
@@ -670,6 +713,7 @@ git commit -m "feat: add create:lib scaffold script"
 ## Task 8: Add scripts to package.json
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Add the two scripts to the "scripts" block**
@@ -682,6 +726,7 @@ Open `package.json`. In the `"scripts"` object, add after `"build-storybook"`:
 ```
 
 Full scripts block should now be:
+
 ```json
 "scripts": {
   "dev": "next dev",
@@ -704,6 +749,7 @@ npm run create:component -- ui/smoke-test
 ```
 
 Expected:
+
 ```
 ✓ components/ui/smoke-test.tsx
 ✓ components/ui/smoke-test.stories.tsx
@@ -730,13 +776,14 @@ git commit -m "chore: add create:component and create:lib npm scripts"
 ## Task 9: Create docs/conventions.md
 
 **Files:**
+
 - Create: `docs/conventions.md`
 
 - [ ] **Step 1: Create the file**
 
 Create `docs/conventions.md`:
 
-```markdown
+````markdown
 # Conventions
 
 Canonical reference for this codebase. Check here before adding files.
@@ -745,31 +792,31 @@ Canonical reference for this codebase. Check here before adding files.
 
 ## Folder map
 
-| Directory | What belongs here | What does NOT belong |
-|---|---|---|
-| `components/ui/` | Reusable presentational primitives — no business logic, no data fetching | Domain-specific components, Server Actions |
-| `components/layout/` | Page structure shells — Header, Footer, nav | Feature components, data fetching |
-| `components/product/` | Product-domain feature components | Reusable primitives, Shopify queries |
-| `components/collection/` | Collection-domain feature components | Reusable primitives |
-| `components/cart/` | Cart-domain feature components | Reusable primitives |
-| `lib/shopify/operations/` | Data fetch functions — `getProduct`, `getCollection`, etc. | Mutations, Server Actions |
-| `lib/shopify/queries/` | `.graphql` source files only | TypeScript, generated code |
-| `lib/shopify/types/generated/` | Auto-generated by codegen — never edit manually | Anything hand-written |
-| `lib/shopify/types/index.ts` | Hand-written exported types — `Cart`, `Product`, `Variant` | Generated types |
-| `lib/cart/actions.ts` | Server Actions for cart mutations | Read-only operations |
-| `lib/blog/` | Blog data helpers and stubs | Shopify queries |
-| `lib/seo/` | SEO utility helpers | Data fetching |
+| Directory                      | What belongs here                                                        | What does NOT belong                       |
+| ------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------ |
+| `components/ui/`               | Reusable presentational primitives — no business logic, no data fetching | Domain-specific components, Server Actions |
+| `components/layout/`           | Page structure shells — Header, Footer, nav                              | Feature components, data fetching          |
+| `components/product/`          | Product-domain feature components                                        | Reusable primitives, Shopify queries       |
+| `components/collection/`       | Collection-domain feature components                                     | Reusable primitives                        |
+| `components/cart/`             | Cart-domain feature components                                           | Reusable primitives                        |
+| `lib/shopify/operations/`      | Data fetch functions — `getProduct`, `getCollection`, etc.               | Mutations, Server Actions                  |
+| `lib/shopify/queries/`         | `.graphql` source files only                                             | TypeScript, generated code                 |
+| `lib/shopify/types/generated/` | Auto-generated by codegen — never edit manually                          | Anything hand-written                      |
+| `lib/shopify/types/index.ts`   | Hand-written exported types — `Cart`, `Product`, `Variant`               | Generated types                            |
+| `lib/cart/actions.ts`          | Server Actions for cart mutations                                        | Read-only operations                       |
+| `lib/blog/`                    | Blog data helpers and stubs                                              | Shopify queries                            |
+| `lib/seo/`                     | SEO utility helpers                                                      | Data fetching                              |
 
 ---
 
 ## Naming rules
 
-| Thing | Convention | Example |
-|---|---|---|
-| File names | kebab-case | `product-card.tsx`, `sort-select.tsx` |
-| Component exports | PascalCase named export | `export function ProductCard(` |
-| Server Action exports | camelCase + "Action" suffix | `addToCartAction`, `getCartAction` |
-| Lib operation exports | camelCase verb + noun | `getProduct`, `getCollection` |
+| Thing                 | Convention                  | Example                               |
+| --------------------- | --------------------------- | ------------------------------------- |
+| File names            | kebab-case                  | `product-card.tsx`, `sort-select.tsx` |
+| Component exports     | PascalCase named export     | `export function ProductCard(`        |
+| Server Action exports | camelCase + "Action" suffix | `addToCartAction`, `getCartAction`    |
+| Lib operation exports | camelCase verb + noun       | `getProduct`, `getCollection`         |
 
 File name and export name are different things. `product-card.tsx` exports `ProductCard`.
 
@@ -794,6 +841,7 @@ Exact order inside every component file:
 ## `'use client'` decision rule
 
 Add `'use client'` only if the component:
+
 - Handles user events (`onClick`, `onChange`, form submission), OR
 - Uses browser-only APIs (`useState`, `useEffect`, `useRef`, `useTransition`)
 
@@ -816,16 +864,16 @@ Only on Server Actions files (`lib/*/actions.ts`). Never on a component file.
 
 ## Where new things go
 
-| I'm adding a… | Put it in… |
-|---|---|
-| Reusable UI primitive (button, badge, price display) | `components/ui/` |
-| Domain feature component | `components/<domain>/` |
-| Page layout wrapper | `components/layout/` |
-| Shopify data fetch function | `lib/shopify/operations/<domain>.ts` |
-| Shopify GraphQL query | `lib/shopify/queries/<domain>.graphql` |
-| Cart/checkout mutation | `lib/cart/actions.ts` |
-| New exported type | `lib/shopify/types/index.ts` |
-| SEO helper | `lib/seo/` |
+| I'm adding a…                                        | Put it in…                             |
+| ---------------------------------------------------- | -------------------------------------- |
+| Reusable UI primitive (button, badge, price display) | `components/ui/`                       |
+| Domain feature component                             | `components/<domain>/`                 |
+| Page layout wrapper                                  | `components/layout/`                   |
+| Shopify data fetch function                          | `lib/shopify/operations/<domain>.ts`   |
+| Shopify GraphQL query                                | `lib/shopify/queries/<domain>.graphql` |
+| Cart/checkout mutation                               | `lib/cart/actions.ts`                  |
+| New exported type                                    | `lib/shopify/types/index.ts`           |
+| SEO helper                                           | `lib/seo/`                             |
 
 ---
 
@@ -836,6 +884,7 @@ npm run create:component -- ui/my-component       # component + story + barrel u
 npm run create:component -- product/my-feature    # domain component + story + barrel update
 npm run create:lib -- blog/operations             # new lib module
 ```
+````
 
 ---
 
@@ -845,7 +894,8 @@ npm run create:lib -- blog/operations             # new lib module
 - Use relative imports for within-domain: `./badge`, `./price` (avoids circular import risk)
 - Use direct file paths for `lib/` imports: `@/lib/cart/actions`, `@/lib/shopify/operations/product`
 - `lib/` does NOT have barrels — import by explicit path
-```
+
+````
 
 - [ ] **Step 2: Verify it renders correctly in your editor (scan for broken markdown)**
 
@@ -856,18 +906,20 @@ Quick visual check — make sure all table pipes align and code blocks open/clos
 ```bash
 git add docs/conventions.md
 git commit -m "docs: add conventions reference"
-```
+````
 
 ---
 
 ## Task 10: Update CLAUDE.md
 
 **Files:**
+
 - Modify: `CLAUDE.md`
 
 - [ ] **Step 1: Add @docs/conventions.md reference at the very top of CLAUDE.md**
 
 The file currently starts with:
+
 ```markdown
 # CLAUDE.md
 
@@ -877,6 +929,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 
 Change to:
+
 ```markdown
 # CLAUDE.md
 
@@ -943,6 +996,7 @@ npm run create:component -- ui/tag-label
 ```
 
 Expected files created:
+
 - `components/ui/tag-label.tsx` — named export `TagLabel`, no default export
 - `components/ui/tag-label.stories.tsx` — `export default meta`, named `Default` story
 - `components/ui/index.ts` — last line is `export { TagLabel } from './tag-label'`
@@ -954,6 +1008,7 @@ npm run lint
 Expected: clean (the generated files must pass lint).
 
 Cleanup:
+
 ```bash
 rm components/ui/tag-label.tsx components/ui/tag-label.stories.tsx
 ```

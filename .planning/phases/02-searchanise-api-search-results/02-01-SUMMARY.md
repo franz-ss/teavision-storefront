@@ -40,15 +40,15 @@ key-files:
     - src/components/product/searchanise-recommendations/searchanise-script-loader.tsx
 
 key-decisions:
-  - "`/search` uses Searchanise JSON as data, never Searchanise-owned search widget DOM."
-  - "Legacy Searchanise page URLs redirect to `/search` while preserving useful query params."
-  - "Searchanise script loading is path-gated: search routes are clean, PDP recommendations remain enabled."
-  - "Runtime search param reads sit behind Suspense boundaries to satisfy Next 16 Cache Components."
+  - '`/search` uses Searchanise JSON as data, never Searchanise-owned search widget DOM.'
+  - 'Legacy Searchanise page URLs redirect to `/search` while preserving useful query params.'
+  - 'Searchanise script loading is path-gated: search routes are clean, PDP recommendations remain enabled.'
+  - 'Runtime search param reads sit behind Suspense boundaries to satisfy Next 16 Cache Components.'
 
 patterns-established:
-  - "Search API adapter maps third-party payloads into local storefront types at the boundary."
-  - "Search UI state is shareable through URL params and converted server-side into Searchanise API params."
-  - "Feature-specific search components live under `src/components/search/` with co-located stories."
+  - 'Search API adapter maps third-party payloads into local storefront types at the boundary.'
+  - 'Search UI state is shareable through URL params and converted server-side into Searchanise API params.'
+  - 'Feature-specific search components live under `src/components/search/` with co-located stories.'
 
 requirements-completed:
   - SEARCH-01
@@ -168,5 +168,5 @@ The planned milestone phases are complete and verified. Remaining search refinem
 
 ---
 
-*Phase: 02-searchanise-api-search-results*
-*Completed: 2026-05-27*
+_Phase: 02-searchanise-api-search-results_
+_Completed: 2026-05-27_
