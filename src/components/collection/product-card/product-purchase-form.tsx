@@ -1,7 +1,6 @@
 'use client'
 
-import { useMemo, useState, type FormEvent } from 'react'
-import { ShoppingCart } from 'lucide-react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 
 import type { ProductVariant } from '@/lib/shopify/types'
 import { Button, Price, QuantityStepper, Select } from '@/components/ui'
@@ -24,6 +23,7 @@ type ProductPurchaseFormProps = {
   onCartChanged?: () => void
   layout?: 'stacked' | 'inline'
   showPrice?: boolean
+  className?: string
 }
 
 function getInitialVariant(
@@ -39,6 +39,7 @@ export function ProductPurchaseForm({
   onCartChanged,
   layout = 'stacked',
   showPrice,
+  className,
 }: ProductPurchaseFormProps) {
   const initialVariant = getInitialVariant(variants)
   const [selectedVariantId, setSelectedVariantId] = useState(
@@ -51,6 +52,13 @@ export function ProductPurchaseForm({
     addToCart,
     onCartChanged,
   })
+  useEffect(() => {
+    if (!message) return
+    const timer = setTimeout(resetFeedback, 2500)
+    return () => clearTimeout(timer)
+  }, [message, resetFeedback])
+
+  const justAdded = !!message && !isPending
 
   const selectedVariant = useMemo(
     () =>
@@ -72,7 +80,7 @@ export function ProductPurchaseForm({
     (maximumQuantity === undefined || maximumQuantity >= minimumQuantity)
   const hasMultipleVariants = variants.length > 1
 
-  const inlineSelect = layout === 'inline'
+  const isInlineLayout = layout === 'inline'
 
   function handleSelectVariant(nextVariantId: string) {
     const nextVariant =
@@ -106,10 +114,19 @@ export function ProductPurchaseForm({
   ))
 
   return (
-    <form className="grid gap-3" onSubmit={handleSubmit}>
+    <form
+      className={cn('grid', isInlineLayout ? 'gap-2' : 'gap-3', className)}
+      onSubmit={handleSubmit}
+    >
       {showPrice !== false && (
         <div className="flex flex-wrap items-baseline justify-between gap-3">
-          {selectedVariant && <Price price={selectedVariant.price} size="lg" />}
+          {selectedVariant && (
+            <Price
+              price={selectedVariant.price}
+              size={isInlineLayout ? 'sm' : 'lg'}
+              className={cn(isInlineLayout && 'text-strong font-semibold')}
+            />
+          )}
           {!canAddToCart && (
             <span className="type-caption text-danger-text">Sold out</span>
           )}
@@ -117,7 +134,7 @@ export function ProductPurchaseForm({
       )}
 
       {/* Stacked layout (PDP): label above select */}
-      {!inlineSelect && hasMultipleVariants && (
+      {!isInlineLayout && hasMultipleVariants && (
         <label className="grid gap-2">
           <span className="type-caption text-muted">Pack size</span>
           <Select
@@ -132,10 +149,21 @@ export function ProductPurchaseForm({
         </label>
       )}
 
-      <div className="flex flex-wrap items-center gap-2">
-        {/* Inline layout (card): select in the same row as the button */}
-        {inlineSelect && hasMultipleVariants && (
-          <div className="min-w-40 flex-[1_1_10rem]">
+      <div
+        className={cn(
+          isInlineLayout
+            ? hasMultipleVariants
+              ? 'grid grid-cols-[7.5rem_minmax(0,1fr)] items-end gap-2 sm:grid-cols-[8rem_7.5rem_7rem] sm:gap-3'
+              : 'grid grid-cols-[7.5rem_minmax(5rem,1fr)] items-end gap-2 sm:grid-cols-[7.5rem_7rem] sm:gap-3'
+            : 'flex flex-wrap items-center gap-2',
+        )}
+      >
+        {/* Inline layout: controls align to the bottom of the product image. */}
+        {isInlineLayout && hasMultipleVariants && (
+          <label className="col-span-2 grid min-w-0 gap-1 sm:col-span-1">
+            <span className="type-caption text-muted font-semibold uppercase">
+              Size
+            </span>
             <Select
               name="variantId"
               value={selectedVariantId}
@@ -144,12 +172,18 @@ export function ProductPurchaseForm({
               }
               disabled={isPending}
               aria-label={`Select pack size for ${productTitle}`}
+              className="min-h-10 px-3 pr-8"
             >
               {variantOptions}
             </Select>
-          </div>
+          </label>
         )}
-        {!inlineSelect && (
+        <div className={cn('grid gap-1', isInlineLayout && 'w-[7.5rem]')}>
+          {isInlineLayout && (
+            <span className="type-caption text-muted font-semibold uppercase">
+              Product Qty
+            </span>
+          )}
           <QuantityStepper
             name="quantity"
             value={effectiveQuantity}
@@ -162,34 +196,40 @@ export function ProductPurchaseForm({
             step={quantityIncrement}
             disabled={isPending || !canAddToCart}
             label={`Quantity for ${productTitle}`}
+            density={isInlineLayout ? 'compact' : 'default'}
           />
-        )}
+        </div>
         <div
           className={cn(
-            inlineSelect && hasMultipleVariants
-              ? 'min-w-36 flex-1'
+            isInlineLayout
+              ? 'min-w-0'
               : 'min-w-36 flex-1 sm:flex-none',
           )}
         >
           <Button
             type="submit"
             isLoading={isPending}
-            disabled={!canAddToCart || isPending}
+            disabled={!canAddToCart || isPending || justAdded}
+            variant={justAdded ? 'brand' : 'primary'}
+            size={isInlineLayout ? 'sm' : 'md'}
             className="w-full"
           >
-            <ShoppingCart className="h-4 w-4" aria-hidden="true" />
-            {canAddToCart ? 'Add to cart' : 'Sold out'}
+            {justAdded ? (
+              'Added'
+            ) : canAddToCart ? (
+              'Add to cart'
+            ) : (
+              'Sold out'
+            )}
           </Button>
         </div>
       </div>
 
-      {message && (
-        <p role="status" className="type-caption text-brand">
-          {message}
-        </p>
-      )}
+      <p role="status" className="sr-only">
+        {justAdded ? message : ''}
+      </p>
       {error && (
-        <p role="alert" className="type-caption text-danger-text">
+        <p role="alert" className="type-body-sm text-danger-text">
           {error}
         </p>
       )}

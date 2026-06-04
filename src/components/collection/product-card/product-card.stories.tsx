@@ -39,7 +39,7 @@ const variants: ProductVariant[] = [
   },
 ]
 
-const firstPageVariantLimit = Array.from({ length: 20 }, (_, index) => ({
+const firstPageVariantLimit = Array.from({ length: 8 }, (_, index) => ({
   ...variants[0],
   id: `gid://shopify/ProductVariant/masters-sencha-pack-${index + 1}`,
   title: `Pack ${index + 1}`,
@@ -85,8 +85,14 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // Eyebrow renders for non-empty productType
-    await expect(canvas.getByText('Green tea')).toBeVisible()
+    // Tags and product type are intentionally omitted in the inline listing.
+    await expect(canvas.queryByText('Green tea')).not.toBeInTheDocument()
+
+    await expect(
+      canvas.getByRole('img', {
+        name: '4.8 out of 5 stars, 37 reviews',
+      }),
+    ).toBeVisible()
 
     // Pack size select still renders (multi-variant product)
     await expect(
@@ -95,12 +101,12 @@ export const Default: Story = {
       }),
     ).toBeVisible()
 
-    // QuantityStepper is hidden in the inline listing-card layout
+    // QuantityStepper is present in the compact inline listing layout
     await expect(
-      canvas.queryByRole('spinbutton', {
+      canvas.getByRole('spinbutton', {
         name: 'Quantity for Tea Masters Sencha Green Tea',
       }),
-    ).not.toBeInTheDocument()
+    ).toBeVisible()
 
     // Add to cart button still renders
     await expect(
@@ -144,12 +150,12 @@ export const MultiVariant: Story = {
       }),
     ).toBeVisible()
 
-    // QuantityStepper is hidden in the inline listing-card layout
+    // QuantityStepper is present in the compact inline listing layout
     await expect(
-      canvas.queryByRole('spinbutton', {
+      canvas.getByRole('spinbutton', {
         name: 'Quantity for Tea Masters Breakfast Blend',
       }),
-    ).not.toBeInTheDocument()
+    ).toBeVisible()
 
     await expect(
       canvas.getByRole('button', { name: /^Add to cart$/ }),
@@ -173,6 +179,11 @@ export const SoldOut: Story = {
     await expect(
       canvas.queryByRole('button', { name: /add to cart/i }),
     ).not.toBeInTheDocument()
+
+    await expect(canvas.getByText('Currently unavailable')).toBeVisible()
+    await expect(
+      canvas.getByRole('link', { name: 'Contact us' }),
+    ).toHaveAttribute('href', '/pages/contact')
   },
 }
 
@@ -211,11 +222,9 @@ export const WithCertBadges: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // Both cert badges render (Organic and ACO match first two keywords)
-    await expect(canvas.getByText('Organic')).toBeVisible()
-    await expect(canvas.getByText('ACO')).toBeVisible()
-
-    // Cap at 2 — Certified badge would be third, should NOT render
+    // Collection listings keep the row quiet and omit tags/cert badges.
+    await expect(canvas.queryByText('Organic')).not.toBeInTheDocument()
+    await expect(canvas.queryByText('ACO')).not.toBeInTheDocument()
     await expect(canvas.queryByText('Certified')).not.toBeInTheDocument()
   },
 }
@@ -234,10 +243,8 @@ export const NoBrandingInfo: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // No eyebrow when productType is empty
+    // Product type and tags are omitted in this compact listing.
     await expect(canvas.queryByText('Green tea')).not.toBeInTheDocument()
-
-    // No cert badge spans
     await expect(canvas.queryByText('Organic')).not.toBeInTheDocument()
     await expect(canvas.queryByText('ACO')).not.toBeInTheDocument()
 

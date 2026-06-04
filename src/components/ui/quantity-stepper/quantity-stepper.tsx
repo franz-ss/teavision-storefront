@@ -18,6 +18,7 @@ type QuantityStepperProps = {
   name?: string
   describedBy?: string
   className?: string
+  density?: 'default' | 'compact'
 }
 
 function getSafeStep(step: number): number {
@@ -52,19 +53,28 @@ export function QuantityStepper({
   name,
   describedBy,
   className,
+  density = 'default',
 }: QuantityStepperProps) {
   const quantityStep = getSafeStep(step)
   const quantity = clampQuantity(value, min, max, quantityStep)
   const canDecrease = quantity > min && !disabled
   const canIncrease =
     max === undefined ? !disabled : quantity + quantityStep <= max && !disabled
+  const isCompact = density === 'compact'
 
   function updateQuantity(nextValue: number) {
     onChange(clampQuantity(nextValue, min, max, quantityStep))
   }
 
   return (
-    <div className={cn('flex items-center gap-2', className)}>
+    <div
+      className={cn(
+        isCompact
+          ? 'grid grid-cols-[2.5rem_2.5rem_2.5rem] gap-0'
+          : 'flex items-center gap-2',
+        className,
+      )}
+    >
       <IconButton
         aria-label={`Decrease ${label.toLowerCase()}`}
         title={`Decrease ${label.toLowerCase()}`}
@@ -72,6 +82,9 @@ export function QuantityStepper({
         onClick={() => updateQuantity(quantity - quantityStep)}
         size="sm"
         variant="outline"
+        className={cn(
+          isCompact && 'h-10 w-10 rounded-r-none border-r-0',
+        )}
       >
         <Minus className="h-4 w-4" aria-hidden="true" />
       </IconButton>
@@ -89,7 +102,10 @@ export function QuantityStepper({
         value={quantity}
         onChange={(event) => updateQuantity(event.currentTarget.valueAsNumber)}
         disabled={disabled}
-        className="type-label border-default bg-canvas text-strong focus-visible:ring-ring h-11 w-16 rounded-md border px-2 text-center tabular-nums focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
+        className={cn(
+          'type-label border-default bg-canvas text-strong focus-visible:ring-ring h-11 w-16 rounded-md border px-2 text-center tabular-nums [appearance:textfield] focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+          isCompact && 'h-10 w-10 rounded-none px-1',
+        )}
         aria-label={label}
         aria-describedby={describedBy}
       />
@@ -100,6 +116,9 @@ export function QuantityStepper({
         onClick={() => updateQuantity(quantity + quantityStep)}
         size="sm"
         variant="outline"
+        className={cn(
+          isCompact && 'h-10 w-10 rounded-l-none border-l-0',
+        )}
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
       </IconButton>

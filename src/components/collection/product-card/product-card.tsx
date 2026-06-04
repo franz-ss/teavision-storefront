@@ -1,32 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { Leaf } from 'lucide-react'
 
 import type { CollectionProductSummary } from '@/lib/shopify/types'
-import { Badge, Button, Card, Price, StarRating } from '@/components/ui'
+import { Button, Price, StarRating } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { cn } from '@/lib/utils'
 
 import { ProductPurchaseForm } from './product-purchase-form'
 
-const CERT_KEYWORDS = ['organic', 'aco', 'certified', 'haccp'] as const
-const COLLECTION_CARD_VARIANT_LIMIT = 20
-
-function getCertificationBadges(tags: string[]): string[] {
-  const labelMap: Record<string, string> = {
-    organic: 'Organic',
-    aco: 'ACO',
-    certified: 'Certified',
-    haccp: 'HACCP',
-  }
-  const found: string[] = []
-  for (const keyword of CERT_KEYWORDS) {
-    if (tags.some((tag) => tag.toLowerCase().includes(keyword))) {
-      found.push(labelMap[keyword])
-      if (found.length === 2) break
-    }
-  }
-  return found
-}
+const COLLECTION_CARD_VARIANT_LIMIT = 8
 
 type ProductCardProps = {
   product: CollectionProductSummary
@@ -41,111 +24,102 @@ export function ProductCard({
 }: ProductCardProps) {
   const productUrl = `/products/${product.handle}`
   const isSoldOut = !product.availableForSale
-  const certBadges = getCertificationBadges(product.tags)
   const canQuickAdd =
     product.availableForSale &&
     product.variants.length > 0 &&
     product.variants.length < COLLECTION_CARD_VARIANT_LIMIT
 
   return (
-    <Card
-      as="article"
-      radius="md"
-      overflow="hidden"
-      interactive
-      className={cn('group', className)}
-    >
-      <div className="grid sm:grid-cols-[16rem_1fr] lg:grid-cols-[20rem_1fr]">
-        <Link
-          href={productUrl}
-          className="bg-surface-sunken focus-visible:ring-ring relative aspect-square overflow-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:aspect-auto sm:min-h-56"
-          aria-label={`View ${product.title}`}
-        >
-          {product.featuredImage &&
-          product.featuredImage.width &&
-          product.featuredImage.height ? (
-            <Image
-              src={getSizedShopifyImageUrl(product.featuredImage.url, 520)}
-              alt={product.featuredImage.altText ?? product.title}
-              width={product.featuredImage.width}
-              height={product.featuredImage.height}
-              loading={priority ? 'eager' : 'lazy'}
-              fetchPriority={priority ? 'high' : 'auto'}
-              sizes="(min-width: 1024px) 20rem, (min-width: 640px) 16rem, 100vw"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+    <article className={cn('group flex gap-4 sm:gap-7', className)}>
+      <Link
+        href={productUrl}
+        tabIndex={-1}
+        aria-hidden="true"
+        className={cn(
+          'bg-surface-sunken border-subtle relative flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-md border sm:h-45 sm:w-45',
+          isSoldOut && 'opacity-60 saturate-75',
+        )}
+      >
+        {product.featuredImage &&
+        product.featuredImage.width &&
+        product.featuredImage.height ? (
+          <Image
+            src={getSizedShopifyImageUrl(product.featuredImage.url, 360)}
+            alt={product.featuredImage.altText ?? product.title}
+            width={product.featuredImage.width}
+            height={product.featuredImage.height}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
+            sizes="(min-width: 640px) 180px, 112px"
+            className="max-h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          />
+        ) : (
+          <div
+            className="flex h-full w-full items-center justify-center"
+            aria-hidden="true"
+          >
+            <Leaf className="text-muted/40 h-6 w-6" />
+          </div>
+        )}
+      </Link>
+
+      <div className="flex min-h-28 min-w-0 flex-1 flex-col gap-2 sm:min-h-45">
+        <div className="min-w-0">
+          <h3 className="type-body-lg text-strong line-clamp-2 w-full leading-tight font-semibold wrap-break-word">
+            <Link
+              href={productUrl}
+              className="focus-visible:ring-ring hover:text-brand rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              {product.title}
+            </Link>
+          </h3>
+
+          {product.rating !== undefined && (
+            <StarRating
+              rating={product.rating}
+              count={product.reviewCount}
+              size="sm"
+              className="mt-2 flex w-fit"
+            />
+          )}
+
+          {!isSoldOut && !canQuickAdd && (
+            <Price
+              price={product.priceRange.minVariantPrice}
+              size="sm"
+              className="text-strong mt-1 block font-semibold"
+            />
+          )}
+        </div>
+
+        <div className={cn('min-w-0', canQuickAdd ? 'flex flex-1' : 'mt-auto')}>
+          {isSoldOut ? (
+            <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_7rem] sm:items-end">
+              <p className="type-body-sm text-muted">Currently unavailable</p>
+              <Button
+                href="/pages/contact"
+                variant="secondary"
+                size="sm"
+                className="w-full"
+              >
+                Contact us
+              </Button>
+            </div>
+          ) : canQuickAdd ? (
+            <ProductPurchaseForm
+              variants={product.variants}
+              productTitle={product.title}
+              layout="inline"
+              showPrice
+              className="flex flex-1 flex-col justify-between"
             />
           ) : (
-            <div className="h-full w-full" aria-hidden="true" />
+            <Button href={productUrl} size="sm" className="w-full sm:w-auto">
+              View options
+            </Button>
           )}
-          {isSoldOut && (
-            <div className="absolute top-3 left-3">
-              <Badge variant="outOfStock" />
-            </div>
-          )}
-        </Link>
-
-        <div className="flex min-w-0 flex-col p-3 sm:p-5 lg:p-6">
-          {/* Identity zone */}
-          <div className="space-y-2 sm:space-y-3">
-            {product.productType.trim() && (
-              <p className="type-eyebrow text-muted">
-                {product.productType.trim()}
-              </p>
-            )}
-            <h3 className="type-heading-04 text-strong wrap-break-word">
-              <Link
-                href={productUrl}
-                className="focus-visible:ring-ring hover:text-brand rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                {product.title}
-              </Link>
-            </h3>
-            {product.rating !== undefined && (
-              <StarRating
-                rating={product.rating}
-                count={product.reviewCount}
-                size="sm"
-              />
-            )}
-            {certBadges.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {certBadges.map((label) => (
-                  <span
-                    key={label}
-                    className="type-eyebrow border-default bg-surface-sunken text-muted inline-block rounded-sm border px-1.5 py-0.5"
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Purchase zone */}
-          <div className="mt-3 sm:mt-4">
-            <p className="type-body-sm mb-3 flex items-center gap-1.5">
-              <span className="text-muted">From</span>
-              <Price
-                price={product.priceRange.minVariantPrice}
-                size="sm"
-                className="text-strong"
-              />
-            </p>
-            {canQuickAdd ? (
-              <ProductPurchaseForm
-                variants={product.variants}
-                productTitle={product.title}
-                layout="inline"
-                showPrice={false}
-              />
-            ) : product.availableForSale ? (
-              <Button href={productUrl} className="w-full sm:w-auto">
-                View options
-              </Button>
-            ) : null}
-          </div>
         </div>
       </div>
-    </Card>
+    </article>
   )
 }

@@ -7,10 +7,13 @@ type ProductListProps = {
   products: CollectionProductSummary[]
 }
 
-export function ProductList({ nextPageHref = null, products }: ProductListProps) {
+export function ProductList({
+  nextPageHref = null,
+  products,
+}: ProductListProps) {
   if (products.length === 0) {
     return (
-      <ul className="grid gap-4" role="list">
+      <ul className="grid gap-2" role="list">
         <Card as="li" padding="lg" radius="md" className="text-center">
           <h3 className="type-heading-03 text-strong">
             No products match these filters
@@ -28,8 +31,11 @@ export function ProductList({ nextPageHref = null, products }: ProductListProps)
   }
 
   return (
-    <div>
-      <ul className="grid gap-4" role="list">
+    <Card padding="md">
+      <ul
+        className="space-y-8 divide-y [&>li]:border-subtle [&>li:not(:last-child)]:pb-8"
+        role="list"
+      >
         {products.map((product, index) => (
           <li key={product.id}>
             <ProductCard product={product} priority={index === 0} />
@@ -44,6 +50,6 @@ export function ProductList({ nextPageHref = null, products }: ProductListProps)
           </Button>
         </div>
       )}
-    </div>
+    </Card>
   )
 }
