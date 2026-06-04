@@ -16,18 +16,44 @@ type CartViewProps = {
   cart: Cart | null
 }
 
+const TRUST_SIGNALS = [
+  '1,000+ businesses served',
+  'ACO Organic certified',
+  'HACCP certified',
+  'Sourced from 15+ countries',
+]
+
 export function CartView({ cart }: CartViewProps) {
   if (!cart || cart.totalQuantity === 0) {
     return (
-      <div className="border-default bg-surface mx-auto max-w-md rounded-md border p-6 text-center sm:p-8">
-        <h2 className="type-heading-04 text-strong">Your cart is empty.</h2>
-        <p className="type-body-sm text-muted mt-2">
-          Browse retail samples, loose leaf teas, herbs, and spices when you are
-          ready to build an order.
-        </p>
-        <Button href="/collections/all" className="mt-6 w-full sm:w-auto">
-          Continue shopping
-        </Button>
+      <div>
+        <div className="text-center">
+          <h2 className="type-heading-02 text-strong">Your cart is empty</h2>
+          <p className="type-body text-muted mx-auto mt-3 max-w-lg">
+            Browse our range of 1,000+ teas, herbs, and spices, or get in touch
+            to set up a wholesale account.
+          </p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button href="/pages/wholesale" variant="brand" size="cta">
+              Apply for wholesale
+            </Button>
+            <Button href="/collections/all" variant="secondary" size="md">
+              Browse collections
+            </Button>
+          </div>
+          <p className="type-body-sm text-muted mt-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            {TRUST_SIGNALS.map((signal, i) => (
+              <span key={signal} className="inline-flex items-center gap-2">
+                {i > 0 && (
+                  <span className="text-subtle" aria-hidden="true">
+                    ·
+                  </span>
+                )}
+                {signal}
+              </span>
+            ))}
+          </p>
+        </div>
       </div>
     )
   }
@@ -61,11 +87,11 @@ export function CartView({ cart }: CartViewProps) {
             return (
               <li
                 key={line.id}
-                className="border-default bg-surface grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 gap-y-4 rounded-md border p-4 sm:grid-cols-[6rem_minmax(0,1fr)] sm:p-5 xl:grid-cols-[5rem_minmax(0,1fr)_auto_7rem_auto] xl:items-center xl:rounded-none xl:border-0 xl:bg-transparent xl:px-0 xl:py-6"
+                className="border-default bg-surface grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 gap-y-4 rounded-md border p-4 sm:grid-cols-[6rem_minmax(0,1fr)] sm:p-5 lg:grid-cols-[5rem_minmax(0,1fr)_auto_auto] lg:items-center xl:grid-cols-[5rem_minmax(0,1fr)_auto_7rem_auto] xl:rounded-none xl:border-0 xl:bg-transparent xl:px-0 xl:py-6"
               >
                 <Link
                   href={productHref}
-                  className="bg-surface-sunken focus-visible:ring-ring relative row-span-3 aspect-square w-20 overflow-hidden rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-24 xl:row-span-1 xl:w-20"
+                  className="bg-surface-sunken focus-visible:ring-ring relative row-span-3 aspect-square w-20 overflow-hidden rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-24 lg:row-span-1 lg:w-20"
                   aria-label={`View ${product.title}`}
                 >
                   {productImage ? (
@@ -83,12 +109,14 @@ export function CartView({ cart }: CartViewProps) {
                 </Link>
 
                 <div className="min-w-0 flex-1">
-                  <Link
-                    href={productHref}
-                    className="text-strong focus-visible:ring-ring line-clamp-2 min-h-10 rounded-md py-2 font-medium wrap-break-word hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                  >
-                    {product.title}
-                  </Link>
+                  <h3>
+                    <Link
+                      href={productHref}
+                      className="text-strong focus-visible:ring-ring line-clamp-2 min-h-10 rounded-md py-2 font-medium wrap-break-word hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    >
+                      {product.title}
+                    </Link>
+                  </h3>
                   {variantTitle ? (
                     <p className="type-body-sm text-muted mt-1 wrap-break-word">
                       {variantTitle}
@@ -140,7 +168,7 @@ export function CartView({ cart }: CartViewProps) {
                           key={`${discount.title ?? 'discount'}-${index}`}
                           className="type-caption text-success-text flex justify-end gap-1"
                         >
-                          <span className="truncate">
+                          <span className="min-w-0 wrap-break-word">
                             {discount.title ?? 'Discount'}
                           </span>
                           <span className="inline-flex gap-0.5">
@@ -161,37 +189,47 @@ export function CartView({ cart }: CartViewProps) {
         </ul>
       </div>
 
-      <div className="border-default bg-surface rounded-md border p-4 sm:p-6 xl:sticky xl:top-24">
+      <aside
+        aria-label="Order summary"
+        className="border-default bg-surface rounded-md border p-4 sm:p-6 xl:sticky xl:top-24"
+      >
         <h2 className="type-heading-04 text-strong">Order summary</h2>
         <div className="border-default mt-5 space-y-3 border-t pt-5">
           <div className="type-body-sm flex justify-between gap-4">
             <span className="text-muted">Items</span>
-            <span className="text-strong font-medium">{itemCountLabel}</span>
+            <span
+              className="text-strong font-medium"
+              role="status"
+              aria-live="polite"
+            >
+              {itemCountLabel}
+            </span>
           </div>
-          <div className="flex justify-between gap-4 text-lg font-semibold">
+          <div className="type-heading-05 flex justify-between gap-4">
             <span>Subtotal</span>
             <Price price={cart.cost.subtotalAmount} size="lg" />
           </div>
         </div>
-        <p className="text-muted mt-1 text-sm">
+        <p className="type-body-sm text-muted mt-1">
           Shipping and taxes calculated at checkout.
         </p>
 
-        <a
+        <Button
           href={cart.checkoutUrl}
-          className="bg-action-primary text-action-primary-text hover:bg-action-primary-hover focus-visible:ring-ring mt-4 flex min-h-12 w-full items-center justify-center rounded-md px-5 text-center font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          size="cta"
+          className="mt-4 w-full"
           aria-label="Proceed to checkout"
         >
           Checkout
-        </a>
+        </Button>
 
         <Link
           href="/collections/all"
-          className="text-muted focus-visible:ring-ring mt-3 flex min-h-11 items-center justify-center text-center text-sm hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="type-body-sm text-muted focus-visible:ring-ring mt-3 flex min-h-11 items-center justify-center text-center hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           Continue shopping
         </Link>
-      </div>
+      </aside>
     </div>
   )
 }

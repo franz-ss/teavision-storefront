@@ -143,7 +143,9 @@ export async function updateCartLineAction(
   if (!cartId) throw new Error(CART_SESSION_EXPIRED_ERROR)
 
   try {
-    await updateCartLines(cartId, [{ id: lineId, quantity: normalizedQuantity }])
+    await updateCartLines(cartId, [
+      { id: lineId, quantity: normalizedQuantity },
+    ])
     revalidatePath('/cart')
   } catch (error) {
     if (isMaximumQuantityError(error)) {

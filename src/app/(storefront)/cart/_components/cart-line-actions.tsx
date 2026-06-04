@@ -57,8 +57,8 @@ export function CartLineActions({
 
   return (
     <>
-      <div className="col-start-2 flex items-center gap-2 xl:col-start-3 xl:justify-center">
-        <span className="type-caption text-muted mr-auto xl:sr-only">
+      <div className="col-start-2 flex items-center gap-2 lg:col-start-3 xl:justify-center">
+        <span className="type-caption text-muted mr-auto lg:sr-only">
           Quantity
         </span>
         <form action={formAction}>
@@ -77,7 +77,8 @@ export function CartLineActions({
         </form>
         <span
           className="min-w-8 text-center tabular-nums"
-          aria-label={`Quantity: ${quantity}`}
+          role="status"
+          aria-live="polite"
         >
           {quantity}
         </span>
@@ -97,7 +98,10 @@ export function CartLineActions({
         </form>
       </div>
 
-      <form action={formAction} className="col-start-2 xl:col-start-5">
+      <form
+        action={formAction}
+        className="col-start-2 lg:col-start-4 xl:col-start-5"
+      >
         <input type="hidden" name="intent" value="remove" />
         <input type="hidden" name="lineId" value={lineId} />
         <Button
@@ -107,7 +111,7 @@ export function CartLineActions({
           disabled={isPending}
           isLoading={isPending}
           aria-label={`Remove ${productTitle} from cart`}
-          className="w-full xl:w-auto"
+          className="w-full lg:w-auto"
         >
           Remove
         </Button>

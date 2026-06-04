@@ -38,7 +38,14 @@ export const Empty: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await expect(canvas.getByText('Your cart is empty.')).toBeInTheDocument()
+    await expect(canvas.getByText('Your cart is empty')).toBeInTheDocument()
+    await expect(
+      canvas.getByRole('link', { name: 'Apply for wholesale' }),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('link', { name: 'Browse collections' }),
+    ).toBeVisible()
+    await expect(canvas.getByText('1,000+ businesses served')).toBeVisible()
     await expect(
       canvas.queryByRole('link', { name: 'Proceed to checkout' }),
     ).not.toBeInTheDocument()

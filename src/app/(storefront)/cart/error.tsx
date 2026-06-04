@@ -6,8 +6,10 @@ import { Button } from '@/components/ui'
 
 export default function CartError({
   error,
+  reset,
 }: {
   error: Error & { digest?: string }
+  reset: () => void
 }) {
   useEffect(() => {
     console.error(error)
@@ -24,6 +26,7 @@ export default function CartError({
           continue shopping while the storefront reconnects.
         </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <Button onClick={reset}>Try again</Button>
           <Button href="/collections/all" variant="secondary">
             Continue shopping
           </Button>

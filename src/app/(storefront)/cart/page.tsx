@@ -32,17 +32,17 @@ export default function CartPage() {
               {Array.from({ length: 2 }, (_, index) => (
                 <div
                   key={index}
-                  className="border-default bg-surface grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 gap-y-4 rounded-md border p-4 sm:grid-cols-[6rem_minmax(0,1fr)] sm:p-5 xl:grid-cols-[5rem_minmax(0,1fr)_auto_7rem_auto] xl:items-center xl:rounded-none xl:border-0 xl:bg-transparent xl:px-0 xl:py-6"
+                  className="border-default bg-surface grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 gap-y-4 rounded-md border p-4 sm:grid-cols-[6rem_minmax(0,1fr)] sm:p-5 lg:grid-cols-[5rem_minmax(0,1fr)_auto_auto] lg:items-center xl:grid-cols-[5rem_minmax(0,1fr)_auto_7rem_auto] xl:rounded-none xl:border-0 xl:bg-transparent xl:px-0 xl:py-6"
                 >
-                  <div className="bg-surface-sunken row-span-3 aspect-square w-20 animate-pulse rounded motion-reduce:animate-none sm:w-24 xl:row-span-1 xl:w-20" />
+                  <div className="bg-surface-sunken row-span-3 aspect-square w-20 animate-pulse rounded motion-reduce:animate-none sm:w-24 lg:row-span-1 lg:w-20" />
                   <div className="flex min-w-0 flex-col gap-2">
                     <div className="bg-surface-sunken h-5 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
                     <div className="bg-surface-sunken h-4 w-1/2 animate-pulse rounded motion-reduce:animate-none" />
                     <div className="bg-surface-sunken h-5 w-24 animate-pulse rounded motion-reduce:animate-none xl:hidden" />
                   </div>
-                  <div className="bg-surface-sunken col-start-2 h-11 w-40 animate-pulse rounded motion-reduce:animate-none xl:col-start-auto" />
+                  <div className="bg-surface-sunken col-start-2 h-11 w-40 animate-pulse rounded motion-reduce:animate-none lg:col-start-3 xl:col-start-auto" />
                   <div className="bg-surface-sunken hidden h-6 w-24 animate-pulse rounded motion-reduce:animate-none xl:block" />
-                  <div className="bg-surface-sunken col-start-2 h-11 w-full animate-pulse rounded motion-reduce:animate-none xl:col-start-auto xl:w-20" />
+                  <div className="bg-surface-sunken col-start-2 h-11 w-full animate-pulse rounded motion-reduce:animate-none lg:col-start-4 lg:w-20 xl:col-start-auto" />
                 </div>
               ))}
             </div>
