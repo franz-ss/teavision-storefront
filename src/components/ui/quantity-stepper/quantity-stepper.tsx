@@ -18,7 +18,6 @@ type QuantityStepperProps = {
   name?: string
   describedBy?: string
   className?: string
-  density?: 'default' | 'compact'
 }
 
 function getSafeStep(step: number): number {
@@ -53,71 +52,66 @@ export function QuantityStepper({
   name,
   describedBy,
   className,
-  density = 'default',
 }: QuantityStepperProps) {
   const quantityStep = getSafeStep(step)
   const quantity = clampQuantity(value, min, max, quantityStep)
   const canDecrease = quantity > min && !disabled
   const canIncrease =
     max === undefined ? !disabled : quantity + quantityStep <= max && !disabled
-  const isCompact = density === 'compact'
 
   function updateQuantity(nextValue: number) {
     onChange(clampQuantity(nextValue, min, max, quantityStep))
   }
 
   return (
-    <div
-      className={cn(
-        isCompact
-          ? 'grid grid-cols-[2.5rem_2.5rem_2.5rem] gap-0'
-          : 'flex items-center gap-2',
-        className,
-      )}
-    >
-      <IconButton
-        aria-label={`Decrease ${label.toLowerCase()}`}
-        title={`Decrease ${label.toLowerCase()}`}
-        disabled={!canDecrease}
-        onClick={() => updateQuantity(quantity - quantityStep)}
-        size="sm"
-        variant="outline"
-        className={cn(isCompact && 'h-10 w-10 rounded-r-none border-r-0')}
-      >
-        <Minus className="h-4 w-4" aria-hidden="true" />
-      </IconButton>
+    <>
       <label className="sr-only" htmlFor={id}>
         {label}
       </label>
-      <input
-        id={id}
-        name={name}
-        type="number"
-        inputMode="numeric"
-        min={min}
-        max={max}
-        step={quantityStep}
-        value={quantity}
-        onChange={(event) => updateQuantity(event.currentTarget.valueAsNumber)}
-        disabled={disabled}
+      <div
         className={cn(
-          'type-label border-default bg-canvas text-strong focus-visible:ring-ring h-11 w-16 [appearance:textfield] rounded-md border px-2 text-center tabular-nums focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
-          isCompact && 'h-10 w-10 rounded-none px-1',
+          'border-default inline-grid w-fit grid-cols-[2.25rem_2.25rem_2.25rem] overflow-hidden rounded-full border',
+          className,
         )}
-        aria-label={label}
-        aria-describedby={describedBy}
-      />
-      <IconButton
-        aria-label={`Increase ${label.toLowerCase()}`}
-        title={`Increase ${label.toLowerCase()}`}
-        disabled={!canIncrease}
-        onClick={() => updateQuantity(quantity + quantityStep)}
-        size="sm"
-        variant="outline"
-        className={cn(isCompact && 'h-10 w-10 rounded-l-none border-l-0')}
       >
-        <Plus className="h-4 w-4" aria-hidden="true" />
-      </IconButton>
-    </div>
+        <IconButton
+          aria-label={`Decrease ${label.toLowerCase()}`}
+          title={`Decrease ${label.toLowerCase()}`}
+          disabled={!canDecrease}
+          onClick={() => updateQuantity(quantity - quantityStep)}
+          variant="ghost"
+          className="h-9 w-9 rounded-none"
+        >
+          <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+        </IconButton>
+        <input
+          id={id}
+          name={name}
+          type="number"
+          inputMode="numeric"
+          min={min}
+          max={max}
+          step={quantityStep}
+          value={quantity}
+          onChange={(event) =>
+            updateQuantity(event.currentTarget.valueAsNumber)
+          }
+          disabled={disabled}
+          className="border-default text-strong type-body-sm h-9 w-9 min-w-0 [appearance:textfield] border-x bg-transparent text-center tabular-nums focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          aria-label={label}
+          aria-describedby={describedBy}
+        />
+        <IconButton
+          aria-label={`Increase ${label.toLowerCase()}`}
+          title={`Increase ${label.toLowerCase()}`}
+          disabled={!canIncrease}
+          onClick={() => updateQuantity(quantity + quantityStep)}
+          variant="ghost"
+          className="h-9 w-9 rounded-none"
+        >
+          <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+        </IconButton>
+      </div>
+    </>
   )
 }

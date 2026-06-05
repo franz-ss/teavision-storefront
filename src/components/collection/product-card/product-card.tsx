@@ -65,7 +65,7 @@ export function ProductCard({
 
       <div className="flex min-h-28 min-w-0 flex-1 flex-col gap-2 sm:min-h-45">
         <div className="min-w-0">
-          <h3 className="type-body-lg text-strong line-clamp-2 w-full leading-tight font-semibold wrap-break-word">
+          <h3 className="text-strong line-clamp-2 w-full leading-tight font-medium wrap-break-word">
             <Link
               href={productUrl}
               className="focus-visible:ring-ring hover:text-brand rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"

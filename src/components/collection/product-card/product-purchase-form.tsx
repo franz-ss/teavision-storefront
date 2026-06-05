@@ -196,7 +196,6 @@ export function ProductPurchaseForm({
             step={quantityIncrement}
             disabled={isPending || !canAddToCart}
             label={`Quantity for ${productTitle}`}
-            density={isInlineLayout ? 'compact' : 'default'}
           />
         </div>
         <div

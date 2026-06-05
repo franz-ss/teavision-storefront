@@ -69,7 +69,6 @@ export function CartLineActions({
             <IconButton
               type="submit"
               variant="ghost"
-              size="sm"
               disabled={!canDecrease || isPending}
               aria-busy={isPending || undefined}
               aria-label={`Decrease quantity of ${productTitle}`}
@@ -92,7 +91,6 @@ export function CartLineActions({
             <IconButton
               type="submit"
               variant="ghost"
-              size="sm"
               disabled={!canIncrease || isPending}
               aria-busy={isPending || undefined}
               aria-label={`Increase quantity of ${productTitle}`}
