@@ -18,7 +18,9 @@ async function CartContent() {
   return (
     <>
       <CartView cart={cart} />
-      {cart && cart.totalQuantity > 0 ? <CartRecommendations /> : null}
+      {cart && cart.totalQuantity > 0 ? (
+        <CartRecommendations cart={cart} />
+      ) : null}
     </>
   )
 }

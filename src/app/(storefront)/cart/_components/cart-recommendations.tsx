@@ -1,19 +1,86 @@
-import { SearchaniseRecommendations } from '@/components/product'
+import {
+  RelatedProductsCarousel,
+  SearchaniseRecommendations,
+} from '@/components/product'
+import {
+  getProduct,
+  getProductRecommendations,
+} from '@/lib/shopify/operations/product'
+import type { Cart, Product, ProductSummary } from '@/lib/shopify/types'
 
-const CART_RECOMMENDATIONS_TITLE = 'Recommended for your order'
+const CART_RECOMMENDATIONS_TITLE =
+  'Customers Who Bought This Product Also Bought'
+const CART_RECOMMENDATIONS_LIMIT = 12
+const CART_RECOMMENDATION_SEED_LIMIT = 3
 const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
 const SEARCHANISE_ENABLED =
   process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
 
-export function CartRecommendations() {
-  if (!SEARCHANISE_ENABLED || !SEARCHANISE_API_KEY) return null
+function getUniqueCartProductHandles(cart: Cart): string[] {
+  const handles = new Set<string>()
+
+  cart.lines.forEach((line) => {
+    handles.add(line.merchandise.product.handle)
+  })
+
+  return Array.from(handles)
+}
+
+async function getCartRecommendationProducts(
+  cart: Cart,
+): Promise<ProductSummary[]> {
+  const cartProductHandles = getUniqueCartProductHandles(cart)
+  const cartProductHandleSet = new Set(cartProductHandles)
+  const seedProducts = (
+    await Promise.all(
+      cartProductHandles
+        .slice(0, CART_RECOMMENDATION_SEED_LIMIT)
+        .map((handle) => getProduct(handle)),
+    )
+  ).filter((product): product is Product => product !== null)
+
+  const recommendations = await Promise.all(
+    seedProducts.map((product) => getProductRecommendations(product.id)),
+  )
+  const seenProductHandles = new Set<string>()
+  const products: ProductSummary[] = []
+
+  recommendations.flat().forEach((product) => {
+    if (
+      cartProductHandleSet.has(product.handle) ||
+      seenProductHandles.has(product.handle) ||
+      products.length >= CART_RECOMMENDATIONS_LIMIT
+    ) {
+      return
+    }
+
+    seenProductHandles.add(product.handle)
+    products.push(product)
+  })
+
+  return products
+}
+
+export async function CartRecommendations({ cart }: { cart: Cart }) {
+  const fallbackProducts = await getCartRecommendationProducts(cart)
+
+  if (fallbackProducts.length === 0) return null
 
   return (
     <SearchaniseRecommendations
+      fallback={
+        <RelatedProductsCarousel
+          products={fallbackProducts}
+          ariaLabel="Recommended products for your order"
+        />
+      }
       title={CART_RECOMMENDATIONS_TITLE}
       titleId="cart-recommendations-title"
       sectionClassName="border-default mt-12 border-t pt-10"
       headingClassName="mb-6 text-xl font-semibold"
+      {...(!SEARCHANISE_ENABLED || !SEARCHANISE_API_KEY
+        ? { fallbackDelayMs: 0 }
+        : undefined)}
     />
   )
 }
