@@ -111,73 +111,100 @@ export function CartView({ cart }: CartViewProps) {
               role="list"
               aria-label="Cart items"
             >
-            {cart.lines.map((line) => {
-              const product = line.merchandise.product
-              const productImage = product.featuredImage
-              const productHref = `/products/${product.handle}`
-              const variantTitle =
-                line.merchandise.title === 'Default Title'
-                  ? null
-                  : line.merchandise.title
-              const hasDiscounts = line.discountAllocations.length > 0
+              {cart.lines.map((line) => {
+                const product = line.merchandise.product
+                const productImage = product.featuredImage
+                const productHref = `/products/${product.handle}`
+                const variantTitle =
+                  line.merchandise.title === 'Default Title'
+                    ? null
+                    : line.merchandise.title
+                const hasDiscounts = line.discountAllocations.length > 0
 
-              return (
-                <li
-                  key={line.id}
-                  className="border-default bg-surface grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 gap-y-4 rounded-md border p-4 sm:grid-cols-[6rem_minmax(0,1fr)] sm:p-5 lg:grid-cols-[5rem_minmax(0,1fr)_auto_auto] lg:items-center xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-start xl:gap-x-6 xl:rounded-none xl:border-0 xl:bg-transparent xl:p-0 xl:py-5"
-                >
-                  {/* Product image */}
-                  <Link
-                    href={productHref}
-                    className="bg-surface-sunken focus-visible:ring-ring relative row-span-3 aspect-square w-20 overflow-hidden rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-24 lg:row-span-1 xl:row-span-2 xl:w-24"
-                    aria-label={`View ${product.title}`}
+                return (
+                  <li
+                    key={line.id}
+                    className="border-default bg-surface grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 gap-y-4 rounded-md border p-4 sm:grid-cols-[6rem_minmax(0,1fr)] sm:p-5 lg:grid-cols-[5rem_minmax(0,1fr)_auto_auto] lg:items-center xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-start xl:gap-x-6 xl:rounded-none xl:border-0 xl:bg-transparent xl:p-0 xl:py-5"
                   >
-                    {productImage ? (
-                      <Image
-                        src={getSizedShopifyImageUrl(productImage.url, 200)}
-                        alt=""
-                        width={productImage.width ?? 200}
-                        height={productImage.height ?? 200}
-                        sizes="(min-width: 1280px) 6rem, (min-width: 640px) 6rem, 5rem"
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span
-                        className="block h-full w-full"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </Link>
+                    {/* Product image */}
+                    <Link
+                      href={productHref}
+                      className="bg-surface-sunken focus-visible:ring-ring relative row-span-3 aspect-square w-20 overflow-hidden rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-24 lg:row-span-1 xl:row-span-2 xl:w-24"
+                      aria-label={`View ${product.title}`}
+                    >
+                      {productImage ? (
+                        <Image
+                          src={getSizedShopifyImageUrl(productImage.url, 200)}
+                          alt=""
+                          width={productImage.width ?? 200}
+                          height={productImage.height ?? 200}
+                          sizes="(min-width: 1280px) 6rem, (min-width: 640px) 6rem, 5rem"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span
+                          className="block h-full w-full"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </Link>
 
-                  {/* Product info */}
-                  <div className="min-w-0 flex-1">
-                    <h3>
-                      <Link
-                        href={productHref}
-                        className="text-strong focus-visible:ring-ring line-clamp-2 rounded-md font-medium wrap-break-word hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                      >
-                        {product.title}
-                      </Link>
-                    </h3>
-                    {variantTitle ? (
-                      <p className="type-body-sm text-muted mt-1 wrap-break-word">
-                        {variantTitle}
-                      </p>
-                    ) : null}
-                    {/* Mobile price — hidden on desktop where it has its own column */}
-                    <div className="mt-2 xl:hidden">
-                      <Price
-                        price={line.cost.totalAmount}
-                        size="md"
-                        className="text-strong font-medium"
-                      />
+                    {/* Product info */}
+                    <div className="min-w-0 flex-1">
+                      <h3>
+                        <Link
+                          href={productHref}
+                          className="text-strong focus-visible:ring-ring line-clamp-2 rounded-md font-medium wrap-break-word hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                        >
+                          {product.title}
+                        </Link>
+                      </h3>
+                      {variantTitle ? (
+                        <p className="type-body-sm text-muted mt-1 wrap-break-word">
+                          {variantTitle}
+                        </p>
+                      ) : null}
+                      {/* Mobile price — hidden on desktop where it has its own column */}
+                      <div className="mt-2 xl:hidden">
+                        <Price
+                          price={line.cost.totalAmount}
+                          size="md"
+                          className="text-strong font-medium"
+                        />
+                        {hasDiscounts ? (
+                          <div className="mt-1 flex flex-col gap-1">
+                            {line.discountAllocations.map((discount, index) => (
+                              <p
+                                key={`${discount.title ?? 'discount'}-${index}-mobile`}
+                                className="type-caption text-success-text flex min-w-0 flex-wrap gap-1"
+                              >
+                                <span className="min-w-0 wrap-break-word">
+                                  {discount.title ?? 'Discount'}
+                                </span>
+                                <span className="inline-flex gap-0.5">
+                                  <span aria-hidden="true">-</span>
+                                  <Price
+                                    price={discount.discountedAmount}
+                                    size="sm"
+                                  />
+                                </span>
+                              </p>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                      {/* Desktop discount info — shown under name */}
                       {hasDiscounts ? (
-                        <div className="mt-1 flex flex-col gap-1">
+                        <div className="mt-2 hidden flex-col gap-1 xl:flex">
                           {line.discountAllocations.map((discount, index) => (
                             <p
-                              key={`${discount.title ?? 'discount'}-${index}-mobile`}
-                              className="type-caption text-success-text flex min-w-0 flex-wrap gap-1"
+                              key={`${discount.title ?? 'discount'}-${index}-desktop-name`}
+                              className="type-caption text-success-text flex min-w-0 items-center gap-1"
                             >
+                              <Check
+                                className="h-3.5 w-3.5 shrink-0"
+                                aria-hidden="true"
+                              />
                               <span className="min-w-0 wrap-break-word">
                                 {discount.title ?? 'Discount'}
                               </span>
@@ -193,90 +220,70 @@ export function CartView({ cart }: CartViewProps) {
                         </div>
                       ) : null}
                     </div>
-                    {/* Desktop discount info — shown under name */}
-                    {hasDiscounts ? (
-                      <div className="mt-2 hidden flex-col gap-1 xl:flex">
-                        {line.discountAllocations.map((discount, index) => (
-                          <p
-                            key={`${discount.title ?? 'discount'}-${index}-desktop-name`}
-                            className="type-caption text-success-text flex min-w-0 items-center gap-1"
-                          >
-                            <Check
-                              className="h-3.5 w-3.5 shrink-0"
-                              aria-hidden="true"
-                            />
-                            <span className="min-w-0 wrap-break-word">
-                              {discount.title ?? 'Discount'}
-                            </span>
-                            <span className="inline-flex gap-0.5">
-                              <span aria-hidden="true">-</span>
-                              <Price
-                                price={discount.discountedAmount}
-                                size="sm"
-                              />
-                            </span>
-                          </p>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
 
-                  {/* Desktop unit price column */}
-                  <div className="hidden xl:col-start-3 xl:row-start-1 xl:block">
-                    <Price
-                      price={line.cost.amountPerQuantity}
-                      size="md"
-                      className="text-strong font-medium"
+                    {/* Desktop unit price column */}
+                    <div className="hidden xl:col-start-3 xl:row-start-1 xl:block">
+                      <Price
+                        price={line.cost.amountPerQuantity}
+                        size="md"
+                        className="text-strong font-medium"
+                      />
+                    </div>
+
+                    {/* Quantity stepper + Remove (from CartLineActions) */}
+                    <CartLineActions
+                      lineId={line.id}
+                      maximumQuantity={getVariantMaximumQuantity(
+                        line.merchandise,
+                      )}
+                      minimumQuantity={getVariantMinimumQuantity(
+                        line.merchandise,
+                      )}
+                      productTitle={product.title}
+                      quantity={line.quantity}
+                      quantityIncrement={getVariantQuantityIncrement(
+                        line.merchandise,
+                      )}
                     />
-                  </div>
 
-                  {/* Quantity stepper + Remove (from CartLineActions) */}
-                  <CartLineActions
-                    lineId={line.id}
-                    maximumQuantity={getVariantMaximumQuantity(
-                      line.merchandise,
-                    )}
-                    minimumQuantity={getVariantMinimumQuantity(
-                      line.merchandise,
-                    )}
-                    productTitle={product.title}
-                    quantity={line.quantity}
-                    quantityIncrement={getVariantQuantityIncrement(
-                      line.merchandise,
-                    )}
-                  />
-
-                  {/* Desktop line total column */}
-                  <div className="hidden text-right xl:col-start-5 xl:row-start-1 xl:block">
-                    <Price
-                      price={line.cost.totalAmount}
-                      size="md"
-                      className="text-strong font-medium"
-                    />
-                    {hasDiscounts ? (
-                      <div className="mt-1 flex flex-col gap-1">
-                        {line.discountAllocations.map((discount, index) => (
-                          <p
-                            key={`${discount.title ?? 'discount'}-${index}-total`}
-                            className="type-caption text-success-text flex justify-end gap-1"
-                          >
-                            <span className="inline-flex gap-0.5">
-                              <span aria-hidden="true">-</span>
-                              <Price
-                                price={discount.discountedAmount}
-                                size="sm"
-                              />
-                            </span>
-                          </p>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                </li>
-              )
-            })}
+                    {/* Desktop line total column */}
+                    <div className="hidden text-right xl:col-start-5 xl:row-start-1 xl:block">
+                      <Price
+                        price={line.cost.totalAmount}
+                        size="md"
+                        className="text-strong font-medium"
+                      />
+                      {hasDiscounts ? (
+                        <div className="mt-1 flex flex-col gap-1">
+                          {line.discountAllocations.map((discount, index) => (
+                            <p
+                              key={`${discount.title ?? 'discount'}-${index}-total`}
+                              className="type-caption text-success-text flex justify-end gap-1"
+                            >
+                              <span className="inline-flex gap-0.5">
+                                <span aria-hidden="true">-</span>
+                                <Price
+                                  price={discount.discountedAmount}
+                                  size="sm"
+                                />
+                              </span>
+                            </p>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </li>
+                )
+              })}
             </ul>
           </Card>
+
+          {/* Packaging note */}
+          <p className="type-caption text-muted border-default bg-brand-subtle mt-6 rounded-md border px-3 py-2.5 leading-snug">
+            <span className="font-semibold">Note:</span> When ordering in sizes
+            over 1kg, your package may not be packed in individual 1kg bags and
+            will instead come in bulk packed bags (2kg 5kg 10kg etc)
+          </p>
 
           {/* Order notes, terms, and checkout actions */}
           <CartCheckoutForm checkoutUrl={cart.checkoutUrl} />
@@ -306,13 +313,6 @@ export function CartView({ cart }: CartViewProps) {
           </div>
           <p className="type-body-sm text-muted mt-1">
             Shipping and taxes calculated at checkout.
-          </p>
-
-          {/* Packaging note */}
-          <p className="type-caption text-muted border-default bg-brand-subtle mt-4 rounded-md border px-3 py-2.5 leading-snug">
-            <span className="font-semibold">Note:</span> When ordering in sizes
-            over 1kg, your package may not be packed in individual 1kg bags and
-            will instead come in bulk packed bags (2kg 5kg 10kg etc)
           </p>
 
           <TrustSignalList layout="stacked" />
