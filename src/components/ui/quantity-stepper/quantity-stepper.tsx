@@ -82,9 +82,7 @@ export function QuantityStepper({
         onClick={() => updateQuantity(quantity - quantityStep)}
         size="sm"
         variant="outline"
-        className={cn(
-          isCompact && 'h-10 w-10 rounded-r-none border-r-0',
-        )}
+        className={cn(isCompact && 'h-10 w-10 rounded-r-none border-r-0')}
       >
         <Minus className="h-4 w-4" aria-hidden="true" />
       </IconButton>
@@ -103,7 +101,7 @@ export function QuantityStepper({
         onChange={(event) => updateQuantity(event.currentTarget.valueAsNumber)}
         disabled={disabled}
         className={cn(
-          'type-label border-default bg-canvas text-strong focus-visible:ring-ring h-11 w-16 rounded-md border px-2 text-center tabular-nums [appearance:textfield] focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+          'type-label border-default bg-canvas text-strong focus-visible:ring-ring h-11 w-16 [appearance:textfield] rounded-md border px-2 text-center tabular-nums focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
           isCompact && 'h-10 w-10 rounded-none px-1',
         )}
         aria-label={label}
@@ -116,9 +114,7 @@ export function QuantityStepper({
         onClick={() => updateQuantity(quantity + quantityStep)}
         size="sm"
         variant="outline"
-        className={cn(
-          isCompact && 'h-10 w-10 rounded-l-none border-l-0',
-        )}
+        className={cn(isCompact && 'h-10 w-10 rounded-l-none border-l-0')}
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
       </IconButton>

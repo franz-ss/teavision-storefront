@@ -201,9 +201,7 @@ export function ProductPurchaseForm({
         </div>
         <div
           className={cn(
-            isInlineLayout
-              ? 'min-w-0'
-              : 'min-w-36 flex-1 sm:flex-none',
+            isInlineLayout ? 'min-w-0' : 'min-w-36 flex-1 sm:flex-none',
           )}
         >
           <Button
@@ -214,13 +212,7 @@ export function ProductPurchaseForm({
             size={isInlineLayout ? 'sm' : 'md'}
             className="w-full"
           >
-            {justAdded ? (
-              'Added'
-            ) : canAddToCart ? (
-              'Add to cart'
-            ) : (
-              'Sold out'
-            )}
+            {justAdded ? 'Added' : canAddToCart ? 'Add to cart' : 'Sold out'}
           </Button>
         </div>
       </div>

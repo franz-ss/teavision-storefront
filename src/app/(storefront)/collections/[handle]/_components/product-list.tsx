@@ -33,7 +33,7 @@ export function ProductList({
   return (
     <Card padding="md">
       <ul
-        className="space-y-8 divide-y [&>li]:border-subtle [&>li:not(:last-child)]:pb-8"
+        className="[&>li]:border-subtle space-y-8 divide-y [&>li:not(:last-child)]:pb-8"
         role="list"
       >
         {products.map((product, index) => (
