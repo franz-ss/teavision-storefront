@@ -7,6 +7,12 @@
       "runtimeArgs": ["node_modules/next/dist/bin/next", "dev"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "cart-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", ".cart-preview", "-l", "4444", "--no-clipboard"],
+      "port": 4444
     }
   ]
 }

@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teavision Cart — Improved Layout Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['Fraunces', 'Times New Roman', 'serif'],
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+            },
+            colors: {
+              canvas: '#f0eade',
+              surface: {
+                DEFAULT: '#fefefc',
+                sunken: '#f0ece3',
+                raised: '#fefefc',
+              },
+              ink: {
+                50: '#f7f7f5',
+                100: '#ededea',
+                200: '#d4d4d0',
+                300: '#b0afa8',
+                400: '#87867e',
+                500: '#65645e',
+                600: '#4a4a45',
+                700: '#3d3d35',
+                800: '#2e2e28',
+                900: '#1e1e1a',
+              },
+              steep: {
+                50: '#eef5ef',
+                100: '#d5e8d9',
+                700: '#2e5040',
+                900: '#1a3328',
+              },
+              amber: {
+                50: '#fef6e6',
+                500: '#b5841f',
+                600: '#9a7019',
+                700: '#7a5a14',
+              },
+              success: {
+                50: '#edf7ef',
+                500: '#3d8b47',
+                700: '#2a6130',
+              },
+            },
+            maxWidth: {
+              wide: '90rem',
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #f0eade;
+        color: #3d3d35;
+        font-family: Inter, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #1e1e1a;
+        font-family: Fraunces, 'Times New Roman', serif;
+        font-weight: 500;
+        line-height: 1.15;
+        text-wrap: balance;
+      }
+
+      .btn-primary {
+        background-color: #1e1e1a;
+        color: #f0eade;
+        font-weight: 600;
+        border-radius: 6px;
+        transition: background-color 200ms;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .btn-primary:hover {
+        background-color: #3d3d35;
+      }
+
+      .btn-secondary {
+        background-color: transparent;
+        color: #3d3d35;
+        border: 1.5px solid #3d3d35;
+        font-weight: 600;
+        border-radius: 6px;
+        transition: background-color 200ms;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .btn-secondary:hover {
+        background-color: #f7f7f5;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: #65645e;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: color 200ms;
+        cursor: pointer;
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.75rem;
+      }
+      .btn-ghost:hover {
+        color: #1e1e1a;
+        text-decoration: underline;
+      }
+
+      .icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 9999px;
+        border: 1.5px solid #d4d4d0;
+        background: #fefefc;
+        cursor: pointer;
+        transition: background-color 200ms;
+        color: #3d3d35;
+      }
+      .icon-btn:hover {
+        background-color: #f7f7f5;
+      }
+
+      .qty-input {
+        width: 2.5rem;
+        height: 2.5rem;
+        text-align: center;
+        border: 1.5px solid #d4d4d0;
+        border-radius: 4px;
+        background: #fefefc;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #1e1e1a;
+      }
+
+      /* State toggle */
+      .state-switch {
+        display: inline-flex;
+        border-radius: 9999px;
+        overflow: hidden;
+        border: 1.5px solid #d4d4d0;
+        background: #fefefc;
+      }
+      .state-switch button {
+        padding: 8px 20px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        background: transparent;
+        cursor: pointer;
+        border: none;
+        color: #65645e;
+        transition: all 150ms;
+      }
+      .state-switch button.active {
+        background: #1e1e1a;
+        color: #f0eade;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <!-- Sticky header bar -->
+    <header
+      class="border-ink-200 sticky top-0 z-40 border-b"
+      style="background: rgba(254, 254, 252, 0.92); backdrop-filter: blur(12px)"
+    >
+      <div
+        class="max-w-wide mx-auto flex items-center justify-between px-4 py-3 md:px-6 lg:px-8"
+      >
+        <span
+          class="font-display text-ink-900 text-xl font-semibold tracking-tight"
+          >teavision</span
+        >
+        <span class="text-ink-500 text-sm">Cart preview mockup</span>
+      </div>
+    </header>
+
+    <!-- State toggle toolbar -->
+    <div
+      class="border-ink-200 bg-surface-sunken sticky top-[53px] z-30 border-b py-2.5 text-center"
+    >
+      <div
+        class="max-w-wide mx-auto flex items-center justify-center gap-4 px-4"
+      >
+        <span
+          class="text-ink-500 text-xs font-semibold tracking-wider uppercase"
+          >View:</span
+        >
+        <div class="state-switch">
+          <button class="active" onclick="showState('filled')">
+            Filled Cart
+          </button>
+          <button onclick="showState('empty')">Empty State</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- FILLED CART STATE                            -->
+    <!-- ============================================ -->
+    <div id="state-filled">
+      <section class="py-6 md:py-10">
+        <div class="max-w-wide mx-auto px-4 md:px-6 lg:px-8">
+          <h1
+            class="font-display mb-8 text-[2.25rem] leading-[2.75rem] font-medium"
+          >
+            Your Cart
+          </h1>
+
+          <!-- Main grid: items + sidebar -->
+          <div
+            class="grid gap-10 pb-24 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-start xl:pb-0"
+          >
+            <!-- LINE ITEMS column -->
+            <div class="min-w-0">
+              <!-- ===== DESKTOP TABLE (xl+) ===== -->
+              <div class="hidden xl:block">
+                <!-- Header row -->
+                <div
+                  class="border-ink-200 grid grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] items-center gap-x-6 border-b pb-3"
+                >
+                  <span class="text-ink-500 text-sm font-medium">Photo</span>
+                  <span class="text-ink-500 text-sm font-medium">Name</span>
+                  <span class="text-ink-500 text-sm font-medium">Price/kg</span>
+                  <span class="text-ink-500 text-center text-sm font-medium"
+                    >Quantity/kg</span
+                  >
+                  <span class="text-ink-500 text-right text-sm font-medium"
+                    >Total</span
+                  >
+                </div>
+
+                <!-- Item rows -->
+                <div class="divide-ink-200 divide-y">
+                  <!-- Item 1 -->
+                  <div class="py-6">
+                    <div
+                      class="grid grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] items-start gap-x-6"
+                    >
+                      <a
+                        href="#"
+                        class="bg-surface-sunken block aspect-square w-24 overflow-hidden rounded"
+                      >
+                        <img
+                          src="https://placehold.co/200x200/f0ece3/3d3d35?text=Chai"
+                          alt=""
+                          class="h-full w-full object-cover"
+                        />
+                      </a>
+                      <div class="min-w-0">
+                        <h3 class="text-base">
+                          <a
+                            href="#"
+                            class="text-ink-900 leading-snug font-semibold uppercase hover:underline"
+                            >Organic Raw Sticky Chai</a
+                          >
+                        </h3>
+                        <p class="text-ink-500 mt-1 text-sm">250g</p>
+                        <p class="mt-3 text-sm leading-snug text-amber-600">
+                          Buy 4 more and get 5% on each product
+                        </p>
+                        <button class="btn-ghost mt-5 px-0">Remove</button>
+                      </div>
+                      <div class="pt-1">
+                        <span class="text-ink-900 font-semibold">$18.38</span>
+                      </div>
+                      <div
+                        class="flex items-center justify-center gap-2 pt-0.5"
+                      >
+                        <button class="icon-btn" aria-label="Decrease quantity">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                          >
+                            <path d="M5 12h14" />
+                          </svg>
+                        </button>
+                        <input
+                          type="text"
+                          value="1"
+                          class="qty-input"
+                          readonly
+                        />
+                        <button class="icon-btn" aria-label="Increase quantity">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                          >
+                            <path d="M12 5v14M5 12h14" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div class="pt-1 text-right">
+                        <span class="text-ink-900 font-semibold">$18.38</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Item 2 -->
+                  <div class="py-6">
+                    <div
+                      class="grid grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] items-start gap-x-6"
+                    >
+                      <a
+                        href="#"
+                        class="bg-surface-sunken block aspect-square w-24 overflow-hidden rounded"
+                      >
+                        <img
+                          src="https://placehold.co/200x200/f0ece3/3d3d35?text=Lemon"
+                          alt=""
+                          class="h-full w-full object-cover"
+                        />
+                      </a>
+                      <div class="min-w-0">
+                        <h3 class="text-base">
+                          <a
+                            href="#"
+                            class="text-ink-900 leading-snug font-semibold uppercase hover:underline"
+                            >Organic Australian Lemon Myrtle</a
+                          >
+                        </h3>
+                        <p class="text-ink-500 mt-1 text-sm">50g</p>
+                        <p class="mt-3 text-sm leading-snug text-amber-600">
+                          Buy 4 more and get 5% on each product
+                        </p>
+                        <button class="btn-ghost mt-5 px-0">Remove</button>
+                      </div>
+                      <div class="pt-1">
+                        <span class="text-ink-900 font-semibold">$16.42</span>
+                      </div>
+                      <div
+                        class="flex items-center justify-center gap-2 pt-0.5"
+                      >
+                        <button class="icon-btn" aria-label="Decrease quantity">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                          >
+                            <path d="M5 12h14" />
+                          </svg>
+                        </button>
+                        <input
+                          type="text"
+                          value="1"
+                          class="qty-input"
+                          readonly
+                        />
+                        <button class="icon-btn" aria-label="Increase quantity">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                          >
+                            <path d="M12 5v14M5 12h14" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div class="pt-1 text-right">
+                        <span class="text-ink-900 font-semibold">$16.42</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Item 3 — with active discount -->
+                  <div class="py-6">
+                    <div
+                      class="grid grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] items-start gap-x-6"
+                    >
+                      <a
+                        href="#"
+                        class="bg-surface-sunken block aspect-square w-24 overflow-hidden rounded"
+                      >
+                        <img
+                          src="https://placehold.co/200x200/f0ece3/3d3d35?text=Rooibos"
+                          alt=""
+                          class="h-full w-full object-cover"
+                        />
+                      </a>
+                      <div class="min-w-0">
+                        <h3 class="text-base">
+                          <a
+                            href="#"
+                            class="text-ink-900 leading-snug font-semibold uppercase hover:underline"
+                            >South African Rooibos Premium</a
+                          >
+                        </h3>
+                        <p class="text-ink-500 mt-1 text-sm">5kg</p>
+                        <p
+                          class="text-success-700 mt-3 flex items-center gap-1.5 text-sm leading-snug font-medium"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="m9 12 2 2 4-4" />
+                            <circle cx="12" cy="12" r="10" />
+                          </svg>
+                          Bulk discount applied &minus;$25.00
+                        </p>
+                        <button class="btn-ghost mt-5 px-0">Remove</button>
+                      </div>
+                      <div class="pt-1">
+                        <span class="text-ink-900 font-semibold">$35.00</span>
+                      </div>
+                      <div
+                        class="flex items-center justify-center gap-2 pt-0.5"
+                      >
+                        <button class="icon-btn" aria-label="Decrease quantity">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                          >
+                            <path d="M5 12h14" />
+                          </svg>
+                        </button>
+                        <input
+                          type="text"
+                          value="5"
+                          class="qty-input"
+                          readonly
+                        />
+                        <button class="icon-btn" aria-label="Increase quantity">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                          >
+                            <path d="M12 5v14M5 12h14" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div class="pt-1 text-right">
+                        <span class="text-ink-900 font-semibold">$150.00</span>
+                        <p class="text-success-700 mt-1 text-xs font-medium">
+                          &minus;$25.00
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom bar: note + grand total -->
+                <div
+                  class="bg-steep-50 border-steep-100 mt-2 flex items-center justify-between gap-6 rounded-lg border px-6 py-4"
+                >
+                  <p
+                    class="text-steep-700 max-w-xl text-sm leading-snug font-medium"
+                  >
+                    <span class="font-semibold">Note:</span> When ordering in
+                    sizes over 1kg, your package may not be packed in individual
+                    1kg bags and will instead come in bulk packed bags (2kg 5kg
+                    10kg etc)
+                  </p>
+                  <div class="flex flex-shrink-0 items-baseline gap-3">
+                    <span
+                      class="text-ink-900 font-display text-lg font-semibold"
+                      >Grand total:</span
+                    >
+                    <span
+                      class="text-ink-900 font-display text-2xl font-bold tabular-nums"
+                      >$159.80</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- ===== MOBILE / TABLET CARDS (below xl) ===== -->
+              <div class="space-y-4 xl:hidden">
+                <!-- Mobile Item 1 -->
+                <div
+                  class="border-ink-200 bg-surface rounded-lg border p-4 sm:p-5"
+                >
+                  <div class="flex gap-4">
+                    <a
+                      href="#"
+                      class="bg-surface-sunken block aspect-square w-20 flex-shrink-0 overflow-hidden rounded sm:w-24"
+                    >
+                      <img
+                        src="https://placehold.co/200x200/f0ece3/3d3d35?text=Chai"
+                        alt=""
+                        class="h-full w-full object-cover"
+                      />
+                    </a>
+                    <div class="min-w-0 flex-1">
+                      <h3>
+                        <a
+                          href="#"
+                          class="text-ink-900 text-sm leading-snug font-semibold uppercase hover:underline"
+                          >Organic Raw Sticky Chai</a
+                        >
+                      </h3>
+                      <p class="text-ink-500 mt-1 text-xs">250g</p>
+                      <p class="text-ink-900 mt-1.5 font-semibold">$18.38</p>
+                    </div>
+                  </div>
+                  <p class="mt-3 text-sm text-amber-600">
+                    Buy 4 more and get 5% on each product
+                  </p>
+                  <div
+                    class="border-ink-100 mt-4 flex items-center justify-between border-t pt-3"
+                  >
+                    <div class="flex items-center gap-2">
+                      <button class="icon-btn" aria-label="Decrease">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <path d="M5 12h14" />
+                        </svg>
+                      </button>
+                      <input type="text" value="1" class="qty-input" readonly />
+                      <button class="icon-btn" aria-label="Increase">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <path d="M12 5v14M5 12h14" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="flex items-center gap-4">
+                      <span class="text-ink-900 font-semibold">$18.38</span>
+                      <button class="btn-ghost px-0">Remove</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mobile Item 2 -->
+                <div
+                  class="border-ink-200 bg-surface rounded-lg border p-4 sm:p-5"
+                >
+                  <div class="flex gap-4">
+                    <a
+                      href="#"
+                      class="bg-surface-sunken block aspect-square w-20 flex-shrink-0 overflow-hidden rounded sm:w-24"
+                    >
+                      <img
+                        src="https://placehold.co/200x200/f0ece3/3d3d35?text=Lemon"
+                        alt=""
+                        class="h-full w-full object-cover"
+                      />
+                    </a>
+                    <div class="min-w-0 flex-1">
+                      <h3>
+                        <a
+                          href="#"
+                          class="text-ink-900 text-sm leading-snug font-semibold uppercase hover:underline"
+                          >Organic Australian Lemon Myrtle</a
+                        >
+                      </h3>
+                      <p class="text-ink-500 mt-1 text-xs">50g</p>
+                      <p class="text-ink-900 mt-1.5 font-semibold">$16.42</p>
+                    </div>
+                  </div>
+                  <p class="mt-3 text-sm text-amber-600">
+                    Buy 4 more and get 5% on each product
+                  </p>
+                  <div
+                    class="border-ink-100 mt-4 flex items-center justify-between border-t pt-3"
+                  >
+                    <div class="flex items-center gap-2">
+                      <button class="icon-btn" aria-label="Decrease">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <path d="M5 12h14" />
+                        </svg>
+                      </button>
+                      <input type="text" value="1" class="qty-input" readonly />
+                      <button class="icon-btn" aria-label="Increase">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <path d="M12 5v14M5 12h14" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="flex items-center gap-4">
+                      <span class="text-ink-900 font-semibold">$16.42</span>
+                      <button class="btn-ghost px-0">Remove</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mobile grand total -->
+                <div
+                  class="bg-steep-50 border-steep-100 rounded-lg border px-4 py-4"
+                >
+                  <p class="text-steep-700 text-xs leading-snug font-medium">
+                    <span class="font-semibold">Note:</span> When ordering sizes
+                    over 1kg, packages come in bulk bags (2kg, 5kg, 10kg etc).
+                  </p>
+                  <div
+                    class="border-steep-100 mt-3 flex items-baseline justify-between border-t pt-3"
+                  >
+                    <span class="text-ink-900 font-display font-semibold"
+                      >Grand total:</span
+                    >
+                    <span
+                      class="text-ink-900 font-display text-xl font-bold tabular-nums"
+                      >$159.80</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ORDER SUMMARY SIDEBAR -->
+            <aside
+              aria-label="Order summary"
+              class="border-ink-200 bg-surface rounded-lg border p-4 sm:p-6 xl:sticky xl:top-28"
+            >
+              <h2
+                class="font-display text-[1.5rem] leading-[2rem] font-semibold"
+              >
+                Order summary
+              </h2>
+
+              <div class="border-ink-200 mt-5 space-y-3 border-t pt-5">
+                <div class="flex justify-between gap-4 text-sm">
+                  <span class="text-ink-500">Items</span>
+                  <span class="text-ink-900 font-medium">7 items</span>
+                </div>
+                <div class="flex justify-between gap-4 text-sm">
+                  <span class="text-ink-500">Discount</span>
+                  <span class="text-success-700 font-medium"
+                    >&minus;$25.00</span
+                  >
+                </div>
+                <div
+                  class="border-ink-100 flex items-baseline justify-between gap-4 border-t pt-2"
+                >
+                  <span class="text-ink-900 font-display text-lg font-semibold"
+                    >Subtotal</span
+                  >
+                  <span
+                    class="text-ink-900 font-display text-xl font-semibold tabular-nums"
+                    >$159.80</span
+                  >
+                </div>
+              </div>
+
+              <p class="text-ink-500 mt-1 text-sm">
+                Shipping and taxes calculated at checkout.
+              </p>
+
+              <a
+                href="#"
+                class="btn-primary mt-4 flex h-12 w-full items-center justify-center text-base"
+              >
+                Checkout
+              </a>
+
+              <a
+                href="#"
+                class="text-ink-500 mt-3 flex min-h-11 items-center justify-center text-center text-sm hover:underline"
+              >
+                Continue shopping
+              </a>
+
+              <!-- Trust signals -->
+              <div class="border-ink-200 mt-4 space-y-2.5 border-t pt-4">
+                <div class="flex items-start gap-2">
+                  <svg
+                    class="text-success-700 mt-0.5 h-4 w-4 flex-shrink-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                  <span class="text-ink-500 text-xs"
+                    >ACO Organic certified</span
+                  >
+                </div>
+                <div class="flex items-start gap-2">
+                  <svg
+                    class="text-success-700 mt-0.5 h-4 w-4 flex-shrink-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                  <span class="text-ink-500 text-xs">HACCP certified</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <svg
+                    class="text-success-700 mt-0.5 h-4 w-4 flex-shrink-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                  <span class="text-ink-500 text-xs"
+                    >1,000+ businesses served</span
+                  >
+                </div>
+                <div class="flex items-start gap-2">
+                  <svg
+                    class="text-success-700 mt-0.5 h-4 w-4 flex-shrink-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                  <span class="text-ink-500 text-xs"
+                    >Sourced from 15+ countries</span
+                  >
+                </div>
+                <div class="flex items-start gap-2">
+                  <svg
+                    class="text-success-700 mt-0.5 h-4 w-4 flex-shrink-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                  <span class="text-ink-500 text-xs"
+                    >Free AU shipping on orders $150+</span
+                  >
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          <!-- Cross-sell -->
+          <div class="border-ink-200 mt-4 border-t pt-10 xl:mt-0">
+            <h2 class="font-display mb-6 text-xl font-semibold">
+              You may also like
+            </h2>
+            <div
+              class="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-4"
+              style="scrollbar-width: thin"
+            >
+              <a
+                href="#"
+                class="group w-44 flex-shrink-0 cursor-pointer snap-start sm:w-52"
+              >
+                <div
+                  class="bg-surface-sunken mb-3 aspect-square overflow-hidden rounded-lg"
+                >
+                  <img
+                    src="https://placehold.co/300x300/f0ece3/3d3d35?text=Green+Tea"
+                    alt=""
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <p
+                  class="text-ink-900 line-clamp-2 text-sm font-medium group-hover:underline"
+                >
+                  Japanese Sencha Green Tea
+                </p>
+                <p class="text-ink-500 mt-1 text-sm">From $18.50</p>
+              </a>
+              <a
+                href="#"
+                class="group w-44 flex-shrink-0 cursor-pointer snap-start sm:w-52"
+              >
+                <div
+                  class="bg-surface-sunken mb-3 aspect-square overflow-hidden rounded-lg"
+                >
+                  <img
+                    src="https://placehold.co/300x300/f0ece3/3d3d35?text=Lavender"
+                    alt=""
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <p
+                  class="text-ink-900 line-clamp-2 text-sm font-medium group-hover:underline"
+                >
+                  French Lavender Buds
+                </p>
+                <p class="text-ink-500 mt-1 text-sm">From $24.00</p>
+              </a>
+              <a
+                href="#"
+                class="group w-44 flex-shrink-0 cursor-pointer snap-start sm:w-52"
+              >
+                <div
+                  class="bg-surface-sunken mb-3 aspect-square overflow-hidden rounded-lg"
+                >
+                  <img
+                    src="https://placehold.co/300x300/f0ece3/3d3d35?text=Turmeric"
+                    alt=""
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <p
+                  class="text-ink-900 line-clamp-2 text-sm font-medium group-hover:underline"
+                >
+                  Organic Turmeric Powder
+                </p>
+                <p class="text-ink-500 mt-1 text-sm">From $15.00</p>
+              </a>
+              <a
+                href="#"
+                class="group w-44 flex-shrink-0 cursor-pointer snap-start sm:w-52"
+              >
+                <div
+                  class="bg-surface-sunken mb-3 aspect-square overflow-hidden rounded-lg"
+                >
+                  <img
+                    src="https://placehold.co/300x300/f0ece3/3d3d35?text=Ginger"
+                    alt=""
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <p
+                  class="text-ink-900 line-clamp-2 text-sm font-medium group-hover:underline"
+                >
+                  Dried Ginger Root Slices
+                </p>
+                <p class="text-ink-500 mt-1 text-sm">From $12.00</p>
+              </a>
+              <a
+                href="#"
+                class="group w-44 flex-shrink-0 cursor-pointer snap-start sm:w-52"
+              >
+                <div
+                  class="bg-surface-sunken mb-3 aspect-square overflow-hidden rounded-lg"
+                >
+                  <img
+                    src="https://placehold.co/300x300/f0ece3/3d3d35?text=Hibiscus"
+                    alt=""
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <p
+                  class="text-ink-900 line-clamp-2 text-sm font-medium group-hover:underline"
+                >
+                  Egyptian Hibiscus Petals
+                </p>
+                <p class="text-ink-500 mt-1 text-sm">From $22.00</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sticky mobile checkout bar -->
+      <div
+        class="bg-surface border-ink-200 fixed inset-x-0 bottom-0 z-40 border-t xl:hidden"
+        style="box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06)"
+      >
+        <div
+          class="max-w-wide mx-auto flex items-center justify-between gap-4 px-4 py-3"
+        >
+          <div class="min-w-0">
+            <p class="text-ink-500 text-xs">Grand total</p>
+            <p
+              class="text-ink-900 font-display text-lg font-semibold tabular-nums"
+            >
+              $159.80
+            </p>
+          </div>
+          <a
+            href="#"
+            class="btn-primary flex h-12 flex-shrink-0 items-center justify-center px-8 text-base"
+          >
+            Checkout
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- EMPTY CART STATE                             -->
+    <!-- ============================================ -->
+    <div id="state-empty" class="hidden">
+      <section class="py-6 md:py-10">
+        <div class="max-w-wide mx-auto px-4 md:px-6 lg:px-8">
+          <h1
+            class="font-display mb-6 text-[2.25rem] leading-[2.75rem] font-medium"
+          >
+            Your Cart
+          </h1>
+          <div class="py-16 text-center sm:py-24">
+            <div
+              class="bg-surface-sunken mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl"
+            >
+              <svg
+                class="text-ink-400 h-10 w-10"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                <path d="M3 6h18" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+            </div>
+            <h2 class="font-display text-ink-900 text-[2.25rem] font-medium">
+              Your cart is empty
+            </h2>
+            <p
+              class="text-ink-500 mx-auto mt-3 max-w-lg text-base leading-relaxed"
+            >
+              Browse our range of 1,000+ teas, herbs, and spices, or get in
+              touch to set up a wholesale account.
+            </p>
+            <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <a
+                href="#"
+                class="btn-primary flex h-12 items-center justify-center px-8 text-base"
+                >Browse collections</a
+              >
+              <a
+                href="#"
+                class="btn-secondary flex h-11 items-center justify-center px-6 text-sm"
+                >Apply for wholesale</a
+              >
+            </div>
+            <div
+              class="mt-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-2"
+            >
+              <span
+                class="text-ink-500 inline-flex items-center gap-1.5 text-xs"
+              >
+                <svg
+                  class="text-success-700 h-3.5 w-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                1,000+ businesses served
+              </span>
+              <span
+                class="text-ink-500 inline-flex items-center gap-1.5 text-xs"
+              >
+                <svg
+                  class="text-success-700 h-3.5 w-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                ACO Organic certified
+              </span>
+              <span
+                class="text-ink-500 inline-flex items-center gap-1.5 text-xs"
+              >
+                <svg
+                  class="text-success-700 h-3.5 w-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                HACCP certified
+              </span>
+              <span
+                class="text-ink-500 inline-flex items-center gap-1.5 text-xs"
+              >
+                <svg
+                  class="text-success-700 h-3.5 w-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Sourced from 15+ countries
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      function showState(state) {
+        const filled = document.getElementById('state-filled')
+        const empty = document.getElementById('state-empty')
+        const buttons = document.querySelectorAll('.state-switch button')
+        if (state === 'filled') {
+          filled.classList.remove('hidden')
+          empty.classList.add('hidden')
+          buttons[0].classList.add('active')
+          buttons[1].classList.remove('active')
+        } else {
+          filled.classList.add('hidden')
+          empty.classList.remove('hidden')
+          buttons[0].classList.remove('active')
+          buttons[1].classList.add('active')
+        }
+      }
+    </script>
+  </body>
+</html>
