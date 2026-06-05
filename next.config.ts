@@ -2,6 +2,15 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  async redirects() {
+    return [
+      {
+        source: '/collections/:handle/products/:productHandle',
+        destination: '/products/:productHandle',
+        permanent: true,
+      },
+    ]
+  },
   images: {
     qualities: [68, 75],
     remotePatterns: [
