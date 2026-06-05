@@ -13,7 +13,7 @@ export const metadata: Metadata = withNoindexRobots({
   title: CUSTOM_TEA_BLEND_META_TITLE,
   description: CUSTOM_TEA_BLEND_DESCRIPTION,
   openGraph: {
-    title: 'Custom Tea Blends | Teavision',
+    title: 'Custom Tea Blending | Teavision',
     description: CUSTOM_TEA_BLEND_DESCRIPTION,
     url: CUSTOM_TEA_BLEND_PAGE_PATH,
     type: 'website',

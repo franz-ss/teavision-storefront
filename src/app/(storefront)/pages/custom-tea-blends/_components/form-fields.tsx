@@ -4,14 +4,13 @@ import { useActionState, useEffect, useRef } from 'react'
 import { Mail } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { FormLabel } from '@/components/ui/form-label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { TextInput } from '@/components/ui/text-input'
 import {
   CUSTOM_TEA_BLEND_CATEGORIES,
-  CUSTOM_TEA_BLEND_FLAVOUR_GROUPS,
+  CUSTOM_TEA_BLEND_FORM_ID,
   CUSTOM_TEA_BLEND_LIMITS,
   CUSTOM_TEA_BLEND_PACK_FORMATS,
 } from '@/lib/contact/custom-tea-blend'
@@ -65,6 +64,7 @@ export function FormFields({
 
   return (
     <form
+      id={CUSTOM_TEA_BLEND_FORM_ID}
       action={formAction}
       className="grid gap-6"
       aria-label="Custom tea blend enquiry form"
@@ -145,34 +145,6 @@ export function FormFields({
           </Select>
         </div>
       </div>
-
-      <fieldset className="border-default rounded-lg border p-4">
-        <legend className="type-eyebrow text-muted px-2">
-          Flavour direction
-        </legend>
-        <p className="type-body-sm text-muted mt-1">
-          Select any useful starting points. The team can also work from a
-          reference product or flavour note.
-        </p>
-        <div className="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {CUSTOM_TEA_BLEND_FLAVOUR_GROUPS.map((group) => (
-            <div key={group.name}>
-              <p className="type-label text-strong">{group.name}</p>
-              <div className="mt-3 grid gap-2">
-                {group.options.map((flavour) => (
-                  <label
-                    key={flavour}
-                    className="type-body-sm border-default bg-surface hover:bg-surface-sunken flex min-h-11 items-center gap-3 rounded-md border px-3 transition-colors"
-                  >
-                    <Checkbox name="flavours" value={flavour} />
-                    <span>{flavour}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </fieldset>
 
       <div className="grid gap-2">
         <FormLabel htmlFor="brief-notes">Project brief</FormLabel>

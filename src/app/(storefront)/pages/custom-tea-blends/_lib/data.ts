@@ -56,6 +56,12 @@ export const THUMBNAILS = [
     width: 900,
     height: 600,
   },
+  {
+    src: `${SHOPIFY_FILE_BASE}/blue_spirulina_powder.png?v=1760854766`,
+    alt: 'Blue spirulina powder',
+    width: 900,
+    height: 900,
+  },
 ] satisfies ImageAsset[]
 
 export const HERO_PROOF_POINTS = [
@@ -129,6 +135,36 @@ export const CAPABILITY_CARDS = [
       alt: 'Sleep tea blend',
       width: 900,
       height: 900,
+    },
+  },
+  {
+    title: 'Chai and spice',
+    description: 'Sticky chai, turmeric, masala, and warming spice blends.',
+    image: {
+      src: `${SHOPIFY_FILE_BASE}/Chai_Spice_Tin.png?v=1760834712`,
+      alt: 'Chai spice tea tin',
+      width: 900,
+      height: 900,
+    },
+  },
+  {
+    title: 'Loose leaf jars',
+    description: 'Retail-ready glass jars and display formats.',
+    image: {
+      src: `${SHOPIFY_FILE_BASE}/tea_in_jars.webp?v=1760833507`,
+      alt: 'Loose-leaf tea in retail jars',
+      width: 900,
+      height: 900,
+    },
+  },
+  {
+    title: 'Pyramid tea bags',
+    description: 'Compostable pyramid bags with tag and string options.',
+    image: {
+      src: `https://www.teavision.com.au/cdn/shop/files/cainyi-paketik-s-odnoi-piramidkoi-i-pustaa-etiketka-na-belom-fone-krupnym-planom_600x.png?v=1760009247`,
+      alt: 'Pyramid tea bag with a blank tag',
+      width: 600,
+      height: 600,
     },
   },
 ] satisfies CapabilityCard[]

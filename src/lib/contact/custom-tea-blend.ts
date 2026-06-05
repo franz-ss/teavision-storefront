@@ -4,11 +4,12 @@ export type CustomTeaBlendFlavourGroup = {
 }
 
 export const CUSTOM_TEA_BLEND_PAGE_PATH = '/pages/custom-tea-blends'
-export const CUSTOM_TEA_BLEND_PAGE_TITLE = 'Custom Tea Blends'
+export const CUSTOM_TEA_BLEND_PAGE_TITLE = 'Custom Tea Blending'
 export const CUSTOM_TEA_BLEND_META_TITLE =
   'Custom Tea Blends | NPD, R&D & Private Label'
 export const CUSTOM_TEA_BLEND_DESCRIPTION =
   'Create your signature tea with Teavision custom blending, R&D support, naturopath input, low MOQ pathways, and retail-ready packaging.'
+export const CUSTOM_TEA_BLEND_FORM_ID = 'custom-tea-blend-form'
 
 export const CUSTOM_TEA_BLEND_LIMITS = {
   brief: 1200,

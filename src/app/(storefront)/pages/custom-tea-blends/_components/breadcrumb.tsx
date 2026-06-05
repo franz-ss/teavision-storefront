@@ -14,7 +14,7 @@ export function Breadcrumb() {
         </li>
         <li aria-hidden="true">/</li>
         <li className="text-default" aria-current="page">
-          Custom tea blends
+          Custom tea blending
         </li>
       </ol>
     </nav>

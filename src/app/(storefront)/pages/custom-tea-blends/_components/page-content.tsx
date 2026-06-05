@@ -1,5 +1,6 @@
 import { BlendDetailsSection } from './blend-details-section'
 import { CtaSection } from './cta-section'
+import { FlavourPicker } from './flavour-picker'
 import { JsonLd } from './json-ld'
 import { FaqSection } from './faq-section'
 import { HeroSection } from './hero-section'
@@ -13,6 +14,7 @@ export function PageContent() {
       <JsonLd />
       <HeroSection />
       <IntroSection />
+      <FlavourPicker />
       <BlendDetailsSection />
       <QualitySection />
       <ProcessSection />
