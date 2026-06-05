@@ -5,6 +5,7 @@ import { Section } from '@/components/ui'
 import { getCartAction } from '@/lib/cart/actions'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 
+import { CartRecommendations } from './_components/cart-recommendations'
 import { CartView } from './_components/cart-view'
 
 export const metadata: Metadata = withNoindexRobots({
@@ -14,7 +15,12 @@ export const metadata: Metadata = withNoindexRobots({
 async function CartContent() {
   const cart = await getCartAction()
 
-  return <CartView cart={cart} />
+  return (
+    <>
+      <CartView cart={cart} />
+      {cart && cart.totalQuantity > 0 ? <CartRecommendations /> : null}
+    </>
+  )
 }
 
 export default function CartPage() {
