@@ -246,7 +246,7 @@ async function ProductContent({
       <div className="mt-12 flex flex-col gap-10">
         <Suspense fallback={null}>
           <RelatedProducts product={product} />
-          <CustomersAlsoBought />
+          <CustomersAlsoBought product={product} />
         </Suspense>
       </div>
     </>
