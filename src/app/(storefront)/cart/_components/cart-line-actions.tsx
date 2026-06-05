@@ -57,50 +57,56 @@ export function CartLineActions({
 
   return (
     <>
-      <div className="col-start-2 flex items-center gap-2 lg:col-start-3 xl:justify-center">
+      <div className="col-start-2 flex items-center gap-2 lg:col-start-3 xl:col-start-4 xl:row-start-1 xl:justify-center">
         <span className="type-caption text-muted mr-auto lg:sr-only">
           Quantity
         </span>
-        <form action={formAction}>
-          <input type="hidden" name="intent" value="update" />
-          <input type="hidden" name="lineId" value={lineId} />
-          <input type="hidden" name="quantity" value={decreasedQuantity} />
-          <IconButton
-            type="submit"
-            size="sm"
-            disabled={!canDecrease || isPending}
-            aria-busy={isPending || undefined}
-            aria-label={`Decrease quantity of ${productTitle}`}
+        <div className="border-default -my-px inline-grid grid-cols-[2.25rem_2.25rem_2.25rem] overflow-hidden rounded-full border">
+          <form action={formAction}>
+            <input type="hidden" name="intent" value="update" />
+            <input type="hidden" name="lineId" value={lineId} />
+            <input type="hidden" name="quantity" value={decreasedQuantity} />
+            <IconButton
+              type="submit"
+              variant="ghost"
+              size="sm"
+              disabled={!canDecrease || isPending}
+              aria-busy={isPending || undefined}
+              aria-label={`Decrease quantity of ${productTitle}`}
+              className="h-9 w-9 rounded-none"
+            >
+              <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+            </IconButton>
+          </form>
+          <span
+            className="border-default text-strong type-body-sm flex items-center justify-center border-x tabular-nums"
+            role="status"
+            aria-live="polite"
           >
-            <Minus className="h-4 w-4" aria-hidden="true" />
-          </IconButton>
-        </form>
-        <span
-          className="min-w-8 text-center tabular-nums"
-          role="status"
-          aria-live="polite"
-        >
-          {quantity}
-        </span>
-        <form action={formAction}>
-          <input type="hidden" name="intent" value="update" />
-          <input type="hidden" name="lineId" value={lineId} />
-          <input type="hidden" name="quantity" value={increasedQuantity} />
-          <IconButton
-            type="submit"
-            size="sm"
-            disabled={!canIncrease || isPending}
-            aria-busy={isPending || undefined}
-            aria-label={`Increase quantity of ${productTitle}`}
-          >
-            <Plus className="h-4 w-4" aria-hidden="true" />
-          </IconButton>
-        </form>
+            {quantity}
+          </span>
+          <form action={formAction}>
+            <input type="hidden" name="intent" value="update" />
+            <input type="hidden" name="lineId" value={lineId} />
+            <input type="hidden" name="quantity" value={increasedQuantity} />
+            <IconButton
+              type="submit"
+              variant="ghost"
+              size="sm"
+              disabled={!canIncrease || isPending}
+              aria-busy={isPending || undefined}
+              aria-label={`Increase quantity of ${productTitle}`}
+              className="h-9 w-9 rounded-none"
+            >
+              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+            </IconButton>
+          </form>
+        </div>
       </div>
 
       <form
         action={formAction}
-        className="col-start-2 lg:col-start-4 xl:col-start-5"
+        className="col-start-2 lg:col-start-4 xl:col-start-2"
       >
         <input type="hidden" name="intent" value="remove" />
         <input type="hidden" name="lineId" value={lineId} />
