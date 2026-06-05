@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Leaf } from 'lucide-react'
 
 import type { CollectionProductSummary } from '@/lib/shopify/types'
-import { Button, Price, StarRating } from '@/components/ui'
+import { Badge, Button, Price, StarRating } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { cn } from '@/lib/utils'
 
@@ -25,7 +25,6 @@ export function ProductCard({
   const productUrl = `/products/${product.handle}`
   const isSoldOut = !product.availableForSale
   const canQuickAdd =
-    product.availableForSale &&
     product.variants.length > 0 &&
     product.variants.length < COLLECTION_CARD_VARIANT_LIMIT
 
@@ -35,10 +34,7 @@ export function ProductCard({
         href={productUrl}
         tabIndex={-1}
         aria-hidden="true"
-        className={cn(
-          'bg-surface-sunken border-subtle relative flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-md border sm:h-45 sm:w-45',
-          isSoldOut && 'opacity-60 saturate-75',
-        )}
+        className="bg-surface-sunken border-subtle relative flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-md border sm:h-45 sm:w-45"
       >
         {product.featuredImage &&
         product.featuredImage.width &&
@@ -59,6 +55,11 @@ export function ProductCard({
             aria-hidden="true"
           >
             <Leaf className="text-muted/40 h-6 w-6" />
+          </div>
+        )}
+        {isSoldOut && (
+          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2">
+            <Badge variant="outOfStock" />
           </div>
         )}
       </Link>
@@ -83,7 +84,7 @@ export function ProductCard({
             />
           )}
 
-          {!isSoldOut && !canQuickAdd && (
+          {!canQuickAdd && (
             <Price
               price={product.priceRange.minVariantPrice}
               size="sm"
@@ -93,24 +94,13 @@ export function ProductCard({
         </div>
 
         <div className={cn('min-w-0', canQuickAdd ? 'flex flex-1' : 'mt-auto')}>
-          {isSoldOut ? (
-            <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_7rem] sm:items-end">
-              <p className="type-body-sm text-muted">Currently unavailable</p>
-              <Button
-                href="/pages/contact"
-                variant="secondary"
-                size="sm"
-                className="w-full"
-              >
-                Contact us
-              </Button>
-            </div>
-          ) : canQuickAdd ? (
+          {canQuickAdd ? (
             <ProductPurchaseForm
               variants={product.variants}
               productTitle={product.title}
               layout="inline"
               showPrice
+              hideSubmit={isSoldOut}
               className="flex flex-1 flex-col justify-between"
             />
           ) : (

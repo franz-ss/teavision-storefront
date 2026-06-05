@@ -176,14 +176,20 @@ export const SoldOut: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
+    await expect(canvas.getByText('SOLD OUT')).toBeVisible()
+
     await expect(
       canvas.queryByRole('button', { name: /add to cart/i }),
     ).not.toBeInTheDocument()
-
-    await expect(canvas.getByText('Currently unavailable')).toBeVisible()
     await expect(
-      canvas.getByRole('link', { name: 'Contact us' }),
-    ).toHaveAttribute('href', '/pages/contact')
+      canvas.queryByRole('button', { name: /sold out/i }),
+    ).not.toBeInTheDocument()
+
+    await expect(
+      canvas.queryByRole('spinbutton', {
+        name: 'Quantity for Premium Rwandan Black Tea CTC BP',
+      }),
+    ).not.toBeInTheDocument()
   },
 }
 

@@ -23,6 +23,7 @@ type ProductPurchaseFormProps = {
   onCartChanged?: () => void
   layout?: 'stacked' | 'inline'
   showPrice?: boolean
+  hideSubmit?: boolean
   className?: string
 }
 
@@ -39,6 +40,7 @@ export function ProductPurchaseForm({
   onCartChanged,
   layout = 'stacked',
   showPrice,
+  hideSubmit,
   className,
 }: ProductPurchaseFormProps) {
   const initialVariant = getInitialVariant(variants)
@@ -109,7 +111,6 @@ export function ProductPurchaseForm({
   const variantOptions = variants.map((variant) => (
     <option key={variant.id} value={variant.id}>
       {variant.title}
-      {!variant.availableForSale ? ' - sold out' : ''}
     </option>
   ))
 
@@ -127,7 +128,7 @@ export function ProductPurchaseForm({
               className={cn(isInlineLayout && 'text-strong font-semibold')}
             />
           )}
-          {!canAddToCart && (
+          {!canAddToCart && !hideSubmit && (
             <span className="type-caption text-danger-text">Sold out</span>
           )}
         </div>
@@ -178,42 +179,46 @@ export function ProductPurchaseForm({
             </Select>
           </label>
         )}
-        <div className={cn('grid gap-1', isInlineLayout && 'w-[7.5rem]')}>
-          {isInlineLayout && (
-            <span className="type-caption text-muted font-semibold uppercase">
-              Product Qty
-            </span>
-          )}
-          <QuantityStepper
-            name="quantity"
-            value={effectiveQuantity}
-            onChange={(nextQuantity) => {
-              setQuantity(nextQuantity)
-              resetFeedback()
-            }}
-            min={minimumQuantity}
-            max={maximumQuantity}
-            step={quantityIncrement}
-            disabled={isPending || !canAddToCart}
-            label={`Quantity for ${productTitle}`}
-          />
-        </div>
-        <div
-          className={cn(
-            isInlineLayout ? 'min-w-0' : 'min-w-36 flex-1 sm:flex-none',
-          )}
-        >
-          <Button
-            type="submit"
-            isLoading={isPending}
-            disabled={!canAddToCart || isPending || justAdded}
-            variant={justAdded ? 'brand' : 'primary'}
-            size={isInlineLayout ? 'sm' : 'md'}
-            className="w-full"
+        {!hideSubmit && (
+          <div className={cn('grid gap-1', isInlineLayout && 'w-[7.5rem]')}>
+            {isInlineLayout && (
+              <span className="type-caption text-muted font-semibold uppercase">
+                Product Qty
+              </span>
+            )}
+            <QuantityStepper
+              name="quantity"
+              value={effectiveQuantity}
+              onChange={(nextQuantity) => {
+                setQuantity(nextQuantity)
+                resetFeedback()
+              }}
+              min={minimumQuantity}
+              max={maximumQuantity}
+              step={quantityIncrement}
+              disabled={isPending || !canAddToCart}
+              label={`Quantity for ${productTitle}`}
+            />
+          </div>
+        )}
+        {!hideSubmit && (
+          <div
+            className={cn(
+              isInlineLayout ? 'min-w-0' : 'min-w-36 flex-1 sm:flex-none',
+            )}
           >
-            {justAdded ? 'Added' : canAddToCart ? 'Add to cart' : 'Sold out'}
-          </Button>
-        </div>
+            <Button
+              type="submit"
+              isLoading={isPending}
+              disabled={!canAddToCart || isPending || justAdded}
+              variant={justAdded ? 'brand' : 'primary'}
+              size={isInlineLayout ? 'sm' : 'md'}
+              className="w-full"
+            >
+              {justAdded ? 'Added' : canAddToCart ? 'Add to cart' : 'Sold out'}
+            </Button>
+          </div>
+        )}
       </div>
 
       <p role="status" className="sr-only">
