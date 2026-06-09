@@ -3,6 +3,7 @@ import { cacheLife, cacheTag } from 'next/cache'
 import { shopifyFetch } from '@/lib/shopify/client'
 import {
   GetCollectionDocument,
+  GetCollectionMenuDocument,
   GetCollectionProductsDocument,
   GetCollectionSummariesDocument,
   GetCollectionsDocument,
@@ -13,6 +14,7 @@ import {
   type CollectionProductSummary,
   type CollectionSummary,
   type GetCollectionQuery,
+  type GetCollectionMenuQuery,
   type GetCollectionProductsQuery,
   type GetCollectionSummariesQuery,
   type ProductFilter,
@@ -56,6 +58,20 @@ type ShopifyCollectionNode = NonNullable<GetCollectionQuery['collection']>
 
 type ShopifyCollectionSummaryNode =
   GetCollectionSummariesQuery['collections']['edges'][number]['node']
+
+type ShopifyCollectionMenuItem = NonNullable<
+  GetCollectionMenuQuery['menu']
+>['items'][number]
+
+type ShopifyCollectionMenuResource = Extract<
+  NonNullable<ShopifyCollectionMenuItem['resource']>,
+  { __typename?: 'Collection' }
+>
+
+type ShopifyCollectionMenuTreeItem = {
+  resource?: ShopifyCollectionMenuItem['resource'] | null
+  items?: ShopifyCollectionMenuTreeItem[]
+}
 
 function textFromHtml(html: string): string {
   return removeCitationMarkers(html)
@@ -221,6 +237,38 @@ function reshapeCollectionSummary(
   }
 }
 
+function isCollectionMenuResource(
+  resource: ShopifyCollectionMenuTreeItem['resource'],
+): resource is ShopifyCollectionMenuResource {
+  return resource?.__typename === 'Collection'
+}
+
+function collectCollectionMenuSummaries(
+  items: ShopifyCollectionMenuTreeItem[],
+  collections: CollectionSummary[],
+): void {
+  items.forEach((item) => {
+    if (isCollectionMenuResource(item.resource)) {
+      collections.push(reshapeCollectionSummary(item.resource))
+    }
+
+    collectCollectionMenuSummaries(item.items ?? [], collections)
+  })
+}
+
+function uniqueCollectionsByHandle(
+  collections: CollectionSummary[],
+): CollectionSummary[] {
+  const seenHandles = new Set<string>()
+
+  return collections.filter((collection) => {
+    if (seenHandles.has(collection.handle)) return false
+
+    seenHandles.add(collection.handle)
+    return true
+  })
+}
+
 async function fetchCollectionSummaries(
   first: number,
 ): Promise<CollectionSummary[]> {
@@ -294,6 +342,26 @@ export async function getCollectionSummaries(
   cacheLife('days')
 
   return fetchCollectionSummaries(first)
+}
+
+export async function getCollectionMenuSummaries(
+  handle: string,
+): Promise<CollectionSummary[]> {
+  'use cache'
+  cacheTag('collections', `collection-menu-${handle}`)
+  cacheLife('days')
+
+  const data = await shopifyFetch({
+    query: GetCollectionMenuDocument,
+    variables: { handle },
+  })
+
+  if (!data.menu) return []
+
+  const collections: CollectionSummary[] = []
+  collectCollectionMenuSummaries(data.menu.items, collections)
+
+  return uniqueCollectionsByHandle(collections)
 }
 
 export async function getCollectionProducts(

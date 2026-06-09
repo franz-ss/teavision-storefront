@@ -2,7 +2,10 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Card, Section } from '@/components/ui'
-import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
+import {
+  getCollectionMenuSummaries,
+  getCollectionSummaries,
+} from '@/lib/shopify/operations/collection'
 import type { CollectionSummary } from '@/lib/shopify/types'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
@@ -22,37 +25,10 @@ export const metadata: Metadata = withNoindexRobots({
   alternates: { canonical: '/collections' },
 })
 
-const FEATURED_HANDLES = [
-  'wholesale-bulk-tea',
-  'herbs-and-spices',
-  'wellness-functional-tea',
-  'bulk-tea-bags',
-  'cafe-range',
-  'superfood-extract-powders-proteins-supplements',
-  'organic-tea',
-  'australian-native-ingredients',
-] as const
-
-const FEATURED_COPY: Partial<Record<string, string>> = {
-  'wholesale-bulk-tea':
-    'Bulk loose leaf teas, botanicals, organic blends, and everyday service staples.',
-  'herbs-and-spices':
-    'Commercial herbs and spices for blending, manufacturing, foodservice, and retail.',
-  'wellness-functional-tea':
-    'Functional blends and botanicals for wellness ranges and product development.',
-  'bulk-tea-bags':
-    'Tea bag formats for hospitality, office supply, service counters, and resale.',
-  'cafe-range':
-    'Cafe-ready tea, powders, beverage ingredients, and high-repeat service options.',
-  'superfood-extract-powders-proteins-supplements':
-    'Powders, extracts, proteins, and supplements for functional beverage ranges.',
-  'organic-tea':
-    'Certified organic teas and botanicals with documentation-led supply support.',
-  'australian-native-ingredients':
-    'Native ingredients for provenance-led blends, menus, and product concepts.',
-}
-
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
+const FEATURED_COLLECTION_LIMIT = 8
+const COLLECTIONS_INDEX_MENU_HANDLE =
+  process.env.SHOPIFY_COLLECTIONS_INDEX_MENU_HANDLE?.trim() ?? 'main-menu'
 
 function hrefForHandle(handle: string): string {
   return `/collections/${handle}`
@@ -66,26 +42,87 @@ function sortByTitle(
 }
 
 function getDescription(collection: CollectionSummary): string {
-  return (
-    FEATURED_COPY[collection.handle] ??
-    collection.description ??
-    `Browse ${collection.title} from Teavision.`
-  )
+  return collection.description || `Browse ${collection.title} from Teavision.`
 }
 
-function getFeatured(collections: CollectionSummary[]): CollectionSummary[] {
-  const byHandle = new Map(
-    collections.map((collection) => [collection.handle, collection]),
+function isPublicCollection(collection: CollectionSummary): boolean {
+  return collection.handle !== 'all' && collection.handle !== 'frontpage'
+}
+
+function getFallbackFeatured(
+  collections: CollectionSummary[],
+): CollectionSummary[] {
+  const publicCollections = collections.filter(isPublicCollection)
+  const collectionsWithImages = publicCollections.filter(
+    (collection) => collection.featuredImage,
+  )
+  const collectionsWithContent = publicCollections.filter(
+    (collection) => collection.description,
   )
 
-  return FEATURED_HANDLES.map((handle) => byHandle.get(handle)).filter(
-    (collection): collection is CollectionSummary => Boolean(collection),
+  return (
+    collectionsWithImages.length >= FEATURED_COLLECTION_LIMIT
+      ? collectionsWithImages
+      : collectionsWithContent.length > 0
+        ? collectionsWithContent
+        : publicCollections
+  )
+    .sort(sortByTitle)
+    .slice(0, FEATURED_COLLECTION_LIMIT)
+}
+
+function mergeFeaturedCollections(
+  primaryCollections: CollectionSummary[],
+  fallbackCollections: CollectionSummary[],
+): CollectionSummary[] {
+  const featuredCollections: CollectionSummary[] = []
+  const seenHandles = new Set<string>()
+
+  for (const collectionGroup of [primaryCollections, fallbackCollections]) {
+    for (const collection of collectionGroup) {
+      if (
+        featuredCollections.length >= FEATURED_COLLECTION_LIMIT ||
+        seenHandles.has(collection.handle)
+      ) {
+        continue
+      }
+
+      featuredCollections.push(collection)
+      seenHandles.add(collection.handle)
+    }
+  }
+
+  return featuredCollections
+}
+
+function getFeatured(
+  menuCollections: CollectionSummary[],
+  collections: CollectionSummary[],
+): CollectionSummary[] {
+  const featuredMenuCollections = menuCollections.filter(isPublicCollection)
+  const fallbackCollections = getFallbackFeatured(
+    collections.filter(
+      (collection) =>
+        !featuredMenuCollections.some(
+          (menuCollection) => menuCollection.handle === collection.handle,
+        ),
+    ),
+  )
+
+  return mergeFeaturedCollections(
+    featuredMenuCollections,
+    fallbackCollections.length > 0
+      ? fallbackCollections
+      : collections.filter(isPublicCollection).sort(sortByTitle),
   )
 }
 
 export default async function Page() {
-  const collections = await getCollectionSummaries()
-  const featuredCollections = getFeatured(collections)
+  const [collections, menuCollections] = await Promise.all([
+    getCollectionSummaries(),
+    getCollectionMenuSummaries(COLLECTIONS_INDEX_MENU_HANDLE),
+  ])
+  const featuredCollections = getFeatured(menuCollections, collections)
   const directoryCollections = collections
     .filter((collection) => collection.handle !== 'all')
     .sort(sortByTitle)

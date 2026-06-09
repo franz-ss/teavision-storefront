@@ -12011,6 +12011,158 @@ export type GetCollectionSummariesQuery = {
   }
 }
 
+export type GetCollectionMenuQueryVariables = Exact<{
+  handle: Scalars['String']['input']
+}>
+
+export type GetCollectionMenuQuery = {
+  __typename?: 'QueryRoot'
+  menu?: {
+    __typename?: 'Menu'
+    items: Array<{
+      __typename?: 'MenuItem'
+      id: string
+      title: string
+      url?: any | null
+      type: MenuItemType
+      items: Array<{
+        __typename?: 'MenuItem'
+        id: string
+        title: string
+        url?: any | null
+        type: MenuItemType
+        items: Array<{
+          __typename?: 'MenuItem'
+          id: string
+          title: string
+          url?: any | null
+          type: MenuItemType
+          resource?:
+            | { __typename: 'Article' }
+            | { __typename: 'Blog' }
+            | {
+                __typename: 'Collection'
+                id: string
+                handle: string
+                title: string
+                description: string
+                updatedAt: any
+                image?: {
+                  __typename?: 'Image'
+                  url: any
+                  altText?: string | null
+                  width?: number | null
+                  height?: number | null
+                } | null
+                seo: {
+                  __typename?: 'SEO'
+                  title?: string | null
+                  description?: string | null
+                }
+              }
+            | { __typename: 'Metaobject' }
+            | { __typename: 'Page' }
+            | { __typename: 'Product' }
+            | { __typename: 'ShopPolicy' }
+            | null
+        }>
+        resource?:
+          | { __typename: 'Article' }
+          | { __typename: 'Blog' }
+          | {
+              __typename: 'Collection'
+              id: string
+              handle: string
+              title: string
+              description: string
+              updatedAt: any
+              image?: {
+                __typename?: 'Image'
+                url: any
+                altText?: string | null
+                width?: number | null
+                height?: number | null
+              } | null
+              seo: {
+                __typename?: 'SEO'
+                title?: string | null
+                description?: string | null
+              }
+            }
+          | { __typename: 'Metaobject' }
+          | { __typename: 'Page' }
+          | { __typename: 'Product' }
+          | { __typename: 'ShopPolicy' }
+          | null
+      }>
+      resource?:
+        | { __typename: 'Article' }
+        | { __typename: 'Blog' }
+        | {
+            __typename: 'Collection'
+            id: string
+            handle: string
+            title: string
+            description: string
+            updatedAt: any
+            image?: {
+              __typename?: 'Image'
+              url: any
+              altText?: string | null
+              width?: number | null
+              height?: number | null
+            } | null
+            seo: {
+              __typename?: 'SEO'
+              title?: string | null
+              description?: string | null
+            }
+          }
+        | { __typename: 'Metaobject' }
+        | { __typename: 'Page' }
+        | { __typename: 'Product' }
+        | { __typename: 'ShopPolicy' }
+        | null
+    }>
+  } | null
+}
+
+export type CollectionMenuItemFieldsFragment = {
+  __typename?: 'MenuItem'
+  id: string
+  title: string
+  url?: any | null
+  type: MenuItemType
+  resource?:
+    | { __typename: 'Article' }
+    | { __typename: 'Blog' }
+    | {
+        __typename: 'Collection'
+        id: string
+        handle: string
+        title: string
+        description: string
+        updatedAt: any
+        image?: {
+          __typename?: 'Image'
+          url: any
+          altText?: string | null
+          width?: number | null
+          height?: number | null
+        } | null
+        seo: {
+          __typename?: 'SEO'
+          title?: string | null
+          description?: string | null
+        }
+      }
+    | { __typename: 'Metaobject' }
+    | { __typename: 'Page' }
+    | { __typename: 'Product' }
+    | { __typename: 'ShopPolicy' }
+    | null
+}
+
 export type GetPageQueryVariables = Exact<{
   handle: Scalars['String']['input']
 }>
@@ -12929,6 +13081,106 @@ export const CartFieldsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<CartFieldsFragment, unknown>
+export const CollectionMenuItemFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CollectionMenuItemFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'MenuItem' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'resource' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'Collection' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'handle' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'image' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'altText' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'width' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'height' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'seo' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CollectionMenuItemFieldsFragment, unknown>
 export const ProductSummaryFieldsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -17890,6 +18142,202 @@ export const GetCollectionSummariesDocument = {
 } as unknown as DocumentNode<
   GetCollectionSummariesQuery,
   GetCollectionSummariesQueryVariables
+>
+export const GetCollectionMenuDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetCollectionMenu' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'handle' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'menu' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'handle' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'handle' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'CollectionMenuItemFields',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'CollectionMenuItemFields',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'CollectionMenuItemFields',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CollectionMenuItemFields' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'MenuItem' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'resource' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'Collection' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'handle' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'image' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'altText' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'width' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'height' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'seo' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetCollectionMenuQuery,
+  GetCollectionMenuQueryVariables
 >
 export const GetPageDocument = {
   kind: 'Document',

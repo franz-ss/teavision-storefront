@@ -151,3 +151,44 @@ query GetCollectionSummaries($first: Int!, $after: String) {
     }
   }
 }
+
+query GetCollectionMenu($handle: String!) {
+  menu(handle: $handle) {
+    items {
+      ...CollectionMenuItemFields
+      items {
+        ...CollectionMenuItemFields
+        items {
+          ...CollectionMenuItemFields
+        }
+      }
+    }
+  }
+}
+
+fragment CollectionMenuItemFields on MenuItem {
+  id
+  title
+  url
+  type
+  resource {
+    __typename
+    ... on Collection {
+      id
+      handle
+      title
+      description
+      updatedAt
+      image {
+        url
+        altText
+        width
+        height
+      }
+      seo {
+        title
+        description
+      }
+    }
+  }
+}
