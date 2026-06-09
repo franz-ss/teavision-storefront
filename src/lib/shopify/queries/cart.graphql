@@ -22,6 +22,10 @@ fragment CartFields on Cart {
             amount
             currencyCode
           }
+          compareAtAmountPerQuantity {
+            amount
+            currencyCode
+          }
           subtotalAmount {
             amount
             currencyCode
@@ -60,6 +64,15 @@ fragment CartFields on Cart {
             price {
               amount
               currencyCode
+            }
+            quantityPriceBreaks(first: 10) {
+              nodes {
+                minimumQuantity
+                price {
+                  amount
+                  currencyCode
+                }
+              }
             }
             product {
               handle

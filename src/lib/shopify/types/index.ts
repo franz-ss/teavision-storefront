@@ -137,6 +137,7 @@ export type CartLine = {
   quantity: number
   cost: {
     amountPerQuantity: Money
+    compareAtAmountPerQuantity?: Money | null
     subtotalAmount: Money
     totalAmount: Money
   }
@@ -148,6 +149,7 @@ export type CartLine = {
     price: Money
     quantityAvailable?: number | null
     quantityRule?: ShopifyQuantityRule
+    quantityPriceBreaks: BulkPricingTier[]
     product: {
       handle: string
       title: string

@@ -50,6 +50,9 @@ export type ShopifyCartPayload = {
           price: Money
           quantityAvailable?: number | null
           quantityRule?: CartLine['merchandise']['quantityRule']
+          quantityPriceBreaks: {
+            nodes: CartLine['merchandise']['quantityPriceBreaks']
+          }
           product: {
             handle: string
             title: string
@@ -77,6 +80,7 @@ export function makeCartLine(overrides: Partial<CartLine> = {}): CartLine {
     quantity: 1,
     cost: {
       amountPerQuantity: makeMoney('24.00'),
+      compareAtAmountPerQuantity: null,
       subtotalAmount: makeMoney('24.00'),
       totalAmount: makeMoney('24.00'),
     },
@@ -92,6 +96,7 @@ export function makeCartLine(overrides: Partial<CartLine> = {}): CartLine {
         maximum: null,
         increment: 1,
       },
+      quantityPriceBreaks: [],
       product: {
         handle: 'test-standard-tea',
         title: 'Test Standard Tea',
@@ -168,7 +173,12 @@ export function makeShopifyCartPayload(
           discountAllocations: line.discountAllocations.map(
             makeShopifyDiscountAllocation,
           ),
-          merchandise: line.merchandise,
+          merchandise: {
+            ...line.merchandise,
+            quantityPriceBreaks: {
+              nodes: line.merchandise.quantityPriceBreaks,
+            },
+          },
         },
       })),
     },

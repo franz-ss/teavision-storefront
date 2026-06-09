@@ -10,6 +10,7 @@ import {
 } from '@/lib/shopify/types'
 
 import { reshapeImage, reshapeMoney } from './mappers'
+import { getProduct, PRODUCT_DETAIL_CACHE_VERSION } from './product'
 
 type ShopifyCart = NonNullable<GetCartQuery['cart']>
 
@@ -20,6 +21,9 @@ type ShopifyProductVariant = ShopifyCartLineNode['merchandise']
 type ShopifyProduct = ShopifyProductVariant['product']
 
 type ShopifyCartLine = Cart['lines'][number]
+
+type ShopifyQuantityPriceBreak =
+  ShopifyProductVariant['quantityPriceBreaks']['nodes'][number]
 
 type ShopifyCartLineDiscountAllocation =
   ShopifyCartLineNode['discountAllocations'][number]
@@ -69,7 +73,16 @@ function reshapeDiscountAllocation(
 
 function reshapeMerchandise(
   merchandise: ShopifyProductVariant,
+  productBulkPricingTiers: ShopifyCartLine['merchandise']['quantityPriceBreaks'],
 ): ShopifyCartLine['merchandise'] {
+  const quantityPriceBreaks: ShopifyCartLine['merchandise']['quantityPriceBreaks'] =
+    merchandise.quantityPriceBreaks.nodes.map(
+      (priceBreak: ShopifyQuantityPriceBreak) => ({
+        minimumQuantity: priceBreak.minimumQuantity,
+        price: reshapeMoney(priceBreak.price),
+      }),
+    )
+
   return {
     id: merchandise.id,
     title: merchandise.title,
@@ -80,11 +93,36 @@ function reshapeMerchandise(
       maximum: merchandise.quantityRule.maximum ?? null,
       increment: merchandise.quantityRule.increment,
     },
+    quantityPriceBreaks: quantityPriceBreaks
+      .concat(productBulkPricingTiers)
+      .sort((a, b) => a.minimumQuantity - b.minimumQuantity),
     product: reshapeProduct(merchandise.product),
   }
 }
 
-function reshapeCart(cart: ShopifyCart): Cart {
+async function getProductBulkPricingByHandle(
+  cart: ShopifyCart,
+): Promise<Map<string, ShopifyCartLine['merchandise']['quantityPriceBreaks']>> {
+  const handles = [
+    ...new Set(
+      cart.lines.edges.map((edge) => edge.node.merchandise.product.handle),
+    ),
+  ]
+
+  const entries = await Promise.all(
+    handles.map(async (handle) => {
+      const product = await getProduct(handle, PRODUCT_DETAIL_CACHE_VERSION)
+
+      return [handle, product?.bulkPricingTiers ?? []] as const
+    }),
+  )
+
+  return new Map(entries)
+}
+
+async function reshapeCart(cart: ShopifyCart): Promise<Cart> {
+  const productBulkPricingByHandle = await getProductBulkPricingByHandle(cart)
+
   return {
     id: cart.id,
     checkoutUrl: String(cart.checkoutUrl),
@@ -98,13 +136,19 @@ function reshapeCart(cart: ShopifyCart): Cart {
       quantity: e.node.quantity,
       cost: {
         amountPerQuantity: reshapeMoney(e.node.cost.amountPerQuantity),
+        compareAtAmountPerQuantity: e.node.cost.compareAtAmountPerQuantity
+          ? reshapeMoney(e.node.cost.compareAtAmountPerQuantity)
+          : null,
         subtotalAmount: reshapeMoney(e.node.cost.subtotalAmount),
         totalAmount: reshapeMoney(e.node.cost.totalAmount),
       },
       discountAllocations: e.node.discountAllocations.map(
         reshapeDiscountAllocation,
       ),
-      merchandise: reshapeMerchandise(e.node.merchandise),
+      merchandise: reshapeMerchandise(
+        e.node.merchandise,
+        productBulkPricingByHandle.get(e.node.merchandise.product.handle) ?? [],
+      ),
     })),
   }
 }
@@ -121,7 +165,7 @@ export async function getCart(cartId: string): Promise<Cart | null> {
     variables: { cartId },
     cache: 'no-store',
   })
-  return data.cart ? reshapeCart(data.cart) : null
+  return data.cart ? await reshapeCart(data.cart) : null
 }
 
 export async function createCart(): Promise<Cart> {
@@ -132,7 +176,7 @@ export async function createCart(): Promise<Cart> {
   })
   handleUserErrors(data.cartCreate?.userErrors ?? [])
   if (!data.cartCreate?.cart) throw new Error('Unable to create cart')
-  return reshapeCart(data.cartCreate.cart)
+  return await reshapeCart(data.cartCreate.cart)
 }
 
 export async function addCartLines(
@@ -146,7 +190,7 @@ export async function addCartLines(
   })
   handleUserErrors(data.cartLinesAdd?.userErrors ?? [])
   if (!data.cartLinesAdd?.cart) throw new Error('Unable to add cart lines')
-  return reshapeCart(data.cartLinesAdd.cart)
+  return await reshapeCart(data.cartLinesAdd.cart)
 }
 
 export async function updateCartLines(
@@ -161,7 +205,7 @@ export async function updateCartLines(
   handleUserErrors(data.cartLinesUpdate?.userErrors ?? [])
   if (!data.cartLinesUpdate?.cart)
     throw new Error('Unable to update cart lines')
-  return reshapeCart(data.cartLinesUpdate.cart)
+  return await reshapeCart(data.cartLinesUpdate.cart)
 }
 
 export async function removeCartLines(
@@ -176,5 +220,5 @@ export async function removeCartLines(
   handleUserErrors(data.cartLinesRemove?.userErrors ?? [])
   if (!data.cartLinesRemove?.cart)
     throw new Error('Unable to remove cart lines')
-  return reshapeCart(data.cartLinesRemove.cart)
+  return await reshapeCart(data.cartLinesRemove.cart)
 }

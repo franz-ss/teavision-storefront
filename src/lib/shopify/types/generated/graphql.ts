@@ -10447,6 +10447,11 @@ export type CartFieldsFragment = {
                 amount: any
                 currencyCode: CurrencyCode
               }
+              compareAtAmountPerQuantity?: {
+                __typename?: 'MoneyV2'
+                amount: any
+                currencyCode: CurrencyCode
+              } | null
               subtotalAmount: {
                 __typename?: 'MoneyV2'
                 amount: any
@@ -10502,6 +10507,18 @@ export type CartFieldsFragment = {
                 __typename?: 'MoneyV2'
                 amount: any
                 currencyCode: CurrencyCode
+              }
+              quantityPriceBreaks: {
+                __typename?: 'QuantityPriceBreakConnection'
+                nodes: Array<{
+                  __typename?: 'QuantityPriceBreak'
+                  minimumQuantity: number
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                }>
               }
               product: {
                 __typename?: 'Product'
@@ -10528,6 +10545,11 @@ export type CartFieldsFragment = {
                 amount: any
                 currencyCode: CurrencyCode
               }
+              compareAtAmountPerQuantity?: {
+                __typename?: 'MoneyV2'
+                amount: any
+                currencyCode: CurrencyCode
+              } | null
               subtotalAmount: {
                 __typename?: 'MoneyV2'
                 amount: any
@@ -10583,6 +10605,18 @@ export type CartFieldsFragment = {
                 __typename?: 'MoneyV2'
                 amount: any
                 currencyCode: CurrencyCode
+              }
+              quantityPriceBreaks: {
+                __typename?: 'QuantityPriceBreakConnection'
+                nodes: Array<{
+                  __typename?: 'QuantityPriceBreak'
+                  minimumQuantity: number
+                  price: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  }
+                }>
               }
               product: {
                 __typename?: 'Product'
@@ -10642,6 +10676,11 @@ export type GetCartQuery = {
                   amount: any
                   currencyCode: CurrencyCode
                 }
+                compareAtAmountPerQuantity?: {
+                  __typename?: 'MoneyV2'
+                  amount: any
+                  currencyCode: CurrencyCode
+                } | null
                 subtotalAmount: {
                   __typename?: 'MoneyV2'
                   amount: any
@@ -10697,6 +10736,18 @@ export type GetCartQuery = {
                   __typename?: 'MoneyV2'
                   amount: any
                   currencyCode: CurrencyCode
+                }
+                quantityPriceBreaks: {
+                  __typename?: 'QuantityPriceBreakConnection'
+                  nodes: Array<{
+                    __typename?: 'QuantityPriceBreak'
+                    minimumQuantity: number
+                    price: {
+                      __typename?: 'MoneyV2'
+                      amount: any
+                      currencyCode: CurrencyCode
+                    }
+                  }>
                 }
                 product: {
                   __typename?: 'Product'
@@ -10723,6 +10774,11 @@ export type GetCartQuery = {
                   amount: any
                   currencyCode: CurrencyCode
                 }
+                compareAtAmountPerQuantity?: {
+                  __typename?: 'MoneyV2'
+                  amount: any
+                  currencyCode: CurrencyCode
+                } | null
                 subtotalAmount: {
                   __typename?: 'MoneyV2'
                   amount: any
@@ -10778,6 +10834,18 @@ export type GetCartQuery = {
                   __typename?: 'MoneyV2'
                   amount: any
                   currencyCode: CurrencyCode
+                }
+                quantityPriceBreaks: {
+                  __typename?: 'QuantityPriceBreakConnection'
+                  nodes: Array<{
+                    __typename?: 'QuantityPriceBreak'
+                    minimumQuantity: number
+                    price: {
+                      __typename?: 'MoneyV2'
+                      amount: any
+                      currencyCode: CurrencyCode
+                    }
+                  }>
                 }
                 product: {
                   __typename?: 'Product'
@@ -10840,6 +10908,11 @@ export type CartCreateMutation = {
                     amount: any
                     currencyCode: CurrencyCode
                   }
+                  compareAtAmountPerQuantity?: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  } | null
                   subtotalAmount: {
                     __typename?: 'MoneyV2'
                     amount: any
@@ -10895,6 +10968,18 @@ export type CartCreateMutation = {
                     __typename?: 'MoneyV2'
                     amount: any
                     currencyCode: CurrencyCode
+                  }
+                  quantityPriceBreaks: {
+                    __typename?: 'QuantityPriceBreakConnection'
+                    nodes: Array<{
+                      __typename?: 'QuantityPriceBreak'
+                      minimumQuantity: number
+                      price: {
+                        __typename?: 'MoneyV2'
+                        amount: any
+                        currencyCode: CurrencyCode
+                      }
+                    }>
                   }
                   product: {
                     __typename?: 'Product'
@@ -10921,6 +11006,11 @@ export type CartCreateMutation = {
                     amount: any
                     currencyCode: CurrencyCode
                   }
+                  compareAtAmountPerQuantity?: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  } | null
                   subtotalAmount: {
                     __typename?: 'MoneyV2'
                     amount: any
@@ -10976,6 +11066,18 @@ export type CartCreateMutation = {
                     __typename?: 'MoneyV2'
                     amount: any
                     currencyCode: CurrencyCode
+                  }
+                  quantityPriceBreaks: {
+                    __typename?: 'QuantityPriceBreakConnection'
+                    nodes: Array<{
+                      __typename?: 'QuantityPriceBreak'
+                      minimumQuantity: number
+                      price: {
+                        __typename?: 'MoneyV2'
+                        amount: any
+                        currencyCode: CurrencyCode
+                      }
+                    }>
                   }
                   product: {
                     __typename?: 'Product'
@@ -11045,6 +11147,11 @@ export type CartLinesAddMutation = {
                     amount: any
                     currencyCode: CurrencyCode
                   }
+                  compareAtAmountPerQuantity?: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  } | null
                   subtotalAmount: {
                     __typename?: 'MoneyV2'
                     amount: any
@@ -11100,6 +11207,18 @@ export type CartLinesAddMutation = {
                     __typename?: 'MoneyV2'
                     amount: any
                     currencyCode: CurrencyCode
+                  }
+                  quantityPriceBreaks: {
+                    __typename?: 'QuantityPriceBreakConnection'
+                    nodes: Array<{
+                      __typename?: 'QuantityPriceBreak'
+                      minimumQuantity: number
+                      price: {
+                        __typename?: 'MoneyV2'
+                        amount: any
+                        currencyCode: CurrencyCode
+                      }
+                    }>
                   }
                   product: {
                     __typename?: 'Product'
@@ -11126,6 +11245,11 @@ export type CartLinesAddMutation = {
                     amount: any
                     currencyCode: CurrencyCode
                   }
+                  compareAtAmountPerQuantity?: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  } | null
                   subtotalAmount: {
                     __typename?: 'MoneyV2'
                     amount: any
@@ -11181,6 +11305,18 @@ export type CartLinesAddMutation = {
                     __typename?: 'MoneyV2'
                     amount: any
                     currencyCode: CurrencyCode
+                  }
+                  quantityPriceBreaks: {
+                    __typename?: 'QuantityPriceBreakConnection'
+                    nodes: Array<{
+                      __typename?: 'QuantityPriceBreak'
+                      minimumQuantity: number
+                      price: {
+                        __typename?: 'MoneyV2'
+                        amount: any
+                        currencyCode: CurrencyCode
+                      }
+                    }>
                   }
                   product: {
                     __typename?: 'Product'
@@ -11250,6 +11386,11 @@ export type CartLinesUpdateMutation = {
                     amount: any
                     currencyCode: CurrencyCode
                   }
+                  compareAtAmountPerQuantity?: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  } | null
                   subtotalAmount: {
                     __typename?: 'MoneyV2'
                     amount: any
@@ -11305,6 +11446,18 @@ export type CartLinesUpdateMutation = {
                     __typename?: 'MoneyV2'
                     amount: any
                     currencyCode: CurrencyCode
+                  }
+                  quantityPriceBreaks: {
+                    __typename?: 'QuantityPriceBreakConnection'
+                    nodes: Array<{
+                      __typename?: 'QuantityPriceBreak'
+                      minimumQuantity: number
+                      price: {
+                        __typename?: 'MoneyV2'
+                        amount: any
+                        currencyCode: CurrencyCode
+                      }
+                    }>
                   }
                   product: {
                     __typename?: 'Product'
@@ -11331,6 +11484,11 @@ export type CartLinesUpdateMutation = {
                     amount: any
                     currencyCode: CurrencyCode
                   }
+                  compareAtAmountPerQuantity?: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  } | null
                   subtotalAmount: {
                     __typename?: 'MoneyV2'
                     amount: any
@@ -11386,6 +11544,18 @@ export type CartLinesUpdateMutation = {
                     __typename?: 'MoneyV2'
                     amount: any
                     currencyCode: CurrencyCode
+                  }
+                  quantityPriceBreaks: {
+                    __typename?: 'QuantityPriceBreakConnection'
+                    nodes: Array<{
+                      __typename?: 'QuantityPriceBreak'
+                      minimumQuantity: number
+                      price: {
+                        __typename?: 'MoneyV2'
+                        amount: any
+                        currencyCode: CurrencyCode
+                      }
+                    }>
                   }
                   product: {
                     __typename?: 'Product'
@@ -11455,6 +11625,11 @@ export type CartLinesRemoveMutation = {
                     amount: any
                     currencyCode: CurrencyCode
                   }
+                  compareAtAmountPerQuantity?: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  } | null
                   subtotalAmount: {
                     __typename?: 'MoneyV2'
                     amount: any
@@ -11510,6 +11685,18 @@ export type CartLinesRemoveMutation = {
                     __typename?: 'MoneyV2'
                     amount: any
                     currencyCode: CurrencyCode
+                  }
+                  quantityPriceBreaks: {
+                    __typename?: 'QuantityPriceBreakConnection'
+                    nodes: Array<{
+                      __typename?: 'QuantityPriceBreak'
+                      minimumQuantity: number
+                      price: {
+                        __typename?: 'MoneyV2'
+                        amount: any
+                        currencyCode: CurrencyCode
+                      }
+                    }>
                   }
                   product: {
                     __typename?: 'Product'
@@ -11536,6 +11723,11 @@ export type CartLinesRemoveMutation = {
                     amount: any
                     currencyCode: CurrencyCode
                   }
+                  compareAtAmountPerQuantity?: {
+                    __typename?: 'MoneyV2'
+                    amount: any
+                    currencyCode: CurrencyCode
+                  } | null
                   subtotalAmount: {
                     __typename?: 'MoneyV2'
                     amount: any
@@ -11591,6 +11783,18 @@ export type CartLinesRemoveMutation = {
                     __typename?: 'MoneyV2'
                     amount: any
                     currencyCode: CurrencyCode
+                  }
+                  quantityPriceBreaks: {
+                    __typename?: 'QuantityPriceBreakConnection'
+                    nodes: Array<{
+                      __typename?: 'QuantityPriceBreak'
+                      minimumQuantity: number
+                      price: {
+                        __typename?: 'MoneyV2'
+                        amount: any
+                        currencyCode: CurrencyCode
+                      }
+                    }>
                   }
                   product: {
                     __typename?: 'Product'
@@ -12289,6 +12493,32 @@ export const CartFieldsFragmentDoc = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'compareAtAmountPerQuantity',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'amount',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'currencyCode',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'subtotalAmount',
                                     },
                                     selectionSet: {
@@ -12536,6 +12766,78 @@ export const CartFieldsFragmentDoc = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'currencyCode',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'quantityPriceBreaks',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'first',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '10',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nodes',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'minimumQuantity',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'price',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'amount',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'currencyCode',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
                                                 },
                                               },
                                             ],
@@ -13563,6 +13865,32 @@ export const GetCartDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'compareAtAmountPerQuantity',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'amount',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'currencyCode',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'subtotalAmount',
                                     },
                                     selectionSet: {
@@ -13810,6 +14138,78 @@ export const GetCartDocument = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'currencyCode',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'quantityPriceBreaks',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'first',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '10',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nodes',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'minimumQuantity',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'price',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'amount',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'currencyCode',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
                                                 },
                                               },
                                             ],
@@ -14101,6 +14501,32 @@ export const CartCreateDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'compareAtAmountPerQuantity',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'amount',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'currencyCode',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'subtotalAmount',
                                     },
                                     selectionSet: {
@@ -14348,6 +14774,78 @@ export const CartCreateDocument = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'currencyCode',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'quantityPriceBreaks',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'first',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '10',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nodes',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'minimumQuantity',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'price',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'amount',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'currencyCode',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
                                                 },
                                               },
                                             ],
@@ -14664,6 +15162,32 @@ export const CartLinesAddDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'compareAtAmountPerQuantity',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'amount',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'currencyCode',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'subtotalAmount',
                                     },
                                     selectionSet: {
@@ -14911,6 +15435,78 @@ export const CartLinesAddDocument = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'currencyCode',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'quantityPriceBreaks',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'first',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '10',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nodes',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'minimumQuantity',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'price',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'amount',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'currencyCode',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
                                                 },
                                               },
                                             ],
@@ -15230,6 +15826,32 @@ export const CartLinesUpdateDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'compareAtAmountPerQuantity',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'amount',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'currencyCode',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'subtotalAmount',
                                     },
                                     selectionSet: {
@@ -15477,6 +16099,78 @@ export const CartLinesUpdateDocument = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'currencyCode',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'quantityPriceBreaks',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'first',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '10',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nodes',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'minimumQuantity',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'price',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'amount',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'currencyCode',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
                                                 },
                                               },
                                             ],
@@ -15796,6 +16490,32 @@ export const CartLinesRemoveDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'compareAtAmountPerQuantity',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'amount',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'currencyCode',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'subtotalAmount',
                                     },
                                     selectionSet: {
@@ -16043,6 +16763,78 @@ export const CartLinesRemoveDocument = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'currencyCode',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'quantityPriceBreaks',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'first',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '10',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nodes',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'minimumQuantity',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'price',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'amount',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'currencyCode',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
                                                 },
                                               },
                                             ],

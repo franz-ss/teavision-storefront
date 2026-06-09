@@ -2,12 +2,14 @@ import type { Mock } from 'vitest'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { shopifyFetch } from '@/lib/shopify/client'
+import type { Product } from '@/lib/shopify/types'
 import {
   makeCart,
   makeCartLine,
   makeDiscountAllocation,
   makeShopifyCartPayload,
 } from '@/tests/fixtures/shopify/cart'
+import { makeMoney } from '@/tests/fixtures/shopify/money'
 
 import {
   addCartLines,
@@ -16,9 +18,15 @@ import {
   removeCartLines,
   updateCartLines,
 } from './cart'
+import { getProduct } from './product'
 
 vi.mock('@/lib/shopify/client', () => ({
   shopifyFetch: vi.fn(),
+}))
+
+vi.mock('./product', () => ({
+  getProduct: vi.fn(),
+  PRODUCT_DETAIL_CACHE_VERSION: 'bulk-pricing-v2',
 }))
 
 type ShopifyFetchCall = {
@@ -28,12 +36,34 @@ type ShopifyFetchCall = {
 }
 
 type ShopifyFetchMock = Mock<(options: ShopifyFetchCall) => Promise<unknown>>
+type GetProductMock = Mock<typeof getProduct>
 
 const shopifyFetchMock = shopifyFetch as unknown as ShopifyFetchMock
+const getProductMock = getProduct as unknown as GetProductMock
+
+function makeProduct(overrides: Partial<Product> = {}): Product {
+  return {
+    id: 'gid://shopify/Product/test-product',
+    handle: 'test-standard-tea',
+    title: 'Test Standard Tea',
+    description: '',
+    descriptionHtml: '',
+    tags: [],
+    images: [],
+    priceRange: {
+      minVariantPrice: makeMoney('24.00'),
+    },
+    variants: [],
+    bulkPricingTiers: [],
+    options: [],
+    ...overrides,
+  }
+}
 
 describe('Shopify cart operations', () => {
   beforeEach(() => {
     shopifyFetchMock.mockReset()
+    getProductMock.mockReset()
   })
 
   test('getCart maps cart payloads and uses no-store reads', async () => {
@@ -80,6 +110,59 @@ describe('Shopify cart operations', () => {
     shopifyFetchMock.mockResolvedValueOnce({ cart: null })
 
     await expect(getCart('gid://shopify/Cart/missing')).resolves.toBeNull()
+  })
+
+  test('getCart enriches cart lines with product-level bulk pricing tiers', async () => {
+    const cart = makeCart({
+      lines: [
+        makeCartLine({
+          quantity: 34,
+          merchandise: {
+            ...makeCartLine().merchandise,
+            quantityPriceBreaks: [],
+            product: {
+              ...makeCartLine().merchandise.product,
+              handle: 'copy-of-peninsula-raw-sticky-chai-loose-leaf',
+              title: 'Organic Raw Sticky Chai',
+            },
+          },
+        }),
+      ],
+    })
+    shopifyFetchMock.mockResolvedValueOnce({
+      cart: makeShopifyCartPayload(cart),
+    })
+    getProductMock.mockResolvedValueOnce(
+      makeProduct({
+        handle: 'copy-of-peninsula-raw-sticky-chai-loose-leaf',
+        bulkPricingTiers: [
+          {
+            minimumQuantity: 40,
+            discountPercent: 15,
+          },
+        ],
+      }),
+    )
+
+    await expect(getCart(cart.id)).resolves.toMatchObject({
+      lines: [
+        {
+          merchandise: {
+            quantityPriceBreaks: [
+              {
+                minimumQuantity: 40,
+                discountPercent: 15,
+              },
+            ],
+          },
+        },
+      ],
+    })
+
+    expect(getProductMock).toHaveBeenCalledWith(
+      'copy-of-peninsula-raw-sticky-chai-loose-leaf',
+      'bulk-pricing-v2',
+    )
   })
 
   test('createCart passes empty input and throws userErrors', async () => {
