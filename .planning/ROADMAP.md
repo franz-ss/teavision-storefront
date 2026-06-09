@@ -18,6 +18,7 @@ This milestone brings high-value legacy storefront behavior into the Next storef
 - [x] **Phase 6: Prevent the site from being indexed** - Add temporary noindex/no-crawl controls across robots, metadata, and sitemap surfaces until launch. (completed 2026-06-03)
 - [x] **Phase 8: Optimized Collection Quick Add** - Restore a visible listing-card add-to-cart affordance for safe single-variant products without reintroducing full per-card purchase forms, variant payload bloat, or hydration-heavy PLP rendering. (completed 2026-06-03)
 - [ ] **Phase 9: Collection Product Card Improvements** - Improve the collection product card layout to better serve B2B buyers: wider image column, product-type eyebrow, organic/certification badges from tags, two-zone content hierarchy, removal of redundant "More info" button, and a `showQuantity` prop to suppress the quantity stepper in listing context.
+- [ ] **Phase 11: Full Visual Redesign** - Replace the entire `--tv-*`/steep/stone design system with the new design system extracted from `design/teavision-redesign.html` (warm-paper + green/gold oklch palette, Spectral/Hanken Grotesk/Space Mono typography) and restyle every storefront surface to match the redesign while preserving all existing behavior.
 
 ## Phase Details
 
@@ -80,10 +81,27 @@ Plans:
 
 - [x] 04-01: Footer 1:1 parity
 
+### Phase 11: Full Visual Redesign
+
+**Goal:** Every storefront surface expresses the new design system from `design/teavision-redesign.html` — warm-paper surfaces, green-undertone ink, brand-green and gold accents, Spectral/Hanken Grotesk/Space Mono typography — with the old `--tv-*`/steep/stone design system removed completely and all existing behavior (cart, search, bulk savings, quick-add, accessibility) preserved.
+**Requirements**: [RD-01, RD-02, RD-03, RD-04, RD-05, RD-06, RD-07, RD-08]
+**Depends on:** Phase 9
+**Source design:** `design/teavision-redesign.html` (extracted sources in `design/extracted/` — `design-system.css` plus per-page React mockups)
+**Success Criteria** (what must be TRUE):
+
+1. `src/app/globals.css` `@theme` exposes only the new design system tokens (paper/ink/green/gold scales, new font stacks, redesign radii) and the new fonts load via `next/font`.
+2. `grep -r "tv-\|steep-\|stone-" src/` returns no design-token matches — the old system is fully removed, not aliased.
+3. Header, footer, homepage, collection pages, product pages, cart, search, blog, and supporting pages visually match the corresponding redesign mockup sections at desktop and mobile breakpoints.
+4. No raw hex/oklch/rgb values appear in component classNames; all styling flows through the new token classes.
+5. All existing behavioral contracts still pass: quick-add, bulk savings, cart server actions, search facets, accessibility landmarks, noindex controls.
+6. Storybook builds with updated stories; `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass.
+
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, then Phase 9.
+Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, then Phase 9, then Phase 11.
 
 | Phase                                   | Plans Complete | Status   | Completed  |
 | --------------------------------------- | -------------- | -------- | ---------- |
@@ -94,6 +112,7 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, t
 | 6. Prevent site indexing                | 1/1            | Complete | 2026-06-03 |
 | 8. Optimized Collection Quick Add       | 1/1            | Complete | 2026-06-03 |
 | 9. Collection Product Card Improvements | 0/1            | Planned  | —          |
+| 11. Full Visual Redesign                 | 0/?            | Planning | —          |
 
 ### Phase 9: Collection Product Card Improvements
 

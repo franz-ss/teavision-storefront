@@ -32,6 +32,9 @@ const eslintConfig = defineConfig([
     'next-env.d.ts',
     // Git worktrees
     '.worktrees/**',
+    // Design mockup reference sources (not application code)
+    'design/**',
+    '.codex-temp/**',
   ]),
   ...storybook.configs['flat/recommended'],
 

@@ -81,6 +81,19 @@
 - [ ] **CARD-06**: `ProductPurchaseForm` accepts a `showQuantity` prop (default `true`); the collection card passes `showQuantity={false}` to hide the quantity stepper in listing context.
 - [ ] **CARD-07**: Storybook story for `ProductCard` is updated to reflect the new layout, including eyebrow, badge, and no-quantity-stepper states.
 
+## v7 Requirements
+
+### Full Visual Redesign (design/teavision-redesign.html)
+
+- [ ] **RD-01**: `src/app/globals.css` defines the new design system as Tailwind 4 `@theme` tokens — warm-paper surfaces, green-undertone ink scale, brand greens, gold accents (oklch values from the redesign), `Spectral` serif / `Hanken Grotesk` sans / `Space Mono` mono / `Caveat` script font stacks, and the redesign radius/rhythm values.
+- [ ] **RD-02**: The old design system is removed completely — no `--tv-*` semantic tokens, no `steep`/`stone` palette scales, and no orphaned CSS or unused token classes remain anywhere in `src/`.
+- [ ] **RD-03**: Layout chrome (header, navigation/mega-menu, search affordance, cart affordance, footer, announcement surfaces) matches the redesign's structure and styling.
+- [ ] **RD-04**: The homepage matches the redesign's section composition and styling (hero, category/collection bands, product showcases, brand-motif bands, trust/wholesale sections, newsletter).
+- [ ] **RD-05**: Collection pages and product cards match the redesign's listing presentation while preserving Phase 8/9 behavior contracts (bounded payloads, quick-add, badges).
+- [ ] **RD-06**: Product detail pages match the redesign's PDP presentation while preserving bulk-savings, variant selection, and add-to-cart behavior.
+- [ ] **RD-07**: Remaining storefront surfaces (cart, search, blog/Tea Journal, wholesale, static pages, error/empty states) are restyled with the new system with no legacy-styled stragglers.
+- [ ] **RD-08**: Storybook stories render correctly under the new system, and `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass with no raw hex/oklch values in classNames.
+
 ## Out of Scope
 
 | Feature                                                | Reason                                                                                 |
@@ -136,6 +149,14 @@
 | CARD-05     | Phase 9  | Planned  |
 | CARD-06     | Phase 9  | Planned  |
 | CARD-07     | Phase 9  | Planned  |
+| RD-01       | Phase 11 | Planned  |
+| RD-02       | Phase 11 | Planned  |
+| RD-03       | Phase 11 | Planned  |
+| RD-04       | Phase 11 | Planned  |
+| RD-05       | Phase 11 | Planned  |
+| RD-06       | Phase 11 | Planned  |
+| RD-07       | Phase 11 | Planned  |
+| RD-08       | Phase 11 | Planned  |
 | BULK-09     | Deferred | Deferred |
 | BULK-10     | Deferred | Deferred |
 
