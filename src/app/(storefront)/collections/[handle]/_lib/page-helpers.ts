@@ -22,6 +22,13 @@ const LEGACY_READ_MORE_LINK_PATTERN =
   /<a\b(?=[^>]*(?:\bid=["']show-(?:more|less)["']|\bhref=["']#read-(?:more|less)["']))[^>]*>[\s\S]*?<\/a>/gi
 
 const CATEGORY_TAG_PREFIX = 'categories_'
+const IMAGE_TAG_PATTERN = /<img\b[^>]*>/i
+const ATTRIBUTE_PATTERN =
+  /\s([a-zA-Z:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/g
+const DEFAULT_DESCRIPTION_HERO_IMAGE = {
+  width: 1600,
+  height: 577,
+}
 
 export const SORT_MAP: Record<
   string,
@@ -86,6 +93,76 @@ function plainTextFromHtml(html: string): string {
 
 function removeCitationMarkers(value: string): string {
   return value.replace(/:contentReference\[[^\]]+\]\{[^}]+\}/g, ' ')
+}
+
+function decodeHtmlAttribute(value: string): string {
+  return value
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+}
+
+function getHtmlAttribute(tag: string, name: string): string | null {
+  ATTRIBUTE_PATTERN.lastIndex = 0
+
+  for (const match of tag.matchAll(ATTRIBUTE_PATTERN)) {
+    if (match[1]?.toLowerCase() !== name.toLowerCase()) continue
+
+    return decodeHtmlAttribute(match[2] ?? match[3] ?? match[4] ?? '')
+  }
+
+  return null
+}
+
+function normalizeImageSource(source: string): string {
+  if (source.startsWith('//')) return `https:${source}`
+  if (source.startsWith('/cdn/shop/'))
+    return `https://www.teavision.com.au${source}`
+
+  return source
+}
+
+function parsePositiveInteger(value: string | null): number | null {
+  if (!value) return null
+
+  const parsedValue = Number.parseInt(value, 10)
+  return Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : null
+}
+
+function parseImageSizeFromSource(
+  source: string,
+): Pick<HeroImage, 'width' | 'height'> {
+  const sizeMatch = source.match(/(?:^|[-_/])(\d{3,5})x(\d{3,5})(?:[._/?-]|$)/i)
+
+  return {
+    width: parsePositiveInteger(sizeMatch?.[1] ?? null),
+    height: parsePositiveInteger(sizeMatch?.[2] ?? null),
+  }
+}
+
+function getDescriptionHeroImage(descriptionHtml: string): HeroImage | null {
+  const imageTag = descriptionHtml.match(IMAGE_TAG_PATTERN)?.[0]
+  if (!imageTag) return null
+
+  const source = getHtmlAttribute(imageTag, 'src')
+  if (!source) return null
+
+  const sourceSize = parseImageSizeFromSource(source)
+
+  return {
+    url: normalizeImageSource(source),
+    altText: getHtmlAttribute(imageTag, 'alt'),
+    width:
+      parsePositiveInteger(getHtmlAttribute(imageTag, 'width')) ??
+      sourceSize.width ??
+      DEFAULT_DESCRIPTION_HERO_IMAGE.width,
+    height:
+      parsePositiveInteger(getHtmlAttribute(imageTag, 'height')) ??
+      sourceSize.height ??
+      DEFAULT_DESCRIPTION_HERO_IMAGE.height,
+  }
 }
 
 function truncateHeroDescription(value: string): string {
@@ -489,8 +566,13 @@ export function parseSelectedFilterParams(values: string[]): {
 export function getHeroImage(
   handle: string,
   featuredImage: HeroImage | null,
+  descriptionHtml = '',
 ): HeroImage | null {
-  return HERO_IMAGE_OVERRIDES[handle] ?? featuredImage
+  return (
+    getDescriptionHeroImage(descriptionHtml) ??
+    HERO_IMAGE_OVERRIDES[handle] ??
+    featuredImage
+  )
 }
 
 export function shouldShowCollectionIntroContent(handle: string): boolean {

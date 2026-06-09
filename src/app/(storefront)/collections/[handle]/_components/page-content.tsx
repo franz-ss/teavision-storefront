@@ -127,7 +127,11 @@ export async function PageContent({ params, searchParams }: PageProps) {
         !isCategoryFilter(filter),
     ),
   ].filter((filter): filter is CollectionProductFilter => Boolean(filter))
-  const heroImage = getHeroImage(handle, collection.featuredImage)
+  const heroImage = getHeroImage(
+    handle,
+    collection.featuredImage,
+    collection.descriptionHtml,
+  )
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
   const collectionPath = category

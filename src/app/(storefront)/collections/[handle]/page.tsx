@@ -27,7 +27,11 @@ export async function generateMetadata({
   const collectionPath = category
     ? `${getPath(handle)}/${category}`
     : getPath(handle)
-  const heroImage = getHeroImage(handle, collection.featuredImage)
+  const heroImage = getHeroImage(
+    handle,
+    collection.featuredImage,
+    collection.descriptionHtml,
+  )
 
   return withNoindexRobots({
     title,
