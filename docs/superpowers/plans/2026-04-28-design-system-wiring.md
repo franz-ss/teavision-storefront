@@ -666,9 +666,6 @@ export default async function CartPage() {
             {cart.cost.subtotalAmount.amount}
           </span>
         </div>
-        <p className="mt-1 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-          Shipping and taxes calculated at checkout.
-        </p>
 
         <a
           href={cart.checkoutUrl}

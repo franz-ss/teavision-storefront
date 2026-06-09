@@ -1744,9 +1744,6 @@ export default async function CartPage() {
             {cart.cost.subtotalAmount.amount}
           </span>
         </div>
-        <p className="mt-1 text-sm text-gray-500">
-          Shipping and taxes calculated at checkout.
-        </p>
         <a
           href={cart.checkoutUrl}
           className="mt-4 block w-full rounded bg-black py-3 text-center font-medium text-white hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-offset-2"
