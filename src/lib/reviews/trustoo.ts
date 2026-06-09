@@ -1,5 +1,7 @@
 import { cacheLife, cacheTag } from 'next/cache'
 
+import { trustooShopDomain } from '@/lib/env/public'
+
 export type ProductReviewSummary = {
   rating: number
   reviewCount: number
@@ -57,7 +59,7 @@ export async function getTrustooProductRatings(
   'use cache'
   cacheTag('trustoo-reviews')
 
-  const shop = process.env.NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN
+  const shop = trustooShopDomain
   const uniqueHandles = Array.from(new Set(handles.filter(Boolean)))
 
   if (!shop || uniqueHandles.length === 0) {

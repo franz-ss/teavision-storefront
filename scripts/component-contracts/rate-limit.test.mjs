@@ -19,10 +19,15 @@ test('rate-limit helper documents production fallback explicitly', async () => {
     sourcePath('src', 'lib', 'rate-limit', 'index.ts'),
     'utf8',
   )
+  const envSource = await readFile(
+    sourcePath('src', 'lib', 'env', 'server.ts'),
+    'utf8',
+  )
 
   assert.match(source, /export type RateLimitStore/)
-  assert.match(source, /RATE_LIMIT_EXTERNAL_PROTECTION/)
-  assert.match(source, /RATE_LIMIT_ALLOW_MEMORY_FALLBACK/)
+  assert.match(source, /shouldWarnAboutRateLimitMemoryFallback/)
+  assert.match(envSource, /RATE_LIMIT_EXTERNAL_PROTECTION/)
+  assert.match(envSource, /RATE_LIMIT_ALLOW_MEMORY_FALLBACK/)
   assert.match(source, /console\.warn/)
 })
 

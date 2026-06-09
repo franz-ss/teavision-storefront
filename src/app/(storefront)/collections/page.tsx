@@ -9,6 +9,8 @@ import {
 import type { CollectionSummary } from '@/lib/shopify/types'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
+import { SITE_URL } from '@/lib/seo/site-url'
+import { SHOPIFY_COLLECTIONS_INDEX_MENU_HANDLE } from '@/lib/shopify/env'
 
 import { CollectionCardImage } from './_components/collection-card-image'
 
@@ -25,10 +27,7 @@ export const metadata: Metadata = withNoindexRobots({
   alternates: { canonical: '/collections' },
 })
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
 const FEATURED_COLLECTION_LIMIT = 8
-const COLLECTIONS_INDEX_MENU_HANDLE =
-  process.env.SHOPIFY_COLLECTIONS_INDEX_MENU_HANDLE?.trim() ?? 'main-menu'
 
 function hrefForHandle(handle: string): string {
   return `/collections/${handle}`
@@ -120,7 +119,7 @@ function getFeatured(
 export default async function Page() {
   const [collections, menuCollections] = await Promise.all([
     getCollectionSummaries(),
-    getCollectionMenuSummaries(COLLECTIONS_INDEX_MENU_HANDLE),
+    getCollectionMenuSummaries(SHOPIFY_COLLECTIONS_INDEX_MENU_HANDLE),
   ])
   const featuredCollections = getFeatured(menuCollections, collections)
   const directoryCollections = collections
@@ -132,7 +131,7 @@ export default async function Page() {
     '@type': 'CollectionPage',
     name: 'Wholesale Tea Collections',
     description: metadata.description,
-    url: `${BASE_URL}/collections`,
+    url: `${SITE_URL}/collections`,
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: directoryCollections
@@ -141,7 +140,7 @@ export default async function Page() {
           '@type': 'ListItem',
           position: index + 1,
           name: collection.title,
-          url: `${BASE_URL}${hrefForHandle(collection.handle)}`,
+          url: `${SITE_URL}${hrefForHandle(collection.handle)}`,
         })),
     },
   }

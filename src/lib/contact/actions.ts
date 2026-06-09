@@ -3,6 +3,7 @@
 import { headers } from 'next/headers'
 import { Resend } from 'resend'
 
+import { getResendApiKey } from '@/lib/env/server'
 import {
   CUSTOM_TEA_BLEND_LIMITS,
   isCustomTeaBlendCategory,
@@ -208,12 +209,13 @@ async function submitContactSubmission(
     return { success: false, error: RATE_LIMIT_ERROR }
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  const resendApiKey = getResendApiKey()
+  if (!resendApiKey) {
     return { success: false, error: SEND_ERROR }
   }
 
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY)
+    const resend = new Resend(resendApiKey)
     const { error } = await resend.emails.send({
       from: 'Teavision Contact <noreply@teavision.com.au>',
       to: 'info@teavision.com.au',
@@ -305,12 +307,13 @@ export async function sendNewsletterSignupAction(
     return { success: false, error: RATE_LIMIT_ERROR }
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  const resendApiKey = getResendApiKey()
+  if (!resendApiKey) {
     return { success: false, error: NEWSLETTER_SEND_ERROR }
   }
 
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY)
+    const resend = new Resend(resendApiKey)
     const { error } = await resend.emails.send({
       from: 'Teavision Newsletter <noreply@teavision.com.au>',
       to: 'info@teavision.com.au',

@@ -1,5 +1,7 @@
 import 'server-only'
 
+import { shouldWarnAboutRateLimitMemoryFallback } from '@/lib/env/server'
+
 type HeaderReader = Pick<Headers, 'get'>
 
 type RateLimitBucket = {
@@ -63,9 +65,7 @@ function getDefaultStore(): RateLimitStore {
 
 function warnIfProductionFallbackIsImplicit() {
   if (
-    process.env.NODE_ENV !== 'production' ||
-    process.env.RATE_LIMIT_EXTERNAL_PROTECTION === 'true' ||
-    process.env.RATE_LIMIT_ALLOW_MEMORY_FALLBACK === 'true' ||
+    !shouldWarnAboutRateLimitMemoryFallback() ||
     productionFallbackWarningLogged
   ) {
     return

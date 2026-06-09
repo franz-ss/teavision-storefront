@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import { isNoindexModeEnabledFromEnv } from '@/lib/env/server'
+
 type RobotsMetadata = NonNullable<Metadata['robots']>
 type RobotsObject = Exclude<RobotsMetadata, string>
 
@@ -10,7 +12,7 @@ const NOINDEX_ROBOTS = {
 } satisfies RobotsObject
 
 export function isNoindexModeEnabled(): boolean {
-  return process.env.DISABLE_INDEXING === 'true'
+  return isNoindexModeEnabledFromEnv()
 }
 
 export function withNoindexRobots(metadata: Metadata): Metadata {

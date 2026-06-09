@@ -1,20 +1,14 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
-function readRequiredEnv(name: string): string {
-  const value = process.env[name]?.trim()
+import { requiredToolEnv } from './src/lib/env/tooling'
 
-  if (!value) {
-    throw new Error(
-      `Missing ${name}. Add it to .env.local before running pnpm codegen.`,
-    )
-  }
-
-  return value
-}
-
-const shopifyStoreDomain = readRequiredEnv('SHOPIFY_STORE_DOMAIN')
-const shopifyStorefrontAccessToken = readRequiredEnv(
+const shopifyStoreDomain = requiredToolEnv(
+  'SHOPIFY_STORE_DOMAIN',
+  'pnpm codegen',
+)
+const shopifyStorefrontAccessToken = requiredToolEnv(
   'SHOPIFY_STOREFRONT_ACCESS_TOKEN',
+  'pnpm codegen',
 )
 
 const config: CodegenConfig = {

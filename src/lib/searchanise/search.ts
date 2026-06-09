@@ -2,6 +2,7 @@ import 'server-only'
 
 import sanitizeHtml from 'sanitize-html'
 
+import { searchanisePublicConfig } from '@/lib/env/public'
 import type {
   CollectionProductSummary,
   Money,
@@ -519,10 +520,7 @@ export async function getSearchaniseSearchResults(
     return createEmptyResult(input, 'idle')
   }
 
-  const enabled = process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
-  const apiKey = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
-
-  if (!enabled || !apiKey) {
+  if (!searchanisePublicConfig.enabled || !searchanisePublicConfig.apiKey) {
     return createEmptyResult(
       input,
       'unavailable',
@@ -531,9 +529,12 @@ export async function getSearchaniseSearchResults(
   }
 
   try {
-    const response = await fetch(buildSearchaniseUrl(input, apiKey), {
-      cache: 'no-store',
-    })
+    const response = await fetch(
+      buildSearchaniseUrl(input, searchanisePublicConfig.apiKey),
+      {
+        cache: 'no-store',
+      },
+    )
 
     if (!response.ok) {
       return createEmptyResult(

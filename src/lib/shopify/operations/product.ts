@@ -2,6 +2,10 @@ import { cacheLife, cacheTag } from 'next/cache'
 
 import { shopifyFetch } from '@/lib/shopify/client'
 import {
+  getShopifyStoreDomain,
+  HULK_VOLUME_DISCOUNT_STORE_ID,
+} from '@/lib/shopify/env'
+import {
   GetProductDocument,
   GetProductRecommendationsDocument,
   GetProductsDocument,
@@ -28,8 +32,6 @@ const SHOPIFY_PAGE_SIZE = 250
 const HULK_VOLUME_DISCOUNT_ENDPOINT =
   'https://volumediscount.hulkapps.com/api/v2/shop/get_offer_table'
 const HULK_PERCENT_DISCOUNT_TYPE = '% Off'
-const HULK_VOLUME_DISCOUNT_STORE_ID =
-  process.env.HULK_VOLUME_DISCOUNT_STORE_ID ?? 'mrteashop-com.myshopify.com'
 export const PRODUCT_DETAIL_CACHE_VERSION = 'bulk-pricing-v2'
 
 type ShopifyProductNode = NonNullable<GetProductQuery['product']>
@@ -507,7 +509,7 @@ async function getLegacyProductInventory(
 
   if (!needsLegacyInventory) return new Map()
 
-  const storeDomain = process.env.SHOPIFY_STORE_DOMAIN
+  const storeDomain = getShopifyStoreDomain()
   if (!storeDomain) return new Map()
 
   try {

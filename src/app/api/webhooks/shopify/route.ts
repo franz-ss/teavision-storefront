@@ -3,6 +3,8 @@ import crypto from 'crypto'
 import { revalidateTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 
+import { getShopifyWebhookSecret } from '@/lib/env/server'
+
 export async function POST(request: NextRequest): Promise<Response> {
   // Read raw body as buffer for HMAC verification
   let rawBody: Buffer
@@ -17,7 +19,7 @@ export async function POST(request: NextRequest): Promise<Response> {
   }
 
   // Verify HMAC signature
-  const secret = process.env.SHOPIFY_WEBHOOK_SECRET
+  const secret = getShopifyWebhookSecret()
   if (!secret) {
     return Response.json(
       { error: 'Webhook secret not configured' },

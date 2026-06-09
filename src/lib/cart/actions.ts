@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 
+import { isProductionRuntime } from '@/lib/env/runtime'
 import {
   getCart,
   createCart,
@@ -97,7 +98,7 @@ async function getOrCreateCart(): Promise<Cart> {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProductionRuntime(),
   })
   return cart
 }

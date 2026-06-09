@@ -7,14 +7,12 @@ import {
   getProductRecommendations,
 } from '@/lib/shopify/operations/product'
 import type { Cart, Product, ProductSummary } from '@/lib/shopify/types'
+import { searchanisePublicConfig } from '@/lib/env/public'
 
 const CART_RECOMMENDATIONS_TITLE =
   'Customers Who Bought This Product Also Bought'
 const CART_RECOMMENDATIONS_LIMIT = 12
 const CART_RECOMMENDATION_SEED_LIMIT = 3
-const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
-const SEARCHANISE_ENABLED =
-  process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
 
 function getUniqueCartProductHandles(cart: Cart): string[] {
   const handles = new Set<string>()
@@ -78,7 +76,7 @@ export async function CartRecommendations({ cart }: { cart: Cart }) {
       titleId="cart-recommendations-title"
       sectionClassName="border-default mt-12 border-t pt-10"
       headingClassName="mb-6 text-xl font-semibold"
-      {...(!SEARCHANISE_ENABLED || !SEARCHANISE_API_KEY
+      {...(!searchanisePublicConfig.enabled || !searchanisePublicConfig.apiKey
         ? { fallbackDelayMs: 0 }
         : undefined)}
     />

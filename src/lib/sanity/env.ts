@@ -1,5 +1,7 @@
 import 'server-only'
 
+import { optionalEnv, requiredEnv } from '@/lib/env/read'
+
 export type SanityRuntimeConfig = {
   projectId: string
   dataset: string
@@ -8,28 +10,19 @@ export type SanityRuntimeConfig = {
 
 const DEFAULT_API_VERSION = '2026-05-28'
 
-function required(name: string): string {
-  const value = process.env[name]?.trim()
-  if (!value) {
-    throw new Error(`Missing required Sanity environment variable: ${name}`)
-  }
-
-  return value
-}
-
 export function getSanityConfig(): SanityRuntimeConfig {
   return {
-    projectId: required('NEXT_PUBLIC_SANITY_PROJECT_ID'),
-    dataset: required('NEXT_PUBLIC_SANITY_DATASET'),
+    projectId: requiredEnv('NEXT_PUBLIC_SANITY_PROJECT_ID'),
+    dataset: requiredEnv('NEXT_PUBLIC_SANITY_DATASET'),
     apiVersion:
-      process.env.NEXT_PUBLIC_SANITY_API_VERSION?.trim() ?? DEFAULT_API_VERSION,
+      optionalEnv('NEXT_PUBLIC_SANITY_API_VERSION') ?? DEFAULT_API_VERSION,
   }
 }
 
 export function getSanityReadToken(): string | undefined {
-  return process.env.SANITY_API_READ_TOKEN?.trim() || undefined
+  return optionalEnv('SANITY_API_READ_TOKEN')
 }
 
 export function getSanityRevalidateSecret(): string {
-  return required('SANITY_REVALIDATE_SECRET')
+  return requiredEnv('SANITY_REVALIDATE_SECRET')
 }

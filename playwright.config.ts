@@ -1,15 +1,20 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 4173)
+import {
+  defaultedNumberEnv,
+  isContinuousIntegration,
+} from './src/lib/env/tooling'
+
+const PORT = defaultedNumberEnv('PLAYWRIGHT_PORT', 4173)
 const BASE_URL = `http://localhost:${PORT}`
-const FAKE_SHOPIFY_PORT = Number(process.env.FAKE_SHOPIFY_PORT ?? 4517)
+const FAKE_SHOPIFY_PORT = defaultedNumberEnv('FAKE_SHOPIFY_PORT', 4517)
 const FAKE_SHOPIFY_URL = `http://127.0.0.1:${FAKE_SHOPIFY_PORT}/graphql`
 
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: false,
   workers: 1,
-  retries: process.env.CI ? 2 : 0,
+  retries: isContinuousIntegration() ? 2 : 0,
   use: {
     baseURL: BASE_URL,
     trace: 'retain-on-failure',

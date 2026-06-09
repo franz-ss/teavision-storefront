@@ -1,6 +1,7 @@
 import { createFakeShopifyServer } from './shopify-graphql-server'
+import { defaultedNumberEnv } from '../../src/lib/env/tooling'
 
-const port = Number(process.env.FAKE_SHOPIFY_PORT ?? 4517)
+const port = defaultedNumberEnv('FAKE_SHOPIFY_PORT', 4517)
 
 async function main() {
   const server = await createFakeShopifyServer({ port })

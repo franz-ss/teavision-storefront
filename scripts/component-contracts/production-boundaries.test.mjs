@@ -48,8 +48,14 @@ test('quick-view route returns stable JSON on product fetch failures', async () 
 
 test('codegen fails before building an invalid Shopify schema URL', async () => {
   const source = await readFile(sourcePath('codegen.ts'), 'utf8')
+  const toolingSource = await readFile(
+    sourcePath('src', 'lib', 'env', 'tooling.ts'),
+    'utf8',
+  )
 
-  assert.match(source, /function readRequiredEnv/)
+  assert.match(source, /requiredToolEnv/)
+  assert.match(toolingSource, /requiredEnv/)
+  assert.match(toolingSource, /Add it to \.env\.local/)
   assert.match(source, /SHOPIFY_STORE_DOMAIN/)
   assert.match(source, /SHOPIFY_STOREFRONT_ACCESS_TOKEN/)
   assert.doesNotMatch(source, /SHOPIFY_STOREFRONT_ACCESS_TOKEN\s*\?\?\s*''/)

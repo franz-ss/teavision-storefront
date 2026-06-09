@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
 
+import { searchanisePublicConfig } from '@/lib/env/public'
 import { cn } from '@/lib/utils'
 import { Section } from '@/components/ui'
 
@@ -12,9 +13,6 @@ import { useSearchaniseRecommendations } from './use-searchanise-recommendations
 const DEFAULT_WIDGET_ID = '1T8K1Y6Q6G8R3B3'
 const DEFAULT_FALLBACK_DELAY_MS = 2500
 const LOAD_ROOT_MARGIN = '800px 0px'
-const SEARCHANISE_API_KEY = process.env.NEXT_PUBLIC_SEARCHANISE_API_KEY
-const SEARCHANISE_ENABLED =
-  process.env.NEXT_PUBLIC_SEARCHANISE_ENABLED === 'true'
 
 export type SearchaniseRecommendationsProps = {
   className?: string
@@ -99,9 +97,11 @@ export function SearchaniseRecommendations({
       className={cn('relative min-w-0', className)}
       data-searchanise-state={renderState}
     >
-      {shouldLoad && SEARCHANISE_ENABLED && SEARCHANISE_API_KEY ? (
+      {shouldLoad &&
+      searchanisePublicConfig.enabled &&
+      searchanisePublicConfig.apiKey ? (
         <Suspense fallback={null}>
-          <SearchaniseScriptLoader apiKey={SEARCHANISE_API_KEY} />
+          <SearchaniseScriptLoader apiKey={searchanisePublicConfig.apiKey} />
         </Suspense>
       ) : null}
 
