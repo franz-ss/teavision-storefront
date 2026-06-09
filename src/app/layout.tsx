@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google'
 
 import { withNoindexRobots } from '@/lib/seo/noindex'
+import { SITE_URL } from '@/lib/seo/site-url'
 import { cn } from '@/lib/utils'
 
 import './globals.css'
@@ -24,10 +25,8 @@ const jetBrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
 })
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
-
 export const metadata: Metadata = withNoindexRobots({
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(SITE_URL),
   title: {
     template: '%s | Teavision',
     default: "Teavision — Australia's #1 Tea Supplier",

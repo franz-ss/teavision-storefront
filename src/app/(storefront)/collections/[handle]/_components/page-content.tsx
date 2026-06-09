@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 
 import { StoryDisclosure, Toolbar } from '@/components/collection'
 import { Section } from '@/components/ui'
+import { SITE_URL } from '@/lib/seo/site-url'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import {
   COLLECTION_PRODUCT_PAGE_SIZE,
@@ -133,11 +134,10 @@ export async function PageContent({ params, searchParams }: PageProps) {
     collection.descriptionHtml,
   )
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
   const collectionPath = category
     ? `${getPath(handle)}/${category}`
     : getPath(handle)
-  const collectionUrl = `${baseUrl}${collectionPath}`
+  const collectionUrl = `${SITE_URL}${collectionPath}`
   const heroDescription = cleanHeroDescription(collection.description)
   const richDescriptionHtml = normalizeHtml(collection.descriptionHtml)
   const sanitizedRichDescriptionHtml =
@@ -154,7 +154,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
   return (
     <>
       <JsonLd
-        baseUrl={baseUrl}
+        baseUrl={SITE_URL}
         collection={collection}
         collectionUrl={collectionUrl}
         products={products}

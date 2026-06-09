@@ -10,39 +10,39 @@ import {
   isLocalCanonicalPath,
 } from '@/lib/blog/operations'
 import { isNoindexModeEnabled } from '@/lib/seo/noindex'
+import { SITE_URL } from '@/lib/seo/site-url'
 import { getAllProducts } from '@/lib/shopify/operations/product'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
 const STATIC_LAST_MODIFIED = '2026-06-02'
 
 const STATIC_PAGES: MetadataRoute.Sitemap = [
   {
-    url: baseUrl,
+    url: SITE_URL,
     lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: 1.0,
   },
   {
-    url: `${baseUrl}/search`,
+    url: `${SITE_URL}/search`,
     lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: 0.5,
   },
   {
-    url: `${baseUrl}/pages/wholesale`,
+    url: `${SITE_URL}/pages/wholesale`,
     lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: 0.5,
   },
   {
-    url: `${baseUrl}/pages/our-story`,
+    url: `${SITE_URL}/pages/our-story`,
     lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: 0.5,
   },
   {
-    url: `${baseUrl}/pages/contact`,
+    url: `${SITE_URL}/pages/contact`,
     lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: 0.5,
@@ -61,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ])
 
   const productUrls: MetadataRoute.Sitemap = products.map((product) => ({
-    url: `${baseUrl}/products/${product.handle}`,
+    url: `${SITE_URL}/products/${product.handle}`,
     lastModified: product.updatedAt ?? STATIC_LAST_MODIFIED,
     changeFrequency: 'daily',
     priority: 0.8,
@@ -69,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const collectionUrls: MetadataRoute.Sitemap = collections.map(
     (collection) => ({
-      url: `${baseUrl}/collections/${collection.handle}`,
+      url: `${SITE_URL}/collections/${collection.handle}`,
       lastModified: collection.updatedAt,
       changeFrequency: 'weekly',
       priority: 0.7,
@@ -82,7 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       return (
         !article.seo.noIndex &&
-        isLocalCanonicalPath(article.seo.canonicalPath, localPath, baseUrl)
+        isLocalCanonicalPath(article.seo.canonicalPath, localPath, SITE_URL)
       )
     }) ?? []
 
@@ -94,7 +94,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blog && !blog.seo.noIndex
       ? [
           {
-            url: `${baseUrl}${getBlogPath(DEFAULT_BLOG_HANDLE)}`,
+            url: `${SITE_URL}${getBlogPath(DEFAULT_BLOG_HANDLE)}`,
             lastModified: latestArticleDate,
             changeFrequency: 'monthly',
             priority: 0.5,
@@ -103,7 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       : []
 
   const articleUrls: MetadataRoute.Sitemap = indexedArticles.map((article) => ({
-    url: `${baseUrl}${getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}`,
+    url: `${SITE_URL}${getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}`,
     lastModified: new Date(article.publishedAt),
     changeFrequency: 'monthly',
     priority: 0.5,
@@ -112,7 +112,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const tagUrls: MetadataRoute.Sitemap =
     blog && !blog.seo.noIndex
       ? getUniqueArticleTags(indexedArticles).map((tag) => ({
-          url: `${baseUrl}${getTagPath(DEFAULT_BLOG_HANDLE, tag)}`,
+          url: `${SITE_URL}${getTagPath(DEFAULT_BLOG_HANDLE, tag)}`,
           lastModified: latestArticleDate,
           changeFrequency: 'monthly',
           priority: 0.4,

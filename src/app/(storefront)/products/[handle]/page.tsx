@@ -10,6 +10,7 @@ import {
 } from '@/lib/shopify/operations/product'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
+import { SITE_URL } from '@/lib/seo/site-url'
 import { getTrustooProductRatings } from '@/lib/reviews/trustoo'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import { RichText } from '@/components/ui/rich-text'
@@ -74,8 +75,7 @@ async function ProductContent({
   const product = await getProduct(handle, PRODUCT_DETAIL_CACHE_VERSION)
   if (!product) notFound()
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
-  const productUrl = `${baseUrl}/products/${product.handle}`
+  const productUrl = `${SITE_URL}/products/${product.handle}`
   const hasAvailableVariant = product.variants.some((v) => v.availableForSale)
   const descriptionHtml = sanitizeShopifyCompactHtml(product.descriptionHtml)
   const productReviewSummaries = await getTrustooProductRatings([
@@ -107,12 +107,12 @@ async function ProductContent({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: `${baseUrl}/` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Products',
-        item: `${baseUrl}/collections/all`,
+        item: `${SITE_URL}/collections/all`,
       },
       {
         '@type': 'ListItem',

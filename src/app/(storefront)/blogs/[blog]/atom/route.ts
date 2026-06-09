@@ -5,12 +5,11 @@ import {
   isLocalCanonicalPath,
   normalizeBlogHandle,
 } from '@/lib/blog/operations'
+import { SITE_URL } from '@/lib/seo/site-url'
 
 type Props = {
   params: Promise<{ blog: string }>
 }
-
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
 
 function escapeXml(value: string): string {
   return value
@@ -36,13 +35,13 @@ export async function GET(_request: Request, { params }: Props) {
 
     return (
       !article.seo.noIndex &&
-      isLocalCanonicalPath(article.seo.canonicalPath, localPath, baseUrl)
+      isLocalCanonicalPath(article.seo.canonicalPath, localPath, SITE_URL)
     )
   })
   const updated = articles[0]?.publishedAt ?? new Date().toISOString()
   const entries = articles
     .map((article) => {
-      const url = `${baseUrl}${getArticlePath(normalizedBlog, article.handle)}`
+      const url = `${SITE_URL}${getArticlePath(normalizedBlog, article.handle)}`
 
       return [
         '<entry>',
@@ -60,9 +59,9 @@ export async function GET(_request: Request, { params }: Props) {
     '<?xml version="1.0" encoding="utf-8"?>',
     '<feed xmlns="http://www.w3.org/2005/Atom">',
     `<title>${escapeXml(blogData.title)}</title>`,
-    `<link href="${escapeXml(`${baseUrl}${blogPath}/atom`)}" rel="self" />`,
-    `<link href="${escapeXml(`${baseUrl}${blogPath}`)}" />`,
-    `<id>${escapeXml(`${baseUrl}${blogPath}`)}</id>`,
+    `<link href="${escapeXml(`${SITE_URL}${blogPath}/atom`)}" rel="self" />`,
+    `<link href="${escapeXml(`${SITE_URL}${blogPath}`)}" />`,
+    `<id>${escapeXml(`${SITE_URL}${blogPath}`)}</id>`,
     `<updated>${new Date(updated).toISOString()}</updated>`,
     entries,
     '</feed>',

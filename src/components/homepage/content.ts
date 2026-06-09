@@ -1,3 +1,5 @@
+import { SITE_URL } from '@/lib/seo/site-url'
+
 import { CtaProps } from './catalogues'
 
 export type ImageAsset = {
@@ -69,14 +71,12 @@ export const ctaCatalogueData: CtaProps = {
 
 const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
-
 export const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Teavision',
-  url: BASE_URL,
-  logo: `${BASE_URL}/favicon.ico`,
+  url: SITE_URL,
+  logo: `${SITE_URL}/favicon.ico`,
   contactPoint: {
     '@type': 'ContactPoint',
     telephone: '1300-729-617',
@@ -89,12 +89,12 @@ export const websiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Teavision',
-  url: BASE_URL,
+  url: SITE_URL,
   potentialAction: {
     '@type': 'SearchAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: `${BASE_URL}/search?q={search_term_string}`,
+      urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
     },
     'query-input': 'required name=search_term_string',
   },

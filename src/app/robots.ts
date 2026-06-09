@@ -1,8 +1,7 @@
 import type { MetadataRoute } from 'next'
 
 import { isNoindexModeEnabled } from '@/lib/seo/noindex'
-
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
+import { SITE_URL } from '@/lib/seo/site-url'
 
 export default function robots(): MetadataRoute.Robots {
   const rules = {
@@ -17,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
 
   return {
     rules,
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   }
 }
