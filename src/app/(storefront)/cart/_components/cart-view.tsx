@@ -388,10 +388,10 @@ export function CartView({ cart }: CartViewProps) {
 
                     {/* Product info */}
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-strong w-full font-sans leading-normal font-medium wrap-break-word">
+                      <h3 className="text-strong w-full font-display leading-relaxed font-medium wrap-break-word">
                         <Link
                           href={productHref}
-                          className="focus-visible:ring-ring hover:text-brand rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                          className="focus-visible:ring-ring hover:text-brand inline-block rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                         >
                           {product.title}
                         </Link>
