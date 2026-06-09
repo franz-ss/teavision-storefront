@@ -4,7 +4,10 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Script from 'next/script'
 
-import { getProduct } from '@/lib/shopify/operations/product'
+import {
+  getProduct,
+  PRODUCT_DETAIL_CACHE_VERSION,
+} from '@/lib/shopify/operations/product'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 import { getTrustooProductRatings } from '@/lib/reviews/trustoo'
@@ -34,11 +37,12 @@ function formatTag(tag: string): string | null {
 
 type Props = {
   params: Promise<{ handle: string }>
+  searchParams: Promise<{ variant?: string | string[] }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params
-  const product = await getProduct(handle)
+  const product = await getProduct(handle, PRODUCT_DETAIL_CACHE_VERSION)
   if (!product) return withNoindexRobots({ title: 'Product not found' })
   const description = product.description
     ? product.description.slice(0, 160)
@@ -59,11 +63,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 async function ProductContent({
   params,
+  searchParams,
 }: {
   params: Promise<{ handle: string }>
+  searchParams: Promise<{ variant?: string | string[] }>
 }) {
   const { handle } = await params
-  const product = await getProduct(handle)
+  const { variant } = await searchParams
+  const initialVariantId = Array.isArray(variant) ? variant[0] : variant
+  const product = await getProduct(handle, PRODUCT_DETAIL_CACHE_VERSION)
   if (!product) notFound()
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://teavision.com.au'
@@ -202,6 +210,7 @@ async function ProductContent({
             variants={product.variants}
             options={product.options}
             bulkPricingTiers={product.bulkPricingTiers}
+            initialVariantId={initialVariantId}
           />
           <RichText
             html={descriptionHtml}
@@ -253,7 +262,7 @@ async function ProductContent({
   )
 }
 
-export default function ProductPage({ params }: Props) {
+export default function ProductPage({ params, searchParams }: Props) {
   return (
     <div className="max-w-wide mx-auto w-full p-4 md:p-6 lg:p-8">
       <Suspense
@@ -296,7 +305,7 @@ export default function ProductPage({ params }: Props) {
           </div>
         }
       >
-        <ProductContent params={params} />
+        <ProductContent params={params} searchParams={searchParams} />
       </Suspense>
     </div>
   )

@@ -30,6 +30,7 @@ const HULK_VOLUME_DISCOUNT_ENDPOINT =
 const HULK_PERCENT_DISCOUNT_TYPE = '% Off'
 const HULK_VOLUME_DISCOUNT_STORE_ID =
   process.env.HULK_VOLUME_DISCOUNT_STORE_ID ?? 'mrteashop-com.myshopify.com'
+export const PRODUCT_DETAIL_CACHE_VERSION = 'bulk-pricing-v2'
 
 type ShopifyProductNode = NonNullable<GetProductQuery['product']>
 
@@ -266,7 +267,7 @@ function parseHulkOfferLevels(value: unknown): BulkPricingTier[] {
 }
 
 function parseLegacyHulkBulkPricingTiers(value: unknown): BulkPricingTier[] {
-  if (!isRecord(value) || value.charges_applied !== true) return []
+  if (!isRecord(value)) return []
 
   const offer = value.eligible_offer
   if (!isRecord(offer)) return []
@@ -576,9 +577,12 @@ async function fetchProductSummaryPages(
   return products
 }
 
-export async function getProduct(handle: string): Promise<Product | null> {
+export async function getProduct(
+  handle: string,
+  cacheVersion = 'default',
+): Promise<Product | null> {
   'use cache'
-  cacheTag('product', `product-${handle}`)
+  cacheTag('product', `product-${handle}`, `product-${handle}-${cacheVersion}`)
 
   const data = await shopifyFetch({
     query: GetProductDocument,

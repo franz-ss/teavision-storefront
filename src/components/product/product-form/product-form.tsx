@@ -4,7 +4,6 @@ import { useId, useState } from 'react'
 
 import {
   Button,
-  FormLabel,
   Price,
   QuantityStepper,
   ToggleButton,
@@ -28,6 +27,7 @@ type ProductFormProps = {
   variants: ProductVariant[]
   options: ProductOption[]
   bulkPricingTiers?: BulkPricingTier[]
+  initialVariantId?: string
   addToCart?: AddToCart
   onCartChanged?: () => void
 }
@@ -43,18 +43,43 @@ function getAddToCartErrorMessage(error: unknown): string {
   return 'Unable to add to cart. Please try again.'
 }
 
+function getNumericVariantId(variantId: string): string {
+  return variantId.replace('gid://shopify/ProductVariant/', '')
+}
+
+function getInitialSelectedVariantId(
+  variants: ProductVariant[],
+  initialVariantId?: string,
+): string {
+  const normalizedInitialVariantId = initialVariantId?.trim()
+  const initialVariant = normalizedInitialVariantId
+    ? variants.find(
+        (variant) =>
+          variant.id === normalizedInitialVariantId ||
+          getNumericVariantId(variant.id) === normalizedInitialVariantId,
+      )
+    : undefined
+
+  return (
+    initialVariant?.id ??
+    variants.find((variant) => variant.availableForSale)?.id ??
+    variants[0]?.id ??
+    ''
+  )
+}
+
 export function ProductForm({
   variants,
   options,
   bulkPricingTiers = [],
+  initialVariantId,
   addToCart,
   onCartChanged,
 }: ProductFormProps) {
-  const quantityInputId = useId()
   const quantityErrorId = useId()
   const quantityStatusId = useId()
-  const [selectedVariantId, setSelectedVariantId] = useState(
-    variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id ?? '',
+  const [selectedVariantId, setSelectedVariantId] = useState(() =>
+    getInitialSelectedVariantId(variants, initialVariantId),
   )
   const [quantity, setQuantity] = useState(1)
   const [selectedBulkTierQuantity, setSelectedBulkTierQuantity] = useState<
@@ -84,12 +109,8 @@ export function ProductForm({
     selectedVariant && selectedVariant.quantityPriceBreaks.length > 0
       ? selectedVariant.quantityPriceBreaks
       : bulkPricingTiers
-  const availableBulkPricingTiers = selectedBulkPricingTiers.filter(
-    (tier) =>
-      maximumQuantity === undefined || tier.minimumQuantity <= maximumQuantity,
-  )
   const activeBulkTier =
-    availableBulkPricingTiers
+    selectedBulkPricingTiers
       .filter((tier) => effectiveQuantity >= tier.minimumQuantity)
       .sort((a, b) => b.minimumQuantity - a.minimumQuantity)[0] ?? null
   const bulkDealQuantity =
@@ -107,11 +128,14 @@ export function ProductForm({
     return true
   }
 
-  function addQuantityToCart(nextQuantity: number) {
+  function addQuantityToCart(
+    nextQuantity: number,
+    { enforceMaximumQuantity = true } = {},
+  ) {
     if (!canAddToCart || !selectedVariant || !canUseSelectedVariantQuantity) {
       return
     }
-    if (!canUseQuantity(nextQuantity)) return
+    if (enforceMaximumQuantity && !canUseQuantity(nextQuantity)) return
 
     addItem(selectedVariant.id, nextQuantity)
   }
@@ -143,7 +167,7 @@ export function ProductForm({
   function handleGrabDeal() {
     if (bulkDealQuantity === null) return
 
-    addQuantityToCart(bulkDealQuantity)
+    addQuantityToCart(bulkDealQuantity, { enforceMaximumQuantity: false })
   }
 
   if (variants.length === 0) {
@@ -177,20 +201,16 @@ export function ProductForm({
         </fieldset>
       )}
 
-      <div className="bg-surface flex min-w-0 flex-col gap-3 p-4 sm:grid sm:grid-cols-[auto_auto_minmax(0,1fr)] sm:items-center sm:gap-6">
-        <div className="flex min-w-0 flex-col gap-2">
-          <FormLabel htmlFor={quantityInputId}>Quantity</FormLabel>
-          <QuantityStepper
-            id={quantityInputId}
-            value={effectiveQuantity}
-            onChange={handleQuantityChange}
-            min={minimumQuantity}
-            max={maximumQuantity}
-            step={quantityIncrement}
-            disabled={!canAddToCart || isPending}
-            describedBy={error ? quantityErrorId : undefined}
-          />
-        </div>
+      <div className="bg-surface flex min-w-0 flex-col items-center gap-3 p-4 sm:grid sm:grid-cols-[auto_auto_minmax(0,1fr)] sm:gap-6">
+        <QuantityStepper
+          value={effectiveQuantity}
+          onChange={handleQuantityChange}
+          min={minimumQuantity}
+          max={maximumQuantity}
+          step={quantityIncrement}
+          disabled={!canAddToCart || isPending}
+          describedBy={error ? quantityErrorId : undefined}
+        />
 
         {selectedVariant && (
           <Price
@@ -236,7 +256,7 @@ export function ProductForm({
 
       {selectedVariant && (
         <BulkSavings
-          tiers={availableBulkPricingTiers}
+          tiers={selectedBulkPricingTiers}
           basePrice={selectedVariant.price}
           selectedQuantity={effectiveQuantity}
           selectedTierQuantity={selectedBulkTierQuantity}
