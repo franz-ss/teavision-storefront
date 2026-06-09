@@ -114,8 +114,9 @@ describe('CartView', () => {
 
     expect(html).toContain('Buy 6 more and get 15% on each product')
     expect(html).toContain(
-      '<h3 class="text-strong w-full font-sans leading-normal font-medium wrap-break-word">',
+      '<h3 class="text-strong w-full font-display leading-relaxed font-medium wrap-break-word">',
     )
+    expect(html).toContain('font-display tabular-nums')
     expect(html).not.toContain('line-clamp-2')
     expect(html).toContain('aria-label="Was $18.38"')
     expect(html).toContain('aria-label="Now $16.17"')

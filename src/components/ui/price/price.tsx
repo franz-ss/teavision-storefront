@@ -16,16 +16,16 @@ export type PriceProps = {
   className?: string
 }
 
-const priceTextVariants = cva('tabular-nums', {
+const priceTextVariants = cva('font-display tabular-nums', {
   variants: {
     tone: {
       default: 'text-default',
       sale: 'text-brand',
     },
     size: {
-      sm: 'type-body-sm',
-      md: 'type-body',
-      lg: 'type-heading-05',
+      sm: 'text-base leading-6',
+      md: 'text-lg leading-7',
+      lg: 'text-2xl leading-9 font-semibold',
     } satisfies Record<PriceSize, string>,
   },
   defaultVariants: {
@@ -34,12 +34,12 @@ const priceTextVariants = cva('tabular-nums', {
   },
 })
 
-const comparePriceTextVariants = cva('text-muted line-through', {
+const comparePriceTextVariants = cva('font-display text-muted line-through', {
   variants: {
     size: {
-      sm: 'type-caption',
-      md: 'type-body-sm',
-      lg: 'type-body',
+      sm: 'text-sm leading-5',
+      md: 'text-base leading-6',
+      lg: 'text-lg leading-7',
     } satisfies Record<PriceSize, string>,
   },
   defaultVariants: {
