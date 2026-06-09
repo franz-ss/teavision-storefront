@@ -6,6 +6,7 @@ import {
   makeCartLine,
   makeDiscountAllocation,
 } from '@/tests/fixtures/shopify/cart'
+import { makeMoney } from '@/tests/fixtures/shopify/money'
 
 import { CartView } from './cart-view'
 
@@ -20,11 +21,16 @@ const meta: Meta<typeof CartView> = {
     nextjs: { appDirectory: true },
   },
   decorators: [
-    (Story) => (
-      <div className="mx-auto max-w-6xl px-4 py-6">
-        <Story />
-      </div>
-    ),
+    (Story, context) =>
+      context.name === 'Discounted' ? (
+        <div className="bg-surface fixed top-0 left-0 w-216 pt-12">
+          <Story />
+        </div>
+      ) : (
+        <div className="mx-auto max-w-6xl px-4 py-6">
+          <Story />
+        </div>
+      ),
   ],
 }
 export default meta
@@ -61,7 +67,7 @@ export const SingleItem: Story = {
 
     await expect(canvas.getByRole('list', { name: 'Cart items' })).toBeVisible()
     await expect(
-      canvas.getByText('Shipping and taxes calculated at checkout.'),
+      canvas.getByText(/When ordering in sizes over 1kg/),
     ).toBeVisible()
     await expect(
       canvas.getByRole('link', { name: 'Proceed to checkout' }),
@@ -91,12 +97,50 @@ export const MultipleItems: Story = {
 export const Discounted: Story = {
   args: {
     cart: makeCart({
+      cost: {
+        subtotalAmount: makeMoney('1626.00'),
+        totalAmount: makeMoney('1382.10'),
+      },
       lines: [
         makeCartLine({
+          quantity: 40,
+          cost: {
+            amountPerQuantity: makeMoney('40.65'),
+            compareAtAmountPerQuantity: makeMoney('40.65'),
+            subtotalAmount: makeMoney('1626.00'),
+            totalAmount: makeMoney('1382.10'),
+          },
           discountAllocations: [
-            makeDiscountAllocation({ title: 'Bulk discount' }),
-            makeDiscountAllocation({ title: null }),
+            makeDiscountAllocation({
+              title: 'Bulk discount',
+              discountedAmount: makeMoney('243.90'),
+            }),
           ],
+          merchandise: {
+            ...makeCartLine().merchandise,
+            title: '250g/box',
+            product: {
+              ...makeCartLine().merchandise.product,
+              featuredImage: {
+                url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/2003YMiniBrick3.jpg?v=1737510905&width=800',
+                altText: '2003Y Mini Ripe Pu-erh Tea Brick (250g/box)',
+                width: 800,
+                height: 833,
+              },
+              handle: '2003y-mini-ripe-pu-erh-tea-brick-250g-box',
+              title: '2003Y Mini Ripe Pu-erh Tea Brick',
+            },
+            quantityPriceBreaks: [
+              {
+                minimumQuantity: 20,
+                price: makeMoney('35.77'),
+              },
+              {
+                minimumQuantity: 40,
+                price: makeMoney('34.55'),
+              },
+            ],
+          },
         }),
       ],
     }),
@@ -104,8 +148,75 @@ export const Discounted: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await expect(canvas.getAllByText('Bulk discount')[0]).toBeVisible()
-    await expect(canvas.getAllByText('Discount')[0]).toBeVisible()
+    await expect(canvas.queryByText('Bulk discount')).not.toBeInTheDocument()
+    await expect(canvas.queryByText(/Buy .* more/)).not.toBeInTheDocument()
+    await expect(
+      canvas.getAllByLabelText('Was $1,626.00')[0],
+    ).toBeInTheDocument()
+    await expect(
+      canvas.getAllByLabelText('Now $1,382.10')[0],
+    ).toBeInTheDocument()
+    await expect(canvas.getByText(/Congratulations! You saved/)).toBeVisible()
+    await expect(canvas.getAllByText('$243.90')[0]).toBeVisible()
+  },
+}
+
+export const PercentageDiscounted: Story = {
+  args: {
+    cart: makeCart({
+      cost: {
+        subtotalAmount: makeMoney('624.92'),
+        totalAmount: makeMoney('549.93'),
+      },
+      lines: [
+        makeCartLine({
+          quantity: 34,
+          cost: {
+            amountPerQuantity: makeMoney('18.38'),
+            compareAtAmountPerQuantity: null,
+            subtotalAmount: makeMoney('624.92'),
+            totalAmount: makeMoney('549.93'),
+          },
+          discountAllocations: [
+            makeDiscountAllocation({
+              title: 'Bulk discount',
+              discountedAmount: makeMoney('74.99'),
+            }),
+          ],
+          merchandise: {
+            ...makeCartLine().merchandise,
+            title: '250g',
+            quantityPriceBreaks: [
+              {
+                minimumQuantity: 40,
+                discountPercent: 15,
+              },
+            ],
+            product: {
+              ...makeCartLine().merchandise.product,
+              featuredImage: {
+                url: 'https://www.teavision.com.au/cdn/shop/products/orgrawsticky.jpg?v=1593990292',
+                altText: 'Organic Raw Sticky Chai',
+                width: 2210,
+                height: 2151,
+              },
+              handle: 'copy-of-peninsula-raw-sticky-chai-loose-leaf',
+              title: 'Organic Raw Sticky Chai',
+            },
+          },
+        }),
+      ],
+    }),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.getByText('Buy 6 more and get 15% on each product'),
+    ).toBeVisible()
+    await expect(canvas.getAllByLabelText('Was $624.92')[0]).toBeVisible()
+    await expect(canvas.getAllByLabelText('Now $549.93')[0]).toBeVisible()
+    await expect(canvas.getByText(/Congratulations! You saved/)).toBeVisible()
   },
 }
 

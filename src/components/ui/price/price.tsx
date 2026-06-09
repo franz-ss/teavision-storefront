@@ -9,6 +9,10 @@ export type PriceProps = {
   price: Money
   compareAtPrice?: Money
   size?: PriceSize
+  discountTone?: 'brand' | 'default'
+  layout?: 'inline' | 'stacked'
+  priceClassName?: string
+  compareAtPriceClassName?: string
   className?: string
 }
 
@@ -53,14 +57,20 @@ function format(money: Money): string {
 export function Price({
   price,
   compareAtPrice,
+  discountTone = 'brand',
+  layout = 'inline',
   size = 'md',
+  priceClassName,
+  compareAtPriceClassName,
   className,
 }: PriceProps) {
   const formattedPrice = format(price)
 
   if (!compareAtPrice) {
     return (
-      <span className={cn(priceTextVariants({ size }), className)}>
+      <span
+        className={cn(priceTextVariants({ size }), priceClassName, className)}
+      >
         {formattedPrice}
       </span>
     )
@@ -70,16 +80,30 @@ export function Price({
 
   return (
     <span
-      className={cn('inline-flex items-baseline gap-2 tabular-nums', className)}
+      className={cn(
+        layout === 'stacked'
+          ? 'inline-flex flex-col items-start gap-2 tabular-nums'
+          : 'inline-flex items-baseline gap-2 tabular-nums',
+        className,
+      )}
     >
       <span
-        className={comparePriceTextVariants({ size })}
+        className={cn(
+          comparePriceTextVariants({ size }),
+          compareAtPriceClassName,
+        )}
         aria-label={`Was ${formattedCompare}`}
       >
         {formattedCompare}
       </span>
       <span
-        className={priceTextVariants({ tone: 'sale', size })}
+        className={cn(
+          priceTextVariants({
+            tone: discountTone === 'brand' ? 'sale' : 'default',
+            size,
+          }),
+          priceClassName,
+        )}
         aria-label={`Now ${formattedPrice}`}
       >
         {formattedPrice}

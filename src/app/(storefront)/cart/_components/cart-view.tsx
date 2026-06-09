@@ -9,7 +9,7 @@ import {
   getVariantMinimumQuantity,
   getVariantQuantityIncrement,
 } from '@/lib/shopify/quantity-rules'
-import type { Cart } from '@/lib/shopify/types'
+import type { Cart, Money } from '@/lib/shopify/types'
 
 import { CartCheckoutForm } from './cart-checkout-form'
 import { CartLineActions } from './cart-line-actions'
@@ -24,6 +24,236 @@ const TRUST_SIGNALS = [
   'HACCP certified',
   'Sourced from 15+ countries',
 ]
+
+const SAVINGS_EPSILON = 0.005
+
+type CartLine = Cart['lines'][number]
+type CartLineDiscountAllocation = CartLine['discountAllocations'][number]
+
+type LineDisplayPricing = {
+  unitPrice: Money
+  unitCompareAtPrice?: Money
+  totalPrice: Money
+  totalCompareAtPrice?: Money
+}
+
+type CartDisplayPricing = {
+  subtotalPrice: Money
+  subtotalCompareAtPrice?: Money
+  savings: Money | null
+}
+
+function parseMoneyAmount(money: Money): number {
+  const amount = Number.parseFloat(money.amount)
+  return Number.isFinite(amount) ? amount : 0
+}
+
+function makeMoney(amount: number, currencyCode: string): Money {
+  return {
+    amount: Math.max(0, amount).toFixed(2),
+    currencyCode,
+  }
+}
+
+function divideMoney(money: Money, divisor: number): Money {
+  if (divisor <= 0) return money
+
+  return makeMoney(parseMoneyAmount(money) / divisor, money.currencyCode)
+}
+
+function multiplyMoney(money: Money, multiplier: number): Money {
+  return makeMoney(parseMoneyAmount(money) * multiplier, money.currencyCode)
+}
+
+function getSavingsAmount(original: Money, discounted: Money): Money | null {
+  if (original.currencyCode !== discounted.currencyCode) return null
+
+  const savings = parseMoneyAmount(original) - parseMoneyAmount(discounted)
+  if (savings <= SAVINGS_EPSILON) return null
+
+  return makeMoney(savings, original.currencyCode)
+}
+
+function getLineCompareTotal(line: CartLine): Money | undefined {
+  return getSavingsAmount(line.cost.subtotalAmount, line.cost.totalAmount)
+    ? line.cost.subtotalAmount
+    : undefined
+}
+
+function getBaseUnitPrice(line: CartLine): Money {
+  return (
+    line.cost.compareAtAmountPerQuantity ??
+    divideMoney(line.cost.subtotalAmount, line.quantity)
+  )
+}
+
+function getActiveBulkTier(line: CartLine, baseUnitPrice: Money) {
+  const baseAmount = parseMoneyAmount(baseUnitPrice)
+  if (baseAmount <= 0) return null
+
+  return (
+    line.merchandise.quantityPriceBreaks
+      .filter((tier) => tier.minimumQuantity <= line.quantity)
+      .filter((tier) => {
+        if (tier.discountPercent !== undefined && tier.discountPercent > 0) {
+          return true
+        }
+
+        if (
+          !tier.price ||
+          tier.price.currencyCode !== baseUnitPrice.currencyCode
+        ) {
+          return false
+        }
+
+        return parseMoneyAmount(tier.price) < baseAmount - SAVINGS_EPSILON
+      })
+      .sort((a, b) => b.minimumQuantity - a.minimumQuantity)[0] ?? null
+  )
+}
+
+function getBulkTierTotalPrice(
+  line: CartLine,
+  baseUnitPrice: Money,
+): Money | null {
+  const activeTier = getActiveBulkTier(line, baseUnitPrice)
+  if (!activeTier) return null
+
+  if (activeTier.discountPercent !== undefined) {
+    if (line.cost.subtotalAmount.currencyCode !== baseUnitPrice.currencyCode) {
+      return null
+    }
+
+    return multiplyMoney(
+      line.cost.subtotalAmount,
+      1 - activeTier.discountPercent / 100,
+    )
+  }
+
+  if (!activeTier.price) return null
+
+  return multiplyMoney(activeTier.price, line.quantity)
+}
+
+function getLineDisplayPricing(line: CartLine): LineDisplayPricing {
+  const compareAtPrice =
+    line.cost.compareAtAmountPerQuantity ?? getBaseUnitPrice(line)
+  const lineCompareTotal = getLineCompareTotal(line)
+  const tierTotalPrice = lineCompareTotal
+    ? null
+    : getBulkTierTotalPrice(line, compareAtPrice)
+  const derivedTotalPrice =
+    tierTotalPrice && getSavingsAmount(line.cost.subtotalAmount, tierTotalPrice)
+      ? tierTotalPrice
+      : null
+  const totalPrice = lineCompareTotal
+    ? line.cost.totalAmount
+    : (derivedTotalPrice ?? line.cost.totalAmount)
+  const discountedUnitPrice = lineCompareTotal
+    ? divideMoney(line.cost.totalAmount, line.quantity)
+    : line.cost.amountPerQuantity
+  const unitPrice = derivedTotalPrice
+    ? divideMoney(derivedTotalPrice, line.quantity)
+    : discountedUnitPrice
+  const totalCompareAtPrice =
+    lineCompareTotal || derivedTotalPrice ? line.cost.subtotalAmount : undefined
+
+  return {
+    unitPrice,
+    unitCompareAtPrice: getSavingsAmount(compareAtPrice, unitPrice)
+      ? compareAtPrice
+      : undefined,
+    totalPrice,
+    totalCompareAtPrice,
+  }
+}
+
+function getNextBulkDiscountPrompt(line: CartLine): {
+  quantityNeeded: number
+  discountPercent: number
+} | null {
+  const baseUnitPrice =
+    line.cost.compareAtAmountPerQuantity ??
+    divideMoney(line.cost.subtotalAmount, line.quantity)
+  const baseAmount = parseMoneyAmount(baseUnitPrice)
+  if (baseAmount <= 0) return null
+
+  const nextTier = line.merchandise.quantityPriceBreaks
+    .filter(
+      (tier) =>
+        tier.minimumQuantity > line.quantity &&
+        (tier.discountPercent !== undefined ||
+          tier.price?.currencyCode === baseUnitPrice.currencyCode),
+    )
+    .sort((a, b) => a.minimumQuantity - b.minimumQuantity)
+    .find((tier) => {
+      if (tier.discountPercent !== undefined && tier.discountPercent > 0) {
+        return true
+      }
+
+      const tierAmount = tier.price ? parseMoneyAmount(tier.price) : baseAmount
+
+      return tierAmount < baseAmount - SAVINGS_EPSILON
+    })
+
+  if (!nextTier) return null
+
+  const tierDiscountPercent =
+    nextTier.discountPercent ??
+    (nextTier.price
+      ? ((baseAmount - parseMoneyAmount(nextTier.price)) / baseAmount) * 100
+      : null)
+
+  if (tierDiscountPercent === null || tierDiscountPercent <= 0) return null
+
+  return {
+    quantityNeeded: nextTier.minimumQuantity - line.quantity,
+    discountPercent: tierDiscountPercent,
+  }
+}
+
+function getCartDisplayPricing(cart: Cart): CartDisplayPricing {
+  const currencyCode = cart.cost.totalAmount.currencyCode
+  const lineSubtotal = cart.lines.reduce((total, line) => {
+    const lineDisplayPricing = getLineDisplayPricing(line)
+
+    return lineDisplayPricing.totalPrice.currencyCode === currencyCode
+      ? total + parseMoneyAmount(lineDisplayPricing.totalPrice)
+      : total
+  }, 0)
+  const subtotalPrice =
+    lineSubtotal > 0
+      ? makeMoney(lineSubtotal, currencyCode)
+      : cart.cost.totalAmount
+  const subtotalCompareAtPrice = getSavingsAmount(
+    cart.cost.subtotalAmount,
+    subtotalPrice,
+  )
+    ? cart.cost.subtotalAmount
+    : undefined
+
+  return {
+    subtotalPrice,
+    subtotalCompareAtPrice,
+    savings: subtotalCompareAtPrice
+      ? getSavingsAmount(subtotalCompareAtPrice, subtotalPrice)
+      : null,
+  }
+}
+
+function formatPercent(value: number): string {
+  return new Intl.NumberFormat('en-AU', {
+    maximumFractionDigits: 1,
+  }).format(value)
+}
+
+function isBulkDiscountAllocation(
+  discount: CartLineDiscountAllocation,
+): boolean {
+  const title = discount.title?.toLowerCase() ?? ''
+
+  return title.includes('bulk') || title.includes('quantity')
+}
 
 function TrustSignalList({ layout }: { layout: 'inline' | 'stacked' }) {
   if (layout === 'inline') {
@@ -91,6 +321,7 @@ export function CartView({ cart }: CartViewProps) {
 
   const itemCountLabel =
     cart.totalQuantity === 1 ? '1 item' : `${cart.totalQuantity} items`
+  const cartDisplayPricing = getCartDisplayPricing(cart)
 
   return (
     <>
@@ -120,6 +351,12 @@ export function CartView({ cart }: CartViewProps) {
                     ? null
                     : line.merchandise.title
                 const hasDiscounts = line.discountAllocations.length > 0
+                const lineDisplayPricing = getLineDisplayPricing(line)
+                const showDiscountAllocations =
+                  hasDiscounts &&
+                  (!lineDisplayPricing.totalCompareAtPrice ||
+                    !line.discountAllocations.every(isBulkDiscountAllocation))
+                const nextBulkDiscountPrompt = getNextBulkDiscountPrompt(line)
 
                 return (
                   <li
@@ -151,10 +388,10 @@ export function CartView({ cart }: CartViewProps) {
 
                     {/* Product info */}
                     <div className="min-w-0 flex-1">
-                      <h3>
+                      <h3 className="text-strong w-full font-sans leading-normal font-medium wrap-break-word">
                         <Link
                           href={productHref}
-                          className="text-strong focus-visible:ring-ring line-clamp-2 rounded-md font-medium wrap-break-word hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                          className="focus-visible:ring-ring hover:text-brand rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                         >
                           {product.title}
                         </Link>
@@ -164,14 +401,28 @@ export function CartView({ cart }: CartViewProps) {
                           {variantTitle}
                         </p>
                       ) : null}
+                      {nextBulkDiscountPrompt ? (
+                        <p className="type-body-sm text-accent mt-2 wrap-break-word">
+                          Buy {nextBulkDiscountPrompt.quantityNeeded} more and
+                          get{' '}
+                          {formatPercent(
+                            nextBulkDiscountPrompt.discountPercent,
+                          )}
+                          % on each product
+                        </p>
+                      ) : null}
                       {/* Mobile price — hidden on desktop where it has its own column */}
                       <div className="mt-2 xl:hidden">
                         <Price
-                          price={line.cost.totalAmount}
-                          size="md"
-                          className="text-strong font-medium"
+                          price={lineDisplayPricing.totalPrice}
+                          compareAtPrice={
+                            lineDisplayPricing.totalCompareAtPrice
+                          }
+                          size="sm"
+                          className="text-strong font-semibold"
+                          priceClassName="text-strong font-semibold"
                         />
-                        {hasDiscounts ? (
+                        {showDiscountAllocations ? (
                           <div className="mt-1 flex flex-col gap-1">
                             {line.discountAllocations.map((discount, index) => (
                               <p
@@ -194,7 +445,7 @@ export function CartView({ cart }: CartViewProps) {
                         ) : null}
                       </div>
                       {/* Desktop discount info — shown under name */}
-                      {hasDiscounts ? (
+                      {showDiscountAllocations ? (
                         <div className="mt-2 hidden flex-col gap-1 xl:flex">
                           {line.discountAllocations.map((discount, index) => (
                             <p
@@ -224,9 +475,12 @@ export function CartView({ cart }: CartViewProps) {
                     {/* Desktop unit price column */}
                     <div className="hidden xl:col-start-3 xl:row-start-1 xl:block">
                       <Price
-                        price={line.cost.amountPerQuantity}
-                        size="md"
-                        className="text-strong font-medium"
+                        price={lineDisplayPricing.unitPrice}
+                        compareAtPrice={lineDisplayPricing.unitCompareAtPrice}
+                        layout="stacked"
+                        size="sm"
+                        className="text-strong font-semibold"
+                        priceClassName="text-strong font-semibold"
                       />
                     </div>
 
@@ -249,11 +503,14 @@ export function CartView({ cart }: CartViewProps) {
                     {/* Desktop line total column */}
                     <div className="hidden text-right xl:col-start-5 xl:row-start-1 xl:block">
                       <Price
-                        price={line.cost.totalAmount}
-                        size="md"
-                        className="text-strong font-medium"
+                        price={lineDisplayPricing.totalPrice}
+                        compareAtPrice={lineDisplayPricing.totalCompareAtPrice}
+                        layout="stacked"
+                        size="sm"
+                        className="text-strong items-end font-semibold"
+                        priceClassName="text-strong font-semibold"
                       />
-                      {hasDiscounts ? (
+                      {showDiscountAllocations ? (
                         <div className="mt-1 flex flex-col gap-1">
                           {line.discountAllocations.map((discount, index) => (
                             <p
@@ -285,6 +542,21 @@ export function CartView({ cart }: CartViewProps) {
             will instead come in bulk packed bags (2kg 5kg 10kg etc)
           </p>
 
+          {cartDisplayPricing.savings ? (
+            <p
+              className="type-body bg-inverse text-on-brand mt-4 rounded-md px-4 py-3 text-center font-medium"
+              role="status"
+            >
+              Congratulations! You saved{' '}
+              <Price
+                price={cartDisplayPricing.savings}
+                size="md"
+                className="text-on-brand"
+              />{' '}
+              by buying in bulk!
+            </p>
+          ) : null}
+
           {/* Order notes, terms, and checkout actions */}
           <CartCheckoutForm checkoutUrl={cart.checkoutUrl} />
         </div>
@@ -299,7 +571,7 @@ export function CartView({ cart }: CartViewProps) {
             <div className="type-body-sm flex justify-between gap-4">
               <span className="text-muted">Items</span>
               <span
-                className="text-strong font-medium"
+                className="text-strong max-w-full flex-wrap justify-end font-medium"
                 role="status"
                 aria-live="polite"
               >
@@ -307,13 +579,14 @@ export function CartView({ cart }: CartViewProps) {
               </span>
             </div>
             <div className="type-heading-05 flex justify-between gap-4">
-              <span>Subtotal</span>
-              <Price price={cart.cost.subtotalAmount} size="lg" />
+              <span>Grand total</span>
+              <Price
+                price={cartDisplayPricing.subtotalPrice}
+                compareAtPrice={cartDisplayPricing.subtotalCompareAtPrice}
+                size="lg"
+              />
             </div>
           </div>
-          <p className="type-body-sm text-muted mt-1">
-            Shipping and taxes calculated at checkout.
-          </p>
 
           <TrustSignalList layout="stacked" />
         </aside>
@@ -326,9 +599,13 @@ export function CartView({ cart }: CartViewProps) {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
           <div className="min-w-0">
-            <p className="type-caption text-muted">Subtotal</p>
+            <p className="type-caption text-muted">Grand total</p>
             <p className="type-heading-05 text-strong tabular-nums">
-              <Price price={cart.cost.subtotalAmount} size="lg" />
+              <Price
+                price={cartDisplayPricing.subtotalPrice}
+                compareAtPrice={cartDisplayPricing.subtotalCompareAtPrice}
+                size="lg"
+              />
             </p>
           </div>
           <Button

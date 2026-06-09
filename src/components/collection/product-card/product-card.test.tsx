@@ -82,6 +82,10 @@ describe('ProductCard', () => {
 
     expect(html).toContain('sm:h-45')
     expect(html).toContain('sm:w-45')
+    expect(html).toContain(
+      '<h3 class="text-strong w-full font-sans leading-normal font-medium wrap-break-word">',
+    )
+    expect(html).not.toContain('line-clamp-2')
     expect(html).toContain('flex-col')
     expect(html).toContain('justify-between')
     expect(html).toContain('4.8 out of 5 stars, 37 reviews')
