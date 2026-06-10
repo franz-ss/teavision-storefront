@@ -79,7 +79,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               key={image.url}
               variant="thumbnail"
               className={cn(
-                'aspect-square h-auto w-full rounded-lg border-2 border-transparent bg-paper-2 opacity-70 hover:opacity-100 aria-pressed:border-brand aria-pressed:opacity-100 aria-pressed:ring-0',
+                'aspect-square h-auto w-full rounded-[8px] border-2 border-transparent bg-paper-2 opacity-70 hover:opacity-100 aria-pressed:border-brand aria-pressed:opacity-100 aria-pressed:ring-0',
               )}
               aria-label={`View image ${i + 1}`}
               pressed={selectedIndex === i}

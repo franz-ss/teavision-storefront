@@ -111,7 +111,7 @@ export function BulkSavings({
   if (visibleTiers.length === 0) return null
 
   return (
-    <div className={cn('flex min-w-0 flex-col gap-4', className)}>
+    <div className={cn('flex min-w-0 flex-col gap-3', className)}>
       <h2 className="font-mono text-[11px] tracking-[0.12em] text-ink-faint uppercase">
         Buy in Bulk and Save
       </h2>

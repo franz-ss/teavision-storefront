@@ -32,6 +32,7 @@ type ProductFormProps = {
   initialVariantId?: string
   addToCart?: AddToCart
   onCartChanged?: () => void
+  className?: string
 }
 
 function getAddToCartErrorMessage(error: unknown): string {
@@ -77,6 +78,7 @@ export function ProductForm({
   initialVariantId,
   addToCart,
   onCartChanged,
+  className,
 }: ProductFormProps) {
   const quantityErrorId = useId()
   const quantityStatusId = useId()
@@ -174,14 +176,14 @@ export function ProductForm({
 
   if (variants.length === 0) {
     return (
-      <div className="rounded-sm border border-dashed border-hairline p-4 text-sm text-ink-faint">
+      <div className={cn('rounded-sm border border-dashed border-hairline p-4 text-sm text-ink-faint', className)}>
         No variants available
       </div>
     )
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-6">
+    <div className={cn('flex min-w-0 flex-col gap-6', className)}>
       {showVariantSelector && (
         <fieldset className="min-w-0">
           <legend className="type-mono-meta mb-3 text-ink-faint">
@@ -198,7 +200,7 @@ export function ProductForm({
                   disabled={!v.availableForSale}
                   aria-label={`${v.title}${!v.availableForSale ? ', out of stock' : ''}`}
                   className={cn(
-                    'min-w-23 flex-col rounded-sm border-[1.5px] border-hairline bg-card px-4.5 py-3 text-center text-ink transition-colors hover:border-ink-faint aria-pressed:border-brand aria-pressed:bg-brand-tint aria-pressed:text-ink',
+                    'min-w-23 flex-col rounded-sm border-[1.5px] border-hairline bg-card px-4.5 py-3.25 text-center text-ink transition-colors hover:border-ink-faint aria-pressed:border-brand aria-pressed:bg-brand-tint aria-pressed:text-ink',
                     isSelected && 'border-brand bg-brand-tint',
                   )}
                   onClick={() => handleSelectVariant(v.id)}
@@ -243,6 +245,7 @@ export function ProductForm({
           step={quantityIncrement}
           disabled={!canAddToCart || isPending}
           describedBy={error ? quantityErrorId : undefined}
+          shape="rectangle"
         />
 
         <div className="min-w-0 flex-1">
@@ -272,7 +275,8 @@ export function ProductForm({
         </p>
       )}
 
-      <div className="flex flex-wrap gap-x-6 gap-y-3 border-y border-hairline py-5">
+      {/* Assurance row — design specifies 18px gap above (vs form gap-6=24px), so -6px offset */}
+      <div className="-mt-1.5 flex flex-wrap gap-x-6.5 gap-y-3.5 border-y border-hairline py-5">
         {[
           { icon: Truck, label: 'Freight-insured and tracked' },
           { icon: Leaf, label: 'Air-tight, resealable packing' },
@@ -298,6 +302,7 @@ export function ProductForm({
           isPending={isPending}
           onGrabDeal={handleGrabDeal}
           onSelectTier={handleSelectBulkTier}
+          className="mt-0.5"
         />
       )}
     </div>

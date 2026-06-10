@@ -253,14 +253,16 @@ async function ProductContent({
         </span>
       </nav>
 
-      {/* Main product layout */}
-      <div className="grid min-w-0 items-start gap-[clamp(28px,4vw,64px)] lg:grid-cols-[1.05fr_1fr]">
+      {/* Main product layout — pt-2 adds the design's 8px grid top offset (delta #1) */}
+      <div className="grid min-w-0 items-start gap-[clamp(28px,4vw,64px)] pt-2 lg:grid-cols-[1.05fr_1fr]">
         <div className="min-w-0">
           <ProductGallery images={product.images} title={product.title} />
         </div>
 
-        <div className="flex min-w-0 flex-col gap-6">
-          <div className="flex flex-col gap-3">
+        {/* Info column: varied rhythm per design — gap-6 removed in favour of per-element mt-* */}
+        <div className="flex min-w-0 flex-col">
+          {/* Title block: eyebrow → h1 → rating, gap-3.5 = 14px (deltas #2, #3) */}
+          <div className="flex flex-col gap-3.5">
             {metaSegments.length > 0 ? (
               <Eyebrow className="items-center">
                 <Globe2 aria-hidden="true" className="size-3.5" />
@@ -286,8 +288,9 @@ async function ProductContent({
             ) : null}
           </div>
 
+          {/* Rating → badge pills: 16px (delta #4) */}
           {visibleTags.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
               {visibleTags.slice(0, 6).map((label) => (
                 <Badge
                   key={label}
@@ -298,12 +301,14 @@ async function ProductContent({
             </div>
           ) : null}
 
-          <div className="flex flex-wrap items-baseline gap-3">
+          {/* Price block: 22px above (delta #5) */}
+          <div className="mt-5.5 flex flex-wrap items-baseline gap-3">
             <Price
               price={product.priceRange.minVariantPrice}
               priceClassName="text-[2.2rem] leading-none font-normal"
             />
-            <span className="font-mono text-[11px] tracking-[0.06em] text-ink-faint uppercase">
+            {/* Unit label: 13px, no uppercase/tracking (delta #12) */}
+            <span className="font-mono text-[13px] text-ink-faint">
               / base unit
             </span>
             <span className="rounded-full bg-brand-tint px-2.5 py-1 font-mono text-[11px] tracking-[0.06em] text-brand uppercase">
@@ -311,22 +316,26 @@ async function ProductContent({
             </span>
           </div>
 
+          {/* Description: part of the 26px description→options rhythm (delta #6) */}
           {descriptionHtml ? (
             <RichText
               html={descriptionHtml}
               variant="compact"
-              className="max-w-prose text-[1.02rem] text-ink-soft"
+              className="mt-5.5 max-w-prose text-[1.02rem] text-ink-soft"
             />
           ) : null}
 
+          {/* ProductForm: 26px gap above (opts) (delta #6) */}
           <ProductForm
             variants={product.variants}
             options={product.options}
             bulkPricingTiers={product.bulkPricingTiers}
             initialVariantId={initialVariantId}
+            className="mt-6.5"
           />
 
-          <div className="mt-2">
+          {/* Disclosures: 32px below ProductForm (design .specs mt-32px = verified match) */}
+          <div className="mt-8">
             {specDisclosures.map((item, index) => (
               <details
                 key={item.title}
@@ -341,7 +350,7 @@ async function ProductContent({
                   />
                 </summary>
                 {item.kind === 'table' ? (
-                  <table className="mb-5 w-full text-left">
+                  <table className="mb-5.5 w-full text-left">
                     <tbody>
                       {item.rows.map(([label, value]) => (
                         <tr
@@ -362,7 +371,7 @@ async function ProductContent({
                     </tbody>
                   </table>
                 ) : (
-                  <p className="max-w-prose pb-5 text-sm leading-6 text-ink-soft">
+                  <p className="max-w-prose pb-5.5 text-sm leading-6 text-ink-soft">
                     {item.content}
                   </p>
                 )}
@@ -376,7 +385,7 @@ async function ProductContent({
       <Section.Root
         tone="transparent"
         spacing="none"
-        className="mt-12 border-t border-hairline pt-10"
+        className="mt-[clamp(50px,7vw,90px)] border-t border-hairline pt-10"
         aria-label="Customer reviews"
       >
         <div className="mb-6 flex flex-wrap items-baseline gap-3">
@@ -386,7 +395,7 @@ async function ProductContent({
       </Section.Root>
 
       {/* Product recommendations */}
-      <div className="mt-12 flex flex-col gap-10">
+      <div className="mt-[clamp(50px,7vw,90px)] flex flex-col gap-10">
         <Suspense fallback={null}>
           <RelatedProducts product={product} />
           <CustomersAlsoBought product={product} />

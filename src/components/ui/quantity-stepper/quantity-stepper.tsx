@@ -18,6 +18,8 @@ type QuantityStepperProps = {
   name?: string
   describedBy?: string
   className?: string
+  /** Shape variant. "pill" (default) keeps rounded-full corners. "rectangle" uses 4px radius for the PDP buy row. */
+  shape?: 'pill' | 'rectangle'
 }
 
 function getSafeStep(step: number): number {
@@ -52,6 +54,7 @@ export function QuantityStepper({
   name,
   describedBy,
   className,
+  shape = 'pill',
 }: QuantityStepperProps) {
   const quantityStep = getSafeStep(step)
   const quantity = clampQuantity(value, min, max, quantityStep)
@@ -63,6 +66,8 @@ export function QuantityStepper({
     onChange(clampQuantity(nextValue, min, max, quantityStep))
   }
 
+  const isRectangle = shape === 'rectangle'
+
   return (
     <>
       <label className="sr-only" htmlFor={id}>
@@ -70,7 +75,8 @@ export function QuantityStepper({
       </label>
       <div
         className={cn(
-          'border-hairline inline-flex items-center rounded-full border',
+          'border-hairline inline-flex border',
+          isRectangle ? 'items-stretch rounded-sm' : 'items-center rounded-full',
           className,
         )}
       >
@@ -80,7 +86,12 @@ export function QuantityStepper({
           disabled={!canDecrease}
           onClick={() => updateQuantity(quantity - quantityStep)}
           variant="ghost"
-          className="size-11 rounded-none rounded-l-full"
+          className={cn(
+            'rounded-none',
+            isRectangle
+              ? 'h-auto w-11.5 rounded-l-sm'
+              : 'size-11 rounded-l-full',
+          )}
         >
           <Minus className="h-3.5 w-3.5" aria-hidden="true" />
         </IconButton>
@@ -107,7 +118,12 @@ export function QuantityStepper({
           disabled={!canIncrease}
           onClick={() => updateQuantity(quantity + quantityStep)}
           variant="ghost"
-          className="size-11 rounded-none rounded-r-full"
+          className={cn(
+            'rounded-none',
+            isRectangle
+              ? 'h-auto w-11.5 rounded-r-sm'
+              : 'size-11 rounded-r-full',
+          )}
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
         </IconButton>
