@@ -17,6 +17,8 @@
   --color-ink: oklch(22.5% 0.016 167);
   --color-ink-soft: oklch(41% 0.02 167);
   --color-ink-faint: oklch(56% 0.016 167);
+  /* Near-black hover state for ink-filled buttons (design .btn-gold:hover #000) */
+  --color-ink-deep: oklch(0% 0 0);
 
   /* Hairlines */
   --color-hairline: oklch(22.5% 0.016 167 / 12%);
