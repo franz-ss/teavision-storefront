@@ -90,7 +90,7 @@
 - [x] **RD-03**: Layout chrome (header, navigation/mega-menu, search affordance, cart affordance, footer, announcement surfaces) matches the redesign's structure and styling.
 - [x] **RD-04**: The homepage matches the redesign's section composition and styling (hero, category/collection bands, product showcases, brand-motif bands, trust/wholesale sections, newsletter).
 - [x] **RD-05**: Collection pages and product cards match the redesign's listing presentation while preserving Phase 8/9 behavior contracts (bounded payloads, quick-add, badges).
-- [ ] **RD-06**: Product detail pages match the redesign's PDP presentation while preserving bulk-savings, variant selection, and add-to-cart behavior.
+- [x] **RD-06**: Product detail pages match the redesign's PDP presentation while preserving bulk-savings, variant selection, and add-to-cart behavior.
 - [x] **RD-07**: Remaining storefront surfaces (cart, search, blog/Tea Journal, wholesale, static pages, error/empty states) are restyled with the new system with no legacy-styled stragglers.
 - [ ] **RD-08**: Storybook stories render correctly under the new system, and `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass with no raw hex/oklch values in classNames.
 
