@@ -83,8 +83,10 @@ export function Header() {
               <MegaNav />
             </div>
 
-            {/* Right cluster */}
-            <div className="flex shrink-0 items-center gap-1">
+            {/* Right cluster — negative margin aligns the last icon glyph (not its
+                44px hit area) with the gutter, mirroring the logo's left edge.
+                Desktop ends with the solid Wholesale pill, which needs no offset. */}
+            <div className="-mr-3.5 flex shrink-0 items-center gap-1 lg:mr-0">
               {/* Search icon */}
               <IconButton
                 aria-label="Open search"
