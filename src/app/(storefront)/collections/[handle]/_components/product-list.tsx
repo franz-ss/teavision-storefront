@@ -1,5 +1,7 @@
+import { Leaf } from 'lucide-react'
+
 import { ProductCard } from '@/components/collection'
-import { Button, Card } from '@/components/ui'
+import { Button } from '@/components/ui'
 import type { CollectionProductSummary } from '@/lib/shopify/types'
 
 type ProductListProps = {
@@ -13,43 +15,39 @@ export function ProductList({
 }: ProductListProps) {
   if (products.length === 0) {
     return (
-      <ul className="grid gap-2" role="list">
-        <Card as="li" padding="lg" radius="md" className="text-center">
-          <h3 className="type-heading-03 text-strong">
-            No products match these filters
-          </h3>
-          <p className="type-body-sm text-muted mx-auto mt-3 max-w-lg">
-            Clear the selected filters or ask the Teavision team to confirm
-            suitable options for this range.
-          </p>
-          <Button href="/pages/contact" className="mt-6">
-            Contact Teavision
-          </Button>
-        </Card>
-      </ul>
+      <div className="flex flex-col items-center py-20 text-center">
+        <Leaf className="h-11 w-11 text-ink-faint/50" aria-hidden="true" />
+        <h3 className="font-display text-2xl mt-4 text-ink">No matches</h3>
+        <p className="text-ink-soft mt-2 max-w-sm">
+          Try removing a filter, or reach out — we source to order.
+        </p>
+        <Button href="/pages/contact" variant="ghost" size="sm" className="mt-5">
+          Clear filters
+        </Button>
+      </div>
     )
   }
 
   return (
-    <Card padding="md">
+    <div>
       <ul
-        className="[&>li]:border-subtle space-y-8 divide-y [&>li:not(:last-child)]:pb-8"
+        className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-y-5.5 gap-x-4.5"
         role="list"
       >
         {products.map((product, index) => (
-          <li key={product.id}>
+          <li key={product.id} className="border-hairline-2">
             <ProductCard product={product} priority={index === 0} />
           </li>
         ))}
       </ul>
 
       {nextPageHref && (
-        <div className="mt-8 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <Button href={nextPageHref} variant="secondary">
             Next products
           </Button>
         </div>
       )}
-    </Card>
+    </div>
   )
 }

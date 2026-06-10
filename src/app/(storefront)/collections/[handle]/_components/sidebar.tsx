@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { FilterPanel } from '@/components/collection'
-import { Button, Card } from '@/components/ui'
+import { Button } from '@/components/ui'
 import type {
   CollectionProductFilter,
   CollectionSummary,
@@ -28,40 +28,34 @@ export function Sidebar({
   visibleFilters,
 }: SidebarProps) {
   return (
-    <aside className="hidden lg:grid lg:gap-5">
-      <Card padding="md" radius="md">
-        <h2 className="type-heading-04 text-strong">Need help choosing?</h2>
-        <p className="type-body-sm text-muted mt-3">
+    <aside className="hidden lg:grid lg:gap-5 lg:sticky lg:top-32 lg:self-start">
+      {/* Wholesale upsell card */}
+      <div className="bg-brand-tint border border-brand/20 rounded-lg p-5.5">
+        <h2 className="font-display text-[1.1rem] text-ink">Need help choosing?</h2>
+        <p className="type-body-sm text-ink-soft mt-3">
           Share your format, volume, and flavour brief with the Teavision team
           before you sample or scale.
         </p>
-        <div className="mt-5 grid gap-2">
-          <Button href="/pages/contact" variant="primary" size="sm">
-            Contact the team
-          </Button>
-          <Button
-            href="/pages/wholesale-account-request"
-            variant="secondary"
-            size="sm"
-          >
+        <div className="mt-4">
+          <Button href="/pages/wholesale-account-request" variant="brand" size="sm" className="w-full">
             Wholesale access
           </Button>
         </div>
-      </Card>
+      </div>
 
-      <Card padding="md" radius="md">
-        <FilterPanel
-          filters={visibleFilters}
-          selectedFilters={activeSelectedFilters}
-          resultCount={productsLength}
-          clearHref={clearFiltersHref}
-        />
-      </Card>
+      {/* Filter panel */}
+      <FilterPanel
+        filters={visibleFilters}
+        selectedFilters={activeSelectedFilters}
+        resultCount={productsLength}
+        clearHref={clearFiltersHref}
+      />
 
+      {/* Related collections */}
       {sidebarCollections.length > 0 && (
-        <Card padding="md" radius="md">
+        <div className="border-t border-hairline pt-5">
           <details open>
-            <summary className="type-label text-strong focus-visible:ring-ring flex min-h-11 cursor-pointer list-none items-center rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+            <summary className="type-mono-meta text-ink-faint uppercase focus-visible:ring-ring flex min-h-11 cursor-pointer list-none items-center rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
               You Might Like
             </summary>
             <nav
@@ -80,8 +74,8 @@ export function Sidebar({
                         className={cn(
                           'type-body-sm focus-visible:ring-ring flex min-h-10 items-center rounded px-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                           isActive
-                            ? 'bg-surface-sunken text-strong'
-                            : 'text-link hover:bg-surface-sunken',
+                            ? 'bg-paper-2 text-ink'
+                            : 'text-brand hover:bg-paper-2',
                         )}
                       >
                         {sidebarCollection.title}
@@ -92,7 +86,7 @@ export function Sidebar({
               </ul>
             </nav>
           </details>
-        </Card>
+        </div>
       )}
     </aside>
   )

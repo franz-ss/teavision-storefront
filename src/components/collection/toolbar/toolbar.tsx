@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { SlidersHorizontal } from 'lucide-react'
+import { SlidersHorizontal, X } from 'lucide-react'
 
 import type { CollectionProductFilter } from '@/lib/shopify/types'
 
@@ -25,18 +25,40 @@ export function Toolbar({
 }: ToolbarProps) {
   return (
     <div className={className}>
-      <Suspense fallback={null}>
-        <SortSelect currentSort={currentSort} />
-      </Suspense>
+      {/* Top bar: count + sort */}
+      <div className="flex items-center justify-between gap-4 mb-4">
+        <span className="type-mono-meta text-ink-faint">
+          {productCount} {productCount === 1 ? 'product' : 'products'}
+        </span>
+        <Suspense fallback={null}>
+          <SortSelect currentSort={currentSort} />
+        </Suspense>
+      </div>
 
-      <details className="bg-surface mt-5 rounded-md lg:hidden">
-        <summary className="type-label text-strong focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-md px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+      {/* Active filter chips */}
+      {selectedFilters.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {selectedFilters.map((filter) => (
+            <span
+              key={filter}
+              className="bg-brand-tint text-brand rounded-full px-3 py-1.75 text-xs font-semibold inline-flex items-center gap-1.5"
+            >
+              {filter}
+              <X className="h-3 w-3" aria-hidden="true" />
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Mobile filter toggle */}
+      <details className="bg-paper mt-2 rounded-lg border border-hairline lg:hidden">
+        <summary className="type-label text-ink focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
           <span className="inline-flex items-center gap-2">
             <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
             Filter products
           </span>
           {selectedFilters.length > 0 && (
-            <span className="type-caption text-muted">
+            <span className="type-mono-meta text-ink-faint">
               {selectedFilters.length} active
             </span>
           )}

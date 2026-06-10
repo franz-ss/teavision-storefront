@@ -2,7 +2,7 @@ import type React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { cn } from '@/lib/utils'
 
@@ -16,12 +16,6 @@ type HeroProps = {
   showIntro?: boolean
 }
 
-const PRIMARY_LINK_CLASS_NAME =
-  'type-label bg-action-primary text-action-primary-text hover:bg-action-primary-hover focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md px-5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
-
-const SECONDARY_LINK_CLASS_NAME =
-  'type-label border-action-secondary-border text-action-secondary-text hover:bg-action-secondary-hover focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md border px-5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
-
 export function Hero({
   collectionTitle,
   heroDescription,
@@ -30,72 +24,70 @@ export function Hero({
   showIntro = true,
 }: HeroProps) {
   return (
-    <Section.Root tone="transparent" spacing="compact">
-      <Section.Container>
+    <Section.Root
+      tone="brand"
+      spacing="none"
+      className="relative overflow-hidden py-[clamp(40px,5vw,70px)]"
+    >
+      {/* Background hero image at 35% opacity */}
+      {heroImage?.width && heroImage.height ? (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={getSizedShopifyImageUrl(heroImage.url, 1440)}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-35"
+            aria-hidden="true"
+          />
+        </div>
+      ) : null}
+
+      <Section.Container className="relative z-10">
+        {/* Breadcrumb */}
         <nav
           aria-label="Breadcrumb"
-          className="type-body-sm text-muted mb-8 flex flex-wrap items-center gap-2"
+          className="type-mono-meta text-paper/60 mb-6 flex flex-wrap items-center gap-2"
         >
           <Link
             href="/"
-            className="focus-visible:ring-ring inline-flex min-h-10 items-center rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none rounded hover:text-paper/90"
           >
             Home
           </Link>
           <span aria-hidden="true">/</span>
           <Link
             href="/collections/all"
-            className="focus-visible:ring-ring inline-flex min-h-10 items-center rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none rounded hover:text-paper/90"
           >
             Collections
           </Link>
           <span aria-hidden="true">/</span>
-          <span aria-current="page" className="text-default">
+          <span aria-current="page" className="text-gold">
             {collectionTitle}
           </span>
         </nav>
 
-        {heroImage?.width && heroImage.height ? (
-          <figure className="border-default bg-surface mb-8 overflow-hidden rounded-md border">
-            <Image
-              src={getSizedShopifyImageUrl(heroImage.url, 1440)}
-              alt={heroImage.altText ?? collectionTitle}
-              width={heroImage.width}
-              height={heroImage.height}
-              preload
-              sizes="(min-width: 1280px) 1200px, 100vw"
-              className="h-auto w-full"
-            />
-          </figure>
-        ) : null}
-
-        {belowHeroImage && <div className="mb-8">{belowHeroImage}</div>}
+        {belowHeroImage && <div className="mb-6">{belowHeroImage}</div>}
 
         {showIntro ? (
-          <div className="max-w-4xl">
-            <p className="type-eyebrow text-accent">Wholesale collection</p>
-            <h1 className="type-heading-02 md:type-display-01 text-strong mt-5 text-balance wrap-break-word">
+          <div className="max-w-[52ch]">
+            <Eyebrow tone="gold">Wholesale collection</Eyebrow>
+
+            <h1
+              className={cn(
+                'font-display text-paper mt-4 text-balance',
+                'text-[clamp(2.4rem,5vw,4rem)] leading-[1.04]',
+              )}
+            >
               {collectionTitle}
             </h1>
+
             {heroDescription && (
-              <p className="type-body-lg text-muted mt-6 max-w-prose wrap-break-word">
+              <p className="text-paper/85 mt-4 max-w-[52ch] text-[1.02rem]">
                 {heroDescription}
               </p>
             )}
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/pages/wholesale-account-request"
-                className={cn(PRIMARY_LINK_CLASS_NAME, 'w-full sm:w-auto')}
-              >
-                Request wholesale pricing
-              </Link>
-              <Link
-                href="/pages/contact"
-                className={cn(SECONDARY_LINK_CLASS_NAME, 'w-full sm:w-auto')}
-              >
-                Ask about this range
-              </Link>
-            </div>
           </div>
         ) : (
           <h1 className="sr-only">{collectionTitle}</h1>

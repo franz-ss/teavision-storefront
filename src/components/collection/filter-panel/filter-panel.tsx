@@ -60,11 +60,13 @@ export function FilterPanel({
   }
 
   return (
-    <div className={cn('grid gap-5', className)}>
-      <div className="flex items-start justify-between gap-4">
+    <div className={cn('grid gap-0', className)}>
+      <div className="flex items-start justify-between gap-4 pb-4">
         <div>
-          <h2 className="type-heading-04 text-strong">Filters</h2>
-          <p className="type-body-sm text-muted mt-1">
+          <h2 className="font-mono text-[11px] tracking-[0.12em] uppercase text-ink-faint">
+            Filters
+          </h2>
+          <p className="type-body-sm text-ink-soft mt-1">
             {formatCount(resultCount)} shown
           </p>
         </div>
@@ -81,21 +83,21 @@ export function FilterPanel({
       </div>
 
       {visibleFilters.length === 0 ? (
-        <p className="type-body-sm text-muted">
+        <p className="type-body-sm text-ink-soft">
           No filters are available for this collection.
         </p>
       ) : (
-        <div className="grid gap-3">
+        <div>
           {visibleFilters.map((filter) => (
             <details
               key={filter.id}
-              className="border-default rounded-md border"
+              className="border-b border-hairline py-5.5"
               open
             >
-              <summary className="type-label text-strong focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-md px-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+              <summary className="font-mono text-[11px] tracking-[0.12em] uppercase text-ink-faint focus-visible:ring-ring flex min-h-10 cursor-pointer list-none items-center justify-between gap-4 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
                 {filter.label}
               </summary>
-              <div className="border-default grid gap-2 border-t p-3">
+              <div className="mt-3 grid gap-1.5">
                 {filter.values.map((value) => {
                   const checked = selectedFilterSet.has(value.input)
                   const disabled = value.count === 0 && !checked
@@ -112,14 +114,14 @@ export function FilterPanel({
                           className={cn(
                             'flex min-h-10 items-center gap-3 rounded px-1 transition-colors',
                             checked
-                              ? 'bg-surface-sunken text-strong'
-                              : 'hover:bg-surface-sunken text-default',
+                              ? 'bg-paper-2 text-ink'
+                              : 'hover:bg-paper-2 text-ink-soft',
                           )}
                         >
                           <span className="type-body-sm flex-1">
                             {value.label}
                           </span>
-                          <span className="type-caption text-muted tabular-nums">
+                          <span className="font-mono text-ink-faint tabular-nums text-[11px]">
                             {value.count}
                           </span>
                         </Link>
@@ -137,10 +139,10 @@ export function FilterPanel({
                             disabled={disabled}
                             onChange={() => toggleFilter(value.input, checked)}
                           />
-                          <span className="type-body-sm text-default flex-1">
+                          <span className="type-body-sm text-ink flex-1">
                             {value.label}
                           </span>
-                          <span className="type-caption text-muted tabular-nums">
+                          <span className="font-mono text-ink-faint tabular-nums text-[11px]">
                             {value.count}
                           </span>
                         </label>
@@ -153,6 +155,7 @@ export function FilterPanel({
           ))}
         </div>
       )}
+
     </div>
   )
 }

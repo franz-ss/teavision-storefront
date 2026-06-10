@@ -183,10 +183,10 @@ export async function PageContent({ params, searchParams }: PageProps) {
             filters={visibleFilters}
             selectedFilters={activeSelectedFilters}
             clearHref={clearFiltersHref}
-            className="mb-8"
+            className="mb-6"
           />
 
-          <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
+          <div className="grid gap-10 lg:grid-cols-[252px_1fr] lg:items-start">
             <Sidebar
               activeSelectedFilters={activeSelectedFilters}
               clearFiltersHref={clearFiltersHref}

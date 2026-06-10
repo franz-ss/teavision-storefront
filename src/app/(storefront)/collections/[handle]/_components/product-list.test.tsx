@@ -50,7 +50,7 @@ const product: CollectionProductSummary = {
 }
 
 describe('ProductList', () => {
-  it('uses parent-owned spacing and dividers for product rows', () => {
+  it('uses a CSS grid layout with hairline-2 separators for product rows', () => {
     const html = renderToStaticMarkup(
       <ProductList
         products={[
@@ -65,13 +65,13 @@ describe('ProductList', () => {
       />,
     )
 
-    expect(html).toContain('space-y-8')
-    expect(html).toContain('divide-y')
-    expect(html).toContain('[&amp;&gt;li]:border-subtle')
-    expect(html).toContain('[&amp;&gt;li:not(:last-child)]:pb-8')
-    expect(html).not.toContain('py-5')
-    expect(html).not.toContain('<li class="border-default border-b')
-    expect(html).not.toContain('first:pt-0')
-    expect(html).not.toContain('last:border-b-0')
+    expect(html).toContain('grid-cols-2')
+    expect(html).toContain('lg:grid-cols-3')
+    expect(html).toContain('gap-y-5.5')
+    expect(html).toContain('gap-x-4.5')
+    expect(html).toContain('border-hairline-2')
+    // Old listing layout classes must be gone (migrated to new grid)
+    expect(html).not.toContain('space-y-8')
+    expect(html).not.toContain('divide-y')
   })
 })
