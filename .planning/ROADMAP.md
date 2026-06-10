@@ -96,7 +96,7 @@ Plans:
 5. All existing behavioral contracts still pass: quick-add, bulk savings, cart server actions, search facets, accessibility landmarks, noindex controls.
 6. Storybook builds with updated stories; `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass.
 
-**Plans**: 14 plans
+**Plans**: 14 plans + 8 gap-closure plans (11-15..11-22)
 
 Plans:
 
@@ -114,6 +114,14 @@ Plans:
 - [x] 11-12-PLAN.md — Blog/Tea Journal + html-content/portable-text class maps
 - [x] 11-13-PLAN.md — Wholesale, contact, our-story, certifications, custom-tea-blends, [...slug] pages
 - [x] 11-14-PLAN.md — Old-system deletion sweep, palette wipe, guard-rule + docs update, full verification gate
+- [ ] 11-15-PLAN.md — Gap closure: header utility bar wrap, mobile menu UX, mega-menu hover, global button hover-lift removal
+- [ ] 11-16-PLAN.md — Gap closure: homepage upper+lower parity, approved copy, certs marquee mount, newsletter env/warn fix
+- [ ] 11-17-PLAN.md — Gap closure: PLP banner hero + star rating + grid, collections index grid + contact move, search empty state
+- [ ] 11-18-PLAN.md — Gap closure: cart column alignment, visible compare-at prices, optimistic quantity, container width
+- [ ] 11-19-PLAN.md — Gap closure: PDP spacing/alignment parity sweep
+- [ ] 11-20-PLAN.md — Gap closure: blog newsletter band + contact reuse + spacing, footer original copy/links + design spacing
+- [ ] 11-21-PLAN.md — Gap closure: new /pages/bulk-wholesale-supply (10-section content spec on design system)
+- [ ] 11-22-PLAN.md — Gap closure: preview-first search overlay + 404 redesign (mockup -> owner approval -> implement)
 
 ## Progress
 
