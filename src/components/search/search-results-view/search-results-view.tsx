@@ -62,6 +62,16 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
                 }
               />
             </div>
+          ) : result.products.length === 0 && selectedFilterCount === 0 ? (
+            // Empty state with no active filters: hero + No-matches card only
+            <div className="max-w-2xl">
+              <SearchAlert
+                actionHref="/search"
+                actionLabel="Search again"
+                tone="empty"
+                message="No products matched this search. Try a different term."
+              />
+            </div>
           ) : (
             <div className="grid items-start gap-6 lg:grid-cols-[252px_minmax(0,1fr)] lg:gap-10">
               <aside className="hidden self-start lg:sticky lg:top-32 lg:block">
