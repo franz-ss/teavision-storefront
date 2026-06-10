@@ -59,9 +59,9 @@ export default function HomePage() {
         <HomepageNewsletter action={submitNewsletterSignupFormAction} />
         <PrivateLabel />
         <OrganicHerbs />
+        <SupplyChain />
         <CertificationCoverage />
         <Testimonials />
-        <SupplyChain />
         <TeaJournal />
         <Cta {...ctaCatalogueData} />
         <ContactSection action={submitContactFormAction} />
