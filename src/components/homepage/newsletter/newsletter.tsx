@@ -33,11 +33,13 @@ export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
               Monthly newsletter
             </Eyebrow>
             <h2 className="type-heading-01 text-paper">
-              Explore the world of tea, monthly.
+              Explore the World of Tea with Monthly Newsletters
             </h2>
             <p className="type-lede text-paper/75 mt-4">
-              Market insights, brewing tips and the latest from trusted
-              suppliers in Australia and beyond.
+              Stay informed with monthly updates on loose leaf tea, bulk tea
+              bags, herbs, and spices. From market insights to brewing tips, we
+              share the latest news and trends from trusted tea suppliers in
+              Australia and beyond.
             </p>
             <div className="flex justify-center">
               <HomepageNewsletterForm action={action} />

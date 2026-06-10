@@ -56,6 +56,7 @@ export default function HomePage() {
       <div className="bg-paper">
         <HomepageHero />
         <ProductRange />
+        <HomepageNewsletter action={submitNewsletterSignupFormAction} />
         <PrivateLabel />
         <OrganicHerbs />
         <CertificationCoverage />
@@ -63,7 +64,6 @@ export default function HomePage() {
         <SupplyChain />
         <TeaJournal />
         <Cta {...ctaCatalogueData} />
-        <HomepageNewsletter action={submitNewsletterSignupFormAction} />
         <ContactSection action={submitContactFormAction} />
         <Faq />
       </div>
