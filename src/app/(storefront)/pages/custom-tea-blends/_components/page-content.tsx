@@ -1,8 +1,9 @@
+import { ContactSection } from '@/components/contact/contact-section'
+import { submitContactFormAction } from '@/lib/contact/actions'
+
 import { BlendDetailsSection } from './blend-details-section'
-import { CtaSection } from './cta-section'
 import { FlavourPicker } from './flavour-picker'
 import { JsonLd } from './json-ld'
-import { FaqSection } from './faq-section'
 import { HeroSection } from './hero-section'
 import { IntroSection } from './intro-section'
 import { ProcessSection } from './process-section'
@@ -18,8 +19,8 @@ export function PageContent() {
       <BlendDetailsSection />
       <QualitySection />
       <ProcessSection />
-      <CtaSection />
-      <FaqSection />
+      {/* Shared contact section replaces the blend-brief form + FAQ (owner directive) */}
+      <ContactSection action={submitContactFormAction} />
     </>
   )
 }

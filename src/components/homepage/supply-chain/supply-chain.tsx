@@ -2,8 +2,6 @@ import Image from 'next/image'
 
 import { Button, Eyebrow, Section } from '@/components/ui'
 
-import { Stamp } from '../stamp'
-
 export function SupplyChain() {
   return (
     <Section.Root tone="inverse" className="overflow-hidden">
@@ -45,11 +43,15 @@ export function SupplyChain() {
           </div>
 
           <div className="flex justify-center">
-            <Stamp
-              top="Business"
-              bottom="Teavision"
-              tone="none"
-              ringSrc="/images/business-stamp.png"
+            {/* Plain brush ring — no text overlay (owner: curved text overlapped) */}
+            <Image
+              src="/images/business-stamp.png"
+              alt=""
+              aria-hidden="true"
+              width={562}
+              height={567}
+              className="animate-st-float h-auto w-[clamp(140px,14vw,200px)] object-contain motion-reduce:animate-none"
+              sizes="(min-width: 1024px) 200px, 30vw"
             />
           </div>
         </div>

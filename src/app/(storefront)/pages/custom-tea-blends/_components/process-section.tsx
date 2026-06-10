@@ -13,7 +13,7 @@ export function ProcessSection() {
               From idea to shelf in six practical steps.
             </h2>
           </div>
-          <Button href="#blend-brief" variant="secondary">
+          <Button href="#need-help" variant="secondary">
             Start a brief
           </Button>
         </div>

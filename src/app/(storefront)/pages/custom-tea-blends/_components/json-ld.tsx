@@ -6,8 +6,6 @@ import {
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 import { getSiteUrl } from '@/lib/seo/site-url'
 
-import { FAQS } from '../_lib/data'
-
 export function JsonLd() {
   const pageUrl = getSiteUrl(CUSTOM_TEA_BLEND_PAGE_PATH)
   const jsonLd = {
@@ -40,17 +38,6 @@ export function JsonLd() {
         },
         areaServed: 'AU',
         url: pageUrl,
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: FAQS.map((faq) => ({
-          '@type': 'Question',
-          name: faq.title,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: faq.description,
-          },
-        })),
       },
     ],
   }

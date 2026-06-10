@@ -26,7 +26,7 @@ export function HeroSection() {
               markets.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button href="#blend-brief" variant="inverse" size="cta">
+              <Button href="#need-help" variant="inverse" size="cta">
                 Speak to our team about a custom blend
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Button>

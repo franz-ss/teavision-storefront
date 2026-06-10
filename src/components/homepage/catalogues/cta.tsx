@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 import {
   Button,
   ButtonProps,
@@ -6,9 +8,6 @@ import {
   type SectionIntroProps,
   type SectionRootProps,
 } from '@/components/ui'
-
-import { BrushCircle } from '../brush-circle'
-import { Stamp } from '../stamp'
 
 export interface CtaProps {
   tone?: SectionRootProps['tone']
@@ -20,9 +19,18 @@ export function Cta({ tone, intro, cta }: CtaProps) {
   return (
     <Section.Root tone={tone ?? 'brand'} className="overflow-hidden">
       <Section.Container>
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,210px)_1fr_minmax(0,260px)]">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,260px)_1fr_minmax(0,210px)]">
           <div className="flex justify-center lg:order-0">
-            <Stamp top="Catalog" bottom="Teavision" tone="brand" />
+            {/* Original-site cup-in-hands illustration (owner-supplied asset) */}
+            <Image
+              src="/images/catalogue-cup.png"
+              alt=""
+              aria-hidden="true"
+              width={680}
+              height={567}
+              className="animate-bc-float h-auto w-[clamp(184px,23vw,248px)] object-contain motion-reduce:animate-none"
+              sizes="(min-width: 1024px) 248px, 40vw"
+            />
           </div>
 
           <div className="mx-auto max-w-[52ch] text-center">
@@ -51,7 +59,16 @@ export function Cta({ tone, intro, cta }: CtaProps) {
           </div>
 
           <div className="flex justify-center lg:order-0">
-            <BrushCircle illo="cup" />
+            {/* Plain brush ring — no text overlay (owner: curved text overlapped) */}
+            <Image
+              src="/images/catalogue-stamp.png"
+              alt=""
+              aria-hidden="true"
+              width={562}
+              height={567}
+              className="animate-st-float h-auto w-[clamp(140px,14vw,200px)] object-contain motion-reduce:animate-none"
+              sizes="(min-width: 1024px) 200px, 30vw"
+            />
           </div>
         </div>
       </Section.Container>

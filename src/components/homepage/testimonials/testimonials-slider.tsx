@@ -93,7 +93,9 @@ export function TestimonialsSlider({
             pressed={index === activeIndex}
             onClick={() => scrollTo(index)}
             className={cn(
-              'gap-3 rounded-lg p-4',
+              // Design .tst__brand: logo + meta in a left-aligned row (override
+              // menuCard's justify-between), 14px gap, padding 16px 18px
+              'items-center justify-start gap-3.5 rounded-lg px-4.5 py-4',
               index === activeIndex && 'shadow-1',
             )}
           >

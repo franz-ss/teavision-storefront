@@ -9,57 +9,52 @@ type HomepageNewsletterProps = {
   action: (formData: FormData) => Promise<NewsletterSignupActionResult>
 }
 
-// Decorative tea/botanical image: absolutely positioned, right-side bleed
-// Uses Shopify CDN asset already in the project. Dynamic offset values that
-// Tailwind cannot statically extract must use style={} per conventions exception.
-const DECOR_IMAGE = {
-  src: 'https://cdn.shopify.com/s/files/1/0786/8339/files/c5a075ef4595339b60bb1672bb1d67e168a564a5.png?v=1757589972&width=1500',
-  alt: '',
-  width: 1500,
-  height: 1000,
-}
-
 export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
   return (
-    <Section.Root tone="sunken" className="pt-0">
+    // Same motif-band layout as the For Business and Catalogues sections:
+    // teapot illustration left, centered content + form, brush ring right.
+    <Section.Root tone="inverse" className="overflow-hidden">
       <Section.Container>
-        <div
-          className="bg-brand-deep text-paper relative overflow-hidden rounded-lg"
-          style={{ padding: 'clamp(40px,6vw,72px)' }}
-        >
-          {/* Decorative image layer — exact offsets from design .news .ph */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute z-0 select-none"
-            style={{
-              right: '-6%',
-              top: '-20%',
-              width: '46%',
-              height: '140%',
-              opacity: 0.5,
-            }}
-          >
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,260px)_1fr_minmax(0,210px)]">
+          <div className="flex justify-center">
             <Image
-              src={DECOR_IMAGE.src}
-              alt={DECOR_IMAGE.alt}
-              fill
-              sizes="46vw"
-              className="object-cover"
+              src="/images/newsletter-teapot.png"
+              alt=""
+              aria-hidden="true"
+              width={530}
+              height={378}
+              className="animate-bc-float h-auto w-[clamp(200px,25vw,268px)] object-contain motion-reduce:animate-none"
+              sizes="(min-width: 1024px) 268px, 40vw"
             />
           </div>
 
-          {/* Body — z-1 above the decorative layer */}
-          <div className="relative z-1 max-w-120">
-            <Eyebrow tone="gold">Monthly newsletter</Eyebrow>
-            <h2 className="type-heading-02 text-paper mt-4">
+          <div className="mx-auto max-w-[52ch] text-center">
+            <Eyebrow tone="gold" className="mb-4 justify-center">
+              Monthly newsletter
+            </Eyebrow>
+            <h2 className="type-heading-01 text-paper">
               Explore the world of tea, monthly.
             </h2>
-            <p className="type-lede text-paper/85 mt-3.5">
+            <p className="type-lede text-paper/75 mt-4">
               Market insights, brewing tips and the latest from trusted
               suppliers in Australia and beyond.
             </p>
+            <div className="flex justify-center">
+              <HomepageNewsletterForm action={action} />
+            </div>
+          </div>
 
-            <HomepageNewsletterForm action={action} />
+          <div className="flex justify-center">
+            {/* Plain brush ring — no text overlay (owner: curved text overlapped) */}
+            <Image
+              src="/images/newsletter-label.png"
+              alt=""
+              aria-hidden="true"
+              width={376}
+              height={378}
+              className="animate-st-float h-auto w-[clamp(140px,14vw,200px)] object-contain motion-reduce:animate-none"
+              sizes="(min-width: 1024px) 200px, 30vw"
+            />
           </div>
         </div>
       </Section.Container>

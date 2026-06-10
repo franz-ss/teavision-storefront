@@ -61,8 +61,8 @@ export const ctaCatalogueData: CtaProps = {
   intro: {
     variant: 'compact',
     eyebrow: 'Wholesale catalogues',
-    title: 'Explore tea & herb catalogues.',
-    copy: 'Browse hundreds of options across black tea, green tea, herbal blends and bulk spices. Every listing includes the quality detail you need to guide confident wholesale orders.',
+    title: 'Explore Tea and Herb Catalogues',
+    copy: 'Browse our catalogues to explore hundreds of options in black tea, green tea, herbal blends, and bulk spices. Each listing includes quality details to guide your wholesale orders.',
   },
   cta: {
     children: 'Download Catalogue',

@@ -67,7 +67,7 @@ export function FlavourPicker() {
               brief.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button href="#blend-brief" variant="secondary">
+              <Button href="#need-help" variant="secondary">
                 Continue to Brief
                 <ArrowRight className="size-4" aria-hidden="true" />
               </Button>
