@@ -502,6 +502,32 @@
   animation: marquee 38s linear infinite;
 }
 
+@keyframes bc-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1.5deg);
+  }
+}
+
+@utility animate-bc-float {
+  animation: bc-float 7s ease-in-out infinite;
+}
+
+@keyframes st-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-1deg);
+  }
+}
+
+@utility animate-st-float {
+  animation: st-float 6s ease-in-out infinite;
+}
+
 @utility text-brand {
   color: var(--color-brand);
 }
