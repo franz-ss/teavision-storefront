@@ -1,13 +1,10 @@
 import Image from 'next/image'
 
-import { Section } from '@/components/ui'
+import { Badge, Eyebrow, Section } from '@/components/ui'
 
 export function HeroSection() {
   return (
-    <Section.Root
-      tone="brandStrong"
-      className="relative isolate overflow-hidden"
-    >
+    <Section.Root tone="brand" className="relative isolate overflow-hidden">
       <Image
         src="/images/homepage-hero.jpg"
         alt=""
@@ -16,20 +13,23 @@ export function HeroSection() {
         preload
         className="absolute inset-0 -z-20 object-cover"
       />
-      <div
-        aria-hidden="true"
-        className="bg-inverse/50 absolute inset-0 -z-10"
-      />
+      <div aria-hidden="true" className="bg-ink/50 absolute inset-0 -z-10" />
       <Section.Container>
         <div className="max-w-prose">
-          <h1 className="type-display-01 text-on-brand mt-5">
+          <Eyebrow tone="gold">Certified quality</Eyebrow>
+          <h1 className="type-display text-paper mt-5 max-w-[16ch]">
             Certified Organic. Globally Sourced. Quality Assured
           </h1>
-          <p className="type-body-lg text-on-brand/85 mt-6 max-w-prose">
+          <p className="type-lede text-paper/85 mt-6 max-w-[54ch]">
             From organic accreditation to food safety standards, our
             certifications back every product we make. We pair rigorous quality
             systems with world-class ingredients to deliver award-winning teas.
           </p>
+          <div className="mt-8 flex flex-wrap gap-2">
+            <Badge variant="onDark" label="ACO certified" />
+            <Badge variant="onDark" label="USDA organic" />
+            <Badge variant="onDark" label="Quality assured" />
+          </div>
         </div>
       </Section.Container>
     </Section.Root>

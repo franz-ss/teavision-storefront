@@ -1,6 +1,6 @@
 import { Star } from 'lucide-react'
 
-import { Card, Section } from '@/components/ui'
+import { Badge, Card, Section } from '@/components/ui'
 
 import { AWARD_EXCELLENCE } from '../_lib/data'
 
@@ -9,25 +9,29 @@ export function AwardExcellenceSection() {
     <Section.Root tone="surface">
       <Section.Container>
         <Section.Intro
+          eyebrow="Recognition"
           title={AWARD_EXCELLENCE.title}
           copy={AWARD_EXCELLENCE.copy}
         />
 
         <Card
           padding="lg"
-          radius="md"
+          radius="lg"
           className="mx-auto mt-10 max-w-3xl text-center"
         >
-          <Star aria-hidden="true" className="text-accent mx-auto size-16" />
-          <p className="type-display-01 text-brand mt-6">
+          <Star aria-hidden="true" className="text-gold mx-auto size-16" />
+          <p className="type-display text-brand mt-6">
             {AWARD_EXCELLENCE.stat}
           </p>
-          <h3 className="type-heading-03 text-strong mt-4">
+          <div className="mt-4 flex justify-center">
+            <Badge variant="gold" label={AWARD_EXCELLENCE.label} />
+          </div>
+          <h3 className="type-heading-03 text-ink mt-4">
             {AWARD_EXCELLENCE.label}
           </h3>
-          <p className="type-body text-muted mt-4">
+          <p className="type-body text-ink-soft mt-4">
             {AWARD_EXCELLENCE.detailPrefix}{' '}
-            <strong className="text-strong font-semibold">
+            <strong className="text-ink font-semibold">
               {AWARD_EXCELLENCE.detailHighlight}
             </strong>{' '}
             {AWARD_EXCELLENCE.detailSuffix}

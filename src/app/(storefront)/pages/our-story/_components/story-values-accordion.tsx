@@ -20,21 +20,21 @@ export function StoryValuesAccordion({ values }: StoryValuesAccordionProps) {
   }
 
   return (
-    <div className="divide-muted/20 divide-y">
+    <div className="divide-hairline divide-y">
       {values.map((value) => {
         const isOpen = openValueId === value.id
         const panelId = `${accordionId}-${value.id}-panel`
         const buttonId = `${accordionId}-${value.id}-button`
 
         return (
-          <div key={value.id} className="bg-surface">
+          <div key={value.id} className="bg-card">
             <h3>
               <DisclosureButton
                 id={buttonId}
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setOpenValueId(value.id)}
-                className="text-strong group min-h-14 w-full justify-between rounded-none px-4 py-3 text-left"
+                className="group text-ink min-h-14 w-full justify-between rounded-none px-4 py-3 text-left"
               >
                 <span>{value.title}</span>
                 <span
@@ -51,7 +51,7 @@ export function StoryValuesAccordion({ values }: StoryValuesAccordionProps) {
               hidden={!isOpen}
               className="grid gap-5 px-4 pb-5 md:grid-cols-[minmax(0,1fr)_minmax(18rem,0.42fr)] md:items-start md:pb-6"
             >
-              <p className="type-body text-muted">{value.description}</p>
+              <p className="type-body text-ink-soft">{value.description}</p>
               <div className="aspect-4/3 overflow-hidden rounded-md">
                 <StoryImage
                   image={value.image}

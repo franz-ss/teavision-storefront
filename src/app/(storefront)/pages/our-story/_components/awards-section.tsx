@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-import { Card, Section } from '@/components/ui'
+import { Badge, Card, Section } from '@/components/ui'
 
 import { AWARD_IMAGES } from '../_lib/data'
 
@@ -9,10 +9,8 @@ export function AwardsSection() {
     <Section.Root tone="surface">
       <Section.Container className="flex flex-col gap-10">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="type-heading-02 text-strong">
-            Awards & Certifications
-          </h2>
-          <p className="type-body text-muted mx-auto mt-5 max-w-3xl">
+          <h2 className="type-heading-02 text-ink">Awards & Certifications</h2>
+          <p className="type-body text-ink-soft mx-auto mt-5 max-w-3xl">
             Teavision is proud to be one of the most awarded and certified
             wholesale tea companies in Australia. Our global recognitions
             include:
@@ -21,6 +19,10 @@ export function AwardsSection() {
             17+ industry awards, including 7 Gold Medals for various tea blends
             and industry recognition, plus Australian Organic certification.
           </p>
+        </div>
+
+        <div className="flex justify-center">
+          <Badge variant="gold" label="17+ industry awards" />
         </div>
 
         <ul
@@ -33,7 +35,7 @@ export function AwardsSection() {
               as="li"
               key={image.src}
               padding="sm"
-              radius="md"
+              radius="lg"
               tone="sunken"
               className="flex min-h-28 items-center justify-center"
             >

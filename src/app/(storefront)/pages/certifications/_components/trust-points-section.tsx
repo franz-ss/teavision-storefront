@@ -1,6 +1,6 @@
 import { Shield, Trophy, Users, type LucideIcon } from 'lucide-react'
 
-import { Card, Section } from '@/components/ui'
+import { Badge, Card, Section } from '@/components/ui'
 
 import { TRUST_POINTS } from '../_lib/data'
 
@@ -23,16 +23,20 @@ export function TrustPointsSection() {
                 as="li"
                 key={point.title}
                 padding="lg"
-                radius="md"
+                radius="lg"
                 className="h-full text-center"
               >
-                <div className="bg-brand text-on-brand mx-auto flex size-16 items-center justify-center rounded-full">
+                <div className="bg-brand-tint text-brand mx-auto flex size-16 items-center justify-center rounded-full">
                   <Icon aria-hidden="true" className="size-8" />
                 </div>
-                <h3 className="type-heading-05 text-strong mt-5">
-                  {point.title}
-                </h3>
-                <p className="type-body-sm text-muted mt-3">
+                <div className="mt-5">
+                  <Badge
+                    variant={point.icon === 'trophy' ? 'gold' : 'organic'}
+                    label={point.icon === 'trophy' ? 'Awarded' : 'Certified'}
+                  />
+                </div>
+                <h3 className="type-heading-05 text-ink mt-4">{point.title}</h3>
+                <p className="type-body-sm text-ink-soft mt-3">
                   {point.description}
                 </p>
               </Card>
