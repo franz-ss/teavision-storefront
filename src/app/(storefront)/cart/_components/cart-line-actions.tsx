@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useOptimistic, useTransition } from 'react'
 import { Minus, Plus } from 'lucide-react'
 
 import { Button, IconButton } from '@/components/ui'
@@ -31,15 +31,23 @@ export function CartLineActions({
   quantityIncrement = 1,
   action = cartLineFormAction,
 }: CartLineActionsProps) {
-  const [state, formAction, isPending] = useActionState(
+  const [state, formAction, isRemovePending] = useActionState(
     action,
     INITIAL_CART_LINE_FORM_STATE,
   )
+
+  const [isUpdatePending, startUpdateTransition] = useTransition()
+
+  const [optimisticQuantity, setOptimisticQuantity] = useOptimistic(
+    quantity,
+    (_current: number, next: number) => next,
+  )
+
   const normalizedQuantity = clampQuantity({
     maximumQuantity,
     minimumQuantity,
     quantityIncrement,
-    value: quantity,
+    value: optimisticQuantity,
   })
   const decreasedQuantity = clampQuantity({
     maximumQuantity,
@@ -62,47 +70,50 @@ export function CartLineActions({
     window.dispatchEvent(new Event(CART_CHANGED_EVENT))
   }, [state.cartChanged])
 
+  function handleStepperClick(newQuantity: number) {
+    startUpdateTransition(async () => {
+      setOptimisticQuantity(newQuantity)
+      const data = new FormData()
+      data.append('intent', 'update')
+      data.append('lineId', lineId)
+      data.append('quantity', String(newQuantity))
+      await action(INITIAL_CART_LINE_FORM_STATE, data)
+    })
+  }
+
   return (
     <>
       {/* Pill quantity stepper */}
       <div className="inline-flex items-center rounded-full border border-hairline">
-        <form action={formAction}>
-          <input type="hidden" name="intent" value="update" />
-          <input type="hidden" name="lineId" value={lineId} />
-          <input type="hidden" name="quantity" value={decreasedQuantity} />
-          <IconButton
-            type="submit"
-            variant="ghost"
-            disabled={!canDecrease || isPending}
-            aria-busy={isPending || undefined}
-            aria-label={`Decrease quantity of ${productTitle}`}
-            className="size-11 text-ink-soft hover:text-brand rounded-full"
-          >
-            <Minus className="h-3.5 w-3.5" aria-hidden="true" />
-          </IconButton>
-        </form>
+        <IconButton
+          type="button"
+          variant="ghost"
+          disabled={!canDecrease}
+          aria-busy={isUpdatePending || undefined}
+          aria-label={`Decrease quantity of ${productTitle}`}
+          className="size-11 text-ink-soft hover:text-brand rounded-full"
+          onClick={() => handleStepperClick(decreasedQuantity)}
+        >
+          <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+        </IconButton>
         <span
           className="min-w-7 text-center font-mono text-[13px] tabular-nums"
           role="status"
           aria-live="polite"
         >
-          {quantity}
+          {optimisticQuantity}
         </span>
-        <form action={formAction}>
-          <input type="hidden" name="intent" value="update" />
-          <input type="hidden" name="lineId" value={lineId} />
-          <input type="hidden" name="quantity" value={increasedQuantity} />
-          <IconButton
-            type="submit"
-            variant="ghost"
-            disabled={!canIncrease || isPending}
-            aria-busy={isPending || undefined}
-            aria-label={`Increase quantity of ${productTitle}`}
-            className="size-11 text-ink-soft hover:text-brand rounded-full"
-          >
-            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-          </IconButton>
-        </form>
+        <IconButton
+          type="button"
+          variant="ghost"
+          disabled={!canIncrease}
+          aria-busy={isUpdatePending || undefined}
+          aria-label={`Increase quantity of ${productTitle}`}
+          className="size-11 text-ink-soft hover:text-brand rounded-full"
+          onClick={() => handleStepperClick(increasedQuantity)}
+        >
+          <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+        </IconButton>
       </div>
 
       {/* Remove link */}
@@ -113,8 +124,8 @@ export function CartLineActions({
           variant="ghost"
           size="sm"
           type="submit"
-          disabled={isPending}
-          isLoading={isPending}
+          disabled={isRemovePending}
+          isLoading={isRemovePending}
           aria-label={`Remove ${productTitle} from cart`}
         >
           Remove
