@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-06-10T02:53:30.570Z"
+last_updated: "2026-06-10T03:04:30.258Z"
 last_activity: 2026-06-10
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 25
-  completed_plans: 18
-  percent: 72
+  completed_plans: 19
+  percent: 75
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-27)
 ## Current Position
 
 Phase: 11 (full-visual-redesign) — EXECUTING
-Plan: 9 of 14
+Plan: 10 of 14
 Status: Ready to execute
 Last activity: 2026-06-10
 
-Progress: [███████░░░] 72%
+Progress: [████████░░] 76%
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Progress: [███████░░░] 72%
 | Phase 11-full-visual-redesign P06 | 535 | 3 tasks | 8 files |
 | Phase 11-full-visual-redesign P08 | 16m | 3 tasks | 15 files |
 | Phase 11-full-visual-redesign P11 | 801s | 2 tasks | 10 files |
+| Phase 11-full-visual-redesign P12 | 6m | 3 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,7 @@ Recent decisions affecting current work:
 - Phase 11-05: Newsletter form layout changed to full-width stacked input+button per mockup; Server Action/honeypot/aria-live wiring unchanged
 - [Phase ?]: Phase 11-06: Hero uses Section.Root tone=transparent with hero-scrim CSS utility; PrivateLabel uses inline svc__card layout; CertificationCoverage is CSS-only marquee Server Component
 - [Phase ?]: Preserved per-unit pricing context in cart line despite drawer mockup omitting it
+- [Phase ?]: Blog hero and rich-content mappers
 
 ### Roadmap Evolution
 
@@ -125,6 +127,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-10T02:53:30.557Z
+Last session: 2026-06-10T03:04:30.246Z
 Stopped at: Completed 11-02-PLAN.md
 Resume file: None
