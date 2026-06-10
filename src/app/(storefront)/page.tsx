@@ -10,6 +10,7 @@ import {
   PrivateLabel,
   ProofPoints,
   ProductRange,
+  SupplyChain,
   TeaJournal,
   Testimonials,
 } from '@/components/homepage'
@@ -53,30 +54,18 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: serializeInlineJson(websiteJsonLd) }}
       />
 
-      <div className="bg-canvas">
+      <div className="bg-paper">
         <HomepageHero />
         <ProofPoints points={HOMEPAGE_PROOF_POINTS} />
         <ProductRange />
-        <HomepageNewsletter action={submitNewsletterSignupFormAction} />
         <PrivateLabel />
         <OrganicHerbs />
-        <Cta
-          tone="brand"
-          intro={{
-            title: 'Source wholesale ingredients with Teavision',
-            copy: 'Talk with our team about samples, bulk supply, private-label packing, or custom blending for your range.',
-          }}
-          cta={{
-            children: 'Contact the team',
-            href: '/pages/contact',
-            variant: 'inverseSecondary',
-          }}
-        />
-
         <Testimonials />
+        <SupplyChain />
         <TeaJournal />
-        <Contact action={submitContactFormAction} />
         <Cta {...ctaCatalogueData} />
+        <HomepageNewsletter action={submitNewsletterSignupFormAction} />
+        <Contact action={submitContactFormAction} />
         <Faq />
       </div>
     </>

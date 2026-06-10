@@ -56,7 +56,7 @@ export function HomepageNewsletterForm({
       ref={formRef}
       onSubmit={handleSubmit}
       aria-busy={isPending}
-      className="mx-auto mt-8 flex max-w-xl flex-col gap-2 sm:flex-row sm:flex-wrap"
+      className="mt-7 flex flex-col gap-2 sm:flex-row sm:flex-wrap"
     >
       <label className="sr-only" htmlFor="homepage-newsletter-email">
         Enter Email
@@ -71,7 +71,7 @@ export function HomepageNewsletterForm({
         maxLength={254}
         placeholder="Enter Email"
         aria-describedby={hasMessage ? messageId : undefined}
-        className="type-body-sm focus-visible:ring-ring border-on-brand/30 bg-canvas text-strong placeholder:text-muted min-h-12 flex-1 rounded-md border px-4 focus-visible:ring-2 focus-visible:outline-none"
+        className="min-h-12 flex-1 rounded-full border border-paper/25 bg-paper/10 px-5.5 text-paper placeholder:text-paper/60 focus:border-gold focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none"
       />
       <div className="sr-only" aria-hidden="true">
         <input
@@ -84,6 +84,7 @@ export function HomepageNewsletterForm({
       </div>
       <Button
         type="submit"
+        variant="inverse"
         size="cta"
         isLoading={isPending}
         disabled={isPending}
@@ -96,8 +97,10 @@ export function HomepageNewsletterForm({
           role={status === 'success' ? 'status' : 'alert'}
           aria-live="polite"
           className={cn(
-            'type-body-sm border-on-brand/30 w-full rounded-md border p-3 text-center',
-            status === 'success' ? 'text-on-brand' : 'bg-surface text-strong',
+            'type-body-sm w-full rounded-md border p-3 text-center',
+            status === 'success'
+              ? 'border-paper/25 text-paper'
+              : 'border-gold bg-paper text-ink',
           )}
         >
           {status === 'success' ? 'Thanks for signing up.' : error}

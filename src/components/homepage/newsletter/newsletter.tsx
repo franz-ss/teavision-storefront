@@ -1,4 +1,4 @@
-import { Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
 import type { NewsletterSignupActionResult } from '@/lib/contact/types'
 
 import { HomepageNewsletterForm } from './newsletter-form'
@@ -9,17 +9,22 @@ type HomepageNewsletterProps = {
 
 export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
   return (
-    <Section.Root tone="brand">
+    <Section.Root tone="sunken" className="pt-0">
       <Section.Container>
-        <Section.Intro
-          title="Explore the World of Tea with Monthly Newsletters"
-          copy="Stay informed with monthly updates on loose leaf tea, bulk tea bags,
-          herbs, and spices. From market insights to brewing tips, we share the
-          latest news and trends from trusted tea suppliers in Australia and
-          beyond."
-        />
+        <div className="overflow-hidden rounded-lg bg-brand-deep p-[clamp(28px,5vw,64px)] text-paper">
+          <div className="relative z-1 max-w-120">
+            <Eyebrow tone="gold">Monthly newsletter</Eyebrow>
+            <h2 className="type-heading-02 mt-4 text-paper">
+              Explore the world of tea, monthly.
+            </h2>
+            <p className="type-lede mt-4 text-paper/75">
+              Market insights, brewing tips and the latest from trusted
+              suppliers in Australia and beyond.
+            </p>
 
-        <HomepageNewsletterForm action={action} />
+            <HomepageNewsletterForm action={action} />
+          </div>
+        </div>
       </Section.Container>
     </Section.Root>
   )

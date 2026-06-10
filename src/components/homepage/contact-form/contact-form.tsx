@@ -112,6 +112,7 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
       </div>
       <Button
         type="submit"
+        variant="brand"
         size="cta"
         isLoading={isPending}
         disabled={isPending}
