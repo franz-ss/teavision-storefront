@@ -104,8 +104,8 @@ export function TestimonialsSlider({
               alt={testimonial.logo.alt}
               width={testimonial.logo.width}
               height={testimonial.logo.height}
-              sizes="54px"
-              className="h-10 w-13.5 shrink-0 rounded-sm object-contain"
+              sizes="80px"
+              className="h-15 w-20 shrink-0 rounded-sm object-contain"
             />
             <span className="min-w-0">
               <span className="text-ink block font-bold">

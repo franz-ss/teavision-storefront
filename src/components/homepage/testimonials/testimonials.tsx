@@ -46,12 +46,14 @@ export function Testimonials() {
                 >
                   <path d="M9 7H5a2 2 0 00-2 2v3a2 2 0 002 2h2v3H4m15-10h-4a2 2 0 00-2 2v3a2 2 0 002 2h2v3h-3" />
                 </svg>
-                <p className="font-display text-ink text-[clamp(1.4rem,2.4vw,2.1rem)] leading-[1.32]">
+                {/* Long-form original quotes — readable serif size, not display scale */}
+                <p className="font-display text-ink text-[clamp(1.05rem,1.4vw,1.25rem)] leading-[1.6]">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
                 <footer className="text-ink-faint mt-6.5 font-mono text-[12px] tracking-widest uppercase">
                   <cite className="not-italic">
                     {testimonial.name}
+                    {testimonial.role ? `, ${testimonial.role}` : null}
                     {testimonial.brand ? ` — ${testimonial.brand}` : null}
                   </cite>
                 </footer>

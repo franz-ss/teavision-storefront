@@ -31,10 +31,14 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
         {/* Header per design .range__head: items-end, h2 + View-all link-arrow, 40px below */}
         <div className="flex flex-wrap items-end justify-between gap-7.5">
           <div>
-            <Eyebrow>Tea Journal</Eyebrow>
-            <h2 className="type-heading-01 text-ink mt-4 max-w-[16ch]">
-              Insights, guides &amp; stories.
-            </h2>
+            <Eyebrow>Insights &amp; stories</Eyebrow>
+            <h2 className="type-heading-01 text-ink mt-4">Tea Journal</h2>
+            <p className="type-lede text-ink-soft mt-4 max-w-[62ch]">
+              Stay updated with insights, guides, and stories from the world of
+              tea and spices. From the health benefits of herbal teas to
+              sourcing bulk herbs and spices, our Tea Journal is here to
+              inspire and educate.
+            </p>
           </div>
 
           <Link
@@ -57,7 +61,8 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
                 href={getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}
                 className="group focus-visible:ring-ring flex h-full min-w-0 flex-col overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
-                <div className="bg-paper-2 relative mb-4.5 h-55 overflow-hidden rounded-lg">
+                {/* Standard 3:2 ratio — scales with column width instead of a fixed 220px */}
+                <div className="bg-paper-2 relative mb-4.5 aspect-3/2 overflow-hidden rounded-lg">
                   {article.featuredImage ? (
                     <Image
                       src={article.featuredImage.url}
