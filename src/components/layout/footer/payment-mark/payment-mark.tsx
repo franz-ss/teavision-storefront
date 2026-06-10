@@ -1,34 +1,9 @@
-import type { ReactElement } from 'react'
-
-import { AmericanExpressMark } from '../payment-marks/american-express'
-import { ApplePayMark } from '../payment-marks/apple-pay'
-import { GooglePayMark } from '../payment-marks/google-pay'
-import { MastercardMark } from '../payment-marks/mastercard'
-import { PayPalMark } from '../payment-marks/paypal'
-import { ShopPayMark } from '../payment-marks/shop-pay'
-import { UnionPayMark } from '../payment-marks/union-pay'
-import { VisaMark } from '../payment-marks/visa'
 import type { PaymentMethod } from '../types'
 
-type PaymentMarkComponent = () => ReactElement
-
-const PAYMENT_MARKS = {
-  'American Express': AmericanExpressMark,
-  'Apple Pay': ApplePayMark,
-  'Google Pay': GooglePayMark,
-  Mastercard: MastercardMark,
-  PayPal: PayPalMark,
-  'Shop Pay': ShopPayMark,
-  'Union Pay': UnionPayMark,
-  Visa: VisaMark,
-} satisfies Record<PaymentMethod['label'], PaymentMarkComponent>
-
 export function PaymentMark({ method }: { method: PaymentMethod }) {
-  const Mark = PAYMENT_MARKS[method.label]
-
   return (
-    <span className="block h-6 w-9.5 [&>svg]:block [&>svg]:h-6 [&>svg]:w-9.5">
-      <Mark />
+    <span className="inline-flex items-center justify-center rounded-[5px] border border-paper/15 px-2 py-1 font-mono text-[9.5px] tracking-[0.04em] uppercase text-paper/60">
+      {method.label}
     </span>
   )
 }

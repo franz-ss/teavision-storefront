@@ -5,13 +5,7 @@ import { cn } from '@/lib/utils'
 import type { FooterLink as FooterLinkData } from '../types'
 
 const FOOTER_LINK_CLASS =
-  'inline-flex min-h-11 items-center underline-offset-2 transition-colors hover:underline focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
-
-export const MENU_LINK_CLASS =
-  'text-on-brand focus-visible:ring-offset-footer text-base leading-[1.4]'
-
-export const BOTTOM_LINK_CLASS =
-  'text-footer-bottom focus-visible:ring-offset-footer-bottom'
+  'inline-flex min-h-11 items-center text-[0.95rem] text-paper/75 underline-offset-2 transition-colors hover:text-paper focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-ink focus-visible:outline-none'
 
 function isInternalHref(href: string) {
   return href === '/' || (href.startsWith('/') && !href.startsWith('//'))

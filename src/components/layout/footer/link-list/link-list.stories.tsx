@@ -16,7 +16,7 @@ const meta: Meta<typeof FooterLinkList> = {
   },
   decorators: [
     (Story) => (
-      <div className="bg-footer p-6">
+      <div className="bg-ink p-6">
         <Story />
       </div>
     ),

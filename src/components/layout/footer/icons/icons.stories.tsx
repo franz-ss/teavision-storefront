@@ -8,7 +8,7 @@ const meta: Meta = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div className="bg-footer p-6">
+      <div className="bg-ink p-6">
         <Story />
       </div>
     ),
@@ -20,7 +20,7 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: () => (
-    <div className="text-on-brand flex items-center gap-6">
+    <div className="flex items-center gap-6 text-paper/75">
       <PhoneIcon />
       <MailIcon />
     </div>

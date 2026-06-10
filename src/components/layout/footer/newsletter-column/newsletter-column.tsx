@@ -4,7 +4,7 @@ import {
   FooterNewsletterForm,
   type FooterNewsletterAction,
 } from '../newsletter-form'
-import { FooterTextLink, MENU_LINK_CLASS } from '../text-link'
+import { FooterTextLink } from '../text-link'
 
 export function NewsletterColumn({
   action,
@@ -16,24 +16,24 @@ export function NewsletterColumn({
 
   return (
     <div>
-      <h3 className="text-footer-muted mb-4 font-sans text-base leading-[1.4] font-semibold">
+      <h3 className="mb-4.5 font-mono text-[10.5px] tracking-[0.16em] uppercase text-gold">
         Keep in Touch
       </h3>
-      <p className="text-on-brand text-base leading-[1.4]">
-        Sign up for exclusive offers, market trends and new product alerts.
+      <p className="text-[0.95rem] text-paper/75 leading-normal">
+        Market trends, new lines and exclusive wholesale offers — monthly.
       </p>
       <FooterNewsletterForm action={action} />
-      <div className="mt-6 flex flex-col gap-4">
+      <div className="mt-5 flex flex-col gap-2 font-mono text-[12px]">
         {phoneLink ? (
-          <p className="text-on-brand flex items-center gap-2 text-base leading-[1.4]">
+          <p className="flex items-center gap-2">
             <PhoneIcon />
-            <FooterTextLink {...phoneLink} className={MENU_LINK_CLASS} />
+            <FooterTextLink {...phoneLink} />
           </p>
         ) : null}
         {emailLink ? (
-          <p className="text-on-brand flex items-center gap-2 text-base leading-[1.4]">
+          <p className="flex items-center gap-2">
             <MailIcon />
-            <FooterTextLink {...emailLink} className={MENU_LINK_CLASS} />
+            <FooterTextLink {...emailLink} />
           </p>
         ) : null}
       </div>
