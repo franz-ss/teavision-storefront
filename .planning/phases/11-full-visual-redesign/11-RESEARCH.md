@@ -528,6 +528,11 @@ for (const { id, uuid } of ids) {                     // stampRing, illoCup, ill
 
 ## Open Questions
 
+> **Status (2026-06-10, plan-phase orchestrator):** all three questions resolved during planning.
+> Q1 → **RESOLVED:** Phase 9 intents CARD-02..06 absorbed into plan 11-08 (RD-05 card redesign); CARD-01 superseded by the vertical mockup card; final Phase 9 supersession bookkeeping surfaced to the user at plan review.
+> Q2 → **RESOLVED:** static utility bar with mockup ticker copy, built in plan 11-04 (user may adjust wording at review).
+> Q3 → **RESOLVED:** `no-section-root-tone-class` regex updated in plan 11-14 Task 2.
+
 1. **Phase 9 (collection card improvements) is planned but NOT implemented** — no `showQuantity` prop exists in `product-purchase-form.tsx` `[VERIFIED: grep]`, yet ROADMAP says Phase 11 depends on Phase 9 and RD-05 says "preserving Phase 8/9 behavior contracts".
    - What we know: the mockup card already delivers most of Phase 9's intent (eyebrow origin/type line ≈ CARD-02, organic/gold pills ≈ CARD-03, no "More info" button ≈ CARD-04, identity-top/controls-bottom ≈ CARD-05).
    - What's unclear: whether Phase 9 runs first or is absorbed.
