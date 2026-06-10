@@ -360,12 +360,12 @@ export function CartView({ cart }: CartViewProps) {
               return (
                 <li
                   key={line.id}
-                  className="flex gap-3.5 py-5 border-b border-hairline last:border-b-0"
+                  className="flex gap-3.5 py-5 border-b border-hairline last:border-b-0 xl:grid xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-start xl:gap-x-6"
                 >
-                  {/* Product image */}
+                  {/* Col 1: Product image */}
                   <Link
                     href={productHref}
-                    className="bg-paper-2 focus-visible:ring-ring relative h-19 w-19 shrink-0 overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    className="bg-paper-2 focus-visible:ring-ring relative h-19 w-19 shrink-0 overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none xl:h-24 xl:w-24"
                     aria-label={`View ${product.title}`}
                   >
                     {productImage ? (
@@ -374,7 +374,7 @@ export function CartView({ cart }: CartViewProps) {
                         alt=""
                         width={productImage.width ?? 200}
                         height={productImage.height ?? 200}
-                        sizes="76px"
+                        sizes="(min-width: 1280px) 96px, 76px"
                         className="h-full w-full object-cover"
                       />
                     ) : (
@@ -385,84 +385,66 @@ export function CartView({ cart }: CartViewProps) {
                     )}
                   </Link>
 
-                  {/* Line info */}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-display text-[1.05rem] w-full leading-snug wrap-break-word">
-                          <Link
-                            href={productHref}
-                            className="focus-visible:ring-ring hover:text-brand inline-block rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                          >
-                            {product.title}
-                          </Link>
-                        </h3>
-                        {variantTitle ? (
-                          <p className="type-mono-meta text-ink-faint mt-1 wrap-break-word">
-                            {variantTitle}
-                          </p>
-                        ) : null}
-                        {/* Unit price (per-kg pricing context for bulk orders) */}
-                        <div className="mt-1">
-                          <Price
-                            price={lineDisplayPricing.unitPrice}
-                            compareAtPrice={lineDisplayPricing.unitCompareAtPrice}
-                            size="sm"
-                            className="text-ink-faint"
-                            priceClassName="type-mono-meta"
-                          />
-                        </div>
-                        {nextBulkDiscountPrompt ? (
-                          <p className="type-body-sm text-gold-deep mt-2 wrap-break-word">
-                            Buy {nextBulkDiscountPrompt.quantityNeeded} more and
-                            get{' '}
-                            {formatPercent(
-                              nextBulkDiscountPrompt.discountPercent,
-                            )}
-                            % on each product
-                          </p>
-                        ) : null}
-                        {showDiscountAllocations ? (
-                          <div className="mt-1.5 flex flex-col gap-1">
-                            {line.discountAllocations.map((discount, index) => (
-                              <p
-                                key={`${discount.title ?? 'discount'}-${index}-name`}
-                                className="type-mono-meta text-brand flex min-w-0 items-center gap-1"
-                              >
-                                <Check
-                                  className="h-3 w-3 shrink-0"
-                                  aria-hidden="true"
-                                />
-                                <span className="min-w-0 wrap-break-word">
-                                  {discount.title ?? 'Discount'}
-                                </span>
-                                <span className="inline-flex gap-0.5">
-                                  <span aria-hidden="true">-</span>
-                                  <Price
-                                    price={discount.discountedAmount}
-                                    size="sm"
-                                  />
-                                </span>
-                              </p>
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                      {/* Line total */}
-                      <div className="shrink-0 text-right">
-                        <Price
-                          price={lineDisplayPricing.totalPrice}
-                          compareAtPrice={lineDisplayPricing.totalCompareAtPrice}
-                          layout="stacked"
-                          size="sm"
-                          className="font-bold items-end"
-                          priceClassName="font-bold"
-                        />
-                      </div>
+                  {/* Col 2: Name, variant, bulk prompt, discount labels */}
+                  <div className="min-w-0 flex-1 xl:flex-none">
+                    <h3 className="font-display text-[1.05rem] w-full leading-snug wrap-break-word">
+                      <Link
+                        href={productHref}
+                        className="focus-visible:ring-ring hover:text-brand inline-block rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                      >
+                        {product.title}
+                      </Link>
+                    </h3>
+                    {variantTitle ? (
+                      <p className="type-mono-meta text-ink-faint mt-1 wrap-break-word">
+                        {variantTitle}
+                      </p>
+                    ) : null}
+                    {/* Unit price: visible on mobile below the name; hidden at xl where it appears in col 3 */}
+                    <div className="mt-1 xl:hidden">
+                      <Price
+                        price={lineDisplayPricing.unitPrice}
+                        compareAtPrice={lineDisplayPricing.unitCompareAtPrice}
+                        size="sm"
+                      />
                     </div>
-
-                    {/* Stepper + remove row */}
-                    <div className="mt-3 flex items-center gap-3">
+                    {nextBulkDiscountPrompt ? (
+                      <p className="type-body-sm text-gold-deep mt-2 wrap-break-word">
+                        Buy {nextBulkDiscountPrompt.quantityNeeded} more and
+                        get{' '}
+                        {formatPercent(
+                          nextBulkDiscountPrompt.discountPercent,
+                        )}
+                        % on each product
+                      </p>
+                    ) : null}
+                    {showDiscountAllocations ? (
+                      <div className="mt-1.5 flex flex-col gap-1">
+                        {line.discountAllocations.map((discount, index) => (
+                          <p
+                            key={`${discount.title ?? 'discount'}-${index}-name`}
+                            className="type-mono-meta text-brand flex min-w-0 items-center gap-1"
+                          >
+                            <Check
+                              className="h-3 w-3 shrink-0"
+                              aria-hidden="true"
+                            />
+                            <span className="min-w-0 wrap-break-word">
+                              {discount.title ?? 'Discount'}
+                            </span>
+                            <span className="inline-flex gap-0.5">
+                              <span aria-hidden="true">-</span>
+                              <Price
+                                price={discount.discountedAmount}
+                                size="sm"
+                              />
+                            </span>
+                          </p>
+                        ))}
+                      </div>
+                    ) : null}
+                    {/* Mobile: stepper + total inline */}
+                    <div className="mt-3 flex items-center justify-between gap-3 xl:hidden">
                       <CartLineActions
                         lineId={line.id}
                         maximumQuantity={getVariantMaximumQuantity(
@@ -477,7 +459,55 @@ export function CartView({ cart }: CartViewProps) {
                           line.merchandise,
                         )}
                       />
+                      <Price
+                        price={lineDisplayPricing.totalPrice}
+                        compareAtPrice={lineDisplayPricing.totalCompareAtPrice}
+                        layout="stacked"
+                        size="sm"
+                        className="font-bold items-end shrink-0"
+                        priceClassName="font-bold"
+                      />
                     </div>
+                  </div>
+
+                  {/* Col 3: Unit price (desktop only) */}
+                  <div className="hidden xl:block xl:pt-1">
+                    <Price
+                      price={lineDisplayPricing.unitPrice}
+                      compareAtPrice={lineDisplayPricing.unitCompareAtPrice}
+                      layout="stacked"
+                      size="sm"
+                    />
+                  </div>
+
+                  {/* Col 4: Quantity stepper (desktop only) */}
+                  <div className="hidden xl:flex xl:justify-center xl:pt-0.5">
+                    <CartLineActions
+                      lineId={line.id}
+                      maximumQuantity={getVariantMaximumQuantity(
+                        line.merchandise,
+                      )}
+                      minimumQuantity={getVariantMinimumQuantity(
+                        line.merchandise,
+                      )}
+                      productTitle={product.title}
+                      quantity={line.quantity}
+                      quantityIncrement={getVariantQuantityIncrement(
+                        line.merchandise,
+                      )}
+                    />
+                  </div>
+
+                  {/* Col 5: Line total (desktop only) */}
+                  <div className="hidden xl:block xl:pt-1 xl:text-right">
+                    <Price
+                      price={lineDisplayPricing.totalPrice}
+                      compareAtPrice={lineDisplayPricing.totalCompareAtPrice}
+                      layout="stacked"
+                      size="sm"
+                      className="font-bold items-end"
+                      priceClassName="font-bold"
+                    />
                   </div>
                 </li>
               )

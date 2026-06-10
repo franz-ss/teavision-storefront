@@ -35,13 +35,13 @@ const priceTextVariants = cva('font-display tabular-nums', {
 })
 
 const comparePriceTextVariants = cva(
-  'font-mono text-[11px] text-ink-faint line-through',
+  'font-mono text-ink-soft line-through',
   {
     variants: {
       size: {
-        sm: 'text-[10px]',
-        md: 'text-[11px]',
-        lg: 'text-sm',
+        sm: 'text-sm',
+        md: 'text-sm',
+        lg: 'text-base',
       } satisfies Record<PriceSize, string>,
     },
     defaultVariants: {
