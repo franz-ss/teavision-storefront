@@ -6,8 +6,8 @@ const preview: Preview = {
     backgrounds: {
       default: 'canvas',
       values: [
-        { name: 'canvas', value: 'var(--tv-bg-canvas)' },
-        { name: 'surface', value: 'var(--tv-bg-surface)' },
+        { name: 'canvas', value: 'var(--color-paper)' },
+        { name: 'surface', value: 'var(--color-card)' },
       ],
     },
     controls: {
