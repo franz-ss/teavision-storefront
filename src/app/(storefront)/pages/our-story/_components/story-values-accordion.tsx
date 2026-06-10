@@ -44,18 +44,21 @@ export function StoryValuesAccordion({ values }: StoryValuesAccordionProps) {
               </DisclosureButton>
             </h3>
 
+            {/* Stacked panel layout per original site: copy first, wide image below */}
             <div
               id={panelId}
               role="region"
               aria-labelledby={buttonId}
               hidden={!isOpen}
-              className="grid gap-5 px-4 pb-5 md:grid-cols-[minmax(0,1fr)_minmax(18rem,0.42fr)] md:items-start md:pb-6"
+              className="flex flex-col gap-5 px-4 pb-5 md:pb-6"
             >
-              <p className="type-body text-ink-soft">{value.description}</p>
-              <div className="aspect-4/3 overflow-hidden rounded-md">
+              <p className="type-body text-ink-soft max-w-prose">
+                {value.description}
+              </p>
+              <div className="aspect-8/3 overflow-hidden rounded-md">
                 <StoryImage
                   image={value.image}
-                  sizes="(min-width: 1024px) 34rem, 100vw"
+                  sizes="(min-width: 1480px) 1400px, 100vw"
                   className="rounded-md"
                 />
               </div>
