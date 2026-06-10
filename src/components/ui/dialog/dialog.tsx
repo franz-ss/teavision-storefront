@@ -88,7 +88,7 @@ export function Dialog({
 
   return createPortal(
     <div
-      className="bg-inverse/45 fixed inset-0 z-50 flex items-end justify-center p-3 backdrop-blur-sm sm:items-center sm:p-6"
+      className="bg-ink/35 fixed inset-0 z-50 flex items-end justify-center p-3 backdrop-blur-[2px] sm:items-center sm:p-6"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onOpenChange(false)
       }}
@@ -100,18 +100,18 @@ export function Dialog({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         className={cn(
-          'bg-surface text-default border-default relative max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-lg border shadow-2xl',
+          'bg-paper text-ink border-hairline relative max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-lg border shadow-4',
           className,
         )}
         onKeyDown={handleKeyDown}
       >
-        <div className="border-default flex items-start justify-between gap-4 border-b px-4 py-3 sm:px-5">
+        <div className="border-hairline flex items-start justify-between gap-4 border-b px-4 py-3 sm:px-5">
           <div className="min-w-0">
             <h2 id={titleId} className="type-heading-05">
               {title}
             </h2>
             {description && (
-              <p id={descriptionId} className="type-body-sm text-muted mt-1">
+              <p id={descriptionId} className="type-body-sm text-ink-soft mt-1">
                 {description}
               </p>
             )}

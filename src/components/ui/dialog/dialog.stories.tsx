@@ -18,7 +18,7 @@ export const Default: Story = {
     description: 'Preview product details without leaving the page.',
     children: (
       <div className="p-5">
-        <p className="type-body-sm text-muted">
+        <p className="type-body-sm text-ink-soft">
           Dialog content remains keyboard accessible and restores focus when
           closed.
         </p>

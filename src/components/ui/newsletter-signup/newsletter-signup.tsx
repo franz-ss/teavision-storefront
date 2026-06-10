@@ -71,8 +71,8 @@ export function NewsletterSignup({
         className={cn(
           'rounded-lg border p-6',
           tone === 'brand'
-            ? 'border-on-brand bg-brand-strong text-on-brand'
-            : 'border-success-border bg-success-bg text-success-text',
+            ? 'border-paper/30 bg-brand-deep text-paper'
+            : 'border-brand bg-brand-tint text-brand',
           className,
         )}
         role="status"
@@ -81,7 +81,7 @@ export function NewsletterSignup({
         <p
           className={cn(
             'type-body-sm mt-2',
-            tone === 'brand' ? 'text-on-brand' : 'text-default',
+            tone === 'brand' ? 'text-paper/90' : 'text-ink',
           )}
         >
           Look out for the next Tea Journal edition.
@@ -96,7 +96,7 @@ export function NewsletterSignup({
       spacing="none"
       className={cn(
         'rounded-lg border p-6',
-        tone === 'brand' ? 'border-on-brand' : 'border-default',
+        tone === 'brand' ? 'border-paper/30' : 'border-hairline',
         className,
       )}
       aria-labelledby="newsletter-signup-heading"
@@ -108,7 +108,7 @@ export function NewsletterSignup({
       <p
         className={cn(
           'type-body-sm mt-3 max-w-xl',
-          tone === 'brand' ? 'text-on-brand' : 'text-muted',
+          tone === 'brand' ? 'text-paper/90' : 'text-ink-soft',
         )}
       >
         Monthly market notes, sourcing guides, and wholesale tea ideas from the
@@ -137,10 +137,10 @@ export function NewsletterSignup({
           onChange={handleEmailChange}
           placeholder="you@example.com"
           className={cn(
-            'type-body focus-visible:ring-ring min-h-11 flex-1 rounded-md border px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none',
+            'type-body min-h-11 flex-1 rounded-full border px-4.5 py-3.5 transition-colors focus:outline-none focus:ring-0',
             tone === 'brand'
-              ? 'border-on-brand bg-brand text-on-brand placeholder:text-on-brand'
-              : 'border-default bg-canvas text-default placeholder:text-muted',
+              ? 'border-paper/20 bg-paper/5 text-paper placeholder:text-paper/60 focus:border-gold'
+              : 'border-hairline bg-card text-ink placeholder:text-ink-faint focus:border-brand focus:shadow-focus',
           )}
           aria-describedby={status === 'error' ? 'newsletter-error' : undefined}
         />
@@ -170,8 +170,8 @@ export function NewsletterSignup({
           className={cn(
             'type-body-sm mt-3 rounded-md border p-3',
             tone === 'brand'
-              ? 'border-on-brand text-on-brand'
-              : 'border-danger-border bg-danger-bg text-danger-text',
+              ? 'border-paper/30 text-paper'
+              : 'border-danger bg-danger-tint text-danger',
           )}
         >
           {error}

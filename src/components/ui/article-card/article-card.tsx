@@ -33,11 +33,11 @@ export type ArticleCardProps = {
 }
 
 const articleHeadingVariants = cva(
-  'text-strong group-hover:text-brand line-clamp-2 transition-colors',
+  'text-ink group-hover:text-brand font-display text-[1.25rem] line-clamp-2 transition-colors',
   {
     variants: {
       variant: {
-        default: 'type-heading-03',
+        default: 'leading-[1.3]',
         featured: 'type-heading-02',
       } satisfies Record<ArticleCardVariant, string>,
     },
@@ -47,7 +47,7 @@ const articleHeadingVariants = cva(
   },
 )
 
-const articleExcerptVariants = cva('text-muted mt-3 line-clamp-3', {
+const articleExcerptVariants = cva('text-ink-soft mt-3 line-clamp-3', {
   variants: {
     variant: {
       default: 'type-body-sm',
@@ -85,7 +85,7 @@ export function ArticleCard({
         href={href}
         className="focus-visible:ring-ring flex h-full flex-col focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
-        <div className="bg-surface-sunken relative aspect-16/10 overflow-hidden">
+        <div className="bg-paper-2 relative aspect-16/10 overflow-hidden rounded-lg">
           {article.featuredImage &&
           article.featuredImage.width &&
           article.featuredImage.height ? (
@@ -107,7 +107,7 @@ export function ArticleCard({
           {article.tags.length > 0 && (
             <div className="mb-3 flex flex-wrap gap-2">
               {article.tags.slice(0, 2).map((tag) => (
-                <span key={tag} className="type-eyebrow text-muted">
+                <span key={tag} className="type-mono-meta text-brand">
                   {tag}
                 </span>
               ))}
@@ -122,7 +122,7 @@ export function ArticleCard({
             {article.excerpt}
           </p>
 
-          <p className="type-caption text-subtle mt-auto pt-5">
+          <p className="type-mono-meta text-ink-faint mt-auto pt-5">
             {article.readingTimeMinutes} min read
             <span aria-hidden="true"> · </span>
             <time dateTime={article.publishedAt}>{publishedLabel}</time>

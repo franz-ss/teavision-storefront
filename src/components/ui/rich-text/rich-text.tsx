@@ -14,7 +14,7 @@ export type RichTextProps = Omit<
 type RichTextVariant = 'page' | 'article' | 'compact' | 'disclosure'
 
 const RICH_TEXT_BASE_CLASS_NAME = cn(
-  'wrap-break-word text-default',
+  'wrap-break-word text-ink',
   '[&>*:first-child]:mt-0 [&>*:last-child]:mb-0',
 )
 

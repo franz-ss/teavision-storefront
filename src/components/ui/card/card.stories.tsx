@@ -38,8 +38,8 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <p className="type-heading-05 text-strong">Card shell</p>
-        <p className="type-body-sm text-muted mt-3">
+        <p className="type-heading-05 text-ink">Card shell</p>
+        <p className="type-body-sm text-ink-soft mt-3">
           A flat bordered surface for reusable content panels.
         </p>
       </>
@@ -50,7 +50,7 @@ export const Default: Story = {
 
 export const Compact: Story = {
   args: {
-    children: <p className="type-label text-strong">Compact card</p>,
+    children: <p className="type-label text-ink">Compact card</p>,
     padding: 'sm',
     radius: 'md',
   },
@@ -60,8 +60,8 @@ export const Sunken: Story = {
   args: {
     children: (
       <>
-        <p className="type-eyebrow text-accent">Certification</p>
-        <p className="type-heading-05 text-strong mt-3">Organic range</p>
+        <p className="type-eyebrow text-gold-deep">Certification</p>
+        <p className="type-heading-05 text-ink mt-3">Organic range</p>
       </>
     ),
     padding: 'md',
@@ -73,10 +73,10 @@ export const Sunken: Story = {
 export const Media: Story = {
   render: () => (
     <Card overflow="hidden" className="max-w-sm">
-      <div className="bg-surface-sunken aspect-4/3" />
+      <div className="bg-paper-2 aspect-4/3" />
       <div className="p-5">
-        <p className="type-heading-05 text-strong">Media card</p>
-        <p className="type-body-sm text-muted mt-3">
+        <p className="type-heading-05 text-ink">Media card</p>
+        <p className="type-body-sm text-ink-soft mt-3">
           Media and body layout stay with the consuming component.
         </p>
       </div>
@@ -89,8 +89,8 @@ export const InteractiveLink: Story = {
     as: 'a',
     children: (
       <>
-        <span className="type-eyebrow text-muted">Wholesale</span>
-        <span className="type-heading-05 text-strong mt-2 block">
+        <span className="type-eyebrow text-ink-faint">Wholesale</span>
+        <span className="type-heading-05 text-ink mt-2 block">
           Custom blending
         </span>
       </>

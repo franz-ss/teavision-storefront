@@ -3,11 +3,11 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
 
-const cardVariants = cva('border text-default', {
+const cardVariants = cva('border text-ink', {
   variants: {
     tone: {
-      surface: 'border-default bg-surface',
-      sunken: 'border-default bg-surface-sunken',
+      surface: 'border-hairline-2 bg-card',
+      sunken: 'border-hairline-2 bg-paper-2',
     },
     padding: {
       none: '',
