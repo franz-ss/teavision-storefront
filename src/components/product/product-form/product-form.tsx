@@ -1,6 +1,7 @@
 'use client'
 
 import { useId, useState } from 'react'
+import { Leaf, ShieldCheck, Truck } from 'lucide-react'
 
 import {
   Button,
@@ -19,6 +20,7 @@ import {
   getVariantMinimumQuantity,
   getVariantQuantityIncrement,
 } from '@/lib/shopify/quantity-rules'
+import { cn } from '@/lib/utils'
 
 import { BulkSavings } from '../bulk-savings'
 import { type AddToCart, useAddToCart } from '../use-add-to-cart'
@@ -172,36 +174,67 @@ export function ProductForm({
 
   if (variants.length === 0) {
     return (
-      <div className="text-muted rounded border border-dashed p-4 text-sm">
+      <div className="rounded-sm border border-dashed border-hairline p-4 text-sm text-ink-faint">
         No variants available
       </div>
     )
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-6">
       {showVariantSelector && (
         <fieldset className="min-w-0">
-          <legend className="mb-2 text-sm font-medium">
+          <legend className="type-mono-meta mb-3 text-ink-faint">
             {options[0]?.name ?? 'Option'}
           </legend>
-          <div className="flex min-w-0 flex-wrap gap-2">
-            {variants.map((v) => (
-              <ToggleButton
-                key={v.id}
-                pressed={selectedVariantId === v.id}
-                disabled={!v.availableForSale}
-                aria-label={`${v.title}${!v.availableForSale ? ', out of stock' : ''}`}
-                onClick={() => handleSelectVariant(v.id)}
-              >
-                {v.title}
-              </ToggleButton>
-            ))}
+          <div className="flex min-w-0 flex-wrap gap-2.5">
+            {variants.map((v) => {
+              const isSelected = selectedVariantId === v.id
+
+              return (
+                <ToggleButton
+                  key={v.id}
+                  pressed={isSelected}
+                  disabled={!v.availableForSale}
+                  aria-label={`${v.title}${!v.availableForSale ? ', out of stock' : ''}`}
+                  className={cn(
+                    'min-w-23 flex-col rounded-sm border-[1.5px] border-hairline bg-card px-4.5 py-3 text-center text-ink transition-colors hover:border-ink-faint aria-pressed:border-brand aria-pressed:bg-brand-tint aria-pressed:text-ink',
+                    isSelected && 'border-brand bg-brand-tint',
+                  )}
+                  onClick={() => handleSelectVariant(v.id)}
+                >
+                  <span className="text-sm font-bold">{v.title}</span>
+                  <Price
+                    price={v.price}
+                    size="sm"
+                    className={cn(
+                      'mt-1 font-mono text-[11px] text-ink-faint',
+                      isSelected && 'text-brand',
+                    )}
+                  />
+                </ToggleButton>
+              )
+            })}
           </div>
         </fieldset>
       )}
 
-      <div className="bg-surface flex min-w-0 flex-col items-center gap-3 p-4 sm:grid sm:grid-cols-[auto_auto_minmax(0,1fr)] sm:gap-6">
+      <div className="flex min-w-0 flex-col gap-3">
+        {selectedVariant && (
+          <div className="flex flex-wrap items-baseline gap-2">
+            <Price
+              price={selectedVariant.price}
+              size="lg"
+              priceClassName="text-[1.6rem] font-normal"
+            />
+            <span className="font-mono text-[11px] tracking-[0.06em] text-ink-faint uppercase">
+              selected pack
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-stretch">
         <QuantityStepper
           value={effectiveQuantity}
           onChange={handleQuantityChange}
@@ -212,46 +245,47 @@ export function ProductForm({
           describedBy={error ? quantityErrorId : undefined}
         />
 
-        {selectedVariant && (
-          <Price
-            price={selectedVariant.price}
-            size="lg"
-            className="text-brand"
-          />
-        )}
-
-        <div className="min-w-0 sm:flex-1">
+        <div className="min-w-0 flex-1">
           <Button
+            variant="brand"
             onClick={() => addQuantityToCart(effectiveQuantity)}
             isLoading={isPending}
             disabled={
               !canAddToCart || !canUseSelectedVariantQuantity || isPending
             }
             size="lg"
-            className="w-full sm:ml-auto sm:max-w-44"
+            className="w-full"
           >
             {canAddToCart ? 'Add to Cart' : 'Sold Out'}
           </Button>
         </div>
+      </div>
 
-        {error && (
-          <p
-            id={quantityErrorId}
-            role="alert"
-            className="text-danger-text type-caption sm:col-span-3"
+      {error && (
+        <p id={quantityErrorId} role="alert" className="type-caption text-danger">
+          {error}
+        </p>
+      )}
+      {message && (
+        <p id={quantityStatusId} role="status" className="type-caption text-brand">
+          {message}
+        </p>
+      )}
+
+      <div className="flex flex-wrap gap-x-6 gap-y-3 border-y border-hairline py-5">
+        {[
+          { icon: Truck, label: 'Freight-insured and tracked' },
+          { icon: Leaf, label: 'Air-tight, resealable packing' },
+          { icon: ShieldCheck, label: 'HACCP food-safety program' },
+        ].map(({ icon: Icon, label }) => (
+          <div
+            key={label}
+            className="flex items-center gap-2.25 text-[0.86rem] text-ink-soft"
           >
-            {error}
-          </p>
-        )}
-        {message && (
-          <p
-            id={quantityStatusId}
-            role="status"
-            className="text-brand type-caption sm:col-span-3"
-          >
-            {message}
-          </p>
-        )}
+            <Icon aria-hidden="true" className="size-4 text-brand" />
+            <span>{label}</span>
+          </div>
+        ))}
       </div>
 
       {selectedVariant && (

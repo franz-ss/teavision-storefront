@@ -1,3 +1,6 @@
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+
 import type { BulkPricingTier, Money } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
 import { Button, ToggleButton } from '@/components/ui'
@@ -109,9 +112,11 @@ export function BulkSavings({
 
   return (
     <div className={cn('flex min-w-0 flex-col gap-4', className)}>
-      <h2 className="type-label text-strong">Buy in Bulk and Save</h2>
+      <h2 className="font-mono text-[11px] tracking-[0.12em] text-ink-faint uppercase">
+        Buy in Bulk and Save
+      </h2>
 
-      <ul className="flex flex-col gap-2" role="list">
+      <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-3" role="list">
         {visibleTiers.map((tier) => {
           const isActive = activeTier?.minimumQuantity === tier.minimumQuantity
           const tierPrice = getTierPrice(tier, basePrice)
@@ -128,52 +133,46 @@ export function BulkSavings({
                 type="button"
                 pressed={isActive}
                 className={cn(
-                  'border-default bg-canvas focus-visible:ring-ring aria-pressed:border-brand aria-pressed:bg-brand-subtle aria-pressed:text-default grid min-h-18 w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-md border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:grid-cols-[auto_minmax(0,1fr)_auto]',
+                  'relative flex min-h-30 w-full flex-col items-center justify-center rounded-sm border border-hairline bg-card p-3.5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none aria-pressed:border-brand',
                   onSelectTier && 'hover:border-brand',
-                  isActive && 'border-brand bg-brand-subtle',
+                  isActive && 'border-brand',
                 )}
                 onClick={() => onSelectTier?.(tier.minimumQuantity)}
               >
-                <span
-                  className={cn(
-                    'border-brand flex size-5 shrink-0 items-center justify-center rounded-full border-2',
-                    isActive && 'bg-brand-subtle',
-                  )}
-                  aria-hidden="true"
-                >
-                  {isActive ? (
-                    <span className="bg-brand size-2 rounded-full" />
-                  ) : null}
-                </span>
+                {isActive ? (
+                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-brand px-2 py-0.5 font-mono text-[9px] tracking-widest whitespace-nowrap text-paper uppercase">
+                    Best value
+                  </span>
+                ) : null}
 
-                <span className="type-body-sm text-default min-w-0 wrap-break-word">
+                <span className="font-mono text-[11px] tracking-wider text-ink-faint">
                   {getTierLabel(tier)}
                 </span>
 
-                <span className="col-start-2 min-w-0 text-left sm:col-start-3 sm:row-start-1 sm:text-right">
+                <span className="mt-1 min-w-0">
                   {tierPrice ? (
                     <>
-                      <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 sm:justify-end">
-                        <span className="type-label text-strong whitespace-nowrap tabular-nums">
+                      <span className="flex min-w-0 flex-col items-center gap-1">
+                        <span className="font-display text-[1.3rem] leading-tight text-ink tabular-nums">
                           {formatCurrency(tierPrice)}
                         </span>
-                        <span className="type-caption text-muted whitespace-nowrap tabular-nums line-through">
+                        <span className="font-mono text-[10px] text-ink-faint tabular-nums line-through">
                           {formatCurrency(basePrice)}
                         </span>
                       </span>
                       {tierTotal ? (
-                        <span className="type-caption text-default flex min-w-0 flex-wrap gap-x-1 tabular-nums sm:justify-end">
+                        <span className="mt-1 flex min-w-0 flex-wrap justify-center gap-x-1 text-[11px] font-semibold text-brand tabular-nums">
                           <span className="whitespace-nowrap">
                             Total {formatCurrency(tierTotal)}
                           </span>
-                          <span className="text-muted whitespace-nowrap line-through">
+                          <span className="whitespace-nowrap text-ink-faint line-through">
                             {formatCurrency(baseTotal)}
                           </span>
                         </span>
                       ) : null}
                     </>
                   ) : (
-                    <span className="type-caption text-muted">In cart</span>
+                    <span className="type-caption text-ink-faint">In cart</span>
                   )}
                 </span>
               </ToggleButton>
@@ -199,6 +198,13 @@ export function BulkSavings({
             packed in individual 1kg bags and will instead come in bulk packed
             bags (2kg 5kg 10kg etc)
           </p>
+          <Link
+            href="/pages/wholesale"
+            className="type-label inline-flex items-center self-start border-b-[1.5px] border-hairline pb-1 text-ink transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            Apply for a wholesale account
+            <ArrowRight aria-hidden="true" className="ml-2 size-4" />
+          </Link>
         </>
       ) : null}
     </div>
