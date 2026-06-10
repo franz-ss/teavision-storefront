@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
-import { Card } from '@/components/ui'
-
 import { ContactForm } from './contact-form'
 
 const successAction = async () => ({ success: true })
@@ -16,10 +14,10 @@ const meta: Meta<typeof ContactForm> = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div className="bg-canvas p-6">
-        <Card className="mx-auto max-w-3xl" padding="lg" radius="md">
+      <div className="bg-paper p-6">
+        <div className="border-hairline-2 bg-card mx-auto max-w-3xl rounded-lg border p-5 sm:p-6">
           <Story />
-        </Card>
+        </div>
       </div>
     ),
   ],

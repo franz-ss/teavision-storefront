@@ -1,8 +1,7 @@
 import { ContactForm } from '@/components/contact'
-import { Card } from '@/components/ui'
+import { Card, Section } from '@/components/ui'
 import { sendContactAction } from '@/lib/contact/actions'
 
-import { Breadcrumb } from './breadcrumb'
 import { Hero } from './hero'
 import { Sidebar } from './sidebar'
 
@@ -11,17 +10,16 @@ export function PageContent() {
     <>
       <Hero />
 
-      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
-        <Breadcrumb />
-
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)] lg:items-start">
-          <Card className="p-5 sm:p-8" radius="md">
-            <ContactForm action={sendContactAction} />
-          </Card>
-
-          <Sidebar />
-        </div>
-      </div>
+      <Section.Root tone="inverse">
+        <Section.Container>
+          <div className="grid gap-10 lg:grid-cols-[minmax(18rem,0.42fr)_minmax(0,0.58fr)] lg:items-start">
+            <Sidebar />
+            <Card className="p-5 sm:p-8" radius="lg">
+              <ContactForm action={sendContactAction} />
+            </Card>
+          </div>
+        </Section.Container>
+      </Section.Root>
     </>
   )
 }

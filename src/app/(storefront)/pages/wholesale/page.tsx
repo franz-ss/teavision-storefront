@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { Section } from '@/components/ui'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 
 import { SupplyPaths } from './_components/supply-paths'
@@ -24,12 +25,14 @@ export default function Page() {
     <>
       <WholesaleHero />
 
-      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.3fr)]">
-          <SupplyPaths />
-          <WholesaleInclusions />
-        </div>
-      </div>
+      <Section.Root tone="surface">
+        <Section.Container>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.62fr)_minmax(22rem,0.38fr)] lg:items-start">
+            <SupplyPaths />
+            <WholesaleInclusions />
+          </div>
+        </Section.Container>
+      </Section.Root>
     </>
   )
 }

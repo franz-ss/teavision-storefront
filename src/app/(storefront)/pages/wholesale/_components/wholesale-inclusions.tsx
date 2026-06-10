@@ -1,41 +1,39 @@
-import { WHOLESALE_INCLUSIONS } from '../_lib/wholesale-content'
+import { ContactForm } from '@/components/contact'
+import { Card, Eyebrow } from '@/components/ui'
+import { sendContactAction } from '@/lib/contact/actions'
 
 export function WholesaleInclusions() {
   return (
-    <aside className="border-default border-y py-6">
-      <p className="type-eyebrow text-muted">What&rsquo;s included</p>
-      <ul className="mt-5 grid gap-4" role="list">
-        {WHOLESALE_INCLUSIONS.map((item) => (
-          <li key={item} className="type-body-sm flex gap-3">
-            <span
-              className="bg-brand mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
-              aria-hidden="true"
-            />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
+    <Card as="aside" className="p-5 sm:p-7">
+      <ContactForm
+        action={sendContactAction}
+        eyebrow="Wholesale application"
+        title="Apply for a trade account"
+        description="Share your sourcing needs and monthly volume. The wholesale team will review your enquiry through the protected Teavision contact workflow."
+        submitLabel="Apply for wholesale"
+        pendingLabel="Sending application..."
+      />
 
-      <div className="border-default mt-8 border-t pt-6">
-        <p className="type-eyebrow text-muted">Direct contact</p>
+      <div className="border-hairline mt-7 border-t pt-6">
+        <Eyebrow tone="muted">Direct contact</Eyebrow>
         <dl className="mt-4 grid gap-4">
           <div>
-            <dt className="type-caption text-muted">Phone</dt>
-            <dd className="type-label mt-1">
+            <dt className="type-mono-meta text-ink-faint">Phone</dt>
+            <dd className="type-label text-ink mt-1">
               <a
                 href="tel:1300729617"
-                className="text-link hover:text-link-hover focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="text-brand hover:text-brand-deep focus-visible:ring-ring rounded-sm hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 1300 729 617
               </a>
             </dd>
           </div>
           <div>
-            <dt className="type-caption text-muted">Email</dt>
-            <dd className="type-label mt-1">
+            <dt className="type-mono-meta text-ink-faint">Email</dt>
+            <dd className="type-label text-ink mt-1">
               <a
                 href="mailto:wholesale@teavision.com.au"
-                className="text-link hover:text-link-hover focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="text-brand hover:text-brand-deep focus-visible:ring-ring rounded-sm hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 wholesale@teavision.com.au
               </a>
@@ -43,6 +41,6 @@ export function WholesaleInclusions() {
           </div>
         </dl>
       </div>
-    </aside>
+    </Card>
   )
 }
