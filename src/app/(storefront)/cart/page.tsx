@@ -29,8 +29,8 @@ async function CartContent() {
 export default function CartPage() {
   return (
     <Section.Root tone="transparent" spacing="compact">
-      <Section.Container>
-        <h1 className="type-heading-02 mb-6">Your Cart</h1>
+      <Section.Container variant="base">
+        <h1 className="type-heading-01 font-display mb-6">Your Cart</h1>
         <Suspense fallback={<CartLoadingSkeleton />}>
           <CartContent />
         </Suspense>

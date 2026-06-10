@@ -74,7 +74,7 @@ export async function CartRecommendations({ cart }: { cart: Cart }) {
       }
       title={CART_RECOMMENDATIONS_TITLE}
       titleId="cart-recommendations-title"
-      sectionClassName="border-default mt-12 border-t pt-10"
+      sectionClassName="border-hairline mt-12 border-t pt-10"
       headingClassName="mb-6 text-xl font-semibold"
       {...(!searchanisePublicConfig.enabled || !searchanisePublicConfig.apiKey
         ? { fallbackDelayMs: 0 }

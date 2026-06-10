@@ -16,7 +16,7 @@ export function CartCheckoutForm({ checkoutUrl }: CartCheckoutFormProps) {
     <div className="mt-8 space-y-4">
       <Textarea
         placeholder="Order Notes"
-        className="min-h-28 bg-surface"
+        className="min-h-28"
         aria-label="Order notes"
       />
 
@@ -27,12 +27,12 @@ export function CartCheckoutForm({ checkoutUrl }: CartCheckoutFormProps) {
           className="mt-0.5"
           aria-describedby="terms-link"
         />
-        <span className="type-body-sm text-strong font-medium select-none">
+        <span className="type-body-sm text-ink font-medium select-none">
           I have read and agree to the{' '}
           <Link
             id="terms-link"
             href="/pages/terms-conditions"
-            className="text-link hover:text-link-hover underline"
+            className="text-brand hover:text-brand-deep underline"
           >
             Terms and Conditions
           </Link>
