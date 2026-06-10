@@ -102,7 +102,7 @@ Plans:
 
 - [x] 11-01-PLAN.md — Foundation: motif asset extraction, next/font swap, new @theme tokens alongside old
 - [x] 11-02-PLAN.md — Core primitives: Button pills + contract test, new Eyebrow, Section tones, Badge pill
-- [ ] 11-03-PLAN.md — Field & support primitives: inputs, stepper, controls, card/accordion/dialog/article-card/rich-text/newsletter
+- [x] 11-03-PLAN.md — Field & support primitives: inputs, stepper, controls, card/accordion/dialog/article-card/rich-text/newsletter
 - [ ] 11-04-PLAN.md — Header chrome: utility bar, translucent main bar, mega menus, search overlay, mobile menu
 - [ ] 11-05-PLAN.md — Footer ink restyle + skip link + error/not-found pages
 - [ ] 11-06-PLAN.md — Homepage upper: Hero A, stat band, range tiles, services, organic split, certs marquee
@@ -129,7 +129,7 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, t
 | 6. Prevent site indexing                | 1/1            | Complete | 2026-06-03 |
 | 8. Optimized Collection Quick Add       | 1/1            | Complete | 2026-06-03 |
 | 9. Collection Product Card Improvements | 0/1            | Planned  | —          |
-| 11. Full Visual Redesign                 | 2/14 | In Progress|  |
+| 11. Full Visual Redesign                 | 3/14 | In Progress|  |
 
 ### Phase 9: Collection Product Card Improvements
 
