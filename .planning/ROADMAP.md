@@ -108,7 +108,7 @@ Plans:
 - [x] 11-06-PLAN.md — Homepage upper: Hero A, stat band, range tiles, services, organic split, certs marquee
 - [x] 11-07-PLAN.md — Homepage lower: BrushCircle/Stamp motifs, brand bands, testimonials, journal, newsletter, contact, FAQ
 - [x] 11-08-PLAN.md — Collections + product card redesign (absorbs Phase 9 CARD-02..06 intents)
-- [ ] 11-09-PLAN.md — Search surfaces restyled to PLP language
+- [x] 11-09-PLAN.md — Search surfaces restyled to PLP language
 - [ ] 11-10-PLAN.md — PDP: layout, gallery, variant tiles, buy row, bulk-savings tiers, quick view, rails
 - [x] 11-11-PLAN.md — Cart page restyle in drawer visual language (no drawer)
 - [x] 11-12-PLAN.md — Blog/Tea Journal + html-content/portable-text class maps
@@ -129,7 +129,7 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, t
 | 6. Prevent site indexing                | 1/1            | Complete | 2026-06-03 |
 | 8. Optimized Collection Quick Add       | 1/1            | Complete | 2026-06-03 |
 | 9. Collection Product Card Improvements | 0/1            | Planned  | —          |
-| 11. Full Visual Redesign                 | 10/14 | In Progress|  |
+| 11. Full Visual Redesign                 | 11/14 | In Progress|  |
 
 ### Phase 9: Collection Product Card Improvements
 

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 11-07-PLAN.md
-last_updated: "2026-06-10T03:48:01.160Z"
+stopped_at: Completed 11-09-PLAN.md
+last_updated: "2026-06-10T04:12:12.755Z"
 last_activity: 2026-06-10
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 25
-  completed_plans: 20
-  percent: 80
+  completed_plans: 21
+  percent: 84
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-27)
 ## Current Position
 
 Phase: 11 (full-visual-redesign) — EXECUTING
-Plan: 10 of 14
+Plan: 11 of 14
 Status: Ready to execute
 Last activity: 2026-06-10
 
-Progress: [████████░░] 80%
+Progress: [████████░░] 84%
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Progress: [████████░░] 80%
 | Phase 11-full-visual-redesign P11 | 801s | 2 tasks | 10 files |
 | Phase 11-full-visual-redesign P12 | 6m | 3 tasks | 11 files |
 | Phase 11-full-visual-redesign P07 | 26 min | 3 tasks | 15 files |
+| Phase 11-full-visual-redesign P09 | 16 min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Blog hero and rich-content mappers
 - [Phase 11]: Homepage lower section order follows the redesign lower composition: testimonials, motif bands, journal, newsletter, contact, FAQ.
 - [Phase 11]: Header cart count loads through a client leaf after hydration to satisfy Next.js 16 Server Function initial-render restrictions.
+- [Phase 11]: Phase 11-09: Search reuses the 11-08 PLP ProductCard/grid/facet/sort vocabulary instead of adding search-only visual variants.
+- [Phase 11]: Phase 11-09: Searchanise request, typed-unknown narrowing, and URL-param helpers stayed untouched; the plan changed presentation only.
 
 ### Roadmap Evolution
 
@@ -130,6 +133,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-10T03:48:01.146Z
-Stopped at: Completed 11-07-PLAN.md
+Last session: 2026-06-10T04:12:12.742Z
+Stopped at: Completed 11-09-PLAN.md
 Resume file: None
