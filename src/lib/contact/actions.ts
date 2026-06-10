@@ -211,6 +211,10 @@ async function submitContactSubmission(
 
   const resendApiKey = getResendApiKey()
   if (!resendApiKey) {
+    console.warn(
+      '[contact] Email provider not configured: RESEND_API_KEY is absent. ' +
+        'Set RESEND_API_KEY in .env.local to enable contact form email delivery.',
+    )
     return { success: false, error: SEND_ERROR }
   }
 
@@ -309,6 +313,10 @@ export async function sendNewsletterSignupAction(
 
   const resendApiKey = getResendApiKey()
   if (!resendApiKey) {
+    console.warn(
+      '[newsletter] Email provider not configured: RESEND_API_KEY is absent. ' +
+        'Set RESEND_API_KEY in .env.local to enable newsletter signup email delivery.',
+    )
     return { success: false, error: NEWSLETTER_SEND_ERROR }
   }
 
