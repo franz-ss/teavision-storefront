@@ -84,8 +84,8 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             </IconButton>
           </div>
 
-          {/* Search input row — serif display + bottom 2px border */}
-          <div className="border-b-2 border-ink mb-6">
+          {/* Search input row — comfortable body scale, shared .field focus ring */}
+          <div className="mb-6">
             <Suspense fallback={<SearchForm />}>
               <SearchWithAutocomplete />
             </Suspense>

@@ -59,7 +59,14 @@ export function SearchForm({
         aria-activedescendant={activeDescendant}
         autoComplete="off"
         className={cn(
-          'font-display text-[clamp(1.4rem,3vw,2.2rem)] bg-transparent border-0 rounded-none shadow-none pr-12 pl-0 placeholder:text-ink-faint min-h-0 py-2',
+          // Comfortable body scale — Hanken Grotesk, no oversized clamp
+          'type-body',
+          // Shared .field treatment: hairline border, brand border + glow on focus
+          'border border-hairline rounded-sm bg-card text-ink placeholder:text-ink-faint',
+          // Sizing — generous vertical padding, room for search icon on right
+          'w-full min-h-12 pl-4 pr-12 py-3.5 shadow-none',
+          // Focus: brand border + green glow (same as TextInput / Textarea)
+          'focus:border-brand focus:shadow-focus focus:ring-0 focus:outline-none',
           inputClassName,
         )}
         data-search-input
