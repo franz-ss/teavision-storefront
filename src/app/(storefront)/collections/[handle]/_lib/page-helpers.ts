@@ -50,29 +50,6 @@ export const SORT_MAP: Record<
   oldest: { sortKey: ProductCollectionSortKeys.Created, reverse: false },
 }
 
-const HERO_IMAGE_OVERRIDES: Record<string, HeroImage> = {
-  'tea-masters-selection-worlds-best-teas': {
-    url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/tea_masters.png?v=1779245717',
-    altText: 'Tea Masters Selection loose leaf tea being prepared by hand',
-    width: 1894,
-    height: 830,
-  },
-  'australian-certified-organic-tea': {
-    url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/organic_tea_6d641d5d-32cf-4674-8426-4ac32368ad8c.png?v=1779248409',
-    altText: 'Australian Certified Organic loose leaf tea',
-    width: 1774,
-    height: 887,
-  },
-}
-
-const HIDDEN_HERO_INTRO_HANDLES = new Set([
-  'tea-masters-selection-worlds-best-teas',
-  'australian-certified-organic-tea',
-])
-
-const FORCED_RICH_DESCRIPTION_HANDLES = new Set([
-  'tea-masters-selection-worlds-best-teas',
-])
 
 export function truncateMetaDescription(value: string): string {
   return value.length > 160 ? `${value.slice(0, 157).trimEnd()}…` : value
@@ -142,7 +119,7 @@ function parseImageSizeFromSource(
   }
 }
 
-function getDescriptionHeroImage(descriptionHtml: string): HeroImage | null {
+export function getDescriptionHeroImage(descriptionHtml: string): HeroImage | null {
   const imageTag = descriptionHtml.match(IMAGE_TAG_PATTERN)?.[0]
   if (!imageTag) return null
 
@@ -564,21 +541,8 @@ export function parseSelectedFilterParams(values: string[]): {
 }
 
 export function getHeroImage(
-  handle: string,
   featuredImage: HeroImage | null,
   descriptionHtml = '',
 ): HeroImage | null {
-  return (
-    getDescriptionHeroImage(descriptionHtml) ??
-    HERO_IMAGE_OVERRIDES[handle] ??
-    featuredImage
-  )
-}
-
-export function shouldShowCollectionIntroContent(handle: string): boolean {
-  return !HIDDEN_HERO_INTRO_HANDLES.has(handle)
-}
-
-export function shouldAlwaysShowRichDescription(handle: string): boolean {
-  return FORCED_RICH_DESCRIPTION_HANDLES.has(handle)
+  return getDescriptionHeroImage(descriptionHtml) ?? featuredImage
 }

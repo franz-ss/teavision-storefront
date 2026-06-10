@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Leaf } from 'lucide-react'
 
 import type { CollectionProductSummary } from '@/lib/shopify/types'
-import { Badge, Button, Price } from '@/components/ui'
+import { Badge, Button, Price, StarRating } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { useAddToCart } from '@/components/product/use-add-to-cart'
 import { cn } from '@/lib/utils'
@@ -180,6 +180,16 @@ export function ProductCard({
             {product.title}
           </Link>
         </h3>
+
+        {/* Star rating row — shown when rating data is available */}
+        {product.rating !== undefined && (
+          <StarRating
+            rating={product.rating}
+            count={product.reviewCount}
+            size="sm"
+            className="mt-1"
+          />
+        )}
 
         {/* Price row */}
         <div className="mt-1.5 flex items-baseline gap-2">

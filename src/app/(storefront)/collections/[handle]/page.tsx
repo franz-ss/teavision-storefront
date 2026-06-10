@@ -28,7 +28,6 @@ export async function generateMetadata({
     ? `${getPath(handle)}/${category}`
     : getPath(handle)
   const heroImage = getHeroImage(
-    handle,
     collection.featuredImage,
     collection.descriptionHtml,
   )

@@ -240,6 +240,52 @@ export const VariantLimitFallback: Story = {
   },
 }
 
+/** Rated card: star rating row visible between title and price */
+export const WithRating: Story = {
+  args: {
+    product: {
+      ...stubProduct,
+      id: 'gid://shopify/Product/rated-sencha',
+      handle: 'rated-sencha',
+      title: 'Rated Premium Sencha',
+      rating: 4.8,
+      reviewCount: 37,
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Star rating accessible label
+    await expect(
+      canvas.getByRole('img', { name: /4.8 out of 5 stars/i }),
+    ).toBeInTheDocument()
+
+    // Review count rendered
+    await expect(canvas.getByText('(37)')).toBeVisible()
+  },
+}
+
+/** Unrated card: no star rating row */
+export const NoRating: Story = {
+  args: {
+    product: {
+      ...stubProduct,
+      id: 'gid://shopify/Product/unrated-sencha',
+      handle: 'unrated-sencha',
+      title: 'Unrated Sencha Green Tea',
+      rating: undefined,
+      reviewCount: undefined,
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.queryByRole('img', { name: /out of 5 stars/i }),
+    ).not.toBeInTheDocument()
+  },
+}
+
 /** Long title on mobile: should not overflow */
 export const LongUnbrokenTitleMobile: Story = {
   args: {

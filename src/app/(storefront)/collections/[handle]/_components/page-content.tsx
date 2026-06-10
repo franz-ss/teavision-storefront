@@ -19,6 +19,7 @@ import {
   findCategoryTagForPath,
   firstParam,
   getCategoryFilterInput,
+  getDescriptionHeroImage,
   getHeroImage,
   getHref,
   getPaginationHref,
@@ -30,8 +31,6 @@ import {
   normalizeHtml,
   paramValues,
   parseSelectedFilterParams,
-  shouldAlwaysShowRichDescription,
-  shouldShowCollectionIntroContent,
   shouldRenderRichDescription,
   SORT_MAP,
 } from '../_lib/page-helpers'
@@ -128,8 +127,10 @@ export async function PageContent({ params, searchParams }: PageProps) {
         !isCategoryFilter(filter),
     ),
   ].filter((filter): filter is CollectionProductFilter => Boolean(filter))
+  // bannerImage: art embedded in descriptionHtml → banner hero mode
+  const bannerImage = getDescriptionHeroImage(collection.descriptionHtml)
+  // heroImage: fallback for the green-band mode (collection featuredImage)
   const heroImage = getHeroImage(
-    handle,
     collection.featuredImage,
     collection.descriptionHtml,
   )
@@ -142,14 +143,10 @@ export async function PageContent({ params, searchParams }: PageProps) {
   const richDescriptionHtml = normalizeHtml(collection.descriptionHtml)
   const sanitizedRichDescriptionHtml =
     sanitizeShopifyCompactHtml(richDescriptionHtml)
-  const showIntroContent = shouldShowCollectionIntroContent(handle)
-  const hasRichDescription =
-    shouldRenderRichDescription(
-      collection.descriptionHtml,
-      collection.description,
-    ) ||
-    (shouldAlwaysShowRichDescription(handle) &&
-      richDescriptionHtml.trim().length > 0)
+  const hasRichDescription = shouldRenderRichDescription(
+    collection.descriptionHtml,
+    collection.description,
+  )
 
   return (
     <>
@@ -164,7 +161,8 @@ export async function PageContent({ params, searchParams }: PageProps) {
         collectionTitle={collection.title}
         heroDescription={heroDescription}
         heroImage={heroImage}
-        belowHeroImage={
+        bannerImage={bannerImage}
+        storyDisclosure={
           hasRichDescription ? (
             <StoryDisclosure
               title={`Read more about ${collection.title}`}
@@ -172,7 +170,6 @@ export async function PageContent({ params, searchParams }: PageProps) {
             />
           ) : null
         }
-        showIntro={showIntroContent}
       />
 
       <Section.Root tone="transparent" className="pt-0 md:pt-0">
