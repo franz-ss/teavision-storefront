@@ -1,4 +1,4 @@
-import { Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
 
 import { CAPABILITY_CARDS } from '../_lib/data'
 import { BlendDetailCard } from './blend-detail-card'
@@ -8,11 +8,11 @@ export function BlendDetailsSection() {
     <Section.Root tone="surface">
       <Section.Container>
         <div className="max-w-3xl">
-          <p className="type-eyebrow text-muted">Capabilities</p>
-          <h2 className="type-heading-02 text-strong mt-3">
+          <Eyebrow>Capabilities</Eyebrow>
+          <h2 className="type-heading-02 text-ink mt-3">
             Custom blends for every tea style.
           </h2>
-          <p className="type-body-lg text-muted mt-4">
+          <p className="type-lede text-ink-soft mt-4">
             From loose-leaf hero blends to pyramid tea bags and clean instant
             powders, Teavision tunes flavour, function, and format to your
             market.

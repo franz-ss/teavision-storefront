@@ -1,4 +1,4 @@
-import { Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
 
 import { QUALITY_CARDS } from '../_lib/data'
 import { QualityFeatureCard } from './quality-feature-card'
@@ -8,8 +8,8 @@ export function QualitySection() {
     <Section.Root tone="sunken">
       <Section.Container>
         <div className="max-w-3xl">
-          <p className="type-eyebrow text-muted">Quality assured</p>
-          <h2 className="type-heading-02 text-strong mt-3">
+          <Eyebrow>Quality assured</Eyebrow>
+          <h2 className="type-heading-02 text-ink mt-3">
             Naturopath-guided and commercially grounded.
           </h2>
         </div>

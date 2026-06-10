@@ -7,8 +7,8 @@ export function Body({ page }: { page: ShopifyPage }) {
   const bodyHtml = sanitizeShopifyPageBodyHtml(page.body)
 
   return (
-    <Section.Root>
-      <Section.Container>
+    <Section.Root tone="surface">
+      <Section.Container variant="compact">
         <RichText html={bodyHtml} variant="page" />
       </Section.Container>
     </Section.Root>

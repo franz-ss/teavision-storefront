@@ -40,13 +40,13 @@ export function FormFields({
       <div
         role="status"
         aria-live="polite"
-        className="border-success-border bg-success-bg rounded-lg border p-6"
+        className="border-brand/30 bg-brand-tint rounded-lg border p-6"
       >
-        <p className="type-eyebrow text-success-text">Brief received</p>
-        <h2 className="type-heading-03 text-strong mt-3">
+        <p className="type-mono-meta text-brand">Brief received</p>
+        <h2 className="type-heading-03 text-ink mt-3">
           Thanks for sharing your custom tea idea.
         </h2>
-        <p className="type-body text-muted mt-3 max-w-2xl">
+        <p className="type-body text-ink-soft mt-3 max-w-2xl">
           Teavision will review the flavour direction, format, and project notes
           before coming back to you. For urgent briefs, call 1300 729 617.
         </p>
@@ -175,19 +175,20 @@ export function FormFields({
           id="brief-form-error"
           role="alert"
           tabIndex={-1}
-          className="type-body-sm border-danger-border bg-danger-bg text-danger-text rounded-md border p-4"
+          className="type-body-sm border-danger bg-danger-tint text-danger rounded-md border p-4"
         >
           {state.error}
         </p>
       )}
 
-      <div className="border-default flex flex-col gap-4 border-t pt-6 lg:flex-row lg:items-center lg:justify-between">
-        <p className="type-body-sm text-muted max-w-prose">
+      <div className="border-hairline flex flex-col gap-4 border-t pt-6 lg:flex-row lg:items-center lg:justify-between">
+        <p className="type-body-sm text-ink-soft max-w-prose">
           Your brief is sent to Teavision&rsquo;s product development team.
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button
             type="submit"
+            variant="brand"
             size="lg"
             isLoading={isPending}
             disabled={isPending}
