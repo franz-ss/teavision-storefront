@@ -20,11 +20,13 @@ import {
   Button,
   type ButtonProps,
   Dialog,
+  Eyebrow,
   Price,
   QuantityStepper,
   StarRating,
-  Select,
+  ToggleButton,
 } from '@/components/ui'
+import { cn } from '@/lib/utils'
 
 import { ProductQuickViewImage } from './product-quick-view-image'
 import { type AddToCart, useAddToCart } from '../use-add-to-cart'
@@ -270,25 +272,28 @@ export function ProductQuickView({
             aria-label="Loading product details"
           >
             <span className="sr-only">Loading product details…</span>
-            <div className="bg-surface-sunken aspect-square animate-pulse rounded-md motion-reduce:animate-none" />
+            <div className="aspect-[1/1.05] animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none" />
             <div className="grid content-start gap-4">
-              <div className="bg-surface-sunken h-8 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-surface-sunken h-5 w-1/2 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-surface-sunken h-28 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="h-3 w-48 animate-pulse rounded-full bg-paper-2 motion-reduce:animate-none" />
+              <div className="h-10 w-4/5 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+              <div className="h-28 animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none" />
             </div>
           </div>
         ) : productData ? (
           <div className="grid gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)] lg:gap-7">
-            <div className="bg-surface-sunken relative mx-auto aspect-square w-full max-w-xl overflow-hidden rounded-md">
+            <div className="relative mx-auto aspect-[1/1.05] w-full max-w-xl overflow-hidden rounded-lg bg-paper-2">
               <ProductQuickViewImage
                 image={selectedImage}
                 title={productData.title}
               />
             </div>
 
-            <div className="grid content-start gap-5">
-              <div className="grid gap-2">
-                <h3 className="type-heading-04">{productData.title}</h3>
+            <div className="grid content-start gap-5 text-ink">
+              <div className="grid gap-3">
+                <Eyebrow rule={false}>Quick view</Eyebrow>
+                <h3 className="font-display text-[clamp(1.75rem,3vw,2.35rem)] leading-[1.04] font-medium">
+                  {productData.title}
+                </h3>
                 {productData.rating !== undefined && (
                   <StarRating
                     rating={productData.rating}
@@ -298,45 +303,65 @@ export function ProductQuickView({
                 )}
                 <div>
                   {selectedVariant ? (
-                    <Price price={selectedVariant.price} size="lg" />
+                    <Price
+                      price={selectedVariant.price}
+                      size="lg"
+                      priceClassName="text-[1.8rem] font-normal"
+                    />
                   ) : (
                     <Price
                       price={productData.priceRange.minVariantPrice}
                       size="lg"
+                      priceClassName="text-[1.8rem] font-normal"
                     />
                   )}
                 </div>
               </div>
 
               {productData.description && (
-                <p className="type-body-sm text-muted line-clamp-5">
+                <p className="line-clamp-5 text-[1.02rem] leading-6 text-ink-soft">
                   {productData.description}
                 </p>
               )}
 
               {hasVariants && (
-                <label className="grid gap-2">
-                  <span className="type-caption text-muted">Pack size</span>
-                  <Select
-                    value={selectedVariantId}
-                    onChange={(event) =>
-                      handleSelectVariant(event.currentTarget.value)
-                    }
-                    disabled={isPending}
-                    aria-label={`Select pack size for ${productData.title}`}
-                  >
+                <fieldset className="grid gap-3">
+                  <legend className="type-mono-meta text-ink-faint">
+                    Pack size
+                  </legend>
+                  <div className="flex flex-wrap gap-2.5">
                     {productData.variants.map((variant) => (
-                      <option key={variant.id} value={variant.id}>
-                        {variant.title}
-                        {!variant.availableForSale ? ' - sold out' : ''}
-                      </option>
+                      <ToggleButton
+                        key={variant.id}
+                        pressed={selectedVariantId === variant.id}
+                        disabled={isPending}
+                        aria-label={`${variant.title}${!variant.availableForSale ? ', sold out' : ''}`}
+                        className={cn(
+                          'min-w-23 flex-col rounded-sm border-[1.5px] border-hairline bg-card px-4.5 py-3 text-center text-ink transition-colors hover:border-ink-faint aria-pressed:border-brand aria-pressed:bg-brand-tint aria-pressed:text-ink',
+                          selectedVariantId === variant.id &&
+                            'border-brand bg-brand-tint',
+                        )}
+                        onClick={() => handleSelectVariant(variant.id)}
+                      >
+                        <span className="text-sm font-bold">
+                          {variant.title}
+                        </span>
+                        <Price
+                          price={variant.price}
+                          size="sm"
+                          className={cn(
+                            'mt-1 font-mono text-[11px] text-ink-faint',
+                            selectedVariantId === variant.id && 'text-brand',
+                          )}
+                        />
+                      </ToggleButton>
                     ))}
-                  </Select>
-                </label>
+                  </div>
+                </fieldset>
               )}
 
               <div className="grid gap-2">
-                <span className="type-caption text-muted">Quantity</span>
+                <span className="type-mono-meta text-ink-faint">Quantity</span>
                 <QuantityStepper
                   value={effectiveQuantity}
                   onChange={handleQuantityChange}
@@ -351,6 +376,7 @@ export function ProductQuickView({
               <div className="grid gap-3 sm:grid-cols-2">
                 <Button
                   type="button"
+                  variant="brand"
                   size="lg"
                   isLoading={isPending}
                   disabled={
@@ -376,7 +402,7 @@ export function ProductQuickView({
                 </p>
               )}
               {error && (
-                <p role="alert" className="type-caption text-danger-text">
+                <p role="alert" className="type-caption text-danger">
                   {error}
                 </p>
               )}
@@ -384,7 +410,7 @@ export function ProductQuickView({
           </div>
         ) : (
           <div className="grid gap-4 p-5">
-            <p role="alert" className="type-body-sm text-danger-text">
+            <p role="alert" className="type-body-sm text-danger">
               {error ?? 'Product details are unavailable.'}
             </p>
             <Button

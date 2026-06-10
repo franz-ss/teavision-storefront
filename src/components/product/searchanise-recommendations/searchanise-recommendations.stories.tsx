@@ -180,8 +180,8 @@ function SearchaniseFixture({
   return (
     <SearchaniseRecommendations
       fallbackDelayMs={fallbackDelayMs}
-      headingClassName="mb-6 text-xl font-semibold"
-      sectionClassName="border-default border-t pt-10"
+      headingClassName="type-heading-02 mb-6 text-ink"
+      sectionClassName="border-t border-hairline pt-10"
       title={withTitle ? STORY_TITLE : undefined}
       titleId={withTitle ? 'storybook-customers-also-bought-title' : undefined}
       widgetId={STORY_WIDGET_ID}
@@ -213,7 +213,7 @@ type Story = StoryObj<typeof SearchaniseRecommendations>
 export const Default: Story = {
   args: {
     fallback: (
-      <div className="border-default bg-surface text-default rounded-lg border p-6">
+      <div className="rounded-lg border border-hairline bg-card p-6 text-ink">
         Native recommendation carousel fallback
       </div>
     ),

@@ -68,10 +68,10 @@ export async function RelatedProducts({ product }: { product: Product }) {
     <Section.Root
       tone="transparent"
       spacing="none"
-      className="border-default border-t pt-10"
+      className="border-t border-hairline pt-10"
       aria-labelledby="related-products-title"
     >
-      <h2 id="related-products-title" className="mb-6 text-xl font-semibold">
+      <h2 id="related-products-title" className="type-heading-02 mb-6 text-ink">
         {RELATED_PRODUCTS_TITLE}
       </h2>
       <RelatedProductsContent products={products} />

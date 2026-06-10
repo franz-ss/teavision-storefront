@@ -75,7 +75,7 @@ export function SearchaniseRecommendations({
   }, [shouldLoad])
 
   const visibleContent = !shouldLoad ? null : renderState === 'waiting' ? (
-    <p className="type-body-sm text-muted" role="status" aria-live="polite">
+    <p className="type-body-sm text-ink-faint" role="status" aria-live="polite">
       Loading recommendations…
     </p>
   ) : renderState === 'rendered' && products.length > 0 ? (
@@ -86,7 +86,7 @@ export function SearchaniseRecommendations({
   ) : renderState === 'fallback' && fallback ? (
     <div data-searchanise-fallback>{fallback}</div>
   ) : renderState === 'empty' ? (
-    <p className="type-body-sm text-muted" role="status">
+    <p className="type-body-sm text-ink-faint" role="status">
       No recommendations are available.
     </p>
   ) : null

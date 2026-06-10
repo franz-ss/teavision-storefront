@@ -162,12 +162,7 @@ export const AddToCartTrigger: Story = {
   play: async ({ canvasElement }) => {
     const dialog = await openQuickViewDialog(canvasElement, 'Add to cart')
 
-    await userEvent.selectOptions(
-      await dialog.findByRole('combobox', {
-        name: 'Select pack size for Tea Masters Sencha Green Tea',
-      }),
-      'gid://shopify/ProductVariant/masters-sencha-1kg',
-    )
+    await userEvent.click(await dialog.findByRole('button', { name: '1kg' }))
     await userEvent.click(
       dialog.getByRole('button', {
         name: 'Increase quantity for tea masters sencha green tea',

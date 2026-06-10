@@ -31,8 +31,8 @@ export async function CustomersAlsoBought({ product }: { product: Product }) {
       }
       title={CUSTOMERS_ALSO_BOUGHT_TITLE}
       titleId="customers-also-bought-title"
-      sectionClassName="border-default border-t pt-10"
-      headingClassName="mb-6 text-xl font-semibold"
+      sectionClassName="border-t border-hairline pt-10"
+      headingClassName="type-heading-02 mb-6 text-ink"
       {...(!searchanisePublicConfig.enabled || !searchanisePublicConfig.apiKey
         ? { fallbackDelayMs: 0 }
         : undefined)}
