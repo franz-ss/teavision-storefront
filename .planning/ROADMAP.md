@@ -121,7 +121,7 @@ Plans:
 - [x] 11-19-PLAN.md — Gap closure: PDP spacing/alignment parity sweep
 - [x] 11-20-PLAN.md — Gap closure: blog newsletter band + contact reuse + spacing, footer original copy/links + design spacing
 - [x] 11-21-PLAN.md — Gap closure: new /pages/bulk-wholesale-supply (10-section content spec on design system)
-- [ ] 11-22-PLAN.md — Gap closure: preview-first search overlay + 404 redesign (mockup -> owner approval -> implement)
+- [x] 11-22-PLAN.md — Gap closure: preview-first search overlay + 404 redesign (mockup -> owner approval -> implement)
 
 ## Progress
 
@@ -137,7 +137,7 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, t
 | 6. Prevent site indexing                | 1/1            | Complete | 2026-06-03 |
 | 8. Optimized Collection Quick Add       | 1/1            | Complete | 2026-06-03 |
 | 9. Collection Product Card Improvements | 0/1            | Planned  | —          |
-| 11. Full Visual Redesign                 | 21/22 | In Progress|  |
+| 11. Full Visual Redesign                 | 22/22 | Complete   | 2026-06-10 |
 
 ### Phase 9: Collection Product Card Improvements
 
