@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 
 import {
-  Contact,
   Cta,
   Faq,
   HomepageHero,
@@ -14,6 +13,7 @@ import {
   TeaJournal,
   Testimonials,
 } from '@/components/homepage'
+import { ContactSection } from '@/components/contact/contact-section'
 import {
   ctaCatalogueData,
   HOMEPAGE_PROOF_POINTS,
@@ -65,7 +65,7 @@ export default function HomePage() {
         <TeaJournal />
         <Cta {...ctaCatalogueData} />
         <HomepageNewsletter action={submitNewsletterSignupFormAction} />
-        <Contact action={submitContactFormAction} />
+        <ContactSection action={submitContactFormAction} />
         <Faq />
       </div>
     </>
