@@ -9,7 +9,7 @@ function isSectionRootName(name) {
 }
 
 function hasToneClass(sourceText) {
-  return /\bbg-[\w/:.-]+|\btext-on-brand\b/.test(sourceText)
+  return /\bbg-[\w/:.-]+|\btext-paper\b/.test(sourceText)
 }
 
 export const noSectionRootToneClass = {
