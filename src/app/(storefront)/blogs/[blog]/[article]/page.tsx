@@ -110,18 +110,18 @@ async function ArticleContent({ params }: Props) {
       />
 
       <article className="mx-auto max-w-prose px-4 py-12">
-        <nav aria-label="Breadcrumb" className="type-body-sm text-muted mb-8">
+        <nav aria-label="Breadcrumb" className="type-mono-meta text-ink-faint mb-8">
           <ol className="flex min-w-0 items-center gap-2" role="list">
             <li className="shrink-0">
               <Link
                 href={getBlogPath(normalizedBlog)}
-                className="text-link hover:text-link-hover focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="text-brand hover:text-brand-deep focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 Tea Journal
               </Link>
             </li>
             <li aria-hidden="true">/</li>
-            <li className="text-default min-w-0 truncate" aria-current="page">
+            <li className="text-ink min-w-0 truncate" aria-current="page">
               {article.title}
             </li>
           </ol>
@@ -133,7 +133,7 @@ async function ArticleContent({ params }: Props) {
               <Link
                 key={tag}
                 href={getTagPath(normalizedBlog, tag)}
-                className="type-eyebrow border-default bg-surface hover:border-brand focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full border px-3 py-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="type-mono-meta text-brand border-hairline bg-card hover:border-brand focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full border px-3.5 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 {tag}
               </Link>
@@ -141,11 +141,11 @@ async function ArticleContent({ params }: Props) {
           </div>
         )}
 
-        <h1 className="type-heading-01 text-strong mx-auto max-w-prose">
+        <h1 className="font-display text-[clamp(2rem,4vw,3.4rem)] leading-[1.04] tracking-[-0.01em] text-ink mx-auto max-w-prose">
           {article.title}
         </h1>
 
-        <div className="type-body-sm text-muted mx-auto mt-5 flex max-w-prose flex-wrap items-center gap-3">
+        <div className="type-mono-meta text-ink-faint mx-auto mt-5 flex max-w-prose flex-wrap items-center gap-3">
           <time dateTime={article.publishedAt}>
             {formatArticleDate(article.publishedAt)}
           </time>
@@ -162,7 +162,7 @@ async function ArticleContent({ params }: Props) {
         {article.featuredImage &&
           article.featuredImage.width &&
           article.featuredImage.height && (
-            <div className="bg-surface-sunken mt-8 overflow-hidden rounded-lg">
+            <div className="bg-paper-2 mt-8 overflow-hidden rounded-lg">
               <Image
                 src={article.featuredImage.url}
                 alt={article.featuredImage.altText ?? article.title}
@@ -177,7 +177,7 @@ async function ArticleContent({ params }: Props) {
 
         {article.excerpt && (
           <Card className="mx-auto mt-8 max-w-prose" padding="md">
-            <p className="type-body-lg text-muted italic">{article.excerpt}</p>
+            <p className="type-lede text-ink-soft italic">{article.excerpt}</p>
           </Card>
         )}
 
@@ -189,7 +189,7 @@ async function ArticleContent({ params }: Props) {
         {(newerArticle || olderArticle) && (
           <nav
             aria-label="Adjacent articles"
-            className="border-default mx-auto mt-12 grid max-w-prose gap-4 border-t pt-8 sm:grid-cols-2"
+            className="border-hairline mx-auto mt-12 grid max-w-prose gap-4 border-t pt-8 sm:grid-cols-2"
           >
             {olderArticle ? (
               <Card interactive>
@@ -197,8 +197,8 @@ async function ArticleContent({ params }: Props) {
                   href={getArticlePath(normalizedBlog, olderArticle.handle)}
                   className="focus-visible:ring-ring block h-full p-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <span className="type-eyebrow text-muted">Previous Post</span>
-                  <span className="type-heading-03 text-strong mt-2 block">
+                  <span className="type-mono-meta text-ink-faint">Previous Post</span>
+                  <span className="type-heading-03 text-ink mt-2 block">
                     {olderArticle.title}
                   </span>
                 </Link>
@@ -213,8 +213,8 @@ async function ArticleContent({ params }: Props) {
                   href={getArticlePath(normalizedBlog, newerArticle.handle)}
                   className="focus-visible:ring-ring block h-full p-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <span className="type-eyebrow text-muted">Next Post</span>
-                  <span className="type-heading-03 text-strong mt-2 block">
+                  <span className="type-mono-meta text-ink-faint">Next Post</span>
+                  <span className="type-heading-03 text-ink mt-2 block">
                     {newerArticle.title}
                   </span>
                 </Link>
@@ -227,15 +227,15 @@ async function ArticleContent({ params }: Props) {
           <Section.Root
             tone="transparent"
             spacing="none"
-            className="border-default mt-12 border-t pt-8"
+            className="border-hairline mt-12 border-t pt-8"
           >
-            <h2 className="type-heading-03 text-strong">
+            <h2 className="type-heading-03 text-ink">
               Comments {article.comments.length}
             </h2>
             <ul className="mt-5 space-y-4" role="list">
               {article.comments.map((comment) => (
                 <Card as="li" key={comment.id} padding="sm">
-                  <p className="type-label text-strong">{comment.authorName}</p>
+                  <p className="type-label text-ink">{comment.authorName}</p>
                   <RichText
                     html={sanitizeShopifyArticleHtml(comment.contentHtml)}
                     variant="compact"
@@ -247,10 +247,10 @@ async function ArticleContent({ params }: Props) {
           </Section.Root>
         )}
 
-        <div className="border-default mx-auto mt-12 max-w-prose border-t pt-8">
+        <div className="border-hairline mx-auto mt-12 max-w-prose border-t pt-8">
           <Link
             href={getBlogPath(normalizedBlog)}
-            className="type-label text-link hover:text-link-hover focus-visible:ring-ring inline-flex min-h-11 items-center hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="type-label text-brand hover:text-brand-deep focus-visible:ring-ring inline-flex min-h-11 items-center hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Back to Tea Journal
           </Link>
@@ -265,7 +265,7 @@ export default function ArticlePage({ params }: Props) {
     <Suspense
       fallback={
         <div
-          className="type-body text-muted mx-auto max-w-4xl px-4 py-12"
+          className="type-body text-ink-soft mx-auto max-w-4xl px-4 py-12"
           role="status"
           aria-live="polite"
         >

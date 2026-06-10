@@ -16,10 +16,10 @@ export function ListingPage(props: ListingProps) {
 
       <Suspense
         fallback={
-          <Section.Root tone="surface">
+          <Section.Root tone="sunken">
             <Section.Container
               variant="compact"
-              className="type-body text-muted"
+              className="type-body text-ink-soft"
               aria-live="polite"
             >
               Loading articles…
