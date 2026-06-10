@@ -1,44 +1,68 @@
 import Image from 'next/image'
+import { Check } from 'lucide-react'
 
-import { Button, Section } from '@/components/ui'
+import { Button, Eyebrow, Section } from '@/components/ui'
 
 import { HERBS_IMAGE } from '../content'
+
+const HERB_CHECKLIST = [
+  {
+    title: 'Import & freight insurance on all ingredients',
+    sub: 'Every order covered from origin to your door',
+  },
+  {
+    title: 'Highest quality standards',
+    sub: 'From our certified facilities and trusted farming partners',
+  },
+  {
+    title: 'Quality-focused, consistent and reliable',
+    sub: 'Efficient, cost-effective supply for cafes, retailers and wellness brands',
+  },
+]
 
 export function OrganicHerbs() {
   return (
     <Section.Root tone="sunken">
       <Section.Container className="grid gap-10 lg:grid-cols-2 lg:items-center">
         <div>
-          <h2 className="type-heading-02 text-strong">
-            Wild Grown & Certified Organic Herbs
+          <Eyebrow className="mb-4">Wild-grown &amp; certified organic</Eyebrow>
+          <h2 className="type-heading-02">
+            Herbs &amp; spices, sourced direct from farm.
           </h2>
-          <p className="type-body text-muted mt-5">
-            We supply only the freshest wild grown herbs and certified organic
-            spices, sourced directly from trusted farmers and plantations. As
-            one of Australia’s leading bulk herb and spice suppliers, we ensure
-            quality, sustainability, and reliability to meet the diverse needs
-            of cafes, retailers, and wellness brands.
+          <p className="type-lede mt-4 text-ink-soft">
+            We supply only the freshest wild-grown herbs and certified-organic
+            spices, sourced directly from trusted farmers and plantations across
+            the globe — with quality, sustainability and reliability built in.
           </p>
-          <ul className="type-body-sm text-muted mt-8 grid gap-3">
-            <li>Import and Freight Insurance on all ingredients</li>
-            <li>Highest quality standards from our company and partners</li>
-            <li>
-              Quality-focused, consistent, efficient, reliable and
-              cost-effective
-            </li>
+          <ul className="mt-8 divide-y divide-hairline">
+            {HERB_CHECKLIST.map((item) => (
+              <li
+                key={item.title}
+                className="flex gap-3 border-t border-hairline py-4 first:border-t-0"
+              >
+                <Check
+                  className="mt-0.5 size-4 shrink-0 text-brand"
+                  aria-hidden="true"
+                />
+                <div>
+                  <p className="type-body font-medium">{item.title}</p>
+                  <p className="type-body-sm text-ink-soft">{item.sub}</p>
+                </div>
+              </li>
+            ))}
           </ul>
           <div className="mt-8">
             <Button
-              href="/pages/terms-conditions-1"
-              aria-label="Learn More about quality standards"
-              size="cta"
+              href="/collections/herbs-and-spices"
+              variant="brand"
+              size="lg"
+              aria-label="Shop herbs and spices"
             >
-              Learn More
-              <span className="sr-only"> about quality standards</span>
+              Shop herbs &amp; spices
             </Button>
           </div>
         </div>
-        <div className="bg-surface shadow-2 overflow-hidden rounded-md">
+        <div className="overflow-hidden rounded-lg shadow-2">
           <Image
             src={HERBS_IMAGE.src}
             alt={HERBS_IMAGE.alt}
