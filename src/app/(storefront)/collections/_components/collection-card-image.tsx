@@ -13,7 +13,7 @@ export function CollectionCardImage({
     !collection.featuredImage.width ||
     !collection.featuredImage.height
   ) {
-    return <div className="bg-surface-sunken aspect-4/3 w-full" />
+    return <div className="bg-paper-2 aspect-[1/1.08] w-full rounded-lg" />
   }
 
   return (
@@ -23,7 +23,7 @@ export function CollectionCardImage({
       width={collection.featuredImage.width}
       height={collection.featuredImage.height}
       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-      className="aspect-4/3 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+      className="aspect-[1/1.08] w-full object-cover transition-transform duration-300 group-hover:scale-[1.06] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
     />
   )
 }

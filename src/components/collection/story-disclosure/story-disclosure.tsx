@@ -20,21 +20,21 @@ export function StoryDisclosure({
   return (
     <details
       className={cn(
-        'border-default bg-surface group rounded-md border',
+        'border-hairline bg-paper group rounded-lg border',
         className,
       )}
       open={defaultOpen}
     >
-      <summary className="focus-visible:ring-ring flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 rounded-md px-4 py-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-5">
-        <span className="type-label text-strong min-w-0 wrap-break-word">
+      <summary className="focus-visible:ring-ring flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 py-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-5">
+        <span className="type-label text-ink min-w-0 wrap-break-word">
           {title}
         </span>
         <ChevronDown
-          className="text-muted h-4 w-4 shrink-0 transition-transform group-open:rotate-180"
+          className="text-ink-soft h-4 w-4 shrink-0 transition-transform group-open:rotate-180"
           aria-hidden="true"
         />
       </summary>
-      <div className="border-default border-t px-4 py-5 sm:px-5">
+      <div className="border-hairline border-t px-4 py-5 sm:px-5">
         <RichText html={html} variant="disclosure" />
       </div>
     </details>

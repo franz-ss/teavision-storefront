@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
-import { Card, Section } from '@/components/ui'
+import { Button, Eyebrow, Section } from '@/components/ui'
 import {
   getCollectionMenuSummaries,
   getCollectionSummaries,
@@ -154,54 +155,60 @@ export default async function Page() {
         }}
       />
 
-      <Section.Root tone="sunken" className="border-default border-b">
+      {/* Page header */}
+      <Section.Root tone="brand" spacing="compact">
         <Section.Container>
           <nav
             aria-label="Breadcrumb"
-            className="type-body-sm text-muted mb-8 flex flex-wrap items-center gap-2"
+            className="type-mono-meta text-paper/60 mb-6 flex flex-wrap items-center gap-2"
           >
             <Link
               href="/"
-              className="focus-visible:ring-ring inline-flex min-h-10 items-center rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="focus-visible:ring-ring rounded hover:text-paper/90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               Home
             </Link>
             <span aria-hidden="true">/</span>
-            <span aria-current="page" className="text-default">
+            <span aria-current="page" className="text-gold">
               Collections
             </span>
           </nav>
 
-          <p className="type-eyebrow text-accent">Wholesale range</p>
-          <h1 className="type-display-01 text-strong mt-5 max-w-4xl text-balance">
+          <Eyebrow tone="gold">Wholesale range</Eyebrow>
+          <h1 className="type-heading-01 text-paper mt-4 max-w-4xl text-balance">
             Tea, herb, spice, and ingredient collections
           </h1>
-          <p className="type-body-lg text-muted mt-6 max-w-prose">
+          <p className="text-paper/85 mt-4 max-w-prose text-[1.02rem]">
             Start with a category, compare adjacent ranges, then move into
             samples or bulk ordering with the Teavision team.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
+            <Button
               href="/collections/all"
-              className="type-label bg-action-primary text-action-primary-text hover:bg-action-primary-hover focus-visible:ring-ring inline-flex min-h-11 w-full items-center justify-center rounded-md px-5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-auto"
+              variant="inverse"
+              size="md"
+              className="w-full sm:w-auto"
             >
               Browse all products
-            </Link>
-            <Link
+            </Button>
+            <Button
               href="/pages/wholesale-account-request"
-              className="type-label border-action-secondary-border text-action-secondary-text hover:bg-action-secondary-hover focus-visible:ring-ring inline-flex min-h-11 w-full items-center justify-center rounded-md border px-5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-auto"
+              variant="inverseSecondary"
+              size="md"
+              className="w-full sm:w-auto"
             >
               Request wholesale access
-            </Link>
+            </Button>
           </div>
         </Section.Container>
       </Section.Root>
 
+      {/* Featured collection tiles (.rtile) */}
       <Section.Root tone="transparent">
         <Section.Container>
           <div className="max-w-prose">
-            <p className="type-eyebrow text-accent">Popular paths</p>
-            <h2 className="type-heading-02 text-strong mt-3">
+            <Eyebrow>Popular paths</Eyebrow>
+            <h2 className="type-heading-02 text-ink mt-3">
               Find the right range faster
             </h2>
           </div>
@@ -211,43 +218,58 @@ export default async function Page() {
             role="list"
           >
             {featuredCollections.map((collection) => (
-              <Card
-                as="li"
+              <li
                 key={collection.id}
-                interactive
-                overflow="hidden"
-                className="group h-full"
+                className="group relative aspect-[1/1.08] overflow-hidden rounded-lg"
               >
                 <Link
                   href={hrefForHandle(collection.handle)}
-                  className="focus-visible:ring-ring block h-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                  className="focus-visible:ring-ring block h-full w-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
                   <CollectionCardImage collection={collection} />
-                  <div className="p-4">
-                    <h3 className="type-heading-04 text-strong group-hover:text-brand transition-colors">
+
+                  {/* Bottom gradient scrim */}
+                  <div
+                    className="absolute inset-0 bg-linear-to-t from-ink/70 via-ink/20 to-transparent"
+                    aria-hidden="true"
+                  />
+
+                  {/* Card content */}
+                  <div className="absolute right-0 bottom-0 left-0 p-4">
+                    <p className="type-mono-meta text-gold mb-1">
+                      {getDescription(collection).slice(0, 30)}
+                    </p>
+                    <h3 className="font-display text-paper text-[1.15rem] leading-[1.1]">
                       {collection.title}
                     </h3>
-                    <p className="type-body-sm text-muted mt-3">
-                      {getDescription(collection)}
-                    </p>
+
+                    {/* Hover-reveal "Shop now" — always visible on touch/mobile */}
+                    <span
+                      className="mt-2 inline-flex items-center gap-1.5 text-paper/90 text-xs font-semibold opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100 max-lg:opacity-100"
+                      aria-hidden="true"
+                    >
+                      Shop now
+                      <ArrowRight className="h-3 w-3" />
+                    </span>
                   </div>
                 </Link>
-              </Card>
+              </li>
             ))}
           </ul>
         </Section.Container>
       </Section.Root>
 
-      <Section.Root tone="surface" className="border-default border-t">
+      {/* Full directory listing */}
+      <Section.Root tone="sunken">
         <Section.Container>
-          <div className="border-default mb-6 flex flex-col gap-3 border-b pb-6 md:flex-row md:items-end md:justify-between">
+          <div className="border-hairline mb-6 flex flex-col gap-3 border-b pb-6 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="type-eyebrow text-accent">Directory</p>
-              <h2 className="type-heading-02 text-strong mt-3">
+              <Eyebrow>Directory</Eyebrow>
+              <h2 className="type-heading-02 text-ink mt-3">
                 All collections
               </h2>
             </div>
-            <p className="type-body-sm text-muted">
+            <p className="type-mono-meta text-ink-faint">
               {directoryCollections.length} wholesale ranges
             </p>
           </div>
@@ -257,16 +279,16 @@ export default async function Page() {
             role="list"
           >
             {directoryCollections.map((collection) => (
-              <li key={collection.id} className="border-default border-b">
+              <li key={collection.id} className="border-hairline border-b">
                 <Link
                   href={hrefForHandle(collection.handle)}
                   className="focus-visible:ring-ring hover:text-brand grid min-h-16 gap-2 py-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <span className="type-label text-strong">
+                  <span className="type-label text-ink">
                     {collection.title}
                   </span>
                   {collection.description && (
-                    <span className="type-body-sm text-muted line-clamp-2">
+                    <span className="type-body-sm text-ink-soft line-clamp-2">
                       {collection.description}
                     </span>
                   )}
