@@ -13,6 +13,7 @@ type ArticleResultsProps = {
   paginated: PaginatedArticles
   query?: string | null
   tags: string[]
+  className?: string
 }
 
 export function ArticleResults({
@@ -22,11 +23,12 @@ export function ArticleResults({
   paginated,
   query,
   tags,
+  className,
 }: ArticleResultsProps) {
   const normalizedQuery = query?.trim() ?? ''
 
   return (
-    <Section.Root tone="sunken">
+    <Section.Root tone="sunken" className={className}>
       <Section.Container>
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>

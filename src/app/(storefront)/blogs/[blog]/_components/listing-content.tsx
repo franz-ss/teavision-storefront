@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import { ArticleResults, FeaturedArticles } from '@/components/blog'
-import { NewsletterSignup, Section } from '@/components/ui'
+import { ContactSection } from '@/components/contact'
 import { parseListingPage } from '@/lib/blog/listing'
 import {
   filterArticles,
@@ -12,9 +12,10 @@ import {
   normalizeBlogHandle,
   paginateArticles,
 } from '@/lib/blog/operations'
-import { sendNewsletterSignupAction } from '@/lib/contact/actions'
+import { submitContactFormAction } from '@/lib/contact/actions'
 
 import type { ListingProps } from '../_lib/types'
+import { BlogNewsletterBand } from './blog-newsletter-band'
 
 export async function ListingContent({ params, searchParams }: ListingProps) {
   const [{ blog, tag }, { page, q }] = await Promise.all([params, searchParams])
@@ -67,13 +68,11 @@ export async function ListingContent({ params, searchParams }: ListingProps) {
         paginated={paginated}
         query={q}
         tags={tags}
+        className={!isFiltered && featuredArticles.length > 0 ? 'pt-0' : undefined}
       />
 
-      <Section.Root tone="sunken">
-        <Section.Container variant="compact">
-          <NewsletterSignup action={sendNewsletterSignupAction} />
-        </Section.Container>
-      </Section.Root>
+      <BlogNewsletterBand />
+      <ContactSection action={submitContactFormAction} />
     </>
   )
 }

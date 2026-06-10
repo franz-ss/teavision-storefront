@@ -5,14 +5,16 @@ import { formatArticleDate, getArticlePath } from '@/lib/blog/operations'
 type FeaturedArticlesProps = {
   articles: BlogArticleSummary[]
   blogHandle: string
+  className?: string
 }
 
 export function FeaturedArticles({
   articles,
   blogHandle,
+  className,
 }: FeaturedArticlesProps) {
   return (
-    <Section.Root tone="sunken">
+    <Section.Root tone="sunken" className={className}>
       <Section.Container>
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
