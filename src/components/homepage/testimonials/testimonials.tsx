@@ -5,17 +5,21 @@ import { TestimonialsSlider } from './testimonials-slider'
 
 export function Testimonials() {
   return (
-    <Section.Root tone="sunken">
+    <Section.Root tone="surface">
       <Section.Container>
-        <div className="mx-auto max-w-prose text-center">
-          <Eyebrow className="justify-center">Testimonials</Eyebrow>
-          <h2 className="type-heading-01 mt-4 text-ink">
-            Trusted by leading Australian brands
-          </h2>
-          <p className="type-lede mt-4 text-ink-soft">
-            Clients rely on Teavision for responsive supply, fresh organic
-            ingredients, and flexible solutions across bulk tea bags, loose-leaf
-            supply, and custom blends.
+        {/* Split range__head layout: eyebrow+h2 left, muted paragraph right */}
+        <div className="mb-12.5 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <Eyebrow className="mb-4">Testimonials</Eyebrow>
+            <h2 className="type-heading-01 max-w-[16ch] text-ink">
+              Teavision Testimonials
+            </h2>
+          </div>
+          <p className="max-w-[34ch] text-ink-soft">
+            We&apos;re proud to be the trusted tea supplier for Australia&apos;s
+            biggest and most loved brands. Our clients value our ability to
+            source fresh, organic ingredients and provide flexible solutions for
+            bulk tea bags, loose tea in bulk, and custom blends.
           </p>
         </div>
 
@@ -29,18 +33,26 @@ export function Testimonials() {
               aria-label={`${testimonial.name} testimonial`}
             >
               <blockquote className="relative">
-                <div
-                  className="mb-4 font-display text-[4rem] leading-none text-gold/50"
+                {/* Design SVG quote mark: 50x50, gold stroke, opacity .5 */}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mb-4.5 size-12.5 shrink-0 text-gold opacity-50"
                   aria-hidden="true"
                 >
-                  &ldquo;
-                </div>
+                  <path d="M9 7H5a2 2 0 00-2 2v3a2 2 0 002 2h2v3H4m15-10h-4a2 2 0 00-2 2v3a2 2 0 002 2h2v3h-3" />
+                </svg>
                 <p className="font-display text-[clamp(1.4rem,2.4vw,2.1rem)] leading-[1.32] text-ink">
-                  {testimonial.quote}
+                  &ldquo;{testimonial.quote}&rdquo;
                 </p>
-                <footer className="type-mono-meta mt-6 text-ink-faint">
+                <footer className="mt-6.5 font-mono text-[12px] tracking-widest uppercase text-ink-faint">
                   <cite className="not-italic">
-                    {testimonial.name} - {testimonial.role}
+                    {testimonial.name}
+                    {testimonial.brand ? ` — ${testimonial.brand}` : null}
                   </cite>
                 </footer>
               </blockquote>

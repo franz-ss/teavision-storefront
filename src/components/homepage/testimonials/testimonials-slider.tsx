@@ -22,6 +22,7 @@ type TestimonialSelector = {
   }
   name: string
   role: string
+  brand?: string
 }
 
 type TestimonialsSliderProps = {
@@ -105,11 +106,11 @@ export function TestimonialsSlider({
               className="h-10 w-13.5 shrink-0 rounded-sm object-contain"
             />
             <span className="min-w-0">
-              <span className="block font-semibold text-ink">
-                {testimonial.name}
+              <span className="block font-bold text-ink">
+                {testimonial.brand ?? testimonial.name}
               </span>
-              <span className="mt-1 block text-sm text-ink-faint">
-                {testimonial.role}
+              <span className="mt-1 block text-[0.8rem] text-ink-faint">
+                {testimonial.name}
               </span>
             </span>
           </ToggleButton>

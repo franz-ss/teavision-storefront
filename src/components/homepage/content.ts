@@ -40,6 +40,7 @@ export type Testimonial = {
   logo: ImageAsset
   name: string
   role: string
+  brand?: string
   quote: string
 }
 
@@ -411,33 +412,23 @@ export const TESTIMONIALS = [
       height: 400,
     },
     name: 'Ashley McGrath',
-    role: 'GM Social Enterprise',
+    role: 'GM, Social Enterprise',
+    brand: 'MOOD Tea',
     quote:
-      "Teavision has been an exceptional partner to MOOD Tea from day one. Their team consistently delivers outstanding service and support, always responsive, proactive, and genuinely invested in our success. As a purpose-led brand, it’s crucial we work with suppliers who share our values and commitment to quality, and Teavision has never let us down. Their reliable supply and streamlined process have saved us both time and cost, allowing us to focus on growing our impact. Thanks to their support, we've been able to channel more resources into our social mission, supporting youth mental health programs. We truly see Teavision not just as a supplier, but as a contributor to the positive impact we’re creating. We’re grateful for their partnership.",
+      'Teavision has been an exceptional partner from day one — responsive, proactive and genuinely invested in our success. Their reliable supply lets us channel more into our social mission.',
   },
   {
     logo: {
       src: `${SHOPIFY_FILE_BASE}/Ali_Logo_1.png?crop=center&height=400&v=1760347120&width=325`,
-      alt: 'St. Ali logo',
+      alt: 'ST. ALi logo',
       width: 325,
       height: 400,
     },
-    name: 'St. Ali',
-    role: 'Lucy Ward',
+    name: 'Lucy Ward',
+    role: 'Buyer',
+    brand: 'ST. ALi',
     quote:
-      'Tea Vision has been an outstanding supplier and trusted partner in bringing our products to life. Over our long-standing relationship across multiple product lines, they have consistently delivered excellent service and reliable, prompt shipments. Their professionalism, attention to detail, and responsiveness have made our collaboration seamless and productive. We highly recommend Tea Vision to any business seeking a dependable supplier who truly understands the value of partnership.',
-  },
-  {
-    logo: {
-      src: `${SHOPIFY_FILE_BASE}/Buy_Organics_Logo_1.png?crop=center&height=400&v=1760347231&width=325`,
-      alt: 'Buy Organics Online logo',
-      width: 325,
-      height: 400,
-    },
-    name: 'Buy Organics Online',
-    role: 'Owner',
-    quote:
-      'We’ve been working with Teavision since early 2025, and their support has been invaluable in navigating the complexities of sourcing quality products. Having them close by gives us confidence, reduces risk, and opens the door to their extensive network for new product opportunities. Their professionalism and commitment make the process seamless and worry-free. I highly recommend their services — Lucas, in particular, has been fantastic to work with.',
+      'An outstanding supplier and trusted partner in bringing our products to life. Professional, detail-oriented and seamless across multiple product lines.',
   },
   {
     logo: {
@@ -448,8 +439,22 @@ export const TESTIMONIALS = [
     },
     name: 'Julia Blair',
     role: 'Global Head of Manufacturing',
+    brand: 'Remedy Drinks',
     quote:
-      'Brewing Better Together with Teavision. As Australia’s leading “better-for-you” beverage manufacturer, here at Remedy Drinks we consider quality, consistency, and trusted partnerships to be at the heart of everything we do. Our long-standing relationship with Teavision has been vital in supporting our growth and upholding the high standards our consumers expect. Teavision reliably provides us with high-quality ingredients which are key to our product range. Their exceptional service and support is always responsive, proactive, and collaborative, making them a true partner in our success. Thanks to their efficient sourcing strategies and deep understanding of our supply chain, we’ve achieved significant cost savings without compromising quality. Their consistent, on-time, and in-full deliveries ensure uninterrupted production and guarantee our amazing drinks reach consumers exactly as intended. Teavision has made a powerful and positive impact on Remedy Drinks, helping us scale sustainably, control costs, and strengthen our supply chain. We value this partnership and look forward to many more years of successful collaboration.',
+      'Their efficient sourcing and deep understanding of our supply chain delivered real cost savings without compromising quality. On-time, in-full, every time.',
+  },
+  {
+    logo: {
+      src: `${SHOPIFY_FILE_BASE}/Buy_Organics_Logo_1.png?crop=center&height=400&v=1760347231&width=325`,
+      alt: 'Buy Organics Online logo',
+      width: 325,
+      height: 400,
+    },
+    name: 'Lucas',
+    role: 'Owner',
+    brand: 'Buy Organics Online',
+    quote:
+      'Invaluable in navigating the complexities of sourcing quality products. Having them close by reduces risk and opens their whole network to us.',
   },
 ] satisfies Testimonial[]
 

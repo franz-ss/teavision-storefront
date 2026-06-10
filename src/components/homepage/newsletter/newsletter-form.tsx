@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useTransition, type FormEvent } from 'react'
+import { ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui'
 import type { NewsletterSignupActionResult } from '@/lib/contact/types'
@@ -56,10 +57,10 @@ export function HomepageNewsletterForm({
       ref={formRef}
       onSubmit={handleSubmit}
       aria-busy={isPending}
-      className="mt-7 flex flex-col gap-2 sm:flex-row sm:flex-wrap"
+      className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap"
     >
       <label className="sr-only" htmlFor="homepage-newsletter-email">
-        Enter Email
+        Enter your email
       </label>
       <input
         id="homepage-newsletter-email"
@@ -69,9 +70,9 @@ export function HomepageNewsletterForm({
         autoComplete="email"
         required
         maxLength={254}
-        placeholder="Enter Email"
+        placeholder="Enter your email"
         aria-describedby={hasMessage ? messageId : undefined}
-        className="min-h-12 flex-1 rounded-full border border-paper/25 bg-paper/10 px-5.5 text-paper placeholder:text-paper/60 focus:border-gold focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none"
+        className="min-h-12 min-w-55 flex-1 rounded-full border border-paper/25 bg-paper/10 px-5.5 text-paper placeholder:text-paper/60 focus:border-gold focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none"
       />
       <div className="sr-only" aria-hidden="true">
         <input
@@ -90,6 +91,7 @@ export function HomepageNewsletterForm({
         disabled={isPending}
       >
         {isPending ? 'Subscribing…' : 'Subscribe'}
+        {!isPending && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
       </Button>
       {hasMessage ? (
         <p

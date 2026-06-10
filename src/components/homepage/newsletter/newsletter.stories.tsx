@@ -35,7 +35,7 @@ export const Success: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.type(
-      canvas.getByLabelText('Enter Email'),
+      canvas.getByLabelText('Enter your email'),
       'buyer@example.com',
     )
     await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))
@@ -53,7 +53,7 @@ export const Error: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.type(
-      canvas.getByLabelText('Enter Email'),
+      canvas.getByLabelText('Enter your email'),
       'buyer@example.com',
     )
     await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))
@@ -71,7 +71,7 @@ export const Pending: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.type(
-      canvas.getByLabelText('Enter Email'),
+      canvas.getByLabelText('Enter your email'),
       'buyer@example.com',
     )
     await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))

@@ -6,11 +6,14 @@ export function Faq() {
   return (
     <Section.Root tone="sunken">
       <Section.Container variant="base">
-        <div className="mx-auto max-w-base text-center">
+        {/* Design constrains FAQ content to 880px (55rem) */}
+        <div className="mx-auto max-w-220 text-center">
           <Eyebrow rule={false} className="justify-center">
             Questions
           </Eyebrow>
-          <h2 className="type-heading-01 mt-4 text-ink">Frequently asked.</h2>
+          <h2 className="type-heading-01 mt-4 text-ink">
+            Frequently asked questions
+          </h2>
           <p className="type-lede mt-4 text-ink-soft">
             You may have questions about sourcing wholesale tea, tea bags, and
             bulk spices. Below are answers to some of the most common queries
@@ -18,7 +21,7 @@ export function Faq() {
           </p>
         </div>
 
-        <div className="mt-11 border-b border-hairline">
+        <div className="mx-auto mt-11 max-w-220 border-b border-hairline">
           {FAQS.map((faq) => (
             <details key={faq.question} className="group border-t border-hairline">
               <summary className="focus-visible:ring-ring flex cursor-pointer list-none items-center justify-between gap-5 py-6.5 font-display text-[clamp(1.1rem,1.8vw,1.4rem)] text-ink transition-colors marker:content-none hover:text-brand focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none [&::-webkit-details-marker]:hidden">
