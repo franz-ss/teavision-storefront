@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google'
+import { Caveat, Hanken_Grotesk, Space_Mono, Spectral } from 'next/font/google'
 
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { SITE_URL } from '@/lib/seo/site-url'
@@ -7,22 +7,31 @@ import { cn } from '@/lib/utils'
 
 import './globals.css'
 
-const fraunces = Fraunces({
-  display: 'swap',
+const spectral = Spectral({
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
   subsets: ['latin'],
-  variable: '--font-fraunces',
+  variable: '--font-spectral',
+  display: 'swap',
 })
 
-const inter = Inter({
-  display: 'swap',
+const hankenGrotesk = Hanken_Grotesk({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-hanken-grotesk',
+  display: 'swap',
 })
 
-const jetBrainsMono = JetBrains_Mono({
-  display: 'swap',
+const spaceMono = Space_Mono({
+  weight: ['400', '700'],
   subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
+  variable: '--font-space-mono',
+  display: 'swap',
+})
+
+const caveat = Caveat({
+  subsets: ['latin'],
+  variable: '--font-caveat',
+  display: 'swap',
 })
 
 export const metadata: Metadata = withNoindexRobots({
@@ -52,9 +61,10 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          inter.variable,
-          fraunces.variable,
-          jetBrainsMono.variable,
+          spectral.variable,
+          hankenGrotesk.variable,
+          spaceMono.variable,
+          caveat.variable,
         )}
       >
         {children}
