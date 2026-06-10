@@ -7,16 +7,19 @@ const ILLO_MAP = {
     src: '/images/illo-handshake.png',
     width: 268,
     height: 268,
+    className: 'w-[clamp(188px,23.5vw,252px)]',
   },
   cup: {
     src: '/images/illo-cup.png',
     width: 268,
     height: 268,
+    className: 'w-[clamp(184px,23vw,248px)]',
   },
   teapot: {
     src: '/images/illo-teapot.png',
     width: 268,
     height: 268,
+    className: 'w-[clamp(200px,25vw,268px)]',
   },
 } as const
 
@@ -35,7 +38,7 @@ export function BrushCircle({ illo, className }: BrushCircleProps) {
       aria-hidden="true"
       className={cn(
         'animate-bc-float motion-reduce:animate-none',
-        'w-[clamp(184px,18vw,268px)]',
+        asset.className,
         className,
       )}
     >

@@ -10,8 +10,12 @@ export type StampProps = {
 }
 
 export function Stamp({ top, bottom, id = 'stamp', className }: StampProps) {
-  const tArcId = `${id}-arcT`
-  const bArcId = `${id}-arcB`
+  const stampId = [id, top, bottom]
+    .join('-')
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+  const tArcId = `${stampId}-arcT`
+  const bArcId = `${stampId}-arcB`
   const R = 64
 
   return (
@@ -50,20 +54,12 @@ export function Stamp({ top, bottom, id = 'stamp', className }: StampProps) {
             fill="none"
           />
         </defs>
-        <text
-          textAnchor="middle"
-          className="fill-paper"
-          style={{ fontSize: 26 }}
-        >
+        <text textAnchor="middle" className="fill-paper text-[26px]">
           <textPath href={`#${tArcId}`} startOffset="50%">
             {top}
           </textPath>
         </text>
-        <text
-          textAnchor="middle"
-          className="fill-paper"
-          style={{ fontSize: 32 }}
-        >
+        <text textAnchor="middle" className="fill-paper text-[32px]">
           <textPath href={`#${bArcId}`} startOffset="50%">
             {bottom}
           </textPath>
