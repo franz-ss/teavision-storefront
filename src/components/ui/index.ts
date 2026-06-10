@@ -1,6 +1,7 @@
 export * from './accordion'
 export * from './article-card'
 export * from './badge'
+export * from './eyebrow'
 export * from './button'
 export * from './card'
 export * from './checkbox'
