@@ -23,17 +23,17 @@ export function FooterNewsletterForm({ action }: FooterNewsletterFormProps) {
   const [state, formAction, isPending] = useActionState(action, INITIAL_STATE)
 
   const messageId = state.success
-    ? 'footer-newsletter-success'
-    : 'footer-newsletter-error'
+    ? 'newsletter-success'
+    : 'newsletter-error'
   const hasMessage = state.success || Boolean(state.error)
 
   return (
     <form action={formAction} aria-busy={isPending} className="mt-5">
-      <label className="sr-only" htmlFor="footer-newsletter-email">
+      <label className="sr-only" htmlFor="newsletter-email">
         Email
       </label>
       <input
-        id="footer-newsletter-email"
+        id="newsletter-email"
         name="email"
         type="email"
         inputMode="email"
@@ -58,9 +58,9 @@ export function FooterNewsletterForm({ action }: FooterNewsletterFormProps) {
         {isPending ? 'Sending…' : 'Subscribe'}
       </Button>
       <div className="sr-only" aria-hidden="true">
-        <label htmlFor="footer-newsletter-website">Website</label>
+        <label htmlFor="newsletter-website">Website</label>
         <input
-          id="footer-newsletter-website"
+          id="newsletter-website"
           name="website"
           type="text"
           tabIndex={-1}

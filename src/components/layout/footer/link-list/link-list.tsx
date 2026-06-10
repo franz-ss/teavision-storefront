@@ -1,4 +1,4 @@
-import { FooterTextLink } from '../text-link'
+import { FooterTextLink } from '../link'
 import type { FooterColumn } from '../types'
 
 export function FooterLinkList({ title, links }: FooterColumn) {

@@ -127,8 +127,8 @@ export function HomepageContactForm({ action }: HomepageContactFormProps) {
           className={cn(
             'type-body-sm rounded-md border p-3',
             status === 'success'
-              ? 'border-success-border bg-success-bg text-success-text'
-              : 'border-danger-border bg-danger-bg text-danger-text',
+              ? 'border-brand bg-brand-tint text-brand'
+              : 'border-danger bg-danger-tint text-danger',
           )}
         >
           {status === 'success'

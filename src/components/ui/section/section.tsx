@@ -11,7 +11,6 @@ const sectionVariants = cva('', {
       surface: 'bg-paper text-ink',
       sunken: 'bg-paper-2 text-ink',
       brand: 'bg-brand-deep text-paper',
-      brandStrong: 'bg-brand-deep text-paper',
       inverse: 'bg-ink text-paper',
       transparent: '',
     },

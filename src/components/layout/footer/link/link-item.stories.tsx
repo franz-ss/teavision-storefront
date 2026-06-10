@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
-import { FooterTextLink } from './text-link'
+import { FooterTextLink } from './link-item'
 
 const meta: Meta<typeof FooterTextLink> = {
   title: 'Layout/Footer/Text Link',

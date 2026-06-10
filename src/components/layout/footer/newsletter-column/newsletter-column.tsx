@@ -4,7 +4,7 @@ import {
   FooterNewsletterForm,
   type FooterNewsletterAction,
 } from '../newsletter-form'
-import { FooterTextLink } from '../text-link'
+import { FooterTextLink } from '../link'
 
 export function NewsletterColumn({
   action,

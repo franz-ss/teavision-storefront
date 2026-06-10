@@ -140,7 +140,7 @@ export function ProductPurchaseForm({
       {/* Stacked layout (PDP): label above select */}
       {!isInlineLayout && hasMultipleVariants && (
         <label className="grid gap-2">
-          <span className="type-caption text-muted">Pack size</span>
+          <span className="type-caption text-ink-soft">Pack size</span>
           <Select
             name="variantId"
             value={selectedVariantId}
@@ -165,7 +165,7 @@ export function ProductPurchaseForm({
         {/* Inline layout: controls align to the bottom of the product image. */}
         {isInlineLayout && hasMultipleVariants && (
           <label className="col-span-2 grid min-w-0 gap-1 sm:col-span-1">
-            <span className="type-caption text-muted font-semibold uppercase">
+            <span className="type-caption text-ink-soft font-semibold uppercase">
               Size
             </span>
             <Select
@@ -185,7 +185,7 @@ export function ProductPurchaseForm({
         {!hideSubmit && showQuantity && (
           <div className={cn('grid gap-1', isInlineLayout && 'w-[7.5rem]')}>
             {isInlineLayout && (
-              <span className="type-caption text-muted font-semibold uppercase">
+              <span className="type-caption text-ink-soft font-semibold uppercase">
                 Product Qty
               </span>
             )}

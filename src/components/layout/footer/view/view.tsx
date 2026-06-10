@@ -1,5 +1,5 @@
 import { FOOTER_COLUMNS, PAYMENT_METHODS } from '../data'
-import { FooterTextLink } from '../text-link'
+import { FooterTextLink } from '../link'
 import { FooterLinkList } from '../link-list'
 import type { FooterNewsletterAction } from '../newsletter-form'
 import { NewsletterColumn } from '../newsletter-column'
