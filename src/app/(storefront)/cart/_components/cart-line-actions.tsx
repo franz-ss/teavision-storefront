@@ -1,6 +1,12 @@
 'use client'
 
-import { useActionState, useEffect, useOptimistic, useTransition } from 'react'
+import {
+  useActionState,
+  useEffect,
+  useOptimistic,
+  useState,
+  useTransition,
+} from 'react'
 import { Minus, Plus } from 'lucide-react'
 
 import { Button, IconButton } from '@/components/ui'
@@ -38,6 +44,10 @@ export function CartLineActions({
 
   const [isUpdatePending, startUpdateTransition] = useTransition()
 
+  const [stepperState, setStepperState] = useState<CartLineFormState>(
+    INITIAL_CART_LINE_FORM_STATE,
+  )
+
   const [optimisticQuantity, setOptimisticQuantity] = useOptimistic(
     quantity,
     (_current: number, next: number) => next,
@@ -73,11 +83,16 @@ export function CartLineActions({
   function handleStepperClick(newQuantity: number) {
     startUpdateTransition(async () => {
       setOptimisticQuantity(newQuantity)
+      setStepperState(INITIAL_CART_LINE_FORM_STATE)
       const data = new FormData()
       data.append('intent', 'update')
       data.append('lineId', lineId)
       data.append('quantity', String(newQuantity))
-      await action(INITIAL_CART_LINE_FORM_STATE, data)
+      const result = await action(INITIAL_CART_LINE_FORM_STATE, data)
+      setStepperState(result)
+      if (result.cartChanged) {
+        window.dispatchEvent(new Event(CART_CHANGED_EVENT))
+      }
     })
   }
 
@@ -132,9 +147,9 @@ export function CartLineActions({
         </Button>
       </form>
 
-      {state.message ? (
+      {(stepperState.message ?? state.message) ? (
         <p className="type-caption text-danger" role="alert">
-          {state.message}
+          {stepperState.message ?? state.message}
         </p>
       ) : null}
     </>

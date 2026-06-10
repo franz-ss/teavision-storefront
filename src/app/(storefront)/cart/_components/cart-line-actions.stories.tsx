@@ -194,17 +194,18 @@ export const UpdatePending: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await userEvent.click(
-      canvas.getByRole('button', {
-        name: 'Increase quantity of Tea Masters Sencha',
-      }),
-    )
+    const increaseButton = canvas.getByRole('button', {
+      name: 'Increase quantity of Tea Masters Sencha',
+    })
+    await userEvent.click(increaseButton)
 
-    await expect(
-      await canvas.findByRole('button', {
-        name: 'Increase quantity of Tea Masters Sencha',
-      }),
-    ).toBeDisabled()
+    // Optimistic update: the displayed quantity advances immediately and the
+    // stepper stays enabled (marked busy) while the server round-trip is pending.
+    await expect(await canvas.findByRole('status')).toHaveTextContent('3')
+    await waitFor(() => {
+      expect(increaseButton).toBeEnabled()
+      expect(increaseButton).toHaveAttribute('aria-busy', 'true')
+    })
   },
 }
 

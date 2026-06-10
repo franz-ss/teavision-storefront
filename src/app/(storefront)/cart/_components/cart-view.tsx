@@ -390,7 +390,7 @@ export function CartView({ cart }: CartViewProps) {
                     <h3 className="font-display text-[1.05rem] w-full leading-snug wrap-break-word">
                       <Link
                         href={productHref}
-                        className="focus-visible:ring-ring hover:text-brand inline-block rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                        className="focus-visible:ring-ring hover:text-brand inline-block max-w-full rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                       >
                         {product.title}
                       </Link>
@@ -444,7 +444,7 @@ export function CartView({ cart }: CartViewProps) {
                       </div>
                     ) : null}
                     {/* Mobile: stepper + total inline */}
-                    <div className="mt-3 flex items-center justify-between gap-3 xl:hidden">
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3 xl:hidden">
                       <CartLineActions
                         lineId={line.id}
                         maximumQuantity={getVariantMaximumQuantity(

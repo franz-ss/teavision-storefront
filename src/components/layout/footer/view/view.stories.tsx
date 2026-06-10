@@ -49,13 +49,16 @@ async function expectFooterParity(canvasElement: HTMLElement) {
     ...MAIN_MENU_LINKS,
     ...FOOTER_LINKS,
     ...CONTACT_LINKS,
-    { href: '/', label: '© 2026 Teavision · 100% Australian owned & operated' },
-    { href: '/search', label: 'Popular Searches' },
+    // Copyright is plain text (not a link) per the redesign bottom bar.
+    { href: '#popular-searches', label: 'Popular Searches' },
   ]
-  const links = Array.from(footer.querySelectorAll('a')).map((link) => ({
-    href: link.getAttribute('href'),
-    label: link.textContent?.trim() ?? '',
-  }))
+  // Exclude the sr-only Popular Searches SEO block — parity covers visible links only.
+  const links = Array.from(footer.querySelectorAll('a'))
+    .filter((link) => !link.closest('#popular-searches'))
+    .map((link) => ({
+      href: link.getAttribute('href'),
+      label: link.textContent?.trim() ?? '',
+    }))
 
   if (links.length !== expectedLinks.length) {
     throw new Error(
