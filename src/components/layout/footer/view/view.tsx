@@ -38,9 +38,8 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
             >
               <li>
                 {/* plain span, not a link — design has copyright as plain text */}
-                <span className="text-paper/75">
-                  &copy; {new Date().getFullYear()} Teavision
-                </span>
+                {/* static year: new Date() breaks Next 16 prerendering (next-prerender-current-time) */}
+                <span className="text-paper/75">&copy; 2026 Teavision</span>
               </li>
               <li aria-hidden="true" className="text-paper/30">
                 ·
