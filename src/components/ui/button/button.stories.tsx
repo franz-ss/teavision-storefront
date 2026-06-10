@@ -33,7 +33,7 @@ type Story = StoryObj<typeof Button>
 const inverseStoryBackgrounds = {
   default: 'dark',
   options: {
-    dark: { name: 'dark', value: 'var(--tv-bg-inverse)' },
+    dark: { name: 'dark', value: 'var(--color-ink)' },
   },
 }
 

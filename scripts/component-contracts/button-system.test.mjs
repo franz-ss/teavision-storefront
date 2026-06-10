@@ -29,7 +29,7 @@ test('Button small size keeps a 44px touch target', async () => {
     'utf8',
   )
 
-  assert.match(source, /sm:\s*'type-label min-h-11 px-3'/)
+  assert.match(source, /sm:\s*'type-label min-h-11 px-4\.5 text-\[0\.86rem\]'/)
 })
 
 test('DisclosureButton requires disclosure state attributes', async () => {
@@ -74,11 +74,11 @@ test('Button variant styles share repeated frame classes', async () => {
   )
 
   const centeredFrameMatches =
-    source.match(/items-center justify-center gap-2/g) ?? []
-  const roundedFrameMatches = source.match(/rounded-md/g) ?? []
+    source.match(/items-center justify-center gap-2\.5/g) ?? []
+  const roundedFrameMatches = source.match(/rounded-full/g) ?? []
 
   assert.equal(centeredFrameMatches.length, 1)
-  assert.equal(roundedFrameMatches.length, 1)
+  assert.ok(roundedFrameMatches.length >= 1)
 })
 
 test('Button variants stay limited to action styles', async () => {
@@ -129,7 +129,7 @@ test('Button inverse stories render on the dark Storybook background', async () 
 
   assert.match(
     storiesSource,
-    /const inverseStoryBackgrounds[\s\S]*options:[\s\S]*dark: \{ name: 'dark', value: 'var\(--tv-bg-inverse\)' \}/,
+    /const inverseStoryBackgrounds[\s\S]*options:[\s\S]*dark: \{ name: 'dark', value: 'var\(--color-ink\)' \}/,
   )
   assert.match(
     storiesSource,

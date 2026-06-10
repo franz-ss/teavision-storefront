@@ -7,33 +7,34 @@ import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
   [
-    'items-center justify-center gap-2',
-    'inline-flex cursor-pointer transition-colors',
+    'items-center justify-center gap-2.5',
+    'inline-flex cursor-pointer',
+    'transition-[background-color,color,box-shadow,transform]',
     'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
     'disabled:cursor-not-allowed disabled:opacity-40',
-    'rounded-md',
+    'rounded-full',
   ],
   {
     variants: {
       variant: {
         brand:
-          'bg-brand text-on-brand hover:bg-brand-strong active:bg-brand-strong',
+          'bg-brand text-paper hover:bg-brand-deep active:bg-brand-deep hover:-translate-y-0.5 hover:shadow-2 motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-0',
         primary:
-          'bg-action-primary text-action-primary-text hover:bg-action-primary-hover active:bg-action-primary-active',
+          'bg-ink text-paper hover:bg-ink/90 active:bg-ink/90 hover:-translate-y-0.5 hover:shadow-2 motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-0',
         secondary:
-          'border border-action-secondary-border bg-action-secondary text-action-secondary-text hover:bg-action-secondary-hover',
+          'border-[1.5px] border-hairline bg-transparent text-ink hover:border-ink hover:bg-ink hover:text-paper',
         inverse:
-          'bg-canvas text-strong hover:bg-surface-sunken active:bg-surface-sunken',
+          'bg-paper text-ink hover:bg-card hover:-translate-y-0.5 hover:shadow-2 motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-0',
         inverseSecondary:
-          'border border-on-brand/70 bg-transparent text-on-brand hover:border-on-brand hover:bg-canvas hover:text-strong active:bg-surface-sunken',
+          'border-[1.5px] border-paper/35 bg-transparent text-paper hover:bg-paper hover:text-ink',
         ghost:
-          'text-action-tertiary hover:bg-surface-sunken hover:text-action-tertiary-hover',
+          'text-brand hover:bg-brand-tint hover:text-brand-deep',
       },
       size: {
-        sm: 'type-label min-h-11 px-3',
-        md: 'type-label min-h-11 px-4',
-        lg: 'type-label min-h-12 px-5',
-        cta: 'type-label min-h-12 px-8',
+        sm: 'type-label min-h-11 px-4.5 text-[0.86rem]',
+        md: 'type-label min-h-11 px-6.5',
+        lg: 'type-label min-h-12 px-8.5',
+        cta: 'type-label min-h-12 px-8.5',
       },
     },
     defaultVariants: {
