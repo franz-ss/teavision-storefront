@@ -33,23 +33,16 @@ export function SearchSuggestions({
   return (
     <div
       id={SUGGESTIONS_PANEL_ID}
-      className="border-subtle bg-surface absolute top-[calc(100%+0.5rem)] right-0 left-0 z-50 max-h-[min(36rem,calc(100vh-10rem))] overflow-y-auto rounded-md border shadow-xl lg:right-auto lg:left-1/2 lg:w-[min(calc(100vw-2rem),72rem)] lg:-translate-x-1/2"
+      className="bg-card border border-hairline absolute top-[calc(100%+0.75rem)] right-0 left-0 z-50 max-h-[min(36rem,calc(100vh-10rem))] overflow-y-auto rounded-lg shadow-2"
     >
-      <div
-        className="border-subtle flex justify-end border-b px-3 py-1"
-        aria-hidden="true"
-      >
-        <span className="type-caption text-muted uppercase">Products</span>
-      </div>
-
       {status === 'loading' && (
         <div
-          className="text-muted flex items-center gap-2 px-4 py-5"
+          className="text-ink-faint flex items-center gap-2 px-4 py-5"
           role="status"
           aria-live="polite"
         >
           <LoaderCircle
-            className="size-4 animate-spin motion-reduce:animate-none"
+            className="size-4 animate-spin motion-reduce:animate-none text-brand"
             aria-hidden="true"
           />
           <span className="type-body-sm">Searching products…</span>
@@ -58,7 +51,7 @@ export function SearchSuggestions({
 
       {status === 'empty' && (
         <p
-          className="type-body-sm text-muted px-4 py-5"
+          className="type-body-sm text-ink-faint px-4 py-5"
           role="status"
           aria-live="polite"
         >
@@ -68,7 +61,7 @@ export function SearchSuggestions({
 
       {status === 'error' && (
         <p
-          className="type-body-sm text-muted px-4 py-5"
+          className="type-body-sm text-ink-faint px-4 py-5"
           role="status"
           aria-live="polite"
         >
@@ -98,11 +91,11 @@ export function SearchSuggestions({
                   onMouseDown={onSuggestionMouseDown}
                   onMouseEnter={() => onSuggestionMouseEnter?.(index)}
                   className={cn(
-                    'border-subtle hover:bg-surface-sunken focus-visible:ring-ring grid grid-cols-[4rem_minmax(0,1fr)] gap-3 border-b px-3 py-3 transition-colors last:border-b-0 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
-                    isActive && 'bg-surface-sunken',
+                    'border-hairline-2 hover:bg-brand-tint focus-visible:ring-ring grid grid-cols-[4rem_minmax(0,1fr)] gap-3 border-b px-3 py-3 transition-colors last:border-b-0 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
+                    isActive && 'bg-brand-tint',
                   )}
                 >
-                  <span className="bg-surface-sunken relative size-16 overflow-hidden rounded-sm">
+                  <span className="bg-paper-2 relative size-16 overflow-hidden rounded-sm">
                     {product.featuredImage &&
                     product.featuredImage.width &&
                     product.featuredImage.height ? (
@@ -121,7 +114,7 @@ export function SearchSuggestions({
 
                   <span className="min-w-0">
                     <span className="flex items-start justify-between gap-3">
-                      <span className="type-label text-link line-clamp-1">
+                      <span className="type-label text-brand line-clamp-1">
                         {product.title}
                       </span>
                       {product.availableForSale !== undefined && (
@@ -129,8 +122,8 @@ export function SearchSuggestions({
                           className={cn(
                             'type-caption shrink-0 rounded-full border px-2 py-0.5',
                             product.availableForSale
-                              ? 'border-success-border bg-success-bg text-success-text'
-                              : 'border-danger-border bg-danger-bg text-danger-text',
+                              ? 'border-brand/30 bg-brand-tint text-brand'
+                              : 'border-danger/30 bg-danger-tint text-danger',
                           )}
                         >
                           {product.availableForSale
@@ -141,17 +134,17 @@ export function SearchSuggestions({
                     </span>
 
                     {product.description && (
-                      <span className="type-body-sm text-muted mt-1 line-clamp-2">
+                      <span className="type-body-sm text-ink-soft mt-1 line-clamp-2">
                         {product.description}
                       </span>
                     )}
 
                     <span className="type-body-sm mt-1 flex flex-wrap items-baseline gap-1.5">
-                      <span className="text-muted">From</span>
+                      <span className="text-ink-faint">From</span>
                       <Price
                         price={product.priceRange.minVariantPrice}
                         size="sm"
-                        className="text-strong"
+                        className="text-ink"
                       />
                     </span>
                   </span>

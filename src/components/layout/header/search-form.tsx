@@ -12,6 +12,7 @@ export type { SearchSuggestionsStatus } from './search-types'
 export function SearchForm({
   activeSuggestionIndex = -1,
   className,
+  inputClassName,
   defaultQuery = '',
   isSuggestionsOpen = false,
   onBlur,
@@ -57,7 +58,10 @@ export function SearchForm({
         aria-expanded={isSuggestionsOpen}
         aria-activedescendant={activeDescendant}
         autoComplete="off"
-        className="border-default bg-canvas min-h-12 rounded-lg py-0 pr-12 pl-5"
+        className={cn(
+          'font-display text-[clamp(1.4rem,3vw,2.2rem)] bg-transparent border-0 rounded-none shadow-none pr-12 pl-0 placeholder:text-ink-faint min-h-0 py-2',
+          inputClassName,
+        )}
         data-search-input
         defaultValue={value === undefined ? defaultQuery : undefined}
         enterKeyHint="search"
@@ -65,7 +69,7 @@ export function SearchForm({
         name="q"
         onChange={onInputChange}
         onFocus={onInputFocus}
-        placeholder="Find products and articles"
+        placeholder="Search 1,000+ teas, herbs & spices…"
         type="search"
         value={value}
       />
@@ -73,10 +77,10 @@ export function SearchForm({
         type="submit"
         variant="ghost"
         size="sm"
-        className="absolute top-1/2 right-1 size-10 -translate-y-1/2"
+        className="absolute top-1/2 right-0 size-10 -translate-y-1/2"
         aria-label="Submit search"
       >
-        <Search className="size-4" aria-hidden="true" strokeWidth={1.8} />
+        <Search className="size-5" aria-hidden="true" strokeWidth={1.8} />
       </IconButton>
       {shouldShowSuggestions && (
         <SearchSuggestions

@@ -18,6 +18,7 @@ export type SearchSuggestionsStatus =
 export type SearchFormProps = {
   activeSuggestionIndex?: number
   className?: string
+  inputClassName?: string
   defaultQuery?: string
   isSuggestionsOpen?: boolean
   onBlur?: FocusEventHandler<HTMLFormElement>

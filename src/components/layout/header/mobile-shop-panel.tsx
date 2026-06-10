@@ -17,10 +17,10 @@ export function MobileShopPanel({
   return (
     <div
       id="mobile-shop-mega"
-      className="border-subtle bg-surface-raised border-t"
+      className="bg-paper-2 border-t border-hairline"
       hidden={!open}
     >
-      <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 sm:px-6 md:grid-cols-[16rem_minmax(0,1fr)]">
+      <div className="mx-auto grid max-w-wide gap-4 px-gutter py-4 md:grid-cols-[16rem_minmax(0,1fr)]">
         <div className="overflow-x-auto md:overflow-visible">
           <div className="flex min-w-max gap-2 md:min-w-0 md:flex-col">
             {SHOP_SECTIONS.map((section) => {
@@ -50,15 +50,15 @@ export function MobileShopPanel({
 
         <div id={`mobile-shop-panel-${activeShop.key}`} className="space-y-4">
           <div>
-            <p className="type-label text-strong">{activeShop.name}</p>
+            <p className="type-label text-ink">{activeShop.name}</p>
             {activeShop.description && (
-              <p className="type-caption text-muted mt-1 max-w-prose">
+              <p className="type-caption text-ink-soft mt-1 max-w-prose">
                 {activeShop.description}
               </p>
             )}
           </div>
 
-          <ul className="grid gap-1 sm:grid-cols-2" role="list">
+          <ul className="grid gap-0.5 sm:grid-cols-2" role="list">
             {activeShop.links.map((link) => (
               <li key={`mobile-${activeShop.key}-${link.href}-${link.label}`}>
                 <Link
@@ -74,7 +74,7 @@ export function MobileShopPanel({
 
           <Link
             href={activeShop.ctaHref}
-            className="focus-visible:ring-ring type-label text-brand hover:bg-brand-subtle inline-flex min-h-11 items-center gap-2 rounded-md px-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="focus-visible:ring-ring type-label text-brand hover:bg-brand-tint inline-flex min-h-11 items-center gap-2 rounded-full px-3.5 py-2.5 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             onClick={onClose}
           >
             View all {activeShop.name}

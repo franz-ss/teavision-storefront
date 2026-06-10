@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useEffect, useRef, Suspense } from 'react'
 
 import { Eyebrow, IconButton } from '@/components/ui'
@@ -35,7 +35,6 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
       '[data-search-input]',
     )
     if (inputEl) {
-      // slight delay so the panel has rendered
       const id = window.setTimeout(() => inputEl.focus(), 30)
       return () => window.clearTimeout(id)
     }
@@ -56,6 +55,13 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
 
   return (
     <>
+      {/* Backdrop scrim — behind panel but above page content */}
+      <div
+        className="fixed inset-0 z-65 bg-ink/35 backdrop-blur-[2px]"
+        aria-hidden="true"
+        onClick={onClose}
+      />
+
       {/* Panel */}
       <div
         ref={panelRef}
@@ -64,9 +70,9 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
         aria-modal="true"
         aria-label="Site search"
       >
-        <div className="max-w-wide mx-auto px-gutter py-6">
-          {/* Close button */}
-          <div className="flex justify-end mb-4">
+        <div className="max-w-wide mx-auto px-gutter pt-5 pb-7">
+          {/* Close button row */}
+          <div className="flex justify-end mb-3">
             <IconButton
               aria-label="Close search"
               variant="ghost"
@@ -78,22 +84,15 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             </IconButton>
           </div>
 
-          {/* Search input */}
-          <div className="flex items-center gap-3 border-b-2 border-ink pb-4 mb-6">
-            <Search
-              className="size-6 text-ink-faint shrink-0"
-              aria-hidden="true"
-              strokeWidth={1.5}
-            />
-            <div className="flex-1">
-              <Suspense fallback={<SearchForm />}>
-                <SearchWithAutocomplete />
-              </Suspense>
-            </div>
+          {/* Search input row — serif display + bottom 2px border */}
+          <div className="border-b-2 border-ink mb-6">
+            <Suspense fallback={<SearchForm />}>
+              <SearchWithAutocomplete />
+            </Suspense>
           </div>
 
           {/* Popular suggestions */}
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-3">
             <Eyebrow tone="muted" rule={false}>
               Popular
             </Eyebrow>
@@ -103,7 +102,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                   key={suggestion}
                   href={`/search?q=${encodeURIComponent(suggestion)}`}
                   onClick={onClose}
-                  className="rounded-full border border-hairline bg-card px-3.5 py-2 type-label text-ink hover:bg-brand hover:text-paper transition-colors"
+                  className="focus-visible:ring-ring rounded-full border border-hairline bg-card px-3.5 py-2 type-label text-ink hover:bg-brand hover:text-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 >
                   {suggestion}
                 </a>
@@ -112,13 +111,6 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           </div>
         </div>
       </div>
-
-      {/* Backdrop scrim */}
-      <div
-        className="fixed inset-0 z-65 bg-ink/35 backdrop-blur-[2px]"
-        aria-hidden="true"
-        onClick={onClose}
-      />
     </>
   )
 }
