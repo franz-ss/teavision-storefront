@@ -17,7 +17,6 @@ const meta: Meta<typeof Section.Root> = {
         'surface',
         'sunken',
         'brand',
-        'brandStrong',
         'inverse',
         'transparent',
       ],
@@ -45,6 +44,20 @@ export const Default: Story = {
   ),
 }
 
+export const WithEyebrow: Story = {
+  render: () => (
+    <Section.Root tone="surface" spacing="compact">
+      <Section.Container>
+        <Section.Intro
+          eyebrow="Premium Wholesale"
+          title="Section.Intro with Eyebrow"
+          copy="The eyebrow appears above the heading using the Eyebrow signature component."
+        />
+      </Section.Container>
+    </Section.Root>
+  ),
+}
+
 export const CompactContainer: Story = {
   render: () => (
     <Section.Root tone="surface">
@@ -53,6 +66,20 @@ export const CompactContainer: Story = {
           align="left"
           title="Section.Container"
           copy="Use the compact container when the section should keep to prose width."
+        />
+      </Section.Container>
+    </Section.Root>
+  ),
+}
+
+export const BaseContainer: Story = {
+  render: () => (
+    <Section.Root tone="sunken" spacing="compact">
+      <Section.Container variant="base">
+        <Section.Intro
+          align="left"
+          title="Section.Container (base)"
+          copy="1280px base container for FAQ and editorial content."
         />
       </Section.Container>
     </Section.Root>
@@ -88,11 +115,6 @@ export const Tones: Story = {
       <Section.Root spacing="compact" tone="brand">
         <Section.Container>
           <Section.Intro title="Brand" />
-        </Section.Container>
-      </Section.Root>
-      <Section.Root spacing="compact" tone="brandStrong">
-        <Section.Container>
-          <Section.Intro title="Brand Strong" />
         </Section.Container>
       </Section.Root>
       <Section.Root spacing="compact" tone="inverse">

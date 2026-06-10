@@ -3,19 +3,21 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
 
+import { Eyebrow } from '../eyebrow'
+
 const sectionVariants = cva('', {
   variants: {
     tone: {
-      surface: 'bg-surface text-default',
-      sunken: 'bg-surface-sunken text-default',
-      brand: 'bg-brand text-on-brand',
-      brandStrong: 'bg-brand-strong text-on-brand',
-      inverse: 'bg-inverse text-on-brand',
+      surface: 'bg-paper text-ink',
+      sunken: 'bg-paper-2 text-ink',
+      brand: 'bg-brand-deep text-paper',
+      brandStrong: 'bg-brand-deep text-paper',
+      inverse: 'bg-ink text-paper',
       transparent: '',
     },
     spacing: {
-      default: 'py-10 md:py-24',
-      compact: 'py-4 md:py-8',
+      default: 'py-section',
+      compact: 'py-8 md:py-12',
       none: '',
     },
   },
@@ -25,11 +27,12 @@ const sectionVariants = cva('', {
   },
 })
 
-const containerVariants = cva('mx-auto px-4 md:px-6 lg:px-8', {
+const containerVariants = cva('mx-auto px-gutter', {
   variants: {
     variant: {
       default: 'max-w-wide',
       compact: 'max-w-prose',
+      base: 'max-w-base',
     },
   },
   defaultVariants: {
@@ -83,6 +86,7 @@ export interface SectionIntroProps extends Omit<
 > {
   variant?: 'default' | 'compact'
   align?: 'center' | 'left'
+  eyebrow?: string
   copy?: React.ReactNode
   title: React.ReactNode
 }
@@ -90,6 +94,7 @@ export interface SectionIntroProps extends Omit<
 function Intro({
   align = 'center',
   className,
+  eyebrow,
   copy,
   title,
   ...props
@@ -103,8 +108,15 @@ function Intro({
       )}
       {...props}
     >
-      <h2 className="type-heading-02 text-current">{title}</h2>
-      {copy ? <p className="type-body mt-4 text-current/70">{copy}</p> : null}
+      {eyebrow ? (
+        <Eyebrow className={cn('mb-4', align === 'center' && 'justify-center')}>
+          {eyebrow}
+        </Eyebrow>
+      ) : null}
+      <h2 className="type-heading-01 text-current">{title}</h2>
+      {copy ? (
+        <p className="type-lede mt-4 text-ink-soft">{copy}</p>
+      ) : null}
     </div>
   )
 }

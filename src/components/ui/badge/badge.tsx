@@ -3,7 +3,14 @@ import { cva } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
 
-export type BadgeVariant = 'outOfStock' | 'sale' | 'new' | 'certification'
+export type BadgeVariant =
+  | 'outOfStock'
+  | 'sale'
+  | 'new'
+  | 'certification'
+  | 'organic'
+  | 'gold'
+  | 'onDark'
 
 export type BadgeProps = Omit<ComponentProps<'span'>, 'children'> & {
   variant: BadgeVariant
@@ -11,14 +18,18 @@ export type BadgeProps = Omit<ComponentProps<'span'>, 'children'> & {
 }
 
 const badgeVariants = cva(
-  'type-eyebrow inline-block rounded-sm px-1.5 py-0.5',
+  'inline-flex items-center gap-2 rounded-full border border-hairline bg-card px-3 py-1.5 type-mono-meta text-ink-soft',
   {
     variants: {
       variant: {
-        outOfStock: 'border border-danger-border bg-danger-bg text-danger-text',
-        sale: 'border border-accent/30 bg-accent-subtle text-accent',
-        new: 'border border-default bg-surface-sunken text-muted',
-        certification: 'border border-default bg-surface-sunken text-muted',
+        outOfStock: 'border-danger/30 bg-danger-tint text-danger',
+        sale: 'border-gold-deep/40 bg-gold-tint text-gold-deep',
+        new: 'border-hairline bg-paper-2 text-ink-soft',
+        certification: 'border-hairline bg-paper-2 text-ink-soft',
+        organic:
+          'border-brand/30 bg-brand-tint text-brand before:size-1.5 before:rounded-full before:bg-current',
+        gold: 'border-gold-deep/40 bg-gold-tint text-gold-deep',
+        onDark: 'border-paper/30 bg-paper/15 text-paper',
       } satisfies Record<BadgeVariant, string>,
     },
   },
