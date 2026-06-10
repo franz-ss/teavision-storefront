@@ -104,7 +104,7 @@ export const Default: Story = {
 }
 
 export const Mobile: StoryObj<typeof MobileMegaNav> = {
-  render: () => <MobileMegaNav />,
+  render: () => <MobileMegaNav open onClose={() => {}} />,
   parameters: {
     viewport: {
       defaultViewport: 'mobile1',

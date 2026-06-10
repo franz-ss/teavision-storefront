@@ -15,4 +15,8 @@ export default meta
 
 type Story = StoryObj<typeof Header>
 
+/**
+ * Full header: ink utility bar (EST. MELBOURNE 2014 ticker) + translucent
+ * sticky main bar with pill nav, gold cart badge, and wholesale CTA.
+ */
 export const Default: Story = {}

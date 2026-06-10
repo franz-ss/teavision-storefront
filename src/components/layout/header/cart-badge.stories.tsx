@@ -19,9 +19,19 @@ export default meta
 
 type Story = StoryObj<typeof CartBadge>
 
+/**
+ * Gold round badge — shown when the cart has items.
+ * Uses `bg-gold text-ink font-mono` for the new design system.
+ */
 export const WithItems: Story = {
   args: {
     count: 3,
+  },
+}
+
+export const HighCount: Story = {
+  args: {
+    count: 12,
   },
 }
 

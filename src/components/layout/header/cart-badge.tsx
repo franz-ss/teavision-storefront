@@ -7,7 +7,7 @@ export function CartBadge({ count }: { count: number }) {
     <span
       aria-live="polite"
       aria-atomic="true"
-      className="type-caption bg-action-primary text-action-primary-text absolute top-1 right-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1"
+      className="absolute top-1 right-1 inline-flex min-w-4.5 h-4.5 items-center justify-center rounded-full bg-gold text-ink font-mono text-[10px] font-bold px-1"
     >
       {count}
       <span className="sr-only"> {itemLabel} in cart</span>
