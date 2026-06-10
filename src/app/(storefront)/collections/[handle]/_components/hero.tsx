@@ -23,52 +23,16 @@ export function Hero({
   bannerImage,
   storyDisclosure,
 }: HeroProps) {
-  // Banner mode: collection has an art image embedded in descriptionHtml.
-  // Render it full-opacity with a visible title and StoryDisclosure below.
+  // Banner mode (owner option C): banner art first, mono breadcrumbs below it,
+  // no visible title — the artwork carries it; sr-only h1 keeps a11y/SEO.
   if (bannerImage) {
     return (
       <>
-        <Section.Root tone="brand" spacing="none">
-          <Section.Container>
-            {/* Breadcrumb */}
-            <nav
-              aria-label="Breadcrumb"
-              className="type-mono-meta text-paper/60 flex flex-wrap items-center gap-2 py-6"
-            >
-              <Link
-                href="/"
-                className="focus-visible:ring-ring hover:text-paper/90 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                Home
-              </Link>
-              <span aria-hidden="true">/</span>
-              <Link
-                href="/collections/all"
-                className="focus-visible:ring-ring hover:text-paper/90 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                Collections
-              </Link>
-              <span aria-hidden="true">/</span>
-              <span aria-current="page" className="text-gold">
-                {collectionTitle}
-              </span>
-            </nav>
+        <h1 className="sr-only">{collectionTitle}</h1>
 
-            <h1
-              className={cn(
-                'font-display text-paper mb-4 text-balance',
-                'text-[clamp(2.4rem,5vw,4rem)] leading-[1.04]',
-              )}
-            >
-              {collectionTitle}
-            </h1>
-          </Section.Container>
-        </Section.Root>
-
-        {/* Full-opacity art banner — constrained to the content container, not full-bleed */}
         {bannerImage.width && bannerImage.height ? (
           <Section.Root tone="transparent" spacing="none">
-            <Section.Container>
+            <Section.Container className="pt-6">
               <div className="overflow-hidden">
                 <Image
                   src={getSizedShopifyImageUrl(bannerImage.url, 1440)}
@@ -83,6 +47,33 @@ export function Hero({
             </Section.Container>
           </Section.Root>
         ) : null}
+
+        <Section.Root tone="transparent" spacing="none">
+          <Section.Container>
+            <nav
+              aria-label="Breadcrumb"
+              className="type-mono-meta text-ink-faint flex flex-wrap items-center gap-2 pt-5.5"
+            >
+              <Link
+                href="/"
+                className="focus-visible:ring-ring hover:text-brand rounded focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+              >
+                Home
+              </Link>
+              <span aria-hidden="true">/</span>
+              <Link
+                href="/collections/all"
+                className="focus-visible:ring-ring hover:text-brand rounded focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+              >
+                Collections
+              </Link>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page" className="text-gold-deep">
+                {collectionTitle}
+              </span>
+            </nav>
+          </Section.Container>
+        </Section.Root>
 
         {storyDisclosure && (
           <Section.Root tone="transparent" spacing="compact">
