@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { ChevronDown, ChevronRight, Phone } from 'lucide-react'
+import { ChevronDown, ChevronRight, Phone, X } from 'lucide-react'
 import { useState } from 'react'
 
-import { Button, DisclosureButton } from '@/components/ui'
+import { Button, DisclosureButton, IconButton } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 import {
@@ -36,9 +36,23 @@ export function MobileMegaNav({ open, onClose }: MobileMegaNavProps) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 top-0 z-55 bg-paper overflow-y-auto lg:hidden">
+    // Overlay starts below the sticky header main bar (top-19 = 76px) so the
+    // burger/X button in the main bar remains visible and tappable above it.
+    <div className="fixed inset-x-0 bottom-0 top-19 z-55 overflow-y-auto bg-paper lg:hidden">
       {/* Body */}
       <div className="flex flex-col">
+        {/* Explicit close row at the top of the overlay for clarity */}
+        <div className="flex justify-end px-gutter py-3 border-b border-hairline">
+          <IconButton
+            aria-label="Close menu"
+            variant="ghost"
+            size="md"
+            onClick={closeAll}
+            className="hover:bg-brand-tint hover:text-brand"
+          >
+            <X className="size-4" aria-hidden="true" strokeWidth={1.8} />
+          </IconButton>
+        </div>
         {/* Shop accordion */}
         <div className="border-b border-hairline">
           <DisclosureButton

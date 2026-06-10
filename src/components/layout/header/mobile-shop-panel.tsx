@@ -1,8 +1,7 @@
 import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 import { ToggleButton } from '@/components/ui'
-import { cn } from '@/lib/utils'
 
 import { SHOP_SECTIONS } from './mega-nav-data'
 import { PANEL_LINK_CLASS } from './mega-nav-styles'
@@ -21,27 +20,20 @@ export function MobileShopPanel({
       hidden={!open}
     >
       <div className="mx-auto grid max-w-wide gap-4 px-gutter py-4 md:grid-cols-[16rem_minmax(0,1fr)]">
-        <div className="overflow-x-auto md:overflow-visible">
-          <div className="flex min-w-max gap-2 md:min-w-0 md:flex-col">
+        {/* Category selector — flex-wrap so chips wrap at 375px instead of horizontal-scrolling */}
+        <div>
+          <div className="flex flex-wrap gap-2 md:flex-col md:flex-nowrap">
             {SHOP_SECTIONS.map((section) => {
               const isActive = section.key === activeShop.key
 
               return (
                 <ToggleButton
                   key={section.key}
-                  variant="menuRow"
+                  variant="tabText"
                   pressed={isActive}
                   onClick={() => onActiveShopChange(section.key)}
                 >
                   {section.name}
-                  <ChevronRight
-                    className={cn(
-                      'hidden size-4 md:block',
-                      isActive && 'text-brand',
-                    )}
-                    aria-hidden="true"
-                    strokeWidth={1.8}
-                  />
                 </ToggleButton>
               )
             })}
@@ -58,7 +50,8 @@ export function MobileShopPanel({
             )}
           </div>
 
-          <ul className="grid gap-0.5 sm:grid-cols-2" role="list">
+          {/* Links — negative margin compensates for px-2.5 padding so text aligns with heading */}
+          <ul className="-mx-2.5 grid gap-0.5 sm:grid-cols-2" role="list">
             {activeShop.links.map((link) => (
               <li key={`mobile-${activeShop.key}-${link.href}-${link.label}`}>
                 <Link
@@ -72,14 +65,15 @@ export function MobileShopPanel({
             ))}
           </ul>
 
+          {/* View-all uses ArrowRight (distinct from ChevronRight drill-in indicators) */}
           <Link
             href={activeShop.ctaHref}
-            className="focus-visible:ring-ring type-label text-brand hover:bg-brand-tint inline-flex min-h-11 items-center gap-2 rounded-full px-3.5 py-2.5 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="focus-visible:ring-ring type-label text-brand hover:text-brand-deep inline-flex min-h-11 items-center gap-1.5 underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none rounded-sm"
             onClick={onClose}
           >
             View all {activeShop.name}
-            <ChevronRight
-              className="size-4"
+            <ArrowRight
+              className="size-3.5"
               aria-hidden="true"
               strokeWidth={1.8}
             />
