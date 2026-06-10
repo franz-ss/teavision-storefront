@@ -58,8 +58,10 @@ export function Header() {
           </div>
         </div>
 
-        {/* Main bar */}
-        <div className="h-19 bg-paper/80 backdrop-blur-md border-b border-hairline">
+        {/* Main bar — relative: mega panels anchor to its bottom via absolute top-full.
+            (backdrop-blur makes this div the containing block for fixed descendants,
+            so fixed+viewport-offset positioning inside it lands 38px low.) */}
+        <div className="relative h-19 bg-paper/80 backdrop-blur-md border-b border-hairline">
           <div className="max-w-wide mx-auto flex h-full items-center justify-between gap-4 px-gutter">
             {/* Logo */}
             <Link

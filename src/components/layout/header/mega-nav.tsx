@@ -80,8 +80,8 @@ export function MegaNav() {
     <>
       <nav ref={navRef} aria-label="Main">
         {/*
-          ul is h-full so each li can stretch to the full main-bar height, closing the
-          ~16px gap between the 44px trigger and the panel's fixed top-28.5 position.
+          ul is h-full so each li can stretch to the full main-bar height, keeping an
+          unbroken hover path from trigger to the panel anchored at the main bar's bottom.
         */}
         <ul className="flex h-full items-stretch gap-1" role="list">
           <li
@@ -163,10 +163,10 @@ export function MegaNav() {
         />
       </div>
 
-      {/* Page scrim */}
+      {/* Page scrim — anchored below the main bar (absolute against the relative main-bar div) */}
       {openMenu && (
         <div
-          className="fixed inset-0 top-28.5 z-40 bg-ink/35 backdrop-blur-[2px]"
+          className="absolute inset-x-0 top-full z-40 h-screen bg-ink/35 backdrop-blur-[2px]"
           aria-hidden="true"
           onClick={closeMenus}
         />

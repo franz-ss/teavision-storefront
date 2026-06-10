@@ -17,7 +17,7 @@ export function ShopMegaPanel({
   return (
     <div
       id="shop-mega"
-      className="fixed inset-x-0 top-28.5 z-50 bg-paper border-b border-hairline shadow-4"
+      className="absolute inset-x-0 top-full z-50 bg-paper border-b border-hairline shadow-4"
       hidden={!open}
     >
       <div className="max-w-wide mx-auto px-gutter py-10">
