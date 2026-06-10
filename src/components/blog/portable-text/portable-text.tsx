@@ -149,10 +149,10 @@ function PortableTextImageBlock({ value }: { value: unknown }) {
         width={resolvedImage.width}
         height={resolvedImage.height}
         sizes="(min-width: 1024px) 896px, 100vw"
-        className="border-default h-auto w-full rounded-md border object-cover"
+        className="border-hairline h-auto w-full rounded-md border object-cover"
       />
       {(resolvedImage.caption || resolvedImage.attribution) && (
-        <figcaption className="type-body-sm text-muted mt-3">
+        <figcaption className="type-mono-meta text-ink-faint mt-3">
           {[resolvedImage.caption, resolvedImage.attribution]
             .filter(Boolean)
             .join(' - ')}
@@ -186,50 +186,52 @@ function getTableCellImage(cell: SanityPortableTextTableCell) {
 const components: PortableTextComponents<SanityPortableTextBlock> = {
   block: {
     h1: ({ children }) => (
-      <h2 className="type-heading-02 text-strong mt-10 first:mt-0">
+      <h2 className="type-heading-02 text-ink mt-10 first:mt-0">
         {children}
       </h2>
     ),
     h2: ({ children }) => (
-      <h2 className="type-heading-02 text-strong mt-10 first:mt-0">
+      <h2 className="type-heading-02 text-ink mt-10 first:mt-0">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="type-heading-03 text-strong mt-8 first:mt-0">
+      <h3 className="type-heading-03 text-ink mt-8 first:mt-0">
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="type-heading-04 text-strong mt-7 first:mt-0">
+      <h4 className="type-heading-04 text-ink mt-7 first:mt-0">
         {children}
       </h4>
     ),
     h5: ({ children }) => (
-      <h5 className="type-heading-05 text-strong mt-6 first:mt-0">
+      <h5 className="type-heading-05 text-ink mt-6 first:mt-0">
         {children}
       </h5>
     ),
     h6: ({ children }) => (
-      <h6 className="type-label text-strong mt-6 first:mt-0">{children}</h6>
+      <h6 className="type-label text-ink mt-6 first:mt-0">{children}</h6>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="type-body-lg border-default bg-surface text-default my-8 rounded-md border p-5 italic">
+      <blockquote className="font-display italic border-l-2 border-gold pl-5 text-ink my-8">
         {children}
       </blockquote>
     ),
     normal: ({ children }) => (
-      <p className="type-body text-default mt-5 first:mt-0">{children}</p>
+      <p className="text-ink-soft text-[1.02rem] leading-[1.6] mt-5 first:mt-0">
+        {children}
+      </p>
     ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="type-body text-default mt-5 list-disc space-y-2 pl-6 first:mt-0">
+      <ul className="text-ink-soft text-[1.02rem] leading-[1.6] mt-5 list-disc space-y-2 pl-6 first:mt-0 marker:text-brand">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="type-body text-default mt-5 list-decimal space-y-2 pl-6 first:mt-0">
+      <ol className="text-ink-soft text-[1.02rem] leading-[1.6] mt-5 list-decimal space-y-2 pl-6 first:mt-0 marker:text-brand">
         {children}
       </ol>
     ),
@@ -240,7 +242,7 @@ const components: PortableTextComponents<SanityPortableTextBlock> = {
   },
   marks: {
     code: ({ children }) => (
-      <code className="bg-surface-sunken text-default rounded px-1 py-0.5 font-mono text-sm">
+      <code className="bg-paper-2 text-ink rounded px-1 py-0.5 font-mono text-sm">
         {children}
       </code>
     ),
@@ -252,7 +254,7 @@ const components: PortableTextComponents<SanityPortableTextBlock> = {
       const target = openInNewTab ? '_blank' : undefined
       const rel = getLinkRel(link.isExternal, openInNewTab)
       const className =
-        'text-link hover:text-link-hover focus-visible:ring-ring rounded underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
+        'text-brand hover:text-brand-deep focus-visible:ring-ring rounded underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
 
       if (!link.useNextLink) {
         return (
@@ -279,12 +281,12 @@ const components: PortableTextComponents<SanityPortableTextBlock> = {
       if (!isPortableTextCalloutValue(value)) return null
 
       return (
-        <aside className="border-default bg-surface my-8 rounded-md border p-5">
+        <aside className="border-hairline bg-card my-8 rounded-md border p-5">
           {value.title && (
-            <p className="type-label text-strong">{value.title}</p>
+            <p className="type-label text-ink">{value.title}</p>
           )}
           {value.body && (
-            <p className="type-body text-default mt-3">{value.body}</p>
+            <p className="text-ink-soft text-[1.02rem] leading-[1.6] mt-3">{value.body}</p>
           )}
         </aside>
       )
@@ -304,9 +306,9 @@ const components: PortableTextComponents<SanityPortableTextBlock> = {
           role={caption ? 'region' : undefined}
           tabIndex={0}
         >
-          <table className="type-body-sm border-default w-full min-w-full border-collapse border text-left">
+          <table className="type-body-sm w-full min-w-full border-collapse text-left">
             {caption && (
-              <caption className="type-body-sm text-muted mb-3 text-left">
+              <caption className="type-mono-meta text-ink-faint mb-3 text-left">
                 {caption}
               </caption>
             )}
@@ -321,7 +323,7 @@ const components: PortableTextComponents<SanityPortableTextBlock> = {
 
                     return (
                       <td
-                        className="border-default border px-3 py-2 align-top"
+                        className="border-b border-hairline-2 px-3 py-2 align-top"
                         key={cellKey}
                       >
                         {cellImage && (
