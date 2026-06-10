@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import {
+  CertificationCoverage,
   Cta,
   Faq,
   HomepageHero,
@@ -60,6 +61,7 @@ export default function HomePage() {
         <ProductRange />
         <PrivateLabel />
         <OrganicHerbs />
+        <CertificationCoverage />
         <Testimonials />
         <SupplyChain />
         <TeaJournal />

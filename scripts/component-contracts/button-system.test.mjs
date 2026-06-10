@@ -114,7 +114,10 @@ test('homepage CTAs use approved brand and inverse button variants', async () =>
     'utf8',
   )
 
-  assert.match(heroSource, /variant="brand"/)
+  // Hero primary CTA: inverse (paper/ink on dark hero background)
+  assert.match(heroSource, /variant="inverse"/)
+  // Hero secondary CTA: inverseSecondary (ghost outline on dark hero per design)
+  assert.match(heroSource, /variant="inverseSecondary"/)
   assert.match(
     homepageContentSource,
     /ctaCatalogueData[\s\S]*variant: 'inverseSecondary'/,

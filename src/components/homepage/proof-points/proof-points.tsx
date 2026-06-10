@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import {
   Award,
   CheckCircle,
@@ -29,29 +30,50 @@ export type ProofPointsProps = {
 
 export function ProofPoints({ points = PROOF_POINTS }: ProofPointsProps) {
   return (
-    <Section.Root tone="brand" spacing="compact">
+    <Section.Root tone="brand" spacing="none">
       <Section.Container>
+        {/* 2-col mobile, 4-col desktop — matches design statband */}
         <ul className="grid grid-cols-2 gap-0 lg:grid-cols-4">
-          {points.map((point) => {
+          {points.map((point, index) => {
             const IconComponent = point.icon ? ICON_MAP[point.icon] : undefined
+            // Divider pattern: right border on all items except last in each row
+            // Mobile 2-col: items 0,2 get right border (odd-indexed items in each pair)
+            // Desktop 4-col: all except last item get right border
+            const isLastInRow2 = index % 2 === 1
+            const isLastOverall = index === points.length - 1
             return (
               <li
                 key={point.title}
-                className="flex flex-col items-center gap-3 px-6 py-4 text-center first:border-l-0 lg:border-l lg:border-paper/12"
+                className={
+                  isLastOverall
+                    ? 'flex flex-col px-7.5 py-11'
+                    : isLastInRow2
+                      ? 'flex flex-col border-r-0 px-7.5 py-11 lg:border-r lg:border-paper/12'
+                      : 'flex flex-col border-r border-paper/12 px-7.5 py-11'
+                }
               >
-                {IconComponent ? (
+                {/* Image branch (e.g. Australian flag) */}
+                {point.image ? (
+                  <Image
+                    src={point.image.src}
+                    alt={point.image.alt}
+                    width={40}
+                    height={40}
+                    className="mb-4 size-10 shrink-0 object-contain"
+                    aria-hidden="true"
+                  />
+                ) : IconComponent ? (
                   <IconComponent
-                    className="text-gold size-6 shrink-0"
+                    className="text-gold mb-4 size-10 shrink-0"
                     aria-hidden="true"
                   />
                 ) : null}
-                <p
-                  className="font-display text-[2.4rem] leading-none text-paper"
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
+                <p className="font-display text-[2.4rem] leading-none text-paper">
                   {point.title}
                 </p>
-                <p className="type-body-sm text-paper/78">{point.description}</p>
+                <p className="mt-2 max-w-[22ch] text-[0.9rem] text-paper/78">
+                  {point.description}
+                </p>
               </li>
             )
           })}

@@ -12,17 +12,16 @@ export function ProductRange() {
           <div>
             <Eyebrow className="mb-4">Explore the range</Eyebrow>
             <h2 className="type-heading-01">
-              Wholesale online, direct
-              <br />
-              to business or doorstep.
+              Explore Our Product Range
             </h2>
           </div>
           <p className="text-ink-soft max-w-[34ch] lg:text-right">
-            Buy any line online at wholesale prices — or apply for a bulk
-            account and unlock further discounts on 100kg+ orders.
+            We offer Wholesale products online direct to consumers and
+            businesses or you can apply for a bulk wholesale account and receive
+            further discounts on 100kg+ orders.
           </p>
         </div>
-        <ul className="grid grid-cols-1 gap-4.5 md:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {PRODUCT_RANGE.map((card) => (
             <li key={card.href} className="rounded-lg overflow-hidden">
               <OverlayImageCard card={card} />

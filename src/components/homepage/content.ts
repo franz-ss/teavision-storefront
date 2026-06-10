@@ -33,6 +33,7 @@ export type ImageCard = {
   image: ImageAsset
   action: string
   badge?: ImageAsset
+  body?: string
 }
 
 export type Testimonial = {
@@ -314,6 +315,7 @@ export const SERVICE_CARDS = [
       height: 1200,
     },
     action: 'Explore',
+    body: 'Work with our expert blenders to develop signature tea blends tailored to your brand identity and customer preferences.',
   },
   {
     title: 'Tea Bag Manufacturing',
@@ -325,6 +327,7 @@ export const SERVICE_CARDS = [
       height: 1200,
     },
     action: 'Explore',
+    body: 'From 20kg minimum orders, we manufacture pyramid, flat, and round tea bags with full packaging options to suit your volume.',
   },
   {
     title: 'Private Label',
@@ -336,6 +339,7 @@ export const SERVICE_CARDS = [
       height: 533,
     },
     action: 'Explore',
+    body: 'Launch your own branded tea range with our end-to-end private label service — from blend development through to shelf-ready packaging.',
   },
 ] satisfies ImageCard[]
 

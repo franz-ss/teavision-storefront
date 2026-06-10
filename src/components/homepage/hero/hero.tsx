@@ -30,22 +30,18 @@ export function HomepageHero() {
           Australia&apos;s tea, herb &amp; spice house
         </Eyebrow>
         <h1 className="type-display max-w-[16ch] text-paper">
-          A world of tea mastery,{' '}
-          <em className="italic">by the kilogram.</em>
+          {HOMEPAGE_HERO.title}
         </h1>
         <p className="type-lede mt-6 max-w-[48ch] text-paper/90">
-          Handpicked from the finest leaves across 15+ countries.
-          Certified-organic loose leaf, bulk tea bags and botanical herbs —
-          trusted by Australia&apos;s leading cafés, retailers and wellness
-          brands.
+          {HOMEPAGE_HERO.copy}
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Button href={HOMEPAGE_HERO.cta.href} variant="inverse" size="lg">
-            Explore our teas
+            {HOMEPAGE_HERO.cta.children}
           </Button>
           <Button
             href="/pages/wholesale"
-            variant="brand"
+            variant="inverseSecondary"
             size="lg"
           >
             Open a wholesale account

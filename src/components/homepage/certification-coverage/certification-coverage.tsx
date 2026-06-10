@@ -1,43 +1,39 @@
-import {
-  Flag,
-  FlaskConical,
-  Leaf,
-  Medal,
-  Shield,
-  Truck,
-} from 'lucide-react'
+import { Leaf } from 'lucide-react'
 
-import { CERTIFICATION_COVERAGE } from '../content'
-
-const CERT_ICONS = [Shield, Leaf, FlaskConical, Medal, Flag, Truck]
+// Six short certification strings from design data-layer.js:140
+const CERT_STRINGS = [
+  'ACO Certified Organic',
+  'USDA Organic',
+  'HACCP Food Safety',
+  'Golden Leaf Awards',
+  'Australian Made',
+  'Freight Insured',
+]
 
 export function CertificationCoverage() {
-  // Duplicate items for seamless loop
-  const items = [...CERTIFICATION_COVERAGE, ...CERTIFICATION_COVERAGE]
+  // Duplicate items for seamless -50% translateX loop
+  const items = [...CERT_STRINGS, ...CERT_STRINGS]
 
   return (
     <div className="border-y border-hairline overflow-hidden">
       <div
-        className="flex animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none whitespace-nowrap"
+        className="flex w-max animate-marquee items-center gap-16 py-7 hover:[animation-play-state:paused] motion-reduce:animate-none"
         aria-hidden="true"
       >
-        {items.map((cert, index) => {
-          const Icon = CERT_ICONS[index % CERT_ICONS.length]
-          return (
-            <span
-              key={index}
-              className="type-mono-meta text-ink-soft inline-flex items-center gap-2.5 px-8 py-5 shrink-0"
-            >
-              <Icon className="size-4 text-brand shrink-0" aria-hidden="true" />
-              {cert.title}
-            </span>
-          )
-        })}
+        {items.map((cert, index) => (
+          <span
+            key={index}
+            className="inline-flex shrink-0 items-center gap-3 font-mono text-[12px] tracking-[0.12em] uppercase text-ink-soft"
+          >
+            <Leaf className="size-6.5 shrink-0 text-brand" aria-hidden="true" />
+            {cert}
+          </span>
+        ))}
       </div>
       {/* Accessible fallback for screen readers and reduced-motion users */}
       <ul className="sr-only">
-        {CERTIFICATION_COVERAGE.map((cert) => (
-          <li key={cert.title}>{cert.title}</li>
+        {CERT_STRINGS.map((cert) => (
+          <li key={cert}>{cert}</li>
         ))}
       </ul>
     </div>

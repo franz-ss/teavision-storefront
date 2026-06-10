@@ -27,10 +27,10 @@ export function OverlayImageCard({ card, className }: OverlayImageCardProps) {
         sizes="(min-width: 1280px) 25vw, (min-width: 768px) 48vw, 100vw"
         className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
       />
-      {/* Bottom gradient scrim */}
+      {/* Bottom gradient scrim — deepens on hover */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-linear-to-t from-ink/70 via-ink/20 to-transparent"
+        className="absolute inset-0 bg-[linear-gradient(to_top,rgba(16,24,18,0.85),rgba(16,24,18,0.15)_65%)] transition-[background] duration-300 group-hover:bg-[linear-gradient(to_top,rgba(16,24,18,0.92),rgba(16,24,18,0.35)_70%)]"
       />
       {card.badge && (
         <Image
@@ -43,19 +43,15 @@ export function OverlayImageCard({ card, className }: OverlayImageCardProps) {
       )}
       {/* Card content */}
       <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-        {card.action ? (
-          <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-gold mb-2 block">
-            {card.action}
-          </span>
-        ) : null}
-        <h3 className="font-display text-paper text-[1.15rem] leading-[1.15]">
+        <h3 className="font-display text-paper text-[1.3rem] leading-[1.05]">
           {card.title}
         </h3>
+        {/* Hover CTA — mono 11px uppercase with translateY reveal */}
         <span
           aria-hidden="true"
-          className="mt-2 inline-flex items-center gap-1.5 font-display text-paper text-sm opacity-0 transition-opacity max-lg:opacity-100 group-hover:opacity-100 focus-within:opacity-100 motion-reduce:transition-none"
+          className="mt-3.5 inline-flex items-center gap-1.75 font-mono text-[11px] tracking-[0.08em] uppercase text-paper opacity-0 translate-y-1.5 transition-[opacity,transform] duration-300 max-lg:opacity-100 max-lg:translate-y-0 group-hover:opacity-100 group-hover:translate-y-0 motion-reduce:transition-none"
         >
-          Shop now <ArrowRight className="size-3.5" />
+          Shop now <ArrowRight className="size-3.5" aria-hidden="true" />
         </span>
       </div>
     </Link>
