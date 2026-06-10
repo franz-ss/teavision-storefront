@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 export type SelectProps = ComponentProps<'select'>
 
 const selectClassName =
-  'type-body-sm border-default focus-visible:ring-ring bg-canvas text-strong min-h-12 w-full rounded-md border px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40'
+  'type-body-sm border-hairline focus:border-brand focus:shadow-focus focus:ring-0 focus:outline-none bg-card text-ink min-h-12 w-full rounded-sm border px-4 py-3.5 transition-colors disabled:cursor-not-allowed disabled:opacity-40'
 
 export function Select({ className, ...props }: SelectProps) {
   return <select className={cn(selectClassName, className)} {...props} />

@@ -7,7 +7,7 @@ export type FormLabelProps = ComponentProps<'label'>
 export function FormLabel({ className, ...props }: FormLabelProps) {
   return (
     <label
-      className={cn('type-label text-strong block', className)}
+      className={cn('type-mono-meta text-ink-faint block', className)}
       {...props}
     />
   )
