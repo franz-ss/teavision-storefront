@@ -2,7 +2,10 @@ import { Suspense } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
 
 import { Section } from '@/components/ui'
-import { createClearFiltersHref } from '@/lib/searchanise/params'
+import {
+  createClearFiltersHref,
+  createSearchHref,
+} from '@/lib/searchanise/params'
 import type {
   SearchRouteState,
   SearchaniseSearchResult,
@@ -28,6 +31,7 @@ type SearchResultsViewProps = {
 
 export function SearchResultsView({ result, state }: SearchResultsViewProps) {
   const clearHref = createClearFiltersHref(state)
+  const retryHref = createSearchHref(state)
   const panelFacets = createPanelFacets(result.facets, state)
   const activeFilters = createActiveFilters(result.facets, state)
   const selectedFilterCount = state.filters.length
@@ -41,6 +45,8 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
           {result.status === 'idle' ? (
             <div className="max-w-2xl">
               <SearchAlert
+                actionHref="/search"
+                actionLabel="Search again"
                 tone="empty"
                 message="Enter a search term to find matching products."
               />
@@ -48,6 +54,8 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
           ) : result.status === 'unavailable' || result.status === 'error' ? (
             <div className="max-w-2xl">
               <SearchAlert
+                actionHref={retryHref}
+                actionLabel="Retry search"
                 tone="error"
                 message={
                   result.message ?? 'Search results are unavailable right now.'
@@ -55,8 +63,8 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
               />
             </div>
           ) : (
-            <div className="grid items-start gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-10">
-              <aside className="hidden self-start lg:block">
+            <div className="grid items-start gap-6 lg:grid-cols-[252px_minmax(0,1fr)] lg:gap-10">
+              <aside className="hidden self-start lg:sticky lg:top-32 lg:block">
                 <SearchFilterPanel
                   clearHref={clearHref}
                   facets={panelFacets}
@@ -66,13 +74,12 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
               </aside>
 
               <div className="grid gap-6 self-start">
-                <div className="border-default grid gap-5 border-b pb-6">
+                <div className="border-hairline grid gap-5 border-b pb-6">
                   <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                     <div>
-                      <p className="type-eyebrow text-accent">Products</p>
-                      <h2 className="type-heading-03 text-strong mt-2">
+                      <p className="type-mono-meta text-ink-faint">
                         {formatResultCount(result)}
-                      </h2>
+                      </p>
                     </div>
                     <Suspense fallback={null}>
                       <SearchSortSelect currentSort={state.sort} />
@@ -84,8 +91,8 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
                     clearHref={clearHref}
                   />
 
-                  <details className="border-default bg-surface rounded-md border lg:hidden">
-                    <summary className="type-label text-strong focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-md px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+                  <details className="bg-paper rounded-lg border border-hairline lg:hidden">
+                    <summary className="type-label text-ink focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
                       <span className="inline-flex items-center gap-2">
                         <SlidersHorizontal
                           className="size-4"
@@ -94,12 +101,12 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
                         Filter results
                       </span>
                       {selectedFilterCount > 0 && (
-                        <span className="type-caption text-muted">
+                        <span className="type-mono-meta text-ink-faint">
                           {selectedFilterCount} active
                         </span>
                       )}
                     </summary>
-                    <div className="border-default border-t p-4">
+                    <div className="border-hairline border-t p-4">
                       <SearchFilterPanel
                         clearHref={clearHref}
                         facets={panelFacets}
@@ -110,7 +117,7 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
                   </details>
                 </div>
 
-                <ProductResults result={result} />
+                <ProductResults clearHref={clearHref} result={result} />
 
                 <SearchPagination
                   pagination={result.pagination}

@@ -23,9 +23,9 @@ export function ActiveFilterChips({
           key={filter.id}
           href={filter.href}
           aria-label={`Remove ${filter.facetLabel} filter: ${filter.label}`}
-          className="type-caption border-default bg-surface text-default hover:bg-surface-sunken focus-visible:ring-ring inline-flex min-h-10 items-center gap-2 rounded-full border px-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="bg-brand-tint text-brand focus-visible:ring-ring inline-flex min-h-10 items-center gap-2 rounded-full px-3 py-1.75 text-xs font-semibold transition-colors hover:text-brand-deep focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          <span className="text-muted">{filter.facetLabel}</span>
+          <span>{filter.facetLabel}</span>
           <span>{filter.label}</span>
           <X className="size-3.5" aria-hidden="true" />
         </Link>

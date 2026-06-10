@@ -1,4 +1,4 @@
-import { Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
 import type {
   SearchRouteState,
   SearchaniseSearchResult,
@@ -15,20 +15,19 @@ export function SearchHero({
   state: SearchRouteState
 }) {
   const hasQuery = state.query.length > 0
-  const eyebrow = hasQuery ? 'Search results' : 'Site search'
   const title = hasQuery ? `Results for "${state.query}"` : 'Search Teavision'
   const countLabel =
     result.status === 'success' ? formatResultCount(result) : undefined
 
   return (
-    <Section.Root tone="sunken" spacing="compact">
+    <Section.Root tone="surface" spacing="compact">
       <Section.Container>
         <div className="max-w-4xl py-8 md:py-12">
-          <p className="type-eyebrow text-accent">{eyebrow}</p>
-          <h1 className="type-heading-01 text-strong mt-3 wrap-break-word">
+          <Eyebrow>Search</Eyebrow>
+          <h1 className="font-display text-[clamp(2rem,4vw,3.4rem)] text-ink mt-3 wrap-break-word">
             {title}
           </h1>
-          <p className="type-body text-muted mt-4 max-w-2xl">
+          <p className="type-mono-meta text-ink-faint mt-4">
             {hasQuery ? countLabel : 'Search bulk teas, herbs, and spices.'}
           </p>
           {!hasQuery && <SearchPageSearchForm />}

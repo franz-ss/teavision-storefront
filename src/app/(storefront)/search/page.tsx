@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
 import { SearchResultsView } from '@/components/search'
-import { Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
 import {
   parseSearchParams,
   type SearchParamsInput,
@@ -45,8 +45,8 @@ function SearchFallback() {
     <Section.Root tone="sunken" spacing="compact">
       <Section.Container>
         <div className="py-10" role="status" aria-live="polite">
-          <p className="type-eyebrow text-accent">Search results</p>
-          <p className="type-heading-03 text-strong mt-3">
+          <Eyebrow>Search</Eyebrow>
+          <p className="font-display text-[clamp(2rem,4vw,3.4rem)] text-ink mt-3">
             Loading search results…
           </p>
         </div>
