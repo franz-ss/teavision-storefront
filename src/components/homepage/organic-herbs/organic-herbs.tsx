@@ -1,23 +1,15 @@
 import Image from 'next/image'
 import { Check } from 'lucide-react'
 
-import { Button, Eyebrow, Section } from '@/components/ui'
+import { Button, Section } from '@/components/ui'
 
 import { HERBS_IMAGE } from '../content'
 
+// Original-site copy — single-line checklist items
 const HERB_CHECKLIST = [
-  {
-    title: 'Import & freight insurance on all ingredients',
-    sub: 'Every order covered from origin to your door',
-  },
-  {
-    title: 'Highest quality standards',
-    sub: 'From our certified facilities and trusted farming partners',
-  },
-  {
-    title: 'Quality-focused, consistent and reliable',
-    sub: 'Efficient, cost-effective supply for cafes, retailers and wellness brands',
-  },
+  'Import and Freight Insurance on all ingredients',
+  'Highest quality standards from our company and partners',
+  'Quality-focused, consistent, efficient, reliable and cost-effective',
 ]
 
 export function OrganicHerbs() {
@@ -25,29 +17,24 @@ export function OrganicHerbs() {
     <Section.Root tone="sunken">
       <Section.Container className="grid gap-10 lg:grid-cols-2 lg:items-center">
         <div>
-          <Eyebrow className="mb-4">Wild-grown &amp; certified organic</Eyebrow>
           <h2 className="type-heading-02">
-            Herbs &amp; spices, sourced direct from farm.
+            Wild Grown &amp; Certified Organic Herbs
           </h2>
           <p className="type-lede text-ink-soft mt-4">
-            We supply only the freshest wild-grown herbs and certified-organic
-            spices, sourced directly from trusted farmers and plantations across
-            the globe — with quality, sustainability and reliability built in.
+            We supply only the freshest wild grown herbs and certified organic
+            spices, sourced directly from trusted farmers and plantations. As
+            one of Australia&apos;s leading bulk herb and spice suppliers, we
+            ensure quality, sustainability, and reliability to meet the diverse
+            needs of cafes, retailers, and wellness brands.
           </p>
-          <ul className="divide-hairline mt-8 divide-y">
+          <ul className="mt-8 flex flex-col gap-4">
             {HERB_CHECKLIST.map((item) => (
-              <li
-                key={item.title}
-                className="border-hairline flex gap-3 border-t py-4 first:border-t-0"
-              >
+              <li key={item} className="flex items-start gap-3">
                 <Check
                   className="text-brand mt-0.5 size-4 shrink-0"
                   aria-hidden="true"
                 />
-                <div>
-                  <p className="type-body font-medium">{item.title}</p>
-                  <p className="type-body-sm text-ink-soft">{item.sub}</p>
-                </div>
+                <p className="type-body">{item}</p>
               </li>
             ))}
           </ul>
@@ -56,9 +43,9 @@ export function OrganicHerbs() {
               href="/collections/herbs-and-spices"
               variant="brand"
               size="lg"
-              aria-label="Shop herbs and spices"
+              aria-label="Learn more about our herbs and spices"
             >
-              Shop herbs &amp; spices
+              Learn More
             </Button>
           </div>
         </div>
