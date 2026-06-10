@@ -248,7 +248,7 @@ blocked: 0
     - path: "src/components/homepage/faq/faq.tsx"
       issue: "title 'Frequently asked.' wrong; container 1280px vs 880px"
   missing:
-    - "Provision RESEND_API_KEY in .env.local (see .env.example); add console.warn in missing-key branch"
+    - "RESEND_API_KEY provisioned in .env.local by owner 2026-06-10 (verified non-empty) — remaining code task: add console.warn in missing-key branch; re-verify signup succeeds during fix execution"
     - "Swap in condensed pull-quotes + SVG quote icon + split header with 'Teavision Testimonials' copy"
     - "Add newsletter decorative image layer with design's exact offsets/opacity; padding clamp(40px,6vw,72px); arrow on button"
     - "FAQ title fix + 880px container"
