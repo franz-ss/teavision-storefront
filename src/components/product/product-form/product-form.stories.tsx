@@ -283,7 +283,7 @@ export const BulkTierPayload: Story = {
 
     await userEvent.click(canvas.getByRole('button', { name: /Buy 5\+/ }))
     await userEvent.click(
-      canvas.getByRole('button', { name: 'Add bulk quantity to cart' }),
+      canvas.getByRole('button', { name: 'Grab this deal' }),
     )
 
     await waitFor(() => {

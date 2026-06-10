@@ -27,6 +27,7 @@ const MAXIMUM_QUANTITY_ERROR_PATTERNS = [
 ]
 
 export type CartLineFormState = {
+  cartChanged?: boolean
   message: string | null
 }
 
@@ -175,17 +176,17 @@ export async function cartLineFormAction(
 
     if (intent === 'remove') {
       await removeCartLineAction(lineId)
-      return { message: null }
+      return { cartChanged: true, message: null }
     }
 
     if (intent === 'update') {
       const quantity = Number(getRequiredFormString(formData, 'quantity'))
       await updateCartLineAction(lineId, quantity)
-      return { message: null }
+      return { cartChanged: true, message: null }
     }
 
     throw new Error(INVALID_CART_REQUEST_ERROR)
   } catch (error) {
-    return { message: getCartLineFormErrorMessage(error) }
+    return { cartChanged: false, message: getCartLineFormErrorMessage(error) }
   }
 }

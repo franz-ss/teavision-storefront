@@ -49,12 +49,12 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
           </div>
         </div>
 
-        <ul className="mt-8 grid gap-5.5 md:grid-cols-3">
+        <ul className="mt-8 grid min-w-0 gap-5.5 md:grid-cols-3">
           {articles.slice(0, 3).map((article, index) => (
-            <li key={article.id}>
+            <li key={article.id} className="min-w-0 overflow-hidden">
               <Link
                 href={getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}
-                className="group focus-visible:ring-ring flex h-full flex-col rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="group focus-visible:ring-ring flex h-full min-w-0 flex-col overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 <div className="relative mb-4.5 h-55 overflow-hidden rounded-lg bg-paper-2">
                   {article.featuredImage ? (
@@ -71,7 +71,7 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
                   )}
                 </div>
 
-                <div className="flex h-full flex-col">
+                <div className="flex h-full min-w-0 flex-col overflow-hidden">
                   <p className="type-mono-meta flex gap-3 text-ink-faint">
                     <span className="text-brand">
                       {article.tags[0] ?? 'Tea Journal'}

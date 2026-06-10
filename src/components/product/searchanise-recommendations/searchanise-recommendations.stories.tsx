@@ -157,23 +157,37 @@ function SearchaniseFixture({
   withTitle = false,
 }: SearchaniseFixtureProps) {
   useEffect(() => {
-    const widget = document.getElementById(STORY_WIDGET_ID)
-    if (!widget) return
-    widget.innerHTML = ''
+    let disposed = false
+    let retryTimer: number | null = null
 
-    if (result === 'none') return
-    if (result === 'empty') {
-      widget.innerHTML = getEmptySearchaniseMarkup()
-      return
+    function writeFixtureMarkup() {
+      if (disposed) return
+      const widget = document.getElementById(STORY_WIDGET_ID)
+
+      if (!widget) {
+        retryTimer = window.setTimeout(writeFixtureMarkup, 25)
+        return
+      }
+
+      if (result === 'none') {
+        widget.innerHTML = ''
+        return
+      }
+
+      if (result === 'empty') {
+        widget.innerHTML = getEmptySearchaniseMarkup()
+        return
+      }
+
+      widget.innerHTML = getSearchaniseMarkup()
     }
 
-    const timer = window.setTimeout(() => {
-      widget.innerHTML = getSearchaniseMarkup()
-    }, 0)
+    writeFixtureMarkup()
 
     return () => {
-      window.clearTimeout(timer)
-      widget.innerHTML = ''
+      disposed = true
+      if (retryTimer !== null) window.clearTimeout(retryTimer)
+      document.getElementById(STORY_WIDGET_ID)?.replaceChildren()
     }
   }, [result])
 

@@ -110,6 +110,9 @@
   p {
     text-wrap: pretty;
   }
+  :where(h1, h2, h3, h4, h5, h6, p, a, button, span, li) {
+    overflow-wrap: anywhere;
+  }
   ::selection {
     background-color: var(--color-gold-tint);
   }

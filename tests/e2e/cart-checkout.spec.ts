@@ -31,7 +31,7 @@ test('adds a product to cart, updates the cart, removes it, and exposes only fak
   await page
     .getByRole('button', { name: 'Remove Test Standard Tea from cart' })
     .click()
-  await expect(page.getByText('Your cart is empty.')).toBeVisible()
+  await expect(page.getByText('Your cart is empty')).toBeVisible()
   await expect(
     page.getByRole('link', { name: 'Proceed to checkout' }),
   ).toHaveCount(0)

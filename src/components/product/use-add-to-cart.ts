@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { addToCartAction } from '@/lib/cart/actions'
+import { CART_CHANGED_EVENT } from '@/lib/cart/events'
 
 export type AddToCart = (
   variantId: string,
@@ -53,6 +54,7 @@ export function useAddToCart({
         } else {
           router.refresh()
         }
+        window.dispatchEvent(new Event(CART_CHANGED_EVENT))
       } catch (addError) {
         setMessage(null)
         setError(getErrorMessage(addError))

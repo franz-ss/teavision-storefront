@@ -86,7 +86,9 @@ Only on Server Actions files (`src/lib/*/actions.ts`). Never on a component file
 ## Styling rules
 
 - Tailwind utilities only — no CSS modules, no `style={{}}`, no inline hex values
-- Use token class names: `bg-canvas`, `text-default`, `text-brand`, `border-default`, `ring-ring` — not `bg-[#f5f0e8]`
+- Use token class names: `bg-paper`, `bg-card`, `text-ink`, `text-ink-soft`, `text-brand`, `border-hairline`, `ring-ring` — not `bg-[#f5f0e8]`
+- Use the shared `Eyebrow` primitive for mono uppercase section labels instead of hand-rolling tracking/rule-line classes.
+- Use `px-gutter` and `py-section` for redesign rhythm, with `max-w-base` and `max-w-wide` for the approved content containers.
 - **Use `cn()` from `@/lib/utils` for all className composition** (conditionals, merging, toggling):
   ```tsx
   import { cn } from '@/lib/utils'
@@ -105,7 +107,7 @@ Only on Server Actions files (`src/lib/*/actions.ts`). Never on a component file
 
 - Do not write raw page-level `<section>` elements for storefront layout. Use `Section.Root` for semantic section bands, vertical rhythm, background tone, and default foreground contrast.
 - Use `Section.Container` inside page-level `Section.Root` layout bands for horizontal containment. Use `variant="compact"` for blog/editorial prose, newsletter blocks, and other reading-focused content.
-- Use `Section.Root tone="surface" | "sunken" | "brand" | "brandStrong" | "inverse" | "transparent"` instead of custom `bg-*` and foreground pairings on page sections.
+- Use `Section.Root tone="surface" | "sunken" | "brand" | "inverse" | "transparent"` instead of custom `bg-*` and foreground pairings on page sections.
 - Use `spacing="none"` only when a section needs semantic/background grouping without the default vertical rhythm.
 - For genuinely local semantic subsections inside an existing container, use `Section.Root tone="transparent" spacing="none"` without adding another container.
 - Raw `<section>` is reserved for the `Section` primitive implementation.

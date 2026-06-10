@@ -40,7 +40,7 @@ export const Success: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.type(canvas.getByLabelText('Email'), 'buyer@example.com')
-    await userEvent.click(canvas.getByRole('button', { name: 'Submit' }))
+    await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))
     await expect(await canvas.findByRole('status')).toHaveTextContent(
       'Thanks for signing up.',
     )
@@ -54,7 +54,7 @@ export const Error: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.type(canvas.getByLabelText('Email'), 'buyer@example.com')
-    await userEvent.click(canvas.getByRole('button', { name: 'Submit' }))
+    await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))
     await expect(await canvas.findByRole('alert')).toHaveTextContent(
       'Please enter a valid email address.',
     )

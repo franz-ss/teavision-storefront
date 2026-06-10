@@ -239,20 +239,21 @@ describe('cart Server Actions', () => {
     updateForm.set('quantity', '2')
     await expect(
       cartLineFormAction({ message: 'old' }, updateForm),
-    ).resolves.toEqual({ message: null })
+    ).resolves.toEqual({ cartChanged: true, message: null })
 
     const removeForm = new FormData()
     removeForm.set('intent', 'remove')
     removeForm.set('lineId', 'gid://shopify/CartLine/1')
     await expect(
       cartLineFormAction({ message: null }, removeForm),
-    ).resolves.toEqual({ message: null })
+    ).resolves.toEqual({ cartChanged: true, message: null })
 
     const invalidForm = new FormData()
     invalidForm.set('intent', 'update')
     await expect(
       cartLineFormAction({ message: null }, invalidForm),
     ).resolves.toEqual({
+      cartChanged: false,
       message:
         'We could not read that cart request. Refresh the page and try again.',
     })
@@ -261,6 +262,7 @@ describe('cart Server Actions', () => {
     await expect(
       cartLineFormAction({ message: null }, updateForm),
     ).resolves.toEqual({
+      cartChanged: false,
       message: 'We could not update your cart. Please try again.',
     })
   })

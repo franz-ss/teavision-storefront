@@ -1,10 +1,11 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { Minus, Plus } from 'lucide-react'
 
 import { Button, IconButton } from '@/components/ui'
 import { cartLineFormAction, type CartLineFormState } from '@/lib/cart/actions'
+import { CART_CHANGED_EVENT } from '@/lib/cart/events'
 import { clampQuantity } from '@/lib/shopify/quantity-rules'
 
 const INITIAL_CART_LINE_FORM_STATE: CartLineFormState = {
@@ -54,6 +55,12 @@ export function CartLineActions({
   })
   const canDecrease = decreasedQuantity < normalizedQuantity
   const canIncrease = increasedQuantity > normalizedQuantity
+
+  useEffect(() => {
+    if (!state.cartChanged) return
+
+    window.dispatchEvent(new Event(CART_CHANGED_EVENT))
+  }, [state.cartChanged])
 
   return (
     <>

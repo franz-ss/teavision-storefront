@@ -56,7 +56,7 @@ Key routes:
 - **`'use server'`** on Server Actions files
 - All styling via Tailwind 4 utilities — no CSS modules, no inline styles
 - Use `cn()` from `@/lib/utils` for all className composition — never array concatenation or template literals
-- Design tokens defined in `app/globals.css` via `@theme`; use token class names (`bg-background`, `text-primary`, `ring-ring`) rather than raw hex values
+- Design tokens defined in `app/globals.css` via `@theme`; use token class names (`bg-paper`, `bg-card`, `text-ink`, `text-brand`, `ring-ring`) rather than raw hex values
 - The palette is warm/botanical — never introduce cool grays
 - Extract a React component only when it creates a useful reuse boundary, isolates interactive state, or deserves Storybook coverage. Keep tiny single-owner markup inline in its owning component.
 - One React component per file once extracted; only non-component types, constants, and pure helper functions may stay colocated.
@@ -80,7 +80,7 @@ These anti-patterns are explicitly banned — they override any default AI behav
 
 - No default exports on components or lib modules (Next.js special files are excepted)
 - No `any` type — use `unknown` and narrow, or define a proper type
-- No raw hex/rgb values in className — use design token class names only (`text-primary` not `text-[#3d3d35]`)
+- No raw hex/rgb values in className — use design token class names only (`text-ink` not `text-[#3d3d35]`)
 - No className string concatenation or `filter(Boolean).join(' ')` — always use `cn()` from `@/lib/utils`
 - No `'use client'` on parent/wrapper components — push it down to the interactive leaf
 - No multiple React component declarations in one file; inline trivial single-owner markup instead of creating tiny helper components

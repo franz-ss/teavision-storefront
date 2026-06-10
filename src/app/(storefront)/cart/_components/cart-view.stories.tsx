@@ -69,9 +69,13 @@ export const SingleItem: Story = {
     await expect(
       canvas.getByText(/When ordering in sizes over 1kg/),
     ).toBeVisible()
-    await expect(
-      canvas.getByRole('link', { name: 'Proceed to checkout' }),
-    ).toHaveAttribute('href', 'https://checkout.test/cart/test-cart')
+    const checkoutLinks = canvas.getAllByRole('link', {
+      name: 'Proceed to checkout',
+    })
+    await expect(checkoutLinks[0]).toHaveAttribute(
+      'href',
+      'https://checkout.test/cart/test-cart',
+    )
   },
 }
 
