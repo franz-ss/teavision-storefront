@@ -160,4 +160,56 @@ describe('CartView', () => {
     expect(html).toContain('aria-label="Was $100.00"')
     expect(html).toContain('aria-label="Now $90.00"')
   })
+
+  it('renders compare-at prices with legible styling (not 10px invisible text)', () => {
+    const html = renderToStaticMarkup(
+      <CartView
+        cart={makeCart({
+          cost: {
+            subtotalAmount: makeMoney('1626.00'),
+            totalAmount: makeMoney('1382.10'),
+          },
+          lines: [
+            makeCartLine({
+              quantity: 40,
+              cost: {
+                amountPerQuantity: makeMoney('34.55'),
+                compareAtAmountPerQuantity: makeMoney('40.65'),
+                subtotalAmount: makeMoney('1626.00'),
+                totalAmount: makeMoney('1382.10'),
+              },
+              discountAllocations: [],
+            }),
+          ],
+        })}
+      />,
+    )
+
+    // Compare-at price must be present
+    expect(html).toContain('aria-label="Was $40.65"')
+    // Must NOT be styled with the invisible 10px faint treatment
+    expect(html).not.toContain('text-[10px]')
+    // Must use legible display size (text-sm = 14px minimum)
+    expect(html).toContain('text-sm')
+  })
+
+  it('renders cart line rows with desktop grid classes matching the table header', () => {
+    const html = renderToStaticMarkup(
+      <CartView
+        cart={makeCart({
+          cost: {
+            subtotalAmount: makeMoney('100.00'),
+            totalAmount: makeMoney('100.00'),
+          },
+          lines: [makeCartLine({ quantity: 2 })],
+        })}
+      />,
+    )
+
+    // The <li> rows must use the same 5-column grid as the header at xl.
+    // We check that the grid template appears twice: once in the header and once per row.
+    const gridPattern = 'xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem]'
+    const occurrences = html.split(gridPattern).length - 1
+    expect(occurrences).toBeGreaterThanOrEqual(2)
+  })
 })
