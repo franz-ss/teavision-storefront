@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { DisclosureButton } from '@/components/ui'
 import { cn } from '@/lib/utils'
@@ -23,25 +23,71 @@ import { useOutsideClose } from './use-outside-close'
 
 export { MobileMegaNav } from './mobile-mega-nav'
 
+/** Grace period in ms before the mega panel closes after cursor leaves the trigger or panel. */
+const CLOSE_GRACE_MS = 200
+
 export function MegaNav() {
   const navRef = useRef<HTMLElement | null>(null)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [openMenu, setOpenMenu] = useState<MenuKey | null>(null)
   const [activeShopKey, setActiveShopKey] = useState<ShopKey>('tea')
-  const closeMenus = useCallback(() => setOpenMenu(null), [])
   const activeShop =
     SHOP_SECTIONS.find((section) => section.key === activeShopKey) ??
     SHOP_SECTIONS[0]!
+
+  // Clear the close timer on unmount to prevent state updates on an unmounted component.
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current)
+    }
+  }, [])
+
+  /** Immediately cancel any pending close and open the given menu. */
+  const openMenuNow = useCallback((key: MenuKey) => {
+    if (closeTimerRef.current !== null) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+    setOpenMenu(key)
+  }, [])
+
+  /** Schedule the close after the grace period. Cancelled by openMenuNow or keepOpen. */
+  const scheduleClose = useCallback(() => {
+    if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current)
+    closeTimerRef.current = setTimeout(() => {
+      closeTimerRef.current = null
+      setOpenMenu(null)
+    }, CLOSE_GRACE_MS)
+  }, [])
+
+  /** Cancel a pending close (called from panel onMouseEnter). */
+  const cancelClose = useCallback(() => {
+    if (closeTimerRef.current !== null) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+  }, [])
+
+  const closeMenus = useCallback(() => {
+    if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current)
+    closeTimerRef.current = null
+    setOpenMenu(null)
+  }, [])
 
   useOutsideClose(navRef, closeMenus)
 
   return (
     <>
       <nav ref={navRef} aria-label="Main">
-        <ul className="flex items-center gap-1" role="list">
+        {/*
+          ul is h-full so each li can stretch to the full main-bar height, closing the
+          ~16px gap between the 44px trigger and the panel's fixed top-28.5 position.
+        */}
+        <ul className="flex h-full items-stretch gap-1" role="list">
           <li
             className={DESKTOP_MENU_ITEM_CLASS}
-            onMouseEnter={() => setOpenMenu('shop')}
-            onMouseLeave={() => setOpenMenu(null)}
+            onMouseEnter={() => openMenuNow('shop')}
+            onMouseLeave={scheduleClose}
           >
             <DisclosureButton
               aria-controls="shop-mega"
@@ -65,8 +111,8 @@ export function MegaNav() {
 
           <li
             className={DESKTOP_MENU_ITEM_CLASS}
-            onMouseEnter={() => setOpenMenu('services')}
-            onMouseLeave={() => setOpenMenu(null)}
+            onMouseEnter={() => openMenuNow('services')}
+            onMouseLeave={scheduleClose}
           >
             <DisclosureButton
               aria-controls="services-menu"
@@ -100,10 +146,10 @@ export function MegaNav() {
         </ul>
       </nav>
 
-      {/* Mega panels — rendered at fixed position below the header (utility 38px + main 76px = 114px) */}
+      {/* Mega panels — onMouseEnter cancels the grace-period close; onMouseLeave re-schedules it */}
       <div
-        onMouseEnter={() => openMenu && setOpenMenu(openMenu)}
-        onMouseLeave={() => setOpenMenu(null)}
+        onMouseEnter={cancelClose}
+        onMouseLeave={scheduleClose}
       >
         <ShopMegaPanel
           activeShop={activeShop}

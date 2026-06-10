@@ -6,5 +6,6 @@ export const NAV_TRIGGER_CLASS =
 export const PANEL_LINK_CLASS =
   'focus-visible:ring-ring type-label inline-flex min-h-9 items-center rounded-md px-2.5 py-1.75 text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
 
-// Desktop nav list item — used as height anchor only (no position:relative)
-export const DESKTOP_MENU_ITEM_CLASS = 'flex items-center'
+// Desktop nav list item — h-full/self-stretch so hover area fills the full main-bar height,
+// eliminating the ~16px dead gap between the 44px trigger bottom and the fixed panel top.
+export const DESKTOP_MENU_ITEM_CLASS = 'flex h-full items-center self-stretch'
