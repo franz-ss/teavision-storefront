@@ -1,10 +1,10 @@
 import { FOOTER_COLUMNS, PAYMENT_METHODS } from '../data'
-import { FooterTextLink } from '../link'
 import { FooterLinkList } from '../link-list'
 import type { FooterNewsletterAction } from '../newsletter-form'
 import { NewsletterColumn } from '../newsletter-column'
 import { PaymentMark } from '../payment-mark'
 import { QualityColumn } from '../quality-column'
+import { PopularSearches } from '../popular-searches'
 
 export type FooterViewProps = {
   newsletterAction: FooterNewsletterAction
@@ -14,7 +14,11 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
   return (
     <footer role="contentinfo" className="bg-ink text-paper/75 font-sans">
       <div className="max-w-wide mx-auto px-gutter">
-        <div className="grid grid-cols-1 gap-10 py-section lg:grid-cols-[1.6fr_1fr_1fr_1.4fr]">
+        {/* footer-local vertical padding: clamp(50px,7vw,90px) per design .ft__top */}
+        <div
+          className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.4fr]"
+          style={{ paddingBlock: 'clamp(50px,7vw,90px)' }}
+        >
           <QualityColumn />
           {FOOTER_COLUMNS.map((column) => (
             <FooterLinkList
@@ -25,27 +29,35 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
           ))}
           <NewsletterColumn action={newsletterAction} />
         </div>
-        <div className="border-t border-paper/10 py-5.5">
+        {/* border opacity 0.12 per design .ft__bottom: rgba(255,255,255,.12) */}
+        <div className="border-t border-paper/12 py-5.5">
           <div className="flex flex-col items-start gap-5 lg:flex-row lg:items-center lg:justify-between">
             <ul
               className="order-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] tracking-[0.06em] lg:order-1"
               role="list"
             >
               <li>
-                <FooterTextLink
-                  href="/"
-                  label="© 2026 Teavision · 100% Australian owned &amp; operated"
-                />
+                {/* plain span, not a link — design has copyright as plain text */}
+                <span className="text-paper/75">
+                  &copy; {new Date().getFullYear()} Teavision
+                </span>
               </li>
               <li aria-hidden="true" className="text-paper/30">
                 ·
               </li>
               <li>
-                <FooterTextLink href="/search" label="Popular Searches" />
+                <a
+                  href="#popular-searches"
+                  className="text-paper/75 underline-offset-2 transition-colors hover:text-paper focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-ink focus-visible:outline-none"
+                >
+                  Popular Searches
+                </a>
               </li>
             </ul>
+            {/* payment gap: 7px per design .ft__pay */}
             <ul
-              className="order-1 flex flex-wrap gap-1 lg:order-2"
+              className="order-1 flex flex-wrap lg:order-2"
+              style={{ gap: '7px' }}
               role="list"
               aria-label="Payment methods"
             >
@@ -56,6 +68,13 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
               ))}
             </ul>
           </div>
+        </div>
+      </div>
+
+      {/* Popular Searches SEO link block — hidden below the footer bar */}
+      <div id="popular-searches" className="sr-only">
+        <div className="max-w-wide mx-auto px-gutter pb-8">
+          <PopularSearches />
         </div>
       </div>
     </footer>

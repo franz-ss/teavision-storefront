@@ -27,8 +27,9 @@ export function FooterNewsletterForm({ action }: FooterNewsletterFormProps) {
     : 'newsletter-error'
   const hasMessage = state.success || Boolean(state.error)
 
+  // margin-top: 12px per design .ft__news input (between blurb and input)
   return (
-    <form action={formAction} aria-busy={isPending} className="mt-5">
+    <form action={formAction} aria-busy={isPending} className="mt-3">
       <label className="sr-only" htmlFor="newsletter-email">
         Email
       </label>
