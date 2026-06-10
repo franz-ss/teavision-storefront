@@ -85,7 +85,7 @@
 
 ### Full Visual Redesign (design/teavision-redesign.html)
 
-- [ ] **RD-01**: `src/app/globals.css` defines the new design system as Tailwind 4 `@theme` tokens — warm-paper surfaces, green-undertone ink scale, brand greens, gold accents (oklch values from the redesign), `Spectral` serif / `Hanken Grotesk` sans / `Space Mono` mono / `Caveat` script font stacks, and the redesign radius/rhythm values.
+- [x] **RD-01**: `src/app/globals.css` defines the new design system as Tailwind 4 `@theme` tokens — warm-paper surfaces, green-undertone ink scale, brand greens, gold accents (oklch values from the redesign), `Spectral` serif / `Hanken Grotesk` sans / `Space Mono` mono / `Caveat` script font stacks, and the redesign radius/rhythm values.
 - [ ] **RD-02**: The old design system is removed completely — no `--tv-*` semantic tokens, no `steep`/`stone` palette scales, and no orphaned CSS or unused token classes remain anywhere in `src/`.
 - [ ] **RD-03**: Layout chrome (header, navigation/mega-menu, search affordance, cart affordance, footer, announcement surfaces) matches the redesign's structure and styling.
 - [ ] **RD-04**: The homepage matches the redesign's section composition and styling (hero, category/collection bands, product showcases, brand-motif bands, trust/wholesale sections, newsletter).

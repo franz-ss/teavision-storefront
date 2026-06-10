@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
+status: executing
 stopped_at: Phase 08 complete
-last_updated: '2026-06-03T17:09:15+08:00'
-last_activity: 2026-06-03 -- Phase 8 completed
+last_updated: "2026-06-10T01:04:20.653Z"
+last_activity: 2026-06-10
 progress:
-  total_phases: 6
+  total_phases: 8
   completed_phases: 6
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_plans: 25
+  completed_plans: 11
+  percent: 44
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-27)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 8 optimized listing quick-add is complete.
+**Current focus:** Phase 11 — full-visual-redesign
 
 ## Current Position
 
-Phase: 8 — Optimized Collection Quick Add
-Plan: 1 of 1
-Status: Complete
-Last activity: 2026-06-03 -- Phase 8 completed
+Phase: 11 (full-visual-redesign) — EXECUTING
+Plan: 2 of 14
+Status: Ready to execute
+Last activity: 2026-06-10
 
-Progress: [##########] 100%
+Progress: [████░░░░░░] 44%
 
 ## Performance Metrics
 
@@ -78,6 +78,9 @@ Recent decisions affecting current work:
 - Phase 4: The live footer from `https://www.teavision.com.au/` is the canonical reference for visible footer parity, including exact labels/hrefs for visible links, the `mrtea.com.au` footer Login link, and payment marks. The hidden keyword-link markup was removed during implementation review to keep the headless footer lean and user-facing.
 - Phase 4: Use Phase 04 rather than Phase 03 because `.planning/phases/03-blog-sanity-cms-migration/` already exists locally and must not be overwritten.
 - Phase 8: Restore listing-card direct add only through a minimal `quickAdd` contract (`variants(first: 2)` with id/title/availability) and a small `QuickAddButton` client leaf; multi-variant products keep Quick View/PDP selection.
+- Phase 11-01: Fonts self-hosted via next/font; Spectral uses explicit weights [300,400,500,600] + italic (not a variable font). No runtime Google Fonts requests.
+- Phase 11-01: Phase 11 OKLCH design tokens added alongside old --tv-* tokens in globals.css; dual-system persists until final sweep in plan 11-14.
+- Phase 11-01: --color-ring/radius-*/shadow-*/container-wide override old values via last-write-wins within @theme inline.
 
 ### Roadmap Evolution
 
@@ -109,6 +112,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-03T17:09:15+08:00
-Stopped at: Phase 08 complete
-Resume file: .planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md
+Last session: 2026-06-10
+Stopped at: Phase 11 Plan 01 complete
+Resume file: .planning/phases/11-full-visual-redesign/11-01-SUMMARY.md
