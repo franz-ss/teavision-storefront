@@ -152,7 +152,7 @@
 | RD-01       | Phase 11 | Planned  |
 | RD-02       | Phase 11 | Planned  |
 | RD-03       | Phase 11 | Planned  |
-| RD-04       | Phase 11 | Planned  |
+| RD-04       | Phase 11 | Complete |
 | RD-05       | Phase 11 | Planned  |
 | RD-06       | Phase 11 | Planned  |
 | RD-07       | Phase 11 | Planned  |
