@@ -18,8 +18,8 @@ function noop() {}
 
 function StoryPanelFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="relative min-h-136">
-      <div className="relative h-0">{children}</div>
+    <div className="relative min-h-80 bg-paper">
+      {children}
     </div>
   )
 }
@@ -33,8 +33,8 @@ const meta: Meta<typeof MegaNav> = {
   },
   decorators: [
     (Story) => (
-      <div className="bg-surface p-8">
-        <div className="mx-auto max-w-7xl">
+      <div className="bg-paper p-8">
+        <div className="mx-auto max-w-wide">
           <Story />
         </div>
       </div>
@@ -56,7 +56,7 @@ export const Default: Story = {
     shopButton.click()
     await new Promise((resolve) => window.requestAnimationFrame(resolve))
 
-    const shopPanel = canvasElement.querySelector<HTMLElement>('#shop-mega')
+    const shopPanel = document.querySelector<HTMLElement>('#shop-mega')
     if (!shopPanel || shopPanel.hidden) {
       throw new Error('Shop mega panel did not open')
     }
@@ -82,8 +82,7 @@ export const Default: Story = {
     servicesButton.click()
     await new Promise((resolve) => window.requestAnimationFrame(resolve))
 
-    const servicesPanel =
-      canvasElement.querySelector<HTMLElement>('#services-menu')
+    const servicesPanel = document.querySelector<HTMLElement>('#services-menu')
     if (!servicesPanel || servicesPanel.hidden) {
       throw new Error('Services mega panel did not open')
     }

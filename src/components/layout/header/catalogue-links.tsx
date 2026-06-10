@@ -6,8 +6,10 @@ import { PANEL_LINK_CLASS } from './mega-nav-styles'
 export function CatalogueLinks({ onClose }: { onClose: () => void }) {
   return (
     <div>
-      <p className="type-caption text-muted mb-2">Catalogues</p>
-      <ul className="grid gap-1" role="list">
+      <p className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-ink-faint mb-3">
+        Catalogues
+      </p>
+      <ul className="grid gap-0.5" role="list">
         {CATALOGUE_LINKS.map((link) => (
           <li key={link.href}>
             <a href={link.href} className={PANEL_LINK_CLASS} onClick={onClose}>
