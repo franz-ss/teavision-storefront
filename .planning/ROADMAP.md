@@ -96,7 +96,24 @@ Plans:
 5. All existing behavioral contracts still pass: quick-add, bulk savings, cart server actions, search facets, accessibility landmarks, noindex controls.
 6. Storybook builds with updated stories; `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass.
 
-**Plans**: TBD
+**Plans**: 14 plans
+
+Plans:
+
+- [ ] 11-01-PLAN.md — Foundation: motif asset extraction, next/font swap, new @theme tokens alongside old
+- [ ] 11-02-PLAN.md — Core primitives: Button pills + contract test, new Eyebrow, Section tones, Badge pill
+- [ ] 11-03-PLAN.md — Field & support primitives: inputs, stepper, controls, card/accordion/dialog/article-card/rich-text/newsletter
+- [ ] 11-04-PLAN.md — Header chrome: utility bar, translucent main bar, mega menus, search overlay, mobile menu
+- [ ] 11-05-PLAN.md — Footer ink restyle + skip link + error/not-found pages
+- [ ] 11-06-PLAN.md — Homepage upper: Hero A, stat band, range tiles, services, organic split, certs marquee
+- [ ] 11-07-PLAN.md — Homepage lower: BrushCircle/Stamp motifs, brand bands, testimonials, journal, newsletter, contact, FAQ
+- [ ] 11-08-PLAN.md — Collections + product card redesign (absorbs Phase 9 CARD-02..06 intents)
+- [ ] 11-09-PLAN.md — Search surfaces restyled to PLP language
+- [ ] 11-10-PLAN.md — PDP: layout, gallery, variant tiles, buy row, bulk-savings tiers, quick view, rails
+- [ ] 11-11-PLAN.md — Cart page restyle in drawer visual language (no drawer)
+- [ ] 11-12-PLAN.md — Blog/Tea Journal + html-content/portable-text class maps
+- [ ] 11-13-PLAN.md — Wholesale, contact, our-story, certifications, custom-tea-blends, [...slug] pages
+- [ ] 11-14-PLAN.md — Old-system deletion sweep, palette wipe, guard-rule + docs update, full verification gate
 
 ## Progress
 
