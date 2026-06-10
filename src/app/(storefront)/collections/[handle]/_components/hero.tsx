@@ -65,19 +65,23 @@ export function Hero({
           </Section.Container>
         </Section.Root>
 
-        {/* Full-opacity art banner */}
+        {/* Full-opacity art banner — constrained to the content container, not full-bleed */}
         {bannerImage.width && bannerImage.height ? (
-          <div className="w-full overflow-hidden">
-            <Image
-              src={getSizedShopifyImageUrl(bannerImage.url, 1440)}
-              alt={bannerImage.altText ?? collectionTitle}
-              width={bannerImage.width}
-              height={bannerImage.height}
-              sizes="100vw"
-              className="w-full object-cover"
-              priority
-            />
-          </div>
+          <Section.Root tone="transparent" spacing="none">
+            <Section.Container>
+              <div className="overflow-hidden">
+                <Image
+                  src={getSizedShopifyImageUrl(bannerImage.url, 1440)}
+                  alt={bannerImage.altText ?? collectionTitle}
+                  width={bannerImage.width}
+                  height={bannerImage.height}
+                  sizes="(min-width: 1480px) 1480px, 100vw"
+                  className="w-full object-cover"
+                  priority
+                />
+              </div>
+            </Section.Container>
+          </Section.Root>
         ) : null}
 
         {storyDisclosure && (

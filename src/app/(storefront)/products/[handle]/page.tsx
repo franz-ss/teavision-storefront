@@ -316,16 +316,8 @@ async function ProductContent({
             </span>
           </div>
 
-          {/* Description: part of the 26px description→options rhythm (delta #6) */}
-          {descriptionHtml ? (
-            <RichText
-              html={descriptionHtml}
-              variant="compact"
-              className="mt-5.5 max-w-prose text-[1.02rem] text-ink-soft"
-            />
-          ) : null}
-
-          {/* ProductForm: 26px gap above (opts) (delta #6) */}
+          {/* ProductForm first — buy controls (size, qty, add-to-cart, bulk savings)
+              precede the description, matching the original site's PDP order */}
           <ProductForm
             variants={product.variants}
             options={product.options}
@@ -333,6 +325,15 @@ async function ProductContent({
             initialVariantId={initialVariantId}
             className="mt-6.5"
           />
+
+          {/* Description: follows the buy section */}
+          {descriptionHtml ? (
+            <RichText
+              html={descriptionHtml}
+              variant="compact"
+              className="mt-5.5 max-w-prose text-[1.02rem] text-ink-soft"
+            />
+          ) : null}
 
           {/* Disclosures: 32px below ProductForm (design .specs mt-32px = verified match) */}
           <div className="mt-8">

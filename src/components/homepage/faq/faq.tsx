@@ -1,3 +1,5 @@
+import { Plus } from 'lucide-react'
+
 import { Eyebrow, Section } from '@/components/ui'
 
 import { FAQS } from '../content'
@@ -30,7 +32,8 @@ export function Faq() {
                   aria-hidden="true"
                   className="relative grid h-7.5 w-7.5 shrink-0 place-items-center rounded-full border border-hairline text-brand transition-transform group-open:rotate-45 group-open:border-brand group-open:bg-brand group-open:text-paper motion-reduce:transition-none"
                 >
-                  +
+                  {/* 16px SVG plus per design .faq__q .ic — a text glyph sits small/off-center */}
+                  <Plus className="size-4" strokeWidth={1.8} />
                 </span>
               </summary>
               <div className="pb-6.5 text-ink-soft">
