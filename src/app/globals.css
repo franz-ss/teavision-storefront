@@ -481,6 +481,14 @@
   text-transform: uppercase;
 }
 
+@utility hero-scrim {
+  background: linear-gradient(
+    105deg,
+    oklch(22.5% 0.016 167 / 0.82),
+    oklch(22.5% 0.016 167 / 0.15)
+  );
+}
+
 @utility text-brand {
   color: var(--color-brand);
 }

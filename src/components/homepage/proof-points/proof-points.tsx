@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import {
   Award,
   CheckCircle,
@@ -30,36 +29,29 @@ export type ProofPointsProps = {
 
 export function ProofPoints({ points = PROOF_POINTS }: ProofPointsProps) {
   return (
-    <Section.Root tone="inverse" spacing="compact">
+    <Section.Root tone="brand" spacing="compact">
       <Section.Container>
-        <ul className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-0 lg:grid-cols-4">
           {points.map((point) => {
             const IconComponent = point.icon ? ICON_MAP[point.icon] : undefined
             return (
-              <li key={point.title} className="flex items-center gap-4">
-                <div className="bg-on-brand/10 flex items-center justify-center rounded-sm p-4">
-                  {point.image ? (
-                    <Image
-                      src={point.image.src}
-                      alt={point.image.alt}
-                      width={point.image.width}
-                      height={point.image.height}
-                      className="h-6 w-12 shrink-0 object-cover"
-                    />
-                  ) : null}
-                  {!point.image && IconComponent ? (
-                    <IconComponent
-                      className="text-on-brand size-10 shrink-0"
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                </div>
-                <div>
-                  <p className="type-heading-03 text-on-brand">{point.title}</p>
-                  <p className="type-body-sm text-on-brand/55">
-                    {point.description}
-                  </p>
-                </div>
+              <li
+                key={point.title}
+                className="flex flex-col items-center gap-3 px-6 py-4 text-center first:border-l-0 lg:border-l lg:border-paper/12"
+              >
+                {IconComponent ? (
+                  <IconComponent
+                    className="text-gold size-6 shrink-0"
+                    aria-hidden="true"
+                  />
+                ) : null}
+                <p
+                  className="font-display text-[2.4rem] leading-none text-paper"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  {point.title}
+                </p>
+                <p className="type-body-sm text-paper/78">{point.description}</p>
               </li>
             )
           })}

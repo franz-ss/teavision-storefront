@@ -1,14 +1,16 @@
 import Image from 'next/image'
 
-import { Button, Section } from '@/components/ui'
+import { Button, Eyebrow, Section } from '@/components/ui'
 
 import { HOMEPAGE_HERO } from '../content'
 
 export function HomepageHero() {
   return (
     <Section.Root
-      tone="brandStrong"
+      tone="transparent"
+      spacing="none"
       className="relative isolate overflow-hidden"
+      style={{ minHeight: 'min(92vh, 860px)' }}
     >
       <Image
         src={HOMEPAGE_HERO.image.src}
@@ -21,29 +23,33 @@ export function HomepageHero() {
       />
       <div
         aria-hidden="true"
-        className="bg-inverse/50 absolute inset-0 -z-10"
+        className="hero-scrim absolute inset-0 -z-10"
       />
-      <Section.Container>
-        <div className="max-w-prose">
-          <h1 className="type-heading-01 text-on-brand md:type-display-02 mt-5">
-            {HOMEPAGE_HERO.title}
-          </h1>
-          <p className="type-body-lg text-on-brand/85 mt-6 max-w-prose">
-            {HOMEPAGE_HERO.copy}
-          </p>
-          <div className="mt-6">
-            <Button href={HOMEPAGE_HERO.cta.href} variant="brand" size="cta">
-              {HOMEPAGE_HERO.cta.children}
-            </Button>
-          </div>
-          <Image
-            src={HOMEPAGE_HERO.trustMarks.src}
-            alt={HOMEPAGE_HERO.trustMarks.alt}
-            width={HOMEPAGE_HERO.trustMarks.width}
-            height={HOMEPAGE_HERO.trustMarks.height}
-            sizes="(min-width: 768px) 36rem, 90vw"
-            className="mt-6 h-auto w-full max-w-md"
-          />
+      <Section.Container className="flex h-full min-h-[inherit] flex-col justify-end pb-16 pt-32">
+        <Eyebrow tone="gold" className="mb-6">
+          Australia&apos;s tea, herb &amp; spice house
+        </Eyebrow>
+        <h1 className="type-display max-w-[16ch] text-paper">
+          A world of tea mastery,{' '}
+          <em className="italic">by the kilogram.</em>
+        </h1>
+        <p className="type-lede mt-6 max-w-[48ch] text-paper/90">
+          Handpicked from the finest leaves across 15+ countries.
+          Certified-organic loose leaf, bulk tea bags and botanical herbs —
+          trusted by Australia&apos;s leading cafés, retailers and wellness
+          brands.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button href={HOMEPAGE_HERO.cta.href} variant="inverse" size="lg">
+            Explore our teas
+          </Button>
+          <Button
+            href="/pages/wholesale"
+            variant="brand"
+            size="lg"
+          >
+            Open a wholesale account
+          </Button>
         </div>
       </Section.Container>
     </Section.Root>
