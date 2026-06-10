@@ -1,4 +1,4 @@
-import { ArticleCard, Section } from '@/components/ui'
+import { ArticleCard, Eyebrow, Section } from '@/components/ui'
 import type { BlogArticleSummary } from '@/lib/blog/operations'
 import { formatArticleDate, getArticlePath } from '@/lib/blog/operations'
 
@@ -12,12 +12,12 @@ export function FeaturedArticles({
   blogHandle,
 }: FeaturedArticlesProps) {
   return (
-    <Section.Root tone="surface">
+    <Section.Root tone="sunken">
       <Section.Container>
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <p className="type-eyebrow text-muted">Tea Journal</p>
-            <h2 className="type-heading-02 text-strong mt-2">
+            <Eyebrow tone="muted">Tea Journal</Eyebrow>
+            <h2 className="type-heading-02 text-ink mt-2">
               Featured Articles
             </h2>
           </div>

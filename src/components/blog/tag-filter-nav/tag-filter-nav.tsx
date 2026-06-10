@@ -20,10 +20,10 @@ export function TagFilterNav({
         href={getBlogPath(blogHandle)}
         aria-current={!activeTag ? 'page' : undefined}
         className={cn(
-          'type-label focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          'type-label focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full border px-3.5 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
           !activeTag
-            ? 'bg-action-primary text-action-primary-text'
-            : 'border-default bg-surface text-default hover:border-brand border',
+            ? 'bg-brand text-paper border-brand'
+            : 'border-hairline bg-card text-ink hover:bg-brand-tint hover:text-brand',
         )}
       >
         All
@@ -34,10 +34,10 @@ export function TagFilterNav({
           href={getTagPath(blogHandle, tag)}
           aria-current={activeTag === tag ? 'page' : undefined}
           className={cn(
-            'type-label focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+            'type-label focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full border px-3.5 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
             activeTag === tag
-              ? 'bg-action-primary text-action-primary-text'
-              : 'border-default bg-surface text-default hover:border-brand border',
+              ? 'bg-brand text-paper border-brand'
+              : 'border-hairline bg-card text-ink hover:bg-brand-tint hover:text-brand',
           )}
         >
           {tag}

@@ -24,7 +24,7 @@ export function Pagination({
   return (
     <nav
       aria-label="Blog pagination"
-      className="border-default mt-12 flex items-center justify-center gap-1 border-t pt-8"
+      className="border-hairline mt-12 flex items-center justify-center gap-1 border-t pt-8"
     >
       {getPaginationItems(currentPage, totalPages).map((item) =>
         typeof item === 'number' ? (
@@ -38,10 +38,10 @@ export function Pagination({
             })}
             aria-current={item === currentPage ? 'page' : undefined}
             className={cn(
-              'type-label focus-visible:ring-ring flex h-11 w-11 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+              'type-label focus-visible:ring-ring flex min-h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
               item === currentPage
-                ? 'bg-action-primary text-action-primary-text'
-                : 'border-default bg-surface text-default hover:border-brand border',
+                ? 'bg-brand text-paper'
+                : 'border-hairline bg-card text-ink hover:bg-brand-tint hover:text-brand border',
             )}
           >
             {item}
@@ -49,7 +49,7 @@ export function Pagination({
         ) : (
           <span
             key={item}
-            className="type-label text-muted flex h-11 w-11 items-center justify-center"
+            className="type-label text-ink-faint flex min-h-11 w-11 items-center justify-center"
             aria-hidden="true"
           >
             …

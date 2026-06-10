@@ -28,7 +28,7 @@ export function SearchForm({
         autoComplete="off"
         defaultValue={defaultQuery}
         placeholder="Search tea topics…"
-        className="type-body border-default bg-surface text-default placeholder:text-muted focus-visible:border-brand focus-visible:ring-ring min-h-12 flex-1 rounded-md border px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+        className="type-body border-hairline bg-card text-ink placeholder:text-ink-faint focus-visible:border-brand focus-visible:ring-ring min-h-12 flex-1 rounded-md border px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
       />
       <Button type="submit" size="lg" className="shrink-0">
         <Search className="size-4" aria-hidden="true" />

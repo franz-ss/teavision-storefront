@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-import { Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
 import { DEFAULT_LISTING_DESCRIPTION } from '@/lib/blog/listing'
 import type { ShopifyImage } from '@/lib/shopify/types'
 
@@ -34,7 +34,7 @@ export function Hero({
 
   return (
     <Section.Root
-      tone="brandStrong"
+      tone="brand"
       spacing="none"
       className="relative isolate overflow-hidden"
     >
@@ -44,20 +44,19 @@ export function Hero({
         fill
         sizes="100vw"
         preload
-        className="absolute inset-0 -z-20 object-cover"
-      />
-      <div
-        aria-hidden="true"
-        className="bg-inverse/60 absolute inset-0 -z-10"
+        className="absolute inset-0 -z-20 object-cover opacity-35"
       />
       <Section.Container
         variant="compact"
         className="relative flex flex-col items-center justify-center py-16 text-center md:py-24"
       >
-        <h1 className="type-heading-01 text-on-brand md:type-display-01 wrap-break-word">
+        <Eyebrow tone="gold" className="mb-4">
+          Tea Journal
+        </Eyebrow>
+        <h1 className="font-display text-paper max-w-[16ch] text-[clamp(2rem,4vw,3.4rem)] leading-[1.04] tracking-[-0.01em] wrap-break-word">
           {title}
         </h1>
-        <p className="type-body-lg text-on-brand mt-5 max-w-2xl wrap-break-word">
+        <p className="type-lede text-paper/85 mt-5 max-w-2xl wrap-break-word">
           {description}
         </p>
 
