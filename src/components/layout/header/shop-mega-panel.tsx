@@ -69,7 +69,7 @@ export function ShopMegaPanel({
                 Browse {activeShop.name}
               </p>
               <ul
-                className="grid auto-rows-min grid-cols-2 gap-x-4 gap-y-0.5"
+                className="-mx-2.5 grid auto-rows-min grid-cols-2 gap-x-4 gap-y-0.5"
                 role="list"
               >
                 {activeShop.links.map((link) => (

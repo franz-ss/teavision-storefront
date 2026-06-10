@@ -9,7 +9,7 @@ export function ServicesLinks({ onClose }: { onClose: () => void }) {
       <p className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-ink-faint mb-3">
         Services
       </p>
-      <ul className="grid gap-0.5" role="list">
+      <ul className="-mx-2.5 grid gap-0.5" role="list">
         {SERVICES_LINKS.map((link) => (
           <li key={link.href}>
             <Link

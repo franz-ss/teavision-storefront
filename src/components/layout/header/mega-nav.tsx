@@ -27,7 +27,7 @@ export { MobileMegaNav } from './mobile-mega-nav'
 const CLOSE_GRACE_MS = 200
 
 export function MegaNav() {
-  const navRef = useRef<HTMLElement | null>(null)
+  const navRef = useRef<HTMLDivElement | null>(null)
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [openMenu, setOpenMenu] = useState<MenuKey | null>(null)
   const [activeShopKey, setActiveShopKey] = useState<ShopKey>('tea')
@@ -77,8 +77,11 @@ export function MegaNav() {
   useOutsideClose(navRef, closeMenus)
 
   return (
-    <>
-      <nav ref={navRef} aria-label="Main">
+    // display:contents wrapper scopes outside-close to triggers AND panels —
+    // with the ref on <nav> alone, pointerdown on a panel link closed (hid)
+    // the panel before the click completed, so links never navigated.
+    <div ref={navRef} className="contents">
+      <nav aria-label="Main">
         {/*
           ul is h-full so each li can stretch to the full main-bar height, keeping an
           unbroken hover path from trigger to the panel anchored at the main bar's bottom.
@@ -163,14 +166,14 @@ export function MegaNav() {
         />
       </div>
 
-      {/* Page scrim — anchored below the main bar (absolute against the relative main-bar div) */}
+      {/* Page scrim — plain dark overlay, no blur or transition (owner directive) */}
       {openMenu && (
         <div
-          className="absolute inset-x-0 top-full z-40 h-screen bg-ink/35 backdrop-blur-[2px]"
+          className="absolute inset-x-0 top-full z-40 h-screen bg-ink/35"
           aria-hidden="true"
           onClick={closeMenus}
         />
       )}
-    </>
+    </div>
   )
 }
