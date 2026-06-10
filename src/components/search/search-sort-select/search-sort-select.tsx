@@ -3,7 +3,6 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { type ChangeEvent, useCallback } from 'react'
 
-import { Select } from '@/components/ui'
 import {
   SEARCH_SORT_OPTIONS,
   type SearchSortValue,
@@ -42,25 +41,25 @@ export function SearchSortSelect({ currentSort }: SearchSortSelectProps) {
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
       <label
         htmlFor="search-sort-select"
-        className="type-label text-strong shrink-0 whitespace-nowrap"
+        className="type-mono-meta text-ink-faint shrink-0 whitespace-nowrap"
       >
-        Sort by
+        Sort
       </label>
-      <Select
+      <select
         id="search-sort-select"
         value={currentSort}
         onChange={handleChange}
-        className="min-w-48"
+        className="border border-hairline bg-card rounded-full px-4 py-2.25 type-label text-ink focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none cursor-pointer appearance-none min-w-48"
       >
         {SEARCH_SORT_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
-      </Select>
+      </select>
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { Check } from 'lucide-react'
 
-import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 export type SearchFilterPanelFacetValue = {
@@ -40,37 +39,42 @@ export function SearchFilterPanel({
   const visibleFacets = facets.filter((facet) => facet.values.length > 0)
 
   return (
-    <div className={cn('grid gap-5', className)}>
-      <div className="flex items-start justify-between gap-4">
+    <div className={cn('grid gap-0', className)}>
+      <div className="flex items-start justify-between gap-4 pb-4">
         <div>
-          <h2 className="type-heading-04 text-strong">Filters</h2>
-          <p className="type-body-sm text-muted mt-1">
+          <h2 className="font-mono text-[11px] tracking-[0.12em] uppercase text-ink-faint">
+            Filters
+          </h2>
+          <p className="type-body-sm text-ink-soft mt-1">
             {formatResultCount(resultCount)}
           </p>
         </div>
         {selectedFilterCount > 0 && (
-          <Button href={clearHref} variant="ghost" size="sm">
+          <Link
+            href={clearHref}
+            className="type-mono-meta text-gold-deep hover:text-brand focus-visible:ring-ring rounded-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
             Clear
-          </Button>
+          </Link>
         )}
       </div>
 
       {visibleFacets.length === 0 ? (
-        <p className="type-body-sm text-muted">
+        <p className="type-body-sm text-ink-soft">
           No filters are available for this search.
         </p>
       ) : (
-        <div className="grid gap-3">
+        <div>
           {visibleFacets.map((facet) => (
             <details
               key={facet.attribute}
-              className="border-default rounded-md border"
+              className="border-b border-hairline py-5.5"
               open
             >
-              <summary className="type-label text-strong focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-md px-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+              <summary className="font-mono text-[11px] tracking-[0.12em] uppercase text-ink-faint focus-visible:ring-ring flex min-h-10 cursor-pointer list-none items-center justify-between gap-4 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
                 {facet.label}
               </summary>
-              <div className="border-default grid gap-1 border-t p-3">
+              <div className="mt-3 grid gap-1.5">
                 {facet.values.map((value) => (
                   <Link
                     key={value.id}
@@ -79,14 +83,14 @@ export function SearchFilterPanel({
                     className={cn(
                       'focus-visible:ring-ring flex min-h-10 items-center gap-3 rounded px-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       value.selected
-                        ? 'bg-surface-sunken text-strong'
-                        : 'text-default hover:bg-surface-sunken',
+                        ? 'bg-paper-2 text-ink'
+                        : 'text-ink-soft hover:bg-paper-2',
                     )}
                   >
                     <span
                       className={cn(
-                        'border-default flex size-4 shrink-0 items-center justify-center rounded border',
-                        value.selected && 'border-brand bg-brand text-on-brand',
+                        'border-hairline flex size-4.5 shrink-0 items-center justify-center rounded-[5px] border-[1.5px]',
+                        value.selected && 'border-brand bg-brand text-paper',
                       )}
                       aria-hidden="true"
                     >
@@ -95,7 +99,7 @@ export function SearchFilterPanel({
                     <span className="type-body-sm min-w-0 flex-1">
                       {value.label}
                     </span>
-                    <span className="type-caption text-muted tabular-nums">
+                    <span className="font-mono text-ink-faint tabular-nums text-[11px]">
                       {value.count}
                     </span>
                   </Link>

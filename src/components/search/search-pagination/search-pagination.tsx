@@ -58,10 +58,10 @@ function createVisiblePages(
 
 function pageLinkClassName(isCurrent: boolean): string {
   return cn(
-    'type-label border-default flex size-10 items-center justify-center rounded-md border transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+    'type-label border-hairline flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
     isCurrent
-      ? 'bg-strong text-on-brand'
-      : 'bg-surface text-default hover:bg-surface-sunken',
+      ? 'bg-brand text-paper border-brand'
+      : 'bg-card text-ink hover:bg-brand-tint hover:text-brand',
   )
 }
 
@@ -96,7 +96,7 @@ export function SearchPagination({
         item.type === 'ellipsis' ? (
           <span
             key={item.id}
-            className="type-label text-muted flex size-10 items-center justify-center"
+            className="type-label text-ink-faint flex min-h-11 min-w-11 items-center justify-center px-3"
             aria-hidden="true"
           >
             ...
