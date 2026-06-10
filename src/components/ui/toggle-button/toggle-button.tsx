@@ -12,11 +12,11 @@ const toggleButtonVariants = cva(
   {
     variants: {
       variant: {
-        chip: 'min-h-11 items-center justify-center gap-2 rounded border border-default px-4 py-2 text-sm font-medium text-default hover:border-brand aria-pressed:border-brand aria-pressed:bg-action-primary aria-pressed:text-action-primary-text',
+        chip: 'min-h-11 items-center justify-center gap-2 rounded-full border border-hairline bg-card px-4 py-2 text-sm font-medium text-ink-soft hover:border-brand hover:text-brand aria-pressed:border-brand/30 aria-pressed:bg-brand-tint aria-pressed:text-brand',
         menuCard:
-          'group min-h-18 w-full items-start justify-between gap-4 rounded-md border border-transparent p-3 text-left text-default hover:bg-surface hover:text-brand aria-pressed:border-subtle aria-pressed:bg-surface-raised aria-pressed:text-brand',
+          'group min-h-18 w-full items-start justify-between gap-4 rounded-md border border-transparent p-3 text-left text-ink-soft hover:bg-brand-tint hover:text-brand aria-pressed:border-hairline-2 aria-pressed:bg-card aria-pressed:text-brand',
         menuRow:
-          'type-label min-h-11 items-center justify-between gap-2 rounded-md border border-transparent px-3 text-left text-default hover:bg-surface-sunken hover:text-brand aria-pressed:border-subtle aria-pressed:bg-brand-subtle aria-pressed:text-brand md:w-full',
+          'type-label min-h-11 items-center justify-between gap-2 rounded-md border border-transparent px-3 text-left text-ink-soft hover:bg-brand-tint hover:text-brand aria-pressed:border-hairline-2 aria-pressed:bg-brand-tint aria-pressed:text-brand md:w-full',
         thumbnail:
           'relative h-16 w-16 shrink-0 overflow-hidden rounded opacity-60 hover:opacity-100 focus-visible:ring-offset-1 aria-pressed:opacity-100 aria-pressed:ring-ring aria-pressed:ring-2',
       },

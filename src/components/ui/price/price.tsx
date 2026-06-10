@@ -19,7 +19,7 @@ export type PriceProps = {
 const priceTextVariants = cva('font-display tabular-nums', {
   variants: {
     tone: {
-      default: 'text-default',
+      default: 'text-ink',
       sale: 'text-brand',
     },
     size: {
@@ -34,18 +34,21 @@ const priceTextVariants = cva('font-display tabular-nums', {
   },
 })
 
-const comparePriceTextVariants = cva('font-display text-muted line-through', {
-  variants: {
-    size: {
-      sm: 'text-sm leading-5',
-      md: 'text-base leading-6',
-      lg: 'text-lg leading-7',
-    } satisfies Record<PriceSize, string>,
+const comparePriceTextVariants = cva(
+  'font-mono text-[11px] text-ink-faint line-through',
+  {
+    variants: {
+      size: {
+        sm: 'text-[10px]',
+        md: 'text-[11px]',
+        lg: 'text-sm',
+      } satisfies Record<PriceSize, string>,
+    },
+    defaultVariants: {
+      size: 'md',
+    },
   },
-  defaultVariants: {
-    size: 'md',
-  },
-})
+)
 
 function format(money: Money): string {
   return new Intl.NumberFormat('en-AU', {

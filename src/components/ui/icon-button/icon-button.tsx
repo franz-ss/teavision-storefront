@@ -5,15 +5,15 @@ import { cn } from '@/lib/utils'
 
 const iconButtonVariants = cva(
   [
-    'inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md transition-colors',
+    'inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors',
     'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
     'disabled:cursor-not-allowed disabled:opacity-40',
   ],
   {
     variants: {
       variant: {
-        outline: 'border border-default hover:border-brand',
-        ghost: 'text-default hover:bg-surface-sunken hover:text-brand',
+        outline: 'border border-hairline hover:bg-brand-tint hover:text-brand',
+        ghost: 'text-ink-soft hover:bg-brand-tint hover:text-brand',
       },
       size: {
         sm: 'h-11 w-11',

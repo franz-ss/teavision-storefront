@@ -23,6 +23,14 @@ type Story = StoryObj<typeof ToggleButton>
 export const Chip: Story = {
   args: {
     children: 'English Breakfast',
+    pressed: false,
+    variant: 'chip',
+  },
+}
+
+export const ChipSelected: Story = {
+  args: {
+    children: 'English Breakfast',
     pressed: true,
     variant: 'chip',
   },
@@ -36,11 +44,11 @@ export const MenuCard: Story = {
       <>
         <span className="flex min-w-0 flex-col gap-1">
           <span className="type-label">Tea</span>
-          <span className="type-caption text-muted">
+          <span className="type-caption text-ink-soft">
             Explore black tea, green tea, matcha, and specialty blends.
           </span>
         </span>
-        <span className="border-subtle bg-surface text-brand mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full border">
+        <span className="border-hairline-2 bg-card text-brand mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full border">
           <ChevronRight className="size-3.5" aria-hidden="true" />
         </span>
       </>
@@ -64,7 +72,7 @@ export const MenuRow: Story = {
 export const Thumbnail: Story = {
   args: {
     'aria-label': 'View image 1',
-    children: <span className="bg-surface block h-full w-full" />,
+    children: <span className="bg-card block h-full w-full" />,
     pressed: true,
     variant: 'thumbnail',
   },

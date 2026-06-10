@@ -18,7 +18,7 @@ const starSizeBySize: Record<StarRatingSize, number> = {
   lg: 20,
 }
 
-const ratingTextVariants = cva('text-muted tabular-nums', {
+const ratingTextVariants = cva('text-ink-soft tabular-nums', {
   variants: {
     size: {
       sm: 'text-xs',
@@ -47,7 +47,7 @@ function Star({
       viewBox="0 0 20 20"
       aria-hidden="true"
       fill="none"
-      className={cn(fill === 'empty' ? 'text-muted' : 'text-accent')}
+      className={cn(fill === 'empty' ? 'text-ink-faint/40' : 'text-gold')}
     >
       {fill === 'half' && (
         <defs>

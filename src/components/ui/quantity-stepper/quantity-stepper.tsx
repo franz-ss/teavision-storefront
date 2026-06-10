@@ -70,7 +70,7 @@ export function QuantityStepper({
       </label>
       <div
         className={cn(
-          'border-default inline-grid w-fit grid-cols-[2.25rem_2.25rem_2.25rem] overflow-hidden rounded-full border',
+          'border-hairline inline-flex items-center rounded-full border',
           className,
         )}
       >
@@ -80,7 +80,7 @@ export function QuantityStepper({
           disabled={!canDecrease}
           onClick={() => updateQuantity(quantity - quantityStep)}
           variant="ghost"
-          className="h-9 w-9 rounded-none"
+          className="size-11 rounded-none rounded-l-full"
         >
           <Minus className="h-3.5 w-3.5" aria-hidden="true" />
         </IconButton>
@@ -97,7 +97,7 @@ export function QuantityStepper({
             updateQuantity(event.currentTarget.valueAsNumber)
           }
           disabled={disabled}
-          className="border-default text-strong type-body-sm h-9 w-9 min-w-0 [appearance:textfield] border-x bg-transparent text-center tabular-nums focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="border-hairline min-w-7 w-auto [appearance:textfield] border-x bg-transparent text-center font-mono text-[13px] tabular-nums focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           aria-label={label}
           aria-describedby={describedBy}
         />
@@ -107,7 +107,7 @@ export function QuantityStepper({
           disabled={!canIncrease}
           onClick={() => updateQuantity(quantity + quantityStep)}
           variant="ghost"
-          className="h-9 w-9 rounded-none"
+          className="size-11 rounded-none rounded-r-full"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
         </IconButton>
