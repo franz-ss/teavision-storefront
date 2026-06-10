@@ -116,7 +116,7 @@ Plans:
 - [x] 11-14-PLAN.md — Old-system deletion sweep, palette wipe, guard-rule + docs update, full verification gate
 - [x] 11-15-PLAN.md — Gap closure: header utility bar wrap, mobile menu UX, mega-menu hover, global button hover-lift removal
 - [ ] 11-16-PLAN.md — Gap closure: homepage upper+lower parity, approved copy, certs marquee mount, newsletter env/warn fix
-- [ ] 11-17-PLAN.md — Gap closure: PLP banner hero + star rating + grid, collections index grid + contact move, search empty state
+- [x] 11-17-PLAN.md — Gap closure: PLP banner hero + star rating + grid, collections index grid + contact move, search empty state
 - [ ] 11-18-PLAN.md — Gap closure: cart column alignment, visible compare-at prices, optimistic quantity, container width
 - [ ] 11-19-PLAN.md — Gap closure: PDP spacing/alignment parity sweep
 - [ ] 11-20-PLAN.md — Gap closure: blog newsletter band + contact reuse + spacing, footer original copy/links + design spacing
@@ -137,7 +137,7 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, t
 | 6. Prevent site indexing                | 1/1            | Complete | 2026-06-03 |
 | 8. Optimized Collection Quick Add       | 1/1            | Complete | 2026-06-03 |
 | 9. Collection Product Card Improvements | 0/1            | Planned  | —          |
-| 11. Full Visual Redesign                 | 15/22 | In Progress|  |
+| 11. Full Visual Redesign                 | 16/22 | In Progress|  |
 
 ### Phase 9: Collection Product Card Improvements
 
