@@ -180,7 +180,7 @@ Kept with new values (NOT renames, part of new system): `bg-brand`, `text-brand`
 
 ### Button (`src/components/ui/button/button.tsx`)
 - Base: `inline-flex items-center justify-center gap-2.5 rounded-full transition-[background-color,color,box-shadow,transform] cursor-pointer focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40` — `rounded-full` replaces `rounded-md` (**update `button-system.test.mjs` rounded-md assertion**).
-- Hover lift `-translate-y-0.5` + `shadow-2` on filled variants, with `motion-reduce:` guards.
+- No hover lift on any variant (hover-translate removed in plan 11-15; owner directive).
 - Variants (mockup mapping):
   - `brand` = `.btn-primary`: `bg-brand text-paper hover:bg-brand-deep active:bg-brand-deep`
   - `primary` = `.btn-gold`: `bg-ink text-paper hover:bg-ink/90 active:bg-ink/90`

@@ -27,9 +27,9 @@ export function Header() {
       </a>
 
       <header className="sticky top-0 z-60">
-        {/* Utility bar */}
-        <div className="bg-ink text-paper h-9.5 hidden sm:block">
-          <div className="max-w-wide mx-auto flex h-full items-center justify-between px-gutter font-mono text-[11.5px] tracking-[0.08em]">
+        {/* Utility bar — only shown at lg+ where content fits on a single line */}
+        <div className="bg-ink text-paper h-9.5 hidden lg:block">
+          <div className="max-w-wide mx-auto flex h-full items-center justify-between whitespace-nowrap overflow-hidden px-gutter font-mono text-[11.5px] tracking-[0.08em]">
             <div className="flex items-center gap-2">
               <span>EST. MELBOURNE 2014</span>
               <span className="text-paper/50" aria-hidden="true">·</span>
@@ -37,7 +37,7 @@ export function Header() {
               <span className="text-paper/50" aria-hidden="true">·</span>
               <span>FREIGHT-INSURED, WORLDWIDE</span>
             </div>
-            <div className="hidden sm:flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <Link
                 href="/pages/wholesale"
                 className="flex items-center gap-1 text-paper/85 hover:text-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"

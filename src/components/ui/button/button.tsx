@@ -18,13 +18,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         brand:
-          'bg-brand text-paper hover:bg-brand-deep active:bg-brand-deep hover:-translate-y-0.5 hover:shadow-2 motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-0',
+          'bg-brand text-paper hover:bg-brand-deep active:bg-brand-deep',
         primary:
-          'bg-ink text-paper hover:bg-ink/90 active:bg-ink/90 hover:-translate-y-0.5 hover:shadow-2 motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-0',
+          'bg-ink text-paper hover:bg-ink/90 active:bg-ink/90',
         secondary:
           'border-[1.5px] border-hairline bg-transparent text-ink hover:border-ink hover:bg-ink hover:text-paper',
         inverse:
-          'bg-paper text-ink hover:bg-card hover:-translate-y-0.5 hover:shadow-2 motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-0',
+          'bg-paper text-ink hover:bg-card',
         inverseSecondary:
           'border-[1.5px] border-paper/35 bg-transparent text-paper hover:bg-paper hover:text-ink',
         ghost:
