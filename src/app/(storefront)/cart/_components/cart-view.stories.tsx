@@ -23,7 +23,7 @@ const meta: Meta<typeof CartView> = {
   decorators: [
     (Story, context) =>
       context.name === 'Discounted' ? (
-        <div className="bg-surface fixed top-0 left-0 w-216 pt-12">
+        <div className="bg-paper fixed top-0 left-0 w-216 pt-12">
           <Story />
         </div>
       ) : (
@@ -49,7 +49,7 @@ export const Empty: Story = {
       canvas.getByRole('link', { name: 'Apply for wholesale' }),
     ).toBeVisible()
     await expect(
-      canvas.getByRole('link', { name: 'Browse collections' }),
+      canvas.getByRole('link', { name: 'Browse teas' }),
     ).toBeVisible()
     await expect(canvas.getByText('1,000+ businesses served')).toBeVisible()
     await expect(

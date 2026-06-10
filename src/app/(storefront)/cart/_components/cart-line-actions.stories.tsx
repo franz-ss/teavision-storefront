@@ -38,7 +38,7 @@ const meta: Meta<typeof CartLineActions> = {
   },
   decorators: [
     (Story) => (
-      <div className="grid max-w-3xl grid-cols-[auto_1fr_auto_auto_auto] items-center gap-4 p-4">
+      <div className="flex max-w-3xl items-center gap-3 p-4">
         <Story />
       </div>
     ),

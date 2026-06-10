@@ -57,55 +57,49 @@ export function CartLineActions({
 
   return (
     <>
-      <div className="col-start-2 flex items-center gap-2 lg:col-start-3 xl:col-start-4 xl:row-start-1 xl:justify-center">
-        <span className="type-caption text-muted mr-auto lg:sr-only">
-          Quantity
-        </span>
-        <div className="border-default -my-px inline-grid grid-cols-[2.25rem_2.25rem_2.25rem] overflow-hidden rounded-full border">
-          <form action={formAction}>
-            <input type="hidden" name="intent" value="update" />
-            <input type="hidden" name="lineId" value={lineId} />
-            <input type="hidden" name="quantity" value={decreasedQuantity} />
-            <IconButton
-              type="submit"
-              variant="ghost"
-              disabled={!canDecrease || isPending}
-              aria-busy={isPending || undefined}
-              aria-label={`Decrease quantity of ${productTitle}`}
-              className="h-9 w-9 rounded-none"
-            >
-              <Minus className="h-3.5 w-3.5" aria-hidden="true" />
-            </IconButton>
-          </form>
-          <span
-            className="border-default text-strong type-body-sm flex items-center justify-center border-x tabular-nums"
-            role="status"
-            aria-live="polite"
+      {/* Pill quantity stepper */}
+      <div className="inline-flex items-center rounded-full border border-hairline">
+        <form action={formAction}>
+          <input type="hidden" name="intent" value="update" />
+          <input type="hidden" name="lineId" value={lineId} />
+          <input type="hidden" name="quantity" value={decreasedQuantity} />
+          <IconButton
+            type="submit"
+            variant="ghost"
+            disabled={!canDecrease || isPending}
+            aria-busy={isPending || undefined}
+            aria-label={`Decrease quantity of ${productTitle}`}
+            className="size-11 text-ink-soft hover:text-brand rounded-full"
           >
-            {quantity}
-          </span>
-          <form action={formAction}>
-            <input type="hidden" name="intent" value="update" />
-            <input type="hidden" name="lineId" value={lineId} />
-            <input type="hidden" name="quantity" value={increasedQuantity} />
-            <IconButton
-              type="submit"
-              variant="ghost"
-              disabled={!canIncrease || isPending}
-              aria-busy={isPending || undefined}
-              aria-label={`Increase quantity of ${productTitle}`}
-              className="h-9 w-9 rounded-none"
-            >
-              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-            </IconButton>
-          </form>
-        </div>
+            <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+          </IconButton>
+        </form>
+        <span
+          className="min-w-7 text-center font-mono text-[13px] tabular-nums"
+          role="status"
+          aria-live="polite"
+        >
+          {quantity}
+        </span>
+        <form action={formAction}>
+          <input type="hidden" name="intent" value="update" />
+          <input type="hidden" name="lineId" value={lineId} />
+          <input type="hidden" name="quantity" value={increasedQuantity} />
+          <IconButton
+            type="submit"
+            variant="ghost"
+            disabled={!canIncrease || isPending}
+            aria-busy={isPending || undefined}
+            aria-label={`Increase quantity of ${productTitle}`}
+            className="size-11 text-ink-soft hover:text-brand rounded-full"
+          >
+            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+          </IconButton>
+        </form>
       </div>
 
-      <form
-        action={formAction}
-        className="col-start-2 lg:col-start-4 xl:col-start-2"
-      >
+      {/* Remove link */}
+      <form action={formAction}>
         <input type="hidden" name="intent" value="remove" />
         <input type="hidden" name="lineId" value={lineId} />
         <Button
@@ -115,14 +109,13 @@ export function CartLineActions({
           disabled={isPending}
           isLoading={isPending}
           aria-label={`Remove ${productTitle} from cart`}
-          className="w-full lg:w-auto"
         >
           Remove
         </Button>
       </form>
 
       {state.message ? (
-        <p className="type-caption text-danger-text col-span-full" role="alert">
+        <p className="type-caption text-danger" role="alert">
           {state.message}
         </p>
       ) : null}
