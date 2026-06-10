@@ -148,28 +148,6 @@ export const DecreasePayload: Story = {
   },
 }
 
-export const RemovePayload: Story = {
-  args: {
-    action: captureAction,
-  },
-  play: async ({ canvasElement }) => {
-    capturedActions.length = 0
-    const canvas = within(canvasElement)
-    await userEvent.click(
-      canvas.getByRole('button', {
-        name: 'Remove Tea Masters Sencha from cart',
-      }),
-    )
-
-    await waitFor(() => {
-      expect(capturedActions.at(-1)).toEqual({
-        intent: 'remove',
-        lineId: 'gid://shopify/CartLine/1',
-      })
-    })
-  },
-}
-
 export const UpdateError: Story = {
   args: {
     action: errorAction,
@@ -209,22 +187,3 @@ export const UpdatePending: Story = {
   },
 }
 
-export const RemovePending: Story = {
-  args: {
-    action: pendingAction,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await userEvent.click(
-      canvas.getByRole('button', {
-        name: 'Remove Tea Masters Sencha from cart',
-      }),
-    )
-
-    await expect(
-      await canvas.findByRole('button', {
-        name: 'Remove Tea Masters Sencha from cart',
-      }),
-    ).toBeDisabled()
-  },
-}

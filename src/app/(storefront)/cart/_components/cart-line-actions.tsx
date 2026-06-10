@@ -1,15 +1,9 @@
 'use client'
 
-import {
-  useActionState,
-  useEffect,
-  useOptimistic,
-  useState,
-  useTransition,
-} from 'react'
+import { useOptimistic, useState, useTransition } from 'react'
 import { Minus, Plus } from 'lucide-react'
 
-import { Button, IconButton } from '@/components/ui'
+import { IconButton } from '@/components/ui'
 import { cartLineFormAction, type CartLineFormState } from '@/lib/cart/actions'
 import { CART_CHANGED_EVENT } from '@/lib/cart/events'
 import { clampQuantity } from '@/lib/shopify/quantity-rules'
@@ -37,11 +31,6 @@ export function CartLineActions({
   quantityIncrement = 1,
   action = cartLineFormAction,
 }: CartLineActionsProps) {
-  const [state, formAction, isRemovePending] = useActionState(
-    action,
-    INITIAL_CART_LINE_FORM_STATE,
-  )
-
   const [isUpdatePending, startUpdateTransition] = useTransition()
 
   const [stepperState, setStepperState] = useState<CartLineFormState>(
@@ -73,12 +62,6 @@ export function CartLineActions({
   })
   const canDecrease = decreasedQuantity < normalizedQuantity
   const canIncrease = increasedQuantity > normalizedQuantity
-
-  useEffect(() => {
-    if (!state.cartChanged) return
-
-    window.dispatchEvent(new Event(CART_CHANGED_EVENT))
-  }, [state.cartChanged])
 
   function handleStepperClick(newQuantity: number) {
     startUpdateTransition(async () => {
@@ -131,25 +114,9 @@ export function CartLineActions({
         </IconButton>
       </div>
 
-      {/* Remove link */}
-      <form action={formAction}>
-        <input type="hidden" name="intent" value="remove" />
-        <input type="hidden" name="lineId" value={lineId} />
-        <Button
-          variant="ghost"
-          size="sm"
-          type="submit"
-          disabled={isRemovePending}
-          isLoading={isRemovePending}
-          aria-label={`Remove ${productTitle} from cart`}
-        >
-          Remove
-        </Button>
-      </form>
-
-      {(stepperState.message ?? state.message) ? (
+      {stepperState.message ? (
         <p className="type-caption text-danger" role="alert">
-          {stepperState.message ?? state.message}
+          {stepperState.message}
         </p>
       ) : null}
     </>

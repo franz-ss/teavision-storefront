@@ -13,6 +13,7 @@ import type { Cart, Money } from '@/lib/shopify/types'
 
 import { CartCheckoutForm } from './cart-checkout-form'
 import { CartLineActions } from './cart-line-actions'
+import { CartLineRemove } from './cart-line-remove'
 
 type CartViewProps = {
   cart: Cart | null
@@ -468,6 +469,11 @@ export function CartView({ cart }: CartViewProps) {
                         priceClassName="font-bold"
                       />
                     </div>
+                    {/* Remove: quiet text link under the line info per design .cart__remove */}
+                    <CartLineRemove
+                      lineId={line.id}
+                      productTitle={product.title}
+                    />
                   </div>
 
                   {/* Col 3: Unit price (desktop only) */}
