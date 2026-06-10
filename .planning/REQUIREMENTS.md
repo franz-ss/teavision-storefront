@@ -86,13 +86,13 @@
 ### Full Visual Redesign (design/teavision-redesign.html)
 
 - [x] **RD-01**: `src/app/globals.css` defines the new design system as Tailwind 4 `@theme` tokens — warm-paper surfaces, green-undertone ink scale, brand greens, gold accents (oklch values from the redesign), `Spectral` serif / `Hanken Grotesk` sans / `Space Mono` mono / `Caveat` script font stacks, and the redesign radius/rhythm values.
-- [ ] **RD-02**: The old design system is removed completely — no `--tv-*` semantic tokens, no `steep`/`stone` palette scales, and no orphaned CSS or unused token classes remain anywhere in `src/`.
+- [x] **RD-02**: The old design system is removed completely — no `--tv-*` semantic tokens, no `steep`/`stone` palette scales, and no orphaned CSS or unused token classes remain anywhere in `src/`.
 - [x] **RD-03**: Layout chrome (header, navigation/mega-menu, search affordance, cart affordance, footer, announcement surfaces) matches the redesign's structure and styling.
 - [x] **RD-04**: The homepage matches the redesign's section composition and styling (hero, category/collection bands, product showcases, brand-motif bands, trust/wholesale sections, newsletter).
 - [x] **RD-05**: Collection pages and product cards match the redesign's listing presentation while preserving Phase 8/9 behavior contracts (bounded payloads, quick-add, badges).
 - [x] **RD-06**: Product detail pages match the redesign's PDP presentation while preserving bulk-savings, variant selection, and add-to-cart behavior.
 - [x] **RD-07**: Remaining storefront surfaces (cart, search, blog/Tea Journal, wholesale, static pages, error/empty states) are restyled with the new system with no legacy-styled stragglers.
-- [ ] **RD-08**: Storybook stories render correctly under the new system, and `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass with no raw hex/oklch values in classNames.
+- [x] **RD-08**: Storybook stories render correctly under the new system, and `pnpm lint`, `pnpm typecheck`, and `pnpm build` pass with no raw hex/oklch values in classNames.
 
 ## Out of Scope
 
