@@ -24,6 +24,8 @@ type ProductPurchaseFormProps = {
   layout?: 'stacked' | 'inline'
   showPrice?: boolean
   hideSubmit?: boolean
+  /** When false, omits the quantity stepper and submits quantity 1 (CARD-06). Default: true */
+  showQuantity?: boolean
   className?: string
 }
 
@@ -41,6 +43,7 @@ export function ProductPurchaseForm({
   layout = 'stacked',
   showPrice,
   hideSubmit,
+  showQuantity = true,
   className,
 }: ProductPurchaseFormProps) {
   const initialVariant = getInitialVariant(variants)
@@ -102,7 +105,7 @@ export function ProductPurchaseForm({
 
   if (variants.length === 0) {
     return (
-      <div className="border-default bg-surface-sunken text-muted rounded-md border border-dashed p-4 text-sm">
+      <div className="border-hairline bg-paper-2 text-ink-soft rounded-sm border border-dashed p-4 text-sm">
         No purchasable variants are currently available.
       </div>
     )
@@ -125,11 +128,11 @@ export function ProductPurchaseForm({
             <Price
               price={selectedVariant.price}
               size={isInlineLayout ? 'sm' : 'lg'}
-              className={cn(isInlineLayout && 'text-strong font-semibold')}
+              className={cn(isInlineLayout && 'text-ink font-semibold')}
             />
           )}
           {!canAddToCart && !hideSubmit && (
-            <span className="type-caption text-danger-text">Sold out</span>
+            <span className="type-caption text-danger">Sold out</span>
           )}
         </div>
       )}
@@ -179,7 +182,7 @@ export function ProductPurchaseForm({
             </Select>
           </label>
         )}
-        {!hideSubmit && (
+        {!hideSubmit && showQuantity && (
           <div className={cn('grid gap-1', isInlineLayout && 'w-[7.5rem]')}>
             {isInlineLayout && (
               <span className="type-caption text-muted font-semibold uppercase">
@@ -225,7 +228,7 @@ export function ProductPurchaseForm({
         {justAdded ? message : ''}
       </p>
       {error && (
-        <p role="alert" className="type-body-sm text-danger-text">
+        <p role="alert" className="type-body-sm text-danger">
           {error}
         </p>
       )}

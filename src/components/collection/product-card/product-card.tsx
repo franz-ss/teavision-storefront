@@ -1,20 +1,76 @@
+'use client'
+
+import { useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Leaf } from 'lucide-react'
 
 import type { CollectionProductSummary } from '@/lib/shopify/types'
-import { Badge, Button, Price, StarRating } from '@/components/ui'
+import { Badge, Button, Price } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
+import { useAddToCart } from '@/components/product/use-add-to-cart'
 import { cn } from '@/lib/utils'
 
-import { ProductPurchaseForm } from './product-purchase-form'
-
-const COLLECTION_CARD_VARIANT_LIMIT = 8
+// Tag heuristics for certification badges (CARD-03)
+function getCertBadges(tags: string[]): { organic: boolean; gold: boolean } {
+  const organic = tags.some((t) =>
+    /\b(organic|aco|usda|certified organic|acoCertified)\b/i.test(t),
+  )
+  const gold = tags.some((t) => /\b(award|gold award|award-winning)\b/i.test(t))
+  return { organic, gold }
+}
 
 type ProductCardProps = {
   product: CollectionProductSummary
   priority?: boolean
   className?: string
+}
+
+// Inner quick-add button: client-only, single-variant products
+function QuickAddButton({
+  product,
+  variantId,
+}: {
+  product: CollectionProductSummary
+  variantId: string
+}) {
+  const { addItem, error, isPending, message, resetFeedback } = useAddToCart()
+  const justAdded = !!message && !isPending
+
+  useEffect(() => {
+    if (!message) return
+    const timer = setTimeout(resetFeedback, 2500)
+    return () => clearTimeout(timer)
+  }, [message, resetFeedback])
+
+  return (
+    <>
+      <Button
+        type="button"
+        variant="primary"
+        size="sm"
+        onClick={() => addItem(variantId, 1)}
+        disabled={isPending || justAdded}
+        isLoading={isPending}
+        className="w-full"
+        aria-label={
+          justAdded
+            ? `${product.title} added`
+            : `Add ${product.title} to cart`
+        }
+      >
+        {justAdded ? 'Added' : 'Add to cart'}
+      </Button>
+      <p role="status" className="sr-only">
+        {justAdded ? message : ''}
+      </p>
+      {error && (
+        <p role="alert" className="type-body-sm text-danger sr-only">
+          {error}
+        </p>
+      )}
+    </>
+  )
 }
 
 export function ProductCard({
@@ -24,90 +80,114 @@ export function ProductCard({
 }: ProductCardProps) {
   const productUrl = `/products/${product.handle}`
   const isSoldOut = !product.availableForSale
-  const canQuickAdd =
-    product.variants.length > 0 &&
-    product.variants.length < COLLECTION_CARD_VARIANT_LIMIT
+
+  // Single-variant available: quick-add; multi-variant: PDP link (CQA-02)
+  const singleAvailableVariant =
+    product.variants.length === 1 && product.variants[0]?.availableForSale
+      ? product.variants[0]
+      : null
+
+  const { organic, gold } = getCertBadges(product.tags)
 
   return (
-    <article className={cn('group flex gap-4 sm:gap-7', className)}>
-      <Link
-        href={productUrl}
-        tabIndex={-1}
-        aria-hidden="true"
-        className="bg-surface-sunken border-subtle relative flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-md border sm:h-45 sm:w-45"
-      >
-        {product.featuredImage &&
-        product.featuredImage.width &&
-        product.featuredImage.height ? (
-          <Image
-            src={getSizedShopifyImageUrl(product.featuredImage.url, 360)}
-            alt={product.featuredImage.altText ?? product.title}
-            width={product.featuredImage.width}
-            height={product.featuredImage.height}
-            loading={priority ? 'eager' : 'lazy'}
-            fetchPriority={priority ? 'high' : 'auto'}
-            sizes="(min-width: 640px) 180px, 112px"
-            className="max-h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-          />
-        ) : (
-          <div
-            className="flex h-full w-full items-center justify-center"
-            aria-hidden="true"
-          >
-            <Leaf className="text-muted/40 h-6 w-6" />
-          </div>
-        )}
-        {isSoldOut && (
-          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2">
-            <Badge variant="outOfStock" />
-          </div>
-        )}
-      </Link>
-
-      <div className="flex min-h-28 min-w-0 flex-1 flex-col gap-2 sm:min-h-45">
-        <div className="min-w-0">
-          <h3 className="text-strong w-full font-display leading-relaxed font-medium wrap-break-word">
-            <Link
-              href={productUrl}
-              className="focus-visible:ring-ring hover:text-brand inline-block rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-            >
-              {product.title}
-            </Link>
-          </h3>
-
-          {product.rating !== undefined && (
-            <StarRating
-              rating={product.rating}
-              count={product.reviewCount}
-              size="sm"
-              className="mt-2 flex w-fit"
-            />
-          )}
-
-          {!canQuickAdd && (
-            <Price
-              price={product.priceRange.minVariantPrice}
-              size="sm"
-              className="text-strong mt-1 block font-semibold"
-            />
-          )}
-        </div>
-
-        <div className={cn('min-w-0', canQuickAdd ? 'flex flex-1' : 'mt-auto')}>
-          {canQuickAdd ? (
-            <ProductPurchaseForm
-              variants={product.variants}
-              productTitle={product.title}
-              layout="inline"
-              showPrice
-              hideSubmit={isSoldOut}
-              className="flex flex-1 flex-col justify-between"
+    <article className={cn('group relative flex flex-col', className)}>
+      {/* Media block */}
+      <div className="relative aspect-[1/1.12] overflow-hidden rounded-lg bg-paper-2">
+        <Link
+          href={productUrl}
+          tabIndex={-1}
+          aria-hidden="true"
+          className="block h-full w-full"
+        >
+          {product.featuredImage &&
+          product.featuredImage.width &&
+          product.featuredImage.height ? (
+            <Image
+              src={getSizedShopifyImageUrl(product.featuredImage.url, 640)}
+              alt={product.featuredImage.altText ?? product.title}
+              fill
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : 'auto'}
+              sizes="(min-width: 1280px) 340px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 50vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.06] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />
           ) : (
-            <Button href={productUrl} size="sm" className="w-full sm:w-auto">
-              View options
-            </Button>
+            <div
+              className="flex h-full w-full items-center justify-center"
+              aria-hidden="true"
+            >
+              <Leaf className="h-8 w-8 text-ink-faint/40" />
+            </div>
           )}
+        </Link>
+
+        {/* Badges top-left (CARD-03) */}
+        {(organic || gold || isSoldOut) && (
+          <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5">
+            {isSoldOut && <Badge variant="outOfStock" />}
+            {organic && !isSoldOut && (
+              <Badge variant="organic" label="Organic" />
+            )}
+            {gold && !isSoldOut && (
+              <Badge variant="gold" label="Award winning" />
+            )}
+          </div>
+        )}
+
+        {/* Quick-add overlay pinned to bottom of media */}
+        {!isSoldOut && (
+          <div
+            className={cn(
+              'absolute right-0 bottom-0 left-0 p-2.5',
+              'opacity-0 transition-opacity duration-200',
+              'group-hover:opacity-100 focus-within:opacity-100 max-lg:opacity-100',
+            )}
+          >
+            {singleAvailableVariant ? (
+              <QuickAddButton
+                product={product}
+                variantId={singleAvailableVariant.id}
+              />
+            ) : (
+              <Button
+                href={productUrl}
+                variant="primary"
+                size="sm"
+                className="w-full"
+              >
+                View options
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Body: identity + price (CARD-05) */}
+      <div className="pt-4">
+        {/* Origin/type eyebrow (CARD-02) */}
+        {product.productType && (
+          <p className="type-mono-meta text-ink-faint mb-1">
+            {product.productType}
+          </p>
+        )}
+
+        {/* Title as sole PDP link (CARD-04) */}
+        <h3 className="font-display text-[1.2rem] leading-[1.1] my-1.5">
+          <Link
+            href={productUrl}
+            className="focus-visible:ring-ring hover:text-brand transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none focus-visible:rounded"
+          >
+            {product.title}
+          </Link>
+        </h3>
+
+        {/* Price row */}
+        <div className="mt-1.5 flex items-baseline gap-2">
+          <Price
+            price={product.priceRange.minVariantPrice}
+            size="sm"
+            className="font-bold"
+          />
         </div>
       </div>
     </article>

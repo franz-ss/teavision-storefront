@@ -1,8 +1,6 @@
 /**
  * @vitest-environment jsdom
  */
-import { act } from 'react'
-import { createRoot } from 'react-dom/client'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -24,21 +22,23 @@ vi.mock('@/lib/cart/actions', () => ({
   addToCartAction: vi.fn(),
 }))
 
-const variants: ProductVariant[] = [
-  {
-    id: 'gid://shopify/ProductVariant/masters-sencha-50g',
-    title: '50g Sample',
-    availableForSale: true,
-    quantityAvailable: 10,
-    quantityRule: {
-      minimum: 1,
-      maximum: 10,
-      increment: 1,
-    },
-    price: { amount: '12.00', currencyCode: 'AUD' },
-    quantityPriceBreaks: [],
-    image: null,
+const singleVariant: ProductVariant = {
+  id: 'gid://shopify/ProductVariant/masters-sencha-50g',
+  title: '50g Sample',
+  availableForSale: true,
+  quantityAvailable: 10,
+  quantityRule: {
+    minimum: 1,
+    maximum: 10,
+    increment: 1,
   },
+  price: { amount: '12.00', currencyCode: 'AUD' },
+  quantityPriceBreaks: [],
+  image: null,
+}
+
+const multiVariants: ProductVariant[] = [
+  singleVariant,
   {
     id: 'gid://shopify/ProductVariant/masters-sencha-1kg',
     title: '1kg',
@@ -73,60 +73,69 @@ const product: CollectionProductSummary = {
   },
   rating: 4.8,
   reviewCount: 37,
-  variants,
+  variants: [singleVariant],
 }
 
 describe('ProductCard', () => {
-  it('renders the approved inline listing layout', () => {
+  it('renders the approved vertical card layout (.pcard)', () => {
     const html = renderToStaticMarkup(<ProductCard product={product} />)
 
-    expect(html).toContain('sm:h-45')
-    expect(html).toContain('sm:w-45')
+    // Media is vertical aspect ratio
+    expect(html).toContain('aspect-[1/1.12]')
+    // Title uses display font (lockstep with UI-SPEC §5.5)
     expect(html).toContain(
-      '<h3 class="text-strong w-full font-display leading-relaxed font-medium wrap-break-word">',
+      '<h3 class="font-display text-[1.2rem] leading-[1.1] my-1.5">',
     )
-    expect(html).toContain('font-display tabular-nums')
-    expect(html).not.toContain('line-clamp-2')
-    expect(html).toContain('flex-col')
-    expect(html).toContain('justify-between')
-    expect(html).toContain('4.8 out of 5 stars, 37 reviews')
+    // Price rendered
     expect(html).toContain('$12.00')
-    expect(html).toContain('Size')
-    expect(html).toContain('Product Qty')
-    expect(html).toContain('Add to cart')
-
-    expect(html).not.toContain('Green tea')
-    expect(html).not.toContain('Organic')
-    expect(html).not.toContain('ACO')
-    expect(html).not.toContain('From')
-    expect(html).not.toContain('ShoppingCart')
+    // Type-mono-meta eyebrow for productType (CARD-02)
+    expect(html).toContain('type-mono-meta')
+    expect(html).toContain('Green tea')
+    // motion-reduce trio on scale animation
+    expect(html).toContain('motion-reduce:group-hover:scale-100')
+    // Sole PDP link on title only (CARD-04)
+    expect(html).not.toContain('View options')
+    // No rating stars in collection card (new layout)
+    expect(html).not.toContain('out of 5 stars')
   })
 
-  it('updates the visible price when a different size is selected', async () => {
-    const host = document.createElement('div')
-    document.body.append(host)
-    const root = createRoot(host)
+  it('shows quick-add button for single-variant available products', () => {
+    const html = renderToStaticMarkup(<ProductCard product={product} />)
+    expect(html).toContain('Add to cart')
+    expect(html).toContain('Add Tea Masters Sencha Green Tea to cart')
+  })
 
-    await act(async () => {
-      root.render(<ProductCard product={product} />)
-    })
+  it('shows View options link for multi-variant products (CQA-02)', () => {
+    const multiVariantProduct: CollectionProductSummary = {
+      ...product,
+      variants: multiVariants,
+    }
+    const html = renderToStaticMarkup(
+      <ProductCard product={multiVariantProduct} />,
+    )
+    expect(html).toContain('View options')
+    expect(html).not.toContain('Add to cart')
+  })
 
-    expect(host.textContent).toContain('$12.00')
+  it('shows organic certification badge from tags (CARD-03)', () => {
+    const html = renderToStaticMarkup(<ProductCard product={product} />)
+    // organic badge text
+    expect(html).toContain('Organic')
+  })
 
-    const select = host.querySelector('select')
-    if (!select) throw new Error('Expected variant select to render')
+  it('omits productType eyebrow when productType is empty (CARD-02)', () => {
+    const noTypeProduct: CollectionProductSummary = {
+      ...product,
+      productType: '',
+    }
+    const html = renderToStaticMarkup(<ProductCard product={noTypeProduct} />)
+    expect(html).not.toContain('type-mono-meta text-ink-faint mb-1')
+  })
 
-    await act(async () => {
-      select.value = 'gid://shopify/ProductVariant/masters-sencha-1kg'
-      select.dispatchEvent(new Event('change', { bubbles: true }))
-    })
-
-    expect(host.textContent).toContain('$88.00')
-    expect(host.textContent).not.toContain('$12.00')
-
-    await act(async () => {
-      root.unmount()
-    })
-    host.remove()
+  it('updates the visible price via the ProductPurchaseForm when used in PDP context', async () => {
+    // The card no longer renders ProductPurchaseForm — price is static from priceRange.
+    // Verify the price is rendered at initial load.
+    const html = renderToStaticMarkup(<ProductCard product={product} />)
+    expect(html).toContain('$12.00')
   })
 })

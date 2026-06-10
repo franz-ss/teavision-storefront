@@ -8,21 +8,23 @@ import type {
 
 import { ProductCard } from './product-card'
 
-const variants: ProductVariant[] = [
-  {
-    id: 'gid://shopify/ProductVariant/masters-sencha-50g',
-    title: '50g Sample',
-    availableForSale: true,
-    quantityAvailable: 10,
-    quantityRule: {
-      minimum: 1,
-      maximum: 10,
-      increment: 1,
-    },
-    price: { amount: '12.00', currencyCode: 'AUD' },
-    quantityPriceBreaks: [],
-    image: null,
+const singleVariant: ProductVariant = {
+  id: 'gid://shopify/ProductVariant/masters-sencha-50g',
+  title: '50g Sample',
+  availableForSale: true,
+  quantityAvailable: 10,
+  quantityRule: {
+    minimum: 1,
+    maximum: 10,
+    increment: 1,
   },
+  price: { amount: '12.00', currencyCode: 'AUD' },
+  quantityPriceBreaks: [],
+  image: null,
+}
+
+const multiVariants: ProductVariant[] = [
+  singleVariant,
   {
     id: 'gid://shopify/ProductVariant/masters-sencha-1kg',
     title: '1kg',
@@ -40,7 +42,7 @@ const variants: ProductVariant[] = [
 ]
 
 const firstPageVariantLimit = Array.from({ length: 8 }, (_, index) => ({
-  ...variants[0],
+  ...singleVariant,
   id: `gid://shopify/ProductVariant/masters-sencha-pack-${index + 1}`,
   title: `Pack ${index + 1}`,
 }))
@@ -63,7 +65,7 @@ const stubProduct: CollectionProductSummary = {
   },
   rating: 4.8,
   reviewCount: 37,
-  variants,
+  variants: [singleVariant],
 }
 
 const meta: Meta<typeof ProductCard> = {
@@ -73,11 +75,19 @@ const meta: Meta<typeof ProductCard> = {
   parameters: {
     nextjs: { appDirectory: true },
   },
+  decorators: [
+    (Story) => (
+      <div className="w-64">
+        <Story />
+      </div>
+    ),
+  ],
 }
 export default meta
 
 type Story = StoryObj<typeof ProductCard>
 
+/** Default single-variant card: eyebrow, title, quick-add button */
 export const Default: Story = {
   args: {
     product: stubProduct,
@@ -85,41 +95,30 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // Tags and product type are intentionally omitted in the inline listing.
-    await expect(canvas.queryByText('Green tea')).not.toBeInTheDocument()
+    // Product type eyebrow renders (CARD-02)
+    await expect(canvas.getByText('Green tea')).toBeVisible()
 
+    // Title is the sole PDP link (CARD-04) — no supplemental info link
     await expect(
-      canvas.getByRole('img', {
-        name: '4.8 out of 5 stars, 37 reviews',
-      }),
+      canvas.getByRole('link', { name: 'Tea Masters Sencha Green Tea' }),
     ).toBeVisible()
-
-    // Pack size select still renders (multi-variant product)
-    await expect(
-      canvas.getByRole('combobox', {
-        name: 'Select pack size for Tea Masters Sencha Green Tea',
-      }),
-    ).toBeVisible()
-
-    // QuantityStepper is present in the compact inline listing layout
-    await expect(
-      canvas.getByRole('spinbutton', {
-        name: 'Quantity for Tea Masters Sencha Green Tea',
-      }),
-    ).toBeVisible()
-
-    // Add to cart button still renders
-    await expect(
-      canvas.getByRole('button', { name: /^Add to cart$/ }),
-    ).toBeVisible()
-
-    // More info link is gone
     await expect(
       canvas.queryByRole('link', { name: /more info/i }),
     ).not.toBeInTheDocument()
+
+    // Quick-add present for single-variant
+    await expect(
+      canvas.getByRole('button', {
+        name: /Add Tea Masters Sencha Green Tea to cart/,
+      }),
+    ).toBeInTheDocument()
+
+    // Price renders
+    await expect(canvas.getByText('$12.00')).toBeVisible()
   },
 }
 
+/** No product image: fallback leaf icon renders */
 export const NoImage: Story = {
   args: {
     product: {
@@ -132,37 +131,33 @@ export const NoImage: Story = {
   },
 }
 
-export const MultiVariant: Story = {
+/** Multi-variant card: shows View options link, no quick-add (CQA-02) */
+export const MultiVariantFallback: Story = {
   args: {
     product: {
       ...stubProduct,
       id: 'gid://shopify/Product/masters-breakfast',
       handle: 'tea-masters-breakfast',
       title: 'Tea Masters Breakfast Blend',
+      variants: multiVariants,
     },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
+    // View options link to PDP (CQA-02)
     await expect(
-      canvas.getByRole('combobox', {
-        name: 'Select pack size for Tea Masters Breakfast Blend',
-      }),
-    ).toBeVisible()
+      canvas.getByRole('link', { name: 'View options' }),
+    ).toHaveAttribute('href', '/products/tea-masters-breakfast')
 
-    // QuantityStepper is present in the compact inline listing layout
+    // No add-to-cart button
     await expect(
-      canvas.getByRole('spinbutton', {
-        name: 'Quantity for Tea Masters Breakfast Blend',
-      }),
-    ).toBeVisible()
-
-    await expect(
-      canvas.getByRole('button', { name: /^Add to cart$/ }),
-    ).toBeVisible()
+      canvas.queryByRole('button', { name: /add to cart/i }),
+    ).not.toBeInTheDocument()
   },
 }
 
+/** Sold-out card: badges shown, no quick-add */
 export const SoldOut: Story = {
   args: {
     product: {
@@ -171,70 +166,40 @@ export const SoldOut: Story = {
       handle: 'premium-rwandan-black-tea',
       title: 'Premium Rwandan Black Tea CTC BP',
       availableForSale: false,
+      variants: [{ ...singleVariant, availableForSale: false }],
     },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await expect(canvas.getByText('SOLD OUT')).toBeVisible()
+    await expect(canvas.getByText('Sold out')).toBeVisible()
 
     await expect(
       canvas.queryByRole('button', { name: /add to cart/i }),
     ).not.toBeInTheDocument()
-    await expect(
-      canvas.queryByRole('button', { name: /sold out/i }),
-    ).not.toBeInTheDocument()
-
-    await expect(
-      canvas.queryByRole('spinbutton', {
-        name: 'Quantity for Premium Rwandan Black Tea CTC BP',
-      }),
-    ).not.toBeInTheDocument()
   },
 }
 
-export const VariantLimitFallback: Story = {
-  args: {
-    product: {
-      ...stubProduct,
-      variants: firstPageVariantLimit,
-    },
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    await expect(
-      canvas.queryByRole('combobox', {
-        name: 'Select pack size for Tea Masters Sencha Green Tea',
-      }),
-    ).not.toBeInTheDocument()
-    await expect(
-      canvas.getByRole('link', { name: 'View options' }),
-    ).toHaveAttribute('href', '/products/tea-masters-sencha')
-  },
-}
-
+/** Cert badges from tags: organic + award (CARD-03) */
 export const WithCertBadges: Story = {
   args: {
     product: {
       ...stubProduct,
-      id: 'gid://shopify/Product/organic-sencha',
-      handle: 'organic-sencha',
-      title: 'Organic Sencha Green Tea',
-      productType: 'Green tea',
-      tags: ['Organic', 'ACO Certified', 'Wholesale'],
+      id: 'gid://shopify/Product/organic-award-sencha',
+      handle: 'organic-award-sencha',
+      title: 'Organic Award Winning Sencha',
+      tags: ['ACO Certified', 'Award winning', 'Organic'],
     },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // Collection listings keep the row quiet and omit tags/cert badges.
-    await expect(canvas.queryByText('Organic')).not.toBeInTheDocument()
-    await expect(canvas.queryByText('ACO')).not.toBeInTheDocument()
-    await expect(canvas.queryByText('Certified')).not.toBeInTheDocument()
+    await expect(canvas.getByText('Organic')).toBeVisible()
+    await expect(canvas.getByText('Award winning')).toBeVisible()
   },
 }
 
+/** No productType: eyebrow line absent (CARD-02) */
 export const NoBrandingInfo: Story = {
   args: {
     product: {
@@ -249,16 +214,33 @@ export const NoBrandingInfo: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // Product type and tags are omitted in this compact listing.
+    // No eyebrow when productType is absent
     await expect(canvas.queryByText('Green tea')).not.toBeInTheDocument()
-    await expect(canvas.queryByText('Organic')).not.toBeInTheDocument()
-    await expect(canvas.queryByText('ACO')).not.toBeInTheDocument()
 
-    // Product title still renders
+    // Title still renders
     await expect(canvas.getByText('House Blend Black Tea')).toBeVisible()
   },
 }
 
+/** Variant limit fallback: 8+ variants → View options (CQA-02) */
+export const VariantLimitFallback: Story = {
+  args: {
+    product: {
+      ...stubProduct,
+      variants: firstPageVariantLimit,
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Multi-variant → View options
+    await expect(
+      canvas.getByRole('link', { name: 'View options' }),
+    ).toHaveAttribute('href', '/products/tea-masters-sencha')
+  },
+}
+
+/** Long title on mobile: should not overflow */
 export const LongUnbrokenTitleMobile: Story = {
   args: {
     product: {
