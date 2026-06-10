@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Button, Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
 import {
   DEFAULT_BLOG_HANDLE,
   formatArticleDate,
@@ -27,28 +27,36 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
   return (
     <Section.Root tone="surface">
       <Section.Container>
-        <div className="flex items-end justify-between gap-8">
-          <Section.Intro
-            align="left"
-            title="Tea Journal"
-            copy="Stay updated with insights, guides, and stories from the world of tea and spices. From the health benefits of herbal teas to sourcing bulk herbs and spices, our Tea Journal is here to inspire and educate."
-          />
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-prose">
+            <Eyebrow>Tea Journal</Eyebrow>
+            <h2 className="type-heading-01 mt-4 text-ink">
+              Insights from the world of tea
+            </h2>
+            <p className="type-lede mt-4 text-ink-soft">
+              Stay updated with sourcing guides, blending notes, and stories
+              from the world of tea and spices.
+            </p>
+          </div>
 
           <div className="shrink-0">
-            <Button size="lg" href={getBlogPath(DEFAULT_BLOG_HANDLE)}>
-              View All
-            </Button>
+            <Link
+              href={getBlogPath(DEFAULT_BLOG_HANDLE)}
+              className="type-label inline-flex border-b border-hairline text-ink transition-colors hover:text-brand focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            >
+              View journal
+            </Link>
           </div>
         </div>
 
-        <ul className="mt-8 grid gap-5 md:grid-cols-3">
+        <ul className="mt-8 grid gap-5.5 md:grid-cols-3">
           {articles.slice(0, 3).map((article, index) => (
             <li key={article.id}>
               <Link
                 href={getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}
-                className="border-default group focus-visible:ring-ring relative flex h-full flex-col overflow-hidden rounded-md border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="group focus-visible:ring-ring flex h-full flex-col rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
-                <div className="bg-surface-sunken relative aspect-video">
+                <div className="relative mb-4.5 h-55 overflow-hidden rounded-lg bg-paper-2">
                   {article.featuredImage ? (
                     <Image
                       src={article.featuredImage.url}
@@ -59,21 +67,25 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
                       className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     />
                   ) : (
-                    <div className="h-full w-full" aria-hidden="true" />
+                    <div className="h-full w-full bg-brand-tint" aria-hidden="true" />
                   )}
                 </div>
 
-                <div className="border-default flex h-full flex-col border-t p-5">
-                  <p className="type-caption text-muted">
+                <div className="flex h-full flex-col">
+                  <p className="type-mono-meta flex gap-3 text-ink-faint">
+                    <span className="text-brand">
+                      {article.tags[0] ?? 'Tea Journal'}
+                    </span>
+                    <span aria-hidden="true">·</span>
                     {formatArticleDate(article.publishedAt)}
                   </p>
-                  <h3 className="type-heading-05 text-strong group-hover:text-brand mt-3 line-clamp-2 wrap-break-word transition-colors">
+                  <h3 className="mt-2.5 line-clamp-2 font-display text-[1.25rem] leading-[1.18] text-ink wrap-break-word transition-colors group-hover:text-brand">
                     {article.title}
                   </h3>
-                  <p className="type-body-sm text-muted mt-3 line-clamp-3 wrap-break-word">
+                  <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-ink-soft wrap-break-word">
                     {article.excerpt}
                   </p>
-                  <span className="type-label text-brand mt-auto inline-flex pt-5">
+                  <span className="type-label mt-auto inline-flex pt-5 text-brand">
                     Read More
                   </span>
                 </div>

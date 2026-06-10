@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import {
   useCallback,
   useEffect,
@@ -9,16 +10,28 @@ import {
 } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 
+import { ToggleButton } from '@/components/ui'
 import { cn } from '@/lib/utils'
+
+type TestimonialSelector = {
+  logo: {
+    src: string
+    alt: string
+    width: number
+    height: number
+  }
+  name: string
+  role: string
+}
 
 type TestimonialsSliderProps = {
   children: ReactNode
-  slideCount: number
+  testimonials: TestimonialSelector[]
 }
 
 export function TestimonialsSlider({
   children,
-  slideCount,
+  testimonials,
 }: TestimonialsSliderProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [activeIndex, setActiveIndex] = useState(0)
@@ -46,6 +59,13 @@ export function TestimonialsSlider({
     [emblaApi],
   )
 
+  const scrollTo = useCallback(
+    (index: number) => {
+      emblaApi?.scrollTo(index)
+    },
+    [emblaApi],
+  )
+
   useEffect(() => {
     if (!emblaApi) return
 
@@ -57,33 +77,65 @@ export function TestimonialsSlider({
 
   return (
     <div
-      className="focus-visible:ring-ring mt-10 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      className="focus-visible:ring-ring mt-12 grid gap-8 rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none lg:grid-cols-[0.9fr_1.6fr] lg:items-center lg:gap-[clamp(30px,5vw,70px)]"
       role="region"
       aria-roledescription="carousel"
       aria-label="Customer testimonials, use left and right arrow keys to move between testimonials"
       tabIndex={0}
       onKeyDown={onKeyDown}
     >
-      <div ref={emblaRef} className="overflow-hidden">
-        <div className="-ml-4 flex items-start">{children}</div>
+      <div className="flex flex-col gap-2">
+        {testimonials.map((testimonial, index) => (
+          <ToggleButton
+            key={testimonial.name}
+            variant="menuCard"
+            pressed={index === activeIndex}
+            onClick={() => scrollTo(index)}
+            className={cn(
+              'gap-3 rounded-lg p-4',
+              index === activeIndex && 'shadow-1',
+            )}
+          >
+            <Image
+              src={testimonial.logo.src}
+              alt={testimonial.logo.alt}
+              width={testimonial.logo.width}
+              height={testimonial.logo.height}
+              sizes="54px"
+              className="h-10 w-13.5 shrink-0 rounded-sm object-contain"
+            />
+            <span className="min-w-0">
+              <span className="block font-semibold text-ink">
+                {testimonial.name}
+              </span>
+              <span className="mt-1 block text-sm text-ink-faint">
+                {testimonial.role}
+              </span>
+            </span>
+          </ToggleButton>
+        ))}
       </div>
 
-      <div className="mt-6 flex justify-center">
+      <div ref={emblaRef} className="overflow-hidden">
+        <div className="flex items-start">{children}</div>
+      </div>
+
+      <div className="sr-only">
         <div className="flex h-1.5 w-24 gap-1" aria-hidden="true">
-          {Array.from({ length: slideCount }, (_, index) => (
+          {Array.from({ length: testimonials.length }, (_, index) => (
             <span
               key={index}
               className={cn(
                 'h-full flex-1 rounded-full border transition-colors',
                 index === activeIndex
                   ? 'border-brand bg-brand'
-                  : 'border-default bg-surface',
+                  : 'border-hairline bg-card',
               )}
             />
           ))}
         </div>
         <p className="sr-only" aria-live="polite">
-          Testimonial {activeIndex + 1} of {slideCount}
+          Testimonial {activeIndex + 1} of {testimonials.length}
         </p>
       </div>
     </div>
