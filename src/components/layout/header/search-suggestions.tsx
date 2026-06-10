@@ -33,7 +33,7 @@ export function SearchSuggestions({
   return (
     <div
       id={SUGGESTIONS_PANEL_ID}
-      className="bg-card border border-hairline absolute top-[calc(100%+0.75rem)] right-0 left-0 z-50 max-h-[min(36rem,calc(100vh-10rem))] overflow-y-auto rounded-lg shadow-2"
+      className="bg-card border-hairline shadow-2 absolute top-[calc(100%+0.75rem)] right-0 left-0 z-50 max-h-[min(36rem,calc(100vh-10rem))] overflow-y-auto rounded-lg border"
     >
       {status === 'loading' && (
         <div
@@ -42,7 +42,7 @@ export function SearchSuggestions({
           aria-live="polite"
         >
           <LoaderCircle
-            className="size-4 animate-spin motion-reduce:animate-none text-brand"
+            className="text-brand size-4 animate-spin motion-reduce:animate-none"
             aria-hidden="true"
           />
           <span className="type-body-sm">Searching products…</span>

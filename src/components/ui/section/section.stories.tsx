@@ -13,13 +13,7 @@ const meta: Meta<typeof Section.Root> = {
     },
     tone: {
       control: 'select',
-      options: [
-        'surface',
-        'sunken',
-        'brand',
-        'inverse',
-        'transparent',
-      ],
+      options: ['surface', 'sunken', 'brand', 'inverse', 'transparent'],
     },
   },
 }

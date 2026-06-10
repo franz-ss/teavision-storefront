@@ -25,7 +25,7 @@ export function OverlayImageCard({ card, className }: OverlayImageCardProps) {
         alt={card.image.alt}
         fill
         sizes="(min-width: 1280px) 25vw, (min-width: 768px) 48vw, 100vw"
-        className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+        className="object-cover"
       />
       {/* Bottom gradient scrim — deepens on hover */}
       <div
@@ -49,7 +49,7 @@ export function OverlayImageCard({ card, className }: OverlayImageCardProps) {
         {/* Hover CTA — mono 11px uppercase with translateY reveal */}
         <span
           aria-hidden="true"
-          className="mt-3.5 inline-flex items-center gap-1.75 font-mono text-[11px] tracking-[0.08em] uppercase text-paper opacity-0 translate-y-1.5 transition-[opacity,transform] duration-300 max-lg:opacity-100 max-lg:translate-y-0 group-hover:opacity-100 group-hover:translate-y-0 motion-reduce:transition-none"
+          className="text-paper mt-3.5 inline-flex translate-y-1.5 items-center gap-1.75 font-mono text-[11px] tracking-[0.08em] uppercase opacity-0 transition-[opacity,translate] duration-300 group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none max-lg:translate-y-0 max-lg:opacity-100"
         >
           Shop now <ArrowRight className="size-3.5" aria-hidden="true" />
         </span>

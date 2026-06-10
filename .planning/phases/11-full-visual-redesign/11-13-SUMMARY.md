@@ -6,42 +6,43 @@ tags: [nextjs, react, tailwind, storefront, redesign, forms]
 
 requires:
   - phase: 11-full-visual-redesign
-    provides: "Section, Button, Breadcrumbs, Eyebrow, RichText, HTML content, and supporting-page visual direction from earlier Phase 11 plans"
+    provides: 'Section, Button, Breadcrumbs, Eyebrow, RichText, HTML content, and supporting-page visual direction from earlier Phase 11 plans'
 provides:
-  - "Restyled wholesale, contact, our-story, certifications, custom-tea-blends, and generic Shopify page surfaces"
-  - "Shared contact form updated to match the redesigned supporting page system while preserving Server Action protections"
-  - "Generic Shopify page route restyled without changing metadata, cache, noindex, or sanitized rich text plumbing"
-affects: [phase-11-final-visual-redesign, RD-07, supporting-pages, contact-forms]
+  - 'Restyled wholesale, contact, our-story, certifications, custom-tea-blends, and generic Shopify page surfaces'
+  - 'Shared contact form updated to match the redesigned supporting page system while preserving Server Action protections'
+  - 'Generic Shopify page route restyled without changing metadata, cache, noindex, or sanitized rich text plumbing'
+affects:
+  [phase-11-final-visual-redesign, RD-07, supporting-pages, contact-forms]
 
 tech-stack:
   added: []
   patterns:
-    - "Supporting page heroes use Section.Root tone=\"brand\" with gold Eyebrow treatment and warm botanical content surfaces"
-    - "Wholesale and contact forms share the protected ContactForm component with configurable copy and action paths"
-    - "Generic Shopify page bodies use compact Section.Container layout around the existing RichText sanitizer pipeline"
+    - 'Supporting page heroes use Section.Root tone="brand" with gold Eyebrow treatment and warm botanical content surfaces'
+    - 'Wholesale and contact forms share the protected ContactForm component with configurable copy and action paths'
+    - 'Generic Shopify page bodies use compact Section.Container layout around the existing RichText sanitizer pipeline'
 
 key-files:
   created:
-    - ".planning/phases/11-full-visual-redesign/11-13-SUMMARY.md"
+    - '.planning/phases/11-full-visual-redesign/11-13-SUMMARY.md'
   modified:
-    - "src/app/(storefront)/pages/wholesale/page.tsx"
-    - "src/app/(storefront)/pages/wholesale/_components/*"
-    - "src/app/(storefront)/pages/contact/_components/*"
-    - "src/app/(storefront)/pages/our-story/_components/*"
-    - "src/app/(storefront)/pages/certifications/_components/*"
-    - "src/app/(storefront)/pages/custom-tea-blends/_components/*"
-    - "src/app/(storefront)/pages/[...slug]/_components/*"
-    - "src/components/contact/contact-form/contact-form.tsx"
-    - "src/components/contact/contact-form/contact-form.stories.tsx"
+    - 'src/app/(storefront)/pages/wholesale/page.tsx'
+    - 'src/app/(storefront)/pages/wholesale/_components/*'
+    - 'src/app/(storefront)/pages/contact/_components/*'
+    - 'src/app/(storefront)/pages/our-story/_components/*'
+    - 'src/app/(storefront)/pages/certifications/_components/*'
+    - 'src/app/(storefront)/pages/custom-tea-blends/_components/*'
+    - 'src/app/(storefront)/pages/[...slug]/_components/*'
+    - 'src/components/contact/contact-form/contact-form.tsx'
+    - 'src/components/contact/contact-form/contact-form.stories.tsx'
 
 key-decisions:
-  - "Wholesale now renders the shared protected ContactForm so wholesale and contact enquiries stay on the same Server Action, honeypot, and rate-limit boundary."
-  - "The generic Shopify page route keeps page.tsx metadata, noindex, cache, and sanitized rich text plumbing untouched; only hero, breadcrumb, body, and support presentation changed."
-  - "Supporting page heroes standardize on brand Section surfaces with gold eyebrows, warm card surfaces, and compact prose for static informational content."
+  - 'Wholesale now renders the shared protected ContactForm so wholesale and contact enquiries stay on the same Server Action, honeypot, and rate-limit boundary.'
+  - 'The generic Shopify page route keeps page.tsx metadata, noindex, cache, and sanitized rich text plumbing untouched; only hero, breadcrumb, body, and support presentation changed.'
+  - 'Supporting page heroes standardize on brand Section surfaces with gold eyebrows, warm card surfaces, and compact prose for static informational content.'
 
 patterns-established:
-  - "Static support pages compose Section.Root, Section.Container, Eyebrow, Button, and Breadcrumbs directly instead of introducing page-specific layout primitives."
-  - "Form restyles preserve existing action state, hidden website honeypot fields, validation messages, and Storybook coverage."
+  - 'Static support pages compose Section.Root, Section.Container, Eyebrow, Button, and Breadcrumbs directly instead of introducing page-specific layout primitives.'
+  - 'Form restyles preserve existing action state, hidden website honeypot fields, validation messages, and Storybook coverage.'
 
 requirements-completed: [RD-07]
 
@@ -101,6 +102,7 @@ Each task was committed atomically:
 ### Auto-fixed Issues
 
 **1. [Rule 2 - Missing Critical] Mounted the protected wholesale application form**
+
 - **Found during:** Task 1 (Restyle wholesale, contact, and shared contact form)
 - **Issue:** The plan required a redesigned wholesale application card/form, but the existing wholesale page only rendered the earlier page sections and did not mount the shared form in the redesigned page container.
 - **Fix:** Updated `src/app/(storefront)/pages/wholesale/page.tsx` and `src/app/(storefront)/pages/wholesale/_components/wholesale-inclusions.tsx` so the page renders the redesigned application card using `ContactForm` with `sendContactAction`.
@@ -159,5 +161,6 @@ RD-07 supporting/static page coverage is ready for final Phase 11 verification. 
 - Generated runtime logs from this execution were removed; unrelated `test-results/` remains untouched.
 
 ---
-*Phase: 11-full-visual-redesign*
-*Completed: 2026-06-10*
+
+_Phase: 11-full-visual-redesign_
+_Completed: 2026-06-10_

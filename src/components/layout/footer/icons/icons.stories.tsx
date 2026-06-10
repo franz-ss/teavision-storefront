@@ -20,7 +20,7 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: () => (
-    <div className="flex items-center gap-6 text-paper/75">
+    <div className="text-paper/75 flex items-center gap-6">
       <PhoneIcon />
       <MailIcon />
     </div>

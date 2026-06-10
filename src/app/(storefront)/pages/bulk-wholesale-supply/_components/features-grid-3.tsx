@@ -10,10 +10,14 @@ export function FeaturesGrid3() {
           {FEATURE_CARDS_3.map((card) => (
             <div
               key={card.title}
-              className="rounded-xl border border-hairline bg-paper p-6"
+              className="border-hairline bg-paper rounded-xl border p-6"
             >
-              <h3 className="type-label text-ink font-semibold">{card.title}</h3>
-              <p className="type-body-sm text-ink-soft mt-2">{card.description}</p>
+              <h3 className="type-label text-ink font-semibold">
+                {card.title}
+              </h3>
+              <p className="type-body-sm text-ink-soft mt-2">
+                {card.description}
+              </p>
             </div>
           ))}
         </div>

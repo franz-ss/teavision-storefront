@@ -8,7 +8,6 @@ import {
   HomepageNewsletter,
   OrganicHerbs,
   PrivateLabel,
-  ProofPoints,
   ProductRange,
   SupplyChain,
   TeaJournal,
@@ -17,7 +16,6 @@ import {
 import { ContactSection } from '@/components/contact/contact-section'
 import {
   ctaCatalogueData,
-  HOMEPAGE_PROOF_POINTS,
   organizationJsonLd,
   websiteJsonLd,
 } from '@/components/homepage/content'
@@ -57,7 +55,6 @@ export default function HomePage() {
 
       <div className="bg-paper">
         <HomepageHero />
-        <ProofPoints points={HOMEPAGE_PROOF_POINTS} />
         <ProductRange />
         <PrivateLabel />
         <OrganicHerbs />

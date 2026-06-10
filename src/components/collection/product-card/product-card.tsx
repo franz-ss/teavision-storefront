@@ -54,9 +54,7 @@ function QuickAddButton({
         isLoading={isPending}
         className="w-full"
         aria-label={
-          justAdded
-            ? `${product.title} added`
-            : `Add ${product.title} to cart`
+          justAdded ? `${product.title} added` : `Add ${product.title} to cart`
         }
       >
         {justAdded ? 'Added' : 'Add to cart'}
@@ -92,7 +90,7 @@ export function ProductCard({
   return (
     <article className={cn('group relative flex flex-col', className)}>
       {/* Media block */}
-      <div className="relative aspect-[1/1.12] overflow-hidden rounded-lg bg-paper-2">
+      <div className="bg-paper-2 relative aspect-[1/1.12] overflow-hidden rounded-lg">
         <Link
           href={productUrl}
           tabIndex={-1}
@@ -116,7 +114,7 @@ export function ProductCard({
               className="flex h-full w-full items-center justify-center"
               aria-hidden="true"
             >
-              <Leaf className="h-8 w-8 text-ink-faint/40" />
+              <Leaf className="text-ink-faint/40 h-8 w-8" />
             </div>
           )}
         </Link>
@@ -172,10 +170,10 @@ export function ProductCard({
         )}
 
         {/* Title as sole PDP link (CARD-04) */}
-        <h3 className="font-display text-[1.2rem] leading-[1.1] my-1.5">
+        <h3 className="font-display my-1.5 text-[1.2rem] leading-[1.1]">
           <Link
             href={productUrl}
-            className="focus-visible:ring-ring hover:text-brand transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none focus-visible:rounded"
+            className="focus-visible:ring-ring hover:text-brand transition-colors focus-visible:rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             {product.title}
           </Link>

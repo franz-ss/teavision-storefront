@@ -117,9 +117,11 @@ No structural-findings block was provided, so this report contains narrative fin
 
 **File:** `src/app/(storefront)/cart/_components/cart-line-actions.tsx:73-82`
 **Issue:** `handleStepperClick` calls `await action(INITIAL_CART_LINE_FORM_STATE, data)` directly and throws the returned `CartLineFormState` away. Two consequences:
-1. Update failures (e.g., "Maximum quantity available reached.", "cart session expired" from `cartLineFormAction`) are never shown — the optimistic quantity silently reverts with zero feedback. The `state.message` rendering at line 135 only ever reflects the *remove* form.
+
+1. Update failures (e.g., "Maximum quantity available reached.", "cart session expired" from `cartLineFormAction`) are never shown — the optimistic quantity silently reverts with zero feedback. The `state.message` rendering at line 135 only ever reflects the _remove_ form.
 2. `state.cartChanged` never becomes true for quantity updates, so `CART_CHANGED_EVENT` is never dispatched (line 67-71). `CartCount` (`src/components/layout/header/cart-count.tsx`) only refetches on that event, so the header badge shows the old quantity after any +/- click.
-**Fix:** Capture the result and feed it into local state:
+   **Fix:** Capture the result and feed it into local state:
+
 ```tsx
 function handleStepperClick(newQuantity: number) {
   startUpdateTransition(async () => {
@@ -134,6 +136,7 @@ function handleStepperClick(newQuantity: number) {
   })
 }
 ```
+
 and render `updateMessage` alongside `state.message`.
 
 #### WR-02: Mobile menu stays open over the destination page after tapping the wholesale/phone CTAs
@@ -141,6 +144,7 @@ and render `updateMessage` alongside `state.message`.
 **File:** `src/components/layout/header/mobile-mega-nav.tsx:131-138`
 **Issue:** The "Apply for Wholesale" Button (`href="/pages/wholesale"`) and phone Button in the footer CTA row do not call `closeAll`. `DIRECT_LINKS` rows and panel links pass `onClick={closeAll}` (lines 117, mobile-shop-panel.tsx:60, 72), but these two were missed. Because navigation is client-side and the `mobileOpen` state lives in `Header`, the full-screen overlay remains open on top of `/pages/wholesale` after tapping the primary mobile conversion CTA.
 **Fix:**
+
 ```tsx
 <Button href="/pages/wholesale" variant="brand" size="lg" onClick={closeAll}>
   Apply for Wholesale
@@ -153,6 +157,7 @@ and render `updateMessage` alongside `state.message`.
 **File:** `src/app/(storefront)/collections/[handle]/_components/product-list.tsx:24-26`
 **Issue:** The button labeled "Clear filters" links to `/pages/contact`. A user trying to remove filters is sent to a contact form instead. `PageContent` already computes `clearFiltersHref` (page-content.tsx:97) but does not pass it to `ProductList`.
 **Fix:** Pass `clearFiltersHref` into `ProductList` and use it as the button href; keep a separate "Contact us" link if the "we source to order" path should remain:
+
 ```tsx
 <Button href={clearFiltersHref} variant="ghost" size="sm" className="mt-5">
   Clear filters
@@ -170,6 +175,7 @@ and render `updateMessage` alongside `state.message`.
 **File:** `src/components/ui/quantity-stepper/quantity-stepper.tsx:107-109`
 **Issue:** `onChange` runs `clampQuantity` on each keystroke. With `min={10}` (wholesale variants do carry `quantityRule.minimum > 1` via `getVariantMinimumQuantity`), typing "2" of "25" immediately becomes "10", and the subsequent "5" produces "105". Clearing the field (`valueAsNumber` = NaN) snaps to `min` instantly. Users cannot type quantities for any variant whose minimum or increment exceeds 1.
 **Fix:** Keep a local string state while focused and clamp on blur/Enter instead of on every change:
+
 ```tsx
 onChange={(e) => setDraft(e.currentTarget.value)}
 onBlur={() => updateQuantity(Number.parseInt(draft, 10))}
@@ -197,10 +203,11 @@ onBlur={() => updateQuantity(Number.parseInt(draft, 10))}
 
 **File:** `src/components/layout/header/search-overlay.tsx:66-72`; `src/components/layout/header/header.tsx:120-132`; `src/components/layout/header/mobile-mega-nav.tsx:41`
 **Issue:**
+
 1. `SearchOverlay` declares `role="dialog" aria-modal="true"` but implements no focus trap and no body scroll lock — Tab moves focus into the obscured page behind the scrim, contradicting `aria-modal`.
 2. The burger `IconButton` toggling `MobileMegaNav` has no `aria-expanded`/`aria-controls`, unlike every other disclosure in this codebase (`DisclosureButton` contract enforced by button-system.test.mjs).
 3. `MobileMegaNav` has no Escape-key handling and no scroll lock; the page behind the full-screen overlay still scrolls.
-**Fix:** Add a focus trap + `overflow-hidden` on `body` while either overlay is open; give the burger `aria-expanded={mobileOpen}` and `aria-controls` referencing the nav container (add an `id` to it); add an Escape handler to `MobileMegaNav` mirroring `SearchOverlay`'s.
+   **Fix:** Add a focus trap + `overflow-hidden` on `body` while either overlay is open; give the burger `aria-expanded={mobileOpen}` and `aria-controls` referencing the nav container (add an `id` to it); add an Escape handler to `MobileMegaNav` mirroring `SearchOverlay`'s.
 
 #### WR-10: Multiple React component declarations per file and `'use client'` above the interactive leaf
 
@@ -243,8 +250,8 @@ onBlur={() => updateQuantity(Number.parseInt(draft, 10))}
 #### IN-06: Duplicate alias exports in contact actions; subject line built from raw user input
 
 **File:** `src/lib/contact/actions.ts:243-249, 286-290, 345-356, 226`
-**Issue:** `submitContactFormAction` is an identical re-wrap of `sendContactAction`, and `submitNewsletterSignupFormAction` / `sendNewsletterSignupFormAction` both wrap `sendNewsletterSignupAction` — three near-duplicate exported entry points per flow. Additionally `subject: \`New enquiry from ${submission.name}\`` interpolates the raw name; Resend's JSON API mitigates header injection, but control characters should still be stripped defensively.
-**Fix:** Consolidate to one exported action per flow (plus the `useActionState`-shaped variant where needed); add `submission.name.replace(/[\r\n]+/g, ' ')` before interpolating into the subject.
+**Issue:** `submitContactFormAction` is an identical re-wrap of `sendContactAction`, and `submitNewsletterSignupFormAction` / `sendNewsletterSignupFormAction` both wrap `sendNewsletterSignupAction` — three near-duplicate exported entry points per flow. Additionally `subject: \`New enquiry from ${submission.name}\``interpolates the raw name; Resend's JSON API mitigates header injection, but control characters should still be stripped defensively.
+**Fix:** Consolidate to one exported action per flow (plus the`useActionState`-shaped variant where needed); add `submission.name.replace(/[\r\n]+/g, ' ')` before interpolating into the subject.
 
 #### IN-07: Shared contact/newsletter forms hardcode `homepage-*` element ids
 
@@ -257,6 +264,7 @@ onBlur={() => updateQuantity(Number.parseInt(draft, 10))}
 **File:** `src/components/homepage/proof-points/proof-points.tsx:46-53`
 **Issue:** The divider-pattern classes are selected via nested ternaries returning whole string literals. The convention requires `cn()` for conditional composition; the shared `flex flex-col px-7.5 py-11` frame is also triplicated.
 **Fix:**
+
 ```tsx
 className={cn(
   'flex flex-col px-7.5 py-11',
@@ -268,7 +276,7 @@ className={cn(
 #### IN-09: Testimonials slider ships invisible, purposeless progress dots
 
 **File:** `src/components/homepage/testimonials/testimonials-slider.tsx:124-137`
-**Issue:** The dot indicator strip is wrapped in `sr-only` *and* marked `aria-hidden="true"` — invisible to sighted users and hidden from assistive tech. It serves no one; only the adjacent `aria-live` paragraph is functional.
+**Issue:** The dot indicator strip is wrapped in `sr-only` _and_ marked `aria-hidden="true"` — invisible to sighted users and hidden from assistive tech. It serves no one; only the adjacent `aria-live` paragraph is functional.
 **Fix:** Delete the dot markup, or remove `sr-only` if the dots were meant to be visible.
 
 #### IN-10: `aria-label` on plain `<span>` elements is unreliably exposed
@@ -283,7 +291,7 @@ className={cn(
 **Issue:** (a) `collections/page.tsx` and the homepage import `@/components/contact/contact-section` directly while other callers use the `@/components/contact` barrel — conventions call for barrel imports across domains. (b) `content.ts` imports `CtaProps` as a value import; it is type-only. (c) `not-found.tsx` collection pills and all popular-search entries use raw `<a>` for internal `/collections/...` routes, losing prefetch/client navigation; `not-found.tsx` also passes a redundant `robots: { index: false }` into `withNoindexRobots`, which may override the helper's fuller robots object.
 **Fix:** Switch to barrel imports; `import type { CtaProps }`; use `<Link>` for internal hrefs; drop the redundant `robots` override.
 
-#### IN-12: BulkSavings labels the *selected* tier "Best value"; mockup concept stories retained after implementation
+#### IN-12: BulkSavings labels the _selected_ tier "Best value"; mockup concept stories retained after implementation
 
 **File:** `src/components/product/bulk-savings/bulk-savings.tsx:142-146`; `src/app/not-found.concept.stories.tsx`; `src/components/layout/header/search-overlay-concept.stories.tsx`
 **Issue:** (a) The "Best value" badge renders on whichever tier is active/selected, so selecting the smallest tier brands it "Best value" — misleading copy; the badge should mark the highest-discount tier. (b) Both `*.concept.stories.tsx` mockup files remain in the tree after their concepts were implemented (`not-found.tsx`, `search-overlay.tsx`); they duplicate production markup that will silently drift, and each declares multiple components per file.

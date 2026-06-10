@@ -74,6 +74,16 @@ export function SearchaniseRecommendations({
     return () => observer.disconnect()
   }, [shouldLoad])
 
+  // Carousel states render the heading inline with the arrows (no dead band
+  // between title and cards); text-only states keep a standalone heading.
+  const headingElement = title ? (
+    <h2 id={titleId} className={headingClassName}>
+      {title}
+    </h2>
+  ) : null
+  const headingIsInline =
+    renderState === 'rendered' || renderState === 'fallback'
+
   const visibleContent = !shouldLoad ? null : renderState === 'waiting' ? (
     <p className="type-body-sm text-ink-faint" role="status" aria-live="polite">
       Loading recommendations…
@@ -82,6 +92,7 @@ export function SearchaniseRecommendations({
     <RelatedProductsCarousel
       products={products}
       ariaLabel="Customers also bought products"
+      heading={headingElement}
     />
   ) : renderState === 'fallback' && fallback ? (
     <div data-searchanise-fallback>{fallback}</div>
@@ -126,9 +137,7 @@ export function SearchaniseRecommendations({
           className={sectionClassName}
           aria-labelledby={titleId}
         >
-          <h2 id={titleId} className={headingClassName}>
-            {title}
-          </h2>
+          {headingIsInline ? null : headingElement}
           {visibleContent}
         </Section.Root>
       ) : (

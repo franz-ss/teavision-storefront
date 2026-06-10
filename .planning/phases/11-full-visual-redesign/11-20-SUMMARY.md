@@ -9,7 +9,14 @@ dependency_graph:
   affects: [blog-listing, footer]
 tech_stack:
   added: []
-  patterns: [route-only component composition, cross-route homepage motif reuse, pt-0 same-tone band collapse, footer-local clamp padding, sr-only SEO link block]
+  patterns:
+    [
+      route-only component composition,
+      cross-route homepage motif reuse,
+      pt-0 same-tone band collapse,
+      footer-local clamp padding,
+      sr-only SEO link block,
+    ]
 key_files:
   created:
     - src/app/(storefront)/blogs/[blog]/_components/blog-newsletter-band.tsx
@@ -27,12 +34,12 @@ key_files:
     - src/components/layout/footer/newsletter-form/newsletter-form.tsx
     - src/components/layout/footer/payment-mark/payment-mark.tsx
 decisions:
-  - "BlogNewsletterBand imports BrushCircle/Stamp/HomepageNewsletterForm cross-route from homepage/ following the certifications precedent; promotion deferred"
-  - "Popular Searches rendered as sr-only SEO block below the footer bar (hidden visually, accessible for screen readers and search engines)"
-  - "Quality pills retained per prior owner decision; only underlying HACCP copy text restored"
+  - 'BlogNewsletterBand imports BrushCircle/Stamp/HomepageNewsletterForm cross-route from homepage/ following the certifications precedent; promotion deferred'
+  - 'Popular Searches rendered as sr-only SEO block below the footer bar (hidden visually, accessible for screen readers and search engines)'
+  - 'Quality pills retained per prior owner decision; only underlying HACCP copy text restored'
 metrics:
   duration: 636s
-  completed_date: "2026-06-10"
+  completed_date: '2026-06-10'
   tasks_completed: 2
   files_changed: 13
 ---
@@ -43,10 +50,10 @@ metrics:
 
 ## Tasks Completed
 
-| Task | Description | Commit | Files |
-|------|-------------|--------|-------|
-| 1 | Blog listing — newsletter ink band + contact section + spacing | 95ff465 | listing-content.tsx, blog-newsletter-band.tsx (new), featured-articles.tsx, article-results.tsx |
-| 2 | Footer — original copy/links + design spacing/typography | f678f49 | view.tsx, link-item.tsx, link-list.tsx, quality-column.tsx, newsletter-column.tsx, newsletter-form.tsx, payment-mark.tsx, popular-searches/ (new) |
+| Task | Description                                                    | Commit  | Files                                                                                                                                             |
+| ---- | -------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Blog listing — newsletter ink band + contact section + spacing | 95ff465 | listing-content.tsx, blog-newsletter-band.tsx (new), featured-articles.tsx, article-results.tsx                                                   |
+| 2    | Footer — original copy/links + design spacing/typography       | f678f49 | view.tsx, link-item.tsx, link-list.tsx, quality-column.tsx, newsletter-column.tsx, newsletter-form.tsx, payment-mark.tsx, popular-searches/ (new) |
 
 ## What Was Built
 
@@ -78,6 +85,7 @@ metrics:
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] JSX comment placement error in newsletter-form.tsx**
+
 - **Found during:** Task 2 typecheck
 - **Issue:** JSX block comment `{/* ... */}` placed outside the return expression's root element, causing TypeScript parse errors.
 - **Fix:** Moved comment to a regular JS comment above the `return`.
@@ -103,10 +111,12 @@ None — no new network endpoints, auth paths, or schema changes introduced.
 ## Self-Check: PASSED
 
 Files created:
+
 - `src/app/(storefront)/blogs/[blog]/_components/blog-newsletter-band.tsx` — FOUND
 - `src/components/layout/footer/popular-searches/popular-searches.tsx` — FOUND
 - `src/components/layout/footer/popular-searches/index.ts` — FOUND
 
 Commits verified:
+
 - 95ff465 (Task 1 — blog newsletter band) — FOUND
 - f678f49 (Task 2 — footer parity) — FOUND

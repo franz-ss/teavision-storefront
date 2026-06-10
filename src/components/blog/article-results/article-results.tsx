@@ -37,9 +37,7 @@ export function ArticleResults({
             {normalizedQuery && (
               <p className="type-body-sm text-ink-soft mt-3">
                 Showing matches for{' '}
-                <span className="type-label text-ink">
-                  {normalizedQuery}
-                </span>
+                <span className="type-label text-ink">{normalizedQuery}</span>
               </p>
             )}
           </div>

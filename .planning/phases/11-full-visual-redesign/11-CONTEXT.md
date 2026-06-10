@@ -27,6 +27,7 @@ The bundled mockup has been unpacked to `design/extracted/`:
 ## Implementation Decisions
 
 ### Design system source of truth (LOCKED)
+
 - The new design system is exactly what `design/extracted/design-system.css` defines:
   - Surfaces: `--paper` oklch(0.974 0.008 92), `--paper-2`, `--paper-3`, `--card`
   - Ink: `--ink` oklch(0.225 0.016 167), `--ink-soft`, `--ink-faint`, hairline borders at 12%/7% ink alpha
@@ -38,26 +39,31 @@ The bundled mockup has been unpacked to `design/extracted/`:
   brush/motif elements) as closely as the real data model allows.
 
 ### Old design system removal (LOCKED)
+
 - Remove the old system **completely**: all `--tv-*` semantic tokens, the
   `steep-*` and `stone-*` palette scales, legacy footer color tokens, and any
   unused CSS/theme files. No aliasing the old names to new values — consumers
   migrate to the new token names.
 
 ### Migration mapping (LOCKED)
+
 - Before restyling, produce a concrete file-by-file migration map: every file in
   `src/` that references old tokens/utilities and what each needs.
 
 ### Scope: all surfaces (LOCKED)
+
 - Header/nav/mega-menu, footer, homepage, collection pages + product cards,
   product detail pages, cart, search, blog/Tea Journal, wholesale and static
   pages, error/empty/loading states, and Storybook stories.
 
 ### Behavior preservation (LOCKED)
+
 - No regression to existing behavioral contracts from Phases 1–10 (bulk savings,
   Searchanise search, footer links/newsletter actions, quick-add, PLP payload
   bounds, noindex, rate limiting, accessibility landmarks/skip-nav).
 
 ### Claude's Discretion
+
 - Tailwind 4 `@theme` token naming for the new system (semantic names like
   `bg-paper`, `text-ink`, `text-brand` etc.) and how mockup CSS maps to utilities.
 - Use the mockup's **default palette** (green); ignore the `[data-palette="earth"]`
@@ -75,11 +81,13 @@ The bundled mockup has been unpacked to `design/extracted/`:
 </decisions>
 
 <canonical_refs>
+
 ## Canonical References
 
 **Downstream agents MUST read these before planning or implementing.**
 
 ### New design system (source of truth)
+
 - `design/extracted/design-system.css` — full token set + component CSS
 - `design/extracted/header.js` — header, mega-menu, search, cart drawer, mobile menu mockup
 - `design/extracted/homepage.js` — homepage section composition
@@ -91,10 +99,12 @@ The bundled mockup has been unpacked to `design/extracted/`:
 - `design/extracted/ui-primitives.js` — button/eyebrow/band primitives
 
 ### Old design system (to be removed)
+
 - `src/app/globals.css` — current `@theme` with `--tv-*`, `steep-*`, `stone-*` tokens
 - `docs/conventions.md` — styling rules (token-class-only, `cn()`, Section primitives)
 
 ### Project rules
+
 - `CLAUDE.md` / `AGENTS.md` — banned patterns (no raw hex in classNames, no CSS modules, Section.Root usage)
 
 </canonical_refs>
@@ -122,5 +132,5 @@ The bundled mockup has been unpacked to `design/extracted/`:
 
 ---
 
-*Phase: 11-full-visual-redesign*
-*Context gathered: 2026-06-10 via PRD Express Path*
+_Phase: 11-full-visual-redesign_
+_Context gathered: 2026-06-10 via PRD Express Path_

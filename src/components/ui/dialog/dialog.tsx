@@ -100,7 +100,7 @@ export function Dialog({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         className={cn(
-          'bg-paper text-ink border-hairline relative max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-lg border shadow-4',
+          'bg-paper text-ink border-hairline shadow-4 relative max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-lg border',
           className,
         )}
         onKeyDown={handleKeyDown}

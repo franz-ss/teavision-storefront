@@ -277,7 +277,7 @@ function TrustSignalList({ layout }: { layout: 'inline' | 'stacked' }) {
   }
 
   return (
-    <div className="mt-4 space-y-2.5 border-t border-hairline pt-4">
+    <div className="border-hairline mt-4 space-y-2.5 border-t pt-4">
       {TRUST_SIGNALS.map((signal) => (
         <div key={signal} className="flex items-start gap-2">
           <Check
@@ -329,7 +329,7 @@ export function CartView({ cart }: CartViewProps) {
       <div className="grid gap-8 pb-24 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-start xl:gap-10 xl:pb-0">
         <div className="min-w-0">
           {/* Desktop table header */}
-          <div className="text-ink-faint hidden border-b border-hairline pb-3 xl:grid xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-center xl:gap-x-6">
+          <div className="text-ink-faint border-hairline hidden border-b pb-3 xl:grid xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-center xl:gap-x-6">
             <span className="type-mono-meta">Photo</span>
             <span className="type-mono-meta">Name</span>
             <span className="type-mono-meta">Price/kg</span>
@@ -338,7 +338,7 @@ export function CartView({ cart }: CartViewProps) {
           </div>
 
           <ul
-            className="space-y-0 divide-y divide-hairline"
+            className="divide-hairline space-y-0 divide-y"
             role="list"
             aria-label="Cart items"
           >
@@ -361,7 +361,7 @@ export function CartView({ cart }: CartViewProps) {
               return (
                 <li
                   key={line.id}
-                  className="flex gap-3.5 py-5 border-b border-hairline last:border-b-0 xl:grid xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-start xl:gap-x-6"
+                  className="border-hairline flex gap-3.5 border-b py-5 last:border-b-0 xl:grid xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-start xl:gap-x-6"
                 >
                   {/* Col 1: Product image */}
                   <Link
@@ -388,7 +388,7 @@ export function CartView({ cart }: CartViewProps) {
 
                   {/* Col 2: Name, variant, bulk prompt, discount labels */}
                   <div className="min-w-0 flex-1 xl:flex-none">
-                    <h3 className="font-display text-[1.05rem] w-full leading-snug wrap-break-word">
+                    <h3 className="font-display w-full text-[1.05rem] leading-snug wrap-break-word">
                       <Link
                         href={productHref}
                         className="focus-visible:ring-ring hover:text-brand inline-block max-w-full rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -411,12 +411,9 @@ export function CartView({ cart }: CartViewProps) {
                     </div>
                     {nextBulkDiscountPrompt ? (
                       <p className="type-body-sm text-gold-deep mt-2 wrap-break-word">
-                        Buy {nextBulkDiscountPrompt.quantityNeeded} more and
-                        get{' '}
-                        {formatPercent(
-                          nextBulkDiscountPrompt.discountPercent,
-                        )}
-                        % on each product
+                        Buy {nextBulkDiscountPrompt.quantityNeeded} more and get{' '}
+                        {formatPercent(nextBulkDiscountPrompt.discountPercent)}%
+                        on each product
                       </p>
                     ) : null}
                     {showDiscountAllocations ? (
@@ -465,7 +462,7 @@ export function CartView({ cart }: CartViewProps) {
                         compareAtPrice={lineDisplayPricing.totalCompareAtPrice}
                         layout="stacked"
                         size="sm"
-                        className="font-bold items-end shrink-0"
+                        className="shrink-0 items-end font-bold"
                         priceClassName="font-bold"
                       />
                     </div>
@@ -511,7 +508,7 @@ export function CartView({ cart }: CartViewProps) {
                       compareAtPrice={lineDisplayPricing.totalCompareAtPrice}
                       layout="stacked"
                       size="sm"
-                      className="font-bold items-end"
+                      className="items-end font-bold"
                       priceClassName="font-bold"
                     />
                   </div>
@@ -549,10 +546,10 @@ export function CartView({ cart }: CartViewProps) {
         {/* Order summary sidebar */}
         <aside
           aria-label="Order summary"
-          className="bg-card border-t border-hairline rounded-lg p-6 xl:sticky xl:top-24"
+          className="bg-card border-hairline rounded-lg border-t p-6 xl:sticky xl:top-24"
         >
-          <h2 className="font-display text-2xl text-ink">Order summary</h2>
-          <div className="mt-5 space-y-3 border-t border-hairline pt-5">
+          <h2 className="font-display text-ink text-2xl">Order summary</h2>
+          <div className="border-hairline mt-5 space-y-3 border-t pt-5">
             <div className="type-body-sm flex justify-between gap-4">
               <span className="text-ink-soft">Items</span>
               <span
@@ -564,7 +561,7 @@ export function CartView({ cart }: CartViewProps) {
               </span>
             </div>
             <div className="flex justify-between gap-4">
-              <span className="font-display text-xl text-ink">Grand total</span>
+              <span className="font-display text-ink text-xl">Grand total</span>
               <Price
                 price={cartDisplayPricing.subtotalPrice}
                 compareAtPrice={cartDisplayPricing.subtotalCompareAtPrice}
@@ -573,9 +570,11 @@ export function CartView({ cart }: CartViewProps) {
             </div>
           </div>
 
-          <div className="mt-3 flex items-center gap-1.5 type-mono-meta text-ink-faint">
+          <div className="type-mono-meta text-ink-faint mt-3 flex items-center gap-1.5">
             <Truck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            <span>Free freight on wholesale orders over $300 · insured &amp; tracked</span>
+            <span>
+              Free freight on wholesale orders over $300 · insured &amp; tracked
+            </span>
           </div>
 
           <div className="mt-5">
@@ -596,13 +595,13 @@ export function CartView({ cart }: CartViewProps) {
 
       {/* Sticky mobile checkout bar */}
       <div
-        className="bg-card shadow-3 fixed inset-x-0 bottom-0 z-40 border-t border-hairline xl:hidden"
+        className="bg-card shadow-3 border-hairline fixed inset-x-0 bottom-0 z-40 border-t xl:hidden"
         aria-label="Checkout"
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
           <div className="min-w-0">
             <p className="type-mono-meta text-ink-faint">Grand total</p>
-            <p className="font-display text-xl text-ink tabular-nums">
+            <p className="font-display text-ink text-xl tabular-nums">
               <Price
                 price={cartDisplayPricing.subtotalPrice}
                 compareAtPrice={cartDisplayPricing.subtotalCompareAtPrice}

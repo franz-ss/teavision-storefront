@@ -76,7 +76,9 @@ export function QuantityStepper({
       <div
         className={cn(
           'border-hairline inline-flex border',
-          isRectangle ? 'items-stretch rounded-sm' : 'items-center rounded-full',
+          isRectangle
+            ? 'items-stretch rounded-sm'
+            : 'items-center rounded-full',
           className,
         )}
       >
@@ -108,7 +110,7 @@ export function QuantityStepper({
             updateQuantity(event.currentTarget.valueAsNumber)
           }
           disabled={disabled}
-          className="border-hairline min-w-7 w-auto [appearance:textfield] border-x bg-transparent text-center font-mono text-[13px] tabular-nums focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="border-hairline w-auto min-w-7 [appearance:textfield] border-x bg-transparent text-center font-mono text-[13px] tabular-nums focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           aria-label={label}
           aria-describedby={describedBy}
         />

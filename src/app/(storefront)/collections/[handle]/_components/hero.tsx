@@ -33,18 +33,18 @@ export function Hero({
             {/* Breadcrumb */}
             <nav
               aria-label="Breadcrumb"
-              className="type-mono-meta text-paper/60 py-6 flex flex-wrap items-center gap-2"
+              className="type-mono-meta text-paper/60 flex flex-wrap items-center gap-2 py-6"
             >
               <Link
                 href="/"
-                className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none rounded hover:text-paper/90"
+                className="focus-visible:ring-ring hover:text-paper/90 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 Home
               </Link>
               <span aria-hidden="true">/</span>
               <Link
                 href="/collections/all"
-                className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none rounded hover:text-paper/90"
+                className="focus-visible:ring-ring hover:text-paper/90 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 Collections
               </Link>
@@ -122,14 +122,14 @@ export function Hero({
         >
           <Link
             href="/"
-            className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none rounded hover:text-paper/90"
+            className="focus-visible:ring-ring hover:text-paper/90 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Home
           </Link>
           <span aria-hidden="true">/</span>
           <Link
             href="/collections/all"
-            className="focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none rounded hover:text-paper/90"
+            className="focus-visible:ring-ring hover:text-paper/90 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Collections
           </Link>

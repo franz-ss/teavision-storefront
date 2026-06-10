@@ -101,7 +101,7 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
                     clearHref={clearHref}
                   />
 
-                  <details className="bg-paper rounded-lg border border-hairline lg:hidden">
+                  <details className="bg-paper border-hairline rounded-lg border lg:hidden">
                     <summary className="type-label text-ink focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
                       <span className="inline-flex items-center gap-2">
                         <SlidersHorizontal

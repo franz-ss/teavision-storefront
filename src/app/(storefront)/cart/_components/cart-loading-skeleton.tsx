@@ -10,7 +10,7 @@ export function CartLoadingSkeleton() {
       <div className="min-w-0">
         {/* Desktop table header skeleton */}
         <div
-          className="hidden border-b border-hairline pb-3 xl:grid xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-center xl:gap-x-6"
+          className="border-hairline hidden border-b pb-3 xl:grid xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-center xl:gap-x-6"
           aria-label="Loading cart items"
         >
           {Array.from({ length: 5 }, (_, index) => (
@@ -22,7 +22,7 @@ export function CartLoadingSkeleton() {
         </div>
 
         {/* Line item skeletons */}
-        <ul className="space-y-0 divide-y divide-hairline" aria-hidden="true">
+        <ul className="divide-hairline space-y-0 divide-y" aria-hidden="true">
           {Array.from({ length: 2 }, (_, index) => (
             <li key={index} className="flex gap-3.5 py-5">
               {/* Thumb */}
@@ -43,7 +43,7 @@ export function CartLoadingSkeleton() {
 
                 {/* Stepper + remove */}
                 <div className="mt-3 flex items-center gap-3">
-                  <div className="border-hairline inline-flex h-11 w-28 animate-pulse rounded-full border motion-reduce:animate-none bg-paper-2" />
+                  <div className="border-hairline bg-paper-2 inline-flex h-11 w-28 animate-pulse rounded-full border motion-reduce:animate-none" />
                   <div className="bg-paper-2 h-4 w-14 animate-pulse rounded motion-reduce:animate-none" />
                 </div>
               </div>
@@ -55,11 +55,8 @@ export function CartLoadingSkeleton() {
         <div className="bg-paper-2 mt-6 h-11 animate-pulse rounded-md motion-reduce:animate-none" />
 
         {/* Checkout form skeleton */}
-        <div
-          className="mt-8 space-y-4"
-          aria-label="Loading checkout form"
-        >
-          <div className="bg-paper-2 h-28 animate-pulse rounded-sm border border-hairline motion-reduce:animate-none" />
+        <div className="mt-8 space-y-4" aria-label="Loading checkout form">
+          <div className="bg-paper-2 border-hairline h-28 animate-pulse rounded-sm border motion-reduce:animate-none" />
           <div className="flex items-start gap-2.5">
             <div className="bg-paper-2 mt-0.5 h-5 w-5 animate-pulse rounded motion-reduce:animate-none" />
             <div className="bg-paper-2 h-5 w-72 max-w-full animate-pulse rounded motion-reduce:animate-none" />
@@ -74,10 +71,10 @@ export function CartLoadingSkeleton() {
       {/* Order summary sidebar skeleton */}
       <aside
         aria-label="Loading order summary"
-        className="bg-card rounded-lg border-t border-hairline p-6 xl:sticky xl:top-24"
+        className="bg-card border-hairline rounded-lg border-t p-6 xl:sticky xl:top-24"
       >
         <div className="bg-paper-2 h-8 w-40 animate-pulse rounded motion-reduce:animate-none" />
-        <div className="mt-5 space-y-3 border-t border-hairline pt-5">
+        <div className="border-hairline mt-5 space-y-3 border-t pt-5">
           <div className="flex justify-between gap-4">
             <div className="bg-paper-2 h-5 w-12 animate-pulse rounded motion-reduce:animate-none" />
             <div className="bg-paper-2 h-5 w-14 animate-pulse rounded motion-reduce:animate-none" />
@@ -87,9 +84,9 @@ export function CartLoadingSkeleton() {
             <div className="bg-paper-2 h-7 w-20 animate-pulse rounded motion-reduce:animate-none" />
           </div>
         </div>
-        <div className="mt-3 bg-paper-2 h-4 w-full animate-pulse rounded motion-reduce:animate-none" />
-        <div className="mt-5 bg-paper-2 h-12 w-full animate-pulse rounded-full motion-reduce:animate-none" />
-        <div className="mt-4 space-y-2.5 border-t border-hairline pt-4">
+        <div className="bg-paper-2 mt-3 h-4 w-full animate-pulse rounded motion-reduce:animate-none" />
+        <div className="bg-paper-2 mt-5 h-12 w-full animate-pulse rounded-full motion-reduce:animate-none" />
+        <div className="border-hairline mt-4 space-y-2.5 border-t pt-4">
           {Array.from({ length: 4 }, (_, index) => (
             <div key={index} className="flex items-start gap-2">
               <div className="bg-paper-2 mt-0.5 h-4 w-4 shrink-0 animate-pulse rounded-full motion-reduce:animate-none" />
@@ -101,7 +98,7 @@ export function CartLoadingSkeleton() {
 
       {/* Sticky mobile checkout bar skeleton */}
       <div
-        className="bg-card shadow-3 fixed inset-x-0 bottom-0 z-40 border-t border-hairline xl:hidden"
+        className="bg-card shadow-3 border-hairline fixed inset-x-0 bottom-0 z-40 border-t xl:hidden"
         aria-label="Loading mobile checkout"
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">

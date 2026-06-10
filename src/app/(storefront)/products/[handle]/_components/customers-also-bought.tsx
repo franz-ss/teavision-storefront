@@ -26,13 +26,21 @@ export async function CustomersAlsoBought({ product }: { product: Product }) {
           <RelatedProductsCarousel
             products={fallbackProducts}
             ariaLabel="Customers also bought products"
+            heading={
+              <h2
+                id="customers-also-bought-title"
+                className="type-heading-02 text-ink"
+              >
+                {CUSTOMERS_ALSO_BOUGHT_TITLE}
+              </h2>
+            }
           />
         ) : undefined
       }
       title={CUSTOMERS_ALSO_BOUGHT_TITLE}
       titleId="customers-also-bought-title"
       sectionClassName="border-t border-hairline pt-10"
-      headingClassName="type-heading-02 mb-6 text-ink"
+      headingClassName="type-heading-02 text-ink"
       {...(!searchanisePublicConfig.enabled || !searchanisePublicConfig.apiKey
         ? { fallbackDelayMs: 0 }
         : undefined)}

@@ -28,16 +28,23 @@ export function Sidebar({
   visibleFilters,
 }: SidebarProps) {
   return (
-    <aside className="hidden lg:grid lg:gap-5 lg:sticky lg:top-32 lg:self-start">
+    <aside className="hidden lg:sticky lg:top-32 lg:grid lg:gap-5 lg:self-start">
       {/* Wholesale upsell card */}
-      <div className="bg-brand-tint border border-brand/20 rounded-lg p-5.5">
-        <h2 className="font-display text-[1.1rem] text-ink">Need help choosing?</h2>
+      <div className="bg-brand-tint border-brand/20 rounded-lg border p-5.5">
+        <h2 className="font-display text-ink text-[1.1rem]">
+          Need help choosing?
+        </h2>
         <p className="type-body-sm text-ink-soft mt-3">
           Share your format, volume, and flavour brief with the Teavision team
           before you sample or scale.
         </p>
         <div className="mt-4">
-          <Button href="/pages/wholesale-account-request" variant="brand" size="sm" className="w-full">
+          <Button
+            href="/pages/wholesale-account-request"
+            variant="brand"
+            size="sm"
+            className="w-full"
+          >
             Wholesale access
           </Button>
         </div>
@@ -53,9 +60,9 @@ export function Sidebar({
 
       {/* Related collections */}
       {sidebarCollections.length > 0 && (
-        <div className="border-t border-hairline pt-5">
+        <div className="border-hairline border-t pt-5">
           <details open>
-            <summary className="type-mono-meta text-ink-faint uppercase focus-visible:ring-ring flex min-h-11 cursor-pointer list-none items-center rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+            <summary className="type-mono-meta text-ink-faint focus-visible:ring-ring flex min-h-11 cursor-pointer list-none items-center rounded uppercase focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
               You Might Like
             </summary>
             <nav

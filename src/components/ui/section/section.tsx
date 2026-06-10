@@ -113,9 +113,7 @@ function Intro({
         </Eyebrow>
       ) : null}
       <h2 className="type-heading-01 text-current">{title}</h2>
-      {copy ? (
-        <p className="type-lede mt-4 text-ink-soft">{copy}</p>
-      ) : null}
+      {copy ? <p className="type-lede text-ink-soft mt-4">{copy}</p> : null}
     </div>
   )
 }

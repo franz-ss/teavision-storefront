@@ -72,7 +72,7 @@ export function HomepageNewsletterForm({
         maxLength={254}
         placeholder="Enter your email"
         aria-describedby={hasMessage ? messageId : undefined}
-        className="min-h-12 min-w-55 flex-1 rounded-full border border-paper/25 bg-paper/10 px-5.5 text-paper placeholder:text-paper/60 focus:border-gold focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none"
+        className="border-paper/25 bg-paper/10 text-paper placeholder:text-paper/60 focus:border-gold focus-visible:ring-ring min-h-12 min-w-55 flex-1 rounded-full border px-5.5 focus-visible:ring-2 focus-visible:outline-none"
       />
       <div className="sr-only" aria-hidden="true">
         <input

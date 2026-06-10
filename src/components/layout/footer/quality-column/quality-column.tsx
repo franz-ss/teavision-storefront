@@ -13,20 +13,23 @@ const QUALITY_PILLS = [
 export function QualityColumn() {
   return (
     <div>
-      <h3 className="mb-4.5 font-mono text-[10.5px] tracking-[0.16em] uppercase text-gold">
+      <h3 className="text-gold mb-4.5 font-mono text-[10.5px] tracking-[0.16em] uppercase">
         Quality
       </h3>
       {/* Original site HACCP copy (restored from settings_data.json footer text block) */}
-      <p className="max-w-[30ch] text-[0.95rem] text-paper/75 leading-normal">
+      <p className="text-paper/75 max-w-[30ch] text-[0.95rem] leading-normal">
         Teavision runs a HACCP Certified food &amp; safety program to provide
         consistent quality throughout its products.
       </p>
       {/* margin-top: 22px, gap: 10px per design .ft__quality */}
-      <div className="flex flex-wrap" style={{ marginTop: '22px', gap: '10px' }}>
+      <div
+        className="flex flex-wrap"
+        style={{ marginTop: '22px', gap: '10px' }}
+      >
         {QUALITY_PILLS.map((pill) => (
           <span
             key={pill}
-            className="rounded-full border border-paper/16 bg-paper/5 px-3 py-1.5 font-mono text-[9.5px] tracking-widest uppercase text-paper/80"
+            className="border-paper/16 bg-paper/5 text-paper/80 rounded-full border px-3 py-1.5 font-mono text-[9.5px] tracking-widest uppercase"
           >
             {pill}
           </span>

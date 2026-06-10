@@ -37,12 +37,14 @@ type ConceptAProps = {
   placeholder?: string
 }
 
-function ConceptAOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…' }: ConceptAProps) {
+function ConceptAOverlay({
+  placeholder = 'Search 1,000+ teas, herbs & spices…',
+}: ConceptAProps) {
   return (
-    <div className="w-full bg-paper border-b border-hairline shadow-4">
-      <div className="max-w-wide mx-auto px-gutter pt-5 pb-7">
+    <div className="bg-paper border-hairline shadow-4 w-full border-b">
+      <div className="max-w-wide px-gutter mx-auto pt-5 pb-7">
         {/* Close button row */}
-        <div className="flex justify-end mb-3">
+        <div className="mb-3 flex justify-end">
           <IconButton
             aria-label="Close search"
             variant="ghost"
@@ -62,9 +64,9 @@ function ConceptAOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…'
               // Comfortable body scale — no oversized clamp
               'type-body',
               // Shared .field treatment from TextInput
-              'border border-hairline rounded-sm bg-card text-ink placeholder:text-ink-faint',
+              'border-hairline bg-card text-ink placeholder:text-ink-faint rounded-sm border',
               // Sizing — generous vertical padding, room for search icon
-              'w-full min-h-12 pl-4 pr-12 py-3.5 transition-colors',
+              'min-h-12 w-full py-3.5 pr-12 pl-4 transition-colors',
               // Focus: brand border + green glow (same as TextInput / Textarea)
               'focus:border-brand focus:shadow-focus focus:ring-0 focus:outline-none',
             )}
@@ -76,7 +78,7 @@ function ConceptAOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…'
             variant="ghost"
             size="sm"
             aria-label="Submit search"
-            className="absolute top-1/2 right-0 size-12 -translate-y-1/2 text-ink-faint hover:text-brand"
+            className="text-ink-faint hover:text-brand absolute top-1/2 right-0 size-12 -translate-y-1/2"
           >
             <Search className="size-5" aria-hidden="true" strokeWidth={1.8} />
           </IconButton>
@@ -91,7 +93,7 @@ function ConceptAOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…'
             {POPULAR_SUGGESTIONS.map((suggestion) => (
               <span
                 key={suggestion}
-                className="rounded-full border border-hairline bg-card px-3.5 py-2 type-label text-ink hover:bg-brand hover:text-paper transition-colors cursor-pointer"
+                className="border-hairline bg-card type-label text-ink hover:bg-brand hover:text-paper cursor-pointer rounded-full border px-3.5 py-2 transition-colors"
               >
                 {suggestion}
               </span>
@@ -105,12 +107,14 @@ function ConceptAOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…'
 
 // ─── Concept B: constrained display scale, soft focus ring (midpoint) ───────
 
-function ConceptBOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…' }: ConceptAProps) {
+function ConceptBOverlay({
+  placeholder = 'Search 1,000+ teas, herbs & spices…',
+}: ConceptAProps) {
   return (
-    <div className="w-full bg-paper border-b border-hairline shadow-4">
-      <div className="max-w-wide mx-auto px-gutter pt-5 pb-7">
+    <div className="bg-paper border-hairline shadow-4 w-full border-b">
+      <div className="max-w-wide px-gutter mx-auto pt-5 pb-7">
         {/* Close button row */}
-        <div className="flex justify-end mb-3">
+        <div className="mb-3 flex justify-end">
           <IconButton
             aria-label="Close search"
             variant="ghost"
@@ -130,9 +134,9 @@ function ConceptBOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…'
               // Modest serif — readable but not dominating
               'font-display text-lg',
               // Shared .field treatment
-              'border border-hairline rounded-sm bg-transparent text-ink placeholder:text-ink-faint',
+              'border-hairline text-ink placeholder:text-ink-faint rounded-sm border bg-transparent',
               // Sizing
-              'w-full min-h-14 pl-4 pr-12 py-4 transition-colors',
+              'min-h-14 w-full py-4 pr-12 pl-4 transition-colors',
               // Focus: brand border + green glow
               'focus:border-brand focus:shadow-focus focus:ring-0 focus:outline-none',
             )}
@@ -144,7 +148,7 @@ function ConceptBOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…'
             variant="ghost"
             size="sm"
             aria-label="Submit search"
-            className="absolute top-1/2 right-0 size-14 -translate-y-1/2 text-ink-faint hover:text-brand"
+            className="text-ink-faint hover:text-brand absolute top-1/2 right-0 size-14 -translate-y-1/2"
           >
             <Search className="size-5" aria-hidden="true" strokeWidth={1.8} />
           </IconButton>
@@ -159,7 +163,7 @@ function ConceptBOverlay({ placeholder = 'Search 1,000+ teas, herbs & spices…'
             {POPULAR_SUGGESTIONS.map((suggestion) => (
               <span
                 key={suggestion}
-                className="rounded-full border border-hairline bg-card px-3.5 py-2 type-label text-ink hover:bg-brand hover:text-paper transition-colors cursor-pointer"
+                className="border-hairline bg-card type-label text-ink hover:bg-brand hover:text-paper cursor-pointer rounded-full border px-3.5 py-2 transition-colors"
               >
                 {suggestion}
               </span>

@@ -1,6 +1,6 @@
 ---
 status: diagnosed
-trigger: "Phase 11 UAT test 3: header utility bar wraps into 3 cramped colliding lines at ~640-768px viewports"
+trigger: 'Phase 11 UAT test 3: header utility bar wraps into 3 cramped colliding lines at ~640-768px viewports'
 created: 2026-06-10T00:00:00Z
 updated: 2026-06-10T00:00:00Z
 symptoms_prefilled: true

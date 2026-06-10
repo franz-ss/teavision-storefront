@@ -27,15 +27,18 @@ function ConceptA404() {
   return (
     <Section.Root tone="sunken" spacing="default">
       <Section.Container>
-        <div className="flex flex-col items-center text-center gap-8 py-8">
+        <div className="flex flex-col items-center gap-8 py-8 text-center">
           {/* Floating illustration */}
           <div className="relative">
-            <BrushCircle illo="teapot" className="w-[clamp(160px,20vw,220px)]" />
+            <BrushCircle
+              illo="teapot"
+              className="w-[clamp(160px,20vw,220px)]"
+            />
           </div>
 
           {/* Eyebrow + heading */}
           <div className="max-w-sm">
-            <Eyebrow tone="muted" className="justify-center mb-4" rule={false}>
+            <Eyebrow tone="muted" className="mb-4 justify-center" rule={false}>
               Nothing to steep here
             </Eyebrow>
             <h1 className="type-heading-01 text-ink">
@@ -61,22 +64,29 @@ function ConceptA404() {
           </div>
 
           {/* Quick collection links */}
-          <div className="border-t border-hairline pt-6 w-full max-w-sm">
-            <p className="type-label text-ink-faint mb-3">Popular collections</p>
+          <div className="border-hairline w-full max-w-sm border-t pt-6">
+            <p className="type-label text-ink-faint mb-3">
+              Popular collections
+            </p>
             <div className="flex flex-wrap justify-center gap-2">
-              {['Teas', 'Herbs & Spices', 'Bulk Bags', 'Matcha', 'Chai'].map((label) => (
-                <a
-                  key={label}
-                  href={`/collections/${label.toLowerCase().replace(/\s+&\s+/g, '-').replace(/\s+/g, '-')}`}
-                  className={cn(
-                    'rounded-full border border-hairline bg-card px-3.5 py-2 type-label text-ink',
-                    'hover:bg-brand hover:text-paper transition-colors',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                  )}
-                >
-                  {label}
-                </a>
-              ))}
+              {['Teas', 'Herbs & Spices', 'Bulk Bags', 'Matcha', 'Chai'].map(
+                (label) => (
+                  <a
+                    key={label}
+                    href={`/collections/${label
+                      .toLowerCase()
+                      .replace(/\s+&\s+/g, '-')
+                      .replace(/\s+/g, '-')}`}
+                    className={cn(
+                      'border-hairline bg-card type-label text-ink rounded-full border px-3.5 py-2',
+                      'hover:bg-brand hover:text-paper transition-colors',
+                      'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                    )}
+                  >
+                    {label}
+                  </a>
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -91,40 +101,45 @@ function ConceptB404() {
   return (
     <Section.Root tone="surface" spacing="default">
       <Section.Container>
-        <div className="flex flex-col items-center text-center gap-6 py-8">
+        <div className="flex flex-col items-center gap-6 py-8 text-center">
           {/* Large typographic 404 with stamp in the corner */}
           <div className="relative inline-flex items-center justify-center">
             <p
               aria-hidden="true"
               className={cn(
-                'font-display font-medium text-ink-faint select-none',
+                'font-display text-ink-faint font-medium select-none',
                 'text-[clamp(6rem,20vw,12rem)] leading-none tracking-tight',
               )}
             >
               404
             </p>
             {/* Stamp rotated slightly — decorative, aria-hidden inside Stamp */}
-            <div className="absolute -right-8 -top-4 rotate-12 opacity-80">
-              <Stamp top="Lost" bottom="Teavision" tone="brand" id="not-found" />
+            <div className="absolute -top-4 -right-8 rotate-12 opacity-80">
+              <Stamp
+                top="Lost"
+                bottom="Teavision"
+                tone="brand"
+                id="not-found"
+              />
             </div>
           </div>
 
           {/* Eyebrow + heading */}
-          <div className="max-w-sm -mt-2">
-            <Eyebrow tone="brand" className="justify-center mb-4">
+          <div className="-mt-2 max-w-sm">
+            <Eyebrow tone="brand" className="mb-4 justify-center">
               Page not found
             </Eyebrow>
             <h1 className="type-heading-02 text-ink">
               Something&rsquo;s gone astray
             </h1>
             <p className="type-body text-ink-soft mt-3">
-              The page you&rsquo;re looking for has moved or never existed.
-              Head back or browse our range.
+              The page you&rsquo;re looking for has moved or never existed. Head
+              back or browse our range.
             </p>
           </div>
 
           {/* Helpful actions */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center mt-2">
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Button href="/" variant="brand">
               Go home
             </Button>

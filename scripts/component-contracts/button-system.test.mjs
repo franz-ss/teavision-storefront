@@ -163,13 +163,8 @@ test('hover zoom image treatments respect reduced motion', async () => {
       '_components',
       'collection-card-image.tsx',
     ),
-    sourcePath(
-      'src',
-      'components',
-      'homepage',
-      'overlay-image-card',
-      'overlay-image-card.tsx',
-    ),
+    // overlay-image-card (range tiles) intentionally has NO image zoom —
+    // the design's .rtile hover only deepens the gradient scrim
     sourcePath(
       'src',
       'components',

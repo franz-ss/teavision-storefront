@@ -11,15 +11,15 @@ export function ServicesMegaPanel({ onClose, open }: ServicesMenuProps) {
   return (
     <div
       id="services-menu"
-      className="absolute inset-x-0 top-full z-50 bg-paper border-b border-hairline shadow-4"
+      className="bg-paper border-hairline shadow-4 absolute inset-x-0 top-full z-50 border-b"
       hidden={!open}
     >
-      <div className="max-w-wide mx-auto px-gutter py-10">
+      <div className="max-w-wide px-gutter mx-auto py-10">
         <div className="grid gap-10 max-lg:grid-cols-1 lg:grid-cols-[1.1fr_3.7fr]">
           {/* Intro column */}
           <div className="flex flex-col gap-4">
             <Eyebrow tone="brand">Services</Eyebrow>
-            <h4 className="font-display text-[1.7rem] text-ink leading-[1.04] tracking-[-0.01em]">
+            <h4 className="font-display text-ink text-[1.7rem] leading-[1.04] tracking-[-0.01em]">
               Build your brand
             </h4>
             <p className="text-ink-soft text-[0.95rem] leading-[1.55]">
@@ -29,10 +29,14 @@ export function ServicesMegaPanel({ onClose, open }: ServicesMenuProps) {
             <Link
               href="/pages/wholesale"
               onClick={onClose}
-              className="focus-visible:ring-ring mt-2 inline-flex items-center gap-2 type-label border-b-[1.5px] border-hairline pb-1 text-ink hover:border-brand hover:text-brand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 self-start"
+              className="focus-visible:ring-ring type-label border-hairline text-ink hover:border-brand hover:text-brand mt-2 inline-flex items-center gap-2 self-start border-b-[1.5px] pb-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               All services
-              <ArrowRight className="size-3.75" aria-hidden="true" strokeWidth={1.8} />
+              <ArrowRight
+                className="size-3.75"
+                aria-hidden="true"
+                strokeWidth={1.8}
+              />
             </Link>
           </div>
 

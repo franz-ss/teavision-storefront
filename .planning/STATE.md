@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 11-22-PLAN.md
-last_updated: "2026-06-10T18:25:57.706Z"
+last_updated: '2026-06-10T18:25:57.706Z'
 last_activity: 2026-06-10
 progress:
   total_phases: 8
@@ -97,14 +97,14 @@ Recent decisions affecting current work:
 - Phase 4: Use Phase 04 rather than Phase 03 because `.planning/phases/03-blog-sanity-cms-migration/` already exists locally and must not be overwritten.
 - Phase 8: Restore listing-card direct add only through a minimal `quickAdd` contract (`variants(first: 2)` with id/title/availability) and a small `QuickAddButton` client leaf; multi-variant products keep Quick View/PDP selection.
 - Phase 11-01: Fonts self-hosted via next/font; Spectral uses explicit weights [300,400,500,600] + italic (not a variable font). No runtime Google Fonts requests.
-- Phase 11-01: Phase 11 OKLCH design tokens added alongside old --tv-* tokens in globals.css; dual-system persists until final sweep in plan 11-14.
-- Phase 11-01: --color-ring/radius-*/shadow-*/container-wide override old values via last-write-wins within @theme inline.
+- Phase 11-01: Phase 11 OKLCH design tokens added alongside old --tv-\* tokens in globals.css; dual-system persists until final sweep in plan 11-14.
+- Phase 11-01: --color-ring/radius-_/shadow-_/container-wide override old values via last-write-wins within @theme inline.
 - [Phase ?]: Phase 11-02: brandStrong kept as temp alias of brand in Section.Root until 11-14 migration sweep
 - [Phase ?]: Phase 11-02: Section.Intro gains optional eyebrow string prop via Eyebrow component above type-heading-01
 - [Phase ?]: Phase 11-02: Badge keeps legacy variant names while adding organic/gold/onDark pill variants
 - Phase 11-05: Payment marks refactored from SVG icons to bordered text chips matching .ft mockup; SVG files retained for plan 11-14 cleanup
 - Phase 11-05: Newsletter form layout changed to full-width stacked input+button per mockup; Server Action/honeypot/aria-live wiring unchanged
-- [Phase ?]: Phase 11-06: Hero uses Section.Root tone=transparent with hero-scrim CSS utility; PrivateLabel uses inline svc__card layout; CertificationCoverage is CSS-only marquee Server Component
+- [Phase ?]: Phase 11-06: Hero uses Section.Root tone=transparent with hero-scrim CSS utility; PrivateLabel uses inline svc\_\_card layout; CertificationCoverage is CSS-only marquee Server Component
 - [Phase ?]: Preserved per-unit pricing context in cart line despite drawer mockup omitting it
 - [Phase ?]: Blog hero and rich-content mappers
 - [Phase 11]: Homepage lower section order follows the redesign lower composition: testimonials, motif bands, journal, newsletter, contact, FAQ.
@@ -117,7 +117,7 @@ Recent decisions affecting current work:
 - [Phase 11-full-visual-redesign]: The generic Shopify page route keeps page.tsx metadata, noindex, cache, and sanitized rich text plumbing untouched; only hero, breadcrumb, body, and support presentation changed. — Plan 11-13 owned presentation surfaces, while route metadata and sanitization already belonged to the existing data boundary.
 - [Phase 11-full-visual-redesign]: Supporting page heroes standardize on brand Section surfaces with gold eyebrows, warm card surfaces, and compact prose for static informational content. — Aligns every support/static page with the approved Phase 11 visual language without introducing new layout primitives.
 - [Phase 11]: Phase 11-14 removed old design tokens instead of aliasing them to new values, preserving RD-02's single-system requirement.
-- [Phase 11]: Phase 11-14 uses --color-*: initial in the Tailwind theme so default palette color utilities are not generated.
+- [Phase 11]: Phase 11-14 uses --color-\*: initial in the Tailwind theme so default palette color utilities are not generated.
 - [Phase 11]: Phase 11-14 uses a shared browser cart-changed event to refresh header cart count after cart mutations without adding client-side cart storage.
 - [Phase ?]: Phase 11-22: Concept A (calm base-scale) approved for search overlay — type-body input replaces clamp(1.4rem,3vw,2.2rem) serif; border-b-2 border-ink removed in favour of shared .field focus ring
 - [Phase ?]: Phase 11-22: Concept A (illustrated BrushCircle) approved for 404 — teapot on Section.Root tone=sunken, tea-brand copy, three action buttons, collection pill links

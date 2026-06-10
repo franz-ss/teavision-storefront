@@ -22,9 +22,7 @@ const DEFAULT_ERROR =
 export function FooterNewsletterForm({ action }: FooterNewsletterFormProps) {
   const [state, formAction, isPending] = useActionState(action, INITIAL_STATE)
 
-  const messageId = state.success
-    ? 'newsletter-success'
-    : 'newsletter-error'
+  const messageId = state.success ? 'newsletter-success' : 'newsletter-error'
   const hasMessage = state.success || Boolean(state.error)
 
   // margin-top: 12px per design .ft__news input (between blurb and input)
@@ -46,7 +44,7 @@ export function FooterNewsletterForm({ action }: FooterNewsletterFormProps) {
         maxLength={254}
         placeholder="you@business.com.au"
         aria-describedby={hasMessage ? messageId : undefined}
-        className="w-full rounded-full border border-paper/20 bg-paper/5 px-4.5 py-3.5 text-[0.95rem] text-paper placeholder:text-paper/60 transition-colors focus:border-gold focus:ring-0 focus:outline-none"
+        className="border-paper/20 bg-paper/5 text-paper placeholder:text-paper/60 focus:border-gold w-full rounded-full border px-4.5 py-3.5 text-[0.95rem] transition-colors focus:ring-0 focus:outline-none"
       />
       <Button
         type="submit"

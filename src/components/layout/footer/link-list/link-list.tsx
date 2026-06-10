@@ -4,7 +4,7 @@ import type { FooterColumn } from '../types'
 export function FooterLinkList({ title, links }: FooterColumn) {
   return (
     <nav aria-label={title}>
-      <h3 className="mb-4.5 font-mono text-[10.5px] tracking-[0.16em] uppercase text-gold">
+      <h3 className="text-gold mb-4.5 font-mono text-[10.5px] tracking-[0.16em] uppercase">
         {title}
       </h3>
       {/* gap: 11px per design .ft__links */}

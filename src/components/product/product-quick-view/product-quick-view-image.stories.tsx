@@ -11,7 +11,7 @@ const meta: Meta<typeof ProductQuickViewImage> = {
   },
   decorators: [
     (Story) => (
-      <div className="relative aspect-[1/1.05] w-80 overflow-hidden rounded-lg bg-paper-2">
+      <div className="bg-paper-2 relative aspect-[1/1.05] w-80 overflow-hidden rounded-lg">
         <Story />
       </div>
     ),

@@ -9,7 +9,9 @@ const buttonVariants = cva(
   [
     'items-center justify-center gap-2.5',
     'inline-flex cursor-pointer',
-    'transition-[background-color,color,box-shadow,transform]',
+    // translate is its own CSS property in Tailwind 4 — listing only
+    // `transform` would make hover lifts snap instead of animate
+    'transition-[background-color,color,box-shadow,translate]',
     // Design .btn svg: icon slides right on hover; lift respects reduced motion
     '[&_svg]:transition-transform hover:[&_svg]:translate-x-1',
     'motion-reduce:transform-none motion-reduce:[&_svg]:transform-none',
@@ -26,14 +28,11 @@ const buttonVariants = cva(
           'bg-ink text-paper hover:bg-ink-deep active:bg-ink-deep hover:-translate-y-0.5',
         secondary:
           'border-[1.5px] border-hairline bg-transparent text-ink hover:border-ink hover:bg-ink hover:text-paper',
-        inverse:
-          'bg-paper text-ink hover:-translate-y-0.5 hover:shadow-2',
+        inverse: 'bg-paper text-ink hover:-translate-y-0.5 hover:shadow-2',
         inverseSecondary:
           'border-[1.5px] border-paper/35 bg-transparent text-paper hover:border-ink hover:bg-ink',
-        ghost:
-          'text-brand hover:bg-brand-tint hover:text-brand-deep',
-        quiet:
-          'bg-transparent text-ink-faint hover:text-gold-deep',
+        ghost: 'text-brand hover:bg-brand-tint hover:text-brand-deep',
+        quiet: 'bg-transparent text-ink-faint hover:text-gold-deep',
       },
       size: {
         sm: 'type-label min-h-11 px-4.5 text-[0.86rem]',

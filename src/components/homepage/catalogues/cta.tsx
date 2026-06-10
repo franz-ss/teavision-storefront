@@ -33,7 +33,7 @@ export function Cta({ tone, intro, cta }: CtaProps) {
             ) : null}
             <h2 className="type-heading-01 text-paper">{intro.title}</h2>
             {intro.copy ? (
-              <p className="type-lede mt-4 text-paper/75">{intro.copy}</p>
+              <p className="type-lede text-paper/75 mt-4">{intro.copy}</p>
             ) : null}
 
             {cta ? (

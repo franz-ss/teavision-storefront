@@ -1,6 +1,6 @@
 ---
 status: diagnosed
-trigger: "Phase 11 UAT test 14 — blog/Tea Journal listing: missing newsletter band + contact section, large vertical gaps, image optimization check"
+trigger: 'Phase 11 UAT test 14 — blog/Tea Journal listing: missing newsletter band + contact section, large vertical gaps, image optimization check'
 created: 2026-06-10T00:00:00Z
 updated: 2026-06-10T00:00:00Z
 ---
@@ -33,7 +33,7 @@ started: redesign phase — sections never mounted on blog listing route
 ## Evidence
 
 - timestamp: 2026-06-10
-  checked: src/app/(storefront)/blogs/[blog]/_components/listing-content.tsx
+  checked: src/app/(storefront)/blogs/[blog]/\_components/listing-content.tsx
   found: Page tail renders only `<Section.Root tone="sunken"><Section.Container variant="compact"><NewsletterSignup action={sendNewsletterSignupAction} /></Section.Container></Section.Root>`. No ink/inverse newsletter band, no Contact section mounted.
   implication: Missing sections are a route-composition gap, not missing components.
 
@@ -58,7 +58,7 @@ started: redesign phase — sections never mounted on blog listing route
   implication: Contact is directly mountable on the blog listing — pass `submitContactFormAction`.
 
 - timestamp: 2026-06-10
-  checked: src/app/(storefront)/pages/certifications/_components/page-content.tsx
+  checked: src/app/(storefront)/pages/certifications/\_components/page-content.tsx
   found: Already imports `ProofPoints` and `SupplyChain` from `@/components/homepage` on a non-homepage route.
   implication: Cross-route reuse of homepage/ components has precedent in this codebase, but per docs/conventions.md folder map, `src/components/homepage/` is "Homepage feature sections, homepage-only UI helpers" — strict compliance would require promoting reused components (Contact, BrushCircle, Stamp, newsletter band) out of homepage/ (e.g. to a shared marketing/ domain or ui/) rather than widening the precedent.
 
@@ -80,9 +80,10 @@ started: redesign phase — sections never mounted on blog listing route
 ## Resolution
 
 root_cause: |
-  1. MISSING SECTIONS — composition gap in listing-content.tsx: the route tail renders only the small ui NewsletterSignup card. The production-matching pieces exist but are split across homepage components: the ink-band BrushCircle+Stamp treatment is SupplyChain (tone="inverse", Stamp "Business Teavision"); the teapot illo exists in BrushCircle's ILLO_MAP (unused in app code); the newsletter copy+form is HomepageNewsletter (different visual treatment, no motifs); the contact section is homepage Contact (directly reusable). No single component implements "newsletter band with teapot + stamp" — it must be composed. Conventions blocker: all candidates live in src/components/homepage/, defined as homepage-only; certifications already breaks this precedent.
-  2. SPACING — three stacked Section.Root tone="sunken" bands (FeaturedArticles, ArticleResults, newsletter wrapper) each contribute py-section (clamp(4rem,9vw,8.125rem)) top AND bottom, producing ~2× py-section (up to ~260px) of empty same-background space between adjacent content blocks.
-  3. IMAGES — no defect. ArticleCard and blog Hero use next/image correctly (sizes, lazy default, Next 16 preload only on LCP/first featured).
-fix: not applied (audit-only)
-verification: static analysis; no runtime testing performed
-files_changed: []
+
+1. MISSING SECTIONS — composition gap in listing-content.tsx: the route tail renders only the small ui NewsletterSignup card. The production-matching pieces exist but are split across homepage components: the ink-band BrushCircle+Stamp treatment is SupplyChain (tone="inverse", Stamp "Business Teavision"); the teapot illo exists in BrushCircle's ILLO_MAP (unused in app code); the newsletter copy+form is HomepageNewsletter (different visual treatment, no motifs); the contact section is homepage Contact (directly reusable). No single component implements "newsletter band with teapot + stamp" — it must be composed. Conventions blocker: all candidates live in src/components/homepage/, defined as homepage-only; certifications already breaks this precedent.
+2. SPACING — three stacked Section.Root tone="sunken" bands (FeaturedArticles, ArticleResults, newsletter wrapper) each contribute py-section (clamp(4rem,9vw,8.125rem)) top AND bottom, producing ~2× py-section (up to ~260px) of empty same-background space between adjacent content blocks.
+3. IMAGES — no defect. ArticleCard and blog Hero use next/image correctly (sizes, lazy default, Next 16 preload only on LCP/first featured).
+   fix: not applied (audit-only)
+   verification: static analysis; no runtime testing performed
+   files_changed: []

@@ -2,14 +2,44 @@
 phase: 11-full-visual-redesign
 plan: 17
 subsystem: collection-plp,collections-index,search
-tags: [gap-closure, uat, hero-banner, product-card, star-rating, collections-index, search-empty-state, contact-domain]
+tags:
+  [
+    gap-closure,
+    uat,
+    hero-banner,
+    product-card,
+    star-rating,
+    collections-index,
+    search-empty-state,
+    contact-domain,
+  ]
 dependency_graph:
   requires: []
-  provides: [plp-banner-hero, star-rating-on-cards, collections-full-grid, contact-section-domain, search-empty-state]
-  affects: [collections-plp, collections-index, search-results, homepage-contact, contact-domain]
+  provides:
+    [
+      plp-banner-hero,
+      star-rating-on-cards,
+      collections-full-grid,
+      contact-section-domain,
+      search-empty-state,
+    ]
+  affects:
+    [
+      collections-plp,
+      collections-index,
+      search-results,
+      homepage-contact,
+      contact-domain,
+    ]
 tech_stack:
   added: []
-  patterns: [conditional-hero-branch, getDescriptionHeroImage-signal, StarRating-drop-in, contact-domain-move]
+  patterns:
+    [
+      conditional-hero-branch,
+      getDescriptionHeroImage-signal,
+      StarRating-drop-in,
+      contact-domain-move,
+    ]
 key_files:
   created:
     - src/components/contact/contact-section/contact-section.tsx
@@ -33,10 +63,10 @@ key_files:
     - src/components/contact/index.ts
     - src/components/search/search-results-view/search-results-view.tsx
 decisions:
-  - "Banner hero branches on getDescriptionHeroImage() != null — no handle-specific hacks"
-  - "ContactSection moved to src/components/contact/; homepage shims re-export to preserve barrel API"
-  - "Search empty state short-circuits chrome only when 0 results AND 0 active filters"
-  - "Collections index uses full getCollectionSummaries grid sorted by title with All first"
+  - 'Banner hero branches on getDescriptionHeroImage() != null — no handle-specific hacks'
+  - 'ContactSection moved to src/components/contact/; homepage shims re-export to preserve barrel API'
+  - 'Search empty state short-circuits chrome only when 0 results AND 0 active filters'
+  - 'Collections index uses full getCollectionSummaries grid sorted by title with All first'
 metrics:
   duration: 12m
   completed: 2026-06-10
@@ -50,11 +80,11 @@ Closed UAT tests 9, 10, 11: PLP hero banner logic restored, product-card star ra
 
 ## Tasks Completed
 
-| Task | Name | Commit | Key Files |
-|------|------|--------|-----------|
-| 1 | PLP hero banner logic + star rating + mobile grid | bbf5cee | hero.tsx, page-helpers.ts, product-card.tsx |
-| 2 | Collections index full grid + ContactSection domain move | 984bedf | collections/page.tsx, contact-section/, contact-section-form/ |
-| 3 | Search empty state simplified | 5464eeb | search-results-view.tsx |
+| Task | Name                                                     | Commit  | Key Files                                                     |
+| ---- | -------------------------------------------------------- | ------- | ------------------------------------------------------------- |
+| 1    | PLP hero banner logic + star rating + mobile grid        | bbf5cee | hero.tsx, page-helpers.ts, product-card.tsx                   |
+| 2    | Collections index full grid + ContactSection domain move | 984bedf | collections/page.tsx, contact-section/, contact-section-form/ |
+| 3    | Search empty state simplified                            | 5464eeb | search-results-view.tsx                                       |
 
 ## What Was Built
 
@@ -90,6 +120,7 @@ During implementation of the banner hero branch, the plan's green-band hero prev
 To keep the green-band hero clean and uncluttered (per the design's `.coll__hero` spec), `storyDisclosure` was not wired back into the green-band hero. The StoryDisclosure is now only shown below the banner art in banner mode, which matches the original theme's inline description rendering.
 
 **Known design delta triage (noted, not fixed — per plan instruction):**
+
 - `pcard__origin`: origin segment (globe icon + origin text) — data not available on CollectionProductSummary
 - `pcard__grade`: mono right-aligned grade label — not in CollectionProductSummary
 - `pcard__fav`: wishlist save button — no wishlist feature; deferred for owner decision

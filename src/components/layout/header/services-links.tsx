@@ -6,7 +6,7 @@ import { PANEL_LINK_CLASS } from './mega-nav-styles'
 export function ServicesLinks({ onClose }: { onClose: () => void }) {
   return (
     <div>
-      <p className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-ink-faint mb-3">
+      <p className="text-ink-faint mb-3 font-mono text-[10.5px] tracking-[0.14em] uppercase">
         Services
       </p>
       <ul className="-mx-2.5 grid gap-0.5" role="list">

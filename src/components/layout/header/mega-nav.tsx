@@ -13,10 +13,7 @@ import {
   type MenuKey,
   type ShopKey,
 } from './mega-nav-data'
-import {
-  DESKTOP_MENU_ITEM_CLASS,
-  NAV_TRIGGER_CLASS,
-} from './mega-nav-styles'
+import { DESKTOP_MENU_ITEM_CLASS, NAV_TRIGGER_CLASS } from './mega-nav-styles'
 import { ServicesMegaPanel } from './services-mega-panel'
 import { ShopMegaPanel } from './shop-mega-panel'
 import { useOutsideClose } from './use-outside-close'
@@ -150,10 +147,7 @@ export function MegaNav() {
       </nav>
 
       {/* Mega panels — onMouseEnter cancels the grace-period close; onMouseLeave re-schedules it */}
-      <div
-        onMouseEnter={cancelClose}
-        onMouseLeave={scheduleClose}
-      >
+      <div onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
         <ShopMegaPanel
           activeShop={activeShop}
           onActiveShopChange={setActiveShopKey}
@@ -169,7 +163,7 @@ export function MegaNav() {
       {/* Page scrim — plain dark overlay, no blur or transition (owner directive) */}
       {openMenu && (
         <div
-          className="absolute inset-x-0 top-full z-40 h-screen bg-ink/35"
+          className="bg-ink/35 absolute inset-x-0 top-full z-40 h-screen"
           aria-hidden="true"
           onClick={closeMenus}
         />

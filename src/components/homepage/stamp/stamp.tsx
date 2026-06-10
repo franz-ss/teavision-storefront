@@ -5,7 +5,9 @@ import { cn } from '@/lib/utils'
 export type StampProps = {
   top: string
   bottom: string
-  tone?: 'ink' | 'brand'
+  /* 'none' leaves the ring centre transparent (band background shows through) */
+  tone?: 'ink' | 'brand' | 'none'
+  ringSrc?: string
   id?: string
   className?: string
 }
@@ -14,6 +16,7 @@ export function Stamp({
   top,
   bottom,
   tone = 'ink',
+  ringSrc = '/images/stamp-ring.png',
   id = 'stamp',
   className,
 }: StampProps) {
@@ -35,24 +38,26 @@ export function Stamp({
       )}
     >
       <Image
-        src="/images/stamp-ring.png"
+        src={ringSrc}
         alt=""
         width={200}
         height={200}
         className="h-auto w-full object-contain"
         sizes="(min-width: 1024px) 14vw, 200px"
       />
-      <span
-        aria-hidden="true"
-        className={cn(
-          'absolute inset-4 rounded-full',
-          tone === 'brand' ? 'bg-brand-deep' : 'bg-ink',
-        )}
-      />
+      {tone !== 'none' ? (
+        <span
+          aria-hidden="true"
+          className={cn(
+            'absolute inset-4 rounded-full',
+            tone === 'brand' ? 'bg-brand-deep' : 'bg-ink',
+          )}
+        />
+      ) : null}
       <svg
         viewBox="0 0 200 200"
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full font-script"
+        className="font-script absolute inset-0 h-full w-full"
       >
         <defs>
           {/* top arc: left to right over the top (text upright) */}

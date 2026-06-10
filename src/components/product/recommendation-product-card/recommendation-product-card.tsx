@@ -26,7 +26,7 @@ export function RecommendationProductCard({
   return (
     <article className="group h-full">
       <div className="flex h-full flex-col">
-        <div className="relative aspect-[1/1.12] overflow-hidden rounded-lg bg-paper-2">
+        <div className="bg-paper-2 relative aspect-[1/1.12] overflow-hidden rounded-lg">
           <Link
             href={productUrl}
             className="focus-visible:ring-ring absolute inset-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -49,7 +49,7 @@ export function RecommendationProductCard({
               <div className="h-full w-full" aria-hidden="true" />
             )}
             <span
-              className="absolute inset-0 bg-ink/0 transition-colors duration-300 ease-out group-focus-within:bg-ink/20 group-hover:bg-ink/20 motion-reduce:transition-none"
+              className="bg-ink/0 group-focus-within:bg-ink/20 group-hover:bg-ink/20 absolute inset-0 transition-colors duration-300 ease-out motion-reduce:transition-none"
               aria-hidden="true"
             />
           </Link>
@@ -71,7 +71,7 @@ export function RecommendationProductCard({
           <p className="type-mono-meta text-ink-faint">Teavision · wholesale</p>
           <Link
             href={productUrl}
-            className="my-1.5 line-clamp-2 rounded font-display text-[1.2rem] leading-[1.1] text-ink transition-colors hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="font-display text-ink hover:text-brand focus-visible:ring-ring my-1.5 line-clamp-2 rounded text-[1.2rem] leading-[1.1] transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             {product.title}
           </Link>
@@ -85,11 +85,11 @@ export function RecommendationProductCard({
           )}
 
           <p className="mt-auto flex flex-wrap items-baseline gap-1.5 pt-2">
-            <span className="font-mono text-[11px] text-ink-faint">From</span>
+            <span className="text-ink-faint font-mono text-[11px]">From</span>
             <Price
               price={product.priceRange.minVariantPrice}
               size="sm"
-              className="font-bold text-ink"
+              className="text-ink font-bold"
             />
           </p>
         </div>

@@ -48,8 +48,8 @@ export function ProofPoints({ points = PROOF_POINTS }: ProofPointsProps) {
                   isLastOverall
                     ? 'flex flex-col px-7.5 py-11'
                     : isLastInRow2
-                      ? 'flex flex-col border-r-0 px-7.5 py-11 lg:border-r lg:border-paper/12'
-                      : 'flex flex-col border-r border-paper/12 px-7.5 py-11'
+                      ? 'lg:border-paper/12 flex flex-col border-r-0 px-7.5 py-11 lg:border-r'
+                      : 'border-paper/12 flex flex-col border-r px-7.5 py-11'
                 }
               >
                 {/* Image branch (e.g. Australian flag) */}
@@ -68,10 +68,10 @@ export function ProofPoints({ points = PROOF_POINTS }: ProofPointsProps) {
                     aria-hidden="true"
                   />
                 ) : null}
-                <p className="font-display text-[2.4rem] leading-none text-paper">
+                <p className="font-display text-paper text-[2.4rem] leading-none">
                   {point.title}
                 </p>
-                <p className="mt-2 max-w-[22ch] text-[0.9rem] text-paper/78">
+                <p className="text-paper/78 mt-2 max-w-[22ch] text-[0.9rem]">
                   {point.description}
                 </p>
               </li>

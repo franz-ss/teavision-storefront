@@ -26,7 +26,7 @@ export function Toolbar({
   return (
     <div className={className}>
       {/* Top bar: count + sort */}
-      <div className="flex items-center justify-between gap-4 mb-4">
+      <div className="mb-4 flex items-center justify-between gap-4">
         <span className="type-mono-meta text-ink-faint">
           {productCount} {productCount === 1 ? 'product' : 'products'}
         </span>
@@ -37,11 +37,11 @@ export function Toolbar({
 
       {/* Active filter chips */}
       {selectedFilters.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="mb-4 flex flex-wrap gap-2">
           {selectedFilters.map((filter) => (
             <span
               key={filter}
-              className="bg-brand-tint text-brand rounded-full px-3 py-1.75 text-xs font-semibold inline-flex items-center gap-1.5"
+              className="bg-brand-tint text-brand inline-flex items-center gap-1.5 rounded-full px-3 py-1.75 text-xs font-semibold"
             >
               {filter}
               <X className="h-3 w-3" aria-hidden="true" />
@@ -51,7 +51,7 @@ export function Toolbar({
       )}
 
       {/* Mobile filter toggle */}
-      <details className="bg-paper mt-2 rounded-lg border border-hairline lg:hidden">
+      <details className="bg-paper border-hairline mt-2 rounded-lg border lg:hidden">
         <summary className="type-label text-ink focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
           <span className="inline-flex items-center gap-2">
             <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />

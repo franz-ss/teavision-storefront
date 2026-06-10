@@ -272,23 +272,23 @@ export function ProductQuickView({
             aria-label="Loading product details"
           >
             <span className="sr-only">Loading product details…</span>
-            <div className="aspect-[1/1.05] animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none" />
+            <div className="bg-paper-2 aspect-[1/1.05] animate-pulse rounded-lg motion-reduce:animate-none" />
             <div className="grid content-start gap-4">
-              <div className="h-3 w-48 animate-pulse rounded-full bg-paper-2 motion-reduce:animate-none" />
-              <div className="h-10 w-4/5 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
-              <div className="h-28 animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none" />
+              <div className="bg-paper-2 h-3 w-48 animate-pulse rounded-full motion-reduce:animate-none" />
+              <div className="bg-paper-2 h-10 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="bg-paper-2 h-28 animate-pulse rounded-lg motion-reduce:animate-none" />
             </div>
           </div>
         ) : productData ? (
           <div className="grid gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)] lg:gap-7">
-            <div className="relative mx-auto aspect-[1/1.05] w-full max-w-xl overflow-hidden rounded-lg bg-paper-2">
+            <div className="bg-paper-2 relative mx-auto aspect-[1/1.05] w-full max-w-xl overflow-hidden rounded-lg">
               <ProductQuickViewImage
                 image={selectedImage}
                 title={productData.title}
               />
             </div>
 
-            <div className="grid content-start gap-5 text-ink">
+            <div className="text-ink grid content-start gap-5">
               <div className="grid gap-3">
                 <Eyebrow rule={false}>Quick view</Eyebrow>
                 <h3 className="font-display text-[clamp(1.75rem,3vw,2.35rem)] leading-[1.04] font-medium">
@@ -319,7 +319,7 @@ export function ProductQuickView({
               </div>
 
               {productData.description && (
-                <p className="line-clamp-5 text-[1.02rem] leading-6 text-ink-soft">
+                <p className="text-ink-soft line-clamp-5 text-[1.02rem] leading-6">
                   {productData.description}
                 </p>
               )}
@@ -337,7 +337,7 @@ export function ProductQuickView({
                         disabled={isPending}
                         aria-label={`${variant.title}${!variant.availableForSale ? ', sold out' : ''}`}
                         className={cn(
-                          'min-w-23 flex-col rounded-sm border-[1.5px] border-hairline bg-card px-4.5 py-3 text-center text-ink transition-colors hover:border-ink-faint aria-pressed:border-brand aria-pressed:bg-brand-tint aria-pressed:text-ink',
+                          'border-hairline bg-card text-ink hover:border-ink-faint aria-pressed:border-brand aria-pressed:bg-brand-tint aria-pressed:text-ink min-w-23 flex-col rounded-sm border-[1.5px] px-4.5 py-3 text-center transition-colors',
                           selectedVariantId === variant.id &&
                             'border-brand bg-brand-tint',
                         )}
@@ -350,7 +350,7 @@ export function ProductQuickView({
                           price={variant.price}
                           size="sm"
                           className={cn(
-                            'mt-1 font-mono text-[11px] text-ink-faint',
+                            'text-ink-faint mt-1 font-mono text-[11px]',
                             selectedVariantId === variant.id && 'text-brand',
                           )}
                         />

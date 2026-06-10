@@ -34,14 +34,14 @@ key-files:
     - src/app/not-found.tsx
 
 key-decisions:
-  - "Concept A (calm base-scale) approved for search overlay — type-body (Hanken Grotesk) input replaces clamp(1.4rem,3vw,2.2rem) serif; border-b-2 border-ink removed in favour of shared .field focus ring"
-  - "Concept A (illustrated) approved for 404 — BrushCircle teapot on sunken section, tea-brand copy, three action buttons, collection pill links"
+  - 'Concept A (calm base-scale) approved for search overlay — type-body (Hanken Grotesk) input replaces clamp(1.4rem,3vw,2.2rem) serif; border-b-2 border-ink removed in favour of shared .field focus ring'
+  - 'Concept A (illustrated) approved for 404 — BrushCircle teapot on sunken section, tea-brand copy, three action buttons, collection pill links'
   - "Concept story files retained as documentation of the approved design direction; tagged 'mockup' to distinguish from production stories"
 
 patterns-established:
-  - "Pattern 1: Preview-first story workflow — create Storybook concepts first, get explicit owner approval, then implement in production"
-  - "Pattern 2: Search overlay uses shared .field focus treatment from TextInput, not custom border inventions"
-  - "Pattern 3: Error/empty-state pages use BrushCircle illustration + Section.Root tone=sunken for on-brand treatment"
+  - 'Pattern 1: Preview-first story workflow — create Storybook concepts first, get explicit owner approval, then implement in production'
+  - 'Pattern 2: Search overlay uses shared .field focus treatment from TextInput, not custom border inventions'
+  - 'Pattern 3: Error/empty-state pages use BrushCircle illustration + Section.Root tone=sunken for on-brand treatment'
 
 requirements-completed: [RD-04]
 
@@ -111,5 +111,6 @@ None - no external service configuration required.
 - Ready for final UAT re-test of these two surfaces
 
 ---
-*Phase: 11-full-visual-redesign*
-*Completed: 2026-06-11*
+
+_Phase: 11-full-visual-redesign_
+_Completed: 2026-06-11_

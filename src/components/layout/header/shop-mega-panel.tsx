@@ -17,15 +17,15 @@ export function ShopMegaPanel({
   return (
     <div
       id="shop-mega"
-      className="absolute inset-x-0 top-full z-50 bg-paper border-b border-hairline shadow-4"
+      className="bg-paper border-hairline shadow-4 absolute inset-x-0 top-full z-50 border-b"
       hidden={!open}
     >
-      <div className="max-w-wide mx-auto px-gutter py-10">
+      <div className="max-w-wide px-gutter mx-auto py-10">
         <div className="grid gap-10 max-lg:grid-cols-1 lg:grid-cols-[1.1fr_2.4fr_1.3fr]">
           {/* Intro column */}
           <div className="flex flex-col gap-4">
             <Eyebrow tone="brand">Shop</Eyebrow>
-            <h4 className="font-display text-[1.7rem] text-ink leading-[1.04] tracking-[-0.01em]">
+            <h4 className="font-display text-ink text-[1.7rem] leading-[1.04] tracking-[-0.01em]">
               Shop {activeShop.name}
             </h4>
             {activeShop.asideDescription && (
@@ -36,10 +36,14 @@ export function ShopMegaPanel({
             <Link
               href={activeShop.ctaHref}
               onClick={onClose}
-              className="focus-visible:ring-ring mt-2 inline-flex items-center gap-2 type-label border-b-[1.5px] border-hairline pb-1 text-ink hover:border-brand hover:text-brand transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 self-start"
+              className="focus-visible:ring-ring type-label border-hairline text-ink hover:border-brand hover:text-brand mt-2 inline-flex items-center gap-2 self-start border-b-[1.5px] pb-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               View all {activeShop.name}
-              <ArrowRight className="size-3.75" aria-hidden="true" strokeWidth={1.8} />
+              <ArrowRight
+                className="size-3.75"
+                aria-hidden="true"
+                strokeWidth={1.8}
+              />
             </Link>
           </div>
 
@@ -65,7 +69,7 @@ export function ShopMegaPanel({
 
             {/* Links grid */}
             <div id={`shop-panel-${activeShop.key}`}>
-              <p className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-ink-faint mb-3">
+              <p className="text-ink-faint mb-3 font-mono text-[10.5px] tracking-[0.14em] uppercase">
                 Browse {activeShop.name}
               </p>
               <ul
@@ -89,7 +93,7 @@ export function ShopMegaPanel({
 
           {/* Feature card (right) */}
           {activeShop.imageAlt && (
-            <div className="relative overflow-hidden rounded-lg aspect-4/3">
+            <div className="relative aspect-4/3 overflow-hidden rounded-lg">
               <Image
                 src={SHOP_IMAGE_SRC}
                 alt={activeShop.imageAlt}
@@ -99,11 +103,11 @@ export function ShopMegaPanel({
               />
               {/* Bottom gradient scrim */}
               <div
-                className="absolute inset-0 bg-linear-to-t from-ink/70 to-transparent"
+                className="from-ink/70 absolute inset-0 bg-linear-to-t to-transparent"
                 aria-hidden="true"
               />
               {/* Content overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-2">
+              <div className="absolute right-0 bottom-0 left-0 flex flex-col gap-2 p-5">
                 <Badge variant="onDark" label="Featured" />
                 <p className="font-display text-paper text-[1.1rem] leading-[1.1]">
                   {activeShop.name} Collection

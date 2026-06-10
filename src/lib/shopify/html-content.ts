@@ -117,8 +117,7 @@ const SHOPIFY_HTML_CLASS_NAMES: Record<
   ShopifyHtmlClassMap
 > = {
   page: {
-    blockquote:
-      'font-display italic border-l-2 border-gold pl-5 text-ink my-8',
+    blockquote: 'font-display italic border-l-2 border-gold pl-5 text-ink my-8',
     caption: 'type-mono-meta text-ink-faint mb-3',
     figcaption: 'type-mono-meta text-ink-faint mt-3',
     figure: 'my-8',
@@ -138,8 +137,7 @@ const SHOPIFY_HTML_CLASS_NAMES: Record<
     ul: 'list-disc pl-6',
   },
   article: {
-    blockquote:
-      'font-display italic border-l-2 border-gold pl-5 text-ink my-8',
+    blockquote: 'font-display italic border-l-2 border-gold pl-5 text-ink my-8',
     caption: 'type-mono-meta text-ink-faint mb-3',
     figcaption: 'type-mono-meta text-ink-faint mt-3',
     figure: 'my-8',
@@ -159,8 +157,7 @@ const SHOPIFY_HTML_CLASS_NAMES: Record<
     ul: 'list-disc pl-6',
   },
   compact: {
-    blockquote:
-      'font-display italic border-l-2 border-gold pl-4 text-ink my-6',
+    blockquote: 'font-display italic border-l-2 border-gold pl-4 text-ink my-6',
     caption: 'type-mono-meta text-ink-faint mb-3',
     figcaption: 'type-mono-meta text-ink-faint mt-3',
     figure: 'my-6',

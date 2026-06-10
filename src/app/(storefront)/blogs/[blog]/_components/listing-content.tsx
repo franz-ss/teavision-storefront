@@ -68,7 +68,9 @@ export async function ListingContent({ params, searchParams }: ListingProps) {
         paginated={paginated}
         query={q}
         tags={tags}
-        className={!isFiltered && featuredArticles.length > 0 ? 'pt-0' : undefined}
+        className={
+          !isFiltered && featuredArticles.length > 0 ? 'pt-0' : undefined
+        }
       />
 
       <BlogNewsletterBand />

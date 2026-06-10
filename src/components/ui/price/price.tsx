@@ -34,21 +34,18 @@ const priceTextVariants = cva('font-display tabular-nums', {
   },
 })
 
-const comparePriceTextVariants = cva(
-  'font-mono text-ink-soft line-through',
-  {
-    variants: {
-      size: {
-        sm: 'text-sm',
-        md: 'text-sm',
-        lg: 'text-base',
-      } satisfies Record<PriceSize, string>,
-    },
-    defaultVariants: {
-      size: 'md',
-    },
+const comparePriceTextVariants = cva('font-mono text-ink-soft line-through', {
+  variants: {
+    size: {
+      sm: 'text-sm',
+      md: 'text-sm',
+      lg: 'text-base',
+    } satisfies Record<PriceSize, string>,
   },
-)
+  defaultVariants: {
+    size: 'md',
+  },
+})
 
 function format(money: Money): string {
   return new Intl.NumberFormat('en-AU', {

@@ -112,7 +112,7 @@ export function BulkSavings({
 
   return (
     <div className={cn('flex min-w-0 flex-col gap-3', className)}>
-      <h2 className="font-mono text-[11px] tracking-[0.12em] text-ink-faint uppercase">
+      <h2 className="text-ink-faint font-mono text-[11px] tracking-[0.12em] uppercase">
         Buy in Bulk and Save
       </h2>
 
@@ -133,19 +133,19 @@ export function BulkSavings({
                 type="button"
                 pressed={isActive}
                 className={cn(
-                  'relative flex min-h-30 w-full flex-col items-center justify-center rounded-sm border border-hairline bg-card p-3.5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none aria-pressed:border-brand',
+                  'border-hairline bg-card focus-visible:ring-ring aria-pressed:border-brand relative flex min-h-30 w-full flex-col items-center justify-center rounded-sm border p-3.5 text-center transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                   onSelectTier && 'hover:border-brand',
                   isActive && 'border-brand',
                 )}
                 onClick={() => onSelectTier?.(tier.minimumQuantity)}
               >
                 {isActive ? (
-                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-brand px-2 py-0.5 font-mono text-[9px] tracking-widest whitespace-nowrap text-paper uppercase">
+                  <span className="bg-brand text-paper absolute -top-2 left-1/2 -translate-x-1/2 rounded-full px-2 py-0.5 font-mono text-[9px] tracking-widest whitespace-nowrap uppercase">
                     Best value
                   </span>
                 ) : null}
 
-                <span className="font-mono text-[11px] tracking-wider text-ink-faint">
+                <span className="text-ink-faint font-mono text-[11px] tracking-wider">
                   {getTierLabel(tier)}
                 </span>
 
@@ -153,19 +153,19 @@ export function BulkSavings({
                   {tierPrice ? (
                     <>
                       <span className="flex min-w-0 flex-col items-center gap-1">
-                        <span className="font-display text-[1.3rem] leading-tight text-ink tabular-nums">
+                        <span className="font-display text-ink text-[1.3rem] leading-tight tabular-nums">
                           {formatCurrency(tierPrice)}
                         </span>
-                        <span className="font-mono text-[10px] text-ink-faint tabular-nums line-through">
+                        <span className="text-ink-faint font-mono text-[10px] tabular-nums line-through">
                           {formatCurrency(basePrice)}
                         </span>
                       </span>
                       {tierTotal ? (
-                        <span className="mt-1 flex min-w-0 flex-wrap justify-center gap-x-1 text-[11px] font-semibold text-brand tabular-nums">
+                        <span className="text-brand mt-1 flex min-w-0 flex-wrap justify-center gap-x-1 text-[11px] font-semibold tabular-nums">
                           <span className="whitespace-nowrap">
                             Total {formatCurrency(tierTotal)}
                           </span>
-                          <span className="whitespace-nowrap text-ink-faint line-through">
+                          <span className="text-ink-faint whitespace-nowrap line-through">
                             {formatCurrency(baseTotal)}
                           </span>
                         </span>
@@ -200,7 +200,7 @@ export function BulkSavings({
           </p>
           <Link
             href="/pages/wholesale"
-            className="type-label inline-flex items-center self-start border-b-[1.5px] border-hairline pb-1 text-ink transition-colors hover:border-brand hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+            className="type-label border-hairline text-ink hover:border-brand hover:text-brand focus-visible:ring-ring inline-flex items-center self-start border-b-[1.5px] pb-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Apply for a wholesale account
             <ArrowRight aria-hidden="true" className="ml-2 size-4" />

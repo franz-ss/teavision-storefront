@@ -227,7 +227,7 @@ type Story = StoryObj<typeof SearchaniseRecommendations>
 export const Default: Story = {
   args: {
     fallback: (
-      <div className="rounded-lg border border-hairline bg-card p-6 text-ink">
+      <div className="border-hairline bg-card text-ink rounded-lg border p-6">
         Native recommendation carousel fallback
       </div>
     ),

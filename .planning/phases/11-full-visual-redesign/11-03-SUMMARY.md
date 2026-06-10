@@ -1,8 +1,9 @@
 ---
 phase: 11-full-visual-redesign
-plan: "03"
+plan: '03'
 subsystem: ui-primitives
-tags: [design-system, token-migration, ui-primitives, forms, controls, containers]
+tags:
+  [design-system, token-migration, ui-primitives, forms, controls, containers]
 dependency_graph:
   requires: [11-01, 11-02]
   provides: [form-field-treatment, control-primitives, container-primitives]
@@ -43,13 +44,13 @@ key_files:
     - src/components/ui/rich-text/rich-text.stories.tsx
     - src/components/ui/newsletter-signup/newsletter-signup.tsx
 decisions:
-  - "quantity-stepper uses inline-flex with rounded-full border wrapper; IconButton size-11 children use rounded-none with rounded-l/r-full to avoid double corner radius"
-  - "accordion chevron uses border-r/border-b rotate-45 pattern instead of Chevron icon to avoid extra icon import"
-  - "rich-text.stories.tsx: type-display replaces both type-display-01 and type-display-02 per UI-SPEC rename table"
-  - "newsletter-signup: success/error state border tokens updated to new system while keeping role=status/role=alert and honeypot field"
+  - 'quantity-stepper uses inline-flex with rounded-full border wrapper; IconButton size-11 children use rounded-none with rounded-l/r-full to avoid double corner radius'
+  - 'accordion chevron uses border-r/border-b rotate-45 pattern instead of Chevron icon to avoid extra icon import'
+  - 'rich-text.stories.tsx: type-display replaces both type-display-01 and type-display-02 per UI-SPEC rename table'
+  - 'newsletter-signup: success/error state border tokens updated to new system while keeping role=status/role=alert and honeypot field'
 metrics:
-  duration: "~8 minutes"
-  completed: "2026-06-10"
+  duration: '~8 minutes'
+  completed: '2026-06-10'
   tasks: 3
   files: 23
 ---
@@ -62,23 +63,25 @@ metrics:
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Form-field family (.field treatment) | ce4c4a1 | text-input, textarea, select, checkbox, checkbox.stories, form-label |
-| 2 | Controls — stepper, icon/toggle/disclosure, stars, price | 4d9d062 | quantity-stepper, icon-button, toggle-button, toggle-button.stories, disclosure-button, star-rating, price |
-| 3 | Containers — card, accordion, dialog, article-card, rich-text, newsletter-signup | c5e47c0 | card, card.stories, accordion, accordion.stories, dialog, dialog.stories, article-card, rich-text, rich-text.stories, newsletter-signup |
+| Task | Name                                                                             | Commit  | Files                                                                                                                                   |
+| ---- | -------------------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Form-field family (.field treatment)                                             | ce4c4a1 | text-input, textarea, select, checkbox, checkbox.stories, form-label                                                                    |
+| 2    | Controls — stepper, icon/toggle/disclosure, stars, price                         | 4d9d062 | quantity-stepper, icon-button, toggle-button, toggle-button.stories, disclosure-button, star-rating, price                              |
+| 3    | Containers — card, accordion, dialog, article-card, rich-text, newsletter-signup | c5e47c0 | card, card.stories, accordion, accordion.stories, dialog, dialog.stories, article-card, rich-text, rich-text.stories, newsletter-signup |
 
 ---
 
 ## What Was Built
 
 ### Task 1 — Form-field family
+
 - **text-input / textarea / select**: `bg-card border-hairline rounded-sm px-4 py-3.5 text-ink placeholder:text-ink-faint`; focus replaced `focus-visible:ring-2` with `focus:border-brand focus:shadow-focus focus:ring-0` (green-tint glow as the single focus signal).
 - **checkbox**: `.fbox` mockup — `size-4.5 rounded-[5px] border-[1.5px] border-hairline`; checked state `accent-brand checked:bg-brand checked:border-brand checked:text-paper`.
 - **form-label**: `type-mono-meta text-ink-faint` (mono 11px uppercase, replaces `type-label text-strong`).
 - **checkbox.stories**: added `Checked` and `Disabled` story states.
 
 ### Task 2 — Controls
+
 - **quantity-stepper**: `inline-flex items-center rounded-full border border-hairline` pill wrapper; `size-11` touch-target buttons (left `rounded-l-full`, right `rounded-r-full`); count `min-w-7 font-mono text-[13px]`.
 - **icon-button**: `rounded-full hover:bg-brand-tint hover:text-brand`; 44px touch targets (`h-11 w-11`) preserved for contract tests.
 - **toggle-button**: chip filter treatment — `border-hairline bg-card text-ink-soft rounded-full` base; selected `border-brand/30 bg-brand-tint text-brand`; stories add `ChipSelected` state and refresh with new tokens.
@@ -87,6 +90,7 @@ metrics:
 - **price**: `font-display` amount, `font-mono text-[11px] text-ink-faint` compare-at; sale tone `text-brand`.
 
 ### Task 3 — Containers
+
 - **card**: `bg-card border-hairline-2 rounded-lg` (`.card-surface`); `text-default` → `text-ink`; stories refreshed.
 - **accordion**: `divide-y divide-hairline`; `font-display text-[1.15rem]` headers; brand chevron on open state; `text-ink-soft` body.
 - **dialog**: `bg-paper rounded-lg shadow-4` panel; `bg-ink/35 backdrop-blur-[2px]` scrim; `border-hairline` header divider; focus-trap and close behavior untouched.
@@ -105,6 +109,7 @@ None — plan executed exactly as written.
 ## Verification
 
 All checks passed:
+
 - `pnpm lint:tailwind` (via `pnpm lint`) — exit 0
 - `pnpm lint` — exit 0
 - `pnpm typecheck` — exit 0

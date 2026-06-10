@@ -57,7 +57,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
     <>
       {/* Backdrop scrim — behind panel but above page content */}
       <div
-        className="fixed inset-0 z-65 bg-ink/35 backdrop-blur-[2px]"
+        className="bg-ink/35 fixed inset-0 z-65 backdrop-blur-[2px]"
         aria-hidden="true"
         onClick={onClose}
       />
@@ -65,14 +65,14 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
       {/* Panel */}
       <div
         ref={panelRef}
-        className="fixed inset-x-0 top-0 z-70 bg-paper border-b border-hairline shadow-4"
+        className="bg-paper border-hairline shadow-4 fixed inset-x-0 top-0 z-70 border-b"
         role="dialog"
         aria-modal="true"
         aria-label="Site search"
       >
-        <div className="max-w-wide mx-auto px-gutter pt-5 pb-7">
+        <div className="max-w-wide px-gutter mx-auto pt-5 pb-7">
           {/* Close button row */}
-          <div className="flex justify-end mb-3">
+          <div className="mb-3 flex justify-end">
             <IconButton
               aria-label="Close search"
               variant="ghost"
@@ -102,7 +102,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                   key={suggestion}
                   href={`/search?q=${encodeURIComponent(suggestion)}`}
                   onClick={onClose}
-                  className="focus-visible:ring-ring rounded-full border border-hairline bg-card px-3.5 py-2 type-label text-ink hover:bg-brand hover:text-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                  className="focus-visible:ring-ring border-hairline bg-card type-label text-ink hover:bg-brand hover:text-paper rounded-full border px-3.5 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
                   {suggestion}
                 </a>

@@ -50,7 +50,7 @@ const meta: Meta<typeof SearchForm> = {
   },
   decorators: [
     (Story) => (
-      <div className="bg-paper border-b-2 border-ink w-[min(42rem,calc(100vw-2rem))] p-6">
+      <div className="bg-paper border-ink w-[min(42rem,calc(100vw-2rem))] border-b-2 p-6">
         <Story />
       </div>
     ),

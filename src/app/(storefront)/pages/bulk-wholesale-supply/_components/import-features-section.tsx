@@ -21,9 +21,9 @@ export function ImportFeaturesSection() {
           {IMPORT_FEATURE_CARDS.map((card) => (
             <div
               key={card.title}
-              className="flex items-start gap-4 rounded-xl border border-hairline bg-paper p-6"
+              className="border-hairline bg-paper flex items-start gap-4 rounded-xl border p-6"
             >
-              <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand text-paper">
+              <span className="bg-brand text-paper mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full">
                 <Check className="h-3.5 w-3.5" aria-hidden="true" />
               </span>
               <div>

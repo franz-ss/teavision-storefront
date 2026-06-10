@@ -54,12 +54,14 @@ export default async function Page() {
     url: `${SITE_URL}/collections`,
     mainEntity: {
       '@type': 'ItemList',
-      itemListElement: gridCollections.slice(0, 120).map((collection, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        name: collection.title,
-        url: `${SITE_URL}${hrefForHandle(collection.handle)}`,
-      })),
+      itemListElement: gridCollections
+        .slice(0, 120)
+        .map((collection, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: collection.title,
+          url: `${SITE_URL}${hrefForHandle(collection.handle)}`,
+        })),
     },
   }
 
@@ -81,7 +83,7 @@ export default async function Page() {
           >
             <Link
               href="/"
-              className="focus-visible:ring-ring rounded hover:text-paper/90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="focus-visible:ring-ring hover:text-paper/90 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               Home
             </Link>
@@ -105,10 +107,7 @@ export default async function Page() {
       {/* Full collection card grid — All first, then alphabetical */}
       <Section.Root tone="transparent">
         <Section.Container>
-          <ul
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-            role="list"
-          >
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" role="list">
             {gridCollections.map((collection) => (
               <li
                 key={collection.id}
@@ -122,7 +121,7 @@ export default async function Page() {
 
                   {/* Bottom gradient scrim */}
                   <div
-                    className="absolute inset-0 bg-linear-to-t from-ink/70 via-ink/20 to-transparent"
+                    className="from-ink/70 via-ink/20 absolute inset-0 bg-linear-to-t to-transparent"
                     aria-hidden="true"
                   />
 

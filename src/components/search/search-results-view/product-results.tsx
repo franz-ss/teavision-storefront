@@ -23,7 +23,7 @@ export function ProductResults({
 
   return (
     <ul
-      className="grid grid-cols-2 gap-y-5.5 gap-x-4.5 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid grid-cols-2 gap-x-4.5 gap-y-5.5 sm:grid-cols-2 lg:grid-cols-3"
       role="list"
     >
       {result.products.map((product, index) => (

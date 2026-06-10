@@ -137,7 +137,7 @@ export function NewsletterSignup({
           onChange={handleEmailChange}
           placeholder="you@example.com"
           className={cn(
-            'type-body min-h-11 flex-1 rounded-full border px-4.5 py-3.5 transition-colors focus:outline-none focus:ring-0',
+            'type-body min-h-11 flex-1 rounded-full border px-4.5 py-3.5 transition-colors focus:ring-0 focus:outline-none',
             tone === 'brand'
               ? 'border-paper/20 bg-paper/5 text-paper placeholder:text-paper/60 focus:border-gold'
               : 'border-hairline bg-card text-ink placeholder:text-ink-faint focus:border-brand focus:shadow-focus',

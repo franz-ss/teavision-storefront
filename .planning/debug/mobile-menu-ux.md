@@ -1,6 +1,6 @@
 ---
 status: diagnosed
-trigger: "Phase 11 UAT test 5 — fullscreen mobile menu UX cluster (375px): no close button, persistent chip-row scrollbar, button-like chips, ambiguous View-all arrow, inconsistent alignment; site-wide Button hover lift disliked"
+trigger: 'Phase 11 UAT test 5 — fullscreen mobile menu UX cluster (375px): no close button, persistent chip-row scrollbar, button-like chips, ambiguous View-all arrow, inconsistent alignment; site-wide Button hover lift disliked'
 created: 2026-06-10T00:00:00Z
 updated: 2026-06-10T00:00:00Z
 ---
@@ -76,12 +76,13 @@ started: Phase 11 mobile menu implementation
 ## Resolution
 
 root_cause: |
-  1) No close affordance: header.tsx renders MobileMegaNav INSIDE <header className="sticky top-0 z-60"> (line 138). The header's z-60 creates a stacking context; within it the menu overlay (mobile-mega-nav.tsx line 39, `fixed inset-0 top-0 z-55`) paints ABOVE the z-auto main-bar div containing the burger IconButton. The burger DOES toggle Menu→X (header.tsx 127-131) but is covered by the full-viewport overlay, and MobileMegaNav renders no close button of its own — links are the only escape.
-  2) Persistent scrollbar: mobile-shop-panel.tsx line 24-25 — `overflow-x-auto` wrapping `flex min-w-max gap-2`; 4 chips can't fit at 375px so overflow always exists, and with no scrollbar-hiding utility in the codebase the native classic scrollbar (Windows) renders permanently.
-  3) Button-like chips: mobile-shop-panel.tsx uses ToggleButton variant="menuRow" (toggle-button.tsx line 18-19): rounded-md + border + aria-pressed:bg-brand-tint + aria-pressed:border-hairline-2 = filled/bordered button treatment.
-  4) Ambiguous arrow: mobile-shop-panel.tsx lines 75-86 — "View all {name}" Link decorated with ChevronRight, the SAME icon used by DIRECT_LINKS rows (mobile-mega-nav.tsx 107) and desktop menuRow toggles, so it reads as drill-in/submenu, not navigation.
-  5) Misalignment: four distinct left text-edges inside one px-gutter container — section heading px-0, PANEL_LINK_CLASS px-2.5 (mega-nav-styles.ts line 7), View-all CTA px-3.5, menuRow chips px-3; the design reference aligned padded links via margin-left:-10px which was not carried over.
-  6) Hover lift: button.tsx lines 21/23/27 — brand, primary, inverse variants each hard-code `hover:-translate-y-0.5 hover:shadow-2` in the cva. No contract test asserts these classes; 11-UI-SPEC.md documents them.
-fix: NOT APPLIED (goal: find_root_cause_only)
-verification: static analysis only
-files_changed: []
+
+1. No close affordance: header.tsx renders MobileMegaNav INSIDE <header className="sticky top-0 z-60"> (line 138). The header's z-60 creates a stacking context; within it the menu overlay (mobile-mega-nav.tsx line 39, `fixed inset-0 top-0 z-55`) paints ABOVE the z-auto main-bar div containing the burger IconButton. The burger DOES toggle Menu→X (header.tsx 127-131) but is covered by the full-viewport overlay, and MobileMegaNav renders no close button of its own — links are the only escape.
+2. Persistent scrollbar: mobile-shop-panel.tsx line 24-25 — `overflow-x-auto` wrapping `flex min-w-max gap-2`; 4 chips can't fit at 375px so overflow always exists, and with no scrollbar-hiding utility in the codebase the native classic scrollbar (Windows) renders permanently.
+3. Button-like chips: mobile-shop-panel.tsx uses ToggleButton variant="menuRow" (toggle-button.tsx line 18-19): rounded-md + border + aria-pressed:bg-brand-tint + aria-pressed:border-hairline-2 = filled/bordered button treatment.
+4. Ambiguous arrow: mobile-shop-panel.tsx lines 75-86 — "View all {name}" Link decorated with ChevronRight, the SAME icon used by DIRECT_LINKS rows (mobile-mega-nav.tsx 107) and desktop menuRow toggles, so it reads as drill-in/submenu, not navigation.
+5. Misalignment: four distinct left text-edges inside one px-gutter container — section heading px-0, PANEL_LINK_CLASS px-2.5 (mega-nav-styles.ts line 7), View-all CTA px-3.5, menuRow chips px-3; the design reference aligned padded links via margin-left:-10px which was not carried over.
+6. Hover lift: button.tsx lines 21/23/27 — brand, primary, inverse variants each hard-code `hover:-translate-y-0.5 hover:shadow-2` in the cva. No contract test asserts these classes; 11-UI-SPEC.md documents them.
+   fix: NOT APPLIED (goal: find_root_cause_only)
+   verification: static analysis only
+   files_changed: []

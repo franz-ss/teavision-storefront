@@ -74,7 +74,7 @@ Homepage UAT gaps 6 and 7 closed with approved verbatim copy, design-faithful la
 ### Task 3: Newsletter/contact send — env provisioning doc + server-side warn (0a6ba64)
 
 - **actions.ts**: Added `console.warn` in the `contact` missing-key branch (`submitContactSubmission`) and the `newsletter` missing-key branch (`sendNewsletterSignupAction`), clearly naming RESEND_API_KEY as the missing env var — distinguishes "not configured" from genuine provider failures in server logs.
-- **.env.example**: Expanded RESEND_API_KEY comment to document it is required for _both_ newsletter signup and contact form delivery, with link to Resend dashboard.
+- **.env.example**: Expanded RESEND*API_KEY comment to document it is required for \_both* newsletter signup and contact form delivery, with link to Resend dashboard.
 
 ## Deviations from Plan
 
@@ -123,12 +123,14 @@ None — no new network endpoints, auth paths, or schema changes at trust bounda
 ## Self-Check: PASSED
 
 Files exist:
+
 - src/app/(storefront)/page.tsx — FOUND (CertificationCoverage mounted)
 - src/components/homepage/certification-coverage/certification-coverage.tsx — FOUND (w-max, 6-item strings)
 - src/components/homepage/proof-points/proof-points.tsx — FOUND (image branch, size-10)
 - src/lib/contact/actions.ts — FOUND (console.warn in both missing-key branches)
 
 Commits exist:
+
 - 35def96 feat(11-16): homepage upper sections — FOUND
 - 068f13b feat(11-16): homepage lower sections — FOUND
 - 0a6ba64 feat(11-16): newsletter/contact send — FOUND

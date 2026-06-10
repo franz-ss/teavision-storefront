@@ -116,7 +116,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
     number: 2,
     title: 'Confirm Shipment Options',
     description:
-      "We’ll recommend suitable container sizes and logistics based on your forecast.",
+      'We’ll recommend suitable container sizes and logistics based on your forecast.',
   },
   {
     number: 3,

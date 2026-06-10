@@ -19,9 +19,7 @@ export function FeaturedArticles({
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
             <Eyebrow tone="muted">Tea Journal</Eyebrow>
-            <h2 className="type-heading-02 text-ink mt-2">
-              Featured Articles
-            </h2>
+            <h2 className="type-heading-02 text-ink mt-2">Featured Articles</h2>
           </div>
         </div>
         <ul className="grid gap-6 md:grid-cols-2" role="list">

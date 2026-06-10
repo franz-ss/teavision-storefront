@@ -9,7 +9,7 @@ export default function StorefrontLayout({
     <div className="flex min-h-dvh flex-col">
       <a
         href="#main-content"
-        className="type-label sr-only z-60 rounded-sm border border-hairline bg-paper px-4 py-3 text-ink focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        className="type-label border-hairline bg-paper text-ink focus-visible:ring-ring sr-only z-60 rounded-sm border px-4 py-3 focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         Skip to main content
       </a>

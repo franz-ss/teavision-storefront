@@ -13,7 +13,9 @@ export function PrivateLabel() {
         {/* Split section head */}
         <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <Eyebrow className="mb-4">Private label &amp; custom solutions</Eyebrow>
+            <Eyebrow className="mb-4">
+              Private label &amp; custom solutions
+            </Eyebrow>
             <h2 className="type-heading-01">
               Private Label &amp; Custom Tea Solutions
             </h2>
@@ -27,7 +29,7 @@ export function PrivateLabel() {
           {SERVICE_CARDS.map((card, index) => (
             <li
               key={card.title}
-              className="bg-card border border-hairline-2 rounded-lg p-7.5 flex flex-col duration-350 transition-[transform,box-shadow] hover:-translate-y-1 hover:shadow-3 motion-reduce:hover:translate-y-0"
+              className="bg-card border-hairline-2 hover:shadow-3 flex flex-col rounded-lg border p-7.5 transition-[translate,box-shadow] duration-350 hover:-translate-y-1 motion-reduce:hover:translate-y-0"
             >
               {/* 150px media block */}
               <div className="relative mb-5.5 h-37.5 w-full overflow-hidden rounded-md">
@@ -40,21 +42,21 @@ export function PrivateLabel() {
                 />
               </div>
               {/* Numbering */}
-              <p className="font-mono text-xs tracking-[0.14em] uppercase text-gold-deep">
+              <p className="text-gold-deep font-mono text-xs tracking-[0.14em] uppercase">
                 {String(index + 1).padStart(2, '0')}
               </p>
               {/* Title */}
-              <h3 className="mt-4 font-display text-[1.45rem] leading-[1.1]">
+              <h3 className="font-display mt-4 text-[1.45rem] leading-[1.1]">
                 {card.title}
               </h3>
               {/* Card body */}
               {card.body ? (
-                <p className="mt-3 text-[0.96rem] text-ink-soft">{card.body}</p>
+                <p className="text-ink-soft mt-3 text-[0.96rem]">{card.body}</p>
               ) : null}
               {/* Link-arrow CTA */}
               <Link
                 href={card.href}
-                className="mt-5.5 inline-flex items-center gap-2 type-label border-b-[1.5px] border-hairline pb-0.75 text-[0.92rem] hover:border-brand hover:text-brand group"
+                className="type-label border-hairline hover:border-brand hover:text-brand group mt-5.5 inline-flex items-center gap-2 border-b-[1.5px] pb-0.75 text-[0.92rem]"
               >
                 {card.action}
                 <ArrowRight

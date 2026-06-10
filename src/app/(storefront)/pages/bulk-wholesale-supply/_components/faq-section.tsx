@@ -13,7 +13,9 @@ export function FaqSection() {
     <Section.Root tone="surface">
       <Section.Container variant="base">
         <div className="mb-8 max-w-prose">
-          <h2 className="type-heading-01 text-ink">Frequently asked questions</h2>
+          <h2 className="type-heading-01 text-ink">
+            Frequently asked questions
+          </h2>
           <p className="type-body text-ink-soft mt-4">
             You may have questions about sourcing wholesale tea, tea bags, and
             bulk spices. Below are answers to some of the most common queries

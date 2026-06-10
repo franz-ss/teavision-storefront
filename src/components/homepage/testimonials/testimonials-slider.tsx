@@ -106,10 +106,10 @@ export function TestimonialsSlider({
               className="h-10 w-13.5 shrink-0 rounded-sm object-contain"
             />
             <span className="min-w-0">
-              <span className="block font-bold text-ink">
+              <span className="text-ink block font-bold">
                 {testimonial.brand ?? testimonial.name}
               </span>
-              <span className="mt-1 block text-[0.8rem] text-ink-faint">
+              <span className="text-ink-faint mt-1 block text-[0.8rem]">
                 {testimonial.name}
               </span>
             </span>

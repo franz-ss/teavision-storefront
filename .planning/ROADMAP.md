@@ -137,7 +137,7 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, t
 | 6. Prevent site indexing                | 1/1            | Complete | 2026-06-03 |
 | 8. Optimized Collection Quick Add       | 1/1            | Complete | 2026-06-03 |
 | 9. Collection Product Card Improvements | 0/1            | Planned  | —          |
-| 11. Full Visual Redesign                 | 22/22 | Complete   | 2026-06-10 |
+| 11. Full Visual Redesign                | 22/22          | Complete | 2026-06-10 |
 
 ### Phase 9: Collection Product Card Improvements
 

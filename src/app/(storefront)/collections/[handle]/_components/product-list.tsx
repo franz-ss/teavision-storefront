@@ -16,12 +16,17 @@ export function ProductList({
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center py-20 text-center">
-        <Leaf className="h-11 w-11 text-ink-faint/50" aria-hidden="true" />
-        <h3 className="font-display text-2xl mt-4 text-ink">No matches</h3>
+        <Leaf className="text-ink-faint/50 h-11 w-11" aria-hidden="true" />
+        <h3 className="font-display text-ink mt-4 text-2xl">No matches</h3>
         <p className="text-ink-soft mt-2 max-w-sm">
           Try removing a filter, or reach out — we source to order.
         </p>
-        <Button href="/pages/contact" variant="ghost" size="sm" className="mt-5">
+        <Button
+          href="/pages/contact"
+          variant="ghost"
+          size="sm"
+          className="mt-5"
+        >
           Clear filters
         </Button>
       </div>
@@ -31,7 +36,7 @@ export function ProductList({
   return (
     <div>
       <ul
-        className="grid grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-3 sm:gap-y-5.5 sm:gap-x-4.5"
+        className="grid grid-cols-2 gap-x-3 gap-y-4 sm:gap-x-4.5 sm:gap-y-5.5 lg:grid-cols-3"
         role="list"
       >
         {products.map((product, index) => (

@@ -24,7 +24,7 @@ export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
     <Section.Root tone="sunken" className="pt-0">
       <Section.Container>
         <div
-          className="relative overflow-hidden rounded-lg bg-brand-deep text-paper"
+          className="bg-brand-deep text-paper relative overflow-hidden rounded-lg"
           style={{ padding: 'clamp(40px,6vw,72px)' }}
         >
           {/* Decorative image layer — exact offsets from design .news .ph */}
@@ -51,10 +51,10 @@ export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
           {/* Body — z-1 above the decorative layer */}
           <div className="relative z-1 max-w-120">
             <Eyebrow tone="gold">Monthly newsletter</Eyebrow>
-            <h2 className="type-heading-02 mt-4 text-paper">
+            <h2 className="type-heading-02 text-paper mt-4">
               Explore the world of tea, monthly.
             </h2>
-            <p className="mt-3.5 type-lede text-paper/85">
+            <p className="type-lede text-paper/85 mt-3.5">
               Market insights, brewing tips and the latest from trusted
               suppliers in Australia and beyond.
             </p>

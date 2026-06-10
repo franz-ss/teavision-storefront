@@ -1,11 +1,11 @@
 ---
 phase: 11
-plan: "02"
+plan: '02'
 subsystem: ui-primitives
 tags: [button, eyebrow, section, badge, design-system, tailwind, cva]
 dependency_graph:
-  requires: ["11-01"]
-  provides: ["Eyebrow", "Button-pill", "Section-new-tokens", "Badge-pill"]
+  requires: ['11-01']
+  provides: ['Eyebrow', 'Button-pill', 'Section-new-tokens', 'Badge-pill']
   affects:
     - src/components/ui/button/button.tsx
     - src/components/ui/eyebrow/eyebrow.tsx
@@ -15,10 +15,10 @@ dependency_graph:
 tech_stack:
   added: []
   patterns:
-    - "cva with new OKLCH token classes (bg-brand, bg-paper-2, bg-brand-deep, bg-ink)"
-    - "rounded-full pill shape for buttons and badges"
-    - "py-section / px-gutter rhythm tokens"
-    - "Eyebrow: type-eyebrow + before:w-5.5 rule line"
+    - 'cva with new OKLCH token classes (bg-brand, bg-paper-2, bg-brand-deep, bg-ink)'
+    - 'rounded-full pill shape for buttons and badges'
+    - 'py-section / px-gutter rhythm tokens'
+    - 'Eyebrow: type-eyebrow + before:w-5.5 rule line'
 key_files:
   created:
     - src/components/ui/eyebrow/eyebrow.tsx
@@ -34,14 +34,14 @@ key_files:
     - src/components/ui/badge/badge.stories.tsx
     - src/components/ui/index.ts
 decisions:
-  - "brandStrong kept as temporary alias of brand in Section to avoid breaking unmigrated call sites until plan 11-14 migration sweep"
-  - "Section.Intro gains optional eyebrow prop (string) rendered via Eyebrow component above the heading"
-  - "Badge keeps all existing variant names (outOfStock/sale/new/certification) for backward compat while adding organic/gold/onDark"
-  - "Button hover lift (-translate-y-0.5 shadow-2) applied only to filled variants (brand/primary/inverse); motion-reduce guards applied"
-  - "Section.Container gains base variant (max-w-base=1280px) for FAQ/editorial in addition to default (max-w-wide=1480px) and compact (max-w-prose)"
+  - 'brandStrong kept as temporary alias of brand in Section to avoid breaking unmigrated call sites until plan 11-14 migration sweep'
+  - 'Section.Intro gains optional eyebrow prop (string) rendered via Eyebrow component above the heading'
+  - 'Badge keeps all existing variant names (outOfStock/sale/new/certification) for backward compat while adding organic/gold/onDark'
+  - 'Button hover lift (-translate-y-0.5 shadow-2) applied only to filled variants (brand/primary/inverse); motion-reduce guards applied'
+  - 'Section.Container gains base variant (max-w-base=1280px) for FAQ/editorial in addition to default (max-w-wide=1480px) and compact (max-w-prose)'
 metrics:
-  duration: "451s (~7.5 min)"
-  completed: "2026-06-10"
+  duration: '451s (~7.5 min)'
+  completed: '2026-06-10'
   tasks_completed: 3
   files_changed: 11
 ---
@@ -52,15 +52,16 @@ Restyles four structural UI primitives using the Phase 11 OKLCH design system to
 
 ## Tasks Completed
 
-| Task | Name | Commit | Key Files |
-|------|------|--------|-----------|
-| 1 | Button pill restyle + lockstep contract test + stories | 94d4bc8 | button.tsx, button-system.test.mjs, button.stories.tsx |
-| 2 | Create the Eyebrow signature component | 2a85bfe | eyebrow.tsx, eyebrow.stories.tsx, eyebrow/index.ts, ui/index.ts |
-| 3 | Section tone/spacing/container remap + Badge pill | 28e1fd3 | section.tsx, section.stories.tsx, badge.tsx, badge.stories.tsx |
+| Task | Name                                                   | Commit  | Key Files                                                       |
+| ---- | ------------------------------------------------------ | ------- | --------------------------------------------------------------- |
+| 1    | Button pill restyle + lockstep contract test + stories | 94d4bc8 | button.tsx, button-system.test.mjs, button.stories.tsx          |
+| 2    | Create the Eyebrow signature component                 | 2a85bfe | eyebrow.tsx, eyebrow.stories.tsx, eyebrow/index.ts, ui/index.ts |
+| 3    | Section tone/spacing/container remap + Badge pill      | 28e1fd3 | section.tsx, section.stories.tsx, badge.tsx, badge.stories.tsx  |
 
 ## What Was Built
 
 ### Button — pill restyle
+
 - Base: `rounded-full` replaces `rounded-md`; `gap-2.5`, transition expanded to `background-color,color,box-shadow,transform`
 - Variants mapped to mockup: `brand`=green, `primary`=ink, `secondary`=hairline ghost, `inverse`=paper, `inverseSecondary`=ghost-on-dark, `ghost`=brand-tint
 - Hover lift (`-translate-y-0.5 shadow-2`) on filled variants with `motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-0` guards
@@ -68,6 +69,7 @@ Restyles four structural UI primitives using the Phase 11 OKLCH design system to
 - Contract test updated in lockstep: `rounded-full` assertion, new sm size string, inverse background `var(--color-ink)`
 
 ### Eyebrow — new signature component
+
 - Server component (no `use client`) at `src/components/ui/eyebrow/`
 - `type-eyebrow inline-flex items-center gap-2.5` base with leading rule `before:h-px before:w-5.5 before:bg-current before:opacity-60`
 - cva `tone`: `brand`=`text-brand` (default), `muted`=`text-ink-faint`, `gold`=`text-gold` (dark bands)
@@ -76,6 +78,7 @@ Restyles four structural UI primitives using the Phase 11 OKLCH design system to
 - Exported from `src/components/ui/eyebrow/index.ts` and `src/components/ui/index.ts`
 
 ### Section — new token mapping
+
 - Tones: `surface`=`bg-paper text-ink`, `sunken`=`bg-paper-2 text-ink`, `brand`=`bg-brand-deep text-paper`, `brandStrong`=`bg-brand-deep text-paper` (temp alias), `inverse`=`bg-ink text-paper`
 - Spacing: `default`=`py-section` (clamp 4rem→8.125rem), `compact`=`py-8 md:py-12`, `none`=''
 - Container: base `mx-auto px-gutter`; `default`=`max-w-wide` (1480px), `compact`=`max-w-prose`, `base`=`max-w-base` (1280px, new)
@@ -83,6 +86,7 @@ Restyles four structural UI primitives using the Phase 11 OKLCH design system to
 - Stories: brandStrong story dropped; WithEyebrow + BaseContainer stories added
 
 ### Badge — mockup pill
+
 - Base: `inline-flex items-center gap-2 rounded-full border border-hairline bg-card px-3 py-1.5 type-mono-meta text-ink-soft`
 - Legacy variants updated with new tokens: `outOfStock`=danger-tint, `sale`=gold-tint, `new`/`certification`=paper-2
 - New variants: `organic` (brand-tint + 6px dot `before:size-1.5 before:rounded-full before:bg-current`), `gold` (gold-tint), `onDark` (paper/15)
@@ -93,6 +97,7 @@ Restyles four structural UI primitives using the Phase 11 OKLCH design system to
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] ESLint import/order error on section.tsx**
+
 - **Found during:** Task 3
 - **Issue:** Relative import `../eyebrow` appeared directly after `@/lib/utils` internal alias import without an empty line separator — violating the import/order rule (groups require blank lines)
 - **Fix:** Added blank line between `@/lib/utils` group and `../eyebrow` relative group
@@ -114,6 +119,7 @@ None — pure presentational restyle of internal primitives per threat model.
 ## Self-Check
 
 Files exist:
+
 - [x] src/components/ui/eyebrow/eyebrow.tsx
 - [x] src/components/ui/eyebrow/eyebrow.stories.tsx
 - [x] src/components/ui/eyebrow/index.ts
@@ -122,11 +128,13 @@ Files exist:
 - [x] src/components/ui/badge/badge.tsx (type-mono-meta, rounded-full)
 
 Commits exist:
+
 - [x] 94d4bc8 — button pill restyle
 - [x] 2a85bfe — eyebrow component
 - [x] 28e1fd3 — section + badge
 
 Gates:
+
 - [x] pnpm test:contracts: 35/35 pass
 - [x] pnpm lint: clean
 - [x] pnpm typecheck: clean

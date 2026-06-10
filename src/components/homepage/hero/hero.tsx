@@ -34,39 +34,37 @@ export function HomepageHero() {
         fetchPriority="high"
         className="absolute inset-0 -z-20 object-cover"
       />
-      <div
-        aria-hidden="true"
-        className="hero-scrim absolute inset-0 -z-10"
-      />
+      <div aria-hidden="true" className="hero-scrim absolute inset-0 -z-10" />
       {/* Inner content: mt-auto + block padding per design .heroA__inner —
           text sits above the trust strip, not flush to the hero bottom */}
       <Section.Container className="mt-auto w-full py-[clamp(60px,9vw,110px)]">
         <Eyebrow tone="gold" className="mb-6.5">
           Australia&apos;s tea, herb &amp; spice house
         </Eyebrow>
-        <h1 className="type-display max-w-[16ch] text-paper">
+        <h1 className="type-display text-paper max-w-[16ch]">
           {HOMEPAGE_HERO.title}
         </h1>
-        <p className="type-lede mt-6 max-w-[48ch] text-paper/90">
+        <p className="type-lede text-paper/90 mt-6 max-w-[48ch]">
           {HOMEPAGE_HERO.copy}
         </p>
         <div className="mt-8.5 flex flex-wrap gap-3">
           <Button href={HOMEPAGE_HERO.cta.href} variant="inverse" size="lg">
             {HOMEPAGE_HERO.cta.children}
-            <ArrowRight aria-hidden="true" className="size-4.5" strokeWidth={1.8} />
+            <ArrowRight
+              aria-hidden="true"
+              className="size-4.5"
+              strokeWidth={1.8}
+            />
           </Button>
-          <Button
-            href="/pages/wholesale"
-            variant="inverseSecondary"
-            size="lg"
-          >
+          <Button href="/pages/wholesale" variant="inverseSecondary" size="lg">
             Open a wholesale account
           </Button>
         </div>
       </Section.Container>
 
-      {/* Trust strip at the hero foot per design .heroA__strip */}
-      <div className="border-t border-paper/18">
+      {/* Trust strip at the hero foot per design .heroA__strip —
+          dark translucent band keeps the stats legible over any hero photo */}
+      <div className="border-paper/18 bg-ink/40 border-t">
         <Section.Container>
           <ul className="grid grid-cols-2 lg:grid-cols-4" role="list">
             {HOMEPAGE_PROOF_POINTS.map((point, index) => {
@@ -82,11 +80,11 @@ export function HomepageHero() {
                     isLastOverall
                       ? 'px-6 py-5.5'
                       : isLastInRow2
-                        ? 'border-r-0 px-6 py-5.5 lg:border-r lg:border-paper/14'
-                        : 'border-r border-paper/14 px-6 py-5.5'
+                        ? 'lg:border-paper/14 border-r-0 px-6 py-5.5 lg:border-r'
+                        : 'border-paper/14 border-r px-6 py-5.5'
                   }
                 >
-                  <div className="flex items-center gap-2 font-display text-[1.7rem] leading-none text-paper">
+                  <div className="font-display text-paper flex items-center gap-2 text-[1.7rem] leading-none">
                     {point.image ? (
                       <Image
                         src={point.image.src}
@@ -98,13 +96,13 @@ export function HomepageHero() {
                     ) : IconComponent ? (
                       <IconComponent
                         aria-hidden="true"
-                        className="size-5.5 text-gold"
+                        className="text-gold size-5.5"
                         strokeWidth={1.8}
                       />
                     ) : null}
                     {point.title}
                   </div>
-                  <div className="mt-1 text-[0.82rem] text-paper/70">
+                  <div className="text-paper/70 mt-1 text-[0.82rem]">
                     {point.description}
                   </div>
                 </li>

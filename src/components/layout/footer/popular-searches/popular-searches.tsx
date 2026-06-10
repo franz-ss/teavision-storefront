@@ -16,7 +16,10 @@ const POPULAR_SEARCH_COLUMNS = [
     { href: '/collections/wholesale-detox-tea/', label: 'detox tea' },
     { href: '/products/spearmint-organic', label: 'spearmint tea' },
     { href: '/collections/spearmint-tea', label: 'buy spearmint tea' },
-    { href: '/collections/licorice-mint', label: 'peppermint and licorice tea' },
+    {
+      href: '/collections/licorice-mint',
+      label: 'peppermint and licorice tea',
+    },
     { href: '/collections/lemon-myrtle', label: 'lemon myrtle tea' },
     { href: '/collections/organic-lemon-balm', label: 'lemon balm tea' },
     { href: '/collections/organic-black-assam-tea', label: 'assam tea' },
@@ -37,22 +40,40 @@ const POPULAR_SEARCH_COLUMNS = [
     { href: '/collections/yerba-mate', label: 'yerba mate tea' },
     { href: '/collections/chamomile', label: 'chamomile leaves' },
     { href: '/collections/chamomile', label: 'chamomile teas' },
-    { href: '/products/organic-chamomile-pyramid-tea-bags', label: 'chamomile tea bags' },
+    {
+      href: '/products/organic-chamomile-pyramid-tea-bags',
+      label: 'chamomile tea bags',
+    },
     { href: '/collections/oolong-tea-wholesale', label: 'buy oolong tea' },
     { href: '/pages/tea-packaging', label: 'tea packaging' },
-    { href: '/collections/organic-body-colon-cleanse', label: 'organic herbal colon cleanse' },
-    { href: '/collections/organic-turmeric-powder', label: 'organic turmeric powder' },
+    {
+      href: '/collections/organic-body-colon-cleanse',
+      label: 'organic herbal colon cleanse',
+    },
+    {
+      href: '/collections/organic-turmeric-powder',
+      label: 'organic turmeric powder',
+    },
     { href: '/collections/organic-cinnamon-powder', label: 'bulk cinnamon' },
     { href: '/collections/organic-hibiscus', label: 'dried hibiscus flowers' },
-    { href: '/pages/import-tea-herbs-australia', label: 'import herbs to australias' },
-    { href: '/pages/tea-importers-australia', label: 'tea importers australia' },
+    {
+      href: '/pages/import-tea-herbs-australia',
+      label: 'import herbs to australias',
+    },
+    {
+      href: '/pages/tea-importers-australia',
+      label: 'tea importers australia',
+    },
     { href: '/collections/white-tea', label: 'buy white tea' },
     { href: '/collections/organic-honeybush', label: 'honeybush tea' },
     { href: '/collections/pu-erh-tea', label: 'pu erh tea australia' },
     { href: '/collections/scullcap', label: 'scullcap' },
     { href: '/collections/english-breakfast-tea', label: 'breakfast tea' },
     { href: '/collections/cloves', label: 'clove tea' },
-    { href: '/collections/organic-calendula-petals', label: 'calendula flowers' },
+    {
+      href: '/collections/organic-calendula-petals',
+      label: 'calendula flowers',
+    },
   ],
   [
     { href: '/collections/organic-digestive-tea', label: 'digestive tea' },
@@ -60,7 +81,10 @@ const POPULAR_SEARCH_COLUMNS = [
     { href: '/collections/speciality-tea', label: 'speciality tea' },
     { href: '/collections/cocoa-tea-shells', label: 'cocoa tea' },
     { href: '/collections/cloves-wholesale', label: 'cloves wholesale' },
-    { href: '/collections/organic-wholesale-peppermint-tea', label: 'loose leaf peppermint tea' },
+    {
+      href: '/collections/organic-wholesale-peppermint-tea',
+      label: 'loose leaf peppermint tea',
+    },
     { href: '/collections/licorice-tea', label: 'licorice root tea' },
     { href: '/collections/aniseed-tea', label: 'aniseed tea' },
     { href: '/collections/rose-tea', label: 'rose bud tea' },
@@ -71,7 +95,10 @@ const POPULAR_SEARCH_COLUMNS = [
     { href: '/collections/ginseng-tea', label: 'ginseng tea' },
     { href: '/collections/elderberries', label: 'elderberries' },
     { href: '/collections/blooming-tea', label: 'blooming tea' },
-    { href: '/collections/lemongrass-ginger-tea', label: 'lemongrass and ginger tea' },
+    {
+      href: '/collections/lemongrass-ginger-tea',
+      label: 'lemongrass and ginger tea',
+    },
     { href: '/collections/lemon-verbena-tea', label: 'lemon verbena tea' },
     { href: '/collections/genmaicha-tea', label: 'genmaicha tea' },
     { href: '/collections/lapsang-souchong', label: 'lapsang souchong tea' },
@@ -89,7 +116,10 @@ const POPULAR_SEARCH_COLUMNS = [
     { href: '/collections/complexion-tea', label: 'complexion tea' },
     { href: '/collections/cinnamon-cassia', label: 'cinnamon cassia' },
     { href: '/collections/calendula-tea', label: 'calendula tea' },
-    { href: '/collections/darjeeling-tea', label: 'darjeeling tea online australia' },
+    {
+      href: '/collections/darjeeling-tea',
+      label: 'darjeeling tea online australia',
+    },
     { href: '/collections/ceylon-tea', label: 'ceylon tea' },
     { href: '/collections/jasmine-tea', label: 'jasmine tea' },
     { href: '/collections/moringa-leaves', label: 'moringa leaf' },
@@ -109,17 +139,21 @@ const POPULAR_SEARCH_COLUMNS = [
 export function PopularSearches() {
   return (
     <nav aria-label="Popular searches">
-      <h2 className="font-mono text-[10.5px] tracking-[0.16em] uppercase text-gold mb-4">
+      <h2 className="text-gold mb-4 font-mono text-[10.5px] tracking-[0.16em] uppercase">
         Popular Searches
       </h2>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {POPULAR_SEARCH_COLUMNS.map((column, colIndex) => (
-          <ul key={colIndex} className="flex flex-col gap-1.5 text-[0.85rem]" role="list">
+          <ul
+            key={colIndex}
+            className="flex flex-col gap-1.5 text-[0.85rem]"
+            role="list"
+          >
             {column.map((link) => (
               <li key={`${link.href}-${link.label}`}>
                 <a
                   href={link.href}
-                  className="text-paper/60 transition-colors hover:text-paper"
+                  className="text-paper/60 hover:text-paper transition-colors"
                 >
                   {link.label}
                 </a>

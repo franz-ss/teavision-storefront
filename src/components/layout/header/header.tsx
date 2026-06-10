@@ -21,34 +21,40 @@ export function Header() {
     <>
       <a
         href="#main-content"
-        className="focus-visible:ring-ring bg-paper text-ink fixed left-2 top-2 z-100 -translate-y-16 rounded-full px-4 py-2 type-label focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none focus-visible:translate-y-0"
+        className="focus-visible:ring-ring bg-paper text-ink type-label fixed top-2 left-2 z-100 -translate-y-16 rounded-full px-4 py-2 focus-visible:translate-y-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         Skip to main content
       </a>
 
       <header className="sticky top-0 z-60">
         {/* Utility bar — only shown at lg+ where content fits on a single line */}
-        <div className="bg-ink text-paper h-9.5 hidden lg:block">
-          <div className="max-w-wide mx-auto flex h-full items-center justify-between whitespace-nowrap overflow-hidden px-gutter font-mono text-[11.5px] tracking-[0.08em]">
+        <div className="bg-ink text-paper hidden h-9.5 lg:block">
+          <div className="max-w-wide px-gutter mx-auto flex h-full items-center justify-between overflow-hidden font-mono text-[11.5px] tracking-[0.08em] whitespace-nowrap">
             <div className="flex items-center gap-2">
               <span>EST. MELBOURNE 2014</span>
-              <span className="text-paper/50" aria-hidden="true">·</span>
+              <span className="text-paper/50" aria-hidden="true">
+                ·
+              </span>
               <span>ACO + USDA CERTIFIED ORGANIC</span>
-              <span className="text-paper/50" aria-hidden="true">·</span>
+              <span className="text-paper/50" aria-hidden="true">
+                ·
+              </span>
               <span>FREIGHT-INSURED, WORLDWIDE</span>
             </div>
             <div className="flex items-center gap-3">
               <Link
                 href="/pages/wholesale"
-                className="flex items-center gap-1 text-paper/85 hover:text-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                className="text-paper/85 hover:text-paper focus-visible:ring-ring flex items-center gap-1 rounded-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
               >
                 <Sparkles className="size-3" aria-hidden="true" />
                 Apply for wholesale
               </Link>
-              <span className="text-paper/50" aria-hidden="true">·</span>
+              <span className="text-paper/50" aria-hidden="true">
+                ·
+              </span>
               <a
                 href="tel:1300729617"
-                className="flex items-center gap-1 text-paper/85 hover:text-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-sm"
+                className="text-paper/85 hover:text-paper focus-visible:ring-ring flex items-center gap-1 rounded-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
                 aria-label="Call Teavision at 1300 729 617"
               >
                 <Phone className="size-3" aria-hidden="true" />
@@ -61,12 +67,12 @@ export function Header() {
         {/* Main bar — relative: mega panels anchor to its bottom via absolute top-full.
             (backdrop-blur makes this div the containing block for fixed descendants,
             so fixed+viewport-offset positioning inside it lands 38px low.) */}
-        <div className="relative h-19 bg-paper/80 backdrop-blur-md border-b border-hairline">
-          <div className="max-w-wide mx-auto flex h-full items-center justify-between gap-4 px-gutter">
+        <div className="bg-paper/80 border-hairline relative h-19 border-b backdrop-blur-md">
+          <div className="max-w-wide px-gutter mx-auto flex h-full items-center justify-between gap-4">
             {/* Logo */}
             <Link
               href="/"
-              className="shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+              className="focus-visible:ring-ring shrink-0 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               aria-label="Teavision home"
             >
               <Image
@@ -79,7 +85,7 @@ export function Header() {
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden lg:flex items-center flex-1 justify-center">
+            <div className="hidden flex-1 items-center justify-center lg:flex">
               <MegaNav />
             </div>
 
@@ -95,16 +101,24 @@ export function Header() {
                 onClick={openSearch}
                 className="hover:bg-brand-tint hover:text-brand"
               >
-                <Search className="size-4" aria-hidden="true" strokeWidth={1.8} />
+                <Search
+                  className="size-4"
+                  aria-hidden="true"
+                  strokeWidth={1.8}
+                />
               </IconButton>
 
               {/* Cart icon */}
               <Link
                 href="/cart"
-                className="relative inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="text-ink-soft hover:bg-brand-tint hover:text-brand focus-visible:ring-ring relative inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label="Cart"
               >
-                <ShoppingCart className="size-4" aria-hidden="true" strokeWidth={1.8} />
+                <ShoppingCart
+                  className="size-4"
+                  aria-hidden="true"
+                  strokeWidth={1.8}
+                />
                 <Suspense fallback={null}>
                   <CartCount />
                 </Suspense>
@@ -115,7 +129,7 @@ export function Header() {
                 href="/pages/wholesale"
                 variant="brand"
                 size="sm"
-                className="hidden lg:inline-flex ml-2"
+                className="ml-2 hidden lg:inline-flex"
               >
                 Wholesale Account
               </Button>
@@ -126,12 +140,16 @@ export function Header() {
                 variant="ghost"
                 size="md"
                 onClick={() => setMobileOpen((v) => !v)}
-                className="lg:hidden hover:bg-brand-tint hover:text-brand"
+                className="hover:bg-brand-tint hover:text-brand lg:hidden"
               >
                 {mobileOpen ? (
                   <X className="size-4" aria-hidden="true" strokeWidth={1.8} />
                 ) : (
-                  <Menu className="size-4" aria-hidden="true" strokeWidth={1.8} />
+                  <Menu
+                    className="size-4"
+                    aria-hidden="true"
+                    strokeWidth={1.8}
+                  />
                 )}
               </IconButton>
             </div>

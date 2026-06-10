@@ -15,14 +15,14 @@ export type AccordionProps = Omit<ComponentProps<'div'>, 'children'> & {
 
 export function Accordion({ className, items, ...props }: AccordionProps) {
   return (
-    <div className={cn('divide-y divide-hairline', className)} {...props}>
+    <div className={cn('divide-hairline divide-y', className)} {...props}>
       {items.map((item) => (
         <details
           key={item.id}
           className="group"
           open={item.defaultOpen || undefined}
         >
-          <summary className="font-display text-[1.15rem] text-ink focus-visible:ring-ring hover:text-brand flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 transition-colors marker:content-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+          <summary className="font-display text-ink focus-visible:ring-ring hover:text-brand flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-[1.15rem] transition-colors marker:content-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none [&::-webkit-details-marker]:hidden">
             <span>{item.title}</span>
             <span
               aria-hidden="true"

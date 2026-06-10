@@ -17,11 +17,7 @@ function ignoreShopKey(key: ShopKey) {
 function noop() {}
 
 function StoryPanelFrame({ children }: { children: ReactNode }) {
-  return (
-    <div className="relative min-h-80 bg-paper">
-      {children}
-    </div>
-  )
+  return <div className="bg-paper relative min-h-80">{children}</div>
 }
 
 const meta: Meta<typeof MegaNav> = {
@@ -34,7 +30,7 @@ const meta: Meta<typeof MegaNav> = {
   decorators: [
     (Story) => (
       <div className="bg-paper p-8">
-        <div className="mx-auto max-w-wide">
+        <div className="max-w-wide mx-auto">
           <Story />
         </div>
       </div>

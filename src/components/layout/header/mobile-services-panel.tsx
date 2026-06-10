@@ -6,10 +6,10 @@ export function MobileServicesPanel({ onClose, open }: ServicesMenuProps) {
   return (
     <div
       id="mobile-services-mega"
-      className="bg-paper-2 border-t border-hairline"
+      className="bg-paper-2 border-hairline border-t"
       hidden={!open}
     >
-      <div className="mx-auto grid max-w-wide gap-5 px-gutter py-4 md:grid-cols-2">
+      <div className="max-w-wide px-gutter mx-auto grid gap-5 py-4 md:grid-cols-2">
         <ServicesLinks onClose={onClose} />
         <CatalogueLinks onClose={onClose} />
       </div>

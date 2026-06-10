@@ -16,10 +16,10 @@ export function MobileShopPanel({
   return (
     <div
       id="mobile-shop-mega"
-      className="bg-paper-2 border-t border-hairline"
+      className="bg-paper-2 border-hairline border-t"
       hidden={!open}
     >
-      <div className="mx-auto grid max-w-wide gap-4 px-gutter py-4 md:grid-cols-[16rem_minmax(0,1fr)]">
+      <div className="max-w-wide px-gutter mx-auto grid gap-4 py-4 md:grid-cols-[16rem_minmax(0,1fr)]">
         {/* Category selector — flex-wrap so chips wrap at 375px instead of horizontal-scrolling */}
         <div>
           <div className="flex flex-wrap gap-2 md:flex-col md:flex-nowrap">
@@ -68,7 +68,7 @@ export function MobileShopPanel({
           {/* View-all uses ArrowRight (distinct from ChevronRight drill-in indicators) */}
           <Link
             href={activeShop.ctaHref}
-            className="focus-visible:ring-ring type-label text-brand hover:text-brand-deep inline-flex min-h-11 items-center gap-1.5 underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none rounded-sm"
+            className="focus-visible:ring-ring type-label text-brand hover:text-brand-deep inline-flex min-h-11 items-center gap-1.5 rounded-sm underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             onClick={onClose}
           >
             View all {activeShop.name}

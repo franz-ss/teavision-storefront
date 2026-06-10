@@ -33,12 +33,12 @@ key-files:
 
 key-decisions:
   - "Phase 11-14 removed old design tokens instead of aliasing them to new values, preserving RD-02's single-system requirement."
-  - "Phase 11-14 uses --color-*: initial in the Tailwind theme so default palette color utilities are not generated."
-  - "Phase 11-14 uses a shared browser cart-changed event to refresh header cart count after cart mutations without adding client-side cart storage."
+  - 'Phase 11-14 uses --color-*: initial in the Tailwind theme so default palette color utilities are not generated.'
+  - 'Phase 11-14 uses a shared browser cart-changed event to refresh header cart count after cart mutations without adding client-side cart storage.'
 
 patterns-established:
-  - "Old-token cleanup must be proven by grep plus lint:tailwind; lint alone can pass while old aliases still exist."
-  - "Storybook interaction coverage is part of the Phase 11 visual gate and must run against the real .storybook config."
+  - 'Old-token cleanup must be proven by grep plus lint:tailwind; lint alone can pass while old aliases still exist.'
+  - 'Storybook interaction coverage is part of the Phase 11 visual gate and must run against the real .storybook config.'
 
 requirements-completed: [RD-02, RD-08]
 
@@ -119,6 +119,7 @@ Storybook emitted non-failing Next image LCP warnings, and the e2e dev server em
 ### Auto-fixed Issues
 
 **1. [Rule 3 - Blocking] Fixed Storybook test config path**
+
 - **Found during:** Task 3 full phase verification
 - **Issue:** `pnpm test:stories` failed before running stories because the config referenced missing `.storybook-test`.
 - **Fix:** Updated `vitest.storybook.config.mts` to use the real `.storybook` config.
@@ -127,6 +128,7 @@ Storybook emitted non-failing Next image LCP warnings, and the e2e dev server em
 - **Committed in:** `3cdd1a9`
 
 **2. [Rule 2 - Missing Critical] Added cart mutation refresh signaling**
+
 - **Found during:** Task 3 e2e verification
 - **Issue:** The fake-Shopify cart-to-checkout handoff exposed stale header cart count after cart mutations.
 - **Fix:** Added `CART_CHANGED_EVENT`, dispatches from add/update/remove flows, and a `CartCount` listener that refetches server cart state.
@@ -135,6 +137,7 @@ Storybook emitted non-failing Next image LCP warnings, and the e2e dev server em
 - **Committed in:** `3cdd1a9`
 
 **3. [Rule 2 - Missing Critical] Added responsive text containment**
+
 - **Found during:** Task 3 Storybook interaction verification
 - **Issue:** Long unbroken story content could overflow redesigned surfaces at narrow widths.
 - **Fix:** Added global `overflow-wrap: anywhere` for common text elements and tightened Tea Journal list containment.
@@ -143,6 +146,7 @@ Storybook emitted non-failing Next image LCP warnings, and the e2e dev server em
 - **Committed in:** `3cdd1a9`
 
 **4. [Rule 1 - Bug] Updated stale Storybook and e2e expectations**
+
 - **Found during:** Task 3 full phase verification
 - **Issue:** Several tests and stories still asserted old labels, DOM structure, or widget timing from before the redesign.
 - **Fix:** Updated CTA args, footer newsletter labels, payment mark query, product form label, Searchanise fixture timing, cart checkout story queries, and empty cart e2e copy.
@@ -151,6 +155,7 @@ Storybook emitted non-failing Next image LCP warnings, and the e2e dev server em
 - **Committed in:** `3cdd1a9`
 
 **5. [Rule 3 - Blocking] Cleared stale local dev server before e2e**
+
 - **Found during:** Task 3 e2e verification
 - **Issue:** Playwright could not start its managed Next server because a repo-local `next dev` process was already running on port 3000.
 - **Fix:** Confirmed the process belonged to this repository and stopped PID 21960 before rerunning e2e.
@@ -194,5 +199,6 @@ Phase 11 now has a single new-token design system and a green automated gate. Ma
 - Key files found: `src/app/globals.css`, `src/components/ui/section/section.tsx`, `scripts/eslint-rules/no-section-root-tone-class.mjs`, `docs/conventions.md`, `AGENTS.md`, `src/lib/cart/events.ts`
 
 ---
-*Phase: 11-full-visual-redesign*
-*Completed: 2026-06-10*
+
+_Phase: 11-full-visual-redesign_
+_Completed: 2026-06-10_

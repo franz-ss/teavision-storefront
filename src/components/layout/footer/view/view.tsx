@@ -13,10 +13,10 @@ export type FooterViewProps = {
 export function FooterView({ newsletterAction }: FooterViewProps) {
   return (
     <footer role="contentinfo" className="bg-ink text-paper/75 font-sans">
-      <div className="max-w-wide mx-auto px-gutter">
+      <div className="max-w-wide px-gutter mx-auto">
         {/* footer-local vertical padding: clamp(50px,7vw,90px) per design .ft__top */}
         <div
-          className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.4fr]"
+          className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.4fr]"
           style={{ paddingBlock: 'clamp(50px,7vw,90px)' }}
         >
           <QualityColumn />
@@ -30,7 +30,7 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
           <NewsletterColumn action={newsletterAction} />
         </div>
         {/* border opacity 0.12 per design .ft__bottom: rgba(255,255,255,.12) */}
-        <div className="border-t border-paper/12 py-5.5">
+        <div className="border-paper/12 border-t py-5.5">
           <div className="flex flex-col items-start gap-5 lg:flex-row lg:items-center lg:justify-between">
             <ul
               className="order-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] tracking-[0.06em] lg:order-1"
@@ -47,7 +47,7 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
               <li>
                 <a
                   href="#popular-searches"
-                  className="text-paper/75 underline-offset-2 transition-colors hover:text-paper focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-ink focus-visible:outline-none"
+                  className="text-paper/75 hover:text-paper focus-visible:ring-ring focus-visible:ring-offset-ink underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
                   Popular Searches
                 </a>
@@ -72,7 +72,7 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
 
       {/* Popular Searches SEO link block — hidden below the footer bar */}
       <div id="popular-searches" className="sr-only">
-        <div className="max-w-wide mx-auto px-gutter pb-8">
+        <div className="max-w-wide px-gutter mx-auto pb-8">
           <PopularSearches />
         </div>
       </div>

@@ -50,7 +50,6 @@ export const SORT_MAP: Record<
   oldest: { sortKey: ProductCollectionSortKeys.Created, reverse: false },
 }
 
-
 export function truncateMetaDescription(value: string): string {
   return value.length > 160 ? `${value.slice(0, 157).trimEnd()}…` : value
 }
@@ -119,7 +118,9 @@ function parseImageSizeFromSource(
   }
 }
 
-export function getDescriptionHeroImage(descriptionHtml: string): HeroImage | null {
+export function getDescriptionHeroImage(
+  descriptionHtml: string,
+): HeroImage | null {
   const imageTag = descriptionHtml.match(IMAGE_TAG_PATTERN)?.[0]
   if (!imageTag) return null
 

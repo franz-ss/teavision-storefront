@@ -9,7 +9,16 @@ dependency_graph:
   affects: [UAT test 15, contact section reuse, JSON-LD structured data]
 tech_stack:
   added: []
-  patterns: [Section.Root/Container/Intro, Accordion, Button, Eyebrow, ContactSection, JSON-LD, withNoindexRobots]
+  patterns:
+    [
+      Section.Root/Container/Intro,
+      Accordion,
+      Button,
+      Eyebrow,
+      ContactSection,
+      JSON-LD,
+      withNoindexRobots,
+    ]
 key_files:
   created:
     - src/app/(storefront)/pages/bulk-wholesale-supply/page.tsx
@@ -26,13 +35,13 @@ key_files:
     - src/app/(storefront)/pages/bulk-wholesale-supply/_components/json-ld.tsx
   modified: []
 decisions:
-  - "Banner section uses Section.Root tone=brand with a full-bleed overlay image + bg-ink/55 scrim — matching the our-story hero pattern for image band backgrounds"
-  - "Logistics check items use structured data (bold/rest pairs) in component rather than _lib/data to keep JSX bold rendering clean without fragile string-splitting"
-  - "Process steps use 5-col grid on desktop (lg:grid-cols-5) to lay out horizontally with wrap/stack fallback on mobile — no horizontal scrollbar per 11-15 mobile-chip decision"
-  - "pnpm build fails site-wide due to pre-existing footer new Date().getFullYear() prerender error (introduced in 11-20); new page TypeScript and lint are clean"
+  - 'Banner section uses Section.Root tone=brand with a full-bleed overlay image + bg-ink/55 scrim — matching the our-story hero pattern for image band backgrounds'
+  - 'Logistics check items use structured data (bold/rest pairs) in component rather than _lib/data to keep JSX bold rendering clean without fragile string-splitting'
+  - 'Process steps use 5-col grid on desktop (lg:grid-cols-5) to lay out horizontally with wrap/stack fallback on mobile — no horizontal scrollbar per 11-15 mobile-chip decision'
+  - 'pnpm build fails site-wide due to pre-existing footer new Date().getFullYear() prerender error (introduced in 11-20); new page TypeScript and lint are clean'
 metrics:
   duration: 683s
-  completed: "2026-06-10T14:47:54Z"
+  completed: '2026-06-10T14:47:54Z'
   tasks: 2
   files: 12
 ---
@@ -54,18 +63,18 @@ UAT test 15 gap closed: the `/pages/bulk-wholesale-supply` route now exists as a
 
 ### Section inventory
 
-| # | Component | Pattern |
-|---|-----------|---------|
-| 1 | `BannerSection` | Full-bleed image, `Section.Root tone="brand"` + overlay scrim |
-| 2 | `HeroSection` | 2-col split — eyebrow, H2, dual CTAs; desktop image / mobile video |
-| 3 | `FeaturesGrid3` | 3-col card grid (ACO, Container Imports, Price Advantage) |
-| 4 | `LogisticsSection` | Image left + check-item list right |
-| 5 | `ImportFeaturesSection` | 2-col check-icon cards |
-| 6 | `WhyChooseSection` | Image left + numbered `Accordion` (5 items) |
-| 7 | `ProcessSection` | 5-col numbered process cards (wrap on mobile) |
-| 8 | `FaqSection` | `Accordion` with 6 Q&A items |
-| 9 | `CtaSection` | Centered CTA band with `text-brand` heading |
-| 10 | `ContactSection` | Shared component with `submitContactFormAction` |
+| #   | Component               | Pattern                                                            |
+| --- | ----------------------- | ------------------------------------------------------------------ |
+| 1   | `BannerSection`         | Full-bleed image, `Section.Root tone="brand"` + overlay scrim      |
+| 2   | `HeroSection`           | 2-col split — eyebrow, H2, dual CTAs; desktop image / mobile video |
+| 3   | `FeaturesGrid3`         | 3-col card grid (ACO, Container Imports, Price Advantage)          |
+| 4   | `LogisticsSection`      | Image left + check-item list right                                 |
+| 5   | `ImportFeaturesSection` | 2-col check-icon cards                                             |
+| 6   | `WhyChooseSection`      | Image left + numbered `Accordion` (5 items)                        |
+| 7   | `ProcessSection`        | 5-col numbered process cards (wrap on mobile)                      |
+| 8   | `FaqSection`            | `Accordion` with 6 Q&A items                                       |
+| 9   | `CtaSection`            | Centered CTA band with `text-brand` heading                        |
+| 10  | `ContactSection`        | Shared component with `submitContactFormAction`                    |
 
 ## Verification
 
@@ -79,6 +88,7 @@ UAT test 15 gap closed: the `/pages/bulk-wholesale-supply` route now exists as a
 ### Auto-fixed Issues
 
 **1. [Rule 1 - Bug] Raw `<section>` element replaced with `Section.Root`**
+
 - **Found during:** Task 1 lint run
 - **Issue:** `banner-section.tsx` initially used a raw `<section>` element, triggering the `teavision/no-raw-section` ESLint rule
 - **Fix:** Changed to `Section.Root tone="brand" spacing="none"` with image overlay; removed explicit `text-paper` from root (picked up from tone) to also satisfy `teavision/no-section-root-tone-class`
@@ -87,9 +97,9 @@ UAT test 15 gap closed: the `/pages/bulk-wholesale-supply` route now exists as a
 
 ## Deferred Issues
 
-| Category | Item | Deferred at |
-|----------|------|-------------|
-| Pre-existing build error | `src/components/layout/footer/view/view.tsx:42` uses `new Date().getFullYear()` outside a Cache Component, causing `next-prerender-current-time` errors on all routes during `pnpm build`. Introduced in plan 11-20. Not caused by this plan. | Plan 11-21 |
+| Category                 | Item                                                                                                                                                                                                                                          | Deferred at |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Pre-existing build error | `src/components/layout/footer/view/view.tsx:42` uses `new Date().getFullYear()` outside a Cache Component, causing `next-prerender-current-time` errors on all routes during `pnpm build`. Introduced in plan 11-20. Not caused by this plan. | Plan 11-21  |
 
 ## Known Stubs
 
@@ -102,13 +112,15 @@ None — the page is a static informational route with no new network endpoints,
 ## Self-Check: PASSED
 
 Files exist:
+
 - src/app/(storefront)/pages/bulk-wholesale-supply/page.tsx — FOUND
-- src/app/(storefront)/pages/bulk-wholesale-supply/_lib/data.ts — FOUND
-- src/app/(storefront)/pages/bulk-wholesale-supply/_components/banner-section.tsx — FOUND
-- src/app/(storefront)/pages/bulk-wholesale-supply/_components/json-ld.tsx — FOUND
-- src/app/(storefront)/pages/bulk-wholesale-supply/_components/why-choose-section.tsx — FOUND
-- src/app/(storefront)/pages/bulk-wholesale-supply/_components/faq-section.tsx — FOUND
+- src/app/(storefront)/pages/bulk-wholesale-supply/\_lib/data.ts — FOUND
+- src/app/(storefront)/pages/bulk-wholesale-supply/\_components/banner-section.tsx — FOUND
+- src/app/(storefront)/pages/bulk-wholesale-supply/\_components/json-ld.tsx — FOUND
+- src/app/(storefront)/pages/bulk-wholesale-supply/\_components/why-choose-section.tsx — FOUND
+- src/app/(storefront)/pages/bulk-wholesale-supply/\_components/faq-section.tsx — FOUND
 
 Commits exist:
+
 - 57c59c1 — feat(11-21): scaffold bulk-wholesale-supply route + sections 1-5
 - 549acf9 — feat(11-21): add sections 6-10 to bulk-wholesale-supply page

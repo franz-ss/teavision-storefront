@@ -1,15 +1,35 @@
 ---
 phase: 11-full-visual-redesign
-plan: "08"
+plan: '08'
 subsystem: collection-pages
 tags: [plp, product-card, collections, redesign, restyle]
 dependency_graph:
-  requires: ["11-02", "11-03"]
-  provides: [".pcard vertical card", "collection hero green-deep", "PLP grid layout", "collections index rtile"]
-  affects: [src/components/collection/product-card, src/components/collection/filter-panel, src/components/collection/toolbar, src/components/collection/sort-select, src/components/collection/story-disclosure, src/app/(storefront)/collections]
+  requires: ['11-02', '11-03']
+  provides:
+    [
+      '.pcard vertical card',
+      'collection hero green-deep',
+      'PLP grid layout',
+      'collections index rtile',
+    ]
+  affects:
+    [
+      src/components/collection/product-card,
+      src/components/collection/filter-panel,
+      src/components/collection/toolbar,
+      src/components/collection/sort-select,
+      src/components/collection/story-disclosure,
+      src/app/(storefront)/collections,
+    ]
 tech_stack:
   added: []
-  patterns: [vertical-card-layout, group-hover-reveal, tag-heuristic-badges, single-variant-quick-add]
+  patterns:
+    [
+      vertical-card-layout,
+      group-hover-reveal,
+      tag-heuristic-badges,
+      single-variant-quick-add,
+    ]
 key_files:
   created: []
   modified:
@@ -29,13 +49,13 @@ key_files:
     - src/app/(storefront)/collections/page.tsx
     - src/app/(storefront)/collections/_components/collection-card-image.tsx
 decisions:
-  - "Single-variant quick-add: replaced COLLECTION_CARD_VARIANT_LIMIT=8 multi-variant form with single-variant=1 check for hover quick-add; multi-variant products always fall back to View options PDP link per CQA-02"
-  - "showQuantity prop default=true on ProductPurchaseForm; collection card passes showQuantity=false to omit stepper (CARD-06)"
-  - "Filter panel clear button uses ghost variant (text-brand); exact gold-deep color spec deferred — teavision/no-button-style-class prevents custom color overrides on Button"
-  - "Collections index featured tiles: aspect-[1/1.08] with linear-to-t scrim; hover-reveal Shop now always visible on mobile (max-lg:opacity-100)"
+  - 'Single-variant quick-add: replaced COLLECTION_CARD_VARIANT_LIMIT=8 multi-variant form with single-variant=1 check for hover quick-add; multi-variant products always fall back to View options PDP link per CQA-02'
+  - 'showQuantity prop default=true on ProductPurchaseForm; collection card passes showQuantity=false to omit stepper (CARD-06)'
+  - 'Filter panel clear button uses ghost variant (text-brand); exact gold-deep color spec deferred — teavision/no-button-style-class prevents custom color overrides on Button'
+  - 'Collections index featured tiles: aspect-[1/1.08] with linear-to-t scrim; hover-reveal Shop now always visible on mobile (max-lg:opacity-100)'
 metrics:
-  duration: "16m"
-  completed: "2026-06-10"
+  duration: '16m'
+  completed: '2026-06-10'
   tasks: 3
   files: 15
 ---
@@ -46,15 +66,16 @@ Redesigned the PLP (collection pages) and shared product card to the new design 
 
 ## Tasks Completed
 
-| Task | Name | Commit | Key Files |
-|------|------|--------|-----------|
-| 1 | Product card redesign + CARD-02..06 + test lockstep | ae9b123 | product-card.tsx, product-purchase-form.tsx, product-card.test.tsx, product-card.stories.tsx |
-| 2 | Collection hero + sidebar + filters + toolbar + product list | a42e136 | hero.tsx, sidebar.tsx, filter-panel.tsx, toolbar.tsx, sort-select.tsx, product-list.tsx, product-list.test.tsx, page-content.tsx |
-| 3 | Collections index + story-disclosure + card image | 1079549 | collections/page.tsx, collection-card-image.tsx, story-disclosure.tsx |
+| Task | Name                                                         | Commit  | Key Files                                                                                                                        |
+| ---- | ------------------------------------------------------------ | ------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Product card redesign + CARD-02..06 + test lockstep          | ae9b123 | product-card.tsx, product-purchase-form.tsx, product-card.test.tsx, product-card.stories.tsx                                     |
+| 2    | Collection hero + sidebar + filters + toolbar + product list | a42e136 | hero.tsx, sidebar.tsx, filter-panel.tsx, toolbar.tsx, sort-select.tsx, product-list.tsx, product-list.test.tsx, page-content.tsx |
+| 3    | Collections index + story-disclosure + card image            | 1079549 | collections/page.tsx, collection-card-image.tsx, story-disclosure.tsx                                                            |
 
 ## What Was Built
 
 **Product Card (.pcard vertical layout):**
+
 - `aspect-[1/1.12]` media with `overflow-hidden rounded-lg bg-paper-2`
 - Image `group-hover:scale-[1.06]` with the required motion-reduce trio
 - Badges top-left: organic (tag heuristic: organic/ACO/USDA) + gold (award tags), up to 2 pills
@@ -67,6 +88,7 @@ Redesigned the PLP (collection pages) and shared product card to the new design 
 - `showQuantity` prop added to ProductPurchaseForm (default true; CARD-06)
 
 **Collection Hero:**
+
 - `Section.Root tone="brand"` (green-deep `bg-brand-deep`)
 - Hero image at 35% opacity as absolute-fill background
 - `type-mono-meta text-paper/60` breadcrumb with gold current page
@@ -74,20 +96,24 @@ Redesigned the PLP (collection pages) and shared product card to the new design 
 - `font-display text-[clamp(2.4rem,5vw,4rem)] text-paper` title
 
 **Layout/Sidebar:**
+
 - `lg:grid-cols-[252px_1fr] gap-10` PLP grid; sidebar `sticky top-32`
 - Wholesale upsell card: `bg-brand-tint border border-brand/20 rounded-lg p-5.5`
 - FilterPanel: `border-b border-hairline py-5.5` groups, `font-mono text-[11px] tracking-[0.12em] uppercase text-ink-faint` headings
 
 **Toolbar/Sort:**
+
 - Count: `type-mono-meta text-ink-faint`
 - Sort: `border border-hairline bg-card rounded-full px-4 py-2.25 type-label`
 - Active filter chips: `bg-brand-tint text-brand rounded-full`
 
 **ProductList:**
+
 - `grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-y-5.5 gap-x-4.5`
 - Empty state: Leaf icon + `font-display text-2xl` "No matches" + ghost clear button
 
 **Collections Index:**
+
 - Header band: `Section.Root tone="brand"`, Eyebrow + `type-heading-01 text-paper`
 - Featured tiles: `.rtile` pattern — `aspect-[1/1.08] rounded-lg overflow-hidden`, linear-to-t scrim, gold mono tag, serif title, hover-reveal "Shop now"
 - Directory: `border-hairline` dividers, `type-label text-ink` names
@@ -109,6 +135,7 @@ Redesigned the PLP (collection pages) and shared product card to the new design 
 ### Auto-fixed Issues
 
 **1. [Rule 2 - Missing correctness] Old token cleanup in ProductPurchaseForm**
+
 - **Found during:** Task 1
 - **Issue:** `text-danger-text`, `border-default bg-surface-sunken text-muted` remained in ProductPurchaseForm
 - **Fix:** Replaced with `text-danger`, `border-hairline bg-paper-2 text-ink-soft`
@@ -116,6 +143,7 @@ Redesigned the PLP (collection pages) and shared product card to the new design 
 - **Commit:** ae9b123
 
 **2. [Rule 1 - Bug] bg-gradient-to-t → bg-linear-to-t**
+
 - **Found during:** Task 3 (lint check)
 - **Issue:** Tailwind 4 canonical class is `bg-linear-to-*` not `bg-gradient-to-*`
 - **Fix:** Replaced in collections/page.tsx
@@ -123,12 +151,14 @@ Redesigned the PLP (collection pages) and shared product card to the new design 
 - **Commit:** 1079549
 
 **3. [Rule 2 - Constraint] Filter "Clear" button color**
+
 - **Found during:** Task 2
 - **Issue:** Design spec calls for `type-mono-meta text-gold-deep` on the clear button, but `teavision/no-button-style-class` ESLint rule prevents visual classes on Button
 - **Fix:** Used `variant="ghost"` (text-brand) without color override; the clear interaction is functional
 - **Impact:** Color is brand green rather than gold-deep — acceptable; functional contract preserved
 
 **4. [Rule 2 - Behavioral] QuickAdd single-variant logic**
+
 - **Found during:** Task 1
 - **Issue:** Old card used `COLLECTION_CARD_VARIANT_LIMIT = 8` allowing multi-variant purchase form in listing. New mockup spec and CQA-02 require single-variant only for quick-add
 - **Fix:** New card uses `product.variants.length === 1 && availableForSale` for quick-add; all others get View options PDP link

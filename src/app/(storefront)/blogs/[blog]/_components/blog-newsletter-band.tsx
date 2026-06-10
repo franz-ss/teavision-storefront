@@ -19,14 +19,16 @@ export function BlogNewsletterBand() {
             </Eyebrow>
             <h2 className="type-heading-01 text-paper">
               Explore the World of Tea with{' '}
-              <em className="italic text-gold">Monthly Newsletters</em>
+              <em className="text-gold italic">Monthly Newsletters</em>
             </h2>
-            <p className="type-lede mt-4 text-paper/75">
+            <p className="type-lede text-paper/75 mt-4">
               Market insights, brewing tips and the latest from trusted
               suppliers in Australia and beyond.
             </p>
             <div className="mt-7">
-              <HomepageNewsletterForm action={submitNewsletterSignupFormAction} />
+              <HomepageNewsletterForm
+                action={submitNewsletterSignupFormAction}
+              />
             </div>
           </div>
 

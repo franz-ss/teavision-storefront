@@ -110,7 +110,10 @@ async function ArticleContent({ params }: Props) {
       />
 
       <article className="mx-auto max-w-prose px-4 py-12">
-        <nav aria-label="Breadcrumb" className="type-mono-meta text-ink-faint mb-8">
+        <nav
+          aria-label="Breadcrumb"
+          className="type-mono-meta text-ink-faint mb-8"
+        >
           <ol className="flex min-w-0 items-center gap-2" role="list">
             <li className="shrink-0">
               <Link
@@ -141,7 +144,7 @@ async function ArticleContent({ params }: Props) {
           </div>
         )}
 
-        <h1 className="font-display text-[clamp(2rem,4vw,3.4rem)] leading-[1.04] tracking-[-0.01em] text-ink mx-auto max-w-prose">
+        <h1 className="font-display text-ink mx-auto max-w-prose text-[clamp(2rem,4vw,3.4rem)] leading-[1.04] tracking-[-0.01em]">
           {article.title}
         </h1>
 
@@ -197,7 +200,9 @@ async function ArticleContent({ params }: Props) {
                   href={getArticlePath(normalizedBlog, olderArticle.handle)}
                   className="focus-visible:ring-ring block h-full p-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <span className="type-mono-meta text-ink-faint">Previous Post</span>
+                  <span className="type-mono-meta text-ink-faint">
+                    Previous Post
+                  </span>
                   <span className="type-heading-03 text-ink mt-2 block">
                     {olderArticle.title}
                   </span>
@@ -213,7 +218,9 @@ async function ArticleContent({ params }: Props) {
                   href={getArticlePath(normalizedBlog, newerArticle.handle)}
                   className="focus-visible:ring-ring block h-full p-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <span className="type-mono-meta text-ink-faint">Next Post</span>
+                  <span className="type-mono-meta text-ink-faint">
+                    Next Post
+                  </span>
                   <span className="type-heading-03 text-ink mt-2 block">
                     {newerArticle.title}
                   </span>

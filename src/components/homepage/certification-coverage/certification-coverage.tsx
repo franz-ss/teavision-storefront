@@ -24,18 +24,18 @@ export function CertificationCoverage() {
   const items = [...CERTS, ...CERTS]
 
   return (
-    <div className="border-y border-hairline overflow-hidden">
+    <div className="border-hairline overflow-hidden border-y">
       <div
-        className="flex w-max animate-marquee items-center gap-16 py-7 hover:[animation-play-state:paused] motion-reduce:animate-none"
+        className="animate-marquee flex w-max items-center gap-16 py-7 hover:[animation-play-state:paused] motion-reduce:animate-none"
         aria-hidden="true"
       >
         {items.map((cert, index) => (
           <span
             key={index}
-            className="inline-flex shrink-0 items-center gap-3 font-mono text-[12px] tracking-[0.12em] uppercase text-ink-soft"
+            className="text-ink-soft inline-flex shrink-0 items-center gap-3 font-mono text-[12px] tracking-[0.12em] uppercase"
           >
             <cert.icon
-              className="size-6.5 shrink-0 text-brand"
+              className="text-brand size-6.5 shrink-0"
               aria-hidden="true"
               strokeWidth={1.6}
             />

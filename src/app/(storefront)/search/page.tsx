@@ -46,7 +46,7 @@ function SearchFallback() {
       <Section.Container>
         <div className="py-10" role="status" aria-live="polite">
           <Eyebrow>Search</Eyebrow>
-          <p className="font-display text-[clamp(2rem,4vw,3.4rem)] text-ink mt-3">
+          <p className="font-display text-ink mt-3 text-[clamp(2rem,4vw,3.4rem)]">
             Loading search results…
           </p>
         </div>

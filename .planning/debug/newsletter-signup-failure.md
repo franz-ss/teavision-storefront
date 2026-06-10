@@ -22,7 +22,7 @@ started: Phase 11 UAT — likely never worked locally (env var never set in .env
 
 ## Eliminated
 
-- hypothesis: Rate limiting (in-memory limiter or RATE_LIMIT_* flags) causes the failure
+- hypothesis: Rate limiting (in-memory limiter or RATE*LIMIT*\* flags) causes the failure
   evidence: Rate-limited path returns a DIFFERENT message ("Too many submissions. Please wait a moment before trying again.", actions.ts:46-47, returned at actions.ts:307). Limiter only triggers after 5 submissions per 60s per IP (actions.ts:52-53). RATE_LIMIT_EXTERNAL_PROTECTION / RATE_LIMIT_ALLOW_MEMORY_FALLBACK only control a production warning (src/lib/env/server.ts:18-24), not request rejection. Symptom occurs on first submission, every time.
   timestamp: 2026-06-10
 

@@ -29,19 +29,19 @@ export function OrganicHerbs() {
           <h2 className="type-heading-02">
             Herbs &amp; spices, sourced direct from farm.
           </h2>
-          <p className="type-lede mt-4 text-ink-soft">
+          <p className="type-lede text-ink-soft mt-4">
             We supply only the freshest wild-grown herbs and certified-organic
             spices, sourced directly from trusted farmers and plantations across
             the globe — with quality, sustainability and reliability built in.
           </p>
-          <ul className="mt-8 divide-y divide-hairline">
+          <ul className="divide-hairline mt-8 divide-y">
             {HERB_CHECKLIST.map((item) => (
               <li
                 key={item.title}
-                className="flex gap-3 border-t border-hairline py-4 first:border-t-0"
+                className="border-hairline flex gap-3 border-t py-4 first:border-t-0"
               >
                 <Check
-                  className="mt-0.5 size-4 shrink-0 text-brand"
+                  className="text-brand mt-0.5 size-4 shrink-0"
                   aria-hidden="true"
                 />
                 <div>
@@ -62,7 +62,7 @@ export function OrganicHerbs() {
             </Button>
           </div>
         </div>
-        <div className="overflow-hidden rounded-lg shadow-2">
+        <div className="shadow-2 overflow-hidden rounded-lg">
           <Image
             src={HERBS_IMAGE.src}
             alt={HERBS_IMAGE.alt}

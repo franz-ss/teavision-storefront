@@ -32,11 +32,7 @@ export function HeroSection() {
               >
                 Apply Now - Wholesale Account
               </Button>
-              <Button
-                href="tel:+611300729617"
-                variant="secondary"
-                size="lg"
-              >
+              <Button href="tel:+611300729617" variant="secondary" size="lg">
                 <Phone className="size-4" aria-hidden="true" />
                 Call 1300 729 617
               </Button>

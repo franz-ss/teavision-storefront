@@ -3,12 +3,7 @@
 import { useId, useState } from 'react'
 import { Leaf, ShieldCheck, Truck } from 'lucide-react'
 
-import {
-  Button,
-  Price,
-  QuantityStepper,
-  ToggleButton,
-} from '@/components/ui'
+import { Button, Price, QuantityStepper, ToggleButton } from '@/components/ui'
 import type {
   BulkPricingTier,
   ProductOption,
@@ -176,7 +171,12 @@ export function ProductForm({
 
   if (variants.length === 0) {
     return (
-      <div className={cn('rounded-sm border border-dashed border-hairline p-4 text-sm text-ink-faint', className)}>
+      <div
+        className={cn(
+          'border-hairline text-ink-faint rounded-sm border border-dashed p-4 text-sm',
+          className,
+        )}
+      >
         No variants available
       </div>
     )
@@ -186,7 +186,7 @@ export function ProductForm({
     <div className={cn('flex min-w-0 flex-col gap-6', className)}>
       {showVariantSelector && (
         <fieldset className="min-w-0">
-          <legend className="type-mono-meta mb-3 text-ink-faint">
+          <legend className="type-mono-meta text-ink-faint mb-3">
             {options[0]?.name ?? 'Option'}
           </legend>
           <div className="flex min-w-0 flex-wrap gap-2.5">
@@ -200,7 +200,7 @@ export function ProductForm({
                   disabled={!v.availableForSale}
                   aria-label={`${v.title}${!v.availableForSale ? ', out of stock' : ''}`}
                   className={cn(
-                    'min-w-23 flex-col rounded-sm border-[1.5px] border-hairline bg-card px-4.5 py-3.25 text-center text-ink transition-colors hover:border-ink-faint aria-pressed:border-brand aria-pressed:bg-brand-tint aria-pressed:text-ink',
+                    'border-hairline bg-card text-ink hover:border-ink-faint aria-pressed:border-brand aria-pressed:bg-brand-tint aria-pressed:text-ink min-w-23 flex-col rounded-sm border-[1.5px] px-4.5 py-3.25 text-center transition-colors',
                     isSelected && 'border-brand bg-brand-tint',
                   )}
                   onClick={() => handleSelectVariant(v.id)}
@@ -210,7 +210,7 @@ export function ProductForm({
                     price={v.price}
                     size="sm"
                     className={cn(
-                      'mt-1 font-mono text-[11px] text-ink-faint',
+                      'text-ink-faint mt-1 font-mono text-[11px]',
                       isSelected && 'text-brand',
                     )}
                   />
@@ -229,7 +229,7 @@ export function ProductForm({
               size="lg"
               priceClassName="text-[1.6rem] font-normal"
             />
-            <span className="font-mono text-[11px] tracking-[0.06em] text-ink-faint uppercase">
+            <span className="text-ink-faint font-mono text-[11px] tracking-[0.06em] uppercase">
               selected pack
             </span>
           </div>
@@ -265,18 +265,26 @@ export function ProductForm({
       </div>
 
       {error && (
-        <p id={quantityErrorId} role="alert" className="type-caption text-danger">
+        <p
+          id={quantityErrorId}
+          role="alert"
+          className="type-caption text-danger"
+        >
           {error}
         </p>
       )}
       {message && (
-        <p id={quantityStatusId} role="status" className="type-caption text-brand">
+        <p
+          id={quantityStatusId}
+          role="status"
+          className="type-caption text-brand"
+        >
           {message}
         </p>
       )}
 
       {/* Assurance row — design specifies 18px gap above (vs form gap-6=24px), so -6px offset */}
-      <div className="-mt-1.5 flex flex-wrap gap-x-6.5 gap-y-3.5 border-y border-hairline py-5">
+      <div className="border-hairline -mt-1.5 flex flex-wrap gap-x-6.5 gap-y-3.5 border-y py-5">
         {[
           { icon: Truck, label: 'Freight-insured and tracked' },
           { icon: Leaf, label: 'Air-tight, resealable packing' },
@@ -284,9 +292,9 @@ export function ProductForm({
         ].map(({ icon: Icon, label }) => (
           <div
             key={label}
-            className="flex items-center gap-2.25 text-[0.86rem] text-ink-soft"
+            className="text-ink-soft flex items-center gap-2.25 text-[0.86rem]"
           >
-            <Icon aria-hidden="true" className="size-4 text-brand" />
+            <Icon aria-hidden="true" className="text-brand size-4" />
             <span>{label}</span>
           </div>
         ))}

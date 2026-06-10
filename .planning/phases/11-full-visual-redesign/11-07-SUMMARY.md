@@ -36,11 +36,11 @@ key-files:
     - src/components/homepage/content.ts
     - src/components/layout/header/cart-count.tsx
 key-decisions:
-  - "Homepage lower section order follows the redesign as hero, stats, range, services, organic, testimonials, motif band, journal, catalogue band, newsletter, contact, FAQ."
-  - "Cart count now reads through a small client leaf after hydration to satisfy Next.js 16 Server Function initial-render restrictions."
+  - 'Homepage lower section order follows the redesign as hero, stats, range, services, organic, testimonials, motif band, journal, catalogue band, newsletter, contact, FAQ.'
+  - 'Cart count now reads through a small client leaf after hydration to satisfy Next.js 16 Server Function initial-render restrictions.'
 patterns-established:
-  - "Stamp uses the extracted ring PNG for brush texture and masks baked lettering so JSX textPath copy owns each band label."
-  - "Homepage contact and newsletter forms may be visually restyled while preserving existing Server Action, honeypot, pending, and aria-live contracts."
+  - 'Stamp uses the extracted ring PNG for brush texture and masks baked lettering so JSX textPath copy owns each band label.'
+  - 'Homepage contact and newsletter forms may be visually restyled while preserving existing Server Action, honeypot, pending, and aria-live contracts.'
 requirements-completed: [RD-04]
 duration: 26 min
 completed: 2026-06-10
@@ -102,6 +102,7 @@ Note: motif folders already existed when execution began; Task 1 verified the sc
 ### Auto-fixed Issues
 
 **1. [Rule 2 - Missing Critical] Removed banned inline SVG text styles and stabilized stamp IDs**
+
 - **Found during:** Task 1 (BrushCircle + Stamp motif components)
 - **Issue:** Existing `Stamp` used inline `style={{ fontSize: ... }}` and defaulted multiple instances to the same SVG arc IDs.
 - **Fix:** Replaced inline styles with token/static Tailwind classes and derived stable per-copy arc IDs.
@@ -110,6 +111,7 @@ Note: motif folders already existed when execution began; Task 1 verified the sc
 - **Committed in:** `f1be8a2`
 
 **2. [Rule 3 - Blocking] Unblocked Next.js 16 build by moving cart count Server Action call out of initial render**
+
 - **Found during:** Task 3 verification (`pnpm build`)
 - **Issue:** Build failed because `CartCount` called `getCartAction()` during initial prerender, which Next.js 16 rejects for Server Functions.
 - **Fix:** Converted `CartCount` into a small client leaf that calls the existing Server Action after hydration and renders the shared `CartBadge`.
@@ -118,6 +120,7 @@ Note: motif folders already existed when execution began; Task 1 verified the sc
 - **Committed in:** `6c8951b`
 
 **3. [Rule 1 - Visual Bug] Masked baked stamp PNG lettering so motif labels render correctly**
+
 - **Found during:** Dev-server visual pass
 - **Issue:** The extracted `stamp-ring.png` contained baked "Subscribe Teavision" text that conflicted with Business/Catalogue `textPath` labels.
 - **Fix:** Added a token-colored inner mask while preserving the brush ring texture and JSX curved text labels.
@@ -168,5 +171,6 @@ Homepage RD-04 lower-section work is complete and ready for Phase 11's remaining
 - Final verification commands passed on current HEAD.
 
 ---
-*Phase: 11-full-visual-redesign*
-*Completed: 2026-06-10*
+
+_Phase: 11-full-visual-redesign_
+_Completed: 2026-06-10_

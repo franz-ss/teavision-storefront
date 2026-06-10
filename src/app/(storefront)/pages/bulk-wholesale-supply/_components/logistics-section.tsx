@@ -47,13 +47,13 @@ export function LogisticsSection() {
             </h2>
             <p className="type-body text-ink-soft mt-4 max-w-[52ch]">
               We coordinate origin pick-ups, ocean freight, customs, and final
-              delivery. You&apos;ll get regular status updates and a clear ETA so
-              your planning stays on track.
+              delivery. You&apos;ll get regular status updates and a clear ETA
+              so your planning stays on track.
             </p>
             <ul className="mt-6 flex flex-col gap-3">
               {CHECK_ITEMS.map((item) => (
                 <li key={item.bold} className="flex items-start gap-3">
-                  <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-brand text-paper">
+                  <span className="bg-brand text-paper mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full">
                     <Check className="h-3 w-3" aria-hidden="true" />
                   </span>
                   <span className="type-body text-ink">

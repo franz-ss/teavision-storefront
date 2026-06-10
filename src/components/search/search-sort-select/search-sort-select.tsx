@@ -52,7 +52,7 @@ export function SearchSortSelect({ currentSort }: SearchSortSelectProps) {
         id="search-sort-select"
         value={currentSort}
         onChange={handleChange}
-        className="border border-hairline bg-card rounded-full px-4 py-2.25 type-label text-ink focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none cursor-pointer appearance-none min-w-48"
+        className="border-hairline bg-card type-label text-ink focus-visible:ring-ring min-w-48 cursor-pointer appearance-none rounded-full border px-4 py-2.25 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         {SEARCH_SORT_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>

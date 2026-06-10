@@ -5,7 +5,13 @@ subsystem: cart
 tags: [cart, pricing, layout, optimistic-ui, accessibility]
 dependency_graph:
   requires: []
-  provides: [cart-column-alignment, cart-compare-at-visibility, cart-optimistic-qty, cart-container-width]
+  provides:
+    [
+      cart-column-alignment,
+      cart-compare-at-visibility,
+      cart-optimistic-qty,
+      cart-container-width,
+    ]
   affects: [src/components/ui/price/price.tsx, src/app/(storefront)/cart]
 tech_stack:
   added: []
@@ -19,12 +25,12 @@ key_files:
     - src/components/ui/price/price.tsx
     - src/app/(storefront)/cart/_components/cart-view.test.tsx
 decisions:
-  - "Phase 11-18: Cart line rows use xl:grid at desktop to match 5-col header; mobile keeps flex with stacked name/price/stepper layout."
-  - "Phase 11-18: CartLineActions uses useOptimistic+useTransition for stepper clicks; remove button keeps useActionState for its own isPending/isLoading feedback."
-  - "Phase 11-18: price.tsx compare-at size sm/md raised from text-[10px]/text-[11px] text-ink-faint to text-sm text-ink-soft so slashed prices are legible at cart density."
+  - 'Phase 11-18: Cart line rows use xl:grid at desktop to match 5-col header; mobile keeps flex with stacked name/price/stepper layout.'
+  - 'Phase 11-18: CartLineActions uses useOptimistic+useTransition for stepper clicks; remove button keeps useActionState for its own isPending/isLoading feedback.'
+  - 'Phase 11-18: price.tsx compare-at size sm/md raised from text-[10px]/text-[11px] text-ink-faint to text-sm text-ink-soft so slashed prices are legible at cart density.'
 metrics:
   duration: 389s
-  completed_date: "2026-06-10"
+  completed_date: '2026-06-10'
   tasks: 2
   files: 5
 ---
@@ -39,11 +45,11 @@ Fixed four cart regressions from plans 11-03 and 11-11: unified 5-column grid la
 
 ## Tasks Completed
 
-| # | Name | Commit | Files |
-|---|------|--------|-------|
-| RED | Failing tests for compare-at visibility and grid alignment | 089d011 | cart-view.test.tsx |
-| 1 | Unify cart line layout, restore visible compare-at prices, fix container width | 74f7784 | cart-view.tsx, price.tsx, cart/page.tsx |
-| 2 | Optimistic quantity updates | 133bbb9 | cart-line-actions.tsx |
+| #   | Name                                                                           | Commit  | Files                                   |
+| --- | ------------------------------------------------------------------------------ | ------- | --------------------------------------- |
+| RED | Failing tests for compare-at visibility and grid alignment                     | 089d011 | cart-view.test.tsx                      |
+| 1   | Unify cart line layout, restore visible compare-at prices, fix container width | 74f7784 | cart-view.tsx, price.tsx, cart/page.tsx |
+| 2   | Optimistic quantity updates                                                    | 133bbb9 | cart-line-actions.tsx                   |
 
 ## What Was Built
 

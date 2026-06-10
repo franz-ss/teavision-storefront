@@ -1,6 +1,6 @@
 ---
 phase: 11-full-visual-redesign
-plan: "05"
+plan: '05'
 subsystem: layout-chrome
 tags: [footer, error-pages, design-tokens, ink-treatment, accessibility]
 dependency_graph:
@@ -39,7 +39,7 @@ decisions:
   - Newsletter form layout changed from side-by-side input+button to stacked (input then full-width Button) matching mockup
 metrics:
   duration: ~25m
-  completed: "2026-06-10"
+  completed: '2026-06-10'
   tasks: 2
   files: 17
 ---
@@ -50,10 +50,10 @@ metrics:
 
 ## Tasks Completed
 
-| Task | Name | Commit | Files |
-|------|------|--------|-------|
-| 1 | Footer ink restyle (keep all links + newsletter action) | a6b635d | 13 footer files |
-| 2 | Skip link + error/global-error/not-found pages | 681e92f | 4 app root files |
+| Task | Name                                                    | Commit  | Files            |
+| ---- | ------------------------------------------------------- | ------- | ---------------- |
+| 1    | Footer ink restyle (keep all links + newsletter action) | a6b635d | 13 footer files  |
+| 2    | Skip link + error/global-error/not-found pages          | 681e92f | 4 app root files |
 
 ## What Was Built
 
@@ -88,9 +88,11 @@ None.
 ### Design adaptations (within spec)
 
 **1. Payment marks as text chips instead of SVG icons**
+
 - **Decision:** The `.ft` mockup bottom row shows simple text labels (VISA, MASTERCARD, etc.) as bordered chips. The plan confirmed "bordered chips". SVG files were unused by the old `PaymentMark` and are retained but unused — will be cleaned in plan 11-14 sweep.
 
 **2. Newsletter form layout: stacked not side-by-side**
+
 - **Decision:** The `.ft` mockup shows input then button stacked vertically. Changed from the Phase 4 side-by-side layout to full-width stacked per mockup. Server Action wiring, honeypot, and aria-live feedback preserved exactly.
 
 ## Verification
@@ -109,12 +111,14 @@ None.
 ## Self-Check
 
 Files confirmed present:
+
 - src/components/layout/footer/view/view.tsx (contains bg-ink)
 - src/app/not-found.tsx (contains font-display + type-heading-02)
 - src/app/error.tsx (no old tokens)
 - src/app/global-error.tsx (body bg-paper text-ink)
 
 Commits confirmed:
+
 - a6b635d — Task 1 footer restyle
 - 681e92f — Task 2 skip link + error pages
 

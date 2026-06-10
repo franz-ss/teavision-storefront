@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -15,12 +15,15 @@ type RelatedProductsCarouselProps = {
   products: ProductSummary[]
   ariaLabel?: string
   className?: string
+  /* Rendered inline with the arrows so the title row carries no dead band */
+  heading?: ReactNode
 }
 
 export function RelatedProductsCarousel({
   ariaLabel = 'Related products',
   products,
   className,
+  heading,
 }: RelatedProductsCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
@@ -71,25 +74,33 @@ export function RelatedProductsCarousel({
       aria-roledescription="carousel"
       aria-label={ariaLabel}
     >
-      <div className="mb-3 flex justify-end gap-2">
-        <IconButton
-          variant="ghost"
-          size="sm"
-          aria-label={`Show previous ${ariaLabel.toLowerCase()}`}
-          disabled={!canScrollPrevious}
-          onClick={scrollPrevious}
-        >
-          <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-        </IconButton>
-        <IconButton
-          variant="ghost"
-          size="sm"
-          aria-label={`Show next ${ariaLabel.toLowerCase()}`}
-          disabled={!canScrollNext}
-          onClick={scrollNext}
-        >
-          <ChevronRight className="h-5 w-5" aria-hidden="true" />
-        </IconButton>
+      <div
+        className={cn(
+          'mb-5 flex items-end gap-2',
+          heading ? 'justify-between' : 'justify-end',
+        )}
+      >
+        {heading}
+        <div className="flex gap-2">
+          <IconButton
+            variant="ghost"
+            size="sm"
+            aria-label={`Show previous ${ariaLabel.toLowerCase()}`}
+            disabled={!canScrollPrevious}
+            onClick={scrollPrevious}
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          </IconButton>
+          <IconButton
+            variant="ghost"
+            size="sm"
+            aria-label={`Show next ${ariaLabel.toLowerCase()}`}
+            disabled={!canScrollNext}
+            onClick={scrollNext}
+          >
+            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          </IconButton>
+        </div>
       </div>
 
       <div ref={emblaRef} className="overflow-hidden">

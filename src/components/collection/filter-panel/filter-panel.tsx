@@ -63,7 +63,7 @@ export function FilterPanel({
     <div className={cn('grid gap-0', className)}>
       <div className="flex items-start justify-between gap-4 pb-4">
         <div>
-          <h2 className="font-mono text-[11px] tracking-[0.12em] uppercase text-ink-faint">
+          <h2 className="text-ink-faint font-mono text-[11px] tracking-[0.12em] uppercase">
             Filters
           </h2>
           <p className="type-body-sm text-ink-soft mt-1">
@@ -91,10 +91,10 @@ export function FilterPanel({
           {visibleFilters.map((filter) => (
             <details
               key={filter.id}
-              className="border-b border-hairline py-5.5"
+              className="border-hairline border-b py-5.5"
               open
             >
-              <summary className="font-mono text-[11px] tracking-[0.12em] uppercase text-ink-faint focus-visible:ring-ring flex min-h-10 cursor-pointer list-none items-center justify-between gap-4 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+              <summary className="text-ink-faint focus-visible:ring-ring flex min-h-10 cursor-pointer list-none items-center justify-between gap-4 rounded font-mono text-[11px] tracking-[0.12em] uppercase focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
                 {filter.label}
               </summary>
               <div className="mt-3 grid gap-1.5">
@@ -121,7 +121,7 @@ export function FilterPanel({
                           <span className="type-body-sm flex-1">
                             {value.label}
                           </span>
-                          <span className="font-mono text-ink-faint tabular-nums text-[11px]">
+                          <span className="text-ink-faint font-mono text-[11px] tabular-nums">
                             {value.count}
                           </span>
                         </Link>
@@ -142,7 +142,7 @@ export function FilterPanel({
                           <span className="type-body-sm text-ink flex-1">
                             {value.label}
                           </span>
-                          <span className="font-mono text-ink-faint tabular-nums text-[11px]">
+                          <span className="text-ink-faint font-mono text-[11px] tabular-nums">
                             {value.count}
                           </span>
                         </label>
@@ -155,7 +155,6 @@ export function FilterPanel({
           ))}
         </div>
       )}
-
     </div>
   )
 }

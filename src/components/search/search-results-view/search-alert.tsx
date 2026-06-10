@@ -34,7 +34,7 @@ export function SearchAlert({
         aria-hidden="true"
       />
       <div className="grid gap-2">
-        <h2 className="font-display text-2xl text-ink">
+        <h2 className="font-display text-ink text-2xl">
           {tone === 'error' ? 'Search unavailable' : 'No matches'}
         </h2>
         <p className="type-body-sm text-ink-soft max-w-md">{message}</p>

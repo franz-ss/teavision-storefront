@@ -1,6 +1,6 @@
 ---
 phase: 11-full-visual-redesign
-plan: "09"
+plan: '09'
 subsystem: search-ui
 tags: [search, searchanise, plp, redesign, tailwind]
 requires:
@@ -29,15 +29,15 @@ key-files:
     - src/components/search/search-sort-select/search-sort-select.tsx
     - src/components/search/search-pagination/search-pagination.tsx
 key-decisions:
-  - "Search reuses the 11-08 PLP ProductCard/grid/facet vocabulary instead of introducing a separate search-only card language."
-  - "Searchanise request, typed-unknown narrowing, and URL-param helpers were left untouched; only presentation components changed."
+  - 'Search reuses the 11-08 PLP ProductCard/grid/facet vocabulary instead of introducing a separate search-only card language.'
+  - 'Searchanise request, typed-unknown narrowing, and URL-param helpers were left untouched; only presentation components changed.'
 patterns-established:
-  - "Search active chips use the PLP brand-tint pill treatment with URL-backed removal links."
-  - "Search pagination uses min-h-11/min-w-11 rounded-full controls with active bg-brand text-paper border-brand."
+  - 'Search active chips use the PLP brand-tint pill treatment with URL-backed removal links.'
+  - 'Search pagination uses min-h-11/min-w-11 rounded-full controls with active bg-brand text-paper border-brand.'
 requirements-completed: [RD-07]
 metrics:
-  duration: "16 min"
-  completed: "2026-06-10"
+  duration: '16 min'
+  completed: '2026-06-10'
   tasks: 2
   files: 9
 ---
@@ -133,5 +133,6 @@ Search now matches the redesigned PLP language and is ready for the remaining Ph
 - Task commits `1cda0ca` and `14bc2ed` are present in git history.
 
 ---
-*Phase: 11-full-visual-redesign*
-*Completed: 2026-06-10*
+
+_Phase: 11-full-visual-redesign_
+_Completed: 2026-06-10_

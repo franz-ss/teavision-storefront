@@ -18,7 +18,10 @@ vi.mock('@/lib/cart/actions', () => ({
 }))
 
 function getTextContent(html: string): string {
-  return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
+  return html
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 describe('CartView', () => {

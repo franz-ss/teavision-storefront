@@ -16,19 +16,21 @@ export default function NotFound() {
   return (
     <Section.Root tone="sunken" spacing="default">
       <Section.Container>
-        <div className="flex flex-col items-center text-center gap-8 py-8">
+        <div className="flex flex-col items-center gap-8 py-8 text-center">
           {/* Floating teapot illustration */}
           <BrushCircle illo="teapot" className="w-[clamp(160px,20vw,220px)]" />
 
           {/* Eyebrow + heading + body */}
           <div className="max-w-sm">
-            <Eyebrow tone="muted" className="justify-center mb-4" rule={false}>
+            <Eyebrow tone="muted" className="mb-4 justify-center" rule={false}>
               Nothing to steep here
             </Eyebrow>
-            <h1 className="type-heading-01 text-ink">This page has gone cold</h1>
+            <h1 className="type-heading-01 text-ink">
+              This page has gone cold
+            </h1>
             <p className="type-body text-ink-soft mt-3">
-              The page you&rsquo;re looking for has moved, been removed, or never existed.
-              Let&rsquo;s find you something worth brewing.
+              The page you&rsquo;re looking for has moved, been removed, or
+              never existed. Let&rsquo;s find you something worth brewing.
             </p>
           </div>
 
@@ -46,8 +48,10 @@ export default function NotFound() {
           </div>
 
           {/* Quick collection pill links */}
-          <div className="border-t border-hairline pt-6 w-full max-w-sm">
-            <p className="type-label text-ink-faint mb-3">Popular collections</p>
+          <div className="border-hairline w-full max-w-sm border-t pt-6">
+            <p className="type-label text-ink-faint mb-3">
+              Popular collections
+            </p>
             <div className="flex flex-wrap justify-center gap-2">
               {[
                 { label: 'Teas', handle: 'teas' },
@@ -60,9 +64,9 @@ export default function NotFound() {
                   key={handle}
                   href={`/collections/${handle}`}
                   className={cn(
-                    'rounded-full border border-hairline bg-card px-3.5 py-2 type-label text-ink',
+                    'border-hairline bg-card type-label text-ink rounded-full border px-3.5 py-2',
                     'hover:bg-brand hover:text-paper transition-colors',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                    'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                   )}
                 >
                   {label}

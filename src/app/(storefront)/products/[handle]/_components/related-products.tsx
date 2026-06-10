@@ -54,12 +54,6 @@ async function getRelatedProducts(product: Product): Promise<ProductSummary[]> {
   })
 }
 
-function RelatedProductsContent({ products }: { products: ProductSummary[] }) {
-  if (products.length === 0) return null
-
-  return <RelatedProductsCarousel products={products} />
-}
-
 export async function RelatedProducts({ product }: { product: Product }) {
   const products = await getRelatedProducts(product)
   if (products.length === 0) return null
@@ -68,13 +62,17 @@ export async function RelatedProducts({ product }: { product: Product }) {
     <Section.Root
       tone="transparent"
       spacing="none"
-      className="border-t border-hairline pt-10"
+      className="border-hairline border-t pt-10"
       aria-labelledby="related-products-title"
     >
-      <h2 id="related-products-title" className="type-heading-02 mb-6 text-ink">
-        {RELATED_PRODUCTS_TITLE}
-      </h2>
-      <RelatedProductsContent products={products} />
+      <RelatedProductsCarousel
+        products={products}
+        heading={
+          <h2 id="related-products-title" className="type-heading-02 text-ink">
+            {RELATED_PRODUCTS_TITLE}
+          </h2>
+        }
+      />
     </Section.Root>
   )
 }

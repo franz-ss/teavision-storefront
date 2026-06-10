@@ -32,7 +32,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   }, [emblaApi, onSelect])
 
   if (images.length === 0) {
-    return <div className="aspect-[1/1.05] w-full rounded-lg bg-paper-2" />
+    return <div className="bg-paper-2 aspect-[1/1.05] w-full rounded-lg" />
   }
 
   return (
@@ -42,7 +42,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       aria-label={`${title} image gallery`}
     >
       <div
-        className="aspect-[1/1.05] w-full overflow-hidden rounded-lg bg-paper-2"
+        className="bg-paper-2 aspect-[1/1.05] w-full overflow-hidden rounded-lg"
         ref={emblaRef}
       >
         <div className="flex">
@@ -65,7 +65,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="h-full w-full bg-paper-2" />
+                <div className="bg-paper-2 h-full w-full" />
               )}
             </div>
           ))}
@@ -79,7 +79,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               key={image.url}
               variant="thumbnail"
               className={cn(
-                'aspect-square h-auto w-full rounded-[8px] border-2 border-transparent bg-paper-2 opacity-70 hover:opacity-100 aria-pressed:border-brand aria-pressed:opacity-100 aria-pressed:ring-0',
+                'bg-paper-2 aria-pressed:border-brand aspect-square h-auto w-full rounded-[8px] border-2 border-transparent opacity-70 hover:opacity-100 aria-pressed:opacity-100 aria-pressed:ring-0',
               )}
               aria-label={`View image ${i + 1}`}
               pressed={selectedIndex === i}
@@ -95,7 +95,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="h-full w-full bg-paper-2" />
+                <div className="bg-paper-2 h-full w-full" />
               )}
             </ToggleButton>
           ))}

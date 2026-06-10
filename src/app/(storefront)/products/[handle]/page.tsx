@@ -15,7 +15,7 @@ import { SITE_URL } from '@/lib/seo/site-url'
 import { getTrustooProductRatings } from '@/lib/reviews/trustoo'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import { RichText } from '@/components/ui/rich-text'
-import { Badge, Eyebrow, Price, Section, StarRating } from '@/components/ui'
+import { Badge, Eyebrow, Section, StarRating } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 
 import { CustomersAlsoBought } from './_components/customers-also-bought'
@@ -232,18 +232,18 @@ async function ProductContent({
 
       <nav
         aria-label="Breadcrumb"
-        className="type-mono-meta flex flex-wrap items-center gap-2 py-5.5 text-ink-faint"
+        className="type-mono-meta text-ink-faint flex flex-wrap items-center gap-2 py-5.5"
       >
         <Link
           href="/"
-          className="rounded hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none"
+          className="hover:text-brand focus-visible:ring-ring rounded focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
         >
           Home
         </Link>
         <ChevronRight aria-hidden="true" className="size-3" />
         <Link
           href="/collections/all"
-          className="rounded hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none"
+          className="hover:text-brand focus-visible:ring-ring rounded focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
         >
           Products
         </Link>
@@ -269,7 +269,7 @@ async function ProductContent({
                 {metaSegments.join(' · ')}
               </Eyebrow>
             ) : null}
-            <h1 className="font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.04] font-medium text-ink">
+            <h1 className="font-display text-ink text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.04] font-medium">
               {product.title}
             </h1>
             {productReviewSummary.rating !== undefined ? (
@@ -288,34 +288,6 @@ async function ProductContent({
             ) : null}
           </div>
 
-          {/* Rating → badge pills: 16px (delta #4) */}
-          {visibleTags.length > 0 ? (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {visibleTags.slice(0, 6).map((label) => (
-                <Badge
-                  key={label}
-                  variant={getBadgeVariant(label)}
-                  label={label}
-                />
-              ))}
-            </div>
-          ) : null}
-
-          {/* Price block: 22px above (delta #5) */}
-          <div className="mt-5.5 flex flex-wrap items-baseline gap-3">
-            <Price
-              price={product.priceRange.minVariantPrice}
-              priceClassName="text-[2.2rem] leading-none font-normal"
-            />
-            {/* Unit label: 13px, no uppercase/tracking (delta #12) */}
-            <span className="font-mono text-[13px] text-ink-faint">
-              / base unit
-            </span>
-            <span className="rounded-full bg-brand-tint px-2.5 py-1 font-mono text-[11px] tracking-[0.06em] text-brand uppercase">
-              Bulk pricing available
-            </span>
-          </div>
-
           {/* ProductForm first — buy controls (size, qty, add-to-cart, bulk savings)
               precede the description, matching the original site's PDP order */}
           <ProductForm
@@ -331,7 +303,7 @@ async function ProductContent({
             <RichText
               html={descriptionHtml}
               variant="compact"
-              className="mt-5.5 max-w-prose text-[1.02rem] text-ink-soft"
+              className="text-ink-soft mt-5.5 max-w-prose text-[1.02rem]"
             />
           ) : null}
 
@@ -340,14 +312,14 @@ async function ProductContent({
             {specDisclosures.map((item, index) => (
               <details
                 key={item.title}
-                className="group border-t border-hairline last:border-b"
+                className="group border-hairline border-t last:border-b"
                 open={index === 0}
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-5 font-display text-[1.15rem] leading-tight text-ink marker:hidden">
+                <summary className="font-display text-ink flex cursor-pointer list-none items-center justify-between gap-5 py-5 text-[1.15rem] leading-tight marker:hidden">
                   {item.title}
                   <ChevronDown
                     aria-hidden="true"
-                    className="size-4 text-brand transition-transform group-open:rotate-180"
+                    className="text-brand size-4 transition-transform group-open:rotate-180"
                   />
                 </summary>
                 {item.kind === 'table' ? (
@@ -356,15 +328,15 @@ async function ProductContent({
                       {item.rows.map(([label, value]) => (
                         <tr
                           key={label}
-                          className="border-b border-hairline-2 last:border-b-0"
+                          className="border-hairline-2 border-b last:border-b-0"
                         >
                           <th
                             scope="row"
-                            className="type-mono-meta w-2/5 py-3 pr-4 text-ink-faint"
+                            className="type-mono-meta text-ink-faint w-2/5 py-3 pr-4"
                           >
                             {label}
                           </th>
-                          <td className="py-3 text-sm text-ink-soft">
+                          <td className="text-ink-soft py-3 text-sm">
                             {value}
                           </td>
                         </tr>
@@ -372,13 +344,26 @@ async function ProductContent({
                     </tbody>
                   </table>
                 ) : (
-                  <p className="max-w-prose pb-5.5 text-sm leading-6 text-ink-soft">
+                  <p className="text-ink-soft max-w-prose pb-5.5 text-sm leading-6">
                     {item.content}
                   </p>
                 )}
               </details>
             ))}
           </div>
+
+          {/* Tag pills at the foot of the info column (owner directive) */}
+          {visibleTags.length > 0 ? (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {visibleTags.slice(0, 6).map((label) => (
+                <Badge
+                  key={label}
+                  variant={getBadgeVariant(label)}
+                  label={label}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -386,11 +371,11 @@ async function ProductContent({
       <Section.Root
         tone="transparent"
         spacing="none"
-        className="mt-[clamp(50px,7vw,90px)] border-t border-hairline pt-10"
+        className="border-hairline mt-[clamp(50px,7vw,90px)] border-t pt-10"
         aria-label="Customer reviews"
       >
         <div className="mb-6 flex flex-wrap items-baseline gap-3">
-          <h2 className="font-display text-[1.4rem] text-ink">Reviews</h2>
+          <h2 className="font-display text-ink text-[1.4rem]">Reviews</h2>
         </div>
         <div id="shopify-product-reviews" data-id={numericProductId} />
       </Section.Root>
@@ -408,7 +393,7 @@ async function ProductContent({
 
 export default function ProductPage({ params, searchParams }: Props) {
   return (
-    <div className="mx-auto w-full max-w-wide px-gutter">
+    <div className="max-w-wide px-gutter mx-auto w-full">
       <Suspense
         fallback={
           <div
@@ -418,34 +403,34 @@ export default function ProductPage({ params, searchParams }: Props) {
           >
             <span className="sr-only">Loading product</span>
             <div className="min-w-0">
-              <div className="aspect-[1/1.05] w-full animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none" />
+              <div className="bg-paper-2 aspect-[1/1.05] w-full animate-pulse rounded-lg motion-reduce:animate-none" />
               <div className="mt-3 grid grid-cols-4 gap-3">
                 {Array.from({ length: 4 }, (_, index) => (
                   <div
                     key={index}
-                    className="aspect-square animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none"
+                    className="bg-paper-2 aspect-square animate-pulse rounded-lg motion-reduce:animate-none"
                   />
                 ))}
               </div>
             </div>
             <div className="flex min-w-0 flex-col gap-4">
-              <div className="h-3 w-56 animate-pulse rounded-full bg-paper-2 motion-reduce:animate-none" />
-              <div className="h-15 w-3/4 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
-              <div className="h-8 w-44 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
-              <div className="flex flex-col gap-3 rounded-lg border border-hairline bg-card p-4">
-                <div className="h-5 w-24 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
-                <div className="h-12 w-full animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
-                <div className="h-12 w-full animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+              <div className="bg-paper-2 h-3 w-56 animate-pulse rounded-full motion-reduce:animate-none" />
+              <div className="bg-paper-2 h-15 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="bg-paper-2 h-8 w-44 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="border-hairline bg-card flex flex-col gap-3 rounded-lg border p-4">
+                <div className="bg-paper-2 h-5 w-24 animate-pulse rounded motion-reduce:animate-none" />
+                <div className="bg-paper-2 h-12 w-full animate-pulse rounded motion-reduce:animate-none" />
+                <div className="bg-paper-2 h-12 w-full animate-pulse rounded motion-reduce:animate-none" />
               </div>
               <div className="flex flex-col gap-2">
-                <div className="h-4 w-full animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
-                <div className="h-4 w-11/12 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
-                <div className="h-4 w-2/3 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+                <div className="bg-paper-2 h-4 w-full animate-pulse rounded motion-reduce:animate-none" />
+                <div className="bg-paper-2 h-4 w-11/12 animate-pulse rounded motion-reduce:animate-none" />
+                <div className="bg-paper-2 h-4 w-2/3 animate-pulse rounded motion-reduce:animate-none" />
               </div>
             </div>
-            <div className="flex flex-col gap-6 border-t border-hairline pt-10 lg:col-span-2">
-              <div className="h-7 w-32 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
-              <div className="h-24 w-full animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none" />
+            <div className="border-hairline flex flex-col gap-6 border-t pt-10 lg:col-span-2">
+              <div className="bg-paper-2 h-7 w-32 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="bg-paper-2 h-24 w-full animate-pulse rounded-lg motion-reduce:animate-none" />
             </div>
           </div>
         }

@@ -186,52 +186,42 @@ function getTableCellImage(cell: SanityPortableTextTableCell) {
 const components: PortableTextComponents<SanityPortableTextBlock> = {
   block: {
     h1: ({ children }) => (
-      <h2 className="type-heading-02 text-ink mt-10 first:mt-0">
-        {children}
-      </h2>
+      <h2 className="type-heading-02 text-ink mt-10 first:mt-0">{children}</h2>
     ),
     h2: ({ children }) => (
-      <h2 className="type-heading-02 text-ink mt-10 first:mt-0">
-        {children}
-      </h2>
+      <h2 className="type-heading-02 text-ink mt-10 first:mt-0">{children}</h2>
     ),
     h3: ({ children }) => (
-      <h3 className="type-heading-03 text-ink mt-8 first:mt-0">
-        {children}
-      </h3>
+      <h3 className="type-heading-03 text-ink mt-8 first:mt-0">{children}</h3>
     ),
     h4: ({ children }) => (
-      <h4 className="type-heading-04 text-ink mt-7 first:mt-0">
-        {children}
-      </h4>
+      <h4 className="type-heading-04 text-ink mt-7 first:mt-0">{children}</h4>
     ),
     h5: ({ children }) => (
-      <h5 className="type-heading-05 text-ink mt-6 first:mt-0">
-        {children}
-      </h5>
+      <h5 className="type-heading-05 text-ink mt-6 first:mt-0">{children}</h5>
     ),
     h6: ({ children }) => (
       <h6 className="type-label text-ink mt-6 first:mt-0">{children}</h6>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="font-display italic border-l-2 border-gold pl-5 text-ink my-8">
+      <blockquote className="font-display border-gold text-ink my-8 border-l-2 pl-5 italic">
         {children}
       </blockquote>
     ),
     normal: ({ children }) => (
-      <p className="text-ink-soft text-[1.02rem] leading-[1.6] mt-5 first:mt-0">
+      <p className="text-ink-soft mt-5 text-[1.02rem] leading-[1.6] first:mt-0">
         {children}
       </p>
     ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="text-ink-soft text-[1.02rem] leading-[1.6] mt-5 list-disc space-y-2 pl-6 first:mt-0 marker:text-brand">
+      <ul className="text-ink-soft marker:text-brand mt-5 list-disc space-y-2 pl-6 text-[1.02rem] leading-[1.6] first:mt-0">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="text-ink-soft text-[1.02rem] leading-[1.6] mt-5 list-decimal space-y-2 pl-6 first:mt-0 marker:text-brand">
+      <ol className="text-ink-soft marker:text-brand mt-5 list-decimal space-y-2 pl-6 text-[1.02rem] leading-[1.6] first:mt-0">
         {children}
       </ol>
     ),
@@ -282,11 +272,11 @@ const components: PortableTextComponents<SanityPortableTextBlock> = {
 
       return (
         <aside className="border-hairline bg-card my-8 rounded-md border p-5">
-          {value.title && (
-            <p className="type-label text-ink">{value.title}</p>
-          )}
+          {value.title && <p className="type-label text-ink">{value.title}</p>}
           {value.body && (
-            <p className="text-ink-soft text-[1.02rem] leading-[1.6] mt-3">{value.body}</p>
+            <p className="text-ink-soft mt-3 text-[1.02rem] leading-[1.6]">
+              {value.body}
+            </p>
           )}
         </aside>
       )
@@ -323,7 +313,7 @@ const components: PortableTextComponents<SanityPortableTextBlock> = {
 
                     return (
                       <td
-                        className="border-b border-hairline-2 px-3 py-2 align-top"
+                        className="border-hairline-2 border-b px-3 py-2 align-top"
                         key={cellKey}
                       >
                         {cellImage && (

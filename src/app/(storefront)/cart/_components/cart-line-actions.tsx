@@ -82,14 +82,14 @@ export function CartLineActions({
   return (
     <>
       {/* Pill quantity stepper */}
-      <div className="inline-flex items-center rounded-full border border-hairline">
+      <div className="border-hairline inline-flex items-center rounded-full border">
         <IconButton
           type="button"
           variant="ghost"
           disabled={!canDecrease}
           aria-busy={isUpdatePending || undefined}
           aria-label={`Decrease quantity of ${productTitle}`}
-          className="size-11 text-ink-soft hover:text-brand rounded-full"
+          className="text-ink-soft hover:text-brand size-11 rounded-full"
           onClick={() => handleStepperClick(decreasedQuantity)}
         >
           <Minus className="h-3.5 w-3.5" aria-hidden="true" />
@@ -107,7 +107,7 @@ export function CartLineActions({
           disabled={!canIncrease}
           aria-busy={isUpdatePending || undefined}
           aria-label={`Increase quantity of ${productTitle}`}
-          className="size-11 text-ink-soft hover:text-brand rounded-full"
+          className="text-ink-soft hover:text-brand size-11 rounded-full"
           onClick={() => handleStepperClick(increasedQuantity)}
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />

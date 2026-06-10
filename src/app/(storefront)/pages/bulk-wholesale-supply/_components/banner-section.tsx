@@ -20,7 +20,7 @@ export function BannerSection() {
         className="absolute inset-0 -z-20 object-cover object-center"
         unoptimized
       />
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-ink/55" />
+      <div aria-hidden="true" className="bg-ink/55 absolute inset-0 -z-10" />
       <Section.Container className="flex min-h-64 flex-col items-center justify-center gap-4 py-12 text-center md:min-h-80">
         <h2 className="type-heading-01 text-paper">BULK WHOLESALE ACCOUNT</h2>
         <p className="type-lede text-paper/85 max-w-[52ch]">

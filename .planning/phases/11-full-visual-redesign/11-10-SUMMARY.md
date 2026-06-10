@@ -38,12 +38,12 @@ key-files:
     - src/components/product/searchanise-recommendations/searchanise-recommendations.stories.tsx
 
 key-decisions:
-  - "Preserved the existing Shopify product query shape and derived PDP eyebrow/detail metadata from already-available tags/options instead of expanding Storefront GraphQL fields."
-  - "Kept Searchanise recommendation, quick-view fetch, and add-to-cart behavior unchanged while replacing the visual treatment."
+  - 'Preserved the existing Shopify product query shape and derived PDP eyebrow/detail metadata from already-available tags/options instead of expanding Storefront GraphQL fields.'
+  - 'Kept Searchanise recommendation, quick-view fetch, and add-to-cart behavior unchanged while replacing the visual treatment.'
 
 patterns-established:
-  - "PDP info panels use native details/summary disclosures with tokenized borders and typography."
-  - "Variant and bulk tier controls use tile-like buttons with brand tint selected states and existing action handlers."
+  - 'PDP info panels use native details/summary disclosures with tokenized borders and typography.'
+  - 'Variant and bulk tier controls use tile-like buttons with brand tint selected states and existing action handlers.'
 
 requirements-completed: [RD-06]
 
@@ -141,5 +141,6 @@ The PDP surface now follows the Phase 11 redesign language and is ready for rema
 - Verified task commits `5958544`, `66de619`, and `5807383` exist in git history.
 
 ---
-*Phase: 11-full-visual-redesign*
-*Completed: 2026-06-10*
+
+_Phase: 11-full-visual-redesign_
+_Completed: 2026-06-10_
