@@ -5,11 +5,18 @@ import { cn } from '@/lib/utils'
 export type StampProps = {
   top: string
   bottom: string
+  tone?: 'ink' | 'brand'
   id?: string
   className?: string
 }
 
-export function Stamp({ top, bottom, id = 'stamp', className }: StampProps) {
+export function Stamp({
+  top,
+  bottom,
+  tone = 'ink',
+  id = 'stamp',
+  className,
+}: StampProps) {
   const stampId = [id, top, bottom]
     .join('-')
     .toLowerCase()
@@ -34,6 +41,13 @@ export function Stamp({ top, bottom, id = 'stamp', className }: StampProps) {
         height={200}
         className="h-auto w-full object-contain"
         sizes="(min-width: 1024px) 14vw, 200px"
+      />
+      <span
+        aria-hidden="true"
+        className={cn(
+          'absolute inset-4 rounded-full',
+          tone === 'brand' ? 'bg-brand-deep' : 'bg-ink',
+        )}
       />
       <svg
         viewBox="0 0 200 200"

@@ -22,7 +22,7 @@ export function Cta({ tone, intro, cta }: CtaProps) {
       <Section.Container>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,210px)_1fr_minmax(0,260px)]">
           <div className="flex justify-center lg:order-0">
-            <Stamp top="Catalog" bottom="Teavision" />
+            <Stamp top="Catalog" bottom="Teavision" tone="brand" />
           </div>
 
           <div className="mx-auto max-w-[52ch] text-center">
