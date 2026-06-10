@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { ToggleButton } from '@/components/ui'
 import type { ShopifyImage } from '@/lib/shopify/types'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
+import { cn } from '@/lib/utils'
 
 type ProductGalleryProps = {
   images: ShopifyImage[]
@@ -31,17 +32,24 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   }, [emblaApi, onSelect])
 
   if (images.length === 0) {
-    return <div className="bg-surface aspect-4/3 w-full rounded" />
+    return <div className="aspect-[1/1.05] w-full rounded-lg bg-paper-2" />
   }
 
   return (
-    <div className="w-full" role="region" aria-label={`${title} image gallery`}>
-      <div className="w-full overflow-hidden rounded" ref={emblaRef}>
+    <div
+      className="w-full lg:sticky lg:top-30"
+      role="region"
+      aria-label={`${title} image gallery`}
+    >
+      <div
+        className="aspect-[1/1.05] w-full overflow-hidden rounded-lg bg-paper-2"
+        ref={emblaRef}
+      >
         <div className="flex">
           {images.map((image, i) => (
             <div
               key={image.url}
-              className="relative aspect-4/3 min-w-0 flex-[0_0_100%]"
+              className="relative aspect-[1/1.05] min-w-0 flex-[0_0_100%]"
               aria-hidden={selectedIndex !== i}
             >
               {image.width && image.height ? (
@@ -57,7 +65,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="bg-surface h-full w-full" />
+                <div className="h-full w-full bg-paper-2" />
               )}
             </div>
           ))}
@@ -65,12 +73,14 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(4rem,1fr))] gap-2">
+        <div className="mt-3 grid grid-cols-4 gap-3">
           {images.map((image, i) => (
             <ToggleButton
               key={image.url}
               variant="thumbnail"
-              className="w-full"
+              className={cn(
+                'aspect-square h-auto w-full rounded-lg border-2 border-transparent bg-paper-2 opacity-70 hover:opacity-100 aria-pressed:border-brand aria-pressed:opacity-100 aria-pressed:ring-0',
+              )}
               aria-label={`View image ${i + 1}`}
               pressed={selectedIndex === i}
               onClick={() => emblaApi?.scrollTo(i)}
@@ -85,7 +95,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="bg-surface h-full w-full" />
+                <div className="h-full w-full bg-paper-2" />
               )}
             </ToggleButton>
           ))}

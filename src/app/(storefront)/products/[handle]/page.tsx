@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Script from 'next/script'
+import { ChevronDown, ChevronRight, Globe2 } from 'lucide-react'
 
 import {
   getProduct,
@@ -14,7 +15,7 @@ import { SITE_URL } from '@/lib/seo/site-url'
 import { getTrustooProductRatings } from '@/lib/reviews/trustoo'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import { RichText } from '@/components/ui/rich-text'
-import { Section, StarRating } from '@/components/ui'
+import { Badge, Eyebrow, Price, Section, StarRating } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 
 import { CustomersAlsoBought } from './_components/customers-also-bought'
@@ -36,10 +37,39 @@ function formatTag(tag: string): string | null {
   return tag
 }
 
+function getBadgeVariant(tag: string): 'gold' | 'organic' | 'certification' {
+  if (/award|gold/i.test(tag)) return 'gold'
+  if (/organic/i.test(tag)) return 'organic'
+  return 'certification'
+}
+
+function getMetaSegments(tags: string[], optionName?: string): string[] {
+  const visibleTags = tags
+    .map(formatTag)
+    .filter((tag): tag is string => tag !== null)
+    .filter((tag) => !/award|organic|certified/i.test(tag))
+
+  return [visibleTags[0], optionName, visibleTags[1]]
+    .filter((segment): segment is string => Boolean(segment))
+    .slice(0, 3)
+}
+
 type Props = {
   params: Promise<{ handle: string }>
   searchParams: Promise<{ variant?: string | string[] }>
 }
+
+type SpecDisclosure =
+  | {
+      kind: 'table'
+      title: string
+      rows: [string, string][]
+    }
+  | {
+      kind: 'text'
+      title: string
+      content: string
+    }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { handle } = await params
@@ -85,6 +115,35 @@ async function ProductContent({
     rating: product.rating,
     reviewCount: product.reviewCount,
   }
+  const visibleTags = product.tags
+    .map(formatTag)
+    .filter((tag): tag is string => tag !== null)
+  const metaSegments = getMetaSegments(product.tags, product.options[0]?.name)
+  const specDisclosures: SpecDisclosure[] = [
+    {
+      kind: 'table',
+      title: 'Tasting & brewing',
+      rows: [
+        ['Pack options', product.options.map((o) => o.name).join(', ')],
+        ['Available variants', `${product.variants.length}`],
+        ['Availability', hasAvailableVariant ? 'In stock' : 'Out of stock'],
+      ],
+    },
+    {
+      kind: 'text',
+      title: 'Ingredients & certification',
+      content:
+        visibleTags.length > 0
+          ? visibleTags.join(' · ')
+          : 'Product certification and ingredient details are listed in the product description.',
+    },
+    {
+      kind: 'text',
+      title: 'Packing, shipping & storage',
+      content:
+        'Packed for bulk tea service and shipped through the existing Teavision checkout flow.',
+    },
+  ]
 
   const productJsonLd = {
     '@context': 'https://schema.org',
@@ -171,70 +230,145 @@ async function ProductContent({
         </>
       ) : null}
 
-      <nav aria-label="Breadcrumb" className="text-muted mb-6 text-sm">
+      <nav
+        aria-label="Breadcrumb"
+        className="type-mono-meta flex flex-wrap items-center gap-2 py-5.5 text-ink-faint"
+      >
         <Link
           href="/"
-          className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+          className="rounded hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none"
         >
           Home
         </Link>
-        <span aria-hidden="true"> / </span>
+        <ChevronRight aria-hidden="true" className="size-3" />
         <Link
           href="/collections/all"
-          className="rounded hover:underline focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
+          className="rounded hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none"
         >
           Products
         </Link>
-        <span aria-hidden="true"> / </span>
-        <span aria-current="page">{product.title}</span>
+        <ChevronRight aria-hidden="true" className="size-3" />
+        <span aria-current="page" className="text-ink">
+          {product.title}
+        </span>
       </nav>
 
       {/* Main product layout */}
-      <div className="grid min-w-0 gap-8 lg:grid-cols-2">
+      <div className="grid min-w-0 items-start gap-[clamp(28px,4vw,64px)] lg:grid-cols-[1.05fr_1fr]">
         <div className="min-w-0">
           <ProductGallery images={product.images} title={product.title} />
         </div>
 
-        <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
-          <div className="flex flex-col gap-2">
-            <h1 className="type-heading-02">{product.title}</h1>
-            {productReviewSummary.rating !== undefined && (
-              <StarRating
-                rating={productReviewSummary.rating}
-                count={productReviewSummary.reviewCount}
-                size="sm"
-              />
-            )}
+        <div className="flex min-w-0 flex-col gap-6">
+          <div className="flex flex-col gap-3">
+            {metaSegments.length > 0 ? (
+              <Eyebrow className="items-center">
+                <Globe2 aria-hidden="true" className="size-3.5" />
+                {metaSegments.join(' · ')}
+              </Eyebrow>
+            ) : null}
+            <h1 className="font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.04] font-medium text-ink">
+              {product.title}
+            </h1>
+            {productReviewSummary.rating !== undefined ? (
+              <div className="flex flex-wrap items-center gap-2.5">
+                <StarRating rating={productReviewSummary.rating} size="md" />
+                {productReviewSummary.reviewCount !== undefined ? (
+                  <span className="type-mono-meta text-ink-faint">
+                    {productReviewSummary.rating.toFixed(1)} ·{' '}
+                    {productReviewSummary.reviewCount.toLocaleString()}{' '}
+                    {productReviewSummary.reviewCount === 1
+                      ? 'review'
+                      : 'reviews'}
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
           </div>
+
+          {visibleTags.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {visibleTags.slice(0, 6).map((label) => (
+                <Badge
+                  key={label}
+                  variant={getBadgeVariant(label)}
+                  label={label}
+                />
+              ))}
+            </div>
+          ) : null}
+
+          <div className="flex flex-wrap items-baseline gap-3">
+            <Price
+              price={product.priceRange.minVariantPrice}
+              priceClassName="text-[2.2rem] leading-none font-normal"
+            />
+            <span className="font-mono text-[11px] tracking-[0.06em] text-ink-faint uppercase">
+              / base unit
+            </span>
+            <span className="rounded-full bg-brand-tint px-2.5 py-1 font-mono text-[11px] tracking-[0.06em] text-brand uppercase">
+              Bulk pricing available
+            </span>
+          </div>
+
+          {descriptionHtml ? (
+            <RichText
+              html={descriptionHtml}
+              variant="compact"
+              className="max-w-prose text-[1.02rem] text-ink-soft"
+            />
+          ) : null}
+
           <ProductForm
             variants={product.variants}
             options={product.options}
             bulkPricingTiers={product.bulkPricingTiers}
             initialVariantId={initialVariantId}
           />
-          <RichText
-            html={descriptionHtml}
-            variant="compact"
-            className="max-w-prose"
-          />
 
-          {/* Tags */}
-          {product.tags.some((t) => formatTag(t) !== null) && (
-            <div className="flex flex-wrap gap-1.5">
-              {product.tags.map((tag) => {
-                const label = formatTag(tag)
-                if (!label) return null
-                return (
-                  <span
-                    key={tag}
-                    className="border-default bg-surface text-muted type-eyebrow rounded border px-2 py-0.5"
-                  >
-                    {label}
-                  </span>
-                )
-              })}
-            </div>
-          )}
+          <div className="mt-2">
+            {specDisclosures.map((item, index) => (
+              <details
+                key={item.title}
+                className="group border-t border-hairline last:border-b"
+                open={index === 0}
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-5 font-display text-[1.15rem] leading-tight text-ink marker:hidden">
+                  {item.title}
+                  <ChevronDown
+                    aria-hidden="true"
+                    className="size-4 text-brand transition-transform group-open:rotate-180"
+                  />
+                </summary>
+                {item.kind === 'table' ? (
+                  <table className="mb-5 w-full text-left">
+                    <tbody>
+                      {item.rows.map(([label, value]) => (
+                        <tr
+                          key={label}
+                          className="border-b border-hairline-2 last:border-b-0"
+                        >
+                          <th
+                            scope="row"
+                            className="type-mono-meta w-2/5 py-3 pr-4 text-ink-faint"
+                          >
+                            {label}
+                          </th>
+                          <td className="py-3 text-sm text-ink-soft">
+                            {value}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="max-w-prose pb-5 text-sm leading-6 text-ink-soft">
+                    {item.content}
+                  </p>
+                )}
+              </details>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -242,11 +376,11 @@ async function ProductContent({
       <Section.Root
         tone="transparent"
         spacing="none"
-        className="border-default mt-12 border-t pt-10"
+        className="mt-12 border-t border-hairline pt-10"
         aria-label="Customer reviews"
       >
         <div className="mb-6 flex flex-wrap items-baseline gap-3">
-          <h2 className="text-xl font-semibold">Reviews</h2>
+          <h2 className="font-display text-[1.4rem] text-ink">Reviews</h2>
         </div>
         <div id="shopify-product-reviews" data-id={numericProductId} />
       </Section.Root>
@@ -264,43 +398,44 @@ async function ProductContent({
 
 export default function ProductPage({ params, searchParams }: Props) {
   return (
-    <div className="max-w-wide mx-auto w-full p-4 md:p-6 lg:p-8">
+    <div className="mx-auto w-full max-w-wide px-gutter">
       <Suspense
         fallback={
           <div
-            className="grid min-h-screen gap-8 lg:grid-cols-2"
+            className="grid min-h-screen gap-[clamp(28px,4vw,64px)] py-5.5 lg:grid-cols-[1.05fr_1fr]"
             role="status"
             aria-live="polite"
           >
             <span className="sr-only">Loading product</span>
             <div className="min-w-0">
-              <div className="bg-surface-sunken aspect-4/3 w-full animate-pulse rounded motion-reduce:animate-none" />
-              <div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(4rem,1fr))] gap-2">
+              <div className="aspect-[1/1.05] w-full animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none" />
+              <div className="mt-3 grid grid-cols-4 gap-3">
                 {Array.from({ length: 4 }, (_, index) => (
                   <div
                     key={index}
-                    className="bg-surface-sunken aspect-square animate-pulse rounded motion-reduce:animate-none"
+                    className="aspect-square animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none"
                   />
                 ))}
               </div>
             </div>
             <div className="flex min-w-0 flex-col gap-4">
-              <div className="bg-surface-sunken h-10 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-surface-sunken h-5 w-36 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="border-default bg-surface flex flex-col gap-3 rounded border p-4">
-                <div className="bg-surface-sunken h-5 w-24 animate-pulse rounded motion-reduce:animate-none" />
-                <div className="bg-surface-sunken h-12 w-full animate-pulse rounded motion-reduce:animate-none" />
-                <div className="bg-surface-sunken h-12 w-full animate-pulse rounded motion-reduce:animate-none" />
+              <div className="h-3 w-56 animate-pulse rounded-full bg-paper-2 motion-reduce:animate-none" />
+              <div className="h-15 w-3/4 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+              <div className="h-8 w-44 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+              <div className="flex flex-col gap-3 rounded-lg border border-hairline bg-card p-4">
+                <div className="h-5 w-24 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+                <div className="h-12 w-full animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+                <div className="h-12 w-full animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
               </div>
               <div className="flex flex-col gap-2">
-                <div className="bg-surface-sunken h-4 w-full animate-pulse rounded motion-reduce:animate-none" />
-                <div className="bg-surface-sunken h-4 w-11/12 animate-pulse rounded motion-reduce:animate-none" />
-                <div className="bg-surface-sunken h-4 w-2/3 animate-pulse rounded motion-reduce:animate-none" />
+                <div className="h-4 w-full animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+                <div className="h-4 w-11/12 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+                <div className="h-4 w-2/3 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
               </div>
             </div>
-            <div className="border-default flex flex-col gap-6 border-t pt-10 lg:col-span-2">
-              <div className="bg-surface-sunken h-7 w-32 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-surface-sunken h-24 w-full animate-pulse rounded motion-reduce:animate-none" />
+            <div className="flex flex-col gap-6 border-t border-hairline pt-10 lg:col-span-2">
+              <div className="h-7 w-32 animate-pulse rounded bg-paper-2 motion-reduce:animate-none" />
+              <div className="h-24 w-full animate-pulse rounded-lg bg-paper-2 motion-reduce:animate-none" />
             </div>
           </div>
         }
