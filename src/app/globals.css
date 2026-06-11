@@ -124,6 +124,15 @@
   min-width: 0;
 }
 
+/* Searchanise init.js (loaded only for the hidden recommendations widget)
+   also injects its own sticky search button + modal into <body>. We render
+   our own search UI, so suppress them — CSS survives re-injection on
+   client-side navigation, unlike one-off DOM removal. */
+.snize-sticky-searchbox,
+#snize-modal-sticky-searchbox {
+  display: none !important;
+}
+
 /* ── Type utilities ───────────────────────────────── */
 
 @utility type-display {

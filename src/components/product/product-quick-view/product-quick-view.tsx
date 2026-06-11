@@ -370,6 +370,7 @@ export function ProductQuickView({
                   step={quantityIncrement}
                   disabled={isPending || !canAddToCart}
                   label={`Quantity for ${productData.title}`}
+                  className="justify-self-start"
                 />
               </div>
 

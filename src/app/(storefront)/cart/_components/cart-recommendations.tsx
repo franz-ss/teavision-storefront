@@ -70,12 +70,20 @@ export async function CartRecommendations({ cart }: { cart: Cart }) {
         <RelatedProductsCarousel
           products={fallbackProducts}
           ariaLabel="Recommended products for your order"
+          heading={
+            <h2
+              id="cart-recommendations-title"
+              className="type-heading-03 text-ink"
+            >
+              {CART_RECOMMENDATIONS_TITLE}
+            </h2>
+          }
         />
       }
       title={CART_RECOMMENDATIONS_TITLE}
       titleId="cart-recommendations-title"
       sectionClassName="border-hairline mt-12 border-t pt-10"
-      headingClassName="mb-6 text-xl font-semibold"
+      headingClassName="type-heading-03 text-ink"
       {...(!searchanisePublicConfig.enabled || !searchanisePublicConfig.apiKey
         ? { fallbackDelayMs: 0 }
         : undefined)}

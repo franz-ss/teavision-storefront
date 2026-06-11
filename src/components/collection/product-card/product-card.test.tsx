@@ -84,7 +84,7 @@ describe('ProductCard', () => {
     expect(html).toContain('aspect-[1/1.12]')
     // Title uses display font (lockstep with UI-SPEC §5.5)
     expect(html).toContain(
-      '<h3 class="font-display text-[1.2rem] leading-[1.1] my-1.5">',
+      '<h3 class="font-display my-1.5 text-[1.2rem] leading-[1.1]">',
     )
     // Price rendered
     expect(html).toContain('$12.00')
@@ -95,8 +95,8 @@ describe('ProductCard', () => {
     expect(html).toContain('motion-reduce:group-hover:scale-100')
     // Sole PDP link on title only (CARD-04)
     expect(html).not.toContain('View options')
-    // No rating stars in collection card (new layout)
-    expect(html).not.toContain('out of 5 stars')
+    // Star rating row renders when rating data is available
+    expect(html).toContain('out of 5 stars')
   })
 
   it('shows quick-add button for single-variant available products', () => {
@@ -130,6 +130,29 @@ describe('ProductCard', () => {
     }
     const html = renderToStaticMarkup(<ProductCard product={noTypeProduct} />)
     expect(html).not.toContain('type-mono-meta text-ink-faint mb-1')
+  })
+
+  it('renders from a bare ProductSummary (recommendation carousels)', () => {
+    const summaryOnlyProduct = {
+      id: product.id,
+      handle: product.handle,
+      title: product.title,
+      featuredImage: product.featuredImage,
+      priceRange: product.priceRange,
+    }
+    const html = renderToStaticMarkup(
+      <ProductCard product={summaryOnlyProduct} />,
+    )
+
+    // Same approved layout
+    expect(html).toContain('aspect-[1/1.12]')
+    expect(html).toContain('$12.00')
+    // Unknown variants → PDP link instead of quick-add
+    expect(html).toContain('View options')
+    expect(html).not.toContain('Add to cart')
+    // No tags → no badges; unknown availability → not sold out
+    expect(html).not.toContain('Organic')
+    expect(html).not.toContain('Out of stock')
   })
 
   it('updates the visible price via the ProductPurchaseForm when used in PDP context', async () => {

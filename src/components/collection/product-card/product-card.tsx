@@ -5,7 +5,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Leaf } from 'lucide-react'
 
-import type { CollectionProductSummary } from '@/lib/shopify/types'
+import type {
+  CollectionProductSummary,
+  ProductSummary,
+} from '@/lib/shopify/types'
 import { Badge, Button, Price, StarRating } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { useAddToCart } from '@/components/product/use-add-to-cart'
@@ -20,8 +23,13 @@ function getCertBadges(tags: string[]): { organic: boolean; gold: boolean } {
   return { organic, gold }
 }
 
+// Recommendation feeds (Shopify recommendations, Searchanise) only supply a
+// ProductSummary — collection extras degrade gracefully when absent.
+type ProductCardProduct = ProductSummary &
+  Partial<Pick<CollectionProductSummary, 'productType' | 'tags' | 'variants'>>
+
 type ProductCardProps = {
-  product: CollectionProductSummary
+  product: ProductCardProduct
   priority?: boolean
   className?: string
 }
@@ -31,7 +39,7 @@ function QuickAddButton({
   product,
   variantId,
 }: {
-  product: CollectionProductSummary
+  product: ProductCardProduct
   variantId: string
 }) {
   const { addItem, error, isPending, message, resetFeedback } = useAddToCart()
@@ -77,15 +85,14 @@ export function ProductCard({
   className,
 }: ProductCardProps) {
   const productUrl = `/products/${product.handle}`
-  const isSoldOut = !product.availableForSale
+  const isSoldOut = product.availableForSale === false
+  const variants = product.variants ?? []
 
-  // Single-variant available: quick-add; multi-variant: PDP link (CQA-02)
+  // Single-variant available: quick-add; multi-variant or unknown: PDP link (CQA-02)
   const singleAvailableVariant =
-    product.variants.length === 1 && product.variants[0]?.availableForSale
-      ? product.variants[0]
-      : null
+    variants.length === 1 && variants[0]?.availableForSale ? variants[0] : null
 
-  const { organic, gold } = getCertBadges(product.tags)
+  const { organic, gold } = getCertBadges(product.tags ?? [])
 
   return (
     <article className={cn('group relative flex flex-col', className)}>

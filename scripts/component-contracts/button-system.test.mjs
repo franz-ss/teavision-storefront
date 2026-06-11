@@ -176,9 +176,9 @@ test('hover zoom image treatments respect reduced motion', async () => {
     sourcePath(
       'src',
       'components',
-      'product',
-      'recommendation-product-card',
-      'recommendation-product-card.tsx',
+      'collection',
+      'product-card',
+      'product-card.tsx',
     ),
   ]
 

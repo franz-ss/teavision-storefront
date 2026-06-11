@@ -6,6 +6,7 @@ import { searchanisePublicConfig } from '@/lib/env/public'
 import { cn } from '@/lib/utils'
 import { Section } from '@/components/ui'
 
+import { RecommendationCarouselSkeleton } from '../recommendation-carousel-skeleton'
 import { RelatedProductsCarousel } from '../related-products-carousel'
 import { SearchaniseScriptLoader } from './searchanise-script-loader'
 import { useSearchaniseRecommendations } from './use-searchanise-recommendations'
@@ -75,19 +76,21 @@ export function SearchaniseRecommendations({
   }, [shouldLoad])
 
   // Carousel states render the heading inline with the arrows (no dead band
-  // between title and cards); text-only states keep a standalone heading.
+  // between title and cards); other states keep a standalone heading with the
+  // same mb-5 gap the carousel heading row uses.
+  const headingIsInline =
+    renderState === 'rendered' || renderState === 'fallback'
   const headingElement = title ? (
-    <h2 id={titleId} className={headingClassName}>
+    <h2
+      id={titleId}
+      className={cn(headingClassName, !headingIsInline && 'mb-5')}
+    >
       {title}
     </h2>
   ) : null
-  const headingIsInline =
-    renderState === 'rendered' || renderState === 'fallback'
 
   const visibleContent = !shouldLoad ? null : renderState === 'waiting' ? (
-    <p className="type-body-sm text-ink-faint" role="status" aria-live="polite">
-      Loading recommendations…
-    </p>
+    <RecommendationCarouselSkeleton />
   ) : renderState === 'rendered' && products.length > 0 ? (
     <RelatedProductsCarousel
       products={products}

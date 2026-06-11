@@ -4,12 +4,10 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
+import { ProductCard } from '@/components/collection'
 import { IconButton } from '@/components/ui'
 import type { ProductSummary } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
-
-import { ProductQuickView } from '../product-quick-view'
-import { RecommendationProductCard } from '../recommendation-product-card'
 
 type RelatedProductsCarouselProps = {
   products: ProductSummary[]
@@ -111,10 +109,7 @@ export function RelatedProductsCarousel({
               className="min-w-0 flex-[0_0_100%] pl-4 min-[360px]:flex-[0_0_50%] sm:flex-[0_0_33.333333%] lg:flex-[0_0_25%]"
               aria-roledescription="slide"
             >
-              <RecommendationProductCard
-                product={product}
-                quickViewAction={<ProductQuickView product={product} />}
-              />
+              <ProductCard product={product} />
             </li>
           ))}
         </ul>
