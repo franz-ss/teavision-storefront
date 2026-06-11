@@ -165,7 +165,7 @@ export const defaultBlogListingQuery = groq`
       },
       featuredPosts[]->{
         ${sanityBlogPostSummaryLightFields}
-      }
+      }[defined(slug) && publishedAt <= now()]
     },
     "articles": *[
       _type == "blogPost" &&
