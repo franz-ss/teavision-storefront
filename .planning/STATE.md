@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
+status: Awaiting next milestone
 stopped_at: Phase 12 context gathered
-last_updated: "2026-06-11T10:43:30.988Z"
-last_activity: 2026-06-11 -- Phase 12 execution started
+last_updated: "2026-06-11T10:52:05.313Z"
+last_activity: 2026-06-11 — Milestone v1.0 completed and archived
 progress:
   total_phases: 9
   completed_phases: 7
@@ -25,12 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-27)
 
 ## Current Position
 
-Phase: 12 (optimize-blogs-teavision-blogs-loading-and-image-rendering) — EXECUTING
-Plan: 1 of 2
-Status: Executing Phase 12
-Last activity: 2026-06-11 -- Phase 12 execution started
-
-Progress: [██████████] 97%
+Phase: Milestone v1.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-11 — Milestone v1.0 completed and archived
 
 ## Performance Metrics
 
@@ -153,8 +151,37 @@ Recent decisions affecting current work:
 | Pricing admin | HulkApps-to-Shopify tier sync workflow     | Deferred | Phase 1 bootstrap |
 | B2B pricing   | Authenticated company/location price lists | Deferred | Phase 1 bootstrap |
 
+Items acknowledged and deferred at v1.0 milestone close on 2026-06-11:
+
+| Category          | Item                       | Status       |
+| ----------------- | -------------------------- | ------------ |
+| debug_sessions    | blog-sections              | diagnosed    |
+| debug_sessions    | cart-regressions           | diagnosed    |
+| debug_sessions    | collections-index          | diagnosed    |
+| debug_sessions    | footer-parity              | diagnosed    |
+| debug_sessions    | homepage-lower-parity      | diagnosed    |
+| debug_sessions    | homepage-upper-parity      | diagnosed    |
+| debug_sessions    | megamenu-hover-gap         | diagnosed    |
+| debug_sessions    | mobile-menu-ux             | diagnosed    |
+| debug_sessions    | newsletter-signup-failure  | diagnosed    |
+| debug_sessions    | pdp-spacing                | diagnosed    |
+| debug_sessions    | plp-parity                 | diagnosed    |
+| debug_sessions    | utility-bar-mobile-wrap    | diagnosed    |
+| uat_gaps          | 11-UAT.md                  | partial      |
+| uat_gaps          | 11-HUMAN-UAT.md            | testing      |
+| verification_gaps | 11-VERIFICATION.md         | human_needed |
+
+Note: all twelve debug sessions were diagnosed and resolved through the
+Phase 11 gap-closure plans (11-15..11-22); the files were never moved to
+debug/resolved. The UAT/verification items are the two human-only tests
+(visual parity sweep, live Resend newsletter signup).
+
 ## Session Continuity
 
 Last session: 2026-06-11T10:11:11.369Z
 Stopped at: Phase 12 context gathered
 Resume file: .planning/phases/12-optimize-blogs-teavision-blogs-loading-and-image-rendering/12-CONTEXT.md
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
