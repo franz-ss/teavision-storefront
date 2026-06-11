@@ -43,8 +43,6 @@ export const CmsContent: Story = {
     image: {
       url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/blog-hero.webp?v=1764582604&width=1600',
       altText: 'Loose leaf tea on a tasting bench',
-      width: 1600,
-      height: 900,
     },
     rssHref: '/blogs/teavision-blogs/atom',
     searchAction: '/blogs/teavision-blogs',

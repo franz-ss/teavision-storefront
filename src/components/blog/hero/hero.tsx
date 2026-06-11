@@ -2,15 +2,21 @@ import Image from 'next/image'
 
 import { Eyebrow, Section } from '@/components/ui'
 import { DEFAULT_LISTING_DESCRIPTION } from '@/lib/blog/listing'
-import type { ShopifyImage } from '@/lib/shopify/types'
 
 import { RssLink } from './rss-link'
 import { SearchForm } from './search-form'
 
+type HeroImage = {
+  url: string
+  altText?: string | null
+  lqip?: string | null
+}
+
 type HeroProps = {
   defaultQuery?: string
   description?: string
-  image?: ShopifyImage | null
+  image?: HeroImage | null
+  preload?: boolean
   rssHref?: string
   searchAction?: string
   title?: string
@@ -26,11 +32,14 @@ export function Hero({
   defaultQuery = '',
   description = DEFAULT_LISTING_DESCRIPTION,
   image,
+  preload = true,
   rssHref,
   searchAction,
   title = HERO_TITLE,
 }: HeroProps) {
   const heroImage = image?.url ? image : null
+  const imageSrc = heroImage?.url ?? HERO_IMAGE.src
+  const hasLqip = heroImage?.lqip != null
 
   return (
     <Section.Root
@@ -39,11 +48,13 @@ export function Hero({
       className="relative isolate overflow-hidden"
     >
       <Image
-        src={heroImage?.url ?? HERO_IMAGE.src}
-        alt={HERO_IMAGE.alt}
+        src={imageSrc}
+        alt={heroImage?.altText ?? HERO_IMAGE.alt}
         fill
         sizes="100vw"
-        preload
+        preload={preload}
+        placeholder={hasLqip ? 'blur' : 'empty'}
+        blurDataURL={hasLqip ? (heroImage?.lqip ?? undefined) : undefined}
         className="absolute inset-0 -z-20 object-cover opacity-35"
       />
       <Section.Container

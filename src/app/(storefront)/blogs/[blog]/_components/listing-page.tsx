@@ -10,7 +10,7 @@ import type { ListingProps } from '../_lib/types'
 export function ListingPage(props: ListingProps) {
   return (
     <>
-      <Suspense fallback={<Hero />}>
+      <Suspense fallback={<Hero preload={false} />}>
         <HeroSlot params={props.params} searchParams={props.searchParams} />
       </Suspense>
 
