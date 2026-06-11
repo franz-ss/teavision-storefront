@@ -130,6 +130,17 @@ export type SanityBlogListingResult = {
   articles: SanityBlogPostSummary[]
 }
 
+/**
+ * Result shape for the light default-listing query.
+ * articles contains only the first page of latest articles (no bodyText).
+ * totalCount is the full article count for pagination UI.
+ */
+export type SanityDefaultBlogListingResult = {
+  blog: SanityBlog | null
+  articles: Omit<SanityBlogPostSummary, 'bodyText'>[]
+  totalCount: number
+}
+
 export type SanityBlogPostResult = {
   article: SanityBlogPost | null
 }

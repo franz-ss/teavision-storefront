@@ -4,6 +4,7 @@ import { cacheLife, cacheTag } from 'next/cache'
 import {
   blogArticleQuery,
   blogListingQuery,
+  defaultBlogListingQuery,
   homepageBlogPostsQuery,
 } from '@/lib/sanity/queries/blog'
 import {
@@ -15,6 +16,7 @@ import type {
   SanityBlogPost,
   SanityBlogPostSummary,
   SanityBlogListingResult,
+  SanityDefaultBlogListingResult,
   SanityBlogPostResult,
   SanityImageWithAlt,
   SanityPortableTextBlock,
@@ -85,6 +87,25 @@ export type PaginatedArticles = {
   currentPage: number
   totalPages: number
   totalArticles: number
+}
+
+/**
+ * Lightweight listing result for the unfiltered default /blogs/[handle] route.
+ * articles contains only the first page of latest articles (no bodyText).
+ * featuredArticles contains up to 2 configured featured articles.
+ * pagination contains server-computed pagination metadata for the non-featured remainder.
+ *
+ * Tag/search pages use getBlog() + in-memory filtering instead of this type.
+ */
+export type DefaultBlogListing = {
+  id: string
+  handle: string
+  title: string
+  description: string
+  heroImage: BlogImage | null
+  seo: BlogSeo
+  featuredArticles: BlogArticleSummary[]
+  paginated: PaginatedArticles
 }
 
 // Bounded Sanity image URL options by use case.
@@ -416,6 +437,68 @@ export async function getArticle(
   )
 
   return data.article ? reshapeArticle(data.article) : null
+}
+
+/**
+ * Light fetch for the unfiltered default /blogs/[handle] listing.
+ * Fetches only blog metadata, featured posts, and the first page of non-featured articles.
+ * bodyText is omitted — reading time is estimated from excerpt instead.
+ *
+ * Use getBlog() for tag/search paths where full article list is required for in-memory filtering.
+ */
+export async function getDefaultBlogListing(
+  handle: string,
+  page: number,
+): Promise<DefaultBlogListing | null> {
+  'use cache'
+  const normalizedHandle = normalizeBlogHandle(handle)
+  cacheTag('blog', `blog-${normalizedHandle}`)
+  cacheLife('hours')
+
+  const offset = (page - 1) * ARTICLES_PER_PAGE
+  const limit = offset + ARTICLES_PER_PAGE
+
+  const data = await sanityPublishedFetch<SanityDefaultBlogListingResult>(
+    defaultBlogListingQuery,
+    {
+      blogHandle: normalizedHandle,
+      offset,
+      limit,
+    },
+  )
+
+  if (!data.blog) return null
+
+  const rawFeatured = (data.blog.featuredPosts ?? []) as SanityBlogPostSummary[]
+  const featuredArticles = rawFeatured
+    .slice(0, 2)
+    .map((a) => reshapeArticleSummary(a, IMAGE_OPTIONS_FEATURED_CARD))
+
+  const rawArticles = data.articles as SanityBlogPostSummary[]
+  const pageArticles = rawArticles.map((a) =>
+    reshapeArticleSummary(a, IMAGE_OPTIONS_CARD),
+  )
+
+  const totalArticles = data.totalCount
+  const totalPages = Math.max(1, Math.ceil(totalArticles / ARTICLES_PER_PAGE))
+  const currentPage = Math.min(Math.max(1, page), totalPages)
+  const description = data.blog.description?.trim() ?? ''
+
+  return {
+    id: data.blog._id,
+    handle: data.blog.slug ?? normalizedHandle,
+    title: data.blog.title?.trim() || 'Tea Journal',
+    description,
+    heroImage: reshapeImage(data.blog.heroImage, IMAGE_OPTIONS_HERO),
+    seo: reshapeSeo(data.blog.seo, description),
+    featuredArticles,
+    paginated: {
+      articles: pageArticles,
+      currentPage,
+      totalPages,
+      totalArticles,
+    },
+  }
 }
 
 export async function getHomepageArticles(
