@@ -68,7 +68,7 @@ describe('CartView', () => {
     expect(html).toContain('aria-label="Now $34.55"')
     expect(html).toContain('aria-label="Was $1,626.00"')
     expect(html).toContain('aria-label="Now $1,382.10"')
-    expect(html).toContain('>40<')
+    expect(html).toContain('value="40"')
     expect(html).toContain('Remove')
     expect(html).not.toContain('Bulk discount')
   })
@@ -116,8 +116,19 @@ describe('CartView', () => {
     )
 
     expect(html).toContain('Buy 6 more and get 15% on each product')
-    expect(html).toContain(
-      '<h3 class="font-display text-[1.05rem] w-full leading-snug wrap-break-word">',
+    const productHeadingClass =
+      html.match(
+        /<h3 class="([^"]+)"><a[^>]*>Organic Raw Sticky Chai<\/a><\/h3>/,
+      )?.[1] ?? ''
+
+    expect(productHeadingClass.split(' ')).toEqual(
+      expect.arrayContaining([
+        'font-display',
+        'text-[1.05rem]',
+        'w-full',
+        'leading-snug',
+        'wrap-break-word',
+      ]),
     )
     expect(html).toContain('font-display tabular-nums')
     expect(html).not.toContain('line-clamp-2')

@@ -1,9 +1,8 @@
 'use client'
 
 import { useOptimistic, useState, useTransition } from 'react'
-import { Minus, Plus } from 'lucide-react'
 
-import { IconButton } from '@/components/ui'
+import { QuantityStepper } from '@/components/ui'
 import { cartLineFormAction, type CartLineFormState } from '@/lib/cart/actions'
 import { CART_CHANGED_EVENT } from '@/lib/cart/events'
 import { clampQuantity } from '@/lib/shopify/quantity-rules'
@@ -48,22 +47,8 @@ export function CartLineActions({
     quantityIncrement,
     value: optimisticQuantity,
   })
-  const decreasedQuantity = clampQuantity({
-    maximumQuantity,
-    minimumQuantity,
-    quantityIncrement,
-    value: normalizedQuantity - quantityIncrement,
-  })
-  const increasedQuantity = clampQuantity({
-    maximumQuantity,
-    minimumQuantity,
-    quantityIncrement,
-    value: normalizedQuantity + quantityIncrement,
-  })
-  const canDecrease = decreasedQuantity < normalizedQuantity
-  const canIncrease = increasedQuantity > normalizedQuantity
-
-  function handleStepperClick(newQuantity: number) {
+  function handleQuantityChange(newQuantity: number) {
+    if (newQuantity === normalizedQuantity) return
     startUpdateTransition(async () => {
       setOptimisticQuantity(newQuantity)
       setStepperState(INITIAL_CART_LINE_FORM_STATE)
@@ -81,38 +66,15 @@ export function CartLineActions({
 
   return (
     <>
-      {/* Pill quantity stepper */}
-      <div className="border-hairline inline-flex items-center rounded-full border">
-        <IconButton
-          type="button"
-          variant="ghost"
-          disabled={!canDecrease}
-          aria-busy={isUpdatePending || undefined}
-          aria-label={`Decrease quantity of ${productTitle}`}
-          className="text-ink-soft hover:text-brand size-11 rounded-full"
-          onClick={() => handleStepperClick(decreasedQuantity)}
-        >
-          <Minus className="h-3.5 w-3.5" aria-hidden="true" />
-        </IconButton>
-        <span
-          className="min-w-7 text-center font-mono text-[13px] tabular-nums"
-          role="status"
-          aria-live="polite"
-        >
-          {optimisticQuantity}
-        </span>
-        <IconButton
-          type="button"
-          variant="ghost"
-          disabled={!canIncrease}
-          aria-busy={isUpdatePending || undefined}
-          aria-label={`Increase quantity of ${productTitle}`}
-          className="text-ink-soft hover:text-brand size-11 rounded-full"
-          onClick={() => handleStepperClick(increasedQuantity)}
-        >
-          <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-        </IconButton>
-      </div>
+      <QuantityStepper
+        value={normalizedQuantity}
+        onChange={handleQuantityChange}
+        min={minimumQuantity}
+        max={maximumQuantity}
+        step={quantityIncrement}
+        busy={isUpdatePending}
+        label={`Quantity of ${productTitle}`}
+      />
 
       {stepperState.message ? (
         <p className="type-caption text-danger" role="alert">

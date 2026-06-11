@@ -63,7 +63,7 @@ export const MinimumQuantity: Story = {
 
     await expect(
       canvas.getByRole('button', {
-        name: 'Decrease quantity of Tea Masters Sencha',
+        name: 'Decrease quantity of tea masters sencha',
       }),
     ).toBeDisabled()
   },
@@ -82,7 +82,7 @@ export const QuantityRulePayloads: Story = {
     const canvas = within(canvasElement)
     await userEvent.click(
       canvas.getByRole('button', {
-        name: 'Increase quantity of Tea Masters Sencha',
+        name: 'Increase quantity of tea masters sencha',
       }),
     )
 
@@ -94,11 +94,15 @@ export const QuantityRulePayloads: Story = {
       })
     })
 
-    await expect(
-      canvas.getByRole('button', {
-        name: 'Decrease quantity of Tea Masters Sencha',
-      }),
-    ).toBeDisabled()
+    // After the round-trip settles, the optimistic value reverts to the
+    // minimum and the decrease control disables again.
+    await waitFor(() => {
+      expect(
+        canvas.getByRole('button', {
+          name: 'Decrease quantity of tea masters sencha',
+        }),
+      ).toBeDisabled()
+    })
   },
 }
 
@@ -111,7 +115,7 @@ export const IncreasePayload: Story = {
     const canvas = within(canvasElement)
     await userEvent.click(
       canvas.getByRole('button', {
-        name: 'Increase quantity of Tea Masters Sencha',
+        name: 'Increase quantity of tea masters sencha',
       }),
     )
 
@@ -134,7 +138,7 @@ export const DecreasePayload: Story = {
     const canvas = within(canvasElement)
     await userEvent.click(
       canvas.getByRole('button', {
-        name: 'Decrease quantity of Tea Masters Sencha',
+        name: 'Decrease quantity of tea masters sencha',
       }),
     )
 
@@ -156,7 +160,7 @@ export const UpdateError: Story = {
     const canvas = within(canvasElement)
     await userEvent.click(
       canvas.getByRole('button', {
-        name: 'Increase quantity of Tea Masters Sencha',
+        name: 'Increase quantity of tea masters sencha',
       }),
     )
 
@@ -173,13 +177,17 @@ export const UpdatePending: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const increaseButton = canvas.getByRole('button', {
-      name: 'Increase quantity of Tea Masters Sencha',
+      name: 'Increase quantity of tea masters sencha',
     })
     await userEvent.click(increaseButton)
 
     // Optimistic update: the displayed quantity advances immediately and the
     // stepper stays enabled (marked busy) while the server round-trip is pending.
-    await expect(await canvas.findByRole('status')).toHaveTextContent('3')
+    await expect(
+      canvas.getByRole('spinbutton', {
+        name: 'Quantity of Tea Masters Sencha',
+      }),
+    ).toHaveValue(3)
     await waitFor(() => {
       expect(increaseButton).toBeEnabled()
       expect(increaseButton).toHaveAttribute('aria-busy', 'true')

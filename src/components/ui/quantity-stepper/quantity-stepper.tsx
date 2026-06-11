@@ -13,6 +13,8 @@ type QuantityStepperProps = {
   max?: number
   step?: number
   disabled?: boolean
+  /** Marks the stepper buttons busy (e.g. while an optimistic cart update is in flight). */
+  busy?: boolean
   label?: string
   id?: string
   name?: string
@@ -49,6 +51,7 @@ export function QuantityStepper({
   max,
   step = 1,
   disabled = false,
+  busy = false,
   label = 'Quantity',
   id,
   name,
@@ -67,6 +70,7 @@ export function QuantityStepper({
   }
 
   const isRectangle = shape === 'rectangle'
+  const labelText = label.toLowerCase()
 
   return (
     <>
@@ -83,8 +87,9 @@ export function QuantityStepper({
         )}
       >
         <IconButton
-          aria-label={`Decrease ${label.toLowerCase()}`}
-          title={`Decrease ${label.toLowerCase()}`}
+          aria-label={`Decrease ${labelText}`}
+          title={`Decrease ${labelText}`}
+          aria-busy={busy || undefined}
           disabled={!canDecrease}
           onClick={() => updateQuantity(quantity - quantityStep)}
           variant="ghost"
@@ -110,13 +115,14 @@ export function QuantityStepper({
             updateQuantity(event.currentTarget.valueAsNumber)
           }
           disabled={disabled}
-          className="border-hairline w-auto min-w-7 [appearance:textfield] border-x bg-transparent text-center font-mono text-[13px] tabular-nums focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="w-7 min-w-7 grow [appearance:textfield] bg-transparent text-center font-mono text-[13px] tabular-nums focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           aria-label={label}
           aria-describedby={describedBy}
         />
         <IconButton
-          aria-label={`Increase ${label.toLowerCase()}`}
-          title={`Increase ${label.toLowerCase()}`}
+          aria-label={`Increase ${labelText}`}
+          title={`Increase ${labelText}`}
+          aria-busy={busy || undefined}
           disabled={!canIncrease}
           onClick={() => updateQuantity(quantity + quantityStep)}
           variant="ghost"
