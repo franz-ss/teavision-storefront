@@ -69,6 +69,7 @@ export async function RelatedProducts({ product }: { product: Product }) {
         products={products}
         heading={
           <h2
+            key="related-products-title"
             id="related-products-title"
             className="font-display text-ink text-[1.4rem]"
           >
