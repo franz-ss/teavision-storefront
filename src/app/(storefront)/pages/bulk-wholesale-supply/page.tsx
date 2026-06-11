@@ -14,11 +14,7 @@ import { JsonLd } from './_components/json-ld'
 import { LogisticsSection } from './_components/logistics-section'
 import { ProcessSection } from './_components/process-section'
 import { WhyChooseSection } from './_components/why-choose-section'
-
-const PAGE_PATH = '/pages/bulk-wholesale-supply'
-const PAGE_TITLE = 'Bulk Wholesale Supply | Teavision'
-const PAGE_DESCRIPTION =
-  'Import premium teas, herbs and botanicals at scale with Teavision. Container freight to Melbourne, 1500+ ingredients direct from farms, ACO/HACCP certified supply chain.'
+import { PAGE_DESCRIPTION, PAGE_PATH, PAGE_TITLE } from './_lib/data'
 
 export const metadata: Metadata = withNoindexRobots({
   title: PAGE_TITLE,

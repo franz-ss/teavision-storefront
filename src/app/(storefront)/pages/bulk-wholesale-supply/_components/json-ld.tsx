@@ -1,12 +1,12 @@
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 import { getSiteUrl } from '@/lib/seo/site-url'
 
-import { FAQ_ITEMS } from '../_lib/data'
-
-const PAGE_PATH = '/pages/bulk-wholesale-supply'
-const PAGE_TITLE = 'Bulk Wholesale Supply | Teavision'
-const PAGE_DESCRIPTION =
-  'Import premium teas, herbs and botanicals at scale with Teavision. Container freight to Melbourne, 1500+ ingredients direct from farms, ACO/HACCP certified supply chain.'
+import {
+  FAQ_ITEMS,
+  PAGE_DESCRIPTION,
+  PAGE_PATH,
+  PAGE_TITLE,
+} from '../_lib/data'
 
 export function JsonLd() {
   const pageUrl = getSiteUrl(PAGE_PATH)
