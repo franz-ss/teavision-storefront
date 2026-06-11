@@ -1,5 +1,3 @@
-# Phase 12: Code Review Report
-
 ---
 phase: 12-optimize-blogs-teavision-blogs-loading-and-image-rendering
 reviewed: 2026-06-11T11:38:59Z
@@ -24,6 +22,8 @@ findings:
   total: 12
 status: issues_found
 ---
+
+# Phase 12: Code Review Report
 
 **Reviewed:** 2026-06-11T11:38:59Z
 **Depth:** standard
