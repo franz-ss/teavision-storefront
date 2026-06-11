@@ -39,7 +39,7 @@ export function Hero({
 }: HeroProps) {
   const heroImage = image?.url ? image : null
   const imageSrc = heroImage?.url ?? HERO_IMAGE.src
-  const hasLqip = heroImage?.lqip != null
+  const hasLqip = Boolean(heroImage?.lqip)
 
   return (
     <Section.Root
