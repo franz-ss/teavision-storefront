@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 
 import { Section } from '@/components/ui'
+import { cn } from '@/lib/utils'
 
 import { PROOF_POINTS, type ProofPoint } from '../content'
 
@@ -44,13 +45,13 @@ export function ProofPoints({ points = PROOF_POINTS }: ProofPointsProps) {
             return (
               <li
                 key={point.title}
-                className={
-                  isLastOverall
-                    ? 'flex flex-col px-7.5 py-11'
-                    : isLastInRow2
-                      ? 'lg:border-paper/12 flex flex-col border-r-0 px-7.5 py-11 lg:border-r'
-                      : 'border-paper/12 flex flex-col border-r px-7.5 py-11'
-                }
+                className={cn(
+                  'flex flex-col px-7.5 py-11',
+                  !isLastOverall && !isLastInRow2 && 'border-paper/12 border-r',
+                  !isLastOverall &&
+                    isLastInRow2 &&
+                    'lg:border-paper/12 border-r-0 lg:border-r',
+                )}
               >
                 {/* Image branch (e.g. Australian flag) */}
                 {point.image ? (
