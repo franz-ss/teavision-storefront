@@ -1,6 +1,6 @@
 ---
 phase: 12-optimize-blogs-teavision-blogs-loading-and-image-rendering
-reviewed: 2026-06-11T12:15:24Z
+reviewed: 2026-06-11T12:59:00Z
 depth: standard
 files_reviewed: 11
 files_reviewed_list:
@@ -16,34 +16,40 @@ files_reviewed_list:
   - src/lib/sanity/queries/blog.ts
   - src/lib/sanity/types.ts
 findings:
-  critical: 2
+  critical: 0
   warning: 5
   info: 3
-  total: 10
+  total: 8
 status: issues_found
 ---
 
-# Phase 12: Code Review Report (Re-review after gap closure 12-03)
+# Phase 12: Code Review Report (Post-12-04 Update)
 
-**Reviewed:** 2026-06-11T12:15:24Z
+**Reviewed:** 2026-06-11T12:59:00Z
 **Depth:** standard
 **Files Reviewed:** 11
 **Status:** issues_found
 
 ## Summary
 
-Re-review of the blog listing optimization after gap-closure plan 12-03. **Both prior blockers are fixed and sound:**
+Post-12-04 review of the final gap-closure commits. **No active critical findings remain.** The two blockers found after 12-03 are now fixed:
+
+- **CR-01 resolved:** `listing-content.tsx` no longer imports or calls `getFeaturedArticles` on the filtered path, no longer builds `featuredIds`, and now paginates `filteredArticles` directly. Tag and search pages include featured articles like Phase 11 because they do not render a separate `FeaturedArticles` section.
+- **CR-02 resolved:** `defaultBlogListingQuery` now applies `[defined(slug) && publishedAt <= now()]` immediately after the light `featuredPosts[]->{...}` projection, preventing scheduled or slug-less featured posts from reaching `rawFeatured.slice(0, 2)`.
+
+The previous 12-03 re-review also confirmed both earlier blockers were fixed and remain sound:
 
 - **Prior WR-01 (coalesce guard):** Verified present. `defaultBlogListingQuery` now wraps the featured-refs exclusion subquery in `coalesce(..., [])` at both the `articles` filter (`src/lib/sanity/queries/blog.ts:175`) and the `totalCount` filter (`src/lib/sanity/queries/blog.ts:184`). A blog with no `featuredPosts` no longer collapses the listing — `_id in []` evaluates correctly to false.
 - **Prior WR-07 (empty-string LQIP):** Verified fixed. `hero.tsx` now computes `hasLqip = Boolean(heroImage?.lqip)` (`src/components/blog/hero/hero.tsx:42`) and gates both `placeholder` and `blurDataURL` on it (lines 56-57), so an empty-string LQIP can no longer be passed as `blurDataURL`. `article-card.tsx:100-101` uses the same truthiness-guard pattern correctly. The `preload` prop usage was verified against the bundled Next.js 16 docs — it is the correct replacement for the deprecated `priority` prop.
 
-However, the fresh review found **two new blockers** introduced by this phase's refactor: the filtered (tag/search) path now silently excludes featured articles from results (a regression visible in the diff against `fafbf6a`), and the new light default-listing path renders featured posts without any published/slug guard, leaking scheduled content and producing guaranteed-404 links. Five warnings cover pagination edge cases, type-assertion lies around the light query shape, an always-wrong "1 min read" label, hidden featured posts beyond the first two, and a request-crashing `decodeURIComponent` call.
+Five advisory warnings and three informational notes remain from the prior review. They cover pagination edge cases, type-assertion lies around the light query shape, an always-wrong "1 min read" label, hidden featured posts beyond the first two, and a request-crashing `decodeURIComponent` call. They are tracked as warnings, not active Phase 12 blockers.
 
-## Critical Issues
+## Resolved Critical Issues
 
-### CR-01: Featured articles are silently excluded from tag and search results (regression)
+### CR-01: Featured articles are silently excluded from tag and search results (regression) — RESOLVED
 
 **File:** `src/app/(storefront)/blogs/[blog]/_components/listing-content.tsx:72-88`
+**Status:** Resolved in `11ca9d1`.
 **Issue:** Before this phase, the filtered path used `mainArticles = isFiltered ? filteredArticles : filteredArticles.filter(a => !featuredIds.has(a.id))` — featured articles were only excluded from the grid on the *unfiltered* listing (where they render in their own `FeaturedArticles` section). The refactor moved the unfiltered listing to an early return, but the remaining filtered-path code now excludes featured IDs **unconditionally**:
 
 ```tsx
@@ -68,9 +74,10 @@ const paginated = paginateArticles({
 })
 ```
 
-### CR-02: Default listing renders scheduled/unpublished featured posts and links them to 404 pages
+### CR-02: Default listing renders scheduled/unpublished featured posts and links them to 404 pages — RESOLVED
 
 **File:** `src/lib/sanity/queries/blog.ts:166-168` and `src/lib/blog/operations.ts:474-477`
+**Status:** Resolved in `ee6ee05`.
 **Issue:** Every article subquery in this file filters on `defined(slug.current) && publishedAt <= now()`, but the `featuredPosts[]->{...}` dereference in `defaultBlogListingQuery` has **no filter at all**. Unlike the heavy path — where `getBlog()` passes featured posts through `getFeaturedArticles()`, which intersects them against the published `articles` list and drops anything unpublished — `getDefaultBlogListing` renders `rawFeatured.slice(0, 2)` directly:
 
 ```ts
