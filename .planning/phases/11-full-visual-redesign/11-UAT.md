@@ -28,15 +28,15 @@ source:
     11-VERIFICATION.md,
   ]
 started: 2026-06-11T07:31:59+08:00
-updated: 2026-06-11T08:31:23+08:00
+updated: 2026-06-11T08:47:16+08:00
 ---
 
 ## Current Test
 
-number: 6
-name: Collection Pages and Product Cards
+number: 8
+name: Search Results
 expected: |
-  Collection pages preserve the original banner logic for collections with embedded banner art, show the regular green hero where appropriate, place read-more disclosure correctly, and render product grids with improved spacing. Product cards include rating stars when available, badges, title, price, unit/variant metadata, and quick-add/view-options behavior without missing design elements.
+  Search results reuse PLP styling for hero, facets, sort, chips, cards, and pagination. Empty/no-results queries show only the hero and a "No matches" card, without extra filter/sort/toolbar chrome.
 awaiting: user response
 
 ## Tests
@@ -73,12 +73,12 @@ result: pass
 ### 6. Collection Pages and Product Cards
 
 expected: Collection pages preserve the original banner logic for collections with embedded banner art, show the regular green hero where appropriate, place read-more disclosure correctly, and render product grids with improved spacing. Product cards include rating stars when available, badges, title, price, unit/variant metadata, and quick-add/view-options behavior without missing design elements.
-result: [pending]
+result: pass
 
 ### 7. Collections Index
 
 expected: The collections index shows a card grid only, with "All" first linking to /collections/all, production-matching collection order, no Directory/All collections list section, and the reusable "Need help? Speak with our Ingredients Experts Today." contact section at the bottom.
-result: [pending]
+result: pass
 
 ### 8. Search Results
 
@@ -118,9 +118,9 @@ result: [pending]
 ## Summary
 
 total: 14
-passed: 3
+passed: 5
 issues: 2
-pending: 9
+pending: 7
 skipped: 0
 blocked: 0
 
