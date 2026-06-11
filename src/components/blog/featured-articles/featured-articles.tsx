@@ -1,4 +1,4 @@
-import { ArticleCard, Eyebrow, Section } from '@/components/ui'
+import { ArticleCard, Section } from '@/components/ui'
 import type { BlogArticleSummary } from '@/lib/blog/operations'
 import { formatArticleDate, getArticlePath } from '@/lib/blog/operations'
 
@@ -16,12 +16,11 @@ export function FeaturedArticles({
   return (
     <Section.Root tone="sunken" className={className}>
       <Section.Container>
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <div>
-            <Eyebrow tone="muted">Tea Journal</Eyebrow>
-            <h2 className="type-heading-02 text-ink mt-2">Featured Articles</h2>
-          </div>
-        </div>
+        <Section.Intro
+          align="left"
+          eyebrow="Tea Journal"
+          title="Featured Articles"
+        />
         <ul className="grid gap-6 md:grid-cols-2" role="list">
           {articles.map((article) => (
             <li key={article.id}>

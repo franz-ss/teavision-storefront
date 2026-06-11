@@ -1,4 +1,4 @@
-import { Eyebrow, Section } from '@/components/ui'
+import { Section } from '@/components/ui'
 import type { PaginatedArticles } from '@/lib/blog/operations'
 
 import { ArticleList } from '../article-list'
@@ -30,10 +30,10 @@ export function ArticleResults({
   return (
     <Section.Root tone="sunken" className={className}>
       <Section.Container>
+        <Section.Intro align="left" eyebrow="Tea Journal" title={heading} />
+
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <Eyebrow tone="muted">Tea Journal</Eyebrow>
-            <h2 className="type-heading-02 text-ink mt-2">{heading}</h2>
             {normalizedQuery && (
               <p className="type-body-sm text-ink-soft mt-3">
                 Showing matches for{' '}

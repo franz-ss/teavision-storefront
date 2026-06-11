@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { CheckCircle2 } from 'lucide-react'
 
-import { Badge, Card, Eyebrow, Section } from '@/components/ui'
+import { Badge, Card, Section } from '@/components/ui'
 
 import {
   WHOLESALE_INCLUSIONS,
@@ -11,14 +11,12 @@ import {
 export function SupplyPaths() {
   return (
     <Section.Root tone="transparent" spacing="none">
-      <Eyebrow>Why apply</Eyebrow>
-      <h2 className="type-heading-02 text-ink mt-3 max-w-[13ch]">
-        Start with the right commercial route.
-      </h2>
-      <p className="type-body text-ink-soft mt-4 max-w-[58ch]">
-        Built for businesses buying by the kilo, with certified supply
-        conversations and commercial account support from first enquiry.
-      </p>
+      <Section.Intro
+        align="left"
+        eyebrow=">Why apply"
+        title="Start with the right commercial route."
+        copy="Built for businesses buying by the kilo, with certified supply conversations and commercial account support from first enquiry."
+      />
 
       <ul className="mt-6 grid gap-0" role="list">
         {WHOLESALE_INCLUSIONS.map((item) => (
