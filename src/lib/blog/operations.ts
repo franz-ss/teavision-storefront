@@ -9,7 +9,7 @@ import {
 } from '@/lib/sanity/queries/blog'
 import {
   getSanityImageUrl,
-  sanityPublishedFetch,
+  sanityFetch,
 } from '@/lib/sanity/client'
 import type { SanityImageUrlOptions } from '@/lib/sanity/client'
 import type {
@@ -390,7 +390,7 @@ export async function getBlog(handle: string): Promise<BlogIndex | null> {
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
-  const data = await sanityPublishedFetch<SanityBlogListingResult>(
+  const data = await sanityFetch<SanityBlogListingResult>(
     blogListingQuery,
     { blogHandle: normalizedHandle },
   )
@@ -433,7 +433,7 @@ export async function getArticle(
   )
   cacheLife('hours')
 
-  const data = await sanityPublishedFetch<SanityBlogPostResult>(
+  const data = await sanityFetch<SanityBlogPostResult>(
     blogArticleQuery,
     { articleHandle, blogHandle: normalizedHandle },
   )
@@ -460,7 +460,7 @@ export async function getDefaultBlogListing(
   const offset = (page - 1) * ARTICLES_PER_PAGE
   const limit = offset + ARTICLES_PER_PAGE
 
-  const data = await sanityPublishedFetch<SanityDefaultBlogListingResult>(
+  const data = await sanityFetch<SanityDefaultBlogListingResult>(
     defaultBlogListingQuery,
     {
       blogHandle: normalizedHandle,
@@ -520,7 +520,7 @@ export async function getHomepageArticles(
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
-  const articles = await sanityPublishedFetch<SanityBlogPostSummary[]>(
+  const articles = await sanityFetch<SanityBlogPostSummary[]>(
     homepageBlogPostsQuery,
     { blogHandle: normalizedHandle },
   )
