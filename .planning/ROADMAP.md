@@ -26,7 +26,7 @@ Full phase details: `milestones/v1.0-ROADMAP.md` · Audit: `milestones/v1.0-MILE
 
 ### 🚧 Next milestone (scope TBD)
 
-- [x] **Phase 12: Optimize /blogs/teavision-blogs loading and image rendering** — Optimize blog listing loading and image rendering while preserving Phase 11 Tea Journal behavior and design. (verification found 2 blockers — gap-closure plan 12-03 pending) (completed 2026-06-11)
+- [ ] **Phase 12: Optimize /blogs/teavision-blogs loading and image rendering** — Optimize blog listing loading and image rendering while preserving Phase 11 Tea Journal behavior and design. (re-verification found 2 new blockers CR-01/CR-02 — gap-closure plan 12-04 pending)
 
 ## Phase Details
 
@@ -35,7 +35,7 @@ Full phase details: `milestones/v1.0-ROADMAP.md` · Audit: `milestones/v1.0-MILE
 **Goal:** Optimize `/blogs/teavision-blogs` loading and image rendering while preserving Phase 11 Tea Journal behavior and design.
 **Requirements**: TBD
 **Depends on:** Phase 11
-**Plans:** 3/3 plans complete
+**Plans:** 3/4 plans complete
 
 Plans:
 **Wave 1**
@@ -50,6 +50,10 @@ Plans:
 
 - [x] 12-03: Null-safe default-listing coalesce + crash-safe Hero LQIP guard (Wave 1; depends on 12-01, 12-02)
 
+**Gap closure** *(closes CR-01 + CR-02 blockers from 12-REVIEW.md / 12-VERIFICATION.md re-verification)*
+
+- [ ] 12-04: Restore featured articles in tag/search results (CR-01) + publish/slug guard on default-listing featuredPosts (CR-02) (Wave 1; depends on 12-01, 12-02, 12-03)
+
 ## Progress
 
 | Phase                                    | Milestone | Plans Complete | Status     | Completed  |
@@ -63,4 +67,4 @@ Plans:
 | 9. Collection Product Card Improvements  | v1.0      | —              | Superseded | 2026-06-11 |
 | 10. Cart/Checkout Critical Flow Tests    | v1.0      | 4/4            | Complete   | —          |
 | 11. Full Visual Redesign                 | v1.0      | 22/22          | Complete   | 2026-06-11 |
-| 12. Optimize blog loading                | next      | 3/3 | Complete   | 2026-06-11 |
+| 12. Optimize blog loading                | next      | 3/4 | In Progress | —          |
