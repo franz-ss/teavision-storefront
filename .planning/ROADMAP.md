@@ -26,7 +26,7 @@ Full phase details: `milestones/v1.0-ROADMAP.md` · Audit: `milestones/v1.0-MILE
 
 ### 🚧 Next milestone (scope TBD)
 
-- [ ] **Phase 12: Optimize /blogs/teavision-blogs loading and image rendering** — Optimize blog listing loading and image rendering while preserving Phase 11 Tea Journal behavior and design. (verification found 2 blockers — gap-closure plan 12-03 pending)
+- [x] **Phase 12: Optimize /blogs/teavision-blogs loading and image rendering** — Optimize blog listing loading and image rendering while preserving Phase 11 Tea Journal behavior and design. (verification found 2 blockers — gap-closure plan 12-03 pending) (completed 2026-06-11)
 
 ## Phase Details
 
@@ -35,7 +35,7 @@ Full phase details: `milestones/v1.0-ROADMAP.md` · Audit: `milestones/v1.0-MILE
 **Goal:** Optimize `/blogs/teavision-blogs` loading and image rendering while preserving Phase 11 Tea Journal behavior and design.
 **Requirements**: TBD
 **Depends on:** Phase 11
-**Plans:** 3 plans (2 executed; 12-03 gap closure pending)
+**Plans:** 3/3 plans complete
 
 Plans:
 **Wave 1**
@@ -48,7 +48,7 @@ Plans:
 
 **Gap closure** *(closes WR-01 + WR-07 blockers from 12-VERIFICATION.md)*
 
-- [ ] 12-03: Null-safe default-listing coalesce + crash-safe Hero LQIP guard (Wave 1; depends on 12-01, 12-02)
+- [x] 12-03: Null-safe default-listing coalesce + crash-safe Hero LQIP guard (Wave 1; depends on 12-01, 12-02)
 
 ## Progress
 
@@ -63,4 +63,4 @@ Plans:
 | 9. Collection Product Card Improvements  | v1.0      | —              | Superseded | 2026-06-11 |
 | 10. Cart/Checkout Critical Flow Tests    | v1.0      | 4/4            | Complete   | —          |
 | 11. Full Visual Redesign                 | v1.0      | 22/22          | Complete   | 2026-06-11 |
-| 12. Optimize blog loading                | next      | 2/3 (gap closure pending) | In Progress | —          |
+| 12. Optimize blog loading                | next      | 3/3 | Complete   | 2026-06-11 |
