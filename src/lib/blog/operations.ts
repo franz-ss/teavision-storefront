@@ -457,7 +457,8 @@ export async function getDefaultBlogListing(
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
-  const offset = (page - 1) * ARTICLES_PER_PAGE
+  const requestedPage = Math.max(1, page)
+  const offset = (requestedPage - 1) * ARTICLES_PER_PAGE
   const limit = offset + ARTICLES_PER_PAGE
 
   const data = await sanityFetch<SanityDefaultBlogListingResult>(
@@ -476,14 +477,30 @@ export async function getDefaultBlogListing(
     .slice(0, 2)
     .map((a) => reshapeArticleSummary(a, IMAGE_OPTIONS_FEATURED_CARD))
 
-  const rawArticles = data.articles as SanityBlogPostSummary[]
+  const totalArticles = data.totalCount
+  const totalPages = Math.max(1, Math.ceil(totalArticles / ARTICLES_PER_PAGE))
+  const currentPage = Math.min(requestedPage, totalPages)
+
+  // An out-of-range page lands past the article window — refetch the clamped
+  // last page so the grid shows content instead of rendering empty (matches
+  // the filtered path, which clamps before slicing).
+  let rawArticles = data.articles as SanityBlogPostSummary[]
+  if (currentPage !== requestedPage) {
+    const clampedOffset = (currentPage - 1) * ARTICLES_PER_PAGE
+    const clamped = await sanityFetch<SanityDefaultBlogListingResult>(
+      defaultBlogListingQuery,
+      {
+        blogHandle: normalizedHandle,
+        offset: clampedOffset,
+        limit: clampedOffset + ARTICLES_PER_PAGE,
+      },
+    )
+    rawArticles = (clamped.articles ?? []) as SanityBlogPostSummary[]
+  }
+
   const pageArticles = rawArticles.map((a) =>
     reshapeArticleSummary(a, IMAGE_OPTIONS_CARD),
   )
-
-  const totalArticles = data.totalCount
-  const totalPages = Math.max(1, Math.ceil(totalArticles / ARTICLES_PER_PAGE))
-  const currentPage = Math.min(Math.max(1, page), totalPages)
   const description = data.blog.description?.trim() ?? ''
 
   // Derive all unique tags from the lightweight allTagArrays subquery

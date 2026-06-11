@@ -123,4 +123,39 @@ describe('getDefaultBlogListing', () => {
       { fit: 'max', quality: 68, width: 640 },
     )
   })
+
+  it('clamps an out-of-range page and refetches the last page of articles', async () => {
+    const emptyWindow: SanityDefaultBlogListingResult = {
+      allTagArrays: [],
+      articles: [],
+      blog: {
+        _id: 'blog',
+        description: 'Tea journal',
+        featuredPosts: [],
+        heroImage: null,
+        seo: null,
+        slug: 'teavision-blogs',
+        title: 'Tea Journal',
+      },
+      totalCount: 7,
+    }
+    const lastPageWindow: SanityDefaultBlogListingResult = {
+      ...emptyWindow,
+      articles: [makePost('last-page')],
+    }
+    vi.mocked(sanityFetch)
+      .mockResolvedValueOnce(emptyWindow)
+      .mockResolvedValueOnce(lastPageWindow)
+
+    const listing = await getDefaultBlogListing('teavision-blogs', 999)
+
+    expect(listing?.paginated.currentPage).toBe(2)
+    expect(listing?.paginated.totalPages).toBe(2)
+    expect(listing?.paginated.articles[0]?.title).toBe('last-page title')
+    expect(vi.mocked(sanityFetch)).toHaveBeenNthCalledWith(
+      2,
+      expect.any(String),
+      expect.objectContaining({ offset: 6, limit: 12 }),
+    )
+  })
 })

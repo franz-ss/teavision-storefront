@@ -179,3 +179,7 @@ The CDN client uses `useCdn: true` with `perspective: 'published'` and no auth t
 ## Self-Check: PASSED
 
 Commits verified: 75f1fc5, 1f10db6, 69f3c4c, 6f41cea — all present on worktree branch.
+
+## Post-Phase Amendment (2026-06-12, v1.1 milestone audit)
+
+Task 2's CDN-backed reads were **reverted after this phase completed**. Commit `ac3c6e7` ("fix: restore authenticated Sanity blog reads") switched all blog operations back to the authenticated `sanityFetch` because the token-less CDN client broke reads against this dataset. The orphaned `getSanityCdnClient()`/`sanityPublishedFetch()` helpers were removed from `src/lib/sanity/client.ts` during v1.1 milestone-audit cleanup (audit finding W1). The `sanity-cdn-published-reads` capability listed in this summary's frontmatter is **not in the shipped codebase**; the light default-listing query and listing path split (Tasks 3–4) remain in place as described.
