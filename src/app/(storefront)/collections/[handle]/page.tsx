@@ -1,4 +1,3 @@
-import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
 import { withNoindexRobots } from '@/lib/seo/noindex'
@@ -53,19 +52,5 @@ export async function generateMetadata({
 }
 
 export default function Page({ params, searchParams }: PageProps) {
-  return (
-    <Suspense
-      fallback={
-        <div
-          className="type-body text-ink-soft mx-auto max-w-7xl px-4 py-12 md:px-6"
-          role="status"
-          aria-live="polite"
-        >
-          Loading collection…
-        </div>
-      }
-    >
-      <PageContent params={params} searchParams={searchParams} />
-    </Suspense>
-  )
+  return <PageContent params={params} searchParams={searchParams} />
 }

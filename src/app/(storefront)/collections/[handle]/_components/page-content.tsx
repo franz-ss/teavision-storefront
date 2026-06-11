@@ -172,7 +172,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
         }
       />
 
-      <Section.Root tone="transparent" className="pt-0 md:pt-0">
+      <Section.Root tone="transparent" className="pt-8 md:pt-10">
         <Section.Container>
           <Toolbar
             currentSort={sort}
