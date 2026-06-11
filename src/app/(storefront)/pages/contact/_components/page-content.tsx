@@ -1,6 +1,6 @@
 import { ContactForm } from '@/components/contact'
 import { Card, Section } from '@/components/ui'
-import { sendContactAction } from '@/lib/contact/actions'
+import { submitContactFormAction } from '@/lib/contact/actions'
 
 import { Hero } from './hero'
 import { LocationMap } from './location-map'
@@ -22,7 +22,7 @@ export function PageContent() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
             <Sidebar />
             <Card className="p-5 sm:p-8" radius="lg">
-              <ContactForm action={sendContactAction} />
+              <ContactForm action={submitContactFormAction} />
             </Card>
           </div>
         </Section.Container>

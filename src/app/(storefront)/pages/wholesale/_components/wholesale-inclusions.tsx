@@ -1,12 +1,12 @@
 import { ContactForm } from '@/components/contact'
 import { Card, Eyebrow } from '@/components/ui'
-import { sendContactAction } from '@/lib/contact/actions'
+import { submitContactFormAction } from '@/lib/contact/actions'
 
 export function WholesaleInclusions() {
   return (
     <Card as="aside" className="p-5 sm:p-7">
       <ContactForm
-        action={sendContactAction}
+        action={submitContactFormAction}
         eyebrow="Wholesale application"
         title="Apply for a trade account"
         description="Share your sourcing needs and monthly volume. The wholesale team will review your enquiry through the protected Teavision contact workflow."

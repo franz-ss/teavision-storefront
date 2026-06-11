@@ -2,7 +2,7 @@ import { Eyebrow, Section } from '@/components/ui'
 import { BrushCircle } from '@/components/homepage/brush-circle'
 import { HomepageNewsletterForm } from '@/components/homepage/newsletter/newsletter-form'
 import { Stamp } from '@/components/homepage/stamp'
-import { submitNewsletterSignupFormAction } from '@/lib/contact/actions'
+import { sendNewsletterSignupAction } from '@/lib/contact/actions'
 
 export function BlogNewsletterBand() {
   return (
@@ -26,9 +26,7 @@ export function BlogNewsletterBand() {
               suppliers in Australia and beyond.
             </p>
             <div className="mt-7">
-              <HomepageNewsletterForm
-                action={submitNewsletterSignupFormAction}
-              />
+              <HomepageNewsletterForm action={sendNewsletterSignupAction} />
             </div>
           </div>
 

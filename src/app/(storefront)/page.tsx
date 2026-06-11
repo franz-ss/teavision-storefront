@@ -21,8 +21,8 @@ import {
   websiteJsonLd,
 } from '@/components/homepage/content'
 import {
+  sendNewsletterSignupAction,
   submitContactFormAction,
-  submitNewsletterSignupFormAction,
 } from '@/lib/contact/actions'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
@@ -57,7 +57,7 @@ export default function HomePage() {
       <div className="bg-paper">
         <HomepageHero />
         <ProductRange />
-        <HomepageNewsletter action={submitNewsletterSignupFormAction} />
+        <HomepageNewsletter action={sendNewsletterSignupAction} />
         <PrivateLabel />
         <OrganicHerbs />
         <SupplyChain />

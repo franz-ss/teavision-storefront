@@ -230,7 +230,7 @@ async function submitContactSubmission(
     const { error } = await resend.emails.send({
       from: 'Teavision Contact <noreply@teavision.com.au>',
       to: 'info@teavision.com.au',
-      subject: `New enquiry from ${submission.name}`,
+      subject: `New enquiry from ${submission.name.replace(/[\r\n]+/g, ' ')}`,
       text: formatSubmission(submission),
       replyTo: submission.email,
     })
@@ -247,7 +247,7 @@ async function submitContactSubmission(
   }
 }
 
-export async function sendContactAction(
+export async function submitContactFormAction(
   formData: FormData,
 ): Promise<ContactActionResult> {
   const submission = readSubmission(formData)
@@ -552,12 +552,6 @@ export async function sendNpdOrderAction(
   }
 }
 
-export async function submitContactFormAction(
-  formData: FormData,
-): Promise<ContactActionResult> {
-  return sendContactAction(formData)
-}
-
 export async function sendNewsletterSignupAction(
   formData: FormData,
 ): Promise<NewsletterSignupActionResult> {
@@ -613,12 +607,6 @@ export async function sendNewsletterSignupAction(
 
 export async function sendNewsletterSignupFormAction(
   _previousState: NewsletterSignupActionResult,
-  formData: FormData,
-): Promise<NewsletterSignupActionResult> {
-  return sendNewsletterSignupAction(formData)
-}
-
-export async function submitNewsletterSignupFormAction(
   formData: FormData,
 ): Promise<NewsletterSignupActionResult> {
   return sendNewsletterSignupAction(formData)
