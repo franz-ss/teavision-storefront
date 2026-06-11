@@ -30,12 +30,16 @@ type LineDisplayPricing = {
   unitCompareAtPrice?: Money
   totalPrice: Money
   totalCompareAtPrice?: Money
+  /** True when the total is derived from quantityPriceBreaks rather than taken from Shopify's cart cost. */
+  isEstimated: boolean
 }
 
 type CartDisplayPricing = {
   subtotalPrice: Money
   subtotalCompareAtPrice?: Money
   savings: Money | null
+  /** True when any line total is a client-side bulk-tier estimate Shopify has not confirmed. */
+  isEstimated: boolean
 }
 
 function parseMoneyAmount(money: Money): number {
@@ -160,6 +164,7 @@ function getLineDisplayPricing(line: CartLine): LineDisplayPricing {
       : undefined,
     totalPrice,
     totalCompareAtPrice,
+    isEstimated: Boolean(derivedTotalPrice),
   }
 }
 
@@ -209,13 +214,14 @@ function getNextBulkDiscountPrompt(line: CartLine): {
 
 function getCartDisplayPricing(cart: Cart): CartDisplayPricing {
   const currencyCode = cart.cost.totalAmount.currencyCode
-  const lineSubtotal = cart.lines.reduce((total, line) => {
-    const lineDisplayPricing = getLineDisplayPricing(line)
-
-    return lineDisplayPricing.totalPrice.currencyCode === currencyCode
-      ? total + parseMoneyAmount(lineDisplayPricing.totalPrice)
-      : total
-  }, 0)
+  const lineDisplayPricings = cart.lines.map(getLineDisplayPricing)
+  const lineSubtotal = lineDisplayPricings.reduce(
+    (total, lineDisplayPricing) =>
+      lineDisplayPricing.totalPrice.currencyCode === currencyCode
+        ? total + parseMoneyAmount(lineDisplayPricing.totalPrice)
+        : total,
+    0,
+  )
   const subtotalPrice =
     lineSubtotal > 0
       ? makeMoney(lineSubtotal, currencyCode)
@@ -233,6 +239,9 @@ function getCartDisplayPricing(cart: Cart): CartDisplayPricing {
     savings: subtotalCompareAtPrice
       ? getSavingsAmount(subtotalCompareAtPrice, subtotalPrice)
       : null,
+    isEstimated: lineDisplayPricings.some(
+      (lineDisplayPricing) => lineDisplayPricing.isEstimated,
+    ),
   }
 }
 
@@ -524,6 +533,11 @@ export function CartView({ cart }: CartViewProps) {
                 size="lg"
               />
             </div>
+            {cartDisplayPricing.isEstimated ? (
+              <p className="type-caption text-ink-faint text-right">
+                Bulk pricing estimated — final total confirmed at checkout
+              </p>
+            ) : null}
           </div>
 
           <div className="type-mono-meta text-ink-faint mt-3 flex items-center gap-3">
