@@ -28,11 +28,33 @@ export async function sanityFetch<T>(
   return getSanityClient().fetch<T>(query, params)
 }
 
-export function getSanityImageUrl(source: SanityImageSource): string {
-  const { projectId, dataset } = getSanityConfig()
+export type SanityImageUrlOptions = {
+  width?: number
+  height?: number
+  quality?: number
+  fit?: 'max' | 'min' | 'clip' | 'crop' | 'fill' | 'fillmax' | 'scale'
+}
 
-  return createImageUrlBuilder({ projectId, dataset })
+export function getSanityImageUrl(
+  source: SanityImageSource,
+  options: SanityImageUrlOptions = {},
+): string {
+  const { projectId, dataset } = getSanityConfig()
+  const { width, height, quality = 75, fit = 'max' } = options
+
+  let builder = createImageUrlBuilder({ projectId, dataset })
     .image(source)
     .auto('format')
-    .url()
+    .fit(fit)
+    .quality(quality)
+
+  if (width !== undefined) {
+    builder = builder.width(Math.round(width))
+  }
+
+  if (height !== undefined) {
+    builder = builder.height(Math.round(height))
+  }
+
+  return builder.url()
 }

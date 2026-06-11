@@ -7,6 +7,7 @@ import {
   homepageBlogPostsQuery,
 } from '@/lib/sanity/queries/blog'
 import { getSanityImageUrl, sanityFetch } from '@/lib/sanity/client'
+import type { SanityImageUrlOptions } from '@/lib/sanity/client'
 import type {
   SanityBlogPost,
   SanityBlogPostSummary,
@@ -29,6 +30,7 @@ export type BlogImage = {
   altText: string | null
   width: number | null
   height: number | null
+  lqip?: string | null
 }
 
 export type BlogSeo = {
@@ -82,6 +84,12 @@ export type PaginatedArticles = {
   totalArticles: number
 }
 
+// Bounded Sanity image URL options by use case.
+// Quality is constrained to the values allowed in next.config.ts (68 or 75).
+const IMAGE_OPTIONS_HERO: SanityImageUrlOptions = { width: 1920, quality: 75, fit: 'max' }
+const IMAGE_OPTIONS_FEATURED_CARD: SanityImageUrlOptions = { width: 900, quality: 75, fit: 'max' }
+const IMAGE_OPTIONS_CARD: SanityImageUrlOptions = { width: 640, quality: 68, fit: 'max' }
+
 function isNonEmpty(value: string | null | undefined): value is string {
   return Boolean(value?.trim())
 }
@@ -101,7 +109,10 @@ function estimateReadingTime(text: string): number {
   return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE))
 }
 
-function reshapeImage(image: SanityImageWithAlt | null): BlogImage | null {
+function reshapeImage(
+  image: SanityImageWithAlt | null,
+  imageOptions?: SanityImageUrlOptions,
+): BlogImage | null {
   const source = image?.image
   const asset = source?.asset
   if (!asset?._id && !asset?.url) return null
@@ -109,7 +120,7 @@ function reshapeImage(image: SanityImageWithAlt | null): BlogImage | null {
   let url = asset.url
   if (asset._id && source) {
     try {
-      url = getSanityImageUrl(source as SanityImageSource)
+      url = getSanityImageUrl(source as SanityImageSource, imageOptions)
     } catch {
       url = asset.url
     }
@@ -122,6 +133,7 @@ function reshapeImage(image: SanityImageWithAlt | null): BlogImage | null {
     altText: image?.alt ?? null,
     width: asset.metadata?.dimensions?.width ?? null,
     height: asset.metadata?.dimensions?.height ?? null,
+    lqip: asset.metadata?.lqip ?? null,
   }
 }
 
@@ -165,6 +177,7 @@ function reshapeTags(article: SanityBlogPostSummary): string[] {
 
 function reshapeArticleSummary(
   article: SanityBlogPostSummary,
+  imageOptions: SanityImageUrlOptions = IMAGE_OPTIONS_CARD,
 ): BlogArticleSummary {
   const bodyText = normalizeBodyText(article.bodyText)
   const excerpt = article.excerpt?.trim() || truncateText(bodyText, 180)
@@ -175,7 +188,7 @@ function reshapeArticleSummary(
     handle: article.slug ?? article._id,
     title,
     excerpt,
-    featuredImage: reshapeImage(article.featuredImage),
+    featuredImage: reshapeImage(article.featuredImage, imageOptions),
     publishedAt: article.publishedAt ?? FALLBACK_PUBLISHED_AT,
     tags: reshapeTags(article),
     authorName: article.author?.name ?? null,
@@ -357,10 +370,14 @@ export async function getBlog(handle: string): Promise<BlogIndex | null> {
 
   if (!data.blog) return null
 
-  const articles = data.articles.map(reshapeArticleSummary)
+  const articles = data.articles.map((a) =>
+    reshapeArticleSummary(a, IMAGE_OPTIONS_CARD),
+  )
   const featuredArticles = getFeaturedArticles(
     articles,
-    (data.blog.featuredPosts ?? []).map(reshapeArticleSummary),
+    (data.blog.featuredPosts ?? []).map((a) =>
+      reshapeArticleSummary(a, IMAGE_OPTIONS_FEATURED_CARD),
+    ),
   )
   const description = data.blog.description?.trim() ?? ''
 
@@ -369,7 +386,7 @@ export async function getBlog(handle: string): Promise<BlogIndex | null> {
     handle: data.blog.slug ?? normalizedHandle,
     title: data.blog.title?.trim() || 'Tea Journal',
     description,
-    heroImage: reshapeImage(data.blog.heroImage),
+    heroImage: reshapeImage(data.blog.heroImage, IMAGE_OPTIONS_HERO),
     seo: reshapeSeo(data.blog.seo, description),
     articles,
     featuredArticles,
@@ -410,5 +427,5 @@ export async function getHomepageArticles(
     { blogHandle: normalizedHandle },
   )
 
-  return articles.map(reshapeArticleSummary)
+  return articles.map((a) => reshapeArticleSummary(a))
 }
