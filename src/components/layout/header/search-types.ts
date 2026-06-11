@@ -1,9 +1,9 @@
 import type {
   ChangeEventHandler,
   FocusEventHandler,
-  FormEventHandler,
   KeyboardEventHandler,
   MouseEventHandler,
+  SubmitEventHandler,
 } from 'react'
 
 import type { ProductSummary } from '@/lib/shopify/types'
@@ -25,7 +25,8 @@ export type SearchFormProps = {
   onInputChange?: ChangeEventHandler<HTMLInputElement>
   onInputFocus?: FocusEventHandler<HTMLInputElement>
   onKeyDown?: KeyboardEventHandler<HTMLFormElement>
-  onSubmit?: FormEventHandler<HTMLFormElement>
+  onSubmit?: SubmitEventHandler<HTMLFormElement>
+  onSuggestionClick?: MouseEventHandler<HTMLAnchorElement>
   onSuggestionMouseDown?: MouseEventHandler<HTMLAnchorElement>
   onSuggestionMouseEnter?: (index: number) => void
   suggestions?: ProductSummary[]

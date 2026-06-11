@@ -87,7 +87,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           {/* Search input row — comfortable body scale, shared .field focus ring */}
           <div className="mb-6">
             <Suspense fallback={<SearchForm />}>
-              <SearchWithAutocomplete />
+              <SearchWithAutocomplete onNavigate={onClose} />
             </Suspense>
           </div>
 

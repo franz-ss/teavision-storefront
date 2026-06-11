@@ -19,12 +19,14 @@ function getSizedImageUrl(url: string, width: number): string {
 
 export function SearchSuggestions({
   activeSuggestionIndex = -1,
+  onSuggestionClick,
   onSuggestionMouseDown,
   onSuggestionMouseEnter,
   suggestions,
   status,
 }: {
   activeSuggestionIndex?: number
+  onSuggestionClick?: MouseEventHandler<HTMLAnchorElement>
   onSuggestionMouseDown?: MouseEventHandler<HTMLAnchorElement>
   onSuggestionMouseEnter?: (index: number) => void
   suggestions: ProductSummary[]
@@ -88,6 +90,7 @@ export function SearchSuggestions({
                   role="option"
                   aria-selected={isActive}
                   aria-label={`View ${product.title}`}
+                  onClick={onSuggestionClick}
                   onMouseDown={onSuggestionMouseDown}
                   onMouseEnter={() => onSuggestionMouseEnter?.(index)}
                   className={cn(

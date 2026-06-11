@@ -6,9 +6,9 @@ import {
   useState,
   type ChangeEvent,
   type FocusEvent,
-  type FormEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type SubmitEvent,
 } from 'react'
 
 import type { ProductSummary } from '@/lib/shopify/types'
@@ -23,7 +23,13 @@ type SearchSuggestionsResponse = {
   products: ProductSummary[]
 }
 
-export function SearchAutocomplete({ initialQuery }: { initialQuery: string }) {
+export function SearchAutocomplete({
+  initialQuery,
+  onNavigate,
+}: {
+  initialQuery: string
+  onNavigate?: () => void
+}) {
   const router = useRouter()
   const [inputValue, setInputValue] = useState(initialQuery)
   const [suggestions, setSuggestions] = useState<ProductSummary[]>([])
@@ -90,11 +96,13 @@ export function SearchAutocomplete({ initialQuery }: { initialQuery: string }) {
       : '/search'
 
     closeSuggestions()
+    onNavigate?.()
     router.push(nextUrl)
   }
 
   function navigateToProduct(product: ProductSummary) {
     closeSuggestions()
+    onNavigate?.()
     router.push(`/products/${product.handle}`)
   }
 
@@ -133,7 +141,7 @@ export function SearchAutocomplete({ initialQuery }: { initialQuery: string }) {
     closeSuggestions()
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     navigateToSearch(inputValue)
   }
@@ -186,6 +194,11 @@ export function SearchAutocomplete({ initialQuery }: { initialQuery: string }) {
     event.preventDefault()
   }
 
+  function handleSuggestionClick() {
+    closeSuggestions()
+    onNavigate?.()
+  }
+
   return (
     <SearchForm
       activeSuggestionIndex={activeSuggestionIndex}
@@ -195,6 +208,7 @@ export function SearchAutocomplete({ initialQuery }: { initialQuery: string }) {
       onInputFocus={handleInputFocus}
       onKeyDown={handleKeyDown}
       onSubmit={handleSubmit}
+      onSuggestionClick={handleSuggestionClick}
       onSuggestionMouseDown={handleSuggestionMouseDown}
       onSuggestionMouseEnter={setActiveSuggestionIndex}
       suggestions={suggestions}

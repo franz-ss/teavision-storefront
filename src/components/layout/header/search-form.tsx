@@ -20,6 +20,7 @@ export function SearchForm({
   onInputFocus,
   onKeyDown,
   onSubmit,
+  onSuggestionClick,
   onSuggestionMouseDown,
   onSuggestionMouseEnter,
   suggestions = [],
@@ -92,6 +93,7 @@ export function SearchForm({
       {shouldShowSuggestions && (
         <SearchSuggestions
           activeSuggestionIndex={activeSuggestionIndex}
+          onSuggestionClick={onSuggestionClick}
           onSuggestionMouseDown={onSuggestionMouseDown}
           onSuggestionMouseEnter={onSuggestionMouseEnter}
           suggestions={suggestions}
