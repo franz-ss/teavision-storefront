@@ -14,6 +14,7 @@ type ArticleCardArticle = {
     altText: string | null
     width: number | null
     height: number | null
+    lqip?: string | null
   } | null
   publishedAt: string
   tags: string[]
@@ -96,6 +97,8 @@ export function ArticleCard({
               height={article.featuredImage.height}
               preload={preload}
               sizes={imageSizes}
+              placeholder={article.featuredImage.lqip ? 'blur' : 'empty'}
+              blurDataURL={article.featuredImage.lqip ?? undefined}
               className="size-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />
           ) : (

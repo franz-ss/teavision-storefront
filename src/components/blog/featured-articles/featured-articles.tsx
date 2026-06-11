@@ -23,7 +23,7 @@ export function FeaturedArticles({
           </div>
         </div>
         <ul className="grid gap-6 md:grid-cols-2" role="list">
-          {articles.map((article, index) => (
+          {articles.map((article) => (
             <li key={article.id}>
               <ArticleCard
                 article={article}
@@ -31,7 +31,6 @@ export function FeaturedArticles({
                 publishedLabel={formatArticleDate(article.publishedAt)}
                 variant="featured"
                 headingLevel="h3"
-                preload={index === 0}
               />
             </li>
           ))}

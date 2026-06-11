@@ -78,3 +78,20 @@ export const LongContent: Story = {
     publishedLabel: '5 Nov 2025',
   },
 }
+
+export const WithBlurPlaceholder: Story = {
+  args: {
+    article: {
+      ...stubArticle,
+      featuredImage: {
+        url: 'https://cdn.shopify.com/s/files/1/0786/8339/files/blog-hero.webp?v=1764582604&width=1200',
+        altText: 'Loose leaf tea',
+        width: 1200,
+        height: 800,
+        lqip: 'data:image/jpeg;base64,/9j/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgUE/8QAIhAAAQQCAgMBAAAAAAAAAAAAAQACAxEEBRIhMUH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8Aot8cqsXFkY8oLeHIHBp0WtFiH6O3bJAGidIiICIiD//Z',
+      },
+    },
+    href: '/blogs/teavision-blogs/the-complete-guide-to-tea-bags-types-quality-and-bulk-options',
+    publishedLabel: '5 Nov 2025',
+  },
+}
