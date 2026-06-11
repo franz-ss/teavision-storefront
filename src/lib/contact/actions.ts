@@ -10,6 +10,13 @@ import {
   isCustomTeaBlendFlavour,
   isCustomTeaBlendPackFormat,
 } from '@/lib/contact/custom-tea-blend'
+import {
+  NPD_ORDER_LIMITS,
+  isNpdFlavour,
+  isNpdProductType,
+  isNpdTimeframe,
+  npdBlendFieldName,
+} from '@/lib/contact/npd-order'
 import type {
   ContactActionResult,
   NewsletterSignupActionResult,
@@ -281,6 +288,268 @@ export async function sendCustomTeaBlendFormAction(
   formData: FormData,
 ): Promise<ContactActionResult> {
   return sendCustomTeaBlendAction(formData)
+}
+
+type NpdBlendSubmission = {
+  name: string
+  profile: string
+  certifiedOrganic: string
+  addNaturalFlavouring: string
+  flavours: string[]
+  ingredients: string
+  aroma: string
+  flavourSuggestion: string
+  notes: string
+}
+
+type NpdOrderSubmission = {
+  company: string
+  date: string
+  timeframe: string
+  otherTimeframe: string
+  productTypes: string[]
+  brandCertifiedOrganic: string
+  blends: NpdBlendSubmission[]
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  naturopathCertification: boolean
+  website: string
+}
+
+function isYesNoOrEmpty(value: string) {
+  return value === '' || value === 'YES' || value === 'NO'
+}
+
+function readNpdBlendCount(formData: FormData): number {
+  const raw = readStringField(formData, 'blendCount')
+  const count = Number.parseInt(raw, 10)
+
+  if (!Number.isInteger(count)) return 0
+  if (count < 1 || count > NPD_ORDER_LIMITS.maxBlends) return 0
+  return count
+}
+
+function readNpdOrderSubmission(formData: FormData): NpdOrderSubmission {
+  const blendCount = readNpdBlendCount(formData)
+  const blends = Array.from({ length: blendCount }, (_, blendIndex) => {
+    const index = blendIndex + 1
+
+    return {
+      name: readStringField(formData, npdBlendFieldName(index, 'name')),
+      profile: readStringField(formData, npdBlendFieldName(index, 'profile')),
+      certifiedOrganic: readStringField(
+        formData,
+        npdBlendFieldName(index, 'organic'),
+      ),
+      addNaturalFlavouring: readStringField(
+        formData,
+        npdBlendFieldName(index, 'flavouring'),
+      ),
+      flavours: readStringList(formData, npdBlendFieldName(index, 'flavours')),
+      ingredients: readStringField(
+        formData,
+        npdBlendFieldName(index, 'ingredients'),
+      ),
+      aroma: readStringField(formData, npdBlendFieldName(index, 'aroma')),
+      flavourSuggestion: readStringField(
+        formData,
+        npdBlendFieldName(index, 'flavourSuggestion'),
+      ),
+      notes: readStringField(formData, npdBlendFieldName(index, 'notes')),
+    }
+  })
+
+  return {
+    company: readStringField(formData, 'company'),
+    date: readStringField(formData, 'date'),
+    timeframe: readStringField(formData, 'timeframe'),
+    otherTimeframe: readStringField(formData, 'otherTimeframe'),
+    productTypes: readStringList(formData, 'productTypes'),
+    brandCertifiedOrganic: readStringField(formData, 'brandCertifiedOrganic'),
+    blends,
+    firstName: readStringField(formData, 'firstName'),
+    lastName: readStringField(formData, 'lastName'),
+    email: readStringField(formData, 'email'),
+    phone: readStringField(formData, 'phone'),
+    naturopathCertification:
+      readStringField(formData, 'naturopathCertification') === 'YES',
+    website: readStringField(formData, 'website'),
+  }
+}
+
+function isValidNpdBlend(blend: NpdBlendSubmission) {
+  if (!blend.name || blend.name.length > NPD_ORDER_LIMITS.field) return false
+  if (!isYesNoOrEmpty(blend.certifiedOrganic)) return false
+  if (!isYesNoOrEmpty(blend.addNaturalFlavouring)) return false
+
+  if (
+    blend.flavours.length > NPD_ORDER_LIMITS.maxFlavoursPerBlend ||
+    blend.flavours.some((flavour) => !isNpdFlavour(flavour))
+  ) {
+    return false
+  }
+
+  const textFields = [
+    blend.profile,
+    blend.ingredients,
+    blend.aroma,
+    blend.flavourSuggestion,
+    blend.notes,
+  ]
+
+  return textFields.every((field) => field.length <= NPD_ORDER_LIMITS.text)
+}
+
+function isValidNpdOrderSubmission(submission: NpdOrderSubmission) {
+  if (
+    !submission.company ||
+    submission.company.length > NPD_ORDER_LIMITS.field
+  ) {
+    return false
+  }
+
+  if (!submission.date || submission.date.length > NPD_ORDER_LIMITS.field) {
+    return false
+  }
+
+  if (submission.timeframe && !isNpdTimeframe(submission.timeframe)) {
+    return false
+  }
+
+  if (submission.otherTimeframe.length > NPD_ORDER_LIMITS.text) return false
+
+  if (
+    submission.productTypes.some(
+      (productType) => !isNpdProductType(productType),
+    )
+  ) {
+    return false
+  }
+
+  if (!isYesNoOrEmpty(submission.brandCertifiedOrganic)) return false
+
+  if (
+    submission.blends.length === 0 ||
+    submission.blends.length > NPD_ORDER_LIMITS.maxBlends ||
+    !submission.blends.every(isValidNpdBlend)
+  ) {
+    return false
+  }
+
+  if (
+    !submission.firstName ||
+    submission.firstName.length > NPD_ORDER_LIMITS.field
+  ) {
+    return false
+  }
+
+  if (
+    !submission.lastName ||
+    submission.lastName.length > NPD_ORDER_LIMITS.field
+  ) {
+    return false
+  }
+
+  if (
+    !submission.email ||
+    submission.email.length > NPD_ORDER_LIMITS.email ||
+    !EMAIL_PATTERN.test(submission.email)
+  ) {
+    return false
+  }
+
+  return submission.phone.length <= NPD_ORDER_LIMITS.phone
+}
+
+function formatNpdOrderSubmission(submission: NpdOrderSubmission) {
+  const notProvided = 'Not provided'
+  const lines = [
+    'New product development order',
+    '',
+    `Company / customer name: ${submission.company}`,
+    `Date: ${submission.date}`,
+    `Estimated timeframe: ${submission.timeframe || notProvided}`,
+    `Other timeframe details: ${submission.otherTimeframe || notProvided}`,
+    `Product types: ${submission.productTypes.join(', ') || notProvided}`,
+    `Brand certified organic: ${submission.brandCertifiedOrganic || notProvided}`,
+    `Naturopath certification ($250 per SKU/blend): ${submission.naturopathCertification ? 'YES' : 'NO'}`,
+  ]
+
+  submission.blends.forEach((blend, blendIndex) => {
+    lines.push(
+      '',
+      `Blend ${blendIndex + 1}: ${blend.name}`,
+      `Blend profile: ${blend.profile || notProvided}`,
+      `Certified organic: ${blend.certifiedOrganic || notProvided}`,
+      `Add natural flavouring: ${blend.addNaturalFlavouring || notProvided}`,
+      `Flavours: ${blend.flavours.join(', ') || notProvided}`,
+      `Ingredient suggestions: ${blend.ingredients || notProvided}`,
+      `Aroma suggestion: ${blend.aroma || notProvided}`,
+      `Flavour suggestion: ${blend.flavourSuggestion || notProvided}`,
+      `Additional notes or requirements: ${blend.notes || notProvided}`,
+    )
+  })
+
+  lines.push(
+    '',
+    'Contact details',
+    `First name: ${submission.firstName}`,
+    `Last name: ${submission.lastName}`,
+    `Email: ${submission.email}`,
+    `Phone: ${submission.phone || notProvided}`,
+  )
+
+  return lines.join('\n')
+}
+
+export async function sendNpdOrderAction(
+  formData: FormData,
+): Promise<ContactActionResult> {
+  const submission = readNpdOrderSubmission(formData)
+
+  if (submission.website) {
+    return { success: true }
+  }
+
+  if (!isValidNpdOrderSubmission(submission)) {
+    return { success: false, error: VALIDATION_ERROR }
+  }
+
+  if (await isRateLimited()) {
+    return { success: false, error: RATE_LIMIT_ERROR }
+  }
+
+  const resendApiKey = getResendApiKey()
+  if (!resendApiKey) {
+    console.warn(
+      '[npd-order] Email provider not configured: RESEND_API_KEY is absent. ' +
+        'Set RESEND_API_KEY in .env.local to enable NPD order form email delivery.',
+    )
+    return { success: false, error: SEND_ERROR }
+  }
+
+  try {
+    const resend = new Resend(resendApiKey)
+    const { error } = await resend.emails.send({
+      from: 'Teavision NPD <noreply@teavision.com.au>',
+      to: 'info@teavision.com.au',
+      subject: 'New Teavision NPD form submission',
+      text: formatNpdOrderSubmission(submission),
+      replyTo: submission.email,
+    })
+
+    if (error) {
+      console.error('Resend NPD order form error', error)
+      return { success: false, error: SEND_ERROR }
+    }
+
+    return { success: true }
+  } catch (error: unknown) {
+    console.error('NPD order form submission failed', error)
+    return { success: false, error: SEND_ERROR }
+  }
 }
 
 export async function submitContactFormAction(
