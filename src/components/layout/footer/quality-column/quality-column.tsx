@@ -22,10 +22,7 @@ export function QualityColumn() {
         consistent quality throughout its products.
       </p>
       {/* margin-top: 22px, gap: 10px per design .ft__quality */}
-      <div
-        className="flex flex-wrap"
-        style={{ marginTop: '22px', gap: '10px' }}
-      >
+      <div className="mt-5.5 flex flex-wrap gap-2.5">
         {QUALITY_PILLS.map((pill) => (
           <span
             key={pill}

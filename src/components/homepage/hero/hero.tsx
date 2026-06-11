@@ -22,8 +22,7 @@ export function HomepageHero() {
     <Section.Root
       tone="transparent"
       spacing="none"
-      className="relative isolate flex flex-col overflow-hidden"
-      style={{ minHeight: 'min(92vh, 860px)' }}
+      className="relative isolate flex min-h-[min(92vh,860px)] flex-col overflow-hidden"
     >
       <Image
         src={HOMEPAGE_HERO.image.src}

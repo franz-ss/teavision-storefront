@@ -14,10 +14,7 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
     <footer role="contentinfo" className="bg-ink text-paper/75 font-sans">
       <div className="max-w-wide px-gutter mx-auto">
         {/* footer-local vertical padding: clamp(50px,7vw,90px) per design .ft__top */}
-        <div
-          className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.4fr]"
-          style={{ paddingBlock: 'clamp(50px,7vw,90px)' }}
-        >
+        <div className="grid grid-cols-1 gap-10 py-[clamp(50px,7vw,90px)] sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.4fr]">
           <QualityColumn />
           {FOOTER_COLUMNS.map((column) => (
             <FooterLinkList

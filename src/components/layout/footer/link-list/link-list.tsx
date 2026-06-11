@@ -8,7 +8,7 @@ export function FooterLinkList({ title, links }: FooterColumn) {
         {title}
       </h3>
       {/* gap: 11px per design .ft__links */}
-      <ul className="flex flex-col" style={{ gap: '11px' }} role="list">
+      <ul className="flex flex-col gap-2.75" role="list">
         {links.map((link) => (
           <li key={`${title}-${link.label}`}>
             <FooterTextLink {...link} />
