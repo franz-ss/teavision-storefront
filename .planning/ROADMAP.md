@@ -139,26 +139,22 @@ Phase 1, then Phase 2, then Phase 4, then Phase 5, then Phase 6, then Phase 8, t
 | 9. Collection Product Card Improvements | 0/1            | Planned  | —          |
 | 11. Full Visual Redesign                | 22/22 | Complete    | 2026-06-11 |
 
-### Phase 9: Collection Product Card Improvements
+### Phase 9: Collection Product Card Improvements Superseded
 
-**Goal:** Collection product cards better serve B2B buyers scanning catalogue listings by surfacing stronger product photography, product-type and certification context, a cleaner two-zone content hierarchy, and focused purchase controls.
-**Requirements**: [CARD-01, CARD-02, CARD-03, CARD-04, CARD-05, CARD-06, CARD-07]
+**Goal:** Historical phase retained for traceability. The intended collection product card improvements were superseded by Phase 11 and absorbed into `11-08-PLAN.md` during the full visual redesign.
+**Requirements**: Superseded by Phase 11 (`11-08-PLAN.md`)
 **Depends on:** Phase 8
 **Success Criteria** (what must be TRUE):
 
-1. The image column is visibly wider at all breakpoints (mobile ≥ 10rem, sm ≥ 16rem, lg ≥ 20rem) in the rendered card.
-2. Cards with a non-empty `productType` render an eyebrow label above the product title.
-3. Cards extract organic/certification tags and render up to 2 certification badges.
-4. The "More info" secondary button is absent from all collection card renders.
-5. The right-column content uses a two-zone grid — product identity top, purchase controls bottom — so cards with and without purchase forms have consistent rhythm.
-6. `ProductPurchaseForm` accepts `showQuantity` and the quantity stepper is absent from collection card renders.
-7. `ProductCard.stories.tsx` covers eyebrow, badge, and no-quantity-stepper states; lint, typecheck, and build pass.
+1. Phase 9 is not planned for separate execution.
+2. Phase 11 documents the absorbed collection product card redesign work in `11-08-PLAN.md`.
+3. Future product-card work should be added as a new phase rather than reviving this superseded phase.
 
 **Plans:** 1 plan
 
 Plans:
 
-- [ ] 09-01: Collection product card layout improvements
+- [x] Superseded by Phase 11 / absorbed by 11-08
 
 ### Phase 5: Codebase Review Remediation
 
@@ -223,3 +219,14 @@ Plans:
 Plans:
 
 - [x] 08-01: Optimized listing quick-add affordance
+
+### Phase 12: optimize /blogs/teavision-blogs loading and image rendering
+
+**Goal:** Optimize `/blogs/teavision-blogs` loading and image rendering while preserving Phase 11 Tea Journal behavior and design.
+**Requirements**: TBD
+**Depends on:** Phase 11
+**Plans:** 2 plans
+
+Plans:
+- [ ] 12-01: Blog image rendering and preload discipline (Wave 1)
+- [ ] 12-02: Published Sanity CDN reads and default listing query trim (Wave 2; depends on 12-01)
