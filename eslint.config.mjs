@@ -32,6 +32,8 @@ const eslintConfig = defineConfig([
     'next-env.d.ts',
     // Git worktrees
     '.worktrees/**',
+    // Claude Code agent worktrees and local settings
+    '.claude/**',
     // Design mockup reference sources (not application code)
     'design/**',
     '.codex-temp/**',
