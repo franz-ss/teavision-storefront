@@ -299,6 +299,29 @@ className={cn(
 
 ---
 
+## Fix Log
+
+Fix pass: 2026-06-11 (scope: Warning findings WR-01..WR-10; Info findings intentionally not fixed).
+Verification: `pnpm lint` passed, `tsc --noEmit` clean, `pnpm test:unit` 89/89 passed, `pnpm test:integration` 20/20 passed.
+
+| Finding | Status | Commit | Notes |
+| ------- | ------ | ------ | ----- |
+| WR-01 | already resolved | — | `cart-line-actions.tsx` now captures the action result into `stepperState`, renders `stepperState.message` as a `role="alert"`, and dispatches `CART_CHANGED_EVENT` on `result.cartChanged`. Fixed by a commit after the review. |
+| WR-02 | fixed | 4f600f2 | Added `onClick={closeAll}` to the "Apply for Wholesale" and phone CTAs in `mobile-mega-nav.tsx`. |
+| WR-03 | fixed | 0b72cae | `PageContent` now passes `clearFiltersHref` into `ProductList`; "Clear filters" uses it and a separate "Contact us" link preserves the "we source to order" path. |
+| WR-04 | fixed (conservative) | e41e521 | Shopify's `cart.cost.totalAmount` was already preferred when it reflects the discount. Added per-line `isEstimated` tracking and an explicit "Bulk pricing estimated — final total confirmed at checkout" note under the Grand total when any derived bulk-tier estimate is displayed. Business decision still open: confirm quantity price breaks are catalog-level so Shopify honors them at checkout; needs human verification of the savings UI against a real checkout. |
+| WR-05 | fixed | b438644 | `QuantityStepper` keeps a draft string while editing and clamps on blur/Enter; +/- buttons and component API/aria unchanged. |
+| WR-06 | fixed | 53c4699 | `collections/[handle]/_components/hero.tsx` banner image now uses `loading="eager"` + `fetchPriority="high"` + `preload` (matching `product-gallery.tsx`). `banner-section.tsx` was already resolved (its `next/image` was removed). Out of finding scope but noted: `collection-rich-hero.tsx:39` and `pages/custom-tea-blends/_components/hero-section.tsx:53` still use deprecated `priority`. |
+| WR-07 | fixed | c1c3a4e | Converted static `style={{}}` in homepage hero, footer link-list, payment-mark, quality-column, and footer view to Tailwind classes (canonical spacing classes per `check-tailwind-classes.mjs`: `gap-2.75`, `px-2.25 py-1.25`, `mt-5.5 gap-2.5`). `newsletter.tsx` was already resolved upstream (style attributes and mis-citing comment no longer present). |
+| WR-08 | fixed | 34f1fe9 | All three bulk-wholesale-supply CTAs now point at canonical `/pages/wholesale`; `?view=` parameter dropped. Out of finding scope but noted: `/pages/wholesale-account-request` is still referenced from `collections` sidebar, FAQ banner, and `page-profile.ts` (it has a catch-all profile, so it may be intentional). |
+| WR-09 | fixed (focus trap deferred) | 974593d | Burger gets `aria-expanded`/`aria-controls="mobile-mega-nav"` (id added to nav container); `MobileMegaNav` gets Escape-close mirroring `SearchOverlay`; both overlays lock body scroll (`overflow-hidden` on `body` via effect) while open. Full focus trap deferred — no existing focus-trap utility in the codebase to reuse. |
+| WR-10 | fixed | 86f3ef6 | `QuickAddButton` extracted to `product-card/quick-add-button.tsx` with `'use client'` (prop narrowed to `productTitle`); `'use client'` removed from `product-card.tsx` so the card shell is server-rendered. `TrustSignalList` extracted to `cart/_components/trust-signal-list.tsx`. Note: `cart-view.tsx` carried pre-existing uncommitted working-tree changes (checkout-form rework) that ride along in this commit. |
+
+_Fixed: 2026-06-11_
+_Fixer: Claude (gsd-code-fixer)_
+
+---
+
 _Reviewed: 2026-06-11_
 _Reviewer: Claude (gsd-code-reviewer)_
 _Depth: standard_
