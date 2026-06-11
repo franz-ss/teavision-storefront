@@ -380,8 +380,8 @@ async function ProductContent({
         <div id="shopify-product-reviews" data-id={numericProductId} />
       </Section.Root>
 
-      {/* Product recommendations */}
-      <div className="mt-[clamp(50px,7vw,90px)] flex flex-col gap-10">
+      {/* Product recommendations — mb keeps the last carousel clear of the footer */}
+      <div className="my-[clamp(50px,7vw,90px)] flex flex-col gap-10">
         <Suspense fallback={null}>
           <RelatedProducts product={product} />
           <CustomersAlsoBought product={product} />

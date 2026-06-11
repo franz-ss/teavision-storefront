@@ -68,7 +68,10 @@ export async function RelatedProducts({ product }: { product: Product }) {
       <RelatedProductsCarousel
         products={products}
         heading={
-          <h2 id="related-products-title" className="type-heading-02 text-ink">
+          <h2
+            id="related-products-title"
+            className="font-display text-ink text-[1.4rem]"
+          >
             {RELATED_PRODUCTS_TITLE}
           </h2>
         }

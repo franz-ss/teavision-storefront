@@ -29,7 +29,7 @@ export async function CustomersAlsoBought({ product }: { product: Product }) {
             heading={
               <h2
                 id="customers-also-bought-title"
-                className="type-heading-02 text-ink"
+                className="font-display text-ink text-[1.4rem]"
               >
                 {CUSTOMERS_ALSO_BOUGHT_TITLE}
               </h2>
@@ -40,7 +40,7 @@ export async function CustomersAlsoBought({ product }: { product: Product }) {
       title={CUSTOMERS_ALSO_BOUGHT_TITLE}
       titleId="customers-also-bought-title"
       sectionClassName="border-t border-hairline pt-10"
-      headingClassName="type-heading-02 text-ink"
+      headingClassName="font-display text-ink text-[1.4rem]"
       {...(!searchanisePublicConfig.enabled || !searchanisePublicConfig.apiKey
         ? { fallbackDelayMs: 0 }
         : undefined)}
