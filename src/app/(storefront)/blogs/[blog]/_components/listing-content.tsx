@@ -8,7 +8,6 @@ import {
   findTagBySlug,
   getBlog,
   getDefaultBlogListing,
-  getFeaturedArticles,
   getUniqueArticleTags,
   normalizeBlogHandle,
   paginateArticles,
@@ -69,21 +68,13 @@ export async function ListingContent({ params, searchParams }: ListingProps) {
   const activeTag = findTagBySlug(tags, tag)
   if (tag && !activeTag) notFound()
 
-  const featuredArticles = getFeaturedArticles(
-    blogData.articles,
-    blogData.featuredArticles,
-  )
-  const featuredIds = new Set(featuredArticles.map((article) => article.id))
   const filteredArticles = filterArticles({
     articles: blogData.articles,
     activeTag,
     query: q,
   })
-  const mainArticles = filteredArticles.filter(
-    (article) => !featuredIds.has(article.id),
-  )
   const paginated = paginateArticles({
-    articles: mainArticles,
+    articles: filteredArticles,
     page: parseListingPage(page),
   })
   const articleGridHeading = activeTag
