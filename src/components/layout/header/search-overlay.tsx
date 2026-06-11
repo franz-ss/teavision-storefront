@@ -51,6 +51,14 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [open, onClose])
 
+  // Lock body scroll while the modal overlay is open
+  useEffect(() => {
+    if (!open) return
+
+    document.body.classList.add('overflow-hidden')
+    return () => document.body.classList.remove('overflow-hidden')
+  }, [open])
+
   if (!open) return null
 
   return (

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ChevronDown, ChevronRight, Phone } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button, DisclosureButton } from '@/components/ui'
 import { cn } from '@/lib/utils'
@@ -33,12 +33,37 @@ export function MobileMegaNav({ open, onClose }: MobileMegaNavProps) {
     onClose()
   }
 
+  // Close on Escape (mirrors SearchOverlay)
+  useEffect(() => {
+    if (!open) return
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setOpenMenu(null)
+        onClose()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [open, onClose])
+
+  // Lock body scroll while the full-screen overlay is open
+  useEffect(() => {
+    if (!open) return
+
+    document.body.classList.add('overflow-hidden')
+    return () => document.body.classList.remove('overflow-hidden')
+  }, [open])
+
   if (!open) return null
 
   return (
     // Overlay starts below the sticky header main bar (top-19 = 76px) so the
     // burger/X button in the main bar remains visible and tappable above it.
-    <div className="bg-paper fixed inset-x-0 top-19 bottom-0 z-55 overflow-y-auto lg:hidden">
+    <div
+      id="mobile-mega-nav"
+      className="bg-paper fixed inset-x-0 top-19 bottom-0 z-55 overflow-y-auto lg:hidden"
+    >
       {/* Body — the burger/X in the main bar above is the single close control */}
       <div className="flex flex-col">
         {/* Shop accordion */}

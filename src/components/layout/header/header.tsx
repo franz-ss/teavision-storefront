@@ -137,6 +137,8 @@ export function Header() {
               {/* Burger — mobile only */}
               <IconButton
                 aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={mobileOpen}
+                aria-controls="mobile-mega-nav"
                 variant="ghost"
                 size="md"
                 onClick={() => setMobileOpen((v) => !v)}
