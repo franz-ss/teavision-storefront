@@ -1,6 +1,7 @@
 'use client'
 
 import { Minus, Plus } from 'lucide-react'
+import { useState } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -65,8 +66,19 @@ export function QuantityStepper({
   const canIncrease =
     max === undefined ? !disabled : quantity + quantityStep <= max && !disabled
 
+  // Draft holds the raw text while the input is being edited so direct entry
+  // works when min/step > 1 — clamping only happens on blur or Enter.
+  const [draft, setDraft] = useState<string | null>(null)
+
   function updateQuantity(nextValue: number) {
     onChange(clampQuantity(nextValue, min, max, quantityStep))
+  }
+
+  function commitDraft() {
+    if (draft === null) return
+    const parsed = Number.parseInt(draft, 10)
+    updateQuantity(Number.isNaN(parsed) ? quantity : parsed)
+    setDraft(null)
   }
 
   const isRectangle = shape === 'rectangle'
@@ -110,10 +122,12 @@ export function QuantityStepper({
           min={min}
           max={max}
           step={quantityStep}
-          value={quantity}
-          onChange={(event) =>
-            updateQuantity(event.currentTarget.valueAsNumber)
-          }
+          value={draft ?? quantity}
+          onChange={(event) => setDraft(event.currentTarget.value)}
+          onBlur={commitDraft}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') commitDraft()
+          }}
           disabled={disabled}
           className="w-7 min-w-7 grow [appearance:textfield] bg-transparent text-center font-mono text-[13px] tabular-nums focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           aria-label={label}
