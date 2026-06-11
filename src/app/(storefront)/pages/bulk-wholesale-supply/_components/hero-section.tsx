@@ -25,11 +25,7 @@ export function HeroSection() {
               Melbourne, and pass through significant volume savings.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button
-                href="/pages/wholesale-account-request"
-                variant="brand"
-                size="lg"
-              >
+              <Button href="/pages/wholesale" variant="brand" size="lg">
                 Apply Now - Wholesale Account
               </Button>
               <Button href="tel:+611300729617" variant="secondary" size="lg">

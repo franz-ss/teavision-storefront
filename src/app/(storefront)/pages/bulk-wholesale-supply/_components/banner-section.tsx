@@ -11,7 +11,7 @@ export function BannerSection() {
           </p>
         </div>
         <Button
-          href="/pages/appi-compliance?view=bulk-wholesale-supply"
+          href="/pages/wholesale"
           variant="inverse"
           size="sm"
         >
