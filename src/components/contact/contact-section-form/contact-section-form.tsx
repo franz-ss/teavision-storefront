@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useTransition, type SubmitEvent } from 'react'
+import { useId, useRef, useState, useTransition, type SubmitEvent } from 'react'
 
 import { Button, FormLabel, Textarea, TextInput } from '@/components/ui'
 import type { ContactActionResult } from '@/lib/contact/types'
@@ -14,6 +14,7 @@ const DEFAULT_ERROR =
   'Unable to send your message right now. Please try again shortly.'
 
 export function ContactSectionForm({ action }: ContactSectionFormProps) {
+  const id = useId()
   const formRef = useRef<HTMLFormElement>(null)
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [error, setError] = useState('')
@@ -43,8 +44,7 @@ export function ContactSectionForm({ action }: ContactSectionFormProps) {
     })
   }
 
-  const messageId =
-    status === 'success' ? 'homepage-contact-success' : 'homepage-contact-error'
+  const messageId = status === 'success' ? `${id}-success` : `${id}-error`
   const hasMessage = status === 'success' || Boolean(error)
 
   return (
@@ -56,9 +56,9 @@ export function ContactSectionForm({ action }: ContactSectionFormProps) {
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
-          <FormLabel htmlFor="contact-name">Name</FormLabel>
+          <FormLabel htmlFor={`${id}-name`}>Name</FormLabel>
           <TextInput
-            id="contact-name"
+            id={`${id}-name`}
             name="name"
             required
             maxLength={100}
@@ -66,9 +66,9 @@ export function ContactSectionForm({ action }: ContactSectionFormProps) {
           />
         </div>
         <div className="grid gap-2">
-          <FormLabel htmlFor="contact-phone">Number</FormLabel>
+          <FormLabel htmlFor={`${id}-phone`}>Number</FormLabel>
           <TextInput
-            id="contact-phone"
+            id={`${id}-phone`}
             name="phone"
             inputMode="tel"
             autoComplete="tel"
@@ -78,9 +78,9 @@ export function ContactSectionForm({ action }: ContactSectionFormProps) {
         </div>
       </div>
       <div className="grid gap-2">
-        <FormLabel htmlFor="contact-email">Email</FormLabel>
+        <FormLabel htmlFor={`${id}-email`}>Email</FormLabel>
         <TextInput
-          id="contact-email"
+          id={`${id}-email`}
           name="email"
           type="email"
           inputMode="email"
@@ -91,9 +91,9 @@ export function ContactSectionForm({ action }: ContactSectionFormProps) {
         />
       </div>
       <div className="grid gap-2">
-        <FormLabel htmlFor="contact-message">Message</FormLabel>
+        <FormLabel htmlFor={`${id}-message`}>Message</FormLabel>
         <Textarea
-          id="contact-message"
+          id={`${id}-message`}
           name="message"
           required
           maxLength={2000}
@@ -103,7 +103,7 @@ export function ContactSectionForm({ action }: ContactSectionFormProps) {
       </div>
       <div className="sr-only" aria-hidden="true">
         <input
-          id="contact-website"
+          id={`${id}-website`}
           name="website"
           type="text"
           tabIndex={-1}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useTransition, type SubmitEvent } from 'react'
+import { useId, useRef, useState, useTransition, type SubmitEvent } from 'react'
 import { ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui'
@@ -17,6 +17,7 @@ const DEFAULT_ERROR =
 export function HomepageNewsletterForm({
   action,
 }: HomepageNewsletterFormProps) {
+  const id = useId()
   const formRef = useRef<HTMLFormElement>(null)
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [error, setError] = useState('')
@@ -46,10 +47,7 @@ export function HomepageNewsletterForm({
     })
   }
 
-  const messageId =
-    status === 'success'
-      ? 'homepage-newsletter-success'
-      : 'homepage-newsletter-error'
+  const messageId = status === 'success' ? `${id}-success` : `${id}-error`
   const hasMessage = status === 'success' || Boolean(error)
 
   return (
@@ -59,11 +57,11 @@ export function HomepageNewsletterForm({
       aria-busy={isPending}
       className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap"
     >
-      <label className="sr-only" htmlFor="homepage-newsletter-email">
+      <label className="sr-only" htmlFor={`${id}-email`}>
         Enter your email
       </label>
       <input
-        id="homepage-newsletter-email"
+        id={`${id}-email`}
         name="email"
         type="email"
         inputMode="email"
@@ -76,7 +74,7 @@ export function HomepageNewsletterForm({
       />
       <div className="sr-only" aria-hidden="true">
         <input
-          id="homepage-newsletter-website"
+          id={`${id}-website`}
           name="website"
           type="text"
           tabIndex={-1}
