@@ -26,7 +26,7 @@ Full phase details: `milestones/v1.0-ROADMAP.md` · Audit: `milestones/v1.0-MILE
 
 ### 🚧 Next milestone (scope TBD)
 
-- [ ] **Phase 12: Optimize /blogs/teavision-blogs loading and image rendering** — Optimize blog listing loading and image rendering while preserving Phase 11 Tea Journal behavior and design.
+- [x] **Phase 12: Optimize /blogs/teavision-blogs loading and image rendering** — Optimize blog listing loading and image rendering while preserving Phase 11 Tea Journal behavior and design. (completed 2026-06-11)
 
 ## Phase Details
 
@@ -35,7 +35,7 @@ Full phase details: `milestones/v1.0-ROADMAP.md` · Audit: `milestones/v1.0-MILE
 **Goal:** Optimize `/blogs/teavision-blogs` loading and image rendering while preserving Phase 11 Tea Journal behavior and design.
 **Requirements**: TBD
 **Depends on:** Phase 11
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 **Wave 1**
@@ -44,7 +44,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 12-02: Published Sanity CDN reads and default listing query trim (Wave 2; depends on 12-01)
+- [x] 12-02: Published Sanity CDN reads and default listing query trim (Wave 2; depends on 12-01)
 
 ## Progress
 
@@ -59,4 +59,4 @@ Plans:
 | 9. Collection Product Card Improvements  | v1.0      | —              | Superseded | 2026-06-11 |
 | 10. Cart/Checkout Critical Flow Tests    | v1.0      | 4/4            | Complete   | —          |
 | 11. Full Visual Redesign                 | v1.0      | 22/22          | Complete   | 2026-06-11 |
-| 12. Optimize blog loading                | next      | 1/2 | In Progress|  |
+| 12. Optimize blog loading                | next      | 2/2 | Complete   | 2026-06-11 |
