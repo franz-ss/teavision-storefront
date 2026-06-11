@@ -2,6 +2,11 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  env: {
+    // Build-time copyright year — avoids per-request new Date() in components,
+    // which breaks Next 16 prerendering. Refreshes on every build/deploy.
+    BUILD_YEAR: String(new Date().getFullYear()),
+  },
   async redirects() {
     return [
       {

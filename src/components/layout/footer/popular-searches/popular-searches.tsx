@@ -145,6 +145,10 @@ const POPULAR_SEARCH_COLUMNS = [
   ],
 ] as const
 
+// Inlined at build time via next.config.ts `env` — no per-request new Date()
+// (which would break Next 16 prerendering). Fallback covers test environments.
+const COPYRIGHT_YEAR = process.env.BUILD_YEAR ?? '2026'
+
 export type PopularSearchesProps = {
   paymentMethods: readonly PaymentMethod[]
 }
@@ -213,7 +217,9 @@ export function PopularSearches({ paymentMethods }: PopularSearchesProps) {
             role="list"
           >
             <li>
-              <span className="text-paper/75">&copy; 2026 Teavision</span>
+              <span className="text-paper/75">
+                &copy; {COPYRIGHT_YEAR} Teavision
+              </span>
             </li>
             <li aria-hidden="true" className="text-paper/30">
               ·
