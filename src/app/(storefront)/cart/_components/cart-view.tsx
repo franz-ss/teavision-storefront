@@ -14,17 +14,11 @@ import type { Cart, Money } from '@/lib/shopify/types'
 import { CartCheckoutForm } from './cart-checkout-form'
 import { CartLineActions } from './cart-line-actions'
 import { CartLineRemove } from './cart-line-remove'
+import { TrustSignalList } from './trust-signal-list'
 
 type CartViewProps = {
   cart: Cart | null
 }
-
-const TRUST_SIGNALS = [
-  '1,000+ businesses served',
-  'ACO Organic certified',
-  'HACCP certified',
-  'Sourced from 15+ countries',
-]
 
 const SAVINGS_EPSILON = 0.005
 
@@ -256,41 +250,6 @@ function isBulkDiscountAllocation(
   return title.includes('bulk') || title.includes('quantity')
 }
 
-function TrustSignalList({ layout }: { layout: 'inline' | 'stacked' }) {
-  if (layout === 'inline') {
-    return (
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-        {TRUST_SIGNALS.map((signal) => (
-          <span
-            key={signal}
-            className="type-caption text-ink-faint inline-flex items-center gap-1.5"
-          >
-            <Check
-              className="text-brand size-3.5 shrink-0"
-              aria-hidden="true"
-            />
-            {signal}
-          </span>
-        ))}
-      </div>
-    )
-  }
-
-  return (
-    <div className="border-hairline mt-4 space-y-2.5 border-t pt-4">
-      {TRUST_SIGNALS.map((signal) => (
-        <div key={signal} className="flex items-start gap-2">
-          <Check
-            className="text-brand mt-0.5 size-4 shrink-0"
-            aria-hidden="true"
-          />
-          <span className="type-caption text-ink-soft">{signal}</span>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 export function CartView({ cart }: CartViewProps) {
   if (!cart || cart.totalQuantity === 0) {
     return (
@@ -326,7 +285,7 @@ export function CartView({ cart }: CartViewProps) {
 
   return (
     <>
-      <div className="grid gap-8 pb-24 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-start xl:gap-10 xl:pb-0">
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-start xl:gap-10">
         <div className="min-w-0">
           {/* Desktop table header */}
           <div className="text-ink-faint border-hairline hidden border-b pb-3 xl:grid xl:grid-cols-[6rem_minmax(0,1fr)_7rem_10rem_7rem] xl:items-center xl:gap-x-6">
@@ -379,10 +338,7 @@ export function CartView({ cart }: CartViewProps) {
                         className="size-full object-cover"
                       />
                     ) : (
-                      <span
-                        className="block size-full"
-                        aria-hidden="true"
-                      />
+                      <span className="block size-full" aria-hidden="true" />
                     )}
                   </Link>
 
@@ -570,55 +526,15 @@ export function CartView({ cart }: CartViewProps) {
             </div>
           </div>
 
-          <div className="type-mono-meta text-ink-faint mt-3 flex items-center gap-1.5">
+          <div className="type-mono-meta text-ink-faint mt-3 flex items-center gap-3">
             <Truck className="size-3.5 shrink-0" aria-hidden="true" />
             <span>
               Free freight on wholesale orders over $300 · insured &amp; tracked
             </span>
           </div>
 
-          <div className="mt-5">
-            <Button
-              href={cart.checkoutUrl}
-              variant="brand"
-              size="lg"
-              className="w-full"
-              aria-label="Proceed to checkout"
-            >
-              Checkout
-            </Button>
-          </div>
-
           <TrustSignalList layout="stacked" />
         </aside>
-      </div>
-
-      {/* Sticky mobile checkout bar */}
-      <div
-        className="bg-card shadow-3 border-hairline fixed inset-x-0 bottom-0 z-40 border-t xl:hidden"
-        aria-label="Checkout"
-      >
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-          <div className="min-w-0">
-            <p className="type-mono-meta text-ink-faint">Grand total</p>
-            <p className="font-display text-ink text-xl tabular-nums">
-              <Price
-                price={cartDisplayPricing.subtotalPrice}
-                compareAtPrice={cartDisplayPricing.subtotalCompareAtPrice}
-                size="lg"
-              />
-            </p>
-          </div>
-          <Button
-            href={cart.checkoutUrl}
-            variant="brand"
-            size="cta"
-            className="shrink-0"
-            aria-label="Proceed to checkout"
-          >
-            Checkout
-          </Button>
-        </div>
       </div>
     </>
   )

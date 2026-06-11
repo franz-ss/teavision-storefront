@@ -1,6 +1,3 @@
-'use client'
-
-import { useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Leaf } from 'lucide-react'
@@ -9,11 +6,12 @@ import type {
   CollectionProductSummary,
   ProductSummary,
 } from '@/lib/shopify/types'
-import { Badge, Button, Price, StarRating } from '@/components/ui'
+import { Badge, Price, StarRating } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
 import { ProductQuickView } from '@/components/product/product-quick-view'
-import { useAddToCart } from '@/components/product/use-add-to-cart'
 import { cn } from '@/lib/utils'
+
+import { QuickAddButton } from './quick-add-button'
 
 // Tag heuristics for certification badges (CARD-03)
 function getCertBadges(tags: string[]): { organic: boolean; gold: boolean } {
@@ -33,51 +31,6 @@ type ProductCardProps = {
   product: ProductCardProduct
   priority?: boolean
   className?: string
-}
-
-// Inner quick-add button: client-only, single-variant products
-function QuickAddButton({
-  product,
-  variantId,
-}: {
-  product: ProductCardProduct
-  variantId: string
-}) {
-  const { addItem, error, isPending, message, resetFeedback } = useAddToCart()
-  const justAdded = !!message && !isPending
-
-  useEffect(() => {
-    if (!message) return
-    const timer = setTimeout(resetFeedback, 2500)
-    return () => clearTimeout(timer)
-  }, [message, resetFeedback])
-
-  return (
-    <>
-      <Button
-        type="button"
-        variant="primary"
-        size="sm"
-        onClick={() => addItem(variantId, 1)}
-        disabled={isPending || justAdded}
-        isLoading={isPending}
-        className="w-full"
-        aria-label={
-          justAdded ? `${product.title} added` : `Add ${product.title} to cart`
-        }
-      >
-        {justAdded ? 'Added' : 'Add to cart'}
-      </Button>
-      <p role="status" className="sr-only">
-        {justAdded ? message : ''}
-      </p>
-      {error && (
-        <p role="alert" className="type-body-sm text-danger sr-only">
-          {error}
-        </p>
-      )}
-    </>
-  )
 }
 
 export function ProductCard({
@@ -151,7 +104,7 @@ export function ProductCard({
           >
             {singleAvailableVariant ? (
               <QuickAddButton
-                product={product}
+                productTitle={product.title}
                 variantId={singleAvailableVariant.id}
               />
             ) : (
