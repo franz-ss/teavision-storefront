@@ -30,11 +30,13 @@ import {
   isVendorFilter,
   normalizeHtml,
   paramValues,
+  parseCollectionRichHero,
   parseSelectedFilterParams,
   shouldRenderRichDescription,
   SORT_MAP,
 } from '../_lib/page-helpers'
 import type { PageProps } from '../_lib/page-types'
+import { CollectionRichHero } from './collection-rich-hero'
 import { Hero } from './hero'
 import { JsonLd } from './json-ld'
 import { ProductList } from './product-list'
@@ -147,6 +149,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
     collection.descriptionHtml,
     collection.description,
   )
+  const richHero = parseCollectionRichHero(collection.descriptionHtml)
 
   return (
     <>
@@ -157,20 +160,24 @@ export async function PageContent({ params, searchParams }: PageProps) {
         products={products}
       />
 
-      <Hero
-        collectionTitle={collection.title}
-        heroDescription={heroDescription}
-        heroImage={heroImage}
-        bannerImage={bannerImage}
-        storyDisclosure={
-          hasRichDescription ? (
-            <StoryDisclosure
-              title={`Read more about ${collection.title}`}
-              html={sanitizedRichDescriptionHtml}
-            />
-          ) : null
-        }
-      />
+      {richHero ? (
+        <CollectionRichHero richHero={richHero} />
+      ) : (
+        <Hero
+          collectionTitle={collection.title}
+          heroDescription={heroDescription}
+          heroImage={heroImage}
+          bannerImage={bannerImage}
+          storyDisclosure={
+            hasRichDescription ? (
+              <StoryDisclosure
+                title={`Read more about ${collection.title}`}
+                html={sanitizedRichDescriptionHtml}
+              />
+            ) : null
+          }
+        />
+      )}
 
       <Section.Root tone="transparent" className="pt-8 md:pt-10">
         <Section.Container>

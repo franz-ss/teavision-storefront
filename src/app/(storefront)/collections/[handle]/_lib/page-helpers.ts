@@ -15,12 +15,27 @@ export type HeroImage = {
   height: number | null
 }
 
+export type CollectionRichHeroAction = {
+  href: string
+  label: string
+}
+
+export type CollectionRichHero = {
+  title: string
+  introHtml: string
+  image: HeroImage
+  actions: CollectionRichHeroAction[]
+  highlightAction: CollectionRichHeroAction
+  footnote: string | null
+}
+
 const LEGACY_COLLECTION_BANNER_BLOCK_PATTERN =
   /<div\b[^>]*\bid=["']kk-collection-banner["'][^>]*>[\s\S]*?<h1\b[\s\S]*?<\/h1>\s*<\/div>/gi
 
 const LEGACY_READ_MORE_LINK_PATTERN =
   /<a\b(?=[^>]*(?:\bid=["']show-(?:more|less)["']|\bhref=["']#read-(?:more|less)["']))[^>]*>[\s\S]*?<\/a>/gi
 
+const RICH_HERO_MARKER_CLASS = ['bulk', 'header'].join('-')
 const CATEGORY_TAG_PREFIX = 'categories_'
 const IMAGE_TAG_PATTERN = /<img\b[^>]*>/i
 const ATTRIBUTE_PATTERN =
@@ -80,6 +95,10 @@ function decodeHtmlAttribute(value: string): string {
     .replace(/&gt;/g, '>')
 }
 
+function decodeHtmlText(value: string): string {
+  return decodeHtmlAttribute(value).replace(/\u00a0/g, ' ')
+}
+
 function getHtmlAttribute(tag: string, name: string): string | null {
   ATTRIBUTE_PATTERN.lastIndex = 0
 
@@ -90,6 +109,85 @@ function getHtmlAttribute(tag: string, name: string): string | null {
   }
 
   return null
+}
+
+function getClassNames(tag: string): string[] {
+  return (getHtmlAttribute(tag, 'class') ?? '')
+    .split(/\s+/)
+    .map((className) => className.trim())
+    .filter(Boolean)
+}
+
+function getRichHeroSectionHtml(descriptionHtml: string): string | null {
+  const sectionPattern = /<section\b[^>]*>[\s\S]*?<\/section>/gi
+
+  for (const match of descriptionHtml.matchAll(sectionPattern)) {
+    const sectionHtml = match[0]
+    const openingTag = sectionHtml.match(/<section\b[^>]*>/i)?.[0]
+    if (!openingTag) continue
+    if (getClassNames(openingTag).includes(RICH_HERO_MARKER_CLASS)) {
+      return sectionHtml
+    }
+  }
+
+  return null
+}
+
+function getTagInnerHtml(html: string, tagName: string): string[] {
+  const tagPattern = new RegExp(
+    `<${tagName}\\b[^>]*>([\\s\\S]*?)<\\/${tagName}>`,
+    'gi',
+  )
+
+  return Array.from(html.matchAll(tagPattern), (match) => match[1] ?? '')
+}
+
+function stripHtmlTags(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function textFromInlineHtml(html: string): string {
+  return decodeHtmlText(stripHtmlTags(html))
+}
+
+function sanitizeInlineHtml(html: string): string {
+  const allowedInlineTags = new Set(['b', 'em', 'i', 'strong'])
+
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<\/?([a-z0-9]+)\b[^>]*>/gi, (tag, tagName: string) => {
+      const normalizedTagName = tagName.toLowerCase()
+      if (!allowedInlineTags.has(normalizedTagName)) return ''
+
+      return tag.startsWith('</')
+        ? `</${normalizedTagName}>`
+        : `<${normalizedTagName}>`
+    })
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function getRichHeroActions(sectionHtml: string): CollectionRichHeroAction[] {
+  const linkPattern = /<a\b[^>]*>[\s\S]*?<\/a>/gi
+
+  return Array.from(sectionHtml.matchAll(linkPattern), (match) => {
+    const linkHtml = match[0]
+    const openingTag = linkHtml.match(/<a\b[^>]*>/i)?.[0] ?? ''
+    const href = getHtmlAttribute(openingTag, 'href') ?? ''
+    const label = textFromInlineHtml(linkHtml)
+
+    return { href, label }
+  }).filter((action) => action.href && action.label)
+}
+
+function isFootnoteText(value: string): boolean {
+  return value.toLowerCase().startsWith('minimum order quantity:')
 }
 
 function normalizeImageSource(source: string): string {
@@ -140,6 +238,44 @@ export function getDescriptionHeroImage(
       parsePositiveInteger(getHtmlAttribute(imageTag, 'height')) ??
       sourceSize.height ??
       DEFAULT_DESCRIPTION_HERO_IMAGE.height,
+  }
+}
+
+export function parseCollectionRichHero(
+  descriptionHtml: string,
+): CollectionRichHero | null {
+  const sectionHtml = getRichHeroSectionHtml(descriptionHtml)
+  if (!sectionHtml) return null
+
+  const title = textFromInlineHtml(getTagInnerHtml(sectionHtml, 'h1')[0] ?? '')
+  const image = getDescriptionHeroImage(sectionHtml)
+  const paragraphHtml = getTagInnerHtml(sectionHtml, 'p')
+  const introHtml = paragraphHtml.find(
+    (paragraph) => !isFootnoteText(textFromInlineHtml(paragraph)),
+  )
+  const footnote =
+    paragraphHtml.map(textFromInlineHtml).find(isFootnoteText) ?? null
+  const actions = getRichHeroActions(sectionHtml)
+  const primaryActions = actions.slice(0, 2)
+  const highlightAction = actions[2]
+
+  if (
+    !title ||
+    !introHtml ||
+    !image ||
+    primaryActions.length !== 2 ||
+    !highlightAction
+  ) {
+    return null
+  }
+
+  return {
+    title,
+    introHtml: sanitizeInlineHtml(introHtml),
+    image,
+    actions: primaryActions,
+    highlightAction,
+    footnote,
   }
 }
 
