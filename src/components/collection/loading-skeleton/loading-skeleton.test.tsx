@@ -12,6 +12,8 @@ describe('LoadingSkeleton', () => {
     expect(html).toContain('role="status"')
     expect(html).toContain('aria-live="polite"')
     expect(html).toContain('Loading collection')
+    expect(html).toContain('data-skeleton="hero"')
+    expect(html).toContain('data-skeleton="story-disclosure"')
     expect(html.match(/data-skeleton="product"/g)).toHaveLength(4)
     expect(html.match(/data-skeleton="sidebar"/g)).toHaveLength(3)
   })

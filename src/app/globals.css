@@ -13,6 +13,7 @@
   --color-paper-2: oklch(95.2% 0.012 90);
   --color-paper-3: oklch(92.8% 0.016 88);
   --color-card: oklch(99.2% 0.004 92);
+  --color-white: white;
 
   /* Ink (green undertone — warm/botanical compliant) */
   --color-ink: oklch(22.5% 0.016 167);

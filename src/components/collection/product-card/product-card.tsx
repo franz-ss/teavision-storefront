@@ -98,7 +98,7 @@ export function ProductCard({
   return (
     <article className={cn('group relative flex flex-col', className)}>
       {/* Media block */}
-      <div className="bg-paper-2 relative aspect-[1/1.12] overflow-hidden rounded-lg">
+      <div className="bg-white relative aspect-square overflow-hidden rounded-lg">
         <Link
           href={productUrl}
           tabIndex={-1}
@@ -115,7 +115,7 @@ export function ProductCard({
               loading={priority ? 'eager' : 'lazy'}
               fetchPriority={priority ? 'high' : 'auto'}
               sizes="(min-width: 1280px) 340px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 50vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.06] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              className="object-contain transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />
           ) : (
             <div

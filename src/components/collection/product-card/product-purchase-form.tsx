@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type SubmitEvent } from 'react'
 
 import type { ProductVariant } from '@/lib/shopify/types'
 import { Button, Price, QuantityStepper, Select } from '@/components/ui'
@@ -96,7 +96,7 @@ export function ProductPurchaseForm({
     resetFeedback()
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!selectedVariant || !canAddToCart) return
 

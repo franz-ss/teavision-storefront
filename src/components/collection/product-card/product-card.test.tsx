@@ -80,12 +80,25 @@ describe('ProductCard', () => {
   it('renders the approved vertical card layout (.pcard)', () => {
     const html = renderToStaticMarkup(<ProductCard product={product} />)
 
-    // Media is vertical aspect ratio
-    expect(html).toContain('aspect-[1/1.12]')
+    // Media is square so Shopify product-photo canvases do not feel stretched.
+    expect(html).toContain('aspect-square')
+    expect(html).not.toContain('aspect-[1/1.12]')
+    // Product photos sit on a full media plate rather than floating on the page.
+    expect(html).toContain('bg-white')
+    expect(html).not.toContain('mix-blend-multiply')
+    expect(html).not.toContain('bg-card')
+    expect(html).not.toContain('bg-paper-2')
     // Title uses display font (lockstep with UI-SPEC §5.5)
     expect(html).toContain(
       '<h3 class="font-display my-1.5 text-[1.2rem] leading-[1.1]">',
     )
+    // Product imagery is contained so pack shots are not cropped/zoomed in.
+    expect(html).toContain('object-contain')
+    expect(html).toContain('group-hover:scale-[1.02]')
+    expect(html).not.toContain('object-cover')
+    expect(html).not.toContain('group-hover:scale-[1.06]')
+    expect(html).not.toContain('p-3')
+    expect(html).not.toContain('sm:p-4')
     // Price rendered
     expect(html).toContain('$12.00')
     // Type-mono-meta eyebrow for productType (CARD-02)
@@ -146,7 +159,7 @@ describe('ProductCard', () => {
     )
 
     // Same approved layout
-    expect(html).toContain('aspect-[1/1.12]')
+    expect(html).toContain('aspect-square')
     expect(html).toContain('$12.00')
     // Unknown variants → Quick View trigger instead of quick-add
     expect(html).toContain('Quick View')

@@ -20,29 +20,60 @@ export function LoadingSkeleton({
       aria-busy="true"
     >
       <span className="sr-only">Loading collection</span>
-      <Section.Root tone="brand" spacing="none">
-        <Section.Container className="grid min-h-90 w-full items-end py-12 md:min-h-107.5 md:py-16">
-          <div className="max-w-3xl" aria-hidden="true">
-            <div className="bg-paper/20 h-4 w-36 animate-pulse rounded motion-reduce:animate-none" />
-            <div className="bg-paper/20 mt-5 h-14 w-3/4 animate-pulse rounded motion-reduce:animate-none md:h-18" />
-            <div className="mt-5 flex max-w-2xl flex-col gap-3">
-              <div className="bg-paper/20 h-4 w-full animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-paper/20 h-4 w-10/12 animate-pulse rounded motion-reduce:animate-none" />
-            </div>
+      <Section.Root tone="transparent" spacing="none">
+        <Section.Container className="pt-6">
+          <div className="overflow-hidden" aria-hidden="true">
+            <div
+              className="bg-paper-2 aspect-16/7 w-full animate-pulse motion-reduce:animate-none"
+              data-skeleton="hero"
+            />
           </div>
         </Section.Container>
       </Section.Root>
-      <Section.Root tone="transparent" spacing="none" className="pt-8 md:pt-10">
+      <Section.Root tone="transparent" spacing="none">
         <Section.Container>
           <div
-            className="mb-6 flex flex-wrap items-center justify-between gap-4"
+            className="flex flex-wrap items-center gap-2 pt-5.5"
             aria-hidden="true"
           >
-            <div className="bg-paper-2 h-10 w-40 animate-pulse rounded motion-reduce:animate-none" />
-            <div className="bg-paper-2 h-10 w-48 animate-pulse rounded motion-reduce:animate-none" />
+            <div className="bg-paper-2 h-3 w-10 animate-pulse rounded motion-reduce:animate-none" />
+            <div className="bg-paper-2 h-3 w-1.5 animate-pulse rounded motion-reduce:animate-none" />
+            <div className="bg-paper-2 h-3 w-20 animate-pulse rounded motion-reduce:animate-none" />
+            <div className="bg-paper-2 h-3 w-1.5 animate-pulse rounded motion-reduce:animate-none" />
+            <div className="bg-paper-2 h-3 w-72 max-w-full animate-pulse rounded motion-reduce:animate-none" />
+          </div>
+        </Section.Container>
+      </Section.Root>
+      <Section.Root tone="transparent" spacing="compact">
+        <Section.Container>
+          <div
+            className="bg-paper border-hairline h-14 animate-pulse rounded-lg border motion-reduce:animate-none"
+            aria-hidden="true"
+            data-skeleton="story-disclosure"
+          />
+        </Section.Container>
+      </Section.Root>
+      <Section.Root tone="transparent" className="pt-8 md:pt-10">
+        <Section.Container>
+          <div className="mb-6" aria-hidden="true">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div className="bg-paper-2 h-3 w-24 animate-pulse rounded motion-reduce:animate-none" />
+              <div className="bg-paper-2 h-10 w-42 animate-pulse rounded motion-reduce:animate-none" />
+            </div>
+
+            <div className="bg-paper border-hairline mt-2 h-12 animate-pulse rounded-lg border motion-reduce:animate-none lg:hidden" />
           </div>
           <div className="grid gap-10 lg:grid-cols-[252px_1fr] lg:items-start">
-            <div className="hidden flex-col gap-3 lg:flex" aria-hidden="true">
+            <div className="hidden gap-5 lg:grid" aria-hidden="true">
+              <div className="bg-brand-tint border-brand/20 rounded-lg border p-5.5">
+                <div className="bg-paper/70 h-6 w-36 animate-pulse rounded motion-reduce:animate-none" />
+                <div className="mt-3 grid gap-2">
+                  <div className="bg-paper/70 h-3 w-full animate-pulse rounded motion-reduce:animate-none" />
+                  <div className="bg-paper/70 h-3 w-11/12 animate-pulse rounded motion-reduce:animate-none" />
+                  <div className="bg-paper/70 h-3 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
+                </div>
+                <div className="bg-brand/20 mt-4 h-10 w-full animate-pulse rounded-full motion-reduce:animate-none" />
+              </div>
               {Array.from({ length: sidebarRowCount }, (_, index) => (
                 <div
                   key={index}
@@ -62,10 +93,11 @@ export function LoadingSkeleton({
                   className="border-hairline-2"
                   data-skeleton="product"
                 >
-                  <div className="bg-paper-2 aspect-3/4 animate-pulse rounded-lg motion-reduce:animate-none" />
-                  <div className="mt-3 flex flex-col gap-2">
-                    <div className="bg-paper-2 h-4 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
-                    <div className="bg-paper-2 h-4 w-1/2 animate-pulse rounded motion-reduce:animate-none" />
+                  <div className="bg-paper-2 aspect-25/28 animate-pulse rounded-lg motion-reduce:animate-none" />
+                  <div className="pt-4">
+                    <div className="bg-paper-2 mb-1 h-3 w-18 animate-pulse rounded motion-reduce:animate-none" />
+                    <div className="bg-paper-2 my-1.5 h-6 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
+                    <div className="bg-paper-2 mt-1.5 h-4 w-20 animate-pulse rounded motion-reduce:animate-none" />
                   </div>
                 </li>
               ))}

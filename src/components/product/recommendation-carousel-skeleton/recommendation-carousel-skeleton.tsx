@@ -24,7 +24,7 @@ export function RecommendationCarouselSkeleton({
             className="min-w-0 flex-[0_0_100%] pl-4 min-[360px]:flex-[0_0_50%] sm:flex-[0_0_33.333333%] lg:flex-[0_0_25%]"
           >
             <div className="flex h-full flex-col">
-              <div className="bg-paper-2 aspect-[1/1.12] animate-pulse rounded-lg motion-reduce:animate-none" />
+              <div className="bg-paper-2 aspect-square animate-pulse rounded-lg motion-reduce:animate-none" />
               <div className="flex flex-col pt-4">
                 <div className="bg-paper-2 h-3 w-28 animate-pulse rounded motion-reduce:animate-none" />
                 <div className="bg-paper-2 my-1.5 h-5 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
