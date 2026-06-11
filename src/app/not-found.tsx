@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 import { Button, Eyebrow } from '@/components/ui'
 import { Section } from '@/components/ui/section/section'
@@ -9,7 +10,6 @@ import { cn } from '@/lib/utils'
 export const metadata: Metadata = withNoindexRobots({
   title: '404 — Page Not Found | Teavision',
   description: "The page you're looking for has moved or never existed.",
-  robots: { index: false },
 })
 
 export default function NotFound() {
@@ -60,7 +60,7 @@ export default function NotFound() {
                 { label: 'Matcha', handle: 'matcha' },
                 { label: 'Chai', handle: 'chai' },
               ].map(({ label, handle }) => (
-                <a
+                <Link
                   key={handle}
                   href={`/collections/${handle}`}
                   className={cn(
@@ -70,7 +70,7 @@ export default function NotFound() {
                   )}
                 >
                   {label}
-                </a>
+                </Link>
               ))}
             </div>
           </div>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Eyebrow, Section } from '@/components/ui'
-import { ContactSection } from '@/components/contact/contact-section'
+import { ContactSection } from '@/components/contact'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 import type { CollectionSummary } from '@/lib/shopify/types'
 import { submitContactFormAction } from '@/lib/contact/actions'

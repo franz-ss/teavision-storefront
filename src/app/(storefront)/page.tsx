@@ -14,7 +14,7 @@ import {
   TeaJournal,
   Testimonials,
 } from '@/components/homepage'
-import { ContactSection } from '@/components/contact/contact-section'
+import { ContactSection } from '@/components/contact'
 import {
   ctaCatalogueData,
   organizationJsonLd,

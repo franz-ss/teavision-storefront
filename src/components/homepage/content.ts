@@ -1,6 +1,6 @@
 import { SITE_URL } from '@/lib/seo/site-url'
 
-import { CtaProps } from './catalogues'
+import type { CtaProps } from './catalogues'
 
 export type ImageAsset = {
   src: string

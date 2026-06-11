@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 
@@ -196,12 +197,12 @@ export function PopularSearches({ paymentMethods }: PopularSearchesProps) {
               >
                 {column.map((link) => (
                   <li key={`${link.href}-${link.label}`}>
-                    <a
+                    <Link
                       href={link.href}
                       className="text-paper/88 block underline-offset-3 transition-colors hover:text-paper hover:underline focus-visible:ring-ring focus-visible:ring-offset-ink focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
