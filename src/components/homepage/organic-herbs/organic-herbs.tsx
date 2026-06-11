@@ -14,9 +14,24 @@ const HERB_CHECKLIST = [
 
 export function OrganicHerbs() {
   return (
-    <Section.Root tone="sunken">
-      <Section.Container className="grid gap-10 lg:grid-cols-2 lg:items-center">
-        <div>
+    // Original-site layout: the herbs photo IS the section background,
+    // anchored right; the copy sits over the photo's light left half.
+    <Section.Root tone="sunken" className="relative isolate overflow-hidden">
+      <Image
+        src={HERBS_IMAGE.src}
+        alt=""
+        aria-hidden="true"
+        fill
+        sizes="100vw"
+        className="absolute inset-0 -z-20 object-cover object-right"
+      />
+      {/* Left-to-right fade keeps the copy legible at every width */}
+      <div
+        aria-hidden="true"
+        className="from-paper-2 via-paper-2/85 absolute inset-0 -z-10 bg-linear-to-r via-35% to-transparent"
+      />
+      <Section.Container>
+        <div className="max-w-xl py-6 lg:py-14">
           <h2 className="type-heading-02">
             Wild Grown &amp; Certified Organic Herbs
           </h2>
@@ -48,16 +63,6 @@ export function OrganicHerbs() {
               Learn More
             </Button>
           </div>
-        </div>
-        <div className="shadow-2 overflow-hidden rounded-lg">
-          <Image
-            src={HERBS_IMAGE.src}
-            alt={HERBS_IMAGE.alt}
-            width={HERBS_IMAGE.width}
-            height={HERBS_IMAGE.height}
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="aspect-3/2 h-full w-full object-cover"
-          />
         </div>
       </Section.Container>
     </Section.Root>
