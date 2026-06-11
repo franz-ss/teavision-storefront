@@ -157,4 +157,4 @@ Recent decisions affecting current work:
 
 Last session: 2026-06-11T10:11:11.369Z
 Stopped at: Phase 12 context gathered
-Resume file: .planning/phases/teavision-12-optimize-blogs-teavision-blogs-loading-and-image-rendering/12-CONTEXT.md
+Resume file: .planning/phases/12-optimize-blogs-teavision-blogs-loading-and-image-rendering/12-CONTEXT.md

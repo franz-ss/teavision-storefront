@@ -228,5 +228,10 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
+**Wave 1**
+
 - [ ] 12-01: Blog image rendering and preload discipline (Wave 1)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 12-02: Published Sanity CDN reads and default listing query trim (Wave 2; depends on 12-01)
