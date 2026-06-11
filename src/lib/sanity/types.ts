@@ -131,14 +131,25 @@ export type SanityBlogListingResult = {
 }
 
 /**
+ * Tag arrays from all published articles — used to compute unique tag navigation.
+ * Only categories and tags fields; no body or image data.
+ */
+export type SanityArticleTagArrays = {
+  categories: (string | null)[] | null
+  tags: string[] | null
+}
+
+/**
  * Result shape for the light default-listing query.
  * articles contains only the first page of latest articles (no bodyText).
  * totalCount is the full article count for pagination UI.
+ * allTagArrays provides the raw tag/category data needed for tag navigation.
  */
 export type SanityDefaultBlogListingResult = {
   blog: SanityBlog | null
   articles: Omit<SanityBlogPostSummary, 'bodyText'>[]
   totalCount: number
+  allTagArrays: SanityArticleTagArrays[]
 }
 
 export type SanityBlogPostResult = {

@@ -182,7 +182,16 @@ export const defaultBlogListingQuery = groq`
       blog->slug.current == $blogHandle &&
       publishedAt <= now() &&
       !(_id in *[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref)
-    ])
+    ]),
+    "allTagArrays": *[
+      _type == "blogPost" &&
+      defined(slug.current) &&
+      blog->slug.current == $blogHandle &&
+      publishedAt <= now()
+    ]{
+      "categories": categories[]->.title,
+      tags
+    }
   }
 `
 

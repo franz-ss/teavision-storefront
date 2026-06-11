@@ -93,7 +93,8 @@ export type PaginatedArticles = {
  * Lightweight listing result for the unfiltered default /blogs/[handle] route.
  * articles contains only the first page of latest articles (no bodyText).
  * featuredArticles contains up to 2 configured featured articles.
- * pagination contains server-computed pagination metadata for the non-featured remainder.
+ * paginated contains server-computed pagination metadata for the non-featured remainder.
+ * allTags is the deduplicated union of all article categories and tags for tag navigation.
  *
  * Tag/search pages use getBlog() + in-memory filtering instead of this type.
  */
@@ -106,6 +107,7 @@ export type DefaultBlogListing = {
   seo: BlogSeo
   featuredArticles: BlogArticleSummary[]
   paginated: PaginatedArticles
+  allTags: string[]
 }
 
 // Bounded Sanity image URL options by use case.
@@ -484,6 +486,14 @@ export async function getDefaultBlogListing(
   const currentPage = Math.min(Math.max(1, page), totalPages)
   const description = data.blog.description?.trim() ?? ''
 
+  // Derive all unique tags from the lightweight allTagArrays subquery
+  const allTags = uniqueLabels(
+    (data.allTagArrays ?? []).flatMap((entry) => [
+      ...(entry.categories ?? []).filter((v): v is string => Boolean(v)),
+      ...(entry.tags ?? []).filter((v): v is string => Boolean(v)),
+    ]),
+  ).sort((a, b) => a.localeCompare(b, 'en-AU', { sensitivity: 'base' }))
+
   return {
     id: data.blog._id,
     handle: data.blog.slug ?? normalizedHandle,
@@ -498,6 +508,7 @@ export async function getDefaultBlogListing(
       totalPages,
       totalArticles,
     },
+    allTags,
   }
 }
 

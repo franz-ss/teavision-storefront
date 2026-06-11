@@ -7,6 +7,7 @@ import {
   filterArticles,
   findTagBySlug,
   getBlog,
+  getDefaultBlogListing,
   getFeaturedArticles,
   getUniqueArticleTags,
   normalizeBlogHandle,
@@ -20,6 +21,47 @@ import { BlogNewsletterBand } from './blog-newsletter-band'
 export async function ListingContent({ params, searchParams }: ListingProps) {
   const [{ blog, tag }, { page, q }] = await Promise.all([params, searchParams])
   const normalizedBlog = normalizeBlogHandle(blog)
+  const normalizedQuery = q?.trim() ?? ''
+  const isFiltered = Boolean(tag || normalizedQuery)
+
+  // Use the light default-listing path for the unfiltered default listing.
+  // Tag pages and search queries keep the full getBlog() path for in-memory filtering.
+  if (!isFiltered) {
+    const currentPage = parseListingPage(page)
+    const listingData = await getDefaultBlogListing(normalizedBlog, currentPage)
+    if (!listingData) notFound()
+
+    const articleGridHeading = 'Latest Articles'
+
+    return (
+      <>
+        {listingData.featuredArticles.length > 0 && (
+          <FeaturedArticles
+            articles={listingData.featuredArticles}
+            blogHandle={normalizedBlog}
+          />
+        )}
+
+        <ArticleResults
+          activeTag={null}
+          blogHandle={normalizedBlog}
+          heading={articleGridHeading}
+          paginated={listingData.paginated}
+          query={null}
+          tags={listingData.allTags}
+          className={
+            listingData.featuredArticles.length > 0 ? 'pt-0' : undefined
+          }
+        />
+
+        <BlogNewsletterBand />
+        <ContactSection action={submitContactFormAction} />
+      </>
+    )
+  }
+
+  // Filtered path: tag pages and ?q= search use the full getBlog() result
+  // for in-memory filtering, counting, and pagination.
   const blogData = await getBlog(normalizedBlog)
   if (!blogData) notFound()
 
@@ -37,30 +79,19 @@ export async function ListingContent({ params, searchParams }: ListingProps) {
     activeTag,
     query: q,
   })
-  const normalizedQuery = q?.trim() ?? ''
-  const isFiltered = Boolean(activeTag || normalizedQuery)
-  const mainArticles = isFiltered
-    ? filteredArticles
-    : filteredArticles.filter((article) => !featuredIds.has(article.id))
+  const mainArticles = filteredArticles.filter(
+    (article) => !featuredIds.has(article.id),
+  )
   const paginated = paginateArticles({
     articles: mainArticles,
     page: parseListingPage(page),
   })
   const articleGridHeading = activeTag
     ? `${activeTag} Articles`
-    : normalizedQuery
-      ? 'Search Results'
-      : 'Latest Articles'
+    : 'Search Results'
 
   return (
     <>
-      {!isFiltered && featuredArticles.length > 0 && (
-        <FeaturedArticles
-          articles={featuredArticles}
-          blogHandle={normalizedBlog}
-        />
-      )}
-
       <ArticleResults
         activeTag={activeTag}
         blogHandle={normalizedBlog}
@@ -68,9 +99,6 @@ export async function ListingContent({ params, searchParams }: ListingProps) {
         paginated={paginated}
         query={q}
         tags={tags}
-        className={
-          !isFiltered && featuredArticles.length > 0 ? 'pt-0' : undefined
-        }
       />
 
       <BlogNewsletterBand />
