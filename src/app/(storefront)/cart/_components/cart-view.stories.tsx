@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, within } from 'storybook/test'
+import { expect, userEvent, within } from 'storybook/test'
 
 import {
   makeCart,
@@ -69,9 +69,22 @@ export const SingleItem: Story = {
     await expect(
       canvas.getByText(/When ordering in sizes over 1kg/),
     ).toBeVisible()
+    await expect(canvas.getByLabelText('Order notes')).toBeVisible()
+    await expect(
+      canvas.getByLabelText('I have read and agree to the Terms and Conditions'),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('button', { name: 'Proceed to checkout' }),
+    ).toBeDisabled()
+
+    await userEvent.click(
+      canvas.getByLabelText('I have read and agree to the Terms and Conditions'),
+    )
+
     const checkoutLinks = canvas.getAllByRole('link', {
       name: 'Proceed to checkout',
     })
+    await expect(checkoutLinks).toHaveLength(1)
     await expect(checkoutLinks[0]).toHaveAttribute(
       'href',
       'https://checkout.test/cart/test-cart',

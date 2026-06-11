@@ -60,6 +60,7 @@ Key routes:
 - The palette is warm/botanical — never introduce cool grays
 - Extract a React component only when it creates a useful reuse boundary, isolates interactive state, or deserves Storybook coverage. Keep tiny single-owner markup inline in its owning component.
 - One React component per file once extracted; only non-component types, constants, and pure helper functions may stay colocated.
+- Do not repeat parent directory context in filenames. If a file already lives in `cart/`, do not prefix it with `cart-`; prefer `view.tsx`, `loading-skeleton.tsx`, or `summary.tsx` over `cart-view.tsx`, `cart-loading-skeleton.tsx`, or `cart-summary.tsx`. Export names may still include domain context when helpful.
 
 ### Environment variables
 
@@ -84,6 +85,7 @@ These anti-patterns are explicitly banned — they override any default AI behav
 - No className string concatenation or `filter(Boolean).join(' ')` — always use `cn()` from `@/lib/utils`
 - No `'use client'` on parent/wrapper components — push it down to the interactive leaf
 - No multiple React component declarations in one file; inline trivial single-owner markup instead of creating tiny helper components
+- No redundant domain or route prefixes in filenames when the parent folder already provides that context, e.g. no `cart-*` files inside a `cart/` folder
 - No new CSS modules, styled-components, or `style={{}}` attributes
 - No direct imports from `src/lib/shopify/types/generated/` — import via `src/lib/shopify/types/index.ts`
 - No recreating root-level `app/`, `components/`, or `lib/`; application code lives in `src/`

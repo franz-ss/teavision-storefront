@@ -41,6 +41,18 @@ Canonical reference for this codebase. Check here before adding files.
 
 File name and export name are different things. `product-card.tsx` exports `ProductCard`.
 
+Do not repeat parent directory context in filenames. The folder path already scopes the file, so avoid domain or route prefixes inside that folder:
+
+```text
+src/app/(storefront)/cart/_components/
+|-- view.tsx                 # good
+|-- loading-skeleton.tsx     # good
+|-- cart-view.tsx            # bad: repeats cart/
+`-- cart-loading-skeleton.tsx # bad: repeats cart/
+```
+
+The exported component can still include useful domain context, for example `view.tsx` may export `CartView`.
+
 Each component lives in its own folder:
 
 ```text

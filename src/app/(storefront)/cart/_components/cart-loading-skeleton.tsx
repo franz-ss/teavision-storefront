@@ -1,7 +1,7 @@
 export function CartLoadingSkeleton() {
   return (
     <div
-      className="grid gap-8 pb-24 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-start xl:gap-10 xl:pb-0"
+      className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-start xl:gap-10"
       role="status"
       aria-live="polite"
     >
@@ -96,19 +96,6 @@ export function CartLoadingSkeleton() {
         </div>
       </aside>
 
-      {/* Sticky mobile checkout bar skeleton */}
-      <div
-        className="bg-card shadow-3 border-hairline fixed inset-x-0 bottom-0 z-40 border-t xl:hidden"
-        aria-label="Loading mobile checkout"
-      >
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-          <div className="min-w-0">
-            <div className="bg-paper-2 h-4 w-20 animate-pulse rounded motion-reduce:animate-none" />
-            <div className="bg-paper-2 mt-1 h-6 w-24 animate-pulse rounded motion-reduce:animate-none" />
-          </div>
-          <div className="bg-paper-2 h-12 w-32 shrink-0 animate-pulse rounded-full motion-reduce:animate-none" />
-        </div>
-      </div>
     </div>
   )
 }

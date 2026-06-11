@@ -1,4 +1,5 @@
 import { Eyebrow, Section } from '@/components/ui'
+import { getPagePath } from '@/lib/shopify/operations/storefront-page'
 import type { ShopifyPage } from '@/lib/shopify/operations/storefront-page'
 
 import type { PageProfile } from '../_lib/page-profile'
@@ -30,7 +31,7 @@ export function Hero({
                 {description}
               </p>
             )}
-            <Actions profile={profile} />
+            <Actions currentPath={getPagePath(page.handle)} profile={profile} />
           </div>
         </div>
       </Section.Container>

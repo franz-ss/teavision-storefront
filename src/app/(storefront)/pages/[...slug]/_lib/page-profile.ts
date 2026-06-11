@@ -33,6 +33,10 @@ const POLICY_HANDLES = new Set([
   'us-laws-compliance',
 ])
 
+export function isPolicyPageHandle(handle: string): boolean {
+  return POLICY_HANDLES.has(handle)
+}
+
 const SERVICE_HANDLES = new Set([
   'services',
   'custom-tea-blends',

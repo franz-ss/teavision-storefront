@@ -226,4 +226,27 @@ describe('CartView', () => {
     const occurrences = html.split(gridPattern).length - 1
     expect(occurrences).toBeGreaterThanOrEqual(2)
   })
+
+  it('keeps notes and terms with a single checkout control', () => {
+    const html = renderToStaticMarkup(
+      <CartView
+        cart={makeCart({
+          cost: {
+            subtotalAmount: makeMoney('100.00'),
+            totalAmount: makeMoney('100.00'),
+          },
+          lines: [makeCartLine({ quantity: 2 })],
+        })}
+      />,
+    )
+
+    const checkoutControlPattern =
+      /<(?:a|button)(?=[^>]*aria-label="Proceed to checkout")[^>]*>/g
+
+    expect(html).toContain('aria-label="Order notes"')
+    expect(html).toContain('Terms and Conditions')
+    expect(html.match(checkoutControlPattern)).toHaveLength(1)
+    expect(html).toContain('Check Out')
+    expect(html).not.toContain('>Checkout</a>')
+  })
 })

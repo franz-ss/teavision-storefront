@@ -1,7 +1,9 @@
+import { ContactSection } from '@/components/contact'
 import type { ShopifyPage } from '@/lib/shopify/operations/storefront-page'
+import { submitContactFormAction } from '@/lib/contact/actions'
 
 import { getLeadDescription } from '../_lib/page-formatting'
-import { resolvePageProfile } from '../_lib/page-profile'
+import { isPolicyPageHandle, resolvePageProfile } from '../_lib/page-profile'
 import { Body } from './body'
 import { Hero } from './hero'
 import { JsonLd } from './json-ld'
@@ -14,6 +16,9 @@ type ContentProps = {
 export function Content({ page }: ContentProps) {
   const profile = resolvePageProfile(page.handle)
   const description = getLeadDescription(page)
+  const isTermsPage =
+    page.handle === 'terms-conditions' || page.handle === 'terms-conditions-1'
+  const showSupportCta = !isPolicyPageHandle(page.handle)
 
   return (
     <>
@@ -22,7 +27,12 @@ export function Content({ page }: ContentProps) {
       <Hero description={description} page={page} profile={profile} />
 
       <Body page={page} />
-      <SupportCta />
+      {isTermsPage ? (
+        <ContactSection action={submitContactFormAction} />
+      ) : null}
+      {showSupportCta ? (
+        <SupportCta profile={profile} />
+      ) : null}
     </>
   )
 }
