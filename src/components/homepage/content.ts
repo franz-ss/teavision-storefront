@@ -462,7 +462,7 @@ export const FAQS = [
   {
     question: 'What types of tea do you offer?',
     answer:
-      "We offer a huge range of tradition and premium teas and botanical herbs along with custom tea blends. Reach out to our sales team if you're interested in developing your own blend.",
+      "We offer a huge range of traditional and premium teas and botanical herbs along with custom tea blends. Reach out to our sales team if you're interested in developing your own blend.",
   },
   {
     question: 'What are the terms for wholesale purchases?',

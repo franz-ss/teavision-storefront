@@ -74,7 +74,7 @@ export type FeatureCard2 = {
 export const IMPORT_FEATURE_CARDS: FeatureCard2[] = [
   {
     title: 'Tea Varieties',
-    description: 'Black, green, white, oolong, match & specialty teas',
+    description: 'Black, green, white, oolong, matcha & specialty teas',
   },
   {
     title: 'Botanicals & Herbs',
