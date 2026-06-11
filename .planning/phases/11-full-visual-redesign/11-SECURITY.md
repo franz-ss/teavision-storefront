@@ -92,6 +92,7 @@ created: 2026-06-11
 | Audit Date | Threats Total | Closed | Open | Run By |
 |------------|---------------|--------|------|--------|
 | 2026-06-11 | 33 | 33 | 0 | Codex secure-phase |
+| 2026-06-11 | 33 | 33 | 0 | Claude secure-phase (re-verification; spot-checked font self-hosting, honeypot/rate-limit, sanitizer allowlist, cart quantity normalization, JSON-LD escaping, button tap targets, motion-reduce guards, eslint Section guard — all evidence holds) |
 
 ---
 
