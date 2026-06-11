@@ -24,9 +24,10 @@ export function BlendFields({ index }: BlendFieldsProps) {
 
   return (
     <fieldset className="border-hairline-2 bg-paper rounded-lg border p-5 sm:p-6">
-      <legend className="float-left w-full">
-        <span className="type-heading-04 text-ink">Blend {index}</span>
-      </legend>
+      <legend className="sr-only">Blend {index}</legend>
+      <p aria-hidden="true" className="type-heading-04 text-ink">
+        Blend {index}
+      </p>
 
       <div className="mt-5 grid gap-5 sm:grid-cols-2">
         <div>

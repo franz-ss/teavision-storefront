@@ -165,9 +165,10 @@ export function NpdOrderForm() {
       </div>
 
       <fieldset className={groupClassName}>
-        <legend className="float-left w-full">
-          <span className={legendClassName}>Product type</span>
-        </legend>
+        <legend className="sr-only">Product type</legend>
+        <p aria-hidden="true" className={legendClassName}>
+          Product type
+        </p>
         <div className="mt-5 grid gap-2 sm:grid-cols-2">
           {NPD_PRODUCT_TYPES.map((productType) => (
             <label key={productType.value} className={optionClassName}>
@@ -187,11 +188,10 @@ export function NpdOrderForm() {
       </fieldset>
 
       <fieldset className={groupClassName}>
-        <legend className="float-left w-full">
-          <span className={legendClassName}>
-            Is your brand certified organic?
-          </span>
-        </legend>
+        <legend className="sr-only">Is your brand certified organic?</legend>
+        <p aria-hidden="true" className={legendClassName}>
+          Is your brand certified organic?
+        </p>
         <div className="mt-5 flex flex-wrap gap-6">
           <label className="type-body-sm text-ink flex items-center gap-3">
             <Radio name="brandCertifiedOrganic" value="YES" />
@@ -205,11 +205,12 @@ export function NpdOrderForm() {
       </fieldset>
 
       <fieldset className={groupClassName}>
-        <legend className="float-left w-full">
-          <span className={legendClassName}>
-            How many blends would you like to create?
-          </span>
+        <legend className="sr-only">
+          How many blends would you like to create?
         </legend>
+        <p aria-hidden="true" className={legendClassName}>
+          How many blends would you like to create?
+        </p>
         <p className="type-body-sm text-ink-soft mt-5">
           Each blend costs {NPD_BLEND_DEVELOPMENT_COST} to develop and will
           include the formulation and recipe details.
