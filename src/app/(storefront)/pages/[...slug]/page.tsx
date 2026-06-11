@@ -21,6 +21,7 @@ const RESERVED_HANDLES = new Set([
   'contact',
   'custom-tea-blends',
   'our-story',
+  'terms-conditions',
   'wholesale',
 ])
 

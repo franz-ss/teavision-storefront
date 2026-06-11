@@ -10,10 +10,12 @@ export function Hero({
   description,
   page,
   profile,
+  showActions = true,
 }: {
-  description: string
+  description?: string
   page: ShopifyPage
   profile: PageProfile
+  showActions?: boolean
 }) {
   return (
     <Section.Root tone="brand">
@@ -26,12 +28,17 @@ export function Hero({
             <h1 className="type-display text-paper mt-5 max-w-[16ch] text-balance">
               {page.title}
             </h1>
-            {description && (
+            {description ? (
               <p className="type-lede text-paper/85 mt-6 max-w-[54ch] wrap-break-word">
                 {description}
               </p>
-            )}
-            <Actions currentPath={getPagePath(page.handle)} profile={profile} />
+            ) : null}
+            {showActions ? (
+              <Actions
+                currentPath={getPagePath(page.handle)}
+                profile={profile}
+              />
+            ) : null}
           </div>
         </div>
       </Section.Container>
