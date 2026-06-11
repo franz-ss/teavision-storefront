@@ -3,6 +3,7 @@ import { Card, Section } from '@/components/ui'
 import { sendContactAction } from '@/lib/contact/actions'
 
 import { Hero } from './hero'
+import { LocationMap } from './location-map'
 import { Sidebar } from './sidebar'
 
 export function PageContent() {
@@ -12,7 +13,13 @@ export function PageContent() {
 
       <Section.Root tone="inverse">
         <Section.Container>
-          <div className="grid gap-10 lg:grid-cols-[minmax(18rem,0.42fr)_minmax(0,0.58fr)] lg:items-start">
+          <LocationMap />
+        </Section.Container>
+      </Section.Root>
+
+      <Section.Root tone="inverse">
+        <Section.Container>
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
             <Sidebar />
             <Card className="p-5 sm:p-8" radius="lg">
               <ContactForm action={sendContactAction} />

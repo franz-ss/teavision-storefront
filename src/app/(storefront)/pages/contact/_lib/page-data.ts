@@ -3,6 +3,10 @@ export const PHONE_HREF = 'tel:1300729617'
 export const EMAIL = 'info@teavision.com.au'
 export const EMAIL_HREF = 'mailto:info@teavision.com.au'
 export const ADDRESS = '29 Palladium Circuit, Clyde North VIC 3978'
+export const MAP_EMBED_URL =
+  'https://maps.google.com/maps?q=29%20Palladium%20Circuit%2C%20Clyde%20North%20VIC%203978&t=&z=16&ie=UTF8&iwloc=B&output=embed'
+export const MAP_DIRECTIONS_URL =
+  'https://www.google.com/maps/search/?api=1&query=29%20Palladium%20Circuit%2C%20Clyde%20North%20VIC%203978'
 
 export const SUPPLY_CUES = [
   'Wholesale account support',
@@ -34,7 +38,7 @@ export const CONTACT_METHODS = [
   {
     label: 'Address',
     value: ADDRESS,
-    href: 'https://www.google.com/maps/search/?api=1&query=29%20Palladium%20Circuit%2C%20Clyde%20North%20VIC%203978',
+    href: MAP_DIRECTIONS_URL,
     icon: 'pin',
     external: true,
   },
