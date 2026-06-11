@@ -34,6 +34,7 @@ import { type AddToCart, useAddToCart } from '../use-add-to-cart'
 type ProductQuickViewProps = {
   product: ProductSummary
   addToCart?: AddToCart
+  buttonFullWidth?: boolean
   buttonIcon?: 'cart' | 'eye'
   buttonLabel?: string
   buttonVariant?: NonNullable<ButtonProps['variant']>
@@ -115,6 +116,7 @@ function isQuickViewDetails(value: unknown): value is ProductQuickViewDetails {
 
 export function ProductQuickView({
   addToCart,
+  buttonFullWidth = false,
   buttonIcon = 'eye',
   buttonLabel = 'Quick View',
   buttonVariant = 'inverse',
@@ -249,6 +251,7 @@ export function ProductQuickView({
         type="button"
         variant={buttonVariant}
         size="sm"
+        className={cn(buttonFullWidth && 'w-full')}
         onClick={handleOpen}
         aria-haspopup="dialog"
         aria-expanded={open}

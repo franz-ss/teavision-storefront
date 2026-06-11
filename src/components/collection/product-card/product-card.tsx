@@ -11,6 +11,7 @@ import type {
 } from '@/lib/shopify/types'
 import { Badge, Button, Price, StarRating } from '@/components/ui'
 import { getSizedShopifyImageUrl } from '@/lib/shopify/image-url'
+import { ProductQuickView } from '@/components/product/product-quick-view'
 import { useAddToCart } from '@/components/product/use-add-to-cart'
 import { cn } from '@/lib/utils'
 
@@ -154,14 +155,11 @@ export function ProductCard({
                 variantId={singleAvailableVariant.id}
               />
             ) : (
-              <Button
-                href={productUrl}
-                variant="primary"
-                size="sm"
-                className="w-full"
-              >
-                View options
-              </Button>
+              <ProductQuickView
+                product={product}
+                buttonVariant="primary"
+                buttonFullWidth
+              />
             )}
           </div>
         )}

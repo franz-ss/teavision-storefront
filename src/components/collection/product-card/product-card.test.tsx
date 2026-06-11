@@ -93,8 +93,8 @@ describe('ProductCard', () => {
     expect(html).toContain('Green tea')
     // motion-reduce trio on scale animation
     expect(html).toContain('motion-reduce:group-hover:scale-100')
-    // Sole PDP link on title only (CARD-04)
-    expect(html).not.toContain('View options')
+    // Single-variant card quick-adds; no Quick View trigger needed (CQA-02)
+    expect(html).not.toContain('Quick View')
     // Star rating row renders when rating data is available
     expect(html).toContain('out of 5 stars')
   })
@@ -105,7 +105,7 @@ describe('ProductCard', () => {
     expect(html).toContain('Add Tea Masters Sencha Green Tea to cart')
   })
 
-  it('shows View options link for multi-variant products (CQA-02)', () => {
+  it('shows Quick View trigger for multi-variant products (CQA-02)', () => {
     const multiVariantProduct: CollectionProductSummary = {
       ...product,
       variants: multiVariants,
@@ -113,7 +113,8 @@ describe('ProductCard', () => {
     const html = renderToStaticMarkup(
       <ProductCard product={multiVariantProduct} />,
     )
-    expect(html).toContain('View options')
+    expect(html).toContain('Quick View')
+    expect(html).toContain('aria-haspopup="dialog"')
     expect(html).not.toContain('Add to cart')
   })
 
@@ -147,8 +148,8 @@ describe('ProductCard', () => {
     // Same approved layout
     expect(html).toContain('aspect-[1/1.12]')
     expect(html).toContain('$12.00')
-    // Unknown variants → PDP link instead of quick-add
-    expect(html).toContain('View options')
+    // Unknown variants → Quick View trigger instead of quick-add
+    expect(html).toContain('Quick View')
     expect(html).not.toContain('Add to cart')
     // No tags → no badges; unknown availability → not sold out
     expect(html).not.toContain('Organic')

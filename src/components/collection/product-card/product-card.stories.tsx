@@ -131,7 +131,7 @@ export const NoImage: Story = {
   },
 }
 
-/** Multi-variant card: shows View options link, no quick-add (CQA-02) */
+/** Multi-variant card: shows Quick View trigger, no quick-add (CQA-02) */
 export const MultiVariantFallback: Story = {
   args: {
     product: {
@@ -145,10 +145,10 @@ export const MultiVariantFallback: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // View options link to PDP (CQA-02)
+    // Quick View dialog trigger (CQA-02)
     await expect(
-      canvas.getByRole('link', { name: 'View options' }),
-    ).toHaveAttribute('href', '/products/tea-masters-breakfast')
+      canvas.getByRole('button', { name: /quick view/i }),
+    ).toHaveAttribute('aria-haspopup', 'dialog')
 
     // No add-to-cart button
     await expect(
@@ -222,7 +222,7 @@ export const NoBrandingInfo: Story = {
   },
 }
 
-/** Variant limit fallback: 8+ variants → View options (CQA-02) */
+/** Variant limit fallback: 8+ variants → Quick View (CQA-02) */
 export const VariantLimitFallback: Story = {
   args: {
     product: {
@@ -233,10 +233,10 @@ export const VariantLimitFallback: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    // Multi-variant → View options
+    // Multi-variant → Quick View dialog trigger
     await expect(
-      canvas.getByRole('link', { name: 'View options' }),
-    ).toHaveAttribute('href', '/products/tea-masters-sencha')
+      canvas.getByRole('button', { name: /quick view/i }),
+    ).toHaveAttribute('aria-haspopup', 'dialog')
   },
 }
 
