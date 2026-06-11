@@ -1,30 +1,45 @@
 import { Plus } from 'lucide-react'
 
-import { Eyebrow, Section } from '@/components/ui'
+import { Eyebrow, Section, type SectionRootProps } from '@/components/ui'
+import { cn } from '@/lib/utils'
 
 import { FAQS, type FaqItem } from '../content'
 
-type FaqProps = {
+type FaqProps = Pick<SectionRootProps, 'className' | 'spacing' | 'tone'> & {
   items?: FaqItem[]
+  eyebrow?: string | null
+  title?: string
+  description?: string | null
 }
 
-export function Faq({ items = FAQS }: FaqProps) {
+const DEFAULT_DESCRIPTION =
+  'You may have questions about sourcing wholesale tea, tea bags, and bulk spices. Below are answers to some of the most common queries from our partners.'
+
+export function Faq({
+  className,
+  description = DEFAULT_DESCRIPTION,
+  eyebrow = 'Questions',
+  items = FAQS,
+  spacing,
+  title = 'Frequently asked questions',
+  tone = 'sunken',
+}: FaqProps) {
   return (
-    <Section.Root tone="sunken">
+    <Section.Root tone={tone} spacing={spacing} className={className}>
       <Section.Container variant="base">
         {/* Design constrains FAQ content to 880px (55rem) */}
         <div className="mx-auto max-w-220 text-center">
-          <Eyebrow rule={false} className="justify-center">
-            Questions
-          </Eyebrow>
-          <h2 className="type-heading-01 text-ink mt-4">
-            Frequently asked questions
+          {eyebrow ? (
+            <Eyebrow rule={false} className="justify-center">
+              {eyebrow}
+            </Eyebrow>
+          ) : null}
+          <h2 className={cn('type-heading-01 text-ink', eyebrow && 'mt-4')}>
+            {title}
           </h2>
-          <p className="type-lede text-ink-soft mt-4">
-            You may have questions about sourcing wholesale tea, tea bags, and
-            bulk spices. Below are answers to some of the most common queries
-            from our partners.
-          </p>
+          {description ? (
+            <p className="type-lede text-ink-soft mt-4">{description}</p>
+          ) : null}
         </div>
 
         <div className="border-hairline mx-auto mt-11 max-w-220 border-b">
@@ -44,7 +59,7 @@ export function Faq({ items = FAQS }: FaqProps) {
                 </span>
               </summary>
               <div className="text-ink-soft pb-6.5">
-                <p className="max-w-[60ch]">{faq.answer}</p>
+                <p className="max-w-[60ch] whitespace-pre-line">{faq.answer}</p>
               </div>
             </details>
           ))}

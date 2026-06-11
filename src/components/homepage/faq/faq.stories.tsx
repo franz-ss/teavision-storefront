@@ -14,3 +14,12 @@ type Story = StoryObj<typeof Faq>
 export const Default: Story = {
   args: {},
 }
+
+export const TitledGroup: Story = {
+  args: {
+    eyebrow: null,
+    description: null,
+    title: 'General Wholesale Tea Questions',
+    tone: 'surface',
+  },
+}

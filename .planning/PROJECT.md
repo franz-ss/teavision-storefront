@@ -17,6 +17,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - Existing product, collection, cart, blog, page, review, Searchanise, and contact flows are implemented in the Next storefront codebase.
 - Shopify Storefront API remains the source of truth for product, collection, cart, and checkout data.
 - The sibling Liquid theme remains a valid reference for legacy storefront behavior that has not yet been ported.
+- Validated in Phase 11: every storefront surface runs on the new warm-paper/green/gold design system (RD-01..RD-08); the old `--tv-*`/steep/stone system is removed; cart, search, bulk savings, and quick-add behavior preserved through two owner UAT rounds.
 
 ### Active
 
@@ -63,4 +64,4 @@ The codebase map in `.planning/codebase/` documents the existing architecture, d
 
 ---
 
-_Last updated: 2026-05-27 after Phase 2 planning_
+_Last updated: 2026-06-11 after Phase 11 (full visual redesign) completion — final phase of the roadmap_
