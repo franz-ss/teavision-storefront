@@ -110,6 +110,10 @@ export function BulkSavings({
 
   if (visibleTiers.length === 0) return null
 
+  // The deepest visible tier carries the highest discount — the badge marks
+  // it regardless of which tier is currently selected.
+  const bestValueTier = visibleTiers[visibleTiers.length - 1]
+
   return (
     <div className={cn('flex min-w-0 flex-col gap-3', className)}>
       <h2 className="text-ink-faint font-mono text-[11px] tracking-[0.12em] uppercase">
@@ -139,7 +143,7 @@ export function BulkSavings({
                 )}
                 onClick={() => onSelectTier?.(tier.minimumQuantity)}
               >
-                {isActive ? (
+                {tier.minimumQuantity === bestValueTier.minimumQuantity ? (
                   <span className="bg-brand text-paper absolute -top-2 left-1/2 -translate-x-1/2 rounded-full px-2 py-0.5 font-mono text-[9px] tracking-widest whitespace-nowrap uppercase">
                     Best value
                   </span>
