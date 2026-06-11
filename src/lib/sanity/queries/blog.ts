@@ -118,6 +118,83 @@ export const sanityBlogPostSummaryFields = groq`
   }
 `
 
+/**
+ * Lighter variant of sanityBlogPostSummaryFields for default listing use.
+ * Omits bodyText (pt::text) to avoid fetching full article body on the unfiltered listing.
+ * Reading-time falls back to excerpt length, which is acceptable for the listing view.
+ * Tag/search paths must keep the full sanityBlogPostSummaryFields with bodyText.
+ */
+export const sanityBlogPostSummaryLightFields = groq`
+  _id,
+  title,
+  "slug": slug.current,
+  excerpt,
+  featuredImage{
+    ${sanityImageWithAltFields}
+  },
+  author->{name},
+  categories[]->{title},
+  tags,
+  publishedAt,
+  seo{
+    ${sanitySeoFields}
+  }
+`
+
+/**
+ * Default listing query for the unfiltered /blogs/[handle] route.
+ * Fetches blog metadata, featured posts, and the first page of latest non-featured articles.
+ * Does NOT fetch bodyText — saves Sanity GROQ work for the common unfiltered case.
+ * Provides totalCount of non-featured articles so pagination UI can be rendered correctly.
+ *
+ * The articles list excludes IDs that appear in the blog's featuredPosts references,
+ * so the component receives a non-duplicated first-page result ready for display.
+ */
+export const defaultBlogListingQuery = groq`
+  {
+    "blog": *[_type == "blog" && slug.current == $blogHandle][0]{
+      _id,
+      title,
+      "slug": slug.current,
+      description,
+      heroImage{
+        ${sanityImageWithAltFields}
+      },
+      seo{
+        ${sanitySeoFields}
+      },
+      featuredPosts[]->{
+        ${sanityBlogPostSummaryLightFields}
+      }
+    },
+    "articles": *[
+      _type == "blogPost" &&
+      defined(slug.current) &&
+      blog->slug.current == $blogHandle &&
+      publishedAt <= now() &&
+      !(_id in *[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref)
+    ] | order(publishedAt desc)[$offset...$limit]{
+      ${sanityBlogPostSummaryLightFields}
+    },
+    "totalCount": count(*[
+      _type == "blogPost" &&
+      defined(slug.current) &&
+      blog->slug.current == $blogHandle &&
+      publishedAt <= now() &&
+      !(_id in *[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref)
+    ]),
+    "allTagArrays": *[
+      _type == "blogPost" &&
+      defined(slug.current) &&
+      blog->slug.current == $blogHandle &&
+      publishedAt <= now()
+    ]{
+      "categories": categories[]->.title,
+      tags
+    }
+  }
+`
+
 export const blogListingQuery = groq`
   {
     "blog": *[_type == "blog" && slug.current == $blogHandle][0]{
