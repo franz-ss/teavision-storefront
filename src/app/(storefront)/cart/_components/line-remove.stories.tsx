@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 
-import { CartLineRemove } from './cart-line-remove'
+import { CartLineRemove } from './line-remove'
 
 type CartLineAction = NonNullable<
   ComponentProps<typeof CartLineRemove>['action']

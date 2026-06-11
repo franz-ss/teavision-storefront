@@ -8,7 +8,7 @@ import {
 } from '@/tests/fixtures/shopify/cart'
 import { makeMoney } from '@/tests/fixtures/shopify/money'
 
-import { CartView } from './cart-view'
+import { CartView } from './view'
 
 const longTitle =
   'Organic ceremonial-grade green tea with a very long wholesale product title for wrapping checks'

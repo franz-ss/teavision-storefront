@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
-import { CartLoadingSkeleton } from './cart-loading-skeleton'
+import { CartLoadingSkeleton } from './loading-skeleton'
 
 describe('CartLoadingSkeleton', () => {
   it('matches the filled cart layout while cart content streams', () => {

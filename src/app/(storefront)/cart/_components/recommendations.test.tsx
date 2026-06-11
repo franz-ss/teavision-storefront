@@ -9,7 +9,7 @@ import { getProduct, getProductRecommendations } from '@/lib/shopify/operations/
 import { makeCart } from '@/tests/fixtures/shopify/cart'
 import { makeProduct, makeProductSummary } from '@/tests/fixtures/shopify/product'
 
-import { CartRecommendations } from './cart-recommendations'
+import { CartRecommendations } from './recommendations'
 
 vi.mock('@/components/product', () => ({
   RelatedProductsCarousel: ({

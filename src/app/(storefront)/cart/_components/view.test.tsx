@@ -11,7 +11,7 @@ import {
 } from '@/tests/fixtures/shopify/cart'
 import { makeMoney } from '@/tests/fixtures/shopify/money'
 
-import { CartView } from './cart-view'
+import { CartView } from './view'
 
 vi.mock('@/lib/cart/actions', () => ({
   cartLineFormAction: vi.fn(),

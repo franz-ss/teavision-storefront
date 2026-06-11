@@ -11,9 +11,9 @@ import {
 } from '@/lib/shopify/quantity-rules'
 import type { Cart, Money } from '@/lib/shopify/types'
 
-import { CartCheckoutForm } from './cart-checkout-form'
-import { CartLineActions } from './cart-line-actions'
-import { CartLineRemove } from './cart-line-remove'
+import { CartCheckoutForm } from './checkout-form'
+import { CartLineActions } from './line-actions'
+import { CartLineRemove } from './line-remove'
 import { TrustSignalList } from './trust-signal-list'
 
 type CartViewProps = {

@@ -5,9 +5,9 @@ import { Section } from '@/components/ui'
 import { getCartAction } from '@/lib/cart/actions'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 
-import { CartLoadingSkeleton } from './_components/cart-loading-skeleton'
-import { CartRecommendations } from './_components/cart-recommendations'
-import { CartView } from './_components/cart-view'
+import { CartLoadingSkeleton } from './_components/loading-skeleton'
+import { CartRecommendations } from './_components/recommendations'
+import { CartView } from './_components/view'
 
 export const metadata: Metadata = withNoindexRobots({
   title: 'Your Cart',
