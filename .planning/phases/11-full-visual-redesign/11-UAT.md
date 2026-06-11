@@ -28,15 +28,15 @@ source:
     11-VERIFICATION.md,
   ]
 started: 2026-06-11T07:31:59+08:00
-updated: 2026-06-11T08:47:16+08:00
+updated: 2026-06-11T09:16:58+08:00
 ---
 
 ## Current Test
 
-number: 8
-name: Search Results
+number: 9
+name: Product Detail Page
 expected: |
-  Search results reuse PLP styling for hero, facets, sort, chips, cards, and pagination. Empty/no-results queries show only the hero and a "No matches" card, without extra filter/sort/toolbar chrome.
+  PDP layout, gallery, title/rating/price rhythm, variant tiles, buy row, assurance row, bulk-savings tiers, accordions, and recommendation rails align with the extracted design spacing and element treatment while preserving variant selection, quantity validation, add-to-cart success feedback, and recommendation quick view behavior.
 awaiting: user response
 
 ## Tests
@@ -83,7 +83,7 @@ result: pass
 ### 8. Search Results
 
 expected: Search results reuse PLP styling for hero, facets, sort, chips, cards, and pagination. Empty/no-results queries show only the hero and a "No matches" card, without extra filter/sort/toolbar chrome.
-result: [pending]
+result: pass
 
 ### 9. Product Detail Page
 
@@ -118,9 +118,9 @@ result: [pending]
 ## Summary
 
 total: 14
-passed: 5
+passed: 6
 issues: 2
-pending: 7
+pending: 6
 skipped: 0
 blocked: 0
 
