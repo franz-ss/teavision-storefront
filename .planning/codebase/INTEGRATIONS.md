@@ -1,159 +1,167 @@
 # External Integrations
 
-**Analysis Date:** 2026-05-26
+**Analysis Date:** 2026-06-11
 
-## APIs and External Services
+## APIs & External Services
 
-**Shopify Storefront API:**
+**Commerce:**
+- Shopify Storefront GraphQL API - Products, collections, menus/pages, cart creation, cart line mutations, product recommendations, checkout handoff URL, and sitemap data.
+  - SDK/Client: custom `shopifyFetch()` in `src/lib/shopify/client.ts` using `graphql` and typed documents from `src/lib/shopify/types/index.ts`.
+  - Auth: `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_ACCESS_TOKEN`.
+  - API version: `2026-04` in `src/lib/shopify/env.ts` and `codegen.ts`.
+- Shopify legacy product JSON endpoint - Fallback inventory lookup at `https://{SHOPIFY_STORE_DOMAIN}/products/{handle}.js`.
+  - SDK/Client: native `fetch()` in `src/lib/shopify/operations/product.ts`.
+  - Auth: public storefront product JSON endpoint; domain comes from `SHOPIFY_STORE_DOMAIN`.
+- Shopify CDN - Product, marketing, catalogue PDF, and static storefront assets.
+  - SDK/Client: Next image remote patterns in `next.config.ts`; hard-coded asset URLs in `src/components/homepage/content.ts`, `src/components/layout/header/mega-nav-data.ts`, and several `src/app/(storefront)/pages/*/_lib/data.ts` files.
+  - Auth: none.
 
-- Purpose: Products, collections, carts, pages, blogs, predictive search, recommendations, and checkout URLs.
-- Client: `src/lib/shopify/client.ts` wraps `fetch()` against `https://${SHOPIFY_STORE_DOMAIN}/api/2026-04/graphql.json`.
-- Documents: `src/lib/shopify/queries/*.graphql`.
-- Types: Generated into `src/lib/shopify/types/generated/`, re-exported through `src/lib/shopify/types/index.ts`.
-- Auth: Storefront access token in `SHOPIFY_STOREFRONT_ACCESS_TOKEN`.
+**CMS & Content:**
+- Sanity Content Lake - Tea Journal/blog content and image metadata.
+  - SDK/Client: `next-sanity` clients in `src/lib/sanity/client.ts`; GROQ queries under `src/lib/sanity/queries/`.
+  - Auth: `SANITY_API_READ_TOKEN` optional for server reads; `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, and `NEXT_PUBLIC_SANITY_API_VERSION` configure the project.
+- Sanity Image CDN - Blog imagery rendered from Sanity image sources.
+  - SDK/Client: `@sanity/image-url` via `getSanityImageUrl()` in `src/lib/sanity/client.ts`; remote image allowlist in `next.config.ts`.
+  - Auth: none for published images.
 
-**Shopify Cart and Checkout:**
+**Search & Recommendations:**
+- Searchanise Search API - Owned search results, facets, sorting, and search suggestions.
+  - SDK/Client: native `fetch()` to `https://searchserverapi1.com/getresults` in `src/lib/searchanise/search.ts`.
+  - Auth: public API key from `NEXT_PUBLIC_SEARCHANISE_API_KEY`; enabled with `NEXT_PUBLIC_SEARCHANISE_ENABLED`.
+- Searchanise Shopify widget script - PDP recommendations compatibility path that parses third-party-rendered markup into native product cards.
+  - SDK/Client: `next/script` loads `https://searchserverapi.com/widgets/shopify/init.js` in `src/components/product/searchanise-recommendations/searchanise-script-loader.tsx`; parsing lives in `src/components/product/searchanise-recommendations/searchanise-product-parser.ts`.
+  - Auth: public API key from `NEXT_PUBLIC_SEARCHANISE_API_KEY`.
 
-- Purpose: Cart creation/mutation and checkout handoff.
-- Implementation: `src/lib/cart/actions.ts` stores Shopify cart ID in the `teavision_cart` HTTP-only cookie and delegates to `src/lib/shopify/operations/cart.ts`.
-- Checkout: Cart page links directly to `cart.checkoutUrl`.
-- Current limitation: Cart query does not expose line-level `discountAllocations`.
+**Reviews:**
+- Trustoo product ratings API - Product review summary data.
+  - SDK/Client: native `fetch()` to `https://api.trustoo.io/api/v1/reviews/get_products_rating` in `src/lib/reviews/trustoo.ts`.
+  - Auth: shop domain from `NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN`.
 
-**Shopify Webhooks:**
+**Pricing Compatibility:**
+- HulkApps volume discount offer table - Legacy fallback for bulk pricing when Shopify-native quantity price breaks and product metafields are absent.
+  - SDK/Client: native `fetch()` POST to `https://volumediscount.hulkapps.com/api/v2/shop/get_offer_table` in `src/lib/shopify/operations/product.ts`.
+  - Auth: store identifier from `HULK_VOLUME_DISCOUNT_STORE_ID`, defaulting in `src/lib/shopify/env.ts`.
 
-- Endpoint: `src/app/api/webhooks/shopify/route.ts`.
-- Verification: HMAC SHA-256 using `SHOPIFY_WEBHOOK_SECRET` and `crypto.timingSafeEqual`.
-- Events handled: product create/update/delete, collection create/update/delete, and collection product add/remove.
-- Effect: Invalidates Next cache tags with `revalidateTag()`.
+**Email:**
+- Resend - Sends contact, custom tea blend, wholesale account, NPD order, and newsletter form emails.
+  - SDK/Client: `resend` package in `src/lib/contact/actions.ts`.
+  - Auth: `RESEND_API_KEY`.
 
-**Trustoo / TrustWILL Reviews:**
-
-- Purpose: Product rating summaries.
-- Implementation: `src/lib/reviews/trustoo.ts`.
-- Endpoint: `https://api.trustoo.io/api/v1/reviews/get_products_rating`.
-- Auth/config: Public shop domain in `NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN`.
-- Usage: Product pages and related product summaries merge Trustoo ratings when available.
-
-**Searchanise:**
-
-- Purpose: Customer-also-bought recommendations widget on product pages when enabled.
-- Loader: `src/components/product/searchanise-recommendations/searchanise-script-loader.tsx`.
-- Widget wrapper: `src/components/product/searchanise-recommendations/searchanise-recommendations.tsx`.
-- Script: `https://searchserverapi.com/widgets/shopify/init.js?a=<apiKey>`.
-- Config: `NEXT_PUBLIC_SEARCHANISE_ENABLED` and `NEXT_PUBLIC_SEARCHANISE_API_KEY`.
-- Widget DOM id: `1T8K1Y6Q6G8R3B3` is hard-coded as the default.
-
-**Resend:**
-
-- Purpose: Contact form, custom tea blend enquiry, and newsletter signup emails.
-- Implementation: `src/lib/contact/actions.ts`.
-- Auth: `RESEND_API_KEY`.
-- From addresses: `noreply@teavision.com.au`.
-- Recipient: `info@teavision.com.au`.
-
-**Shopify Customer Account Link:**
-
-- Header account link goes to `https://mrtea.com.au/account/login` in `src/components/layout/header/header.tsx`.
-- This is an external handoff, not a headless account implementation.
-
-**Sibling Shopify Theme:**
-
-- Sibling project exists at `../teavision-theme`.
-- It contains legacy Liquid app integration footprints, including HulkApps discount hooks in cart templates and commented Quantity Breaks Now integration.
-- Use it as a migration reference, not as source code to import.
+**Fonts & Platform Assets:**
+- Google Fonts through Next font optimization - Spectral, Hanken Grotesk, Space Mono, and Caveat.
+  - SDK/Client: `next/font/google` in `src/app/layout.tsx`.
+  - Auth: none.
 
 ## Data Storage
 
-**Primary Store:**
-
-- Shopify is the source of truth for storefront catalog, carts, checkout, pages, blogs, and product review metafields.
-- The Next app does not have its own database.
-
-**Session/Cart State:**
-
-- Cart ID is stored in an HTTP-only cookie named `teavision_cart`.
-- No client-side global cart store exists.
+**Databases:**
+- Shopify Storefront API / Shopify platform
+  - Connection: `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_ACCESS_TOKEN`.
+  - Client: custom GraphQL client `shopifyFetch()` in `src/lib/shopify/client.ts`.
+- Sanity Content Lake
+  - Connection: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `NEXT_PUBLIC_SANITY_API_VERSION`.
+  - Client: `next-sanity` via `getSanityClient()` and `sanityPublishedFetch()` in `src/lib/sanity/client.ts`.
+- No application-owned SQL, document, or key-value database is detected in the repo.
 
 **File Storage:**
-
-- Product and content images are loaded from `cdn.shopify.com`.
-- Static assets live in `public/`, including `public/teavision.svg` and homepage imagery.
+- Shopify CDN and Teavision Shopify-hosted file assets are used throughout page data and component fixtures, with image host allowlists in `next.config.ts`.
+- Sanity Image CDN is used for blog imagery through `src/lib/sanity/client.ts`.
+- Local static assets are served from `public/` and Storybook uses `staticDirs: ['../public']` in `.storybook/main.ts`.
 
 **Caching:**
+- Next.js Cache Components with `'use cache'`, `cacheTag()`, `cacheLife()`, and `revalidateTag()` are used for Shopify product/collection/page reads, Sanity blog reads, and Trustoo reviews in `src/lib/shopify/operations/*.ts`, `src/lib/blog/operations.ts`, and `src/lib/reviews/trustoo.ts`.
+- Cart and Searchanise network calls use `cache: 'no-store'` where freshness is required in `src/lib/shopify/operations/cart.ts` and `src/lib/searchanise/search.ts`.
+- Rate limiting uses an in-memory `Map` in `src/lib/rate-limit/index.ts`; no Redis, durable KV, or database-backed limiter is detected.
 
-- Next.js 16 Cache Components are enabled with `cacheComponents: true`.
-- Expensive reads use `'use cache'`, `cacheTag()`, and `cacheLife()` in Shopify/blog/review operations.
-- Cart operations use `cache: 'no-store'`.
+## Authentication & Identity
 
-## Authentication and Identity
+**Auth Provider:**
+- Not detected for end-user accounts; storefront shopping is anonymous and cart state is stored in the `teavision_cart` HTTP-only cookie by `src/lib/cart/actions.ts`.
+  - Implementation: Server Actions call Shopify cart operations and set/delete the Shopify cart ID cookie.
+- Shopify Storefront API authentication is server-side token authentication via `X-Shopify-Storefront-Access-Token` in `src/lib/shopify/env.ts`.
+- Sanity webhook authentication uses signed webhook verification through `next-sanity/webhook` and `SANITY_REVALIDATE_SECRET` in `src/app/api/webhooks/sanity/route.ts`.
+- Shopify webhook authentication uses HMAC SHA-256 verification with `SHOPIFY_WEBHOOK_SECRET` in `src/app/api/webhooks/shopify/route.ts`.
 
-**Storefront Auth:**
-
-- No custom storefront login state exists in this app.
-- Shopify account access is linked externally from the header.
-
-**Admin Auth:**
-
-- `SHOPIFY_ADMIN_API_ACCESS_TOKEN` is documented in `.env.example`, but no committed code currently uses it.
-
-## Monitoring and Analytics
-
-**Structured Data:**
-
-- JSON-LD is emitted by homepage, product, collection, article, static page, and custom tea blend routes.
-
-**Shopify Analytics Compatibility:**
-
-- `src/app/(storefront)/products/[handle]/page.tsx` currently emits `window.ShopifyAnalytics.meta` and `var __st` product context for compatibility with Shopify-app-style scripts.
-- This file has uncommitted user edits; do not overwrite it casually.
+## Monitoring & Observability
 
 **Error Tracking:**
-
-- No Sentry, Datadog, or equivalent error tracking integration is committed.
+- No external error tracking provider such as Sentry, Datadog, Honeycomb, or Logtail is detected in `package.json` or source imports.
 
 **Logs:**
+- Server-side console logging is used for third-party degradation and form delivery failures in `src/lib/contact/actions.ts`, `src/lib/reviews/trustoo.ts`, `src/lib/shopify/operations/product.ts`, and `src/lib/rate-limit/index.ts`.
+- Playwright traces are retained on failure via `trace: 'retain-on-failure'` in `playwright.config.ts`.
+- Storybook/Chromatic package support is installed through `@chromatic-com/storybook`, but no repository CI workflow invoking Chromatic is detected.
 
-- Server-side contact and newsletter failures use `console.error()` in `src/lib/contact/actions.ts`.
-
-## CI/CD and Deployment
+## CI/CD & Deployment
 
 **Hosting:**
-
-- No committed Vercel, GitHub Actions, or deployment workflow config is present.
-- `next.config.ts` is compatible with typical Next.js hosting and Shopify CDN images.
+- Provider-specific deployment config is not detected in the repo.
+- Project documentation recommends Vercel for production/preview hosting in `docs/teavision-project-reference.md`.
+- The app is a standard Next.js production build/start target through `pnpm build` and `pnpm start` in `package.json`.
 
 **CI Pipeline:**
-
-- No `.github/workflows/` pipeline is present.
-- Verification is currently local via `pnpm lint`, `pnpm build`, `pnpm codegen`, Storybook, and direct Node tests for script contracts when needed.
+- No `.github/` workflow directory is detected.
+- Local Git hooks in `.husky/pre-commit` run `pnpm lint` and `pnpm test:contracts`.
+- Local Git hooks in `.husky/pre-push` run `pnpm lint`, `pnpm typecheck`, `pnpm test:contracts`, and `pnpm build`.
+- E2E CI behavior is encoded in `playwright.config.ts` with retries controlled by `CI` through `isContinuousIntegration()`.
 
 ## Environment Configuration
 
-**Development:**
+**Required env vars:**
+- `SHOPIFY_STORE_DOMAIN` - Shopify store domain for Storefront API and product JSON fallback.
+- `SHOPIFY_STOREFRONT_ACCESS_TOKEN` - Storefront API token.
+- `NEXT_PUBLIC_SANITY_PROJECT_ID` - Sanity project ID.
+- `NEXT_PUBLIC_SANITY_DATASET` - Sanity dataset.
+- `SANITY_REVALIDATE_SECRET` - Signed Sanity webhook secret.
+- `SITE_URL` or `NEXT_PUBLIC_SITE_URL` - Canonical site URL; required in production by `src/lib/seo/site-url.ts`.
 
-- `.env.local` is gitignored.
-- `.env.example` provides names only; do not copy secrets into planning docs.
+**Optional / feature env vars:**
+- `NEXT_PUBLIC_SANITY_API_VERSION` - Overrides Sanity API version; defaults to `2026-05-28` in `src/lib/sanity/env.ts`.
+- `SANITY_API_READ_TOKEN` - Optional Sanity read token for private server reads.
+- `RESEND_API_KEY` - Enables contact and newsletter email sending.
+- `SHOPIFY_WEBHOOK_SECRET` - Enables Shopify webhook HMAC validation.
+- `SHOPIFY_COLLECTIONS_INDEX_MENU_HANDLE` - Overrides Shopify collection index menu handle; defaults to `main-menu`.
+- `HULK_VOLUME_DISCOUNT_STORE_ID` - Overrides HulkApps store ID; defaults to `mrteashop-com.myshopify.com`.
+- `NEXT_PUBLIC_SEARCHANISE_ENABLED` - Enables Searchanise search integration when set to `true`.
+- `NEXT_PUBLIC_SEARCHANISE_API_KEY` - Public Searchanise API key for search and widget script.
+- `NEXT_PUBLIC_TRUSTOO_SHOP_DOMAIN` - Trustoo shop domain for product ratings.
+- `DISABLE_INDEXING` - Enables noindex mode and empty sitemap behavior.
+- `RATE_LIMIT_EXTERNAL_PROTECTION` - Declares external/provider-level rate limiting in production.
+- `RATE_LIMIT_ALLOW_MEMORY_FALLBACK` - Explicitly allows in-memory rate limiting in production.
+- `SHOPIFY_STOREFRONT_TEST_MODE`, `SHOPIFY_STOREFRONT_TEST_URL`, `PLAYWRIGHT_PORT`, and `FAKE_SHOPIFY_PORT` - Local/fake Shopify test harness configuration in `src/lib/shopify/env.ts` and `playwright.config.ts`.
 
-**Production:**
+**Secrets location:**
+- `.env.local` is present and must be treated as local secret/config storage; contents are not read or documented.
+- `.env.example` is present as a template, but environment values must not be copied from local secret files.
+- Production secrets belong in the deployment platform environment, not in committed files.
 
-- Required: Shopify Storefront domain/token and public site URL.
-- Optional/feature-gated: Trustoo, Searchanise, Resend, Shopify webhook secret.
-
-## Webhooks and Callbacks
+## Webhooks & Callbacks
 
 **Incoming:**
-
-- Shopify webhook endpoint: `/api/webhooks/shopify`.
-- Validates HMAC and updates cache tags.
+- `POST /api/webhooks/shopify` at `src/app/api/webhooks/shopify/route.ts`.
+  - Verifies `x-shopify-hmac-sha256` with `SHOPIFY_WEBHOOK_SECRET`.
+  - Handles product, collection, collection-product, and page topics by invalidating Next cache tags.
+  - Accepts unknown topics but ignores them.
+- `POST /api/webhooks/sanity` at `src/app/api/webhooks/sanity/route.ts`.
+  - Uses `parseBody()` from `next-sanity/webhook` with `SANITY_REVALIDATE_SECRET`.
+  - Invalidates broad blog tags plus specific blog/article tags when slugs are present.
+- `GET /api/search/suggestions` at `src/app/api/search/suggestions/route.ts`.
+  - Public route that proxies typed Searchanise results into limited product suggestions with in-memory rate limiting.
+- `GET /api/products/[handle]/quick-view` at `src/app/api/products/[handle]/quick-view/route.ts`.
+  - Public route that returns Shopify product quick-view details.
 
 **Outgoing:**
-
-- Resend email API calls for contact and newsletter submissions.
-- Trustoo rating fetches.
-- Shopify GraphQL requests.
-- Searchanise widget script and client-side widget rendering when enabled.
+- Shopify GraphQL POST requests from `src/lib/shopify/client.ts` to `https://{SHOPIFY_STORE_DOMAIN}/api/2026-04/graphql.json`.
+- Shopify product JSON GET requests from `src/lib/shopify/operations/product.ts` to `https://{SHOPIFY_STORE_DOMAIN}/products/{handle}.js`.
+- GraphQL Codegen schema introspection requests from `codegen.ts` to `https://{SHOPIFY_STORE_DOMAIN}/api/2026-04/graphql.json`.
+- Sanity query requests from `src/lib/sanity/client.ts` through `next-sanity`.
+- Searchanise search GET requests from `src/lib/searchanise/search.ts` to `https://searchserverapi1.com/getresults`.
+- Searchanise widget script requests from `src/components/product/searchanise-recommendations/searchanise-script-loader.tsx` to `https://searchserverapi.com/widgets/shopify/init.js`.
+- Trustoo ratings GET requests from `src/lib/reviews/trustoo.ts` to `https://api.trustoo.io/api/v1/reviews/get_products_rating`.
+- HulkApps volume discount POST requests from `src/lib/shopify/operations/product.ts` to `https://volumediscount.hulkapps.com/api/v2/shop/get_offer_table`.
+- Resend email API calls from `src/lib/contact/actions.ts`.
+- Google font fetches are mediated by Next font optimization from `src/app/layout.tsx`.
 
 ---
 
-_Integration audit: 2026-05-26_
-_Update when adding, removing, or replacing external services_
+*Integration audit: 2026-06-11*

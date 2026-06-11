@@ -1,233 +1,247 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-05-26
-**Updated:** 2026-06-04 for Phase 10 cart and checkout-handoff test infrastructure
+**Analysis Date:** 2026-06-11
 
 ## Test Framework
 
-**Primary Component Verification:**
+**Runner:**
+- Vitest 4.1.8 for unit and integration tests. Config: `vitest.config.mts`.
+- Playwright 1.60.0 for browser E2E coverage of the fake-Shopify cart checkout handoff. Config: `playwright.config.ts`.
+- Node's built-in `node:test` runner for custom ESLint rule and component contract tests under `scripts/eslint-rules/*.test.mjs` and `scripts/component-contracts/*.test.mjs`.
+- Storybook 10.4.1 with `@storybook/nextjs-vite`, `@storybook/addon-vitest`, docs, a11y, and Chromatic integration. Config: `.storybook/main.ts` and `.storybook/preview.ts`.
 
-- Storybook 10.3.5 with `@storybook/nextjs-vite`.
-- Addons include docs, a11y, onboarding, Vitest addon, and Chromatic.
-- Stories live beside components as `*.stories.tsx`.
+**Assertion Library:**
+- Vitest tests use `expect` from `vitest`.
+- Playwright E2E tests use `expect` from `@playwright/test`.
+- Node contract tests use `node:assert/strict`.
 
-**Script and Contract Tests:**
-
-- Node built-in `node:test` is used for local script/custom-rule tests.
-- Examples: `scripts/eslint-rules/no-raw-section.test.mjs`, `scripts/eslint-rules/no-raw-button.test.mjs`, `scripts/component-contracts/button-system.test.mjs`.
-
-**Package-Level Test Runner:**
-
-- Phase 10 adds an approved Vitest and Playwright exception for revenue-critical cart and checkout-handoff coverage.
-- Storybook remains the preferred component documentation and interaction surface.
-- Vitest covers Shopify transport, cart operations, Server Actions, and route handlers.
-- Playwright covers a thin fake-Shopify browser flow for local cart-to-checkout handoff.
-- Real Shopify hosted checkout UAT is documented but blocked until the Shopify dev store is configured and the store owner explicitly approves checkout testing.
-
-## Run Commands
-
+**Run Commands:**
 ```bash
-pnpm lint
-pnpm build
-pnpm codegen
-pnpm storybook
-pnpm build-storybook
-pnpm test:contracts
-pnpm test:unit
-pnpm test:integration
-pnpm test:e2e
-node --test scripts/eslint-rules/no-raw-section.test.mjs
-node --test scripts/eslint-rules/no-raw-button.test.mjs
-node --test scripts/eslint-rules/no-button-style-class.test.mjs
-node --test scripts/component-contracts/button-system.test.mjs
-```
-
-For a single Storybook story, open:
-
-```text
-http://localhost:6006/?path=/story/<story-id>
+pnpm test:unit          # Run selected Vitest unit tests for helpers, Shopify transport, operations, and UI behavior
+pnpm test:integration   # Run Vitest boundary tests for Server Actions and route handlers
+pnpm test:e2e           # Run Playwright fake-Shopify cart-to-checkout browser coverage
+pnpm test:contracts     # Run Node test contracts for custom ESLint rules and structural component checks
+pnpm test:stories       # Run Storybook stories through the Vitest browser integration
+pnpm lint               # Run Tailwind class checks and ESLint
+pnpm typecheck          # Run TypeScript type checking
+pnpm storybook          # Start Storybook on port 6006 for interactive component review
 ```
 
 ## Test File Organization
 
-**Stories:**
+**Location:**
+- Unit tests are co-located beside the source under test: `src/lib/shopify/client.test.ts`, `src/lib/shopify/operations/cart.test.ts`, `src/components/ui/quantity-stepper/quantity-stepper.test.tsx`.
+- Route-scoped tests live beside route files: `src/app/api/products/[handle]/quick-view/route.test.ts`, `src/app/(storefront)/collections/[handle]/_lib/page-helpers.test.ts`.
+- Component stories are co-located as `*.stories.tsx`: `src/components/ui/button/button.stories.tsx`, `src/app/(storefront)/cart/_components/view.stories.tsx`.
+- E2E tests live under `tests/e2e/`, with mock servers and network helpers under `tests/mocks/`.
+- Shared test fixtures live under `tests/fixtures/shopify/`.
+- Script-level contract tests live under `scripts/component-contracts/` and `scripts/eslint-rules/`.
 
-- Co-located with component implementation files.
-- Pattern: `src/components/<domain>/<component>/<component>.stories.tsx`.
-- Story titles use domain names such as `UI/Button` and `Ui/QuantityStepper`.
+**Naming:**
+- Use `*.test.ts` for TypeScript helper and operation tests.
+- Use `*.test.tsx` for component and route-scoped React tests.
+- Use `*.spec.ts` for Playwright E2E tests, as in `tests/e2e/cart-checkout.spec.ts`.
+- Use `*.test.mjs` for Node runner tests in `scripts/`.
+- Use `*.stories.tsx` for Storybook stories.
 
-**Node Tests:**
+**Structure:**
+```text
+src/
+├── lib/<domain>/<module>.test.ts
+├── components/<domain>/<component>/<component>.test.tsx
+├── components/<domain>/<component>/<component>.stories.tsx
+└── app/**/_components/<component>.test.tsx
 
-- Custom ESLint rule tests live beside rules in `scripts/eslint-rules/`.
-- Source contract checks live in `scripts/component-contracts/`.
+tests/
+├── e2e/*.spec.ts
+├── fixtures/shopify/*.ts
+└── mocks/*.ts
 
-**Vitest Tests:**
-
-- `src/lib/shopify/client.test.ts` covers transport behavior and the test-only fake endpoint.
-- `src/lib/shopify/operations/cart.test.ts` covers cart operation variables, `no-store`, mapping, checkout URL, discounts, and user errors.
-- `src/lib/cart/actions.test.ts` covers cart cookie lifecycle, Server Actions, quantity policy, stale carts, safe errors, and `/cart` revalidation.
-- `src/app/api/products/[handle]/quick-view/route.test.ts` covers quick-view route success and failure behavior.
-- `tests/setup/smoke.test.ts` proves shared fixtures and fake Shopify can create/read a cart.
-
-**E2E Directory:**
-
-- `tests/e2e/cart-checkout.spec.ts` covers a thin fake-Shopify cart flow and stops at the checkout URL.
-- E2E must not navigate into real Shopify checkout until the dev store gate is cleared.
-
-## Story Structure
-
-**Storybook Pattern:**
-
-```tsx
-import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-
-import { Button } from './button'
-
-const meta: Meta<typeof Button> = {
-  title: 'UI/Button',
-  component: Button,
-  tags: ['autodocs'],
-}
-export default meta
-
-type Story = StoryObj<typeof Button>
-
-export const Primary: Story = {
-  args: { children: 'Add to Cart', variant: 'primary' },
-}
+scripts/
+├── component-contracts/*.test.mjs
+└── eslint-rules/*.test.mjs
 ```
 
-**Interactive Story Pattern:**
+## Test Structure
 
-- Use a `render` function with local React state for controlled components.
-- Example: `src/components/ui/quantity-stepper/quantity-stepper.stories.tsx`.
+**Suite Organization:**
+```typescript
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-## Node Test Structure
+import { shopifyFetch } from '@/lib/shopify/client'
 
-**Custom ESLint Rule Pattern:**
+import { getCart } from './cart'
 
-```js
-import assert from 'node:assert/strict'
-import { test } from 'node:test'
-import { ESLint } from 'eslint'
+vi.mock('@/lib/shopify/client', () => ({
+  shopifyFetch: vi.fn(),
+}))
 
-test('reports invalid pattern', async () => {
-  const messages = await lintText(code, filePath)
-  assert.ok(messages.some((message) => message.ruleId === 'teavision/rule'))
+const shopifyFetchMock = shopifyFetch as unknown as Mock<
+  (options: ShopifyFetchCall) => Promise<unknown>
+>
+
+describe('Shopify cart operations', () => {
+  beforeEach(() => {
+    shopifyFetchMock.mockReset()
+  })
+
+  test('getCart maps cart payloads and uses no-store reads', async () => {
+    shopifyFetchMock.mockResolvedValueOnce({ cart: makeShopifyCartPayload() })
+
+    await expect(getCart('gid://shopify/Cart/test-cart')).resolves.toMatchObject({
+      totalQuantity: 1,
+    })
+  })
 })
 ```
 
-**Source Contract Pattern:**
-
-- Tests read source files as text and assert important class/variant/API contracts.
-- Example: `scripts/component-contracts/button-system.test.mjs` checks 44px touch targets, variant names, and reduced-motion expectations.
+**Patterns:**
+- Reset or clear mocks in `beforeEach()`: `src/lib/cart/actions.test.ts` uses `vi.clearAllMocks()`, while `src/lib/shopify/operations/cart.test.ts` uses `mockReset()`.
+- Use `await expect(promise).resolves` and `await expect(promise).rejects` for async behavior, as in `src/lib/shopify/client.test.ts`.
+- Use `renderToStaticMarkup()` for static HTML contract checks where full browser interaction is unnecessary: `src/components/collection/product-card/product-card.test.tsx` and `src/components/ui/quantity-stepper/quantity-stepper.test.tsx`.
+- Use React `act()` plus `createRoot()` for targeted client interaction tests: `src/components/product/product-form/product-form.test.tsx`.
+- Use role- and accessible-name selectors in Playwright: `page.getByRole('button', { name: 'Add to Cart' })` in `tests/e2e/cart-checkout.spec.ts`.
+- Route-handler tests call exported route functions directly with `Request` and a promised `params` context: `src/app/api/products/[handle]/quick-view/route.test.ts`.
 
 ## Mocking
 
-**Current State:**
+**Framework:** Vitest `vi.mock`, `vi.fn`, `vi.stubEnv`, `vi.stubGlobal`; Playwright route interception; local fake Shopify HTTP server.
 
-- Vitest uses direct module mocks for Next server-only boundaries such as `next/headers`, `next/cache`, and Shopify operations.
-- `tests/mocks/shopify-graphql-server.ts` provides a stateful fake Storefront GraphQL server for local server-side Shopify calls.
-- `tests/mocks/third-party-network.ts` blocks analytics, payment, Searchanise, Trustoo, Resend-like, and other third-party calls in Playwright.
-- Storybook stories pass static args, render controlled state, or inject action functions.
-- Node contract tests use real ESLint instances and filesystem reads.
+**Patterns:**
+```typescript
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(),
+}))
+
+vi.mock('@/lib/shopify/operations/cart', () => ({
+  addCartLines: vi.fn(),
+  createCart: vi.fn(),
+  getCart: vi.fn(),
+  removeCartLines: vi.fn(),
+  updateCartLines: vi.fn(),
+}))
+
+const cookiesMock = cookies as unknown as Mock<() => Promise<CookieStore>>
+```
 
 **What to Mock:**
+- Mock Next.js runtime APIs at Server Action boundaries: `next/headers` and `next/cache` in `src/lib/cart/actions.test.ts`.
+- Mock Shopify transport when testing operations: `shopifyFetch` in `src/lib/shopify/operations/cart.test.ts`.
+- Mock Shopify operations when testing route handlers and Server Actions: `getProduct` in `src/app/api/products/[handle]/quick-view/route.test.ts`.
+- Mock `next/navigation` for client components that call `useRouter()`: `src/components/collection/product-card/product-card.test.tsx`.
+- Stub environment variables with `vi.stubEnv()` and clean them with `vi.unstubAllEnvs()` in env-sensitive tests such as `src/lib/shopify/client.test.ts`.
+- Stub `fetch` with `vi.stubGlobal()` for low-level HTTP client tests in `src/lib/shopify/client.test.ts`.
+- Use `tests/mocks/shopify-graphql-server.ts` for browser E2E so the app exercises real HTTP GraphQL calls without real Shopify checkout or payment flows.
+- Use `tests/mocks/third-party-network.ts` to block unexpected external browser requests during Playwright tests.
 
-- If adding test infrastructure later, mock Shopify, Trustoo, Searchanise, Resend, and network calls at boundaries.
-- Keep pure helpers unmocked.
+**What NOT to Mock:**
+- Do not run real Shopify hosted checkout, payment, shipping-rate, tax, order-creation, or success-redirect tests until store-owner approval exists.
+- Do not hit production Shopify in tests; Playwright config injects fake local Shopify values in `playwright.config.ts`.
+- Do not mock the function under test. Mock its external boundary instead, such as `shopifyFetch` for operation tests or `getProduct` for route tests.
+- Do not mock simple pure helpers when direct assertions are cheap; test them directly as in `src/lib/shopify/quantity-rules.test.ts` and `src/lib/seo/site-url.test.ts`.
 
 ## Fixtures and Factories
 
-**Current State:**
+**Test Data:**
+```typescript
+export function makeCart(overrides: Partial<Cart> = {}): Cart {
+  const lines = overrides.lines ?? [makeCartLine()]
+  const totalQuantity =
+    overrides.totalQuantity ??
+    lines.reduce((total, line) => total + line.quantity, 0)
 
-- Shared Shopify fixtures live under `tests/fixtures/shopify/`.
-- Use `makeMoney`, `makeVariant`, `makeCartLine`, `makeCart`, and `makeShopifyCartPayload` for reusable cart/product fixtures.
-- Stories can import shared fixtures through the root alias when the fixture is reused by multiple tests.
-- Keep one-off sample props local to a story/test unless reuse is real.
+  return {
+    id: 'gid://shopify/Cart/test-cart',
+    checkoutUrl: 'https://checkout.test/cart/test-cart',
+    totalQuantity,
+    cost: {
+      totalAmount: makeMoney('24.00'),
+      subtotalAmount: makeMoney('24.00'),
+    },
+    lines,
+    ...overrides,
+  }
+}
+```
+
+**Location:**
+- Shopify fixtures live in `tests/fixtures/shopify/cart.ts`, `tests/fixtures/shopify/product.ts`, and `tests/fixtures/shopify/money.ts`.
+- E2E fake service helpers live in `tests/mocks/shopify-graphql-server.ts`, `tests/mocks/run-fake-shopify-server.ts`, and `tests/mocks/third-party-network.ts`.
+- Inline data is acceptable for narrow component tests when it is local to one behavior, as in `src/components/product/product-form/product-form.test.tsx`.
 
 ## Coverage
 
-**Requirements:**
+**Requirements:** No numeric coverage threshold is enforced in `package.json` or `vitest.config.mts`.
 
-- No coverage target is configured.
-- Storybook a11y and visual/manual review are the main UI quality gates.
-- `pnpm lint` and `pnpm build` are required before claiming code is complete.
-
-**Configuration:**
-
-- `vitest.config.mts` configures app-level Vitest setup and path aliases.
-- Storybook Vitest addon remains installed for Storybook's own test surface.
-- `playwright.config.ts` starts a fake Shopify server and a local Next server for fake-only E2E handoff coverage.
+**View Coverage:**
+```bash
+pnpm test:unit          # Primary regression suite; no coverage reporter configured
+pnpm test:integration   # Boundary regression suite; no coverage reporter configured
+```
 
 ## Test Types
 
-**Component Stories:**
+**Unit Tests:**
+- Cover pure helpers, low-level clients, Shopify operation mapping, component static markup contracts, and narrowly scoped UI interactions.
+- Examples: `src/lib/env/read.test.ts`, `src/lib/seo/site-url.test.ts`, `src/lib/shopify/client.test.ts`, `src/lib/shopify/operations/product.test.ts`, `src/components/ui/quantity-stepper/quantity-stepper.test.tsx`.
 
-- Scope: UI primitives and domain components under `src/components/`.
-- New components should include a Storybook story.
-- Prefer representative states: default, loading, disabled, variants, empty/error states where applicable.
+**Integration Tests:**
+- Cover Server Action and route-handler boundaries with mocked downstream dependencies.
+- `pnpm test:integration` runs `src/lib/cart/actions.test.ts` and `src/app/api/products/[handle]/quick-view/route.test.ts`.
+- Server Actions are tested with mocked cookies, cache revalidation, and Shopify operations in `src/lib/cart/actions.test.ts`.
+- Route handlers are tested by calling exported handlers directly and asserting JSON responses and HTTP statuses in `src/app/api/products/[handle]/quick-view/route.test.ts`.
 
-**Static Contract Tests:**
+**E2E Tests:**
+- Playwright tests are limited to fake-Shopify cart-to-checkout handoff coverage in `tests/e2e/cart-checkout.spec.ts`.
+- `playwright.config.ts` starts both `tests/mocks/run-fake-shopify-server.ts` and `next dev`, injects local Shopify test env vars, runs Chromium only, disables full parallelism, and retains traces on failure.
+- Tests must use fake checkout URLs such as `https://checkout.test/cart/fake-cart` and must not exercise real hosted checkout or payment flows.
 
-- Scope: Local ESLint rules and design-system source invariants.
-- Use when enforcing anti-regression constraints that lint/build alone will not catch.
+**Storybook Tests:**
+- Stories are the preferred component documentation and interaction surface.
+- `pnpm test:stories` uses `vitest.storybook.config.mts` with `@storybook/addon-vitest` and browser Playwright Chromium.
+- Story discovery includes `src/components/**/*.stories.*` and `src/app/**/_components/**/*.stories.*` from `.storybook/main.ts`.
 
-**Build and Type Checks:**
+**Contract Tests:**
+- `pnpm test:contracts` runs Node tests for static source contracts that lint or type tests do not capture.
+- Custom ESLint rules are tested through `ESLint.lintText()` in files such as `scripts/eslint-rules/no-raw-button.test.mjs`.
+- Structural and design contracts are checked by reading source files and matching stable patterns in `scripts/component-contracts/button-system.test.mjs`.
 
-- `pnpm build` validates Next/TypeScript production build behavior.
-- `pnpm codegen` validates Shopify GraphQL selection sets against the configured schema when credentials are available.
+## Common Patterns
 
-**Manual Flow Checks:**
+**Async Testing:**
+```typescript
+await expect(
+  shopifyFetch<{ ok: boolean }>({ query: 'query Test { ok }' }),
+).rejects.toThrow('Missing Shopify credentials')
 
-- Storefront data depends on Shopify credentials outside test mode.
-- Product/cart changes should use unit, integration, Storybook, and fake-only E2E checks first.
-- Hosted checkout UAT is documented in `docs/testing/cart-checkout-uat.md`, but execution is blocked until the Shopify dev store is ready and explicitly approved.
-- Review-driven refinement rationale for the cart and checkout test slice is documented in `docs/testing/cart-checkout-refinement-rationale.md`.
+await expect(getCart(cart.id)).resolves.toMatchObject({
+  checkoutUrl: cart.checkoutUrl,
+})
+```
 
-## Common Verification Matrix
+**Error Testing:**
+```typescript
+shopifyFetchMock.mockResolvedValueOnce({
+  cartLinesAdd: {
+    cart: null,
+    userErrors: [{ message: 'Not enough merchandise available' }],
+  },
+})
 
-**UI Component Change:**
+await expect(addCartLines(cart.id, lines)).rejects.toThrow(
+  'Not enough merchandise available',
+)
+```
 
-- Add/update `*.stories.tsx`.
-- Run `pnpm lint`.
-- Run Storybook and inspect target story.
-- Run `pnpm build` if the component is route-critical or uses Next APIs.
+**DOM and Browser Testing:**
+```typescript
+const html = renderToStaticMarkup(<ProductCard product={product} />)
+expect(html).toContain('aspect-square')
 
-**Shopify Query/Type Change:**
-
-- Update `src/lib/shopify/queries/*.graphql`.
-- Run `pnpm codegen`.
-- Update `src/lib/shopify/types/index.ts`.
-- Run `pnpm lint` and `pnpm build`.
-
-**Cart or Server Action Change:**
-
-- Run `pnpm test:unit`.
-- Run `pnpm test:integration`.
-- Run `pnpm test:stories` when UI states change.
-- Run `pnpm test:e2e` for local fake-Shopify cart handoff changes.
-- Do not run real Shopify hosted checkout UAT until the dev store is ready and explicitly approved.
-
-**Hosted Checkout UAT:**
-
-- Use `docs/testing/cart-checkout-uat.md`.
-- Validate customer, shipping, billing, payment, order, tax, shipping, and success states only against the approved Shopify dev store.
-- Keep production payment credentials, production fulfilment, and production communications disabled.
-
-## Residual Gaps
-
-- Cart discount-code entry is not present in the Next storefront; discount-code behavior is checkout-only unless a separate cart discount feature is added.
-- `src/lib/shopify/queries/cart.graphql` currently fetches `lines(first: 100)`. Tests document this cap; pagination or warning UI is a separate product decision.
-- Local tests prove checkout URL handoff, not hosted payment/order behavior.
-- Dev-store hosted checkout UAT remains blocked until store setup is complete.
-
-**Custom ESLint Rule Change:**
-
-- Run the matching `node --test scripts/eslint-rules/*.test.mjs`.
-- Run `pnpm lint`.
+await page.getByRole('button', { name: 'Add to Cart' }).click()
+await expect(page.getByText('5 added to cart')).toBeVisible()
+```
 
 ---
 
-_Testing analysis: 2026-05-26_
-_Update when test infrastructure or verification gates change_
+*Testing analysis: 2026-06-11*

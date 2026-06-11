@@ -1,208 +1,200 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-05-26
+**Analysis Date:** 2026-06-11
 
 ## Tech Debt
 
-**PDP quantity and discount parity:**
+**Contact and lead-capture actions are concentrated in one large Server Actions module:**
+- Issue: `src/lib/contact/actions.ts` handles contact enquiries, custom tea blends, wholesale accounts, NPD orders, newsletter signup, rate-limit checks, validation, formatting, and Resend transport in a single 660-line file.
+- Files: `src/lib/contact/actions.ts`, `src/lib/contact/custom-tea-blend.ts`, `src/lib/contact/wholesale-account.ts`, `src/lib/contact/npd-order.ts`
+- Impact: Adding a new lead-capture form requires editing a high-churn shared module. Validation and email formatting patterns can drift because form-specific code is separated only by function naming.
+- Fix approach: Keep shared primitives in `src/lib/contact/actions.ts` only for transport, rate limiting, and common result helpers. Move each form workflow to a focused module such as `src/lib/contact/contact-action.ts`, `src/lib/contact/wholesale-account-action.ts`, and `src/lib/contact/npd-order-action.ts`, with tests next to each workflow.
 
-- Issue: `src/components/product/product-form/product-form.tsx` hard-codes add-to-cart quantity to `1` and does not render bulk discount tiers.
-- Related files: `src/app/(storefront)/products/[handle]/page.tsx`, `src/lib/shopify/queries/product.graphql`, `src/lib/shopify/types/index.ts`, `src/lib/cart/actions.ts`.
-- Impact: Headless PDP does not yet match the live Shopify-theme "Buy in Bulk and Save" behavior.
-- Fix approach: Add a first-class quantity selector, bulk tier data source, and cart discount display path. Prefer Shopify-native discount/metafield/metaobject data over injecting legacy app scripts.
+**Product operations mix Shopify queries, legacy adapters, parsing, enrichment, and cache policy:**
+- Issue: `src/lib/shopify/operations/product.ts` owns generated query calls, product reshaping, variant pagination, metafield bulk-tier parsing, HulkApps fallback parsing, legacy `/products/{handle}.js` inventory lookup, and cache lifetimes.
+- Files: `src/lib/shopify/operations/product.ts`
+- Impact: Product-detail changes are risky because unrelated concerns share the same module. Legacy enrichment can affect core PDP fetch behavior and cache duration.
+- Fix approach: Keep public operations in `src/lib/shopify/operations/product.ts`, but extract adapters into focused modules such as `src/lib/shopify/operations/product-bulk-pricing.ts`, `src/lib/shopify/operations/product-inventory.ts`, and `src/lib/shopify/operations/product-mappers.ts`.
 
-**Cart discount visibility gap:**
+**Collection page helpers rely on custom HTML and filter parsing:**
+- Issue: `src/app/(storefront)/collections/[handle]/_lib/page-helpers.ts` parses Shopify collection HTML with regexes, rebuilds category path segments from Shopify tag filters, and serializes filter inputs manually.
+- Files: `src/app/(storefront)/collections/[handle]/_lib/page-helpers.ts`, `src/app/(storefront)/collections/[handle]/_components/page-content.tsx`
+- Impact: Changes to legacy collection HTML shape, tag naming, or Shopify filter input structure can break category routes, rich hero extraction, and filter links without TypeScript catching it.
+- Fix approach: Prefer structured Shopify metafields for rich hero/category metadata. Keep HTML parsing as a compatibility adapter with explicit fixture tests in `src/app/(storefront)/collections/[handle]/_lib/page-helpers.test.ts`.
 
-- Issue: `src/lib/shopify/queries/cart.graphql` fetches totals and line prices but not line-level `discountAllocations`.
-- Impact: Cart can show Shopify subtotal/total but cannot explain applied bulk/discount allocations at line level.
-- Fix approach: Extend cart query/types/reshaper to expose discount allocations before implementing visible discount messaging.
-
-**Duplicated reshape helpers:**
-
-- Issue: `reshapeMoney()`, `reshapeImage()`, and review-rating parsing exist in multiple operation files.
-- Files: `src/lib/shopify/operations/product.ts`, `collection.ts`, `cart.ts`, `search.ts`.
-- Impact: Field additions must be repeated and can drift across product, collection, search, and cart.
-- Fix approach: Extract shared reshapers only when a change touches multiple domains; keep type-specific reshape logic local.
-
-**Homepage/page docs and README drift:**
-
-- Issue: `README.md` is still the create-next-app default and references root `app/page.tsx`.
-- Impact: New contributors may follow wrong commands or paths.
-- Fix approach: Replace README with Teavision-specific setup, env, Shopify, Storybook, and verification notes.
-
-**Scaffolding script generates weak placeholder code:**
-
-- Issue: `scripts/create-component.mjs` emits `className = ''` and a placeholder `<div>`.
-- Impact: Generated components still need cleanup to comply with the stricter `cn()`/component anatomy guidance.
-- Fix approach: Update scaffold templates to import `cn()` when `className` exists, include `type-*`/token examples only if appropriate, and keep placeholder comments out of production components.
+**Test scripts use explicit file whitelists:**
+- Issue: `package.json` enumerates individual files in `test:unit` and `test:integration` rather than globbing all eligible tests.
+- Files: `package.json`, `src/app/(storefront)/collections/[handle]/_components/page-content.test.tsx`, `src/components/collection/toolbar.test.tsx`, `src/lib/blog/operations.test.ts`, `src/lib/sanity/queries/blog.test.ts`
+- Impact: New `*.test.*` files can be committed but not run by the standard test scripts unless the script is manually updated.
+- Fix approach: Replace whitelists with domain globs or split tests by marker/path convention. Keep the Shopify checkout e2e restriction, but run all unit-safe `src/**/*.test.*` and `tests/setup/**/*.test.*` files automatically.
 
 ## Known Bugs
 
-**No confirmed runtime bugs documented in code:**
+**Collection category routes depend on the first uncategorized product page to discover category tags:**
+- Symptoms: `PageContent` first fetches unfiltered products, then calls `findCategoryTagForPath()` with only `initialProductsResult.filters` and `initialProductsResult.products`. If Shopify filters do not include category tags and the first 24 products do not contain a requested category tag, the route can 404 even if later products in the collection match.
+- Files: `src/app/(storefront)/collections/[handle]/_components/page-content.tsx`, `src/app/(storefront)/collections/[handle]/_lib/page-helpers.ts`
+- Trigger: Visit `/collections/[handle]/[category]` for a category represented only outside the first returned product page when Shopify does not expose the category tag in filters.
+- Workaround: Ensure category tags appear in Shopify filter values or keep a representative product in the first collection page.
 
-- Current map did not find reproducible committed bug reports in source comments.
-- Keep this section updated as QA or production issues are confirmed.
+**Unknown Shopify webhook topics are accepted without visibility:**
+- Symptoms: The Shopify webhook route returns success for unhandled topics and does not log or record the ignored topic.
+- Files: `src/app/api/webhooks/shopify/route.ts`
+- Trigger: Shopify sends a topic outside `products/*`, `collections/*`, `collections/products_*`, or `pages/*`, such as inventory, price list, publication, or metafield changes.
+- Workaround: Configure only supported webhook topics until ignored-topic logging and topic coverage are expanded.
 
 ## Security Considerations
 
-**Contact form rate limiting is in-memory:**
+**Production rate limiting is process-local memory only:**
+- Risk: Public forms and search suggestions call `checkRateLimit()`, but the implementation always uses the module-level `memoryBuckets` map. Multi-instance, serverless, or restarted deployments reset counters and allow bypass by spreading traffic across instances.
+- Files: `src/lib/rate-limit/index.ts`, `src/lib/contact/actions.ts`, `src/app/api/search/suggestions/route.ts`
+- Current mitigation: A production warning is emitted unless `RATE_LIMIT_EXTERNAL_PROTECTION=true` or `RATE_LIMIT_ALLOW_MEMORY_FALLBACK=true` is set. Contact forms use honeypot fields and validation before email delivery.
+- Recommendations: Add a durable `RateLimitStore` implementation backed by hosting-provider rate limiting, Redis/KV, or another shared store. Make production fail closed when neither external protection nor explicit memory fallback is configured.
 
-- Risk: `src/lib/contact/actions.ts` stores buckets in a module-level `Map`, which resets across serverless instances/restarts and does not coordinate across regions.
-- Current mitigation: Honeypot field, validation, and short-window per-IP bucket.
-- Recommendation: Use provider-level rate limits, edge middleware, or durable rate limiting for production abuse resistance.
+**Client IP trust is based on forwarded headers:**
+- Risk: `getClientIpFromHeaders()` trusts `x-forwarded-for`, `x-real-ip`, then `cf-connecting-ip`. If the hosting layer does not sanitize these headers, clients can spoof identifiers and bypass rate limits.
+- Files: `src/lib/rate-limit/index.ts`, `src/lib/contact/actions.ts`, `src/app/api/search/suggestions/route.ts`
+- Current mitigation: Header-derived IPs are used only for rate-limit keys, not authentication.
+- Recommendations: Prefer the platform-provided client IP header after confirming proxy behavior. Document the trusted header source in deployment configuration and ignore generic forwarded headers when they are not guaranteed by the edge provider.
 
-**Searchanise public script injection:**
+**Contact error logs may include provider payloads for user-submitted emails:**
+- Risk: Resend error objects and caught exceptions are logged directly for contact, wholesale, NPD, and newsletter submissions.
+- Files: `src/lib/contact/actions.ts`
+- Current mitigation: Successful submission bodies are emailed but not logged by application code.
+- Recommendations: Log structured, redacted fields such as form type, provider status/code, and request correlation ID. Avoid logging raw provider error objects if they can contain recipient, reply-to, or message metadata.
 
-- Risk: `SearchaniseScriptLoader` loads a third-party script from `searchserverapi.com` when public env flags enable it.
-- Current mitigation: Feature flag and fallback state.
-- Recommendation: Validate the exact production role of Searchanise, monitor failures, and keep a no-script fallback.
-
-**HTML rendering requires sanitizer discipline:**
-
-- Risk: Shopify page/article/product HTML enters the app from an external CMS.
-- Current mitigation: `src/lib/shopify/html-content.ts` sanitizes allowed tags, attributes, schemes, and classes.
-- Recommendation: Route all Shopify HTML through this module before `dangerouslySetInnerHTML`; do not render raw CMS HTML directly.
-
-**Webhook accepts ignored topics:**
-
-- Risk: Unknown Shopify topics return success and do not alert.
-- Current mitigation: Safe default avoids webhook retries for irrelevant topics.
-- Recommendation: Add structured logging or monitoring if webhook topic coverage becomes operationally important.
+**Rich collection hero HTML bypasses the branded `SanitizedHtml` path:**
+- Risk: General Shopify rich text rendering requires the `SanitizedHtml` brand from `src/lib/shopify/html-content.ts`, but collection rich hero intro HTML is a plain string created by `sanitizeInlineHtml()` and rendered with `dangerouslySetInnerHTML`.
+- Files: `src/app/(storefront)/collections/[handle]/_lib/page-helpers.ts`, `src/app/(storefront)/collections/[handle]/_components/collection-rich-hero.tsx`, `src/lib/shopify/html-content.ts`, `src/components/ui/rich-text/rich-text.tsx`
+- Current mitigation: `sanitizeInlineHtml()` strips scripts/styles and allows only `b`, `em`, `i`, and `strong`.
+- Recommendations: Return `SanitizedHtml` from the rich-hero sanitizer or render the intro through a structured React representation. Keep all future `dangerouslySetInnerHTML` call sites behind branded sanitizer APIs.
 
 ## Performance Bottlenecks
 
-**Full collection product pagination before render:**
+**Cart reads fan out to product-detail enrichment for every unique line handle:**
+- Problem: Every cart fetch or mutation reshapes the Shopify cart, then calls `getProduct()` for each unique product handle to merge product-level bulk pricing tiers.
+- Files: `src/lib/shopify/operations/cart.ts`, `src/lib/shopify/operations/product.ts`, `src/lib/cart/actions.ts`
+- Cause: `reshapeCart()` calls `getProductBulkPricingByHandle()`, which uses `Promise.all()` over cart line handles. `getProduct()` can paginate variants and query legacy inventory/HulkApps fallbacks.
+- Improvement path: Add cart-specific bulk-pricing fields to the cart GraphQL query when possible, or create a lighter `getProductBulkPricing(handle)` operation that avoids PDP-only fields, recommendations, analytics inputs, and legacy inventory lookups.
 
-- Problem: `getCollectionProductsWithFilters()` loops through all product pages for a collection using page size 250.
-- Files: `src/lib/shopify/operations/collection.ts`, `src/app/(storefront)/collections/[handle]/page.tsx`.
-- Measurement: No current timings captured.
-- Cause: Collection page needs full product set to build category filters and display all products.
-- Improvement path: Introduce pagination or split filter metadata from visible product fetches if collection size affects TTFB.
+**Sitemap generation fetches the entire product catalog:**
+- Problem: `src/app/sitemap.ts` calls `getAllProducts()`, which paginates all Shopify products in 250-item pages before returning sitemap entries.
+- Files: `src/app/sitemap.ts`, `src/lib/shopify/operations/product.ts`
+- Cause: Sitemap generation uses the same product summary pagination path as storefront data rather than a sitemap-specific query/cache.
+- Improvement path: Keep a sitemap-specific operation with only `handle` and `updatedAt`, cache it with an appropriate long-lived tag, and consider sitemap chunking if the catalog grows beyond a few thousand products.
 
-**Product detail page does multiple independent external reads:**
+**Collection pages do extra data work for categories and sidebar summaries:**
+- Problem: Every collection page fetches collection details, one product page, and all collection summaries in parallel. Category pages then perform a second product query with the active category filter.
+- Files: `src/app/(storefront)/collections/[handle]/_components/page-content.tsx`, `src/lib/shopify/operations/collection.ts`
+- Cause: Category route resolution first depends on initial unfiltered products/filters, then fetches the active filtered result.
+- Improvement path: Resolve category tags from a structured category index or Shopify filter metadata without fetching products first. Cache sidebar collection summaries separately from the page request path.
 
-- Problem: PDP fetches product data, related collection/recommendations, and Trustoo ratings.
-- Files: `src/app/(storefront)/products/[handle]/page.tsx`, `src/lib/reviews/trustoo.ts`.
-- Measurement: No current timings captured.
-- Cause: Related products and reviews add external dependencies.
-- Improvement path: Keep related sections behind Suspense, preserve caching, and measure before broadening PDP dependencies.
-
-**Blog fetch loads all articles:**
-
-- Problem: `getBlog()` paginates through all articles before filtering/pagination in memory.
-- File: `src/lib/blog/operations.ts`.
-- Measurement: No current timings captured.
-- Improvement path: Use Shopify pagination/cursors for listing pages if article count grows enough to affect page generation.
+**Search suggestions proxy every eligible keystroke to Searchanise:**
+- Problem: Header autocomplete debounces to 180ms and the route calls Searchanise with `cache: 'no-store'`.
+- Files: `src/components/layout/header/search-autocomplete.tsx`, `src/app/api/search/suggestions/route.ts`, `src/lib/searchanise/search.ts`
+- Cause: Suggestions favor freshness and do not cache repeated popular prefixes.
+- Improvement path: Add a short server-side cache for normalized query prefixes, keep the rate limit, and consider requiring three characters before server calls if Searchanise latency or cost becomes visible.
 
 ## Fragile Areas
 
-**Next.js 16 APIs:**
+**Legacy bulk-pricing fallback depends on HulkApps response shape and external availability:**
+- Files: `src/lib/shopify/operations/product.ts`
+- Why fragile: The HulkApps fallback posts to `https://volumediscount.hulkapps.com/api/v2/shop/get_offer_table` and parses `"% Off"` offer levels from a legacy response shape. Failures degrade bulk tiers and shorten product cache life to minutes.
+- Safe modification: Treat the HulkApps adapter as compatibility-only. Add fixture coverage for every observed response shape before changing parsing, and prefer Shopify-native quantity price breaks or typed product metafields for new pricing work.
+- Test coverage: `src/lib/shopify/operations/product.test.ts` covers product operations and bulk-pricing parsing, but live HulkApps behavior is not covered by integration tests.
 
-- Why fragile: Repo instructions warn this Next version differs from common assumptions.
-- Common failures: Using old `params`/`searchParams` patterns, wrong cache assumptions, or outdated docs.
-- Safe modification: Read `node_modules/next/dist/docs/` before changing Next data, caching, route, or dynamic API code.
-- Test coverage: Build/lint only; no E2E suite.
+**Legacy inventory lookup reads Shopify product JSON outside the Storefront GraphQL API:**
+- Files: `src/lib/shopify/operations/product.ts`
+- Why fragile: `getLegacyProductInventory()` fetches `https://${storeDomain}/products/${handle}.js` only when Storefront `quantityRule.maximum` is missing. That endpoint is theme/Shopify legacy surface area, not part of the generated Storefront GraphQL contract.
+- Safe modification: Keep the fallback isolated and optional. Replace it with Storefront API inventory data or a first-party API path when the token scopes allow it.
+- Test coverage: Product unit tests cover mapper behavior, but there is no fake-Shopify integration coverage for this legacy product JSON endpoint.
 
-**Shopify generated types boundary:**
+**Searchanise recommendations depend on third-party DOM markup:**
+- Files: `src/components/product/searchanise-recommendations/searchanise-script-loader.tsx`, `src/components/product/searchanise-recommendations/use-searchanise-recommendations.ts`, `src/components/product/searchanise-recommendations/searchanise-product-parser.ts`, `src/app/(storefront)/products/[handle]/_components/customers-also-bought.tsx`, `src/app/(storefront)/cart/_components/recommendations.tsx`
+- Why fragile: The component waits for global Searchanise events, observes third-party-rendered DOM with `MutationObserver`, parses product cards back into native `ProductSummary` objects, and falls back after a timer.
+- Safe modification: Keep Shopify fallback carousels in place. When changing Searchanise integration, update Storybook fixtures in `src/components/product/searchanise-recommendations/searchanise-recommendations.stories.tsx` to mirror real widget markup before changing parser selectors.
+- Test coverage: Storybook fixtures cover rendered, empty, and fallback states, but there is no production-like browser test against the real Searchanise script.
 
-- Why fragile: Generated files are large and should not be hand-edited or imported directly.
-- Common failures: Direct imports from `src/lib/shopify/types/generated/`, stale generated types after query edits.
-- Safe modification: Edit `.graphql`, run `pnpm codegen`, then update public exports in `src/lib/shopify/types/index.ts`.
-
-**Legacy Shopify app parity:**
-
-- Why fragile: Live theme behavior can come from Shopify app embeds/scripts instead of Liquid files.
-- Evidence: Sibling `../teavision-theme` contains HulkApps hooks and commented Quantity Breaks Now code; live behavior may still depend on admin-side app config.
-- Safe modification: Treat the theme as evidence, then verify live rendered scripts/DOM before implementing parity in Next.
-
-**Product analytics compatibility script:**
-
-- Why fragile: `src/app/(storefront)/products/[handle]/page.tsx` includes inline `window.ShopifyAnalytics`/`__st` compatibility data and currently has uncommitted user edits.
-- Common failures: Overwriting user changes, introducing unsafe inline JSON, or breaking Shopify-app-style product context.
-- Safe modification: Use `serializeInlineJson()` for inline JSON and read the latest diff before editing this file.
+**Cache invalidation is broad and partially topic-based:**
+- Files: `src/app/api/webhooks/shopify/route.ts`, `src/app/api/webhooks/sanity/route.ts`, `src/lib/shopify/operations/product.ts`, `src/lib/shopify/operations/collection.ts`, `src/lib/blog/operations.ts`
+- Why fragile: Shopify webhooks invalidate broad tags such as `product`, `products`, `collection`, and `collections`, while product operations also use per-handle tags. Sanity invalidates blog-wide tags and optional slug tags. Unsupported topics are ignored.
+- Safe modification: Add topic tests before changing webhook behavior. Prefer targeted handle/slug tags when webhook payloads provide enough identity, but keep broad tags for delete or relationship-changing events.
+- Test coverage: Webhook route tests are not detected under current `*.test.*` files.
 
 ## Scaling Limits
 
-**No app database or queue:**
+**In-memory rate-limit store capacity scales with unique identifiers per process:**
+- Current capacity: One `Map` entry per `{namespace}:{identifier}` until each bucket expires.
+- Limit: High-cardinality spoofed IP traffic can grow memory within each Node process, and limits do not coordinate across processes.
+- Scaling path: Use a bounded external store with TTL and atomic increment. Keep namespace-specific limits in code, but move storage out of module state.
 
-- Current capacity: Limited by Shopify Storefront API, Next server runtime, and external service limits.
-- Limit: Long-running or durable workflows cannot be stored locally.
-- Scaling path: Keep state in Shopify where possible; introduce durable infrastructure only for explicit product requirements.
-
-**Contact form rate limiting:**
-
-- Current capacity: Best-effort per runtime instance.
-- Limit: Distributed production traffic can bypass the in-memory bucket.
-- Scaling path: Durable rate limiter or provider-level protection.
+**Storefront product and collection pagination assumes Shopify page sizes of 250:**
+- Current capacity: Product and collection summary operations fetch pages of up to 250 records.
+- Limit: Large catalogs increase Shopify request count for `getAllProducts()`, collection summaries, and PDP variant pagination.
+- Scaling path: Add purpose-specific skinny queries, sitemap chunking, and route-level pagination that avoids fetching catalog-wide data during normal page requests.
 
 ## Dependencies at Risk
 
-**Third-party storefront widgets:**
+**HulkApps volume discount endpoint:**
+- Risk: The endpoint and response contract are external and untyped.
+- Impact: PDP and cart bulk-savings display can lose legacy fallback tiers when Shopify-native breaks and metafields are absent.
+- Migration plan: Move operators to Shopify-native quantity price breaks or typed `custom.bulk_pricing_tiers` metafields; keep HulkApps only as a temporary compatibility adapter.
 
-- Risk: Searchanise and Trustoo behavior depends on external services and dashboard configuration outside the repo.
-- Impact: Recommendations/reviews can silently disappear or mismatch headless markup.
-- Mitigation: Feature flags, fallbacks, and server-side summaries where available.
+**Searchanise widget and Searchanise search API:**
+- Risk: Search and recommendations rely on `NEXT_PUBLIC_SEARCHANISE_*`, `https://searchserverapi1.com/getresults`, and widget script markup.
+- Impact: Search pages, suggestions, PDP recommendations, and cart recommendations degrade to unavailable/Shopify fallback states when Searchanise config or markup changes.
+- Migration plan: Keep Shopify fallbacks for recommendations and consider a Storefront API search fallback for basic product search when Searchanise is unavailable.
 
-**Shopify Storefront schema:**
-
-- Risk: Queries target `2026-04`; schema or plan features may affect fields like quantity price breaks.
-- Impact: Codegen/build can fail after API changes or when adding B2B pricing fields without schema support.
-- Mitigation: Run `pnpm codegen` after query edits and check official Shopify docs for new Storefront fields.
+**Legacy Shopify product JSON endpoint:**
+- Risk: `/products/{handle}.js` is outside generated Storefront GraphQL types and may not match future inventory needs.
+- Impact: Maximum quantity display and cart validation can become less accurate when Storefront quantity rules omit maximums.
+- Migration plan: Replace with typed Storefront inventory data or a first-party endpoint once credentials and scopes are available.
 
 ## Missing Critical Features
 
-**Bulk pricing source of truth:**
+**Durable rate limiting and abuse protection:**
+- Problem: Public forms and search endpoints have application-level limits but no durable store implementation in the repo.
+- Blocks: Reliable production protection for contact, wholesale, NPD, newsletter, and search suggestion endpoints.
 
-- Problem: The Next app has no committed model for bulk pricing tiers.
-- Current workaround: None in Next; live theme/app behavior handles it outside this codebase.
-- Blocks: Accurate "Buy in Bulk and Save" display and discount explanation in cart.
-- Implementation complexity: Medium to high, depending on whether tiers come from Shopify native data, metafields/metaobjects, or a third-party app export/API.
+**Webhook observability:**
+- Problem: Shopify ignored topics and revalidation outcomes are not logged or surfaced.
+- Blocks: Diagnosing stale product, collection, page, and pricing data after Shopify changes.
 
-**Automated browser/E2E coverage:**
-
-- Problem: No Playwright/Cypress suite covers PDP, collection filters, cart, checkout handoff, contact forms, or third-party widget degradation.
-- Current workaround: Manual local verification and Storybook.
-- Blocks: Safe migration confidence for revenue-critical flows.
-- Implementation complexity: Medium.
-
-**Production monitoring:**
-
-- Problem: No committed error tracking or uptime/analytics instrumentation beyond partial ShopifyAnalytics compatibility on PDP.
-- Current workaround: Hosting/provider logs and manual checks.
-- Blocks: Fast detection of production regressions.
-- Implementation complexity: Low to medium depending on provider choice.
+**Production-like third-party integration verification:**
+- Problem: Searchanise, Trustoo, HulkApps, and legacy Shopify product JSON behavior are primarily covered by adapters, stories, or unit fixtures.
+- Blocks: High-confidence deploys when third-party markup/API contracts change.
 
 ## Test Coverage Gaps
 
-**Cart and checkout:**
+**Webhook route behavior:**
+- What's not tested: HMAC success/failure paths, missing secret responses, topic-to-tag mapping, ignored Shopify topics, Sanity signature failures, and slug-specific Sanity invalidation.
+- Files: `src/app/api/webhooks/shopify/route.ts`, `src/app/api/webhooks/sanity/route.ts`
+- Risk: Cache invalidation regressions can ship unnoticed and leave stale storefront data.
+- Priority: High
 
-- What's not tested: Add/update/remove cart lines, cookie recovery, checkout URL handoff, discount allocation display.
-- Risk: Revenue-impacting regressions can ship unnoticed.
-- Priority: High.
-- Difficulty: Needs real Shopify test products/carts or a mocked Storefront layer.
+**Rate-limit production behavior:**
+- What's not tested: Memory-store cleanup under high cardinality, forwarded-header precedence, production warning behavior, and explicit fallback flags.
+- Files: `src/lib/rate-limit/index.ts`, `scripts/component-contracts/rate-limit.test.mjs`
+- Risk: Abuse protection can be weaker than expected in production.
+- Priority: High
 
-**Shopify HTML sanitizer:**
+**All test files are not covered by standard scripts automatically:**
+- What's not tested: Any new unit file omitted from `package.json` scripts, including current files outside the explicit `test:unit` and `test:integration` lists.
+- Files: `package.json`, `src/app/(storefront)/collections/[handle]/_components/page-content.test.tsx`, `src/components/collection/toolbar.test.tsx`, `src/lib/blog/operations.test.ts`, `src/lib/sanity/queries/blog.test.ts`
+- Risk: Passing standard test commands may not include all committed tests.
+- Priority: Medium
 
-- What's not tested: Allowed/disallowed tags, links, images, table rendering, class stripping, heading remapping.
-- Risk: CMS content can break layout or unsafe markup can slip through after changes.
-- Priority: High.
-- Difficulty: Low; pure function tests are straightforward if a test runner is formalized.
+**Searchanise and recommendation browser behavior:**
+- What's not tested: Real script loading, real widget event timing, Searchanise markup drift, and fallback behavior in a production-like browser.
+- Files: `src/components/product/searchanise-recommendations/searchanise-script-loader.tsx`, `src/components/product/searchanise-recommendations/use-searchanise-recommendations.ts`, `src/components/product/searchanise-recommendations/searchanise-product-parser.ts`
+- Risk: Recommendations can disappear or parse incorrectly without failing unit tests.
+- Priority: Medium
 
-**Collection filtering/canonicalization:**
-
-- What's not tested: Sort/filter/category URL parsing, not-found behavior, and generated structured data.
-- Risk: SEO and product discovery regressions.
-- Priority: Medium-high.
-- Difficulty: Medium due to Storefront data dependency.
-
-**Webhook verification:**
-
-- What's not tested: Valid/invalid HMAC, known topics, unknown topics, cache tag calls.
-- Risk: Cache invalidation breaks silently.
-- Priority: Medium.
-- Difficulty: Medium; route handler tests need request fixtures and cache mocking.
+**Sitemap scale and failure behavior:**
+- What's not tested: Shopify failures during sitemap generation, very large catalogs, and noindex-mode sitemap suppression.
+- Files: `src/app/sitemap.ts`, `src/lib/shopify/operations/product.ts`, `src/lib/shopify/operations/collection.ts`
+- Risk: SEO surfaces can fail at request/build time or become slow as catalog size grows.
+- Priority: Medium
 
 ---
 
-_Concerns audit: 2026-05-26_
-_Update as issues are fixed or new ones are discovered_
+*Concerns audit: 2026-06-11*
