@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 
-import { Hero } from '@/components/blog'
-import { Section } from '@/components/ui'
+import { BlogLoadingSkeleton, Hero } from '@/components/blog'
 
 import { HeroSlot } from './hero-slot'
 import { ListingContent } from './listing-content'
@@ -15,17 +14,7 @@ export function ListingPage(props: ListingProps) {
       </Suspense>
 
       <Suspense
-        fallback={
-          <Section.Root tone="sunken">
-            <Section.Container
-              variant="compact"
-              className="type-body text-ink-soft"
-              aria-live="polite"
-            >
-              Loading articles…
-            </Section.Container>
-          </Section.Root>
-        }
+        fallback={<BlogLoadingSkeleton includeFeatured articleCount={6} />}
       >
         <ListingContent
           params={props.params}
