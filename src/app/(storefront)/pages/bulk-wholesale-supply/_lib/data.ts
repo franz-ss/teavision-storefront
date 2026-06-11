@@ -35,11 +35,28 @@ export const FEATURE_CARDS_3: FeatureCard3[] = [
 ]
 
 // Section 4 — freight & logistics check items
-export const LOGISTICS_CHECK_ITEMS: string[] = [
-  'Container & LCL Options to match your volumes',
-  'Quality Control Checks on arrival in Melbourne',
-  'Supplier Due-Diligence and document verification',
-  'Consolidation Services of teas, herbs, spices & functional ingredients',
+export type LogisticsCheckItem = {
+  bold: string
+  rest: string
+}
+
+export const LOGISTICS_CHECK_ITEMS: LogisticsCheckItem[] = [
+  {
+    bold: 'Container & LCL Options',
+    rest: 'to match your volumes',
+  },
+  {
+    bold: 'Quality Control Checks',
+    rest: 'on arrival in Melbourne',
+  },
+  {
+    bold: 'Supplier Due-Diligence',
+    rest: 'and document verification',
+  },
+  {
+    bold: 'Consolidation Services',
+    rest: 'of teas, herbs, spices & functional ingredients',
+  },
 ]
 
 // Section 5 — 2-column feature cards

@@ -3,26 +3,7 @@ import { Check } from 'lucide-react'
 
 import { Section } from '@/components/ui'
 
-import { SHIP_IMAGE_SRC } from '../_lib/data'
-
-const CHECK_ITEMS = [
-  {
-    bold: 'Container & LCL Options',
-    rest: 'to match your volumes',
-  },
-  {
-    bold: 'Quality Control Checks',
-    rest: 'on arrival in Melbourne',
-  },
-  {
-    bold: 'Supplier Due-Diligence',
-    rest: 'and document verification',
-  },
-  {
-    bold: 'Consolidation Services',
-    rest: 'of teas, herbs, spices & functional ingredients',
-  },
-]
+import { LOGISTICS_CHECK_ITEMS, SHIP_IMAGE_SRC } from '../_lib/data'
 
 export function LogisticsSection() {
   return (
@@ -50,7 +31,7 @@ export function LogisticsSection() {
               so your planning stays on track.
             </p>
             <ul className="mt-6 flex flex-col gap-3">
-              {CHECK_ITEMS.map((item) => (
+              {LOGISTICS_CHECK_ITEMS.map((item) => (
                 <li key={item.bold} className="flex items-start gap-3">
                   <span className="bg-brand text-paper mt-0.5 grid size-5 shrink-0 place-items-center rounded-full">
                     <Check className="size-3" aria-hidden="true" />
