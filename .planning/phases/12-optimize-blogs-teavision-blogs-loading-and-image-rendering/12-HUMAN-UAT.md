@@ -1,20 +1,16 @@
 ---
-status: partial
+status: complete
 phase: 12-optimize-blogs-teavision-blogs-loading-and-image-rendering
 source: [12-VERIFICATION.md]
 started: 2026-06-11T13:01:00Z
-updated: 2026-06-11T13:24:44Z
+updated: 2026-06-11T13:25:37Z
 ---
 
 # Phase 12 Human UAT
 
 ## Current Test
 
-number: 4
-name: Default listing hides scheduled featured posts
-expected: |
-  A future-dated featured post configured in Sanity Studio does not appear in the FeaturedArticles section.
-awaiting: user response
+[testing complete]
 
 ## Tests
 
@@ -32,14 +28,14 @@ result: pass
 
 ### 4. Default listing hides scheduled featured posts
 expected: A future-dated featured post configured in Sanity Studio does not appear in the FeaturedArticles section.
-result: pending
+result: pass
 
 ## Summary
 
 total: 4
-passed: 3
+passed: 4
 issues: 0
-pending: 1
+pending: 0
 skipped: 0
 blocked: 0
 
