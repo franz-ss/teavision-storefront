@@ -2,9 +2,13 @@ import { Plus } from 'lucide-react'
 
 import { Eyebrow, Section } from '@/components/ui'
 
-import { FAQS } from '../content'
+import { FAQS, type FaqItem } from '../content'
 
-export function Faq() {
+type FaqProps = {
+  items?: FaqItem[]
+}
+
+export function Faq({ items = FAQS }: FaqProps) {
   return (
     <Section.Root tone="sunken">
       <Section.Container variant="base">
@@ -24,7 +28,7 @@ export function Faq() {
         </div>
 
         <div className="border-hairline mx-auto mt-11 max-w-220 border-b">
-          {FAQS.map((faq) => (
+          {items.map((faq) => (
             <details
               key={faq.question}
               className="group border-hairline border-t"
