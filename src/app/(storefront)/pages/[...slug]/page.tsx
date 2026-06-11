@@ -23,6 +23,7 @@ const RESERVED_HANDLES = new Set([
   'our-story',
   'terms-conditions',
   'wholesale',
+  'wholesale-account-request',
 ])
 
 async function getRequestedPage(

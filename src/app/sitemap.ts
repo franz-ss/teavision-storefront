@@ -36,6 +36,12 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
     priority: 0.5,
   },
   {
+    url: `${SITE_URL}/pages/wholesale-account-request`,
+    lastModified: STATIC_LAST_MODIFIED,
+    changeFrequency: 'monthly',
+    priority: 0.5,
+  },
+  {
     url: `${SITE_URL}/pages/our-story`,
     lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: 'monthly',
