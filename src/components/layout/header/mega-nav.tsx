@@ -160,10 +160,10 @@ export function MegaNav() {
         />
       </div>
 
-      {/* Page scrim — plain dark overlay, no blur or transition (owner directive) */}
+      {/* Page scrim — blur matches the search-overlay and dialog scrims */}
       {openMenu && (
         <div
-          className="bg-ink/35 absolute inset-x-0 top-full z-40 h-screen"
+          className="bg-ink/35 absolute inset-x-0 top-full z-40 h-screen backdrop-blur-[2px]"
           aria-hidden="true"
           onClick={closeMenus}
         />

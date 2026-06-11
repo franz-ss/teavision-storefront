@@ -9,6 +9,12 @@
       "autoPort": true
     },
     {
+      "name": "storybook",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["storybook"],
+      "port": 6006
+    },
+    {
       "name": "cart-preview",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", ".cart-preview", "-l", "4444", "--no-clipboard"],

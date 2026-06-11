@@ -33,6 +33,8 @@ const buttonVariants = cva(
           'border-[1.5px] border-paper/35 bg-transparent text-paper hover:border-ink hover:bg-ink',
         ghost: 'text-brand hover:bg-brand-tint hover:text-brand-deep',
         quiet: 'bg-transparent text-ink-faint hover:text-gold-deep',
+        footerLink:
+          'bg-transparent text-paper/75 hover:text-paper focus-visible:ring-offset-ink',
       },
       size: {
         sm: 'type-label min-h-11 px-4.5 text-[0.86rem]',
@@ -42,6 +44,8 @@ const buttonVariants = cva(
         // Quiet text-link sizing per design .cart__remove — mono caps, no pill padding
         quiet:
           'min-h-11 px-0 font-mono text-[10.5px] font-normal tracking-widest uppercase',
+        footerLink:
+          'min-h-0 px-0 font-mono text-[11px] font-normal tracking-[0.06em] normal-case',
       },
     },
     defaultVariants: {

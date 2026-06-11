@@ -21,6 +21,7 @@ const toggleButtonVariants = cva(
           'type-label min-h-11 items-center justify-between gap-2 rounded-md border border-transparent px-3 text-left text-ink-soft hover:bg-brand-tint hover:text-brand aria-pressed:border-hairline-2 aria-pressed:bg-brand-tint aria-pressed:text-brand md:w-full',
         thumbnail:
           'relative h-16 w-16 shrink-0 overflow-hidden rounded opacity-60 hover:opacity-100 focus-visible:ring-offset-1 aria-pressed:opacity-100 aria-pressed:ring-ring aria-pressed:ring-2',
+        dot: 'h-1.5 flex-1 rounded-full border border-hairline bg-card px-0 text-transparent hover:border-brand/50 aria-pressed:border-brand aria-pressed:bg-brand',
       },
     },
     defaultVariants: {

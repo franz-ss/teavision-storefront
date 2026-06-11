@@ -2,9 +2,8 @@ import { FOOTER_COLUMNS, PAYMENT_METHODS } from '../data'
 import { FooterLinkList } from '../link-list'
 import type { FooterNewsletterAction } from '../newsletter-form'
 import { NewsletterColumn } from '../newsletter-column'
-import { PaymentMark } from '../payment-mark'
-import { QualityColumn } from '../quality-column'
 import { PopularSearches } from '../popular-searches'
+import { QualityColumn } from '../quality-column'
 
 export type FooterViewProps = {
   newsletterAction: FooterNewsletterAction
@@ -29,52 +28,7 @@ export function FooterView({ newsletterAction }: FooterViewProps) {
           ))}
           <NewsletterColumn action={newsletterAction} />
         </div>
-        {/* border opacity 0.12 per design .ft__bottom: rgba(255,255,255,.12) */}
-        <div className="border-paper/12 border-t py-5.5">
-          <div className="flex flex-col items-start gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <ul
-              className="order-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] tracking-[0.06em] lg:order-1"
-              role="list"
-            >
-              <li>
-                {/* plain span, not a link — design has copyright as plain text */}
-                {/* static year: new Date() breaks Next 16 prerendering (next-prerender-current-time) */}
-                <span className="text-paper/75">&copy; 2026 Teavision</span>
-              </li>
-              <li aria-hidden="true" className="text-paper/30">
-                ·
-              </li>
-              <li>
-                <a
-                  href="#popular-searches"
-                  className="text-paper/75 hover:text-paper focus-visible:ring-ring focus-visible:ring-offset-ink underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                >
-                  Popular Searches
-                </a>
-              </li>
-            </ul>
-            {/* payment gap: 7px per design .ft__pay */}
-            <ul
-              className="order-1 flex flex-wrap lg:order-2"
-              style={{ gap: '7px' }}
-              role="list"
-              aria-label="Payment methods"
-            >
-              {PAYMENT_METHODS.map((method) => (
-                <li key={method.label}>
-                  <PaymentMark method={method} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Popular Searches SEO link block — hidden below the footer bar */}
-      <div id="popular-searches" className="sr-only">
-        <div className="max-w-wide px-gutter mx-auto pb-8">
-          <PopularSearches />
-        </div>
+        <PopularSearches paymentMethods={PAYMENT_METHODS} />
       </div>
     </footer>
   )

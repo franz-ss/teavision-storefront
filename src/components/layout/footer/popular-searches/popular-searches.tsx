@@ -1,3 +1,12 @@
+'use client'
+
+import { useRef, useState } from 'react'
+
+import { Button } from '@/components/ui/button'
+
+import { PaymentMark } from '../payment-mark'
+import type { PaymentMethod } from '../types'
+
 const POPULAR_SEARCH_COLUMNS = [
   [
     { href: '/', label: 'teas australia' },
@@ -136,32 +145,105 @@ const POPULAR_SEARCH_COLUMNS = [
   ],
 ] as const
 
-export function PopularSearches() {
+export type PopularSearchesProps = {
+  paymentMethods: readonly PaymentMethod[]
+}
+
+export function PopularSearches({ paymentMethods }: PopularSearchesProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  function handleToggle() {
+    const nextExpanded = !isExpanded
+    setIsExpanded(nextExpanded)
+
+    if (nextExpanded) {
+      window.requestAnimationFrame(() => {
+        const prefersReducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches
+
+        panelRef.current?.scrollIntoView({
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          block: 'start',
+        })
+      })
+    }
+  }
+
   return (
-    <nav aria-label="Popular searches">
-      <h2 className="text-gold mb-4 font-mono text-[10.5px] tracking-[0.16em] uppercase">
-        Popular Searches
-      </h2>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {POPULAR_SEARCH_COLUMNS.map((column, colIndex) => (
+    <div className="border-paper/12 border-t">
+      <div
+        id="popular-searches"
+        ref={panelRef}
+        hidden={!isExpanded}
+        className="border-paper/10 border-b bg-ink"
+      >
+        <nav
+          aria-label="Popular searches"
+          className="max-w-wide px-gutter mx-auto py-10 md:py-12"
+        >
+          <div className="grid grid-cols-1 gap-x-16 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
+            {POPULAR_SEARCH_COLUMNS.map((column, colIndex) => (
+              <ul
+                key={colIndex}
+                className="flex flex-col gap-2.5 text-[0.95rem] font-semibold capitalize"
+                role="list"
+              >
+                {column.map((link) => (
+                  <li key={`${link.href}-${link.label}`}>
+                    <a
+                      href={link.href}
+                      className="text-paper/88 block underline-offset-3 transition-colors hover:text-paper hover:underline focus-visible:ring-ring focus-visible:ring-offset-ink focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </nav>
+      </div>
+
+      <div className="py-5.5">
+        <div className="flex flex-col items-start gap-5 lg:flex-row lg:items-center lg:justify-between">
           <ul
-            key={colIndex}
-            className="flex flex-col gap-1.5 text-[0.85rem]"
+            className="order-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] tracking-[0.06em] lg:order-1"
             role="list"
           >
-            {column.map((link) => (
-              <li key={`${link.href}-${link.label}`}>
-                <a
-                  href={link.href}
-                  className="text-paper/60 hover:text-paper transition-colors"
-                >
-                  {link.label}
-                </a>
+            <li>
+              <span className="text-paper/75">&copy; 2026 Teavision</span>
+            </li>
+            <li aria-hidden="true" className="text-paper/30">
+              ·
+            </li>
+            <li>
+              <Button
+                type="button"
+                variant="footerLink"
+                size="footerLink"
+                aria-controls="popular-searches"
+                aria-expanded={isExpanded}
+                onClick={handleToggle}
+              >
+                {isExpanded ? 'Hide Popular Searches' : 'Popular Searches'}
+              </Button>
+            </li>
+          </ul>
+          <ul
+            className="order-1 flex flex-wrap gap-1.75 lg:order-2"
+            role="list"
+            aria-label="Payment methods"
+          >
+            {paymentMethods.map((method) => (
+              <li key={method.label}>
+                <PaymentMark method={method} />
               </li>
             ))}
           </ul>
-        ))}
+        </div>
       </div>
-    </nav>
+    </div>
   )
 }

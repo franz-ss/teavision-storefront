@@ -10,6 +10,7 @@ import {
   PrivateLabel,
   ProductRange,
   SupplyChain,
+  SupplyChainProtection,
   TeaJournal,
   Testimonials,
 } from '@/components/homepage'
@@ -61,10 +62,11 @@ export default function HomePage() {
         <OrganicHerbs />
         <SupplyChain />
         <CertificationCoverage />
+        <SupplyChainProtection />
         <Testimonials />
         <TeaJournal />
-        <Cta {...ctaCatalogueData} />
         <ContactSection action={submitContactFormAction} />
+        <Cta {...ctaCatalogueData} />
         <Faq />
       </div>
     </>

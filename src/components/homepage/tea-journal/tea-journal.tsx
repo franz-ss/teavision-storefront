@@ -36,8 +36,8 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
             <p className="type-lede text-ink-soft mt-4 max-w-[62ch]">
               Stay updated with insights, guides, and stories from the world of
               tea and spices. From the health benefits of herbal teas to
-              sourcing bulk herbs and spices, our Tea Journal is here to
-              inspire and educate.
+              sourcing bulk herbs and spices, our Tea Journal is here to inspire
+              and educate.
             </p>
           </div>
 
@@ -54,12 +54,12 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
           </Link>
         </div>
 
-        <ul className="mt-10 grid min-w-0 gap-5.5 md:grid-cols-3">
+        <ul className="mt-8 grid min-w-0 gap-8 md:mt-10 md:grid-cols-3 md:gap-5.5">
           {articles.slice(0, 3).map((article, index) => (
             <li key={article.id} className="min-w-0 overflow-hidden">
               <Link
                 href={getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}
-                className="group focus-visible:ring-ring flex h-full min-w-0 flex-col overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className="group focus-visible:ring-ring flex min-w-0 flex-col overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:h-full"
               >
                 {/* Standard 3:2 ratio — scales with column width instead of a fixed 220px */}
                 <div className="bg-paper-2 relative mb-4.5 aspect-3/2 overflow-hidden rounded-lg">
@@ -80,7 +80,7 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
                   )}
                 </div>
 
-                <div className="flex h-full min-w-0 flex-col overflow-hidden">
+                <div className="flex min-w-0 flex-col overflow-hidden">
                   <p className="type-mono-meta text-ink-faint flex gap-3">
                     <span className="text-brand">
                       {article.tags[0] ?? 'Tea Journal'}

@@ -56,7 +56,7 @@ export function PrivateLabel() {
               {/* Link-arrow CTA */}
               <Link
                 href={card.href}
-                className="type-label border-hairline hover:border-brand hover:text-brand group mt-5.5 inline-flex items-center gap-2 border-b-[1.5px] pb-0.75 text-[0.92rem]"
+                className="type-label border-hairline hover:border-brand hover:text-brand group mt-5.5 inline-flex items-center gap-2 self-start border-b-[1.5px] pb-0.75 text-[0.92rem]"
               >
                 {card.action}
                 <ArrowRight

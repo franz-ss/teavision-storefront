@@ -49,10 +49,8 @@ async function expectFooterParity(canvasElement: HTMLElement) {
     ...MAIN_MENU_LINKS,
     ...FOOTER_LINKS,
     ...CONTACT_LINKS,
-    // Copyright is plain text (not a link) per the redesign bottom bar.
-    { href: '#popular-searches', label: 'Popular Searches' },
   ]
-  // Exclude the sr-only Popular Searches SEO block — parity covers visible links only.
+  // Exclude the collapsed Popular Searches SEO block — parity covers visible links only.
   const links = Array.from(footer.querySelectorAll('a'))
     .filter((link) => !link.closest('#popular-searches'))
     .map((link) => ({
@@ -90,6 +88,45 @@ async function expectFooterParity(canvasElement: HTMLElement) {
   }
 
   const canvas = within(canvasElement)
+  const popularSearchesToggle = canvas.getByRole('button', {
+    name: 'Popular Searches',
+  })
+  await expect(popularSearchesToggle).toHaveAttribute('aria-expanded', 'false')
+
+  const popularSearchesPanel = canvasElement.querySelector('#popular-searches')
+  if (!popularSearchesPanel) {
+    throw new Error('Popular Searches panel not found')
+  }
+  await expect(popularSearchesPanel).toHaveAttribute('hidden')
+
+  await userEvent.click(popularSearchesToggle)
+  await expect(popularSearchesToggle).toHaveTextContent(
+    'Hide Popular Searches',
+  )
+  await expect(popularSearchesToggle).toHaveAttribute('aria-expanded', 'true')
+  await expect(popularSearchesPanel).not.toHaveAttribute('hidden')
+
+  const popularSearchLinks = Array.from(
+    popularSearchesPanel.querySelectorAll('a'),
+  ).map((link) => ({
+    href: link.getAttribute('href'),
+    label: link.textContent?.trim() ?? '',
+  }))
+
+  if (
+    popularSearchLinks.at(0)?.label !== 'teas australia' ||
+    popularSearchLinks.at(0)?.href !== '/'
+  ) {
+    throw new Error('Popular Searches first link does not match theme order')
+  }
+
+  if (
+    popularSearchLinks.at(-1)?.label !== 'japanese matcha' ||
+    popularSearchLinks.at(-1)?.href !== '/collections/japanese-matcha'
+  ) {
+    throw new Error('Popular Searches last link does not match theme order')
+  }
+
   await userEvent.type(canvas.getByLabelText('Email'), 'buyer@example.com')
   await userEvent.click(canvas.getByRole('button', { name: 'Subscribe' }))
 

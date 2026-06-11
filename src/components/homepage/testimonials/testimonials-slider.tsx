@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import {
   useCallback,
   useEffect,
@@ -11,28 +10,15 @@ import {
 import useEmblaCarousel from 'embla-carousel-react'
 
 import { ToggleButton } from '@/components/ui'
-import { cn } from '@/lib/utils'
-
-type TestimonialSelector = {
-  logo: {
-    src: string
-    alt: string
-    width: number
-    height: number
-  }
-  name: string
-  role: string
-  brand?: string
-}
 
 type TestimonialsSliderProps = {
   children: ReactNode
-  testimonials: TestimonialSelector[]
+  slideCount: number
 }
 
 export function TestimonialsSlider({
   children,
-  testimonials,
+  slideCount,
 }: TestimonialsSliderProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [activeIndex, setActiveIndex] = useState(0)
@@ -78,67 +64,33 @@ export function TestimonialsSlider({
 
   return (
     <div
-      className="focus-visible:ring-ring mt-12 grid gap-8 rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none lg:grid-cols-[0.9fr_1.6fr] lg:items-center lg:gap-[clamp(30px,5vw,70px)]"
+      className="focus-visible:ring-ring mt-8 rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:mt-10"
       role="region"
       aria-roledescription="carousel"
       aria-label="Customer testimonials, use left and right arrow keys to move between testimonials"
       tabIndex={0}
       onKeyDown={onKeyDown}
     >
-      <div className="flex flex-col gap-2">
-        {testimonials.map((testimonial, index) => (
-          <ToggleButton
-            key={testimonial.name}
-            variant="menuCard"
-            pressed={index === activeIndex}
-            onClick={() => scrollTo(index)}
-            className={cn(
-              // Design .tst__brand: logo + meta in a left-aligned row (override
-              // menuCard's justify-between), 14px gap, padding 16px 18px
-              'items-center justify-start gap-3.5 rounded-lg px-4.5 py-4',
-              index === activeIndex && 'shadow-1',
-            )}
-          >
-            <Image
-              src={testimonial.logo.src}
-              alt={testimonial.logo.alt}
-              width={testimonial.logo.width}
-              height={testimonial.logo.height}
-              sizes="80px"
-              className="h-15 w-20 shrink-0 rounded-sm object-contain"
-            />
-            <span className="min-w-0">
-              <span className="text-ink block font-bold">
-                {testimonial.brand ?? testimonial.name}
-              </span>
-              <span className="text-ink-faint mt-1 block text-[0.8rem]">
-                {testimonial.name}
-              </span>
-            </span>
-          </ToggleButton>
-        ))}
-      </div>
-
       <div ref={emblaRef} className="overflow-hidden">
-        <div className="flex items-start">{children}</div>
+        <div className="-ml-4 flex items-start">{children}</div>
       </div>
 
-      <div className="sr-only">
-        <div className="flex h-1.5 w-24 gap-1" aria-hidden="true">
-          {Array.from({ length: testimonials.length }, (_, index) => (
-            <span
+      <div className="mt-7 flex justify-center">
+        <div className="flex h-1.5 w-28 gap-1.5" aria-label="Choose testimonial">
+          {Array.from({ length: slideCount }, (_, index) => (
+            <ToggleButton
               key={index}
-              className={cn(
-                'h-full flex-1 rounded-full border transition-colors',
-                index === activeIndex
-                  ? 'border-brand bg-brand'
-                  : 'border-hairline bg-card',
-              )}
-            />
+              variant="dot"
+              pressed={index === activeIndex}
+              aria-label={`Show testimonial ${index + 1}`}
+              onClick={() => scrollTo(index)}
+            >
+              <span className="sr-only">Show testimonial {index + 1}</span>
+            </ToggleButton>
           ))}
         </div>
         <p className="sr-only" aria-live="polite">
-          Testimonial {activeIndex + 1} of {testimonials.length}
+          Testimonial {activeIndex + 1} of {slideCount}
         </p>
       </div>
     </div>

@@ -16,7 +16,7 @@ export function OverlayImageCard({ card, className }: OverlayImageCardProps) {
     <Link
       href={card.href}
       className={cn(
-        'group focus-visible:ring-ring relative block aspect-[1/1.08] overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+        'group focus-visible:ring-ring relative block aspect-video overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none lg:aspect-square',
         className,
       )}
     >
