@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { SlidersHorizontal, X } from 'lucide-react'
 
 import type { CollectionProductFilter } from '@/lib/shopify/types'
+import { getSelectedCollectionFilterLabels } from '@/lib/shopify/filters'
 
 import { FilterPanel } from '../filter-panel'
 import { SortSelect } from '../sort-select'
@@ -23,6 +24,11 @@ export function Toolbar({
   clearHref,
   className,
 }: ToolbarProps) {
+  const selectedFilterLabels = getSelectedCollectionFilterLabels(
+    filters,
+    selectedFilters,
+  )
+
   return (
     <div className={className}>
       {/* Top bar: count + sort */}
@@ -36,14 +42,14 @@ export function Toolbar({
       </div>
 
       {/* Active filter chips */}
-      {selectedFilters.length > 0 && (
+      {selectedFilterLabels.length > 0 && (
         <div className="mb-4 flex flex-wrap gap-2">
-          {selectedFilters.map((filter) => (
+          {selectedFilterLabels.map((filter) => (
             <span
-              key={filter}
+              key={filter.input}
               className="bg-brand-tint text-brand inline-flex items-center gap-1.5 rounded-full px-3 py-1.75 text-xs font-semibold"
             >
-              {filter}
+              {filter.label}
               <X className="size-3" aria-hidden="true" />
             </span>
           ))}
