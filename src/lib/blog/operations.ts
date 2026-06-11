@@ -6,7 +6,10 @@ import {
   blogListingQuery,
   homepageBlogPostsQuery,
 } from '@/lib/sanity/queries/blog'
-import { getSanityImageUrl, sanityFetch } from '@/lib/sanity/client'
+import {
+  getSanityImageUrl,
+  sanityPublishedFetch,
+} from '@/lib/sanity/client'
 import type { SanityImageUrlOptions } from '@/lib/sanity/client'
 import type {
   SanityBlogPost,
@@ -364,9 +367,10 @@ export async function getBlog(handle: string): Promise<BlogIndex | null> {
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
-  const data = await sanityFetch<SanityBlogListingResult>(blogListingQuery, {
-    blogHandle: normalizedHandle,
-  })
+  const data = await sanityPublishedFetch<SanityBlogListingResult>(
+    blogListingQuery,
+    { blogHandle: normalizedHandle },
+  )
 
   if (!data.blog) return null
 
@@ -406,10 +410,10 @@ export async function getArticle(
   )
   cacheLife('hours')
 
-  const data = await sanityFetch<SanityBlogPostResult>(blogArticleQuery, {
-    articleHandle,
-    blogHandle: normalizedHandle,
-  })
+  const data = await sanityPublishedFetch<SanityBlogPostResult>(
+    blogArticleQuery,
+    { articleHandle, blogHandle: normalizedHandle },
+  )
 
   return data.article ? reshapeArticle(data.article) : null
 }
@@ -422,7 +426,7 @@ export async function getHomepageArticles(
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
-  const articles = await sanityFetch<SanityBlogPostSummary[]>(
+  const articles = await sanityPublishedFetch<SanityBlogPostSummary[]>(
     homepageBlogPostsQuery,
     { blogHandle: normalizedHandle },
   )
