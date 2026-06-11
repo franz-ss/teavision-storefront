@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import { DisclosureButton } from '@/components/ui'
 import { cn } from '@/lib/utils'
@@ -160,14 +161,18 @@ export function MegaNav() {
         />
       </div>
 
-      {/* Page scrim — blur matches the search-overlay and dialog scrims */}
-      {openMenu && (
-        <div
-          className="bg-ink/35 absolute inset-x-0 top-full z-40 h-screen backdrop-blur-[2px]"
-          aria-hidden="true"
-          onClick={closeMenus}
-        />
-      )}
+      {/* Page scrim — portaled to body because the header's backdrop-blur-md makes
+          it a backdrop root, so a descendant's backdrop-filter can't sample the
+          page behind it. z-40 keeps it under the sticky header (z-60). */}
+      {openMenu &&
+        createPortal(
+          <div
+            className="bg-ink/35 fixed inset-0 z-40 backdrop-blur-[2px]"
+            aria-hidden="true"
+            onClick={closeMenus}
+          />,
+          document.body,
+        )}
     </div>
   )
 }
