@@ -102,7 +102,7 @@ export function ProductCard({
           href={productUrl}
           tabIndex={-1}
           aria-hidden="true"
-          className="block h-full w-full"
+          className="relative block h-full w-full"
         >
           {product.featuredImage &&
           product.featuredImage.width &&
