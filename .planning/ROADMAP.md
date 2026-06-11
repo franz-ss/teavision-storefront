@@ -48,3 +48,13 @@ Full phase details: `milestones/v1.1-ROADMAP.md` · Audit: `milestones/v1.1-MILE
 | 10. Cart/Checkout Critical Flow Tests    | v1.0      | 4/4            | Complete   | —          |
 | 11. Full Visual Redesign                 | v1.0      | 22/22          | Complete   | 2026-06-11 |
 | 12. Optimize blog loading                | v1.1      | 4/4            | Complete   | 2026-06-12 |
+
+### Phase 13: Production-parity collection pagination — restore classic ?page=N PLP pagination while preserving production SEO canonicals, robots behavior, and bounded Shopify Storefront GraphQL payloads
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 12
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 13 to break down)
