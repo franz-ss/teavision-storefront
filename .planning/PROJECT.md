@@ -4,7 +4,7 @@
 
 Teavision is a headless Shopify storefront built with Next.js 16 App Router and React 19. It sells wholesale tea, herbs, spices, and related products to Australian retail, cafe, foodservice, and direct customers.
 
-v1.0 shipped the migration of Shopify-theme storefront behavior into the Next storefront — product discovery, product detail with bulk savings, cart, checkout handoff, owned Searchanise search, trust signals — plus a complete visual redesign of every surface on the new warm-paper/green/gold design system.
+v1.0 shipped the migration of Shopify-theme storefront behavior into the Next storefront — product discovery, product detail with bulk savings, cart, checkout handoff, owned Searchanise search, trust signals — plus a complete visual redesign of every surface on the new warm-paper/green/gold design system. v1.1 followed with Tea Journal (blog) loading and image-rendering performance work.
 
 ## Core Value
 
@@ -26,10 +26,12 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - Shopify Storefront API remains the source of truth for product, collection, cart, and checkout data.
 - The sibling Liquid theme remains a valid reference for legacy storefront behavior that has not yet been ported.
 
+- ✓ Optimized `/blogs/teavision-blogs` loading and image rendering (bounded image URLs, LQIP placeholders, hero preload discipline, light default-listing query) while preserving the Phase 11 Tea Journal design — v1.1
+
 ### Active
 
-- [ ] Optimize `/blogs/teavision-blogs` loading and image rendering while preserving the Phase 11 Tea Journal design (Phase 12, carried into the next milestone).
 - [ ] Close v1.0 known gaps: collection empty-state "Clear filters" misdirect (CQA-05), human UAT items (visual sweep, live Resend newsletter), and the tech-debt list in `milestones/v1.0-MILESTONE-AUDIT.md`.
+- [ ] Close v1.1 remaining tech debt (W2 heavy `getBlog()` on default blog route for hero/metadata, W4 light-projection type honesty, W5 featured backfill trade-off) — see `milestones/v1.1-MILESTONE-AUDIT.md`.
 
 ### Out of Scope
 
@@ -40,7 +42,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ## Context
 
-Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
+Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
 
 The site remains noindexed pending launch sign-off (Phase 6 controls; flip `DISABLE_INDEXING` at launch and add the new landing pages to the sitemap). The owner actively authors new landing surfaces directly in the codebase (bulk-wholesale-supply, private-label-packing, tea-bag-manufacturer, NPD order form, supply-chain protection band).
 
@@ -65,7 +67,10 @@ The codebase map in `.planning/codebase/` predates the redesign and has known dr
 | Preview-first concept workflow for design-direction changes (Storybook mockups → owner approval → implement) | Avoided re-implementing rejected directions; owner picked from rendered options (search overlay, 404, testimonials, collection hero) | Good    |
 | Supersede Phase 9's horizontal card with the redesign's vertical card        | Owner approved the mockup card; CARD-02..06 delivered via 11-08, CARD-01 closed as superseded                                          | Good    |
 | Client-side cart "Grand total" estimate from quantity breaks                 | Shows savings pre-checkout, but can diverge from Shopify's authoritative total                                                         | ⚠️ Revisit |
+| Light server-paginated GROQ query for the default blog listing, full `getBlog()` for tag/search | Avoids fetching every article's bodyText on the most-visited blog path while keeping in-memory filtering where it is needed | Good    |
+| Revert CDN-backed Sanity reads to authenticated `sanityFetch`                | Token-less CDN client broke reads against the dataset; authenticated non-CDN reads are correct, CDN helper removed at v1.1 audit       | Good    |
+| LQIP blur placeholders with truthy guards plus bounded image URL options    | Blur-in perceived performance without render crashes on empty/absent LQIP; image weight capped per use case                            | Good    |
 
 ---
 
-_Last updated: 2026-06-11 after v1.0 milestone completion_
+_Last updated: 2026-06-12 after v1.1 milestone completion_
