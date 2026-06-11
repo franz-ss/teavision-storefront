@@ -71,7 +71,10 @@ export function TestimonialsSlider({
       tabIndex={0}
       onKeyDown={onKeyDown}
     >
-      <div ref={emblaRef} className="overflow-hidden">
+      <div
+        ref={emblaRef}
+        className="cursor-grab overflow-hidden active:cursor-grabbing"
+      >
         <div className="-ml-4 flex items-start">{children}</div>
       </div>
 

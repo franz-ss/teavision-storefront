@@ -72,7 +72,10 @@ export function PackagingCarousel({ images }: PackagingCarouselProps) {
         </IconButton>
       </div>
 
-      <div ref={emblaRef} className="overflow-hidden">
+      <div
+        ref={emblaRef}
+        className="cursor-grab overflow-hidden active:cursor-grabbing"
+      >
         <ul className="-ml-4 flex" role="list">
           {images.map((image, index) => (
             <li

@@ -42,7 +42,10 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       aria-label={`${title} image gallery`}
     >
       <div
-        className="bg-paper-2 aspect-[1/1.05] w-full overflow-hidden rounded-lg"
+        className={cn(
+          'bg-paper-2 aspect-[1/1.05] w-full overflow-hidden rounded-lg',
+          images.length > 1 && 'cursor-grab active:cursor-grabbing',
+        )}
         ref={emblaRef}
       >
         <div className="flex">
