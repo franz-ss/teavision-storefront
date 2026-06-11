@@ -38,7 +38,7 @@ export function ReadyToShipSection() {
               {READY_TO_SHIP_VARIETIES.map((variety) => (
                 <li key={variety.title} className="flex items-start gap-3">
                   <span
-                    className="bg-brand mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                    className="bg-brand mt-1.5 size-2.5 shrink-0 rounded-full"
                     aria-hidden="true"
                   />
                   <div>

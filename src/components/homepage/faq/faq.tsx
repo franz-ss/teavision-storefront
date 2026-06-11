@@ -52,7 +52,7 @@ export function Faq({
                 <span>{faq.question}</span>
                 <span
                   aria-hidden="true"
-                  className="border-hairline text-brand group-open:border-brand group-open:bg-brand group-open:text-paper relative grid h-7.5 w-7.5 shrink-0 place-items-center rounded-full border transition-transform group-open:rotate-45 motion-reduce:transition-none"
+                  className="border-hairline text-brand group-open:border-brand group-open:bg-brand group-open:text-paper relative grid size-7.5 shrink-0 place-items-center rounded-full border transition-transform group-open:rotate-45 motion-reduce:transition-none"
                 >
                   {/* 16px SVG plus per design .faq__q .ic — a text glyph sits small/off-center */}
                   <Plus className="size-4" strokeWidth={1.8} />

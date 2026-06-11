@@ -13,7 +13,7 @@ export function ProductQuickViewImage({
   title,
 }: ProductQuickViewImageProps) {
   if (!image) {
-    return <div className="h-full w-full" aria-hidden="true" />
+    return <div className="size-full" aria-hidden="true" />
   }
 
   return (

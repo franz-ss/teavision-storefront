@@ -60,7 +60,7 @@ export function PackagingCarousel({ images }: PackagingCarouselProps) {
           aria-label="Show previous packaging example"
           onClick={scrollPrevious}
         >
-          <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          <ChevronLeft className="size-5" aria-hidden="true" />
         </IconButton>
         <IconButton
           variant="ghost"
@@ -68,7 +68,7 @@ export function PackagingCarousel({ images }: PackagingCarouselProps) {
           aria-label="Show next packaging example"
           onClick={scrollNext}
         >
-          <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          <ChevronRight className="size-5" aria-hidden="true" />
         </IconButton>
       </div>
 

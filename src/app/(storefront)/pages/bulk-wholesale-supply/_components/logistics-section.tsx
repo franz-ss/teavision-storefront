@@ -52,8 +52,8 @@ export function LogisticsSection() {
             <ul className="mt-6 flex flex-col gap-3">
               {CHECK_ITEMS.map((item) => (
                 <li key={item.bold} className="flex items-start gap-3">
-                  <span className="bg-brand text-paper mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full">
-                    <Check className="h-3 w-3" aria-hidden="true" />
+                  <span className="bg-brand text-paper mt-0.5 grid size-5 shrink-0 place-items-center rounded-full">
+                    <Check className="size-3" aria-hidden="true" />
                   </span>
                   <span className="type-body text-ink">
                     <strong>{item.bold}</strong> {item.rest}

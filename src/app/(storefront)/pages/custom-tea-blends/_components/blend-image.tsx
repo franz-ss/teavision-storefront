@@ -22,7 +22,7 @@ export function BlendImage({
       preload={priority}
       quality={68}
       sizes={sizes}
-      className="border-hairline h-full w-full rounded-lg border object-cover"
+      className="border-hairline size-full rounded-lg border object-cover"
     />
   )
 }

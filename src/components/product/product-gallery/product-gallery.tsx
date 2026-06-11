@@ -65,10 +65,10 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   fetchPriority={i === 0 ? 'high' : 'auto'}
                   preload={i === 0}
                   sizes="(min-width: 1280px) 38rem, (min-width: 1024px) calc(50vw - 3.5rem), calc(100vw - 2rem)"
-                  className="h-full w-full object-cover"
+                  className="size-full object-cover"
                 />
               ) : (
-                <div className="bg-paper-2 h-full w-full" />
+                <div className="bg-paper-2 size-full" />
               )}
             </div>
           ))}
@@ -95,10 +95,10 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   width={image.width}
                   height={image.height}
                   sizes="120px"
-                  className="h-full w-full object-cover"
+                  className="size-full object-cover"
                 />
               ) : (
-                <div className="bg-paper-2 h-full w-full" />
+                <div className="bg-paper-2 size-full" />
               )}
             </ToggleButton>
           ))}

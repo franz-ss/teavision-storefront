@@ -3,7 +3,7 @@ import { Mail, MapPin, Phone } from 'lucide-react'
 
 import type { IconName } from '../_lib/page-data'
 
-const iconClassName = 'h-5 w-5'
+const iconClassName = 'size-5'
 
 const svgProps = {
   className: iconClassName,

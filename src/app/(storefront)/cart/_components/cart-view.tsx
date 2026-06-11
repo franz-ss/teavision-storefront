@@ -266,7 +266,7 @@ function TrustSignalList({ layout }: { layout: 'inline' | 'stacked' }) {
             className="type-caption text-ink-faint inline-flex items-center gap-1.5"
           >
             <Check
-              className="text-brand h-3.5 w-3.5 shrink-0"
+              className="text-brand size-3.5 shrink-0"
               aria-hidden="true"
             />
             {signal}
@@ -281,7 +281,7 @@ function TrustSignalList({ layout }: { layout: 'inline' | 'stacked' }) {
       {TRUST_SIGNALS.map((signal) => (
         <div key={signal} className="flex items-start gap-2">
           <Check
-            className="text-brand mt-0.5 h-4 w-4 shrink-0"
+            className="text-brand mt-0.5 size-4 shrink-0"
             aria-hidden="true"
           />
           <span className="type-caption text-ink-soft">{signal}</span>
@@ -295,9 +295,9 @@ export function CartView({ cart }: CartViewProps) {
   if (!cart || cart.totalQuantity === 0) {
     return (
       <div className="py-16 text-center sm:py-24">
-        <div className="bg-paper-2 mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl">
+        <div className="bg-paper-2 mx-auto mb-8 flex size-20 items-center justify-center rounded-2xl">
           <Leaf
-            className="text-ink-faint h-10 w-10"
+            className="text-ink-faint size-10"
             strokeWidth={1.5}
             aria-hidden="true"
           />
@@ -366,7 +366,7 @@ export function CartView({ cart }: CartViewProps) {
                   {/* Col 1: Product image */}
                   <Link
                     href={productHref}
-                    className="bg-paper-2 focus-visible:ring-ring relative h-19 w-19 shrink-0 overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none xl:h-24 xl:w-24"
+                    className="bg-paper-2 focus-visible:ring-ring relative size-19 shrink-0 overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none xl:size-24"
                     aria-label={`View ${product.title}`}
                   >
                     {productImage ? (
@@ -376,11 +376,11 @@ export function CartView({ cart }: CartViewProps) {
                         width={productImage.width ?? 200}
                         height={productImage.height ?? 200}
                         sizes="(min-width: 1280px) 96px, 76px"
-                        className="h-full w-full object-cover"
+                        className="size-full object-cover"
                       />
                     ) : (
                       <span
-                        className="block h-full w-full"
+                        className="block size-full"
                         aria-hidden="true"
                       />
                     )}
@@ -424,7 +424,7 @@ export function CartView({ cart }: CartViewProps) {
                             className="type-mono-meta text-brand flex min-w-0 items-center gap-1"
                           >
                             <Check
-                              className="h-3 w-3 shrink-0"
+                              className="size-3 shrink-0"
                               aria-hidden="true"
                             />
                             <span className="min-w-0 wrap-break-word">
@@ -571,7 +571,7 @@ export function CartView({ cart }: CartViewProps) {
           </div>
 
           <div className="type-mono-meta text-ink-faint mt-3 flex items-center gap-1.5">
-            <Truck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <Truck className="size-3.5 shrink-0" aria-hidden="true" />
             <span>
               Free freight on wholesale orders over $300 · insured &amp; tracked
             </span>

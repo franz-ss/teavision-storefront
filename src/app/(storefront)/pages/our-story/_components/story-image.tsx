@@ -18,7 +18,7 @@ export function StoryImage({ className, image, sizes }: StoryImageProps) {
       width={image.width}
       height={image.height}
       sizes={sizes}
-      className={cn('h-full w-full object-cover', className)}
+      className={cn('size-full object-cover', className)}
     />
   )
 }

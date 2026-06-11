@@ -14,7 +14,7 @@ export function Sidebar() {
       <dl className="divide-paper/12 mt-6 divide-y">
         {CONTACT_METHODS.map((method) => (
           <div key={method.label} className="flex gap-4 py-5 first:pt-0">
-            <div className="bg-brand-tint text-brand mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+            <div className="bg-brand-tint text-brand mt-1 flex size-11 shrink-0 items-center justify-center rounded-full">
               <Icon name={method.icon} />
             </div>
             <div>
@@ -40,7 +40,7 @@ export function Sidebar() {
           {SUPPLY_NOTES.map((note) => (
             <li key={note} className="type-body-sm text-paper/75 flex gap-3">
               <span
-                className="bg-gold mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
+                className="bg-gold mt-2 size-1.5 shrink-0 rounded-full"
                 aria-hidden="true"
               />
               <span>{note}</span>
@@ -59,7 +59,7 @@ export function Sidebar() {
               aria-label={link.label}
               target="_blank"
               rel="noopener noreferrer"
-              className="border-paper/20 bg-paper/10 text-paper hover:border-gold hover:text-gold flex h-11 w-11 items-center justify-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="border-paper/20 bg-paper/10 text-paper hover:border-gold hover:text-gold flex size-11 items-center justify-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2"
             >
               <Icon name={link.icon} />
             </a>

@@ -103,7 +103,7 @@ export function ProductCard({
           href={productUrl}
           tabIndex={-1}
           aria-hidden="true"
-          className="relative block h-full w-full"
+          className="relative block size-full"
         >
           {product.featuredImage &&
           product.featuredImage.width &&
@@ -119,10 +119,10 @@ export function ProductCard({
             />
           ) : (
             <div
-              className="flex h-full w-full items-center justify-center"
+              className="flex size-full items-center justify-center"
               aria-hidden="true"
             >
-              <Leaf className="text-ink-faint/40 h-8 w-8" />
+              <Leaf className="text-ink-faint/40 size-8" />
             </div>
           )}
         </Link>

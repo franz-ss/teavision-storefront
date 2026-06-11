@@ -57,7 +57,7 @@ export function Stamp({
       <svg
         viewBox="0 0 200 200"
         aria-hidden="true"
-        className="font-script absolute inset-0 h-full w-full"
+        className="font-script absolute inset-0 size-full"
       >
         <defs>
           {/* top arc: left to right over the top (text upright) */}

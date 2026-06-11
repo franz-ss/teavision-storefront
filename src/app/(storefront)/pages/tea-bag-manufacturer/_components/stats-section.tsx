@@ -16,8 +16,8 @@ export function StatsSection() {
 
             return (
               <div key={stat.label} className="flex items-center gap-4">
-                <span className="bg-paper/10 text-gold grid h-14 w-14 shrink-0 place-items-center rounded-lg">
-                  <Icon className="h-7 w-7" aria-hidden="true" />
+                <span className="bg-paper/10 text-gold grid size-14 shrink-0 place-items-center rounded-lg">
+                  <Icon className="size-7" aria-hidden="true" />
                 </span>
                 <div>
                   <dd className="type-heading-03 text-gold">

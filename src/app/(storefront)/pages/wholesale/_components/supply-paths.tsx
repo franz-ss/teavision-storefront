@@ -27,7 +27,7 @@ export function SupplyPaths() {
             className="border-hairline flex gap-3 border-t py-4 last:border-b"
           >
             <CheckCircle2
-              className="text-brand mt-0.5 h-5 w-5 shrink-0"
+              className="text-brand mt-0.5 size-5 shrink-0"
               aria-hidden="true"
               strokeWidth={1.8}
             />

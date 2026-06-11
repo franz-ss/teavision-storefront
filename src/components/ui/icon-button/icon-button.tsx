@@ -16,9 +16,9 @@ const iconButtonVariants = cva(
         ghost: 'text-ink-soft hover:bg-brand-tint hover:text-brand',
       },
       size: {
-        sm: 'h-11 w-11',
-        md: 'h-11 w-11',
-        lg: 'h-12 w-12',
+        sm: 'size-11',
+        md: 'size-11',
+        lg: 'size-12',
       },
     },
     defaultVariants: {

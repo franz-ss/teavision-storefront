@@ -37,7 +37,7 @@ export function Testimonials() {
                       width={testimonial.logo.width}
                       height={testimonial.logo.height}
                       sizes="(min-width: 768px) 128px, 96px"
-                      className="border-hairline bg-paper h-24 w-24 shrink-0 rounded-md border object-contain md:h-32 md:w-32"
+                      className="border-hairline bg-paper size-24 shrink-0 rounded-md border object-contain md:size-32"
                     />
                     <span className="type-eyebrow text-brand shrink-0">
                       Partner

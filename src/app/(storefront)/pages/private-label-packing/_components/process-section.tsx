@@ -17,7 +17,7 @@ export function ProcessSection() {
               key={step.number}
               className="border-hairline bg-paper flex flex-col gap-3 rounded-xl border p-6"
             >
-              <span className="bg-brand text-paper grid h-9 w-9 shrink-0 place-items-center rounded-full text-sm font-bold">
+              <span className="bg-brand text-paper grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold">
                 {step.number}
               </span>
               <h3 className="type-label text-ink font-semibold">{step.title}</h3>

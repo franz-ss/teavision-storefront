@@ -77,7 +77,7 @@ export function SupplyChainProtection() {
                 width={mark.width}
                 height={mark.height}
                 sizes="(min-width: 1024px) 11vw, (min-width: 640px) 30vw, 45vw"
-                className="h-auto max-h-[74%] w-auto max-w-[78%]"
+                className="size-auto max-h-[74%] max-w-[78%]"
               />
             </li>
           ))}

@@ -26,7 +26,7 @@ export function Accordion({ className, items, ...props }: AccordionProps) {
             <span>{item.title}</span>
             <span
               aria-hidden="true"
-              className="text-brand h-2 w-2 shrink-0 rotate-45 border-r border-b border-current transition-transform group-open:rotate-225"
+              className="text-brand size-2 shrink-0 rotate-45 border-r border-b border-current transition-transform group-open:rotate-225"
             />
           </summary>
           <div className="type-body-sm text-ink-soft px-4 pb-5">

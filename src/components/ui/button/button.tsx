@@ -143,7 +143,7 @@ export const Button = React.forwardRef<
       >
         {isLoading && (
           <LoaderCircle
-            className="h-4 w-4 animate-spin motion-reduce:animate-none"
+            className="size-4 animate-spin motion-reduce:animate-none"
             aria-hidden="true"
           />
         )}

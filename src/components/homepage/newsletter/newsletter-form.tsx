@@ -91,7 +91,7 @@ export function HomepageNewsletterForm({
         disabled={isPending}
       >
         {isPending ? 'Subscribing…' : 'Subscribe'}
-        {!isPending && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+        {!isPending && <ArrowRight className="size-4" aria-hidden="true" />}
       </Button>
       {hasMessage ? (
         <p

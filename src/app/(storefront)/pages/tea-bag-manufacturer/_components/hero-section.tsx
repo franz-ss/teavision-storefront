@@ -25,7 +25,7 @@ export function HeroSection() {
               {HERO_FEATURES.map((feature) => (
                 <li key={feature} className="flex items-start gap-2.5">
                   <span
-                    className="bg-brand mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                    className="bg-brand mt-1.5 size-2.5 shrink-0 rounded-full"
                     aria-hidden="true"
                   />
                   <span className="text-ink font-semibold">{feature}</span>

@@ -30,7 +30,7 @@ export function StoryDisclosure({
           {title}
         </span>
         <ChevronDown
-          className="text-ink-soft h-4 w-4 shrink-0 transition-transform group-open:rotate-180"
+          className="text-ink-soft size-4 shrink-0 transition-transform group-open:rotate-180"
           aria-hidden="true"
         />
       </summary>

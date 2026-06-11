@@ -48,8 +48,8 @@ export function ContactSection({ action }: ContactSectionProps) {
                   href={method.href}
                   className="group focus-visible:ring-ring flex items-center gap-3.5 rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <span className="bg-brand-tint text-brand grid h-11 w-11 shrink-0 place-items-center rounded-full">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  <span className="bg-brand-tint text-brand grid size-11 shrink-0 place-items-center rounded-full">
+                    <Icon className="size-5" aria-hidden="true" />
                   </span>
                   <span>
                     <span className="type-mono-meta text-paper/60 block">

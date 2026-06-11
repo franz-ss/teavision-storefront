@@ -16,7 +16,7 @@ export function ProductList({
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center py-20 text-center">
-        <Leaf className="text-ink-faint/50 h-11 w-11" aria-hidden="true" />
+        <Leaf className="text-ink-faint/50 size-11" aria-hidden="true" />
         <h3 className="font-display text-ink mt-4 text-2xl">No matches</h3>
         <p className="text-ink-soft mt-2 max-w-sm">
           Try removing a filter, or reach out — we source to order.

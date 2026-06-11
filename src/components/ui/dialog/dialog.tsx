@@ -122,7 +122,7 @@ export function Dialog({
             size="sm"
             onClick={() => onOpenChange(false)}
           >
-            <X className="h-4 w-4" aria-hidden="true" />
+            <X className="size-4" aria-hidden="true" />
           </IconButton>
         </div>
         {children}

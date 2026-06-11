@@ -12,8 +12,8 @@ export function FeaturesGrid3() {
               key={card.title}
               className="border-hairline bg-paper flex items-start gap-4 rounded-xl border p-6"
             >
-              <span className="bg-ink text-paper grid h-11 w-11 shrink-0 place-items-center rounded-lg">
-                <card.icon className="h-5 w-5" aria-hidden="true" />
+              <span className="bg-ink text-paper grid size-11 shrink-0 place-items-center rounded-lg">
+                <card.icon className="size-5" aria-hidden="true" />
               </span>
               <div>
                 <h3 className="type-heading-05 text-ink">{card.title}</h3>

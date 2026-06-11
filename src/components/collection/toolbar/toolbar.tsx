@@ -44,7 +44,7 @@ export function Toolbar({
               className="bg-brand-tint text-brand inline-flex items-center gap-1.5 rounded-full px-3 py-1.75 text-xs font-semibold"
             >
               {filter}
-              <X className="h-3 w-3" aria-hidden="true" />
+              <X className="size-3" aria-hidden="true" />
             </span>
           ))}
         </div>
@@ -54,7 +54,7 @@ export function Toolbar({
       <details className="bg-paper border-hairline mt-2 rounded-lg border lg:hidden">
         <summary className="type-label text-ink focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
           <span className="inline-flex items-center gap-2">
-            <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
+            <SlidersHorizontal className="size-4" aria-hidden="true" />
             Filter products
           </span>
           {selectedFilters.length > 0 && (

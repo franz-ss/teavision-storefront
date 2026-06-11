@@ -20,7 +20,7 @@ test('IconButton small size keeps a 44px touch target', async () => {
     'utf8',
   )
 
-  assert.match(source, /sm:\s*'h-11 w-11'/)
+  assert.match(source, /sm:\s*'size-11'/)
 })
 
 test('Button small size keeps a 44px touch target', async () => {

@@ -74,7 +74,7 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
                     />
                   ) : (
                     <div
-                      className="bg-brand-tint h-full w-full"
+                      className="bg-brand-tint size-full"
                       aria-hidden="true"
                     />
                   )}

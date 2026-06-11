@@ -19,14 +19,14 @@ type Story = StoryObj<typeof IconButton>
 export const Default: Story = {
   args: {
     'aria-label': 'Increase quantity',
-    children: <Plus className="h-4 w-4" aria-hidden="true" />,
+    children: <Plus className="size-4" aria-hidden="true" />,
   },
 }
 
 export const Small: Story = {
   args: {
     'aria-label': 'Decrease quantity',
-    children: <Minus className="h-4 w-4" aria-hidden="true" />,
+    children: <Minus className="size-4" aria-hidden="true" />,
     size: 'sm',
   },
 }
@@ -34,7 +34,7 @@ export const Small: Story = {
 export const Ghost: Story = {
   args: {
     'aria-label': 'Open menu',
-    children: <Plus className="h-4 w-4" aria-hidden="true" />,
+    children: <Plus className="size-4" aria-hidden="true" />,
     variant: 'ghost',
   },
 }

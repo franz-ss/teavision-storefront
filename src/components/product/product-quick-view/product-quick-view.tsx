@@ -256,7 +256,7 @@ export function ProductQuickView({
         aria-haspopup="dialog"
         aria-expanded={open}
       >
-        <TriggerIcon className="h-4 w-4" aria-hidden="true" />
+        <TriggerIcon className="size-4" aria-hidden="true" />
         {buttonLabel}
       </Button>
 
@@ -388,7 +388,7 @@ export function ProductQuickView({
                   }
                   onClick={handleAddToCart}
                 >
-                  <ShoppingCart className="h-4 w-4" aria-hidden="true" />
+                  <ShoppingCart className="size-4" aria-hidden="true" />
                   {canAddToCart ? 'Add to Cart' : 'Sold Out'}
                 </Button>
                 <Button

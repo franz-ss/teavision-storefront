@@ -96,10 +96,10 @@ export function ArticleCard({
               height={article.featuredImage.height}
               preload={preload}
               sizes={imageSizes}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              className="size-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />
           ) : (
-            <div className="h-full w-full" aria-hidden="true" />
+            <div className="size-full" aria-hidden="true" />
           )}
         </div>
 

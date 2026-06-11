@@ -87,7 +87,7 @@ export function RelatedProductsCarousel({
             disabled={!canScrollPrevious}
             onClick={scrollPrevious}
           >
-            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            <ChevronLeft className="size-5" aria-hidden="true" />
           </IconButton>
           <IconButton
             variant="ghost"
@@ -96,7 +96,7 @@ export function RelatedProductsCarousel({
             disabled={!canScrollNext}
             onClick={scrollNext}
           >
-            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+            <ChevronRight className="size-5" aria-hidden="true" />
           </IconButton>
         </div>
       </div>

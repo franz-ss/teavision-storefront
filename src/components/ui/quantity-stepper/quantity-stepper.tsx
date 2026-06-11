@@ -100,7 +100,7 @@ export function QuantityStepper({
               : 'size-11 rounded-l-full',
           )}
         >
-          <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+          <Minus className="size-3.5" aria-hidden="true" />
         </IconButton>
         <input
           id={id}
@@ -133,7 +133,7 @@ export function QuantityStepper({
               : 'size-11 rounded-r-full',
           )}
         >
-          <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+          <Plus className="size-3.5" aria-hidden="true" />
         </IconButton>
       </div>
     </>

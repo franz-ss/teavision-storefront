@@ -115,7 +115,7 @@ export default async function Page() {
               >
                 <Link
                   href={hrefForHandle(collection.handle)}
-                  className="focus-visible:ring-ring block h-full w-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                  className="focus-visible:ring-ring block size-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
                   <CollectionCardImage collection={collection} />
 

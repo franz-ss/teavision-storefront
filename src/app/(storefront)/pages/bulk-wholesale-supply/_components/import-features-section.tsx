@@ -23,8 +23,8 @@ export function ImportFeaturesSection() {
               key={card.title}
               className="border-hairline bg-paper flex items-start gap-4 rounded-xl border p-6"
             >
-              <span className="bg-brand text-paper mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full">
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="bg-brand text-paper mt-0.5 grid size-6 shrink-0 place-items-center rounded-full">
+                <Check className="size-3.5" aria-hidden="true" />
               </span>
               <div>
                 <h3 className="type-label text-ink font-semibold">

@@ -72,7 +72,7 @@ export const MenuRow: Story = {
 export const Thumbnail: Story = {
   args: {
     'aria-label': 'View image 1',
-    children: <span className="bg-card block h-full w-full" />,
+    children: <span className="bg-card block size-full" />,
     pressed: true,
     variant: 'thumbnail',
   },

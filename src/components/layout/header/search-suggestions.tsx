@@ -105,10 +105,10 @@ export function SearchSuggestions({
                         width={product.featuredImage.width}
                         height={product.featuredImage.height}
                         sizes="4rem"
-                        className="h-full w-full object-cover"
+                        className="size-full object-cover"
                       />
                     ) : (
-                      <span className="h-full w-full" aria-hidden="true" />
+                      <span className="size-full" aria-hidden="true" />
                     )}
                   </span>
 

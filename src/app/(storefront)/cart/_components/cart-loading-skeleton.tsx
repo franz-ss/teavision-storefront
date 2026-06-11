@@ -26,7 +26,7 @@ export function CartLoadingSkeleton() {
           {Array.from({ length: 2 }, (_, index) => (
             <li key={index} className="flex gap-3.5 py-5">
               {/* Thumb */}
-              <div className="bg-paper-2 h-19 w-19 shrink-0 animate-pulse rounded-lg motion-reduce:animate-none" />
+              <div className="bg-paper-2 size-19 shrink-0 animate-pulse rounded-lg motion-reduce:animate-none" />
 
               {/* Line info */}
               <div className="min-w-0 flex-1">
@@ -58,7 +58,7 @@ export function CartLoadingSkeleton() {
         <div className="mt-8 space-y-4" aria-label="Loading checkout form">
           <div className="bg-paper-2 border-hairline h-28 animate-pulse rounded-sm border motion-reduce:animate-none" />
           <div className="flex items-start gap-2.5">
-            <div className="bg-paper-2 mt-0.5 h-5 w-5 animate-pulse rounded motion-reduce:animate-none" />
+            <div className="bg-paper-2 mt-0.5 size-5 animate-pulse rounded motion-reduce:animate-none" />
             <div className="bg-paper-2 h-5 w-72 max-w-full animate-pulse rounded motion-reduce:animate-none" />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -89,7 +89,7 @@ export function CartLoadingSkeleton() {
         <div className="border-hairline mt-4 space-y-2.5 border-t pt-4">
           {Array.from({ length: 4 }, (_, index) => (
             <div key={index} className="flex items-start gap-2">
-              <div className="bg-paper-2 mt-0.5 h-4 w-4 shrink-0 animate-pulse rounded-full motion-reduce:animate-none" />
+              <div className="bg-paper-2 mt-0.5 size-4 shrink-0 animate-pulse rounded-full motion-reduce:animate-none" />
               <div className="bg-paper-2 h-4 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
             </div>
           ))}

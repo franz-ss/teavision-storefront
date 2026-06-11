@@ -39,7 +39,7 @@ export function StoryValuesAccordion({ values }: StoryValuesAccordionProps) {
                 <span>{value.title}</span>
                 <span
                   aria-hidden="true"
-                  className="border-brand h-2 w-2 shrink-0 rotate-45 border-r border-b transition-transform group-aria-expanded:rotate-225"
+                  className="border-brand size-2 shrink-0 rotate-45 border-r border-b transition-transform group-aria-expanded:rotate-225"
                 />
               </DisclosureButton>
             </h3>
