@@ -1,7 +1,6 @@
-const SHOPIFY_CDN_BASE = 'https://www.teavision.com.au/cdn/shop/files'
-const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
+import { MapPinned, ShieldCheck, Tag, type LucideIcon } from 'lucide-react'
 
-export const BANNER_IMAGE_SRC = `${SHOPIFY_CDN_BASE}/Screenshot_2025-10-29_at_14.01.32.png`
+const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
 
 export const HERO_DESKTOP_IMAGE_SRC = `${SHOPIFY_FILE_BASE}/Section_Image.avif`
 export const HERO_MOBILE_VIDEO_SRC = `${SHOPIFY_FILE_BASE}/b76f0f3e99f443ecbd95ecfcb9b844d9.mp4`
@@ -12,20 +11,24 @@ export const SHIP_AVIF_SRC = `${SHOPIFY_FILE_BASE}/ship.avif`
 
 // Section 3 — 3-column feature grid
 export type FeatureCard3 = {
+  icon: LucideIcon
   title: string
   description: string
 }
 
 export const FEATURE_CARDS_3: FeatureCard3[] = [
   {
+    icon: ShieldCheck,
     title: 'ACO / HACCP Certified',
     description: 'Programs & documentation available on request.',
   },
   {
+    icon: MapPinned,
     title: 'Container Imports',
     description: 'Reliable global lanes into Melbourne.',
   },
   {
+    icon: Tag,
     title: 'Price Advantage',
     description: 'Bulk & contract pricing for 100kg+ orders.',
   },

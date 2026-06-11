@@ -27,11 +27,12 @@ export function PackagingSection() {
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
               <div className="p-4">
-                <p className="type-label text-ink font-semibold">{card.title}</p>
+                <p className="type-label text-ink font-semibold">
+                  {card.title}
+                </p>
                 <p className="type-body-sm text-ink-soft mt-1">{card.tag}</p>
               </div>
             </div>

@@ -28,7 +28,6 @@ export function WhyChooseSection() {
               height={600}
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="w-full object-cover"
-              unoptimized
             />
           </div>
 

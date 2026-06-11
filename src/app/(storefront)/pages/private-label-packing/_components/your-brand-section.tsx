@@ -8,13 +8,12 @@ export function YourBrandSection() {
   return (
     <Section.Root tone="surface">
       <Section.Container>
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-center">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           {/* Text 2/3 */}
           <div>
             <Eyebrow>Private Label • White Label • OEM</Eyebrow>
             <h2 className="type-heading-01 text-ink mt-4 text-balance">
-              Your Brand,{' '}
-              <span className="text-brand">Our Product</span>
+              Your Brand, <span className="text-brand">Our Product</span>
             </h2>
             <p className="type-lede text-ink-soft mt-4 max-w-[52ch]">
               We formulate, blend, fill and pack{' '}
@@ -28,10 +27,7 @@ export function YourBrandSection() {
                   key={item}
                   className="type-body text-ink-soft flex items-start gap-2"
                 >
-                  <span
-                    className="text-brand mt-1 shrink-0"
-                    aria-hidden="true"
-                  >
+                  <span className="text-brand mt-1 shrink-0" aria-hidden="true">
                     &#10003;
                   </span>
                   {item}
@@ -53,14 +49,13 @@ export function YourBrandSection() {
           </div>
 
           {/* Image 1/3 */}
-          <div className="relative aspect-4/5 overflow-hidden rounded-xl">
+          <div className="relative aspect-video overflow-hidden rounded-xl">
             <Image
               src={YOUR_BRAND_IMAGE_SRC}
               alt="Your Brand Our Product mockup"
               fill
               sizes="(max-width: 1024px) 100vw, 33vw"
               className="object-cover"
-              unoptimized
             />
           </div>
         </div>

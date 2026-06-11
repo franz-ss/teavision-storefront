@@ -26,11 +26,10 @@ export function TopProductsSection() {
                   fill
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
               <div className="p-3">
-                <p className="type-body-sm text-ink font-semibold leading-snug">
+                <p className="type-body-sm text-ink leading-snug font-semibold">
                   {product.name}
                 </p>
                 {product.tag ? (

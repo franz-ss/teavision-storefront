@@ -48,7 +48,6 @@ export function HeroSection() {
               height={1130}
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="hidden w-full object-cover lg:block"
-              unoptimized
             />
             {/* Mobile video */}
             <video

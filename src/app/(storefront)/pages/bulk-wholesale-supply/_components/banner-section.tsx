@@ -1,35 +1,19 @@
-import Image from 'next/image'
-
 import { Button, Section } from '@/components/ui'
-
-import { BANNER_IMAGE_SRC } from '../_lib/data'
 
 export function BannerSection() {
   return (
-    <Section.Root
-      tone="brand"
-      spacing="none"
-      className="relative isolate min-h-64 overflow-hidden md:min-h-80"
-    >
-      <Image
-        src={BANNER_IMAGE_SRC}
-        alt="Bulk wholesale tea and ingredients"
-        fill
-        sizes="100vw"
-        priority
-        className="absolute inset-0 -z-20 object-cover object-center"
-        unoptimized
-      />
-      <div aria-hidden="true" className="bg-ink/55 absolute inset-0 -z-10" />
-      <Section.Container className="flex min-h-64 flex-col items-center justify-center gap-4 py-12 text-center md:min-h-80">
-        <h2 className="type-heading-01 text-paper">BULK WHOLESALE ACCOUNT</h2>
-        <p className="type-lede text-paper/85 max-w-[52ch]">
-          Access 1500+ Ingredients Direct from Farms and Save
-        </p>
+    <Section.Root tone="inverse" spacing="none">
+      <Section.Container className="flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:gap-10">
+        <div>
+          <h2 className="type-label text-paper">BULK WHOLESALE ACCOUNT</h2>
+          <p className="type-body-sm text-paper/85 mt-1">
+            Access 1500+ Ingredients Direct from Farms and Save
+          </p>
+        </div>
         <Button
           href="/pages/appi-compliance?view=bulk-wholesale-supply"
           variant="inverse"
-          size="lg"
+          size="sm"
         >
           Apply Now
         </Button>

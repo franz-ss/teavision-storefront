@@ -4,20 +4,23 @@ import { FEATURE_CARDS_3 } from '../_lib/data'
 
 export function FeaturesGrid3() {
   return (
-    <Section.Root tone="sunken">
+    <Section.Root tone="sunken" spacing="compact">
       <Section.Container>
         <div className="grid gap-6 sm:grid-cols-3">
           {FEATURE_CARDS_3.map((card) => (
             <div
               key={card.title}
-              className="border-hairline bg-paper rounded-xl border p-6"
+              className="border-hairline bg-paper flex items-start gap-4 rounded-xl border p-6"
             >
-              <h3 className="type-label text-ink font-semibold">
-                {card.title}
-              </h3>
-              <p className="type-body-sm text-ink-soft mt-2">
-                {card.description}
-              </p>
+              <span className="bg-ink text-paper grid h-11 w-11 shrink-0 place-items-center rounded-lg">
+                <card.icon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="type-heading-05 text-ink">{card.title}</h3>
+                <p className="type-body-sm text-ink-soft mt-1.5">
+                  {card.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>

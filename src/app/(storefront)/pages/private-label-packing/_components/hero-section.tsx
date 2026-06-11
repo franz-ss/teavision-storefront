@@ -24,10 +24,9 @@ export function HeroSection() {
               functional blends &mdash; fast.
             </h1>
             <p className="type-lede text-ink-soft mt-4 max-w-[52ch]">
-              From concept to shelf: teas, herbs, spices, custom blends,
-              extract powders, superfoods, juices and premium tea bag
-              manufacturing. R&amp;D support, packaging and logistics &mdash;
-              sorted.
+              From concept to shelf: teas, herbs, spices, custom blends, extract
+              powders, superfoods, juices and premium tea bag manufacturing.
+              R&amp;D support, packaging and logistics &mdash; sorted.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button
@@ -63,7 +62,6 @@ export function HeroSection() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
                 preload
-                unoptimized
               />
             </div>
             <div className="grid grid-cols-3 gap-3">
@@ -74,7 +72,6 @@ export function HeroSection() {
                   fill
                   sizes="(max-width: 1024px) 33vw, 17vw"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
               <div className="relative aspect-square overflow-hidden rounded-lg">
@@ -84,7 +81,6 @@ export function HeroSection() {
                   fill
                   sizes="(max-width: 1024px) 33vw, 17vw"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
               <div className="relative aspect-square overflow-hidden rounded-lg">
@@ -94,7 +90,6 @@ export function HeroSection() {
                   fill
                   sizes="(max-width: 1024px) 33vw, 17vw"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
             </div>

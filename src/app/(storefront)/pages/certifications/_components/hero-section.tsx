@@ -15,9 +15,9 @@ export function HeroSection() {
       />
       <div aria-hidden="true" className="bg-ink/50 absolute inset-0 -z-10" />
       <Section.Container>
-        <div className="max-w-prose">
+        <div className="max-w-4xl">
           <Eyebrow tone="gold">Certified quality</Eyebrow>
-          <h1 className="type-display text-paper mt-5 max-w-[16ch]">
+          <h1 className="type-display text-paper mt-5 max-w-[16ch] text-balance">
             Certified Organic. Globally Sourced. Quality Assured
           </h1>
           <p className="type-lede text-paper/85 mt-6 max-w-[54ch]">
