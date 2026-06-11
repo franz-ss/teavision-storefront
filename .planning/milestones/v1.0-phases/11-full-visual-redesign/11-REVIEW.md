@@ -320,6 +320,28 @@ Verification: `pnpm lint` passed, `tsc --noEmit` clean, `pnpm test:unit` 89/89 p
 _Fixed: 2026-06-11_
 _Fixer: Claude (gsd-code-fixer)_
 
+Fix pass 2: 2026-06-11 (scope: Info findings IN-01..IN-12).
+Verification: `pnpm lint` passed, `tsc --noEmit` clean, `pnpm test:unit` 119/119 passed (baseline before fixes: 82/82 — count grew from a concurrent cart-refactor session adding tests; no new failures introduced).
+Note: several cited locations had moved since the review (footer rework relocated the copyright and Popular Searches into `popular-searches.tsx`; the phase directory itself moved to `.planning/milestones/v1.0-phases/`). The pending `review-scope.txt` deletion was committed by the concurrent session (7c5fb41) before this pass reached it. A prerequisite commit 4a29f10 (`chore: ignore .claude directory in eslint`) was required because a leftover agent worktree under `.claude/worktrees/` broke the pre-commit lint hook.
+
+| Finding | Status | Commit | Notes |
+| ------- | ------ | ------ | ----- |
+| IN-01 | fixed | fafbf6a | Bold/rest-shaped check items moved into `_lib/data.ts` as `LOGISTICS_CHECK_ITEMS: LogisticsCheckItem[]`; `logistics-section.tsx` imports it; dead string[] export and local duplicate removed. |
+| IN-02 | fixed | b05330c | `PAGE_PATH`/`PAGE_TITLE`/`PAGE_DESCRIPTION` moved to `_lib/data.ts`; imported by both `page.tsx` and `json-ld.tsx`. |
+| IN-03 | fixed | d67b68f | "match" → "matcha" in bulk-wholesale data; "tradition" → "traditional" in homepage content. |
+| IN-04 | already resolved | — | Footer rework (fab09ab) replaced the dead `#popular-searches` anchor + `sr-only` block with a visible toggle disclosure (`Button` with `aria-expanded`/`aria-controls` revealing the link panel). Links render visibly when expanded. |
+| IN-05 | fixed | 8eba4dd | `BUILD_YEAR` injected at build time via `next.config.ts` `env`; `popular-searches.tsx` (current home of the copyright) renders `process.env.BUILD_YEAR` with a `'2026'` fallback. No per-request `new Date()`. |
+| IN-06 | fixed | 2c60d4f | One export per flow: `sendContactAction` removed (callers moved to `submitContactFormAction` — kept because the concurrent session's in-flight files import it); `submitNewsletterSignupFormAction` removed (callers moved to `sendNewsletterSignupAction`); `sendNewsletterSignupFormAction` kept as the `useActionState`-shaped variant for the footer. Subject line now strips CR/LF from the submitted name. |
+| IN-07 | fixed | 778dc63 | `ContactSectionForm` and `HomepageNewsletterForm` generate all element ids with `useId()`; stale `homepage-` prefixes dropped; label `htmlFor`/`aria-describedby` pairs preserved. No tests/stories asserted the old ids. |
+| IN-08 | fixed | de62645 | Proof-points divider classes composed with `cn()`; shared frame deduplicated. |
+| IN-09 | already resolved | — | Slider dots are now real visible `ToggleButton variant="dot"` controls with `aria-label` and click handlers; the `aria-live` paragraph remains. |
+| IN-10 | skipped | — | Conflicts with in-flight cart refactor: every test/story asserting the `Was $X`/`Now $Y` aria-labels lives in the concurrent session's uncommitted cart `_components` files (`view.test.tsx`, `view.stories.tsx`). Fixing `price.tsx` without updating those would break them. Revisit after the cart refactor lands. |
+| IN-11 | fixed | 17a465f | Barrel `@/components/contact` imports in homepage + collections index; `import type { CtaProps }`; `<Link>` for internal hrefs in `not-found.tsx` pills and all popular-search entries; redundant `robots: { index: false }` dropped from `not-found.tsx` (verified `withNoindexRobots` spreads its own values last, so the override was inert in noindex mode; 404 status prevents indexing otherwise). |
+| IN-12 | fixed | e2bb49f | "Best value" badge pinned to the deepest visible tier (highest discount) instead of the selected tier; both `*concept.stories.tsx` mockup files deleted. No tests/stories asserted the old badge behavior. |
+
+_Fixed (info pass): 2026-06-11_
+_Fixer: Claude (gsd-code-fixer)_
+
 ---
 
 _Reviewed: 2026-06-11_
