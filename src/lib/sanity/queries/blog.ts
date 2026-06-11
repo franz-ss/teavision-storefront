@@ -172,7 +172,7 @@ export const defaultBlogListingQuery = groq`
       defined(slug.current) &&
       blog->slug.current == $blogHandle &&
       publishedAt <= now() &&
-      !(_id in *[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref)
+      !(_id in coalesce(*[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref, []))
     ] | order(publishedAt desc)[$offset...$limit]{
       ${sanityBlogPostSummaryLightFields}
     },
@@ -181,7 +181,7 @@ export const defaultBlogListingQuery = groq`
       defined(slug.current) &&
       blog->slug.current == $blogHandle &&
       publishedAt <= now() &&
-      !(_id in *[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref)
+      !(_id in coalesce(*[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref, []))
     ]),
     "allTagArrays": *[
       _type == "blogPost" &&
