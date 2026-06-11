@@ -11,7 +11,8 @@ export function TopProductsSection() {
         <Section.Intro
           align="left"
           title="Top 20 Private Label Products"
-          className="mb-10"
+          variant="compact"
+          className="mb-10 max-w-none"
         />
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {TOP_PRODUCTS.map((product) => (

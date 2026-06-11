@@ -63,13 +63,13 @@ export function SupplyChainProtection() {
         </div>
 
         <ul
-          className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7 lg:gap-7"
+          className="mt-16 grid grid-cols-2 items-center gap-x-8 gap-y-7 sm:grid-cols-3 lg:grid-cols-7"
           aria-label="Supply chain certification marks"
         >
           {CERTIFICATION_MARKS.map((mark) => (
             <li
               key={mark.src}
-              className="bg-paper-2 flex aspect-170/124 items-center justify-center overflow-hidden"
+              className="flex min-h-24 items-center justify-center px-2 py-3 sm:min-h-28"
             >
               <Image
                 src={mark.src}
@@ -77,7 +77,7 @@ export function SupplyChainProtection() {
                 width={mark.width}
                 height={mark.height}
                 sizes="(min-width: 1024px) 11vw, (min-width: 640px) 30vw, 45vw"
-                className="size-auto max-h-[74%] max-w-[78%]"
+                className="h-auto max-h-20 w-full object-contain mix-blend-multiply"
               />
             </li>
           ))}

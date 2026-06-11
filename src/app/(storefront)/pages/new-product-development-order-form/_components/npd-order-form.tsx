@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, type FormEvent } from 'react'
+import { useState, useTransition, type SubmitEvent } from 'react'
 
 import {
   Button,
@@ -45,7 +45,7 @@ export function NpdOrderForm() {
 
   const blendCount = blendMode === 'one' ? 1 : multiBlendCount
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
 

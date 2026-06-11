@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useTransition, type FormEvent } from 'react'
+import { useRef, useState, useTransition, type SubmitEvent } from 'react'
 import { ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui'
@@ -22,7 +22,7 @@ export function HomepageNewsletterForm({
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
 

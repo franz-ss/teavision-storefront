@@ -11,7 +11,7 @@ export function SolutionsSection() {
         <Section.Intro
           title="Complete Tea Manufacturing Solutions"
           copy="From custom blend creation to private label packaging, we offer end-to-end tea manufacturing services for businesses worldwide."
-          className="mb-12"
+          className="mb-12 max-w-4xl [&>p]:mx-auto [&>p]:max-w-prose"
         />
         <div className="grid gap-6 md:grid-cols-3">
           {SOLUTION_CARDS.map((card) => (

@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-import { Badge, Card, Section } from '@/components/ui'
+import { Badge, Section } from '@/components/ui'
 
 import { AWARD_IMAGES } from '../_lib/data'
 
@@ -26,18 +26,14 @@ export function AwardsSection() {
         </div>
 
         <ul
-          className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7"
+          className="grid grid-cols-2 items-center gap-x-8 gap-y-7 sm:grid-cols-3 lg:grid-cols-7"
           role="list"
           aria-hidden="true"
         >
           {AWARD_IMAGES.map((image) => (
-            <Card
-              as="li"
+            <li
               key={image.src}
-              padding="sm"
-              radius="lg"
-              tone="sunken"
-              className="flex min-h-28 items-center justify-center"
+              className="flex min-h-24 items-center justify-center px-2 py-3 sm:min-h-28"
             >
               <Image
                 src={image.src}
@@ -45,9 +41,9 @@ export function AwardsSection() {
                 width={image.width}
                 height={image.height}
                 sizes="(min-width: 1024px) 10rem, (min-width: 640px) 30vw, 50vw"
-                className="h-auto max-h-20 w-full object-contain"
+                className="h-auto max-h-20 w-full object-contain mix-blend-multiply"
               />
-            </Card>
+            </li>
           ))}
         </ul>
       </Section.Container>

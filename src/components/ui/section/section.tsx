@@ -87,6 +87,7 @@ export interface SectionIntroProps extends Omit<
   align?: 'center' | 'left'
   eyebrow?: string
   copy?: React.ReactNode
+  copyClassName?: string
   title: React.ReactNode
 }
 
@@ -95,7 +96,9 @@ function Intro({
   className,
   eyebrow,
   copy,
+  copyClassName,
   title,
+  variant = 'default',
   ...props
 }: SectionIntroProps) {
   return (
@@ -112,8 +115,19 @@ function Intro({
           {eyebrow}
         </Eyebrow>
       ) : null}
-      <h2 className="type-heading-01 text-current">{title}</h2>
-      {copy ? <p className="type-lede text-ink-soft mt-4">{copy}</p> : null}
+      <h2
+        className={cn(
+          'text-current',
+          variant === 'compact' ? 'type-heading-02' : 'type-heading-01',
+        )}
+      >
+        {title}
+      </h2>
+      {copy ? (
+        <p className={cn('type-lede text-ink-soft mt-4', copyClassName)}>
+          {copy}
+        </p>
+      ) : null}
     </div>
   )
 }

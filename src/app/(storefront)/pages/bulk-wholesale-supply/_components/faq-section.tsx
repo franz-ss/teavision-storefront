@@ -8,5 +8,5 @@ const faqItems = FAQ_ITEMS.map((item) => ({
 }))
 
 export function FaqSection() {
-  return <Faq items={faqItems} />
+  return <Faq items={faqItems} spacing="none" />
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useTransition, type FormEvent } from 'react'
+import { useRef, useState, useTransition, type SubmitEvent } from 'react'
 
 import { Button, FormLabel, Textarea, TextInput } from '@/components/ui'
 import type { ContactActionResult } from '@/lib/contact/types'
@@ -19,7 +19,7 @@ export function ContactSectionForm({ action }: ContactSectionFormProps) {
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
 

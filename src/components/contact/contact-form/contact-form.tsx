@@ -4,7 +4,7 @@ import {
   useState,
   useTransition,
   type ChangeEvent,
-  type FormEvent,
+  type SubmitEvent,
 } from 'react'
 
 import { Button, FormLabel, Textarea, TextInput } from '@/components/ui'
@@ -67,7 +67,7 @@ export function ContactForm({
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
 

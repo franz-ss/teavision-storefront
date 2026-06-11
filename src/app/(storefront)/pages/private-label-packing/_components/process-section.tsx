@@ -9,7 +9,8 @@ export function ProcessSection() {
         <Section.Intro
           align="left"
           title="From brief to shelf in 5 steps"
-          className="mb-10"
+          variant="compact"
+          className="mb-10 max-w-none"
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {PROCESS_STEPS.map((step) => (

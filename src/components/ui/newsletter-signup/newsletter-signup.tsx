@@ -4,7 +4,7 @@ import {
   useState,
   useTransition,
   type ChangeEvent,
-  type FormEvent,
+  type SubmitEvent,
 } from 'react'
 
 import type { NewsletterSignupActionResult } from '@/lib/contact/types'
@@ -41,7 +41,7 @@ export function NewsletterSignup({
     setWebsite(event.target.value)
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
 
