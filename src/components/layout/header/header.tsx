@@ -43,7 +43,7 @@ export function Header() {
             </div>
             <div className="flex items-center gap-3">
               <Link
-                href="/pages/wholesale"
+                href="/pages/wholesale-account-request"
                 className="text-paper/85 hover:text-paper focus-visible:ring-ring flex items-center gap-1 rounded-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
               >
                 <Sparkles className="size-3" aria-hidden="true" />
@@ -126,7 +126,7 @@ export function Header() {
 
               {/* Wholesale CTA — desktop only */}
               <Button
-                href="/pages/wholesale"
+                href="/pages/wholesale-account-request"
                 variant="brand"
                 size="sm"
                 className="ml-2 hidden lg:inline-flex"

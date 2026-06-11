@@ -203,7 +203,7 @@ export function BulkSavings({
             bags (2kg 5kg 10kg etc)
           </p>
           <Link
-            href="/pages/wholesale"
+            href="/pages/wholesale-account-request"
             className="type-label border-hairline text-ink hover:border-brand hover:text-brand focus-visible:ring-ring inline-flex items-center self-start border-b-[1.5px] pb-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Apply for a wholesale account

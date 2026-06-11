@@ -40,7 +40,11 @@ export function WholesaleHero() {
               retailers, and wellness brands across Australia.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/pages/contact" variant="inverse" size="lg">
+              <Button
+                href="/pages/wholesale-account-request"
+                variant="inverse"
+                size="lg"
+              >
                 Apply for wholesale
               </Button>
               <Button
