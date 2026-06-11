@@ -200,7 +200,11 @@ export async function PageContent({ params, searchParams }: PageProps) {
               visibleFilters={visibleFilters}
             />
 
-            <ProductList products={products} nextPageHref={nextPageHref} />
+            <ProductList
+              clearFiltersHref={clearFiltersHref}
+              nextPageHref={nextPageHref}
+              products={products}
+            />
           </div>
         </Section.Container>
       </Section.Root>

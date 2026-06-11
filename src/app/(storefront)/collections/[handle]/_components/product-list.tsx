@@ -5,11 +5,13 @@ import { Button } from '@/components/ui'
 import type { CollectionProductSummary } from '@/lib/shopify/types'
 
 type ProductListProps = {
+  clearFiltersHref?: string | null
   nextPageHref?: string | null
   products: CollectionProductSummary[]
 }
 
 export function ProductList({
+  clearFiltersHref = null,
   nextPageHref = null,
   products,
 }: ProductListProps) {
@@ -21,14 +23,16 @@ export function ProductList({
         <p className="text-ink-soft mt-2 max-w-sm">
           Try removing a filter, or reach out — we source to order.
         </p>
-        <Button
-          href="/pages/contact"
-          variant="ghost"
-          size="sm"
-          className="mt-5"
-        >
-          Clear filters
-        </Button>
+        <div className="mt-5 flex flex-wrap justify-center gap-3">
+          {clearFiltersHref ? (
+            <Button href={clearFiltersHref} variant="ghost" size="sm">
+              Clear filters
+            </Button>
+          ) : null}
+          <Button href="/pages/contact" variant="ghost" size="sm">
+            Contact us
+          </Button>
+        </div>
       </div>
     )
   }
