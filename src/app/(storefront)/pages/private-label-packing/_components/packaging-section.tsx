@@ -13,10 +13,8 @@ export function PackagingSection() {
           title="Packaging options & formats"
           copy="Choose shelf-ready packaging or go fully custom with print finishes, closures and materials."
           variant="compact"
-          className="mb-10 max-w-none"
-          copyClassName="max-w-[60ch]"
         />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {PACKAGING_CARDS.map((card) => (
             <div
               key={card.title}
