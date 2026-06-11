@@ -8,7 +8,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test:contracts": "node --test scripts/eslint-rules/*.test.mjs scripts/component-contracts/*.test.mjs",
-    "test:unit": "vitest run --environment node tests/setup/smoke.test.ts src/lib/env/read.test.ts src/lib/seo/site-url.test.ts src/lib/shopify/client.test.ts src/lib/shopify/quantity-rules.test.ts src/lib/shopify/operations/cart.test.ts src/lib/shopify/operations/product.test.ts src/lib/contact/actions.test.ts src/components/collection/loading-skeleton/loading-skeleton.test.tsx src/components/layout/header/search-autocomplete.test.tsx src/components/product/product-form/product-form.test.tsx \"src/app/(storefront)/cart/_components/loading-skeleton.test.tsx\" \"src/app/(storefront)/cart/_components/recommendations.test.tsx\" \"src/app/(storefront)/cart/_components/view.test.tsx\" \"src/app/(storefront)/products/[handle]/_components/related-products.test.tsx\"",
+    "test:unit": "vitest run --exclude src/lib/cart/actions.test.ts --exclude \"src/app/api/**/*.test.ts\"",
     "test:integration": "vitest run --environment node src/lib/cart/actions.test.ts \"src/app/api/products/[handle]/quick-view/route.test.ts\"",
     "test:e2e": "playwright test",
     "test:stories": "vitest run --config vitest.storybook.config.mts",

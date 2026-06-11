@@ -5,6 +5,8 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
+    environment: 'node',
+    include: ['src/**/*.test.{ts,tsx}', 'tests/setup/**/*.test.ts'],
     restoreMocks: true,
     clearMocks: true,
   },
