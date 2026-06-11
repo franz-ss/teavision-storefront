@@ -1,5 +1,25 @@
 # Milestones
 
+## v1.2 SEO-Safe PLP Pagination Parity (Active)
+
+**Phases planned:** 1 phase (13), 1 plan
+**Timeline:** 2026-06-12 → active
+
+**Planned:** Restore production-style collection pagination on headless PLPs
+using `?page=N` URLs while preserving the live Shopify site's SEO contract for
+launch: base collection canonicals, prev/next links where available, existing
+robots intent for sort/filter URLs, and no public cursor-navigation URLs.
+
+**Key planned outcomes:**
+
+- Public collection pagination parity with production (`/collections/all?page=2`)
+- Launch-safe production canonical behavior instead of a simultaneous SEO strategy change
+- Internal page-number-to-cursor resolution over Shopify Storefront GraphQL
+- Bounded PLP payloads preserved from Phase 05-03
+- Classic accessible pagination UI replacing "Next products"
+
+---
+
 ## v1.1 Blog Performance (Shipped: 2026-06-12)
 
 **Phases completed:** 1 phase (12), 4 plans, 13 tasks

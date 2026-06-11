@@ -32,6 +32,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 - [ ] Close v1.0 known gaps: collection empty-state "Clear filters" misdirect (CQA-05), human UAT items (visual sweep, live Resend newsletter), and the tech-debt list in `milestones/v1.0-MILESTONE-AUDIT.md`.
 - [ ] Close v1.1 remaining tech debt (W2 heavy `getBlog()` on default blog route for hero/metadata, W4 light-projection type honesty, W5 featured backfill trade-off) — see `milestones/v1.1-MILESTONE-AUDIT.md`.
+- [ ] v1.2 SEO-safe PLP pagination parity: restore production-style `?page=N` collection pagination while preserving production canonical/crawler behavior and bounded Shopify Storefront GraphQL payloads.
 
 ### Out of Scope
 
@@ -70,7 +71,8 @@ The codebase map in `.planning/codebase/` predates the redesign and has known dr
 | Light server-paginated GROQ query for the default blog listing, full `getBlog()` for tag/search | Avoids fetching every article's bodyText on the most-visited blog path while keeping in-memory filtering where it is needed | Good    |
 | Revert CDN-backed Sanity reads to authenticated `sanityFetch`                | Token-less CDN client broke reads against the dataset; authenticated non-CDN reads are correct, CDN helper removed at v1.1 audit       | Good    |
 | LQIP blur placeholders with truthy guards plus bounded image URL options    | Blur-in perceived performance without render crashes on empty/absent LQIP; image weight capped per use case                            | Good    |
+| Preserve production PLP pagination SEO behavior for launch                  | Platform migration risk is lower when `?page=N`, base canonicals, prev/next links, and crawler exclusions match the live Shopify site before post-launch SEO tuning | Planned |
 
 ---
 
-_Last updated: 2026-06-12 after v1.1 milestone completion_
+_Last updated: 2026-06-12 after Phase 13 planning_

@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 Headless Storefront Launch** — Phases 1–11 (shipped 2026-06-11) — see `milestones/v1.0-ROADMAP.md`
 - ✅ **v1.1 Blog Performance** — Phase 12 (shipped 2026-06-12) — see `milestones/v1.1-ROADMAP.md`
-- 📋 **Next milestone** — define scope with `/gsd:new-milestone`
+- 🚧 **v1.2 SEO-Safe PLP Pagination Parity** — Phase 13 (planned 2026-06-12)
 
 ## Phases
 
@@ -34,6 +34,10 @@ Full phase details: `milestones/v1.1-ROADMAP.md` · Audit: `milestones/v1.1-MILE
 
 </details>
 
+### 🚧 v1.2 SEO-Safe PLP Pagination Parity
+
+- [ ] **Phase 13: Production-parity collection pagination** — Restore classic `?page=N` PLP pagination while preserving production SEO canonicals, robots behavior, and bounded Shopify Storefront GraphQL payloads. (1/1 plans ready)
+
 ## Progress
 
 | Phase                                    | Milestone | Plans Complete | Status     | Completed  |
@@ -48,13 +52,16 @@ Full phase details: `milestones/v1.1-ROADMAP.md` · Audit: `milestones/v1.1-MILE
 | 10. Cart/Checkout Critical Flow Tests    | v1.0      | 4/4            | Complete   | —          |
 | 11. Full Visual Redesign                 | v1.0      | 22/22          | Complete   | 2026-06-11 |
 | 12. Optimize blog loading                | v1.1      | 4/4            | Complete   | 2026-06-12 |
+| 13. Production-parity collection pagination | v1.2   | 1/1            | Ready      | —          |
 
-### Phase 13: Production-parity collection pagination — restore classic ?page=N PLP pagination while preserving production SEO canonicals, robots behavior, and bounded Shopify Storefront GraphQL payloads
+## Phase Details
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+### Phase 13: Production-parity collection pagination
+
+**Goal:** Restore production-style `?page=N` collection pagination in the headless PLP while preserving production canonical/crawler behavior and the Phase 05-03 bounded payload contract.
+**Requirements**: PLP-PAGE-01, PLP-PAGE-02, PLP-PAGE-03, PLP-PAGE-04, PLP-PAGE-05, PLP-PAGE-06
 **Depends on:** Phase 12
-**Plans:** 0 plans
+**Plans:** 1/1 plans ready
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 13 to break down)
+- [ ] 13-01: Production-Parity PLP Numbered Pagination (Wave 1)
