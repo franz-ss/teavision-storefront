@@ -21,6 +21,10 @@ import type {
   ContactActionResult,
   NewsletterSignupActionResult,
 } from '@/lib/contact/types'
+import {
+  WHOLESALE_ACCOUNT_LIMITS,
+  isWholesaleAccountStartOption,
+} from '@/lib/contact/wholesale-account'
 import { checkRateLimit, getClientIpFromHeaders } from '@/lib/rate-limit'
 
 type ContactSubmission = {
@@ -40,6 +44,18 @@ type CustomTeaBlendSubmission = {
   packFormat: string
   flavours: string[]
   brief: string
+  website: string
+}
+
+type WholesaleAccountSubmission = {
+  firstName: string
+  lastName: string
+  phone: string
+  email: string
+  company: string
+  productList: string
+  annualVolumeKg: string
+  startPurchasing: string
   website: string
 }
 
@@ -120,6 +136,22 @@ function readCustomTeaBlendSubmission(
   }
 }
 
+function readWholesaleAccountSubmission(
+  formData: FormData,
+): WholesaleAccountSubmission {
+  return {
+    firstName: readStringField(formData, 'firstName'),
+    lastName: readStringField(formData, 'lastName'),
+    phone: readStringField(formData, 'phone'),
+    email: readStringField(formData, 'email'),
+    company: readStringField(formData, 'company'),
+    productList: readStringField(formData, 'productList'),
+    annualVolumeKg: readStringField(formData, 'annualVolumeKg'),
+    startPurchasing: readStringField(formData, 'startPurchasing'),
+    website: readStringField(formData, 'website'),
+  }
+}
+
 function isValidSubmission(submission: ContactSubmission) {
   if (!submission.name || submission.name.length > CONTACT_NAME_MAX_LENGTH) {
     return false
@@ -174,6 +206,52 @@ function isValidCustomTeaBlendSubmission(submission: CustomTeaBlendSubmission) {
   return true
 }
 
+function isValidWholesaleAccountSubmission(
+  submission: WholesaleAccountSubmission,
+) {
+  const requiredFieldValues = [
+    submission.firstName,
+    submission.lastName,
+    submission.email,
+    submission.company,
+    submission.productList,
+    submission.annualVolumeKg,
+    submission.startPurchasing,
+  ]
+
+  if (requiredFieldValues.some((value) => !value)) return false
+
+  if (
+    submission.firstName.length > WHOLESALE_ACCOUNT_LIMITS.field ||
+    submission.lastName.length > WHOLESALE_ACCOUNT_LIMITS.field ||
+    submission.company.length > WHOLESALE_ACCOUNT_LIMITS.field
+  ) {
+    return false
+  }
+
+  if (
+    submission.email.length > CONTACT_EMAIL_MAX_LENGTH ||
+    !EMAIL_PATTERN.test(submission.email)
+  ) {
+    return false
+  }
+
+  if (submission.phone.length > CONTACT_PHONE_MAX_LENGTH) return false
+
+  if (
+    submission.productList.length > WHOLESALE_ACCOUNT_LIMITS.text ||
+    submission.annualVolumeKg.length > WHOLESALE_ACCOUNT_LIMITS.text
+  ) {
+    return false
+  }
+
+  if (!isWholesaleAccountStartOption(submission.startPurchasing)) {
+    return false
+  }
+
+  return submission.website.length === 0
+}
+
 function formatSubmission(submission: ContactSubmission) {
   return [
     'New Teavision contact enquiry',
@@ -198,6 +276,29 @@ function formatCustomTeaBlendSubmission(submission: CustomTeaBlendSubmission) {
     '',
     'Project brief:',
     submission.brief,
+  ].join('\n')
+}
+
+function formatWholesaleAccountSubmission(
+  submission: WholesaleAccountSubmission,
+) {
+  const notProvided = 'Not provided'
+
+  return [
+    'Wholesale bulk order account request',
+    '',
+    `First name: ${submission.firstName}`,
+    `Last name: ${submission.lastName}`,
+    `Phone: ${submission.phone || notProvided}`,
+    `Email: ${submission.email}`,
+    `Company / business name: ${submission.company}`,
+    `Looking to start purchasing: ${submission.startPurchasing}`,
+    '',
+    'Product list:',
+    submission.productList,
+    '',
+    'Product volumes (estimated annual volume in kg):',
+    submission.annualVolumeKg,
   ].join('\n')
 }
 
@@ -281,6 +382,54 @@ export async function sendCustomTeaBlendAction(
     message,
     website: submission.website,
   })
+}
+
+export async function sendWholesaleAccountAction(
+  formData: FormData,
+): Promise<ContactActionResult> {
+  const submission = readWholesaleAccountSubmission(formData)
+
+  if (submission.website) {
+    return { success: true }
+  }
+
+  if (!isValidWholesaleAccountSubmission(submission)) {
+    return { success: false, error: VALIDATION_ERROR }
+  }
+
+  if (await isRateLimited()) {
+    return { success: false, error: RATE_LIMIT_ERROR }
+  }
+
+  const resendApiKey = getResendApiKey()
+  if (!resendApiKey) {
+    console.warn(
+      '[wholesale-account] Email provider not configured: RESEND_API_KEY is absent. ' +
+        'Set RESEND_API_KEY in .env.local to enable wholesale account form email delivery.',
+    )
+    return { success: false, error: SEND_ERROR }
+  }
+
+  try {
+    const resend = new Resend(resendApiKey)
+    const { error } = await resend.emails.send({
+      from: 'Teavision Wholesale <noreply@teavision.com.au>',
+      to: 'info@teavision.com.au',
+      subject: 'New Teavision wholesale account request',
+      text: formatWholesaleAccountSubmission(submission),
+      replyTo: submission.email,
+    })
+
+    if (error) {
+      console.error('Resend wholesale account form error', error)
+      return { success: false, error: SEND_ERROR }
+    }
+
+    return { success: true }
+  } catch (error: unknown) {
+    console.error('Wholesale account form submission failed', error)
+    return { success: false, error: SEND_ERROR }
+  }
 }
 
 export async function sendCustomTeaBlendFormAction(
