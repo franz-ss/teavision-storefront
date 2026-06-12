@@ -425,27 +425,35 @@ export async function getCollectionProductsWithFilters(
   }
 }
 
+type CollectionCursorIndexEntry = {
+  cursor: string
+  tags: string[]
+}
+
 /**
- * Fetch cursor-only index for a collection (id/cursor edges, no product fields).
- * Chunks at SHOPIFY_PAGE_SIZE (250) to handle collections larger than 250 products.
- * Returns all cursors so that any page's `after` cursor can be resolved in O(1).
+ * Fetch cursor index for a collection (cursor + tags per edge, no other
+ * product fields). Chunks at SHOPIFY_PAGE_SIZE (250) to handle collections
+ * larger than 250 products. Returns all entries so that any page's `after`
+ * cursor can be resolved in O(1). Tags ride along because Shopify silently
+ * ignores `{ tag }` ProductFilters when the store has no tag facets enabled —
+ * category views must derive their page set client-side from this index.
  *
- * This is the single cached index entry shared by `getCollectionPageIndex`
- * and `getCollectionProductsPage`, so total-pages and cursor resolution come
- * from one snapshot and cannot diverge mid-render. Cached with the same
- * policy as product fetches (D-11).
+ * This is the single cached index entry shared by `getCollectionPageIndex`,
+ * `getCollectionTagCounts`, and `getCollectionProductsPage`, so total-pages
+ * and cursor resolution come from one snapshot and cannot diverge mid-render.
+ * Cached with the same policy as product fetches (D-11).
  */
 async function fetchCollectionCursorIndex(
   handle: string,
   sortKey: ProductCollectionSortKeys,
   reverse: boolean,
   filters: ProductFilter[],
-): Promise<string[]> {
+): Promise<CollectionCursorIndexEntry[]> {
   'use cache'
   cacheTag('collection', `collection-${handle}`)
   cacheLife('hours')
 
-  const cursors: string[] = []
+  const entries: CollectionCursorIndexEntry[] = []
   let after: string | null | undefined
   let hasNextPage = true
 
@@ -465,17 +473,25 @@ async function fetchCollectionCursorIndex(
     if (!data.collection) break
 
     const edges = data.collection.products.edges
-    cursors.push(...edges.map((edge) => edge.cursor))
+    entries.push(
+      ...edges.map((edge) => ({ cursor: edge.cursor, tags: edge.node.tags })),
+    )
     hasNextPage = data.collection.products.pageInfo.hasNextPage
     after = data.collection.products.pageInfo.endCursor
   }
 
-  return cursors
+  return entries
 }
 
 /**
  * Returns total product count, true total pages, and the `after` cursor
  * for page N (i.e. the cursor at position `(N-1) * pageSize - 1`).
+ *
+ * When `matchTag` is given, page math runs over the products carrying that
+ * tag: `totalPages` counts only raw pages with at least one match, and
+ * `displayPageToRawPage` maps each display page to its raw index page.
+ * Needed because Shopify ignores `{ tag }` filters without tag facets, so
+ * the raw index spans the whole collection while the view shows a subset.
  *
  * Thin derivation over the cached cursor index — caching lives on
  * `fetchCollectionCursorIndex` so this and `getCollectionProductsPage`
@@ -487,14 +503,35 @@ export async function getCollectionPageIndex(
   sortKey = ProductCollectionSortKeys.CollectionDefault,
   reverse = false,
   filters: ProductFilter[] = [],
+  matchTag: string | null = null,
 ): Promise<CollectionPageIndex> {
-  const cursors = await fetchCollectionCursorIndex(
+  const entries = await fetchCollectionCursorIndex(
     handle,
     sortKey,
     reverse,
     filters,
   )
-  const totalCount = cursors.length
+
+  if (matchTag) {
+    const rawPages: number[] = []
+    let totalCount = 0
+
+    entries.forEach((entry, index) => {
+      if (!entry.tags.includes(matchTag)) return
+      totalCount += 1
+      const rawPage = Math.floor(index / pageSize) + 1
+      if (rawPages.at(-1) !== rawPage) rawPages.push(rawPage)
+    })
+
+    return {
+      totalCount,
+      totalPages: Math.max(rawPages.length, 1),
+      afterCursor: null,
+      displayPageToRawPage: rawPages.length > 0 ? rawPages : [1],
+    }
+  }
+
+  const totalCount = entries.length
   const totalPages = totalCount === 0 ? 1 : Math.ceil(totalCount / pageSize)
 
   return {
@@ -503,7 +540,38 @@ export async function getCollectionPageIndex(
     // afterCursor for page N is the cursor at index (N-1)*pageSize - 1
     // This is resolved by getCollectionProductsPage per call
     afterCursor: null,
+    displayPageToRawPage: null,
   }
+}
+
+/**
+ * Tag → product count across the entire collection index. Derived from the
+ * same cached cursor index as `getCollectionPageIndex`, so calling both with
+ * identical arguments costs no extra Shopify requests. Used for category
+ * facet counts because Shopify returns no tag facet for this store and
+ * per-page counting undercounts multi-page collections.
+ */
+export async function getCollectionTagCounts(
+  handle: string,
+  sortKey = ProductCollectionSortKeys.CollectionDefault,
+  reverse = false,
+  filters: ProductFilter[] = [],
+): Promise<Record<string, number>> {
+  const entries = await fetchCollectionCursorIndex(
+    handle,
+    sortKey,
+    reverse,
+    filters,
+  )
+  const counts: Record<string, number> = {}
+
+  for (const entry of entries) {
+    for (const tag of entry.tags) {
+      counts[tag] = (counts[tag] ?? 0) + 1
+    }
+  }
+
+  return counts
 }
 
 /**
@@ -512,13 +580,15 @@ export async function getCollectionPageIndex(
  * For page N returns the cursor at position (N-1)*pageSize - 1 in the full index.
  */
 function resolveAfterCursor(
-  cursors: string[],
+  entries: CollectionCursorIndexEntry[],
   page: number,
   pageSize: number,
 ): string | null {
   if (page <= 1) return null
   const cursorIndex = (page - 1) * pageSize - 1
-  return cursors[cursorIndex] ?? cursors[cursors.length - 1] ?? null
+  return (
+    entries[cursorIndex]?.cursor ?? entries[entries.length - 1]?.cursor ?? null
+  )
 }
 
 /**

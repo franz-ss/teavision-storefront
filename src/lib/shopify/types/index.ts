@@ -123,6 +123,13 @@ export type CollectionPageIndex = {
   totalPages: number
   /** The resolved `after` cursor for the requested page (null = start from beginning) */
   afterCursor: string | null
+  /**
+   * Raw cursor-index page backing each 1-based display page when a tag match
+   * constrains the view (Shopify ignores tag filters unless the store enables
+   * tag facets, so matching is client-side). Null when display pages equal
+   * raw pages.
+   */
+  displayPageToRawPage: number[] | null
 }
 
 export type Collection = {
