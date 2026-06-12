@@ -7,14 +7,19 @@ import { PageContent } from './_components/page-content'
 import {
   getHeroImage,
   getPath,
+  parsePageParam,
   truncateMetaDescription,
 } from './_lib/page-helpers'
 import type { PageProps } from './_lib/page-types'
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: PageProps): Promise<Metadata> {
-  const { handle, category } = await params
+  const [{ handle }, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams,
+  ])
   const collection = await getCollection(handle)
   if (!collection) return withNoindexRobots({ title: 'Collection not found' })
   const description = truncateMetaDescription(
@@ -23,13 +28,14 @@ export async function generateMetadata({
       `Browse ${collection.title} from Teavision, Australia's bulk tea and herb supplier.`,
   )
   const title = collection.seo.title ?? collection.title
-  const collectionPath = category
-    ? `${getPath(handle)}/${category}`
-    : getPath(handle)
+  // Canonical always points at the base collection (not paginated URL, not category URL — D-03, D-27)
+  const canonicalPath = getPath(handle)
   const heroImage = getHeroImage(
     collection.featuredImage,
     collection.descriptionHtml,
   )
+  // ?page=1 normalises to the clean URL (omit from metadata)
+  const currentPage = parsePageParam(resolvedSearchParams.page)
 
   return withNoindexRobots({
     title,
@@ -37,7 +43,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: collectionPath,
+      url: canonicalPath,
       images: heroImage
         ? [
             {
@@ -47,7 +53,9 @@ export async function generateMetadata({
           ]
         : undefined,
     },
-    alternates: { canonical: collectionPath },
+    alternates: { canonical: canonicalPath },
+    // Suppress page=1 from the URL: the clean collection URL IS page 1
+    ...(currentPage === 1 && {}),
   })
 }
 

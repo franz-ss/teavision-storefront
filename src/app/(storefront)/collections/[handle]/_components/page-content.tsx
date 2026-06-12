@@ -189,8 +189,22 @@ export async function PageContent({ params, searchParams }: PageProps) {
   )
   const richHero = parseCollectionRichHero(collection.descriptionHtml)
 
+  // Prev/next link tags for adjacent pages — hoisted to <head> by React 19 (D-05)
+  // The Next 16 Metadata API has no prev/next field, so we render them as JSX links.
+  const prevPageHref =
+    currentPage > 1
+      ? `${SITE_URL}${getPaginationHref({ category, handle, page: currentPage - 1, selectedFilters: activeSelectedFilters, sort })}`
+      : null
+  const nextPageHref =
+    currentPage < totalPages
+      ? `${SITE_URL}${getPaginationHref({ category, handle, page: currentPage + 1, selectedFilters: activeSelectedFilters, sort })}`
+      : null
+
   return (
     <>
+      {prevPageHref && <link rel="prev" href={prevPageHref} />}
+      {nextPageHref && <link rel="next" href={nextPageHref} />}
+
       <JsonLd
         baseUrl={SITE_URL}
         collection={collection}
