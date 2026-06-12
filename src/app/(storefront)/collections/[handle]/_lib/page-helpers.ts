@@ -498,7 +498,11 @@ export function getPaginationHref({
   selectedFilters: string[]
   sort: string
 }): string {
-  const path = category ? `${getPath(handle)}/${category}` : getPath(handle)
+  // category is a raw route param and these hrefs become redirect targets —
+  // normalize to the safe [a-z0-9_-] segment charset like getCategoryHref does
+  const path = category
+    ? `${getPath(handle)}/${toCategoryPathSegment(normalizeCategoryPathSegment(category))}`
+    : getPath(handle)
 
   return withQuery(path, sort, selectedFilters, page)
 }

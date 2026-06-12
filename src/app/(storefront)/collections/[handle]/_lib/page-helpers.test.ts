@@ -143,6 +143,30 @@ describe('getPaginationHref', () => {
     expect(href).toBe('/collections/all/categories_all-herbs?page=3')
   })
 
+  it('normalizes raw category segments to the safe charset', () => {
+    const href = pageHelpers.getPaginationHref({
+      category: 'Categories_All-Herbs',
+      handle: 'all',
+      page: 2,
+      selectedFilters: [],
+      sort: 'featured',
+    })
+    expect(href).toBe('/collections/all/categories_all-herbs?page=2')
+  })
+
+  it('strips path traversal characters from category segments', () => {
+    const href = pageHelpers.getPaginationHref({
+      category: '../%2F..%2Fadmin',
+      handle: 'all',
+      page: 2,
+      selectedFilters: [],
+      sort: 'featured',
+    })
+    expect(href).not.toContain('..')
+    expect(href).not.toContain('//')
+    expect(href).toMatch(/^\/collections\/all\/[a-z0-9_-]*\?page=2$/)
+  })
+
   it('preserves sort param alongside page', () => {
     const href = pageHelpers.getPaginationHref({
       category: undefined,
