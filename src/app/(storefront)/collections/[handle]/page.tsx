@@ -7,19 +7,14 @@ import { PageContent } from './_components/page-content'
 import {
   getHeroImage,
   getPath,
-  parsePageParam,
   truncateMetaDescription,
 } from './_lib/page-helpers'
 import type { PageProps } from './_lib/page-types'
 
 export async function generateMetadata({
   params,
-  searchParams,
 }: PageProps): Promise<Metadata> {
-  const [{ handle }, resolvedSearchParams] = await Promise.all([
-    params,
-    searchParams,
-  ])
+  const { handle } = await params
   const collection = await getCollection(handle)
   if (!collection) return withNoindexRobots({ title: 'Collection not found' })
   const description = truncateMetaDescription(
@@ -34,8 +29,6 @@ export async function generateMetadata({
     collection.featuredImage,
     collection.descriptionHtml,
   )
-  // ?page=1 normalises to the clean URL (omit from metadata)
-  const currentPage = parsePageParam(resolvedSearchParams.page)
 
   return withNoindexRobots({
     title,
@@ -54,8 +47,6 @@ export async function generateMetadata({
         : undefined,
     },
     alternates: { canonical: canonicalPath },
-    // Suppress page=1 from the URL: the clean collection URL IS page 1
-    ...(currentPage === 1 && {}),
   })
 }
 
