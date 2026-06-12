@@ -11,6 +11,7 @@ import {
   getCollectionPageIndex,
   getCollectionProductsPage,
   getCollectionSummaries,
+  getCollectionTagCounts,
 } from '@/lib/shopify/operations/collection'
 import type { CollectionProductFilter } from '@/lib/shopify/types'
 
@@ -31,6 +32,7 @@ import {
   isCategoryFilter,
   isPriceFilter,
   isVendorFilter,
+  matchCategoryTag,
   normalizeHtml,
   paramValues,
   parseCollectionRichHero,
@@ -79,11 +81,24 @@ export async function PageContent({ params, searchParams }: PageProps) {
   if (!collection) notFound()
 
   const sidebarCollections = getSidebarCollections(collectionSummaries)
-  const selectedCategoryTag = findCategoryTagForPath(
+  let selectedCategoryTag = findCategoryTagForPath(
     category,
     initialProductsResult.filters,
     initialProductsResult.products,
   )
+  // Category tags are only visible on fetched products (Shopify exposes no
+  // tag facet for this store), so a category whose products all sit beyond
+  // page 1 can't resolve from the initial fetch — rescue it from the full
+  // cursor index before 404ing.
+  if (category && !selectedCategoryTag) {
+    const baseTagCounts = await getCollectionTagCounts(
+      handle,
+      sortKey,
+      reverse,
+      productFilters,
+    )
+    selectedCategoryTag = matchCategoryTag(category, Object.keys(baseTagCounts))
+  }
   if (category && !selectedCategoryTag) notFound()
 
   const activeProductFilters = selectedCategoryTag
@@ -93,14 +108,22 @@ export async function PageContent({ params, searchParams }: PageProps) {
     ? [getCategoryFilterInput(selectedCategoryTag), ...selectedFilters]
     : selectedFilters
 
-  // Get cursor index for true total pages and resolve the requested page
-  const pageIndex = await getCollectionPageIndex(
-    handle,
-    COLLECTION_PRODUCT_PAGE_SIZE,
-    sortKey,
-    reverse,
-    activeProductFilters,
-  )
+  // Get cursor index for true total pages and resolve the requested page.
+  // Shopify silently ignores the category `{ tag }` filter (no tag facets
+  // enabled), so the index passes selectedCategoryTag to derive display
+  // pages from the raw pages that actually contain matching products.
+  // Both calls read the same cached index entry — no extra Shopify requests.
+  const [pageIndex, indexTagCounts] = await Promise.all([
+    getCollectionPageIndex(
+      handle,
+      COLLECTION_PRODUCT_PAGE_SIZE,
+      sortKey,
+      reverse,
+      activeProductFilters,
+      selectedCategoryTag,
+    ),
+    getCollectionTagCounts(handle, sortKey, reverse, activeProductFilters),
+  ])
 
   // Redirect out-of-range pages to last valid page (D-24)
   // Pagination hrefs use the plain selectedFilters: the category is already
@@ -117,25 +140,34 @@ export async function PageContent({ params, searchParams }: PageProps) {
     redirect(lastPageHref)
   }
 
-  // Fetch the actual products for this page
+  // Fetch the actual products for this page. With a category active, display
+  // page N maps to the raw index page that holds its matching products.
+  const rawPage = pageIndex.displayPageToRawPage?.[page - 1] ?? page
   const collectionProductsResult =
     page === 1 && !selectedCategoryTag
       ? initialProductsResult
       : await getCollectionProductsPage(
           handle,
-          page,
+          rawPage,
           COLLECTION_PRODUCT_PAGE_SIZE,
           sortKey,
           reverse,
           activeProductFilters,
         )
 
+  const products = filterProductsByCategoryTags(
+    collectionProductsResult.products,
+    selectedCategoryTag,
+  )
+
   // Stale-cursor fallback (D-22): the index and page caches can disagree after
-  // a collection shrinks, so an in-range page can come back empty. Always step
-  // strictly downward so we can never redirect to the URL currently being
-  // served — the chain terminates at page 1, which renders the normal empty
-  // state instead of redirecting.
-  if (collectionProductsResult.products.length === 0 && page > 1) {
+  // a collection shrinks, so an in-range page can come back empty. Checked on
+  // the visible (category-filtered) list so a category page whose raw page no
+  // longer holds matches also falls back. Always step strictly downward so we
+  // can never redirect to the URL currently being served — the chain
+  // terminates at page 1, which renders the normal empty state instead of
+  // redirecting.
+  if (products.length === 0 && page > 1) {
     const fallbackPage = Math.min(page - 1, pageIndex.totalPages)
     redirect(
       getPaginationHref({
@@ -156,11 +188,8 @@ export async function PageContent({ params, searchParams }: PageProps) {
     selectedCategoryTag,
     sort,
     selectedFilters,
+    indexTagCounts,
   })
-  const products = filterProductsByCategoryTags(
-    collectionProductsResult.products,
-    selectedCategoryTag,
-  )
 
   const totalPages = pageIndex.totalPages
   const currentPage = page

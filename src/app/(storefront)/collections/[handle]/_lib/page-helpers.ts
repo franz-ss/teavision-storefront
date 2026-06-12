@@ -587,21 +587,29 @@ function normalizeCategoryPathSegment(value: string): string {
   }
 }
 
+export function matchCategoryTag(
+  category: string,
+  tags: string[],
+): string | null {
+  const normalizedCategory = normalizeCategoryPathSegment(category)
+
+  return (
+    tags.find((tag) => toCategoryPathSegment(tag) === normalizedCategory) ??
+    null
+  )
+}
+
 export function findCategoryTagForPath(
   category: string | undefined,
   filters: CollectionProductFilter[],
   products: CollectionProductSummary[] = [],
 ): string | null {
   if (!category) return null
-  const normalizedCategory = normalizeCategoryPathSegment(category)
   const categoryTags = getCategoryTagsFromFilters(filters)
   const tags =
     categoryTags.length > 0 ? categoryTags : getCategoryTags(products)
 
-  return (
-    tags.find((tag) => toCategoryPathSegment(tag) === normalizedCategory) ??
-    null
-  )
+  return matchCategoryTag(category, tags)
 }
 
 export function buildCategoryFilter({
@@ -611,6 +619,7 @@ export function buildCategoryFilter({
   selectedCategoryTag,
   sort,
   selectedFilters,
+  indexTagCounts,
 }: {
   products: CollectionProductSummary[]
   sourceFilter?: CollectionProductFilter | null
@@ -618,6 +627,8 @@ export function buildCategoryFilter({
   selectedCategoryTag: string | null
   sort: string
   selectedFilters: string[]
+  /** Full-collection tag counts from the cursor index — see getCollectionTagCounts */
+  indexTagCounts?: Record<string, number>
 }): CollectionProductFilter | null {
   const sourceValues =
     sourceFilter?.values
@@ -638,11 +649,23 @@ export function buildCategoryFilter({
   const fallbackCounts = new Map<string, number>()
 
   if (sourceValues.length === 0) {
-    products.forEach((product) => {
-      product.tags.filter(isCategoryTag).forEach((tag) => {
-        fallbackCounts.set(tag, (fallbackCounts.get(tag) ?? 0) + 1)
+    // Prefer full-index counts: per-page counting only sees the current page,
+    // which undercounts (and can entirely miss) categories on later pages.
+    const indexCategoryEntries = Object.entries(indexTagCounts ?? {}).filter(
+      ([tag]) => isCategoryTag(tag),
+    )
+
+    if (indexCategoryEntries.length > 0) {
+      indexCategoryEntries.forEach(([tag, count]) => {
+        fallbackCounts.set(tag, count)
       })
-    })
+    } else {
+      products.forEach((product) => {
+        product.tags.filter(isCategoryTag).forEach((tag) => {
+          fallbackCounts.set(tag, (fallbackCounts.get(tag) ?? 0) + 1)
+        })
+      })
+    }
   }
 
   const categoryValues =
