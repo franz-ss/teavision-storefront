@@ -28,12 +28,12 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 - ✓ Optimized `/blogs/teavision-blogs` loading and image rendering (bounded image URLs, LQIP placeholders, hero preload discipline, light default-listing query) while preserving the Phase 11 Tea Journal design — v1.1
 
+- ✓ Production-style `?page=N` collection pagination with production canonical/crawler parity, bounded Shopify Storefront GraphQL payloads, and sticky-header-aware scroll-to-grid anchoring (PLP-PAGE-01..06) — Validated in Phase 13 — v1.2
+
 ### Active
 
 - [ ] Close v1.0 known gaps: collection empty-state "Clear filters" misdirect (CQA-05), human UAT items (visual sweep, live Resend newsletter), and the tech-debt list in `milestones/v1.0-MILESTONE-AUDIT.md`.
 - [ ] Close v1.1 remaining tech debt (W2 heavy `getBlog()` on default blog route for hero/metadata, W4 light-projection type honesty, W5 featured backfill trade-off) — see `milestones/v1.1-MILESTONE-AUDIT.md`.
-- [ ] v1.2 SEO-safe PLP pagination parity: restore production-style `?page=N` collection pagination while preserving production canonical/crawler behavior and bounded Shopify Storefront GraphQL payloads.
-
 ### Out of Scope
 
 - Reinstalling or injecting HulkApps app scripts into the headless storefront - third-party browser scripts from the Liquid theme are not a stable headless data contract.
@@ -43,7 +43,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ## Context
 
-Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
+Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Phase 13 (v1.2 SEO-safe PLP pagination parity) complete 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
 
 The site remains noindexed pending launch sign-off (Phase 6 controls; flip `DISABLE_INDEXING` at launch and add the new landing pages to the sitemap). The owner actively authors new landing surfaces directly in the codebase (bulk-wholesale-supply, private-label-packing, tea-bag-manufacturer, NPD order form, supply-chain protection band).
 
@@ -75,4 +75,4 @@ The codebase map in `.planning/codebase/` predates the redesign and has known dr
 
 ---
 
-_Last updated: 2026-06-12 after Phase 13 planning_
+_Last updated: 2026-06-12 after Phase 13 completion_
