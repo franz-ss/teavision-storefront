@@ -182,7 +182,7 @@ export function PopularSearches({ paymentMethods }: PopularSearchesProps) {
         id="popular-searches"
         ref={panelRef}
         hidden={!isExpanded}
-        className="border-paper/10 border-b bg-ink"
+        className="border-paper/10 bg-ink border-b"
       >
         <nav
           aria-label="Popular searches"
@@ -199,7 +199,7 @@ export function PopularSearches({ paymentMethods }: PopularSearchesProps) {
                   <li key={`${link.href}-${link.label}`}>
                     <Link
                       href={link.href}
-                      className="text-paper/88 block underline-offset-3 transition-colors hover:text-paper hover:underline focus-visible:ring-ring focus-visible:ring-offset-ink focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                      className="text-paper/88 hover:text-paper focus-visible:ring-ring focus-visible:ring-offset-ink block underline-offset-3 transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                     >
                       {link.label}
                     </Link>
