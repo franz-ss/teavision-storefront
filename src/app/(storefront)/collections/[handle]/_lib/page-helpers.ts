@@ -350,6 +350,10 @@ function isAvailabilityProductFilter(value: ProductFilter): boolean {
   return typeof value.available === 'boolean'
 }
 
+function isPriceProductFilter(value: ProductFilter): boolean {
+  return typeof value.price === 'object' && value.price !== null
+}
+
 function isCategoryTag(value: string): boolean {
   return value.startsWith(CATEGORY_TAG_PREFIX)
 }
@@ -401,6 +405,22 @@ export function isCategoryFilter(filter: CollectionProductFilter): boolean {
       return false
     }
   })
+}
+
+export function isPriceFilter(filter: CollectionProductFilter): boolean {
+  return (
+    filter.type === FilterType.PriceRange ||
+    filter.id.toLowerCase().includes('price') ||
+    filter.label.trim().toLowerCase() === 'price' ||
+    filter.values.some((value) => {
+      try {
+        const parsed: unknown = JSON.parse(value.input)
+        return isProductFilterInput(parsed) && isPriceProductFilter(parsed)
+      } catch {
+        return false
+      }
+    })
+  )
 }
 
 export function getCategoryFilterInput(tag: string): string {
@@ -683,6 +703,7 @@ export function parseSelectedFilterParams(values: string[]): {
       if (
         isVendorProductFilter(parsed) ||
         isAvailabilityProductFilter(parsed) ||
+        isPriceProductFilter(parsed) ||
         isCategoryProductFilter(parsed)
       )
         return

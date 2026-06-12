@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import { FilterType, type CollectionProductFilter } from '@/lib/shopify/types'
+
 import * as pageHelpers from './page-helpers'
 
 const richHeroHtml = `
@@ -209,5 +211,37 @@ describe('getHref (sort/filter hrefs drop page param)', () => {
       '{"productVendor":"test"}',
     ])
     expect(href).not.toContain('page')
+  })
+})
+
+describe('price filter exclusion', () => {
+  it('identifies Shopify price-range filters', () => {
+    const priceFilter: CollectionProductFilter = {
+      id: 'filter.v.price',
+      label: 'Price',
+      type: FilterType.PriceRange,
+      values: [
+        {
+          id: 'filter.v.price',
+          label: 'Price',
+          count: 0,
+          input: JSON.stringify({ price: { min: 0, max: 100 } }),
+        },
+      ],
+    }
+
+    expect(pageHelpers.isPriceFilter(priceFilter)).toBe(true)
+  })
+
+  it('drops incoming price filter params from product filters', () => {
+    const priceInput = JSON.stringify({ price: { min: 0, max: 100 } })
+    const tagInput = JSON.stringify({ tag: 'organic' })
+
+    expect(pageHelpers.parseSelectedFilterParams([priceInput, tagInput])).toEqual(
+      {
+        selectedFilters: [tagInput],
+        productFilters: [{ tag: 'organic' }],
+      },
+    )
   })
 })

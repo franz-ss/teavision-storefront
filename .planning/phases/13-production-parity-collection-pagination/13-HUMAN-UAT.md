@@ -1,5 +1,5 @@
 ---
-status: resolved
+status: complete
 phase: 13-production-parity-collection-pagination
 source: [13-VERIFICATION.md]
 started: 2026-06-12T01:25:00Z
@@ -41,7 +41,7 @@ blocked: 0
 
 - truth: "Clicking any pager link lands the viewport at the top of the product grid (the `#product-grid` anchor), not the top of the page (D-26)."
   status: resolved
-  resolved_by: "13-02-GAP (commit 6d25b81) — pending human re-confirmation"
+  resolved_by: "13-02-GAP (commit 6d25b81) — human re-test passed 2026-06-12"
   reason: "User reported: not working as expected"
   severity: major
   test: 2

@@ -29,6 +29,7 @@ import {
   getSidebarCollections,
   isAvailabilityFilter,
   isCategoryFilter,
+  isPriceFilter,
   isVendorFilter,
   normalizeHtml,
   paramValues,
@@ -169,6 +170,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
       (filter) =>
         !isVendorFilter(filter) &&
         !isAvailabilityFilter(filter) &&
+        !isPriceFilter(filter) &&
         !isCategoryFilter(filter),
     ),
   ].filter((filter): filter is CollectionProductFilter => Boolean(filter))

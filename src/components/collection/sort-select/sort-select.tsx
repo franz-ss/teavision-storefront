@@ -16,22 +16,36 @@ const SORT_OPTIONS = [
 
 export type SortValue = (typeof SORT_OPTIONS)[number]['value']
 
+export function getCollectionSortHref({
+  pathname,
+  searchParams,
+  sort,
+}: {
+  pathname: string
+  searchParams: URLSearchParams
+  sort: string
+}): string {
+  const params = new URLSearchParams(searchParams.toString())
+  params.delete('page')
+
+  if (sort === 'featured') {
+    params.delete('sort')
+  } else {
+    params.set('sort', sort)
+  }
+
+  const qs = params.toString()
+  return qs ? `${pathname}?${qs}` : pathname
+}
+
 export function SortSelect({ currentSort }: { currentSort: string }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   const createSortUrl = useCallback(
-    (sort: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      if (sort === 'featured') {
-        params.delete('sort')
-      } else {
-        params.set('sort', sort)
-      }
-      const qs = params.toString()
-      return qs ? `${pathname}?${qs}` : pathname
-    },
+    (sort: string) =>
+      getCollectionSortHref({ pathname, searchParams, sort }),
     [pathname, searchParams],
   )
 

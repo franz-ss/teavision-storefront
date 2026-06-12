@@ -23,6 +23,24 @@ function toSafeId(value: string): string {
   return value.replace(/[^a-zA-Z0-9_-]/g, '-')
 }
 
+export function getCollectionFilterHref({
+  pathname,
+  searchParams,
+  filters,
+}: {
+  pathname: string
+  searchParams: URLSearchParams
+  filters: string[]
+}): string {
+  const params = new URLSearchParams(searchParams.toString())
+  params.delete('page')
+  params.delete('filter')
+  filters.forEach((filter) => params.append('filter', filter))
+
+  const queryString = params.toString()
+  return queryString ? `${pathname}?${queryString}` : pathname
+}
+
 export function FilterPanel({
   filters,
   selectedFilters,
@@ -37,13 +55,10 @@ export function FilterPanel({
   const visibleFilters = filters.filter((filter) => filter.values.length > 0)
 
   function replaceFilters(nextFilters: string[]) {
-    const params = new URLSearchParams(searchParams.toString())
-    params.delete('filter')
-    nextFilters.forEach((filter) => params.append('filter', filter))
-    const queryString = params.toString()
-    router.replace(queryString ? `${pathname}?${queryString}` : pathname, {
-      scroll: false,
-    })
+    router.replace(
+      getCollectionFilterHref({ pathname, searchParams, filters: nextFilters }),
+      { scroll: false },
+    )
   }
 
   function toggleFilter(input: string, checked: boolean) {
@@ -91,7 +106,7 @@ export function FilterPanel({
           {visibleFilters.map((filter) => (
             <details
               key={filter.id}
-              className="border-hairline border-b py-5.5"
+              className="border-hairline border-t py-5.5"
               open
             >
               <summary className="text-ink-faint focus-visible:ring-ring flex min-h-10 cursor-pointer list-none items-center justify-between gap-4 rounded font-mono text-[11px] tracking-[0.12em] uppercase focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
