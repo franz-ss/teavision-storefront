@@ -26,3 +26,7 @@ During Phase 13 UAT, clicking a collection pager link did not land the viewport 
 ## Suggested Fix Direction
 
 Give the collection grid anchor an explicit scroll offset for the sticky header, preferably on the target element with a tokenized Tailwind utility such as `scroll-mt-*`. Add or update coverage so the anchor target carries the offset class, and manually verify mobile and desktop pager navigation.
+
+## Resolution
+
+Resolved by 13-02-GAP (commit 6d25b81, 2026-06-12): moved `id="product-grid"` onto the product grid `<ul>` and added `scroll-mt-24 lg:scroll-mt-32` to offset the sticky header. D-26 test extended to cover the offset. Pending human re-confirmation in 13-HUMAN-UAT.md test 2.

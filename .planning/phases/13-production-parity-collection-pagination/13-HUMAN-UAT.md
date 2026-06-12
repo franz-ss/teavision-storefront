@@ -1,14 +1,14 @@
 ---
-status: diagnosed
+status: partial
 phase: 13-production-parity-collection-pagination
 source: [13-VERIFICATION.md]
 started: 2026-06-12T01:25:00Z
-updated: 2026-06-12T02:27:09Z
+updated: 2026-06-12T03:30:00Z
 ---
 
 ## Current Test
 
-[testing complete]
+2. Scroll-to-grid behavior on pager click (re-test after 13-02-GAP fix)
 
 ## Tests
 
@@ -20,9 +20,8 @@ result: pass
 ### 2. Scroll-to-grid behavior on pager click
 
 expected: Clicking any pager link lands the viewport at the top of the product grid (the `#product-grid` anchor), not the top of the page (D-26).
-result: issue
-reported: "not working as expected"
-severity: major
+result: pending
+note: "Fix applied in 13-02-GAP (commit 6d25b81): id moved onto the grid <ul> with scroll-mt-24 / lg:scroll-mt-32. Re-test at 375px and 1280px."
 
 ### 3. Storybook UI/Pagination stories render correctly
 
@@ -33,15 +32,16 @@ result: pass
 
 total: 3
 passed: 2
-issues: 1
-pending: 0
+issues: 0
+pending: 1
 skipped: 0
 blocked: 0
 
 ## Gaps
 
 - truth: "Clicking any pager link lands the viewport at the top of the product grid (the `#product-grid` anchor), not the top of the page (D-26)."
-  status: failed
+  status: resolved
+  resolved_by: "13-02-GAP (commit 6d25b81) — pending human re-confirmation"
   reason: "User reported: not working as expected"
   severity: major
   test: 2
