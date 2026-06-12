@@ -1,18 +1,22 @@
 import { Leaf } from 'lucide-react'
 
 import { ProductCard } from '@/components/collection'
-import { Button } from '@/components/ui'
+import { Button, Pagination } from '@/components/ui'
 import type { CollectionProductSummary } from '@/lib/shopify/types'
 
 type ProductListProps = {
   clearFiltersHref?: string | null
-  nextPageHref?: string | null
+  currentPage?: number
+  totalPages?: number
+  buildPageHref?: (page: number) => string
   products: CollectionProductSummary[]
 }
 
 export function ProductList({
   clearFiltersHref = null,
-  nextPageHref = null,
+  currentPage = 1,
+  totalPages = 1,
+  buildPageHref,
   products,
 }: ProductListProps) {
   if (products.length === 0) {
@@ -39,6 +43,8 @@ export function ProductList({
 
   return (
     <div>
+      {/* Anchor target for scroll-to-grid on pager clicks (D-26) */}
+      <div id="product-grid" />
       <ul
         className="grid grid-cols-2 gap-x-3 gap-y-4 sm:gap-x-4.5 sm:gap-y-5.5 lg:grid-cols-3"
         role="list"
@@ -50,11 +56,14 @@ export function ProductList({
         ))}
       </ul>
 
-      {nextPageHref && (
+      {buildPageHref && totalPages > 1 && (
         <div className="mt-10 flex justify-center">
-          <Button href={nextPageHref} variant="secondary">
-            Next products
-          </Button>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            buildPageHref={(page) => `${buildPageHref(page)}#product-grid`}
+            aria-label="Collection pagination"
+          />
         </div>
       )}
     </div>

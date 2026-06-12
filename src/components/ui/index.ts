@@ -1,4 +1,5 @@
 export * from './accordion'
+export * from './pagination'
 export * from './article-card'
 export * from './badge'
 export * from './eyebrow'
