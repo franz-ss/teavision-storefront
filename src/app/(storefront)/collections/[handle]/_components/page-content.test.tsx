@@ -17,6 +17,7 @@ const shopifyMocks = vi.hoisted(() => ({
     vi.fn<() => Promise<CollectionProductsResult>>(),
   getCollectionPageIndex: vi.fn<() => Promise<CollectionPageIndex>>(),
   getCollectionSummaries: vi.fn<() => Promise<CollectionSummary[]>>(),
+  getCollectionTagCounts: vi.fn<() => Promise<Record<string, number>>>(),
 }))
 
 vi.mock('server-only', () => ({}))
@@ -27,6 +28,7 @@ vi.mock('@/lib/shopify/operations/collection', () => ({
   getCollectionProductsPage: shopifyMocks.getCollectionProductsPage,
   getCollectionPageIndex: shopifyMocks.getCollectionPageIndex,
   getCollectionSummaries: shopifyMocks.getCollectionSummaries,
+  getCollectionTagCounts: shopifyMocks.getCollectionTagCounts,
 }))
 
 vi.mock('next/navigation', () => ({
@@ -88,6 +90,7 @@ function pageIndexFixture(
     totalCount: 0,
     totalPages: 1,
     afterCursor: null,
+    displayPageToRawPage: null,
     ...overrides,
   }
 }
@@ -130,6 +133,7 @@ describe('PageContent out-of-range and stale-cursor handling', () => {
       collectionFixture({ handle: 'all', title: 'All Products' }),
     )
     shopifyMocks.getCollectionSummaries.mockResolvedValue([])
+    shopifyMocks.getCollectionTagCounts.mockResolvedValue({})
   })
 
   it('redirects to last valid page when requested page exceeds totalPages', async () => {
@@ -242,6 +246,7 @@ describe('PageContent category pagination hrefs', () => {
       collectionFixture({ handle: 'all', title: 'All Products' }),
     )
     shopifyMocks.getCollectionSummaries.mockResolvedValue([])
+    shopifyMocks.getCollectionTagCounts.mockResolvedValue({})
     shopifyMocks.getCollectionPageIndex.mockResolvedValue(
       pageIndexFixture({ totalCount: 72, totalPages: 3 }),
     )
@@ -264,6 +269,152 @@ describe('PageContent category pagination hrefs', () => {
   })
 })
 
+describe('PageContent category page mapping', () => {
+  beforeEach(() => {
+    shopifyMocks.getCollection.mockResolvedValue(
+      collectionFixture({ handle: 'dried-herbs', title: 'Dried Herbs' }),
+    )
+    shopifyMocks.getCollectionSummaries.mockResolvedValue([])
+    shopifyMocks.getCollectionTagCounts.mockResolvedValue({})
+  })
+
+  it('caps the category pager at display pages that contain matching products', async () => {
+    // 48-product collection (2 raw pages) where only one product carries the
+    // category tag — the pager must show 1 page, not the raw 2.
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({
+        totalCount: 1,
+        totalPages: 1,
+        displayPageToRawPage: [1],
+      }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: true },
+      products: [
+        productFixture({ tags: ['categories_Australian Tea'] }),
+        productFixture({
+          id: 'gid://shopify/Product/peppermint',
+          handle: 'peppermint',
+          tags: ['categories_All Herbs'],
+        }),
+      ],
+    })
+
+    const element = await PageContent({
+      params: Promise.resolve({
+        handle: 'dried-herbs',
+        category: 'categories_australian-tea',
+      }),
+      searchParams: Promise.resolve({}),
+    })
+    const html = renderToStaticMarkup(element)
+
+    expect(html).not.toContain('?page=2')
+    expect(shopifyMocks.getCollectionPageIndex).toHaveBeenCalledWith(
+      'dried-herbs',
+      24,
+      'COLLECTION_DEFAULT',
+      false,
+      [{ tag: 'categories_Australian Tea' }],
+      'categories_Australian Tea',
+    )
+  })
+
+  it('fetches the mapped raw page for category display pages', async () => {
+    // Matches live on raw pages 1 and 3 — display page 2 must fetch raw page 3.
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({
+        totalCount: 2,
+        totalPages: 2,
+        displayPageToRawPage: [1, 3],
+      }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: false },
+      products: [productFixture({ tags: ['categories_Australian Tea'] })],
+    })
+
+    await PageContent({
+      params: Promise.resolve({
+        handle: 'dried-herbs',
+        category: 'categories_australian-tea',
+      }),
+      searchParams: Promise.resolve({ page: '2' }),
+    })
+
+    expect(shopifyMocks.getCollectionProductsPage).toHaveBeenLastCalledWith(
+      'dried-herbs',
+      3,
+      24,
+      'COLLECTION_DEFAULT',
+      false,
+      [{ tag: 'categories_Australian Tea' }],
+    )
+  })
+
+  it('redirects a category page with no visible products strictly downward', async () => {
+    shopifyMocks.getCollectionTagCounts.mockResolvedValue({
+      'categories_Australian Tea': 2,
+    })
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({
+        totalCount: 2,
+        totalPages: 2,
+        displayPageToRawPage: [1, 2],
+      }),
+    )
+    // Raw page has products, but none carry the selected category tag —
+    // the visible list is empty, so display page 2 must step down to page 1.
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: false },
+      products: [productFixture({ tags: ['categories_All Herbs'] })],
+    })
+
+    await expect(
+      PageContent({
+        params: Promise.resolve({
+          handle: 'dried-herbs',
+          category: 'categories_australian-tea',
+        }),
+        searchParams: Promise.resolve({ page: '2' }),
+      }),
+    ).rejects.toThrow(/^redirect:\/collections\/dried-herbs\/categories_australian-tea$/)
+  })
+
+  it('resolves a category whose products sit beyond page 1 via the index tag counts', async () => {
+    // No page-1 product carries the tag, but the full-index tag counts do —
+    // the route must resolve instead of 404ing.
+    shopifyMocks.getCollectionTagCounts.mockResolvedValue({
+      'categories_Most_Popular': 1,
+    })
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({
+        totalCount: 1,
+        totalPages: 1,
+        displayPageToRawPage: [2],
+      }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: false },
+      products: [productFixture({ tags: ['categories_Most_Popular'] })],
+    })
+
+    const element = await PageContent({
+      params: Promise.resolve({
+        handle: 'dried-herbs',
+        category: 'categories_most_popular',
+      }),
+      searchParams: Promise.resolve({}),
+    })
+
+    expect(element).toBeTruthy()
+  })
+})
+
 describe('PageContent collection rich hero rendering', () => {
   beforeEach(() => {
     shopifyMocks.getCollectionProductsPage.mockResolvedValue(
@@ -271,6 +422,7 @@ describe('PageContent collection rich hero rendering', () => {
     )
     shopifyMocks.getCollectionPageIndex.mockResolvedValue(pageIndexFixture())
     shopifyMocks.getCollectionSummaries.mockResolvedValue([])
+    shopifyMocks.getCollectionTagCounts.mockResolvedValue({})
   })
 
   it('renders the strict rich hero block when Shopify description opts in', async () => {

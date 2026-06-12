@@ -214,6 +214,79 @@ describe('getHref (sort/filter hrefs drop page param)', () => {
   })
 })
 
+describe('matchCategoryTag', () => {
+  it('matches a category path segment to its raw Shopify tag', () => {
+    expect(
+      pageHelpers.matchCategoryTag('categories_australian-tea', [
+        'categories_All Herbs',
+        'categories_Australian Tea',
+      ]),
+    ).toBe('categories_Australian Tea')
+  })
+
+  it('returns null when no tag maps to the segment', () => {
+    expect(
+      pageHelpers.matchCategoryTag('categories_missing', [
+        'categories_All Herbs',
+      ]),
+    ).toBeNull()
+  })
+})
+
+describe('buildCategoryFilter index tag counts', () => {
+  it('prefers full-index tag counts over first-page product counting', () => {
+    const filter = pageHelpers.buildCategoryFilter({
+      products: [],
+      sourceFilter: null,
+      handle: 'dried-herbs',
+      selectedCategoryTag: null,
+      sort: 'featured',
+      selectedFilters: [],
+      indexTagCounts: {
+        'categories_All Herbs': 48,
+        'categories_Australian Tea': 1,
+        organic: 12,
+      },
+    })
+
+    expect(filter?.values).toEqual([
+      expect.objectContaining({ label: 'All Herbs', count: 48 }),
+      expect.objectContaining({ label: 'Australian Tea', count: 1 }),
+    ])
+  })
+
+  it('falls back to first-page product counting without index counts', () => {
+    const filter = pageHelpers.buildCategoryFilter({
+      products: [
+        {
+          id: 'gid://shopify/Product/1',
+          handle: 'lemon-myrtle',
+          title: 'Lemon Myrtle',
+          availableForSale: true,
+          productType: 'Herb',
+          tags: ['categories_All Herbs'],
+          featuredImage: null,
+          priceRange: {
+            minVariantPrice: { amount: '16.42', currencyCode: 'AUD' },
+          },
+          rating: undefined,
+          reviewCount: undefined,
+          variants: [],
+        },
+      ],
+      sourceFilter: null,
+      handle: 'dried-herbs',
+      selectedCategoryTag: null,
+      sort: 'featured',
+      selectedFilters: [],
+    })
+
+    expect(filter?.values).toEqual([
+      expect.objectContaining({ label: 'All Herbs', count: 1 }),
+    ])
+  })
+})
+
 describe('price filter exclusion', () => {
   it('identifies Shopify price-range filters', () => {
     const priceFilter: CollectionProductFilter = {

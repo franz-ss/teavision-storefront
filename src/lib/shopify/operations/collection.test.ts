@@ -12,6 +12,7 @@ import {
   COLLECTION_PRODUCT_PAGE_SIZE,
   getCollectionPageIndex,
   getCollectionProductsPage,
+  getCollectionTagCounts,
 } from './collection'
 
 vi.mock('next/cache', () => ({
@@ -36,15 +37,20 @@ function makeCursorPayload({
   cursors,
   endCursor,
   hasNextPage,
+  tagsByCursor = {},
 }: {
   cursors: string[]
   endCursor: string | null
   hasNextPage: boolean
+  tagsByCursor?: Record<string, string[]>
 }) {
   return {
     collection: {
       products: {
-        edges: cursors.map((cursor) => ({ cursor })),
+        edges: cursors.map((cursor) => ({
+          cursor,
+          node: { tags: tagsByCursor[cursor] ?? [] },
+        })),
         pageInfo: { endCursor, hasNextPage },
       },
     },
@@ -163,6 +169,96 @@ describe('Shopify collection pagination operations', () => {
         reverse: false,
         filters: [],
       },
+    })
+  })
+
+  test('getCollectionPageIndex maps category display pages to the raw index pages containing matches', async () => {
+    const cursors = Array.from(
+      { length: 72 },
+      (_, index) => `cursor-${index + 1}`,
+    )
+    shopifyFetchMock.mockResolvedValueOnce(
+      makeCursorPayload({
+        cursors,
+        endCursor: 'cursor-72',
+        hasNextPage: false,
+        tagsByCursor: {
+          // raw page 1 (positions 1-24) and raw page 3 (positions 49-72)
+          'cursor-10': ['categories_Australian Tea'],
+          'cursor-60': ['categories_Australian Tea', 'categories_All Herbs'],
+        },
+      }),
+    )
+
+    await expect(
+      getCollectionPageIndex(
+        'dried-herbs',
+        COLLECTION_PRODUCT_PAGE_SIZE,
+        ProductCollectionSortKeys.CollectionDefault,
+        false,
+        [],
+        'categories_Australian Tea',
+      ),
+    ).resolves.toMatchObject({
+      totalCount: 2,
+      totalPages: 2,
+      displayPageToRawPage: [1, 3],
+    })
+  })
+
+  test('getCollectionPageIndex falls back to a single display page when no products match the tag', async () => {
+    const cursors = Array.from(
+      { length: 30 },
+      (_, index) => `cursor-${index + 1}`,
+    )
+    shopifyFetchMock.mockResolvedValueOnce(
+      makeCursorPayload({
+        cursors,
+        endCursor: 'cursor-30',
+        hasNextPage: false,
+      }),
+    )
+
+    await expect(
+      getCollectionPageIndex(
+        'dried-herbs',
+        COLLECTION_PRODUCT_PAGE_SIZE,
+        ProductCollectionSortKeys.CollectionDefault,
+        false,
+        [],
+        'categories_Missing',
+      ),
+    ).resolves.toMatchObject({
+      totalCount: 0,
+      totalPages: 1,
+      displayPageToRawPage: [1],
+    })
+  })
+
+  test('getCollectionTagCounts aggregates tag counts across the full cursor index', async () => {
+    const cursors = Array.from(
+      { length: 26 },
+      (_, index) => `cursor-${index + 1}`,
+    )
+    const tagsByCursor = Object.fromEntries(
+      cursors.map((cursor) => [cursor, ['categories_All Herbs']]),
+    )
+    tagsByCursor['cursor-26'] = [
+      'categories_All Herbs',
+      'categories_Australian Tea',
+    ]
+    shopifyFetchMock.mockResolvedValueOnce(
+      makeCursorPayload({
+        cursors,
+        endCursor: 'cursor-26',
+        hasNextPage: false,
+        tagsByCursor,
+      }),
+    )
+
+    await expect(getCollectionTagCounts('dried-herbs')).resolves.toEqual({
+      'categories_All Herbs': 26,
+      'categories_Australian Tea': 1,
     })
   })
 
