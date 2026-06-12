@@ -5,6 +5,7 @@ import type {
   Collection,
   CollectionPageIndex,
   CollectionProductsResult,
+  CollectionProductSummary,
   CollectionSummary,
 } from '@/lib/shopify/types'
 
@@ -36,8 +37,12 @@ vi.mock('next/navigation', () => ({
     throw new Error(`redirect:${url}`)
   },
   usePathname: () => '/collections/bulk-tea-bags',
-  useRouter: () => ({ replace: vi.fn() }),
+  useRouter: () => ({ refresh: vi.fn(), replace: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),
+}))
+
+vi.mock('@/lib/cart/actions', () => ({
+  addToCartAction: vi.fn(),
 }))
 
 const richHeroHtml = `
@@ -83,6 +88,38 @@ function pageIndexFixture(
     totalCount: 0,
     totalPages: 1,
     afterCursor: null,
+    ...overrides,
+  }
+}
+
+function productFixture(
+  overrides: Partial<CollectionProductSummary> = {},
+): CollectionProductSummary {
+  return {
+    id: 'gid://shopify/Product/masters-sencha',
+    handle: 'tea-masters-sencha',
+    title: 'Tea Masters Sencha Green Tea',
+    availableForSale: true,
+    productType: 'Green tea',
+    tags: [],
+    featuredImage: null,
+    priceRange: {
+      minVariantPrice: { amount: '12.00', currencyCode: 'AUD' },
+    },
+    rating: 4.8,
+    reviewCount: 37,
+    variants: [
+      {
+        id: 'gid://shopify/ProductVariant/masters-sencha-50g',
+        title: '50g Sample',
+        availableForSale: true,
+        quantityAvailable: 10,
+        quantityRule: { minimum: 1, maximum: 10, increment: 1 },
+        price: { amount: '12.00', currencyCode: 'AUD' },
+        quantityPriceBreaks: [],
+        image: null,
+      },
+    ],
     ...overrides,
   }
 }
@@ -196,6 +233,34 @@ describe('PageContent out-of-range and stale-cursor handling', () => {
       searchParams: Promise.resolve({ page: 'abc' }),
     })
     expect(element).toBeTruthy()
+  })
+})
+
+describe('PageContent category pagination hrefs', () => {
+  it('emits category pager and prev/next hrefs without a redundant filter param (WR-01)', async () => {
+    shopifyMocks.getCollection.mockResolvedValue(
+      collectionFixture({ handle: 'all', title: 'All Products' }),
+    )
+    shopifyMocks.getCollectionSummaries.mockResolvedValue([])
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 72, totalPages: 3 }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: true },
+      products: [productFixture({ tags: ['categories_herbs'] })],
+    })
+
+    const element = await PageContent({
+      params: Promise.resolve({ handle: 'all', category: 'categories_herbs' }),
+      searchParams: Promise.resolve({ page: '2' }),
+    })
+    const html = renderToStaticMarkup(element)
+
+    // The category lives in the URL path — pagination hrefs must not
+    // re-serialise it as a ?filter= query param (two URL variants).
+    expect(html).toContain('/collections/all/categories_herbs?page=3')
+    expect(html).not.toContain('filter=')
   })
 })
 

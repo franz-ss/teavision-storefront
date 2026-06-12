@@ -102,12 +102,15 @@ export async function PageContent({ params, searchParams }: PageProps) {
   )
 
   // Redirect out-of-range pages to last valid page (D-24)
+  // Pagination hrefs use the plain selectedFilters: the category is already
+  // encoded in the URL path, so re-serialising it as a ?filter= param would
+  // emit a second, non-canonical URL variant for every category page.
   if (page > pageIndex.totalPages && pageIndex.totalPages > 0) {
     const lastPageHref = getPaginationHref({
       category,
       handle,
       page: pageIndex.totalPages,
-      selectedFilters: activeSelectedFilters,
+      selectedFilters,
       sort,
     })
     redirect(lastPageHref)
@@ -138,7 +141,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
         category,
         handle,
         page: fallbackPage,
-        selectedFilters: activeSelectedFilters,
+        selectedFilters,
         sort,
       }),
     )
@@ -195,11 +198,11 @@ export async function PageContent({ params, searchParams }: PageProps) {
   // The Next 16 Metadata API has no prev/next field, so we render them as JSX links.
   const prevPageHref =
     currentPage > 1
-      ? `${SITE_URL}${getPaginationHref({ category, handle, page: currentPage - 1, selectedFilters: activeSelectedFilters, sort })}`
+      ? `${SITE_URL}${getPaginationHref({ category, handle, page: currentPage - 1, selectedFilters, sort })}`
       : null
   const nextPageHref =
     currentPage < totalPages
-      ? `${SITE_URL}${getPaginationHref({ category, handle, page: currentPage + 1, selectedFilters: activeSelectedFilters, sort })}`
+      ? `${SITE_URL}${getPaginationHref({ category, handle, page: currentPage + 1, selectedFilters, sort })}`
       : null
 
   return (
@@ -263,7 +266,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
                   category,
                   handle,
                   page: p,
-                  selectedFilters: activeSelectedFilters,
+                  selectedFilters,
                   sort,
                 })
               }
