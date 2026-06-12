@@ -74,7 +74,7 @@ export const PAYMENT_METHODS = [
 
 export const QUALITY_IMAGE = {
   alt: '',
-  src: 'https://www.teavision.com.au/cdn/shop/files/3.png?v=1757328068&width=600',
+  src: '/images/navigation/teavision-catalogues.png',
   width: 600,
   height: 232,
 } satisfies FooterImage

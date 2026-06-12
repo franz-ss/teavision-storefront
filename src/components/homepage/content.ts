@@ -72,8 +72,6 @@ export const ctaCatalogueData: CtaProps = {
   },
 }
 
-const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
-
 export const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -111,13 +109,13 @@ export const HOMEPAGE_HERO = {
     href: '/collections',
   },
   image: {
-    src: `${SHOPIFY_FILE_BASE}/image_2.png?v=1757407742&width=1920`,
+    src: '/images/homepage/homepage-hero-tea-harvest.png',
     alt: '',
     width: 1920,
     height: 1080,
   },
   trustMarks: {
-    src: `${SHOPIFY_FILE_BASE}/hero-logos.webp?v=1761037820&width=1126`,
+    src: '/images/homepage/homepage-trust-marks.webp',
     alt: 'Teavision certification and trust marks',
     width: 1126,
     height: 226,
@@ -180,7 +178,7 @@ export const PRODUCT_RANGE = [
     title: 'Wholesale Bulk Tea',
     href: '/collections/wholesale-bulk-tea',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/bulk_wholesale.jpg?v=1776400758&width=800`,
+      src: '/images/homepage/bulk-wholesale.jpg',
       alt: 'Wholesale bulk loose leaf tea',
       width: 800,
       height: 534,
@@ -191,7 +189,7 @@ export const PRODUCT_RANGE = [
     title: 'Herbs, Spices & Botanicals',
     href: '/collections/herbs-and-spices',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/herbs_and_spices_1c9b15ca-6833-460f-817a-32013fd18e41.jpg?v=1776400817&width=800`,
+      src: '/images/homepage/herbs-and-spices-1c9b15ca-6833-460f-817a-32013fd18e41.jpg',
       alt: 'Bulk herbs, spices, and botanicals',
       width: 800,
       height: 533,
@@ -202,7 +200,7 @@ export const PRODUCT_RANGE = [
     title: 'Speciality Blends',
     href: '/collections/speciality-tea',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/speciality_blends.jpg?v=1776400871&width=800`,
+      src: '/images/homepage/speciality-blends.jpg',
       alt: 'Speciality tea blends',
       width: 800,
       height: 1200,
@@ -213,7 +211,7 @@ export const PRODUCT_RANGE = [
     title: 'Functional Wellness Tea',
     href: '/collections/wellness-functional-tea',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/functional_wellness.jpg?v=1776400996&width=800`,
+      src: '/images/homepage/functional-wellness.jpg',
       alt: 'Functional wellness tea ingredients',
       width: 800,
       height: 571,
@@ -224,7 +222,7 @@ export const PRODUCT_RANGE = [
     title: 'Cafe Range',
     href: '/collections/cafe-range',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/cafe_range.jpg?v=1776400996&width=800`,
+      src: '/images/homepage/cafe-range.jpg',
       alt: 'Cafe range teas',
       width: 800,
       height: 1000,
@@ -235,7 +233,7 @@ export const PRODUCT_RANGE = [
     title: 'Australian Native Tea',
     href: '/collections/australian-native-ingredients',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/australian_native.jpg?v=1776400996&width=800`,
+      src: '/images/homepage/australian-native.jpg',
       alt: 'Australian native tea ingredients',
       width: 800,
       height: 450,
@@ -246,7 +244,7 @@ export const PRODUCT_RANGE = [
     title: 'Bulk Tea Bag Packs',
     href: '/collections/bulk-tea-bags',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/bulk_tea_bags.jpg?v=1776400996&width=800`,
+      src: '/images/homepage/bulk-tea-bags.jpg',
       alt: 'Bulk tea bag packs',
       width: 800,
       height: 533,
@@ -257,14 +255,14 @@ export const PRODUCT_RANGE = [
     title: 'Organic Tea Collection',
     href: '/collections/australian-certified-organic-tea',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/organic_range.jpg?v=1776401243&width=800`,
+      src: '/images/homepage/organic-range.jpg',
       alt: 'Organic tea collection',
       width: 800,
       height: 533,
     },
     action: 'Shop Now',
     badge: {
-      src: `${SHOPIFY_FILE_BASE}/australian-organic.webp?v=1760701558&width=200`,
+      src: '/images/homepage/australian-organic.webp',
       alt: 'Australian organic certification',
       width: 200,
       height: 200,
@@ -274,7 +272,7 @@ export const PRODUCT_RANGE = [
     title: 'Cocktail & Iced Tea Collection',
     href: '/collections/dessert-cocktail-inspired-blends',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/iced_tea.jpg?v=1776400996&width=800`,
+      src: '/images/homepage/iced-tea.jpg',
       alt: 'Cocktail and iced tea collection',
       width: 800,
       height: 533,
@@ -285,7 +283,7 @@ export const PRODUCT_RANGE = [
     title: 'Tea Masters Selection',
     href: '/collections/tea-masters-selection-worlds-best-teas',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/photo-1597884324477-ca524e6e882e.jpg?v=1776399378&width=800`,
+      src: '/images/homepage/tea-masters-selection.jpg',
       alt: 'Premium tea masters selection',
       width: 800,
       height: 533,
@@ -296,7 +294,7 @@ export const PRODUCT_RANGE = [
     title: 'Superfood & Supplements',
     href: '/collections/superfood-extract-powders-proteins-supplements',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/photo-1732901379182-46b0cbc13b15.jpg?v=1776399462&width=800`,
+      src: '/images/homepage/superfood-supplements.jpg',
       alt: 'Superfood powders and supplement ingredients',
       width: 800,
       height: 533,
@@ -310,7 +308,7 @@ export const SERVICE_CARDS = [
     title: 'Custom Tea Blends',
     href: '/pages/custom-tea-blends',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/tea_blending_aff55624-3ee5-41da-ae02-235d3dcc917c.jpg?v=1776403654&width=800`,
+      src: '/images/homepage/tea-blending-aff55624-3ee5-41da-ae02-235d3dcc917c.jpg',
       alt: 'Custom tea blending',
       width: 800,
       height: 1200,
@@ -322,7 +320,7 @@ export const SERVICE_CARDS = [
     title: 'Tea Bag Manufacturing',
     href: '/collections/tea-bag-manufacturer',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/Tea_bag_manufacturing_machine_close-up.png?v=1776404052&width=800`,
+      src: '/images/homepage/tea-bag-manufacturing-machine.png',
       alt: 'Tea bag manufacturing machine',
       width: 800,
       height: 1200,
@@ -334,7 +332,7 @@ export const SERVICE_CARDS = [
     title: 'Private Label',
     href: '/pages/private-label-packing',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/plabel2.jpg?v=1776404355&width=800`,
+      src: '/images/homepage/private-label-packaging.jpg',
       alt: 'Private label tea packaging',
       width: 800,
       height: 533,
@@ -345,14 +343,14 @@ export const SERVICE_CARDS = [
 ] satisfies ImageCard[]
 
 export const HERBS_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/c5a075ef4595339b60bb1672bb1d67e168a564a5.png?v=1757589972&width=1500`,
+  src: '/images/homepage/organic-herbs-and-spices.png',
   alt: 'Organic herbs and spices',
   width: 1500,
   height: 1000,
 } satisfies ImageAsset
 
 export const CATALOGUE_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/3.png?v=1757328068&width=600`,
+  src: '/images/navigation/teavision-catalogues.png',
   alt: 'Teavision catalogues',
   width: 600,
   height: 400,
@@ -360,43 +358,43 @@ export const CATALOGUE_IMAGE = {
 
 export const SUPPLY_CHAIN_IMAGES = [
   {
-    src: `${SHOPIFY_FILE_BASE}/Group_39481.png?v=1758534766&width=400`,
+    src: '/images/supply-chain/supply-chain-mark-1.png',
     alt: 'Supply chain quality mark',
     width: 400,
     height: 258,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/Group_288.png?v=1758534491&width=400`,
+    src: '/images/supply-chain/supply-chain-mark-2.png',
     alt: 'Supply chain quality mark',
     width: 400,
     height: 259,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/Group_289_25b41dd4-5382-4951-9de5-e212c2f9832f.png?v=1758534710&width=400`,
+    src: '/images/supply-chain/supply-chain-mark-3.png',
     alt: 'Supply chain quality mark',
     width: 400,
     height: 258,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/Group_290_7dbc3c9c-245b-45c9-aaef-85151b2be561.png?v=1758534616&width=400`,
+    src: '/images/supply-chain/supply-chain-mark-4.png',
     alt: 'Supply chain quality mark',
     width: 400,
     height: 258,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/Group_60_dbe0534f-6bee-4cba-8731-39ec49e605f9.png?v=1758534880&width=400`,
+    src: '/images/supply-chain/supply-chain-mark-5.png',
     alt: 'Supply chain quality mark',
     width: 400,
     height: 258,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/australian_organic_matched_size_borderless.png?v=1760590976&width=400`,
+    src: '/images/supply-chain/supply-chain-australian-organic-mark.png',
     alt: 'Australian organic certification mark',
     width: 400,
     height: 258,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/Group_293_13de32ff-b1e8-4307-92b6-267425fb79c5.png?v=1758534817&width=400`,
+    src: '/images/supply-chain/supply-chain-mark-7.png',
     alt: 'Supply chain quality mark',
     width: 400,
     height: 258,
@@ -406,7 +404,7 @@ export const SUPPLY_CHAIN_IMAGES = [
 export const TESTIMONIALS = [
   {
     logo: {
-      src: `${SHOPIFY_FILE_BASE}/Mood_Logo_1.png?crop=center&height=400&v=1760347291&width=325`,
+      src: '/images/testimonials/mood-tea-logo.png',
       alt: 'MOOD Tea logo',
       width: 325,
       height: 400,
@@ -419,7 +417,7 @@ export const TESTIMONIALS = [
   },
   {
     logo: {
-      src: `${SHOPIFY_FILE_BASE}/Ali_Logo_1.png?crop=center&height=400&v=1760347120&width=325`,
+      src: '/images/testimonials/st-ali-logo.png',
       alt: 'St. Ali logo',
       width: 325,
       height: 400,
@@ -432,7 +430,7 @@ export const TESTIMONIALS = [
   },
   {
     logo: {
-      src: `${SHOPIFY_FILE_BASE}/Buy_Organics_Logo_1.png?crop=center&height=400&v=1760347231&width=325`,
+      src: '/images/testimonials/buy-organics-online-logo.png',
       alt: 'Buy Organics Online logo',
       width: 325,
       height: 400,
@@ -445,7 +443,7 @@ export const TESTIMONIALS = [
   },
   {
     logo: {
-      src: `${SHOPIFY_FILE_BASE}/remedy-logo.png?crop=center&height=400&v=1760700368&width=325`,
+      src: '/images/testimonials/remedy-drinks-logo.png',
       alt: 'Remedy Drinks logo',
       width: 325,
       height: 400,

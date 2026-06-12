@@ -22,10 +22,8 @@ export type QualityCard = TextCard & {
   icon: QualityCardIcon
 }
 
-const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
-
 export const HERO_IMAGE = {
-  src: `${SHOPIFY_FILE_BASE}/rose_and_green_tea.png?v=1761280323`,
+  src: '/images/custom-tea-blends/rose-green-tea-blend.png',
   alt: 'Green tea blended with rose petals',
   width: 1400,
   height: 900,
@@ -33,31 +31,31 @@ export const HERO_IMAGE = {
 
 export const THUMBNAILS = [
   {
-    src: `${SHOPIFY_FILE_BASE}/LGandG.png?v=1761280324`,
+    src: '/images/custom-tea-blends/lemongrass-ginger-blend.png',
     alt: 'Lemongrass, ginger, and turmeric blend',
     width: 640,
     height: 640,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/EGT.png?v=1761280324`,
+    src: '/images/custom-tea-blends/earl-grey-tea-blend.png',
     alt: 'French Earl Grey tea blend',
     width: 640,
     height: 640,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/TeaVision-20.jpg?v=1761281369`,
+    src: '/images/custom-tea-blends/custom-blending-lab.jpg',
     alt: 'Teavision product development workspace',
     width: 900,
     height: 600,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/TeaVision-14_1.jpg?v=1761279097`,
+    src: '/images/custom-tea-blends/custom-tea-bags.jpg',
     alt: 'Teavision tea blending workspace',
     width: 900,
     height: 600,
   },
   {
-    src: `${SHOPIFY_FILE_BASE}/blue_spirulina_powder.png?v=1760854766`,
+    src: '/images/custom-tea-blends/blue-spirulina-powder.png',
     alt: 'Blue spirulina powder',
     width: 900,
     height: 900,
@@ -81,7 +79,7 @@ export const CAPABILITY_CARDS = [
     title: 'Loose-leaf teas',
     description: 'Sencha, breakfast tea, Earl Grey, oolongs, and hero blends.',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/tea_in_jars.webp?v=1760833507`,
+      src: '/images/custom-tea-blends/tea-in-jars.webp',
       alt: 'Loose-leaf tea in jars',
       width: 900,
       height: 900,
@@ -91,7 +89,7 @@ export const CAPABILITY_CARDS = [
     title: 'Herbal and botanicals',
     description: 'Calm, sleep, digest, detox, and functional herbal blends.',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/calm_tea_with_passionflower.png?v=1760853980`,
+      src: '/images/custom-tea-blends/calm-tea-passionflower.png',
       alt: 'Herbal tea blend with passionflower',
       width: 900,
       height: 900,
@@ -101,7 +99,7 @@ export const CAPABILITY_CARDS = [
     title: 'Boxes and sachets',
     description: 'Retail cartons, display formats, and single-serve packs.',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/tea_cartons_and_boxes_image.png?v=1760835585`,
+      src: '/images/custom-tea-blends/tea-cartons-boxes.png',
       alt: 'Tea cartons and retail boxes',
       width: 900,
       height: 900,
@@ -111,7 +109,7 @@ export const CAPABILITY_CARDS = [
     title: 'Powders and instant',
     description: 'Matcha, iced tea powders, chai latte, and superfood blends.',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/matcha_powder.png?v=1760848523`,
+      src: '/images/custom-tea-blends/matcha-powder.png',
       alt: 'Matcha powder',
       width: 900,
       height: 900,
@@ -121,7 +119,7 @@ export const CAPABILITY_CARDS = [
     title: 'Iced and cold-brew',
     description: 'Hibiscus, peach, lemon, berry, and summer-ready profiles.',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/hibiscus_iced_tea_image.png?v=1760852863`,
+      src: '/images/custom-tea-blends/hibiscus-iced-tea.png',
       alt: 'Iced hibiscus tea',
       width: 900,
       height: 900,
@@ -131,7 +129,7 @@ export const CAPABILITY_CARDS = [
     title: 'Wellness specials',
     description: 'Sleep, immunity, de-stress, slim, and mood-led blends.',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/sleep_tea.png?v=1760848557`,
+      src: '/images/custom-tea-blends/sleep-tea.png',
       alt: 'Sleep tea blend',
       width: 900,
       height: 900,
@@ -141,7 +139,7 @@ export const CAPABILITY_CARDS = [
     title: 'Chai and spice',
     description: 'Sticky chai, turmeric, masala, and warming spice blends.',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/Chai_Spice_Tin.png?v=1760834712`,
+      src: '/images/custom-tea-blends/chai-spice-tin.png',
       alt: 'Chai spice tea tin',
       width: 900,
       height: 900,
@@ -151,7 +149,7 @@ export const CAPABILITY_CARDS = [
     title: 'Loose leaf jars',
     description: 'Retail-ready glass jars and display formats.',
     image: {
-      src: `${SHOPIFY_FILE_BASE}/tea_in_jars.webp?v=1760833507`,
+      src: '/images/custom-tea-blends/tea-in-jars.webp',
       alt: 'Loose-leaf tea in retail jars',
       width: 900,
       height: 900,
@@ -161,7 +159,7 @@ export const CAPABILITY_CARDS = [
     title: 'Pyramid tea bags',
     description: 'Compostable pyramid bags with tag and string options.',
     image: {
-      src: `https://www.teavision.com.au/cdn/shop/files/cainyi-paketik-s-odnoi-piramidkoi-i-pustaa-etiketka-na-belom-fone-krupnym-planom_600x.png?v=1760009247`,
+      src: `/images/tea-bag-manufacturer/single-pyramid-tea-bag.png`,
       alt: 'Pyramid tea bag with a blank tag',
       width: 600,
       height: 600,

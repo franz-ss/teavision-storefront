@@ -24,7 +24,7 @@ type HeroProps = {
 
 const HERO_TITLE = 'Discover the Finest Teas for Your Business'
 const HERO_IMAGE = {
-  src: 'https://cdn.shopify.com/s/files/1/0786/8339/files/blog-hero.webp?v=1764582604&width=2880',
+  src: '/images/blog/blog-hero-tea-journal.webp',
   alt: '',
 }
 

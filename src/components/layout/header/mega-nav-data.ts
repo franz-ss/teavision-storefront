@@ -16,8 +16,7 @@ export type ShopSection = {
   imageAlt?: string
 }
 
-export const SHOP_IMAGE_SRC =
-  'https://cdn.shopify.com/s/files/1/0786/8339/files/6.png?v=1757506061'
+export const SHOP_IMAGE_SRC = '/images/navigation/mega-menu-tea-leaves.png'
 
 export const SHOP_SECTIONS = [
   {
@@ -78,7 +77,7 @@ export const SHOP_SECTIONS = [
         label: 'Custom & Private Label Tea Bags',
       },
       {
-        href: 'https://cdn.shopify.com/s/files/1/0786/8339/files/Teavision_Tea_Bag_Catalogue_1.pdf?v=1640138688',
+        href: '/vendor/catalogues/tea-bag-catalogue.pdf',
         label: 'Download Tea Bag Catalogue',
       },
     ],
@@ -123,27 +122,27 @@ export const SERVICES_LINKS = [
 
 export const CATALOGUE_LINKS = [
   {
-    href: 'https://cdn.shopify.com/s/files/1/0786/8339/files/Teavision_Tea_Cafe_Catalogue_f01248e9-e5fe-42c4-a708-f135d89fdde6.pdf?v=1633393698',
+    href: '/vendor/catalogues/tea-cafe-catalogue.pdf',
     label: 'Tea Catalogue',
   },
   {
-    href: 'https://cdn.shopify.com/s/files/1/0786/8339/files/Teavision_Tea_Bag_Catalogue_1.pdf?v=1640138688',
+    href: '/vendor/catalogues/tea-bag-catalogue.pdf',
     label: 'Tea Bag Catalogue',
   },
   {
-    href: 'https://cdn.shopify.com/s/files/1/0786/8339/files/Beverage_RTD_Catalogue_Teavision.pdf?v=1633393450',
+    href: '/vendor/catalogues/beverage-rtd-catalogue.pdf',
     label: 'Beverage, Natural Sweeteners, Juices',
   },
   {
-    href: 'https://cdn.shopify.com/s/files/1/0786/8339/files/HERBS_SPICES_CATALOGUE_2021_1_-compressed.pdf?v=1639355955',
+    href: '/vendor/catalogues/herbs-spices-catalogue.pdf',
     label: 'Herbs & Spices Catalogue',
   },
   {
-    href: 'https://cdn.shopify.com/s/files/1/0786/8339/files/BLENDS_CATALOGUE_2021_1_-compressed.pdf?v=1639356205',
+    href: '/vendor/catalogues/tea-blends-catalogue.pdf',
     label: 'Tea Blends Catalogue',
   },
   {
-    href: 'https://cdn.shopify.com/s/files/1/0786/8339/files/ACO_Certificate_221004.pdf?v=1669809178',
+    href: '/vendor/catalogues/aco-organic-certificate.pdf',
     label: 'ACO Organic Certificate - Full Organic Range',
   },
 ] satisfies NavLink[]

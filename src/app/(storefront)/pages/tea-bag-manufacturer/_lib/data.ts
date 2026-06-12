@@ -1,8 +1,6 @@
-const SHOPIFY_CDN_BASE = 'https://www.teavision.com.au/cdn/shop/files'
-const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
-
 // Section 1 — Hero
-export const HERO_IMAGE_SRC = `${SHOPIFY_CDN_BASE}/hero-image_1600x.webp?v=1756890900`
+export const HERO_IMAGE_SRC =
+  '/images/tea-bag-manufacturer/tea-bag-manufacturer-hero.webp'
 
 export const HERO_FEATURES = [
   'Custom Blends Available',
@@ -18,31 +16,31 @@ export type CertLogo = {
 
 export const HERO_CERT_LOGOS: CertLogo[] = [
   {
-    src: `${SHOPIFY_CDN_BASE}/Australian_Certified_Organic_200x.svg?v=1756888023`,
+    src: '/icons/certifications/australian-certified-organic.svg',
     alt: 'Australian Certified Organic',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/Frame_200x.svg?v=1756890473`,
+    src: '/icons/certifications/kosher-australia.svg',
     alt: 'Halal certified',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/OK_Kosher_logo_1_200x.svg?v=1756890527`,
+    src: '/icons/certifications/ok-kosher.svg',
     alt: 'OK Kosher certified',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/USDA_organic_seal_2_200x.svg?v=1756890554`,
+    src: '/icons/certifications/usda-organic-seal.svg',
     alt: 'USDA Organic',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/Mask_group_200x.svg?v=1756890625`,
+    src: '/icons/certifications/halal-certification.svg',
     alt: 'Made in Australia',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/Organic-Logo_2_200x.svg?v=1756890667`,
+    src: '/icons/certifications/organic-certification.svg',
     alt: 'Organic certification',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/haccp-australia-vector-logo_2_200x.svg?v=1756890683`,
+    src: '/icons/certifications/haccp-australia.svg',
     alt: 'HACCP Australia',
   },
 ]
@@ -71,7 +69,7 @@ export type SolutionCard = {
 
 export const SOLUTION_CARDS: SolutionCard[] = [
   {
-    src: `${SHOPIFY_CDN_BASE}/Rectangle_4133633.webp?v=1756948727&width=400`,
+    src: '/images/tea-bag-manufacturer/tea-bag-feature-pyramid.webp',
     alt: 'Custom tea blends',
     title: 'Custom Tea Blends',
     copy: 'Create your unique tea blend or let us develop one for you. Over 100 tea varieties and flavors available.',
@@ -83,7 +81,7 @@ export const SOLUTION_CARDS: SolutionCard[] = [
     ],
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/Rectangle_4133645.webp?v=1756948753&width=400`,
+    src: '/images/tea-bag-manufacturer/tea-bag-feature-packaging.webp',
     alt: 'Private label packaging',
     title: 'Private Label Packaging',
     copy: 'Complete packaging solutions including pouches, cylinders, tins, and individual sachets.',
@@ -95,7 +93,7 @@ export const SOLUTION_CARDS: SolutionCard[] = [
     ],
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/Rectangle_4133646.webp?v=1756948861&width=400`,
+    src: '/images/tea-bag-manufacturer/tea-bag-feature-production.webp',
     alt: 'International shipping',
     title: 'International Shipping',
     copy: 'Reliable worldwide shipping from Australia to any country with full logistics support.',
@@ -109,7 +107,8 @@ export const SOLUTION_CARDS: SolutionCard[] = [
 ]
 
 // Section 5 — Tea bag & packaging options
-export const TEA_BAG_STYLES_IMAGE_SRC = `${SHOPIFY_CDN_BASE}/tea-bag_600x.webp?v=1756953539`
+export const TEA_BAG_STYLES_IMAGE_SRC =
+  '/images/tea-bag-manufacturer/tea-bag-styles.webp'
 
 export type PackagingItem = {
   title: string
@@ -145,39 +144,39 @@ export type PackagingImage = {
 
 export const PACKAGING_IMAGES: PackagingImage[] = [
   {
-    src: `${SHOPIFY_CDN_BASE}/Rectangle_4133652_600x.webp?v=1756955444`,
+    src: '/images/tea-bag-manufacturer/pyramid-tea-bag.webp',
     alt: 'Branded tea pouch packaging',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/cainyi-paketik-s-odnoi-piramidkoi-i-pustaa-etiketka-na-belom-fone-krupnym-planom_600x.png?v=1760009247`,
+    src: '/images/tea-bag-manufacturer/single-pyramid-tea-bag.png',
     alt: 'Pyramid tea bag with blank tag',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/Rectangle_4133650_600x.webp?v=1756955466`,
+    src: '/images/tea-bag-manufacturer/round-tea-bag.webp',
     alt: 'Custom tea tin packaging',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/Rectangle_4133651_600x.webp?v=1756955470`,
+    src: '/images/tea-bag-manufacturer/flat-tea-bag.webp',
     alt: 'Retail-ready tea cartons',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/Green_Roots_Sachet_High_Res_600x.webp?v=1762867570`,
+    src: '/images/tea-bag-manufacturer/green-roots-sachet.webp',
     alt: 'Green Roots individual sachet',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/green_roots_tea_bags_high_res_600x.webp?v=1762867582`,
+    src: '/images/tea-bag-manufacturer/green-roots-tea-bags.webp',
     alt: 'Green Roots tea bags',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/pavillion_hgih_res_600x.webp?v=1762867582`,
+    src: '/images/tea-bag-manufacturer/pavillion-tea-bags.webp',
     alt: 'Pavilion branded tea packaging',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/sachet_1_high_res_600x.webp?v=1762867581`,
+    src: '/images/tea-bag-manufacturer/sachet-tea-bag.webp',
     alt: 'Heat seal tea sachet',
   },
   {
-    src: `${SHOPIFY_CDN_BASE}/st_jennis_high_resolution_600x.webp?v=1762867581`,
+    src: '/images/tea-bag-manufacturer/st-jennis-tea-bags.webp',
     alt: 'St Jennis branded tea packaging',
   },
 ]
@@ -211,7 +210,8 @@ export const PROCESS_STEPS: ProcessStep[] = [
 ]
 
 // Section 8 — Ready-to-ship tea bags
-export const READY_TO_SHIP_IMAGE_SRC = `${SHOPIFY_CDN_BASE}/tea-varieties_59760a77-ee2e-4095-b2d7-51542865eabd_600x.webp?v=1757040802`
+export const READY_TO_SHIP_IMAGE_SRC =
+  '/images/tea-bag-manufacturer/ready-to-ship-tea-varieties.webp'
 
 export const READY_TO_SHIP_VARIETIES: PackagingItem[] = [
   { title: 'English Breakfast', description: 'Traditional morning blend' },
@@ -219,4 +219,4 @@ export const READY_TO_SHIP_VARIETIES: PackagingItem[] = [
   { title: 'Earl Grey', description: 'Classic Bergamot blend' },
 ]
 
-export const TEA_LIST_PDF_URL = `${SHOPIFY_FILE_BASE}/Teavision_Tea_Bag_Catalogue_1.pdf?v=1640138688`
+export const TEA_LIST_PDF_URL = '/vendor/catalogues/tea-bag-catalogue.pdf'

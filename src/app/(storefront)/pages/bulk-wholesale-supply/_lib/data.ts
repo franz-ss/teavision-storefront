@@ -1,19 +1,22 @@
 import { MapPinned, ShieldCheck, Tag, type LucideIcon } from 'lucide-react'
 
-const SHOPIFY_FILE_BASE = 'https://cdn.shopify.com/s/files/1/0786/8339/files'
-
 // Page metadata — shared by page.tsx (Metadata) and json-ld.tsx (structured data)
 export const PAGE_PATH = '/pages/bulk-wholesale-supply'
 export const PAGE_TITLE = 'Bulk Wholesale Supply | Teavision'
 export const PAGE_DESCRIPTION =
   'Import premium teas, herbs and botanicals at scale with Teavision. Container freight to Melbourne, 1500+ ingredients direct from farms, ACO/HACCP certified supply chain.'
 
-export const HERO_DESKTOP_IMAGE_SRC = `${SHOPIFY_FILE_BASE}/Section_Image.avif`
-export const HERO_MOBILE_VIDEO_SRC = `${SHOPIFY_FILE_BASE}/b76f0f3e99f443ecbd95ecfcb9b844d9.mp4`
-export const HERO_MOBILE_POSTER_SRC = `${SHOPIFY_FILE_BASE}/Section_Image.avif`
+export const HERO_DESKTOP_IMAGE_SRC =
+  '/images/bulk-wholesale-supply/bulk-wholesale-hero.avif'
+export const HERO_MOBILE_VIDEO_SRC =
+  'https://cdn.shopify.com/s/files/1/0786/8339/files/b76f0f3e99f443ecbd95ecfcb9b844d9.mp4'
+export const HERO_MOBILE_POSTER_SRC =
+  '/images/bulk-wholesale-supply/bulk-wholesale-hero.avif'
 
-export const SHIP_IMAGE_SRC = `${SHOPIFY_FILE_BASE}/image-ship.png`
-export const SHIP_AVIF_SRC = `${SHOPIFY_FILE_BASE}/ship.avif`
+export const SHIP_IMAGE_SRC =
+  '/images/bulk-wholesale-supply/bulk-wholesale-shipping.png'
+export const SHIP_AVIF_SRC =
+  '/images/bulk-wholesale-supply/bulk-wholesale-ship.avif'
 
 // Section 3 — 3-column feature grid
 export type FeatureCard3 = {
