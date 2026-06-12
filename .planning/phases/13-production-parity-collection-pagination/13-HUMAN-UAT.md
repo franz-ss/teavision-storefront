@@ -1,9 +1,9 @@
 ---
-status: complete
+status: diagnosed
 phase: 13-production-parity-collection-pagination
 source: [13-VERIFICATION.md]
 started: 2026-06-12T01:25:00Z
-updated: 2026-06-12T02:23:38Z
+updated: 2026-06-12T02:27:09Z
 ---
 
 ## Current Test
@@ -45,5 +45,16 @@ blocked: 0
   reason: "User reported: not working as expected"
   severity: major
   test: 2
-  artifacts: []
-  missing: []
+  root_cause: "The `#product-grid` fragment target is a zero-height element immediately before the product grid, but the storefront header is sticky at `top-0` and no scroll offset is defined. Native fragment navigation aligns the target to the viewport top, where the sticky header covers the grid start."
+  artifacts:
+    - path: "src/app/(storefront)/collections/[handle]/_components/product-list.tsx"
+      issue: "Renders the `#product-grid` target without a `scroll-mt-*` offset while pager hrefs navigate to that fragment."
+    - path: "src/components/layout/header/header.tsx"
+      issue: "Sticky `top-0` header overlays native fragment targets aligned to the viewport top."
+    - path: "src/app/globals.css"
+      issue: "No global `scroll-padding-top` offsets fragment navigation for the sticky header."
+  missing:
+    - "Add a sticky-header-aware scroll offset to the `#product-grid` target or equivalent document scroll padding."
+    - "Extend coverage beyond fragment href presence to assert the anchor target carries the scroll offset."
+    - "Manually verify pager navigation on mobile and desktop after the offset is applied."
+  debug_session: ".planning/debug/collection-pagination-product-grid-anchor.md"
