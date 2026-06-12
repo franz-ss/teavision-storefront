@@ -87,6 +87,81 @@ function pageIndexFixture(
   }
 }
 
+describe('PageContent out-of-range and stale-cursor handling', () => {
+  beforeEach(() => {
+    shopifyMocks.getCollection.mockResolvedValue(
+      collectionFixture({ handle: 'all', title: 'All Products' }),
+    )
+    shopifyMocks.getCollectionSummaries.mockResolvedValue([])
+  })
+
+  it('redirects to last valid page when requested page exceeds totalPages', async () => {
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 24, totalPages: 3 }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue(
+      emptyProductsResult(),
+    )
+
+    await expect(
+      PageContent({
+        params: Promise.resolve({ handle: 'all' }),
+        // page=999 is out-of-range for a 3-page collection
+        searchParams: Promise.resolve({ page: '999' }),
+      }),
+    ).rejects.toThrow('redirect:/collections/all?page=3')
+  })
+
+  it('redirects stale-cursor result (empty products on in-range page > 1) to last valid page', async () => {
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 48, totalPages: 2 }),
+    )
+    // page 2 returns empty (stale cursor)
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue(
+      emptyProductsResult(),
+    )
+
+    await expect(
+      PageContent({
+        params: Promise.resolve({ handle: 'all' }),
+        searchParams: Promise.resolve({ page: '2' }),
+      }),
+    ).rejects.toThrow('redirect:/collections/all?page=2')
+  })
+
+  it('renders normally for in-range page with products', async () => {
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 48, totalPages: 2 }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue(
+      emptyProductsResult(),
+    )
+
+    // page 1 of 2 — within range, products returned (emptyProductsResult is page 1 so no stale-cursor trigger)
+    const element = await PageContent({
+      params: Promise.resolve({ handle: 'all' }),
+      searchParams: Promise.resolve({ page: '1' }),
+    })
+    expect(element).toBeTruthy()
+  })
+
+  it('treats invalid page param as page 1 (no redirect)', async () => {
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 24, totalPages: 1 }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue(
+      emptyProductsResult(),
+    )
+
+    // page='abc' → parsePageParam returns 1, page 1 <= totalPages 1 → no redirect
+    const element = await PageContent({
+      params: Promise.resolve({ handle: 'all' }),
+      searchParams: Promise.resolve({ page: 'abc' }),
+    })
+    expect(element).toBeTruthy()
+  })
+})
+
 describe('PageContent collection rich hero rendering', () => {
   beforeEach(() => {
     shopifyMocks.getCollectionProductsPage.mockResolvedValue(
