@@ -8,11 +8,11 @@ export function HeroSection() {
   return (
     <Section.Root tone="surface">
       <Section.Container>
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           {/* Copy column */}
           <div>
             <Eyebrow>Tea Bag Manufacturer</Eyebrow>
-            <h1 className="type-heading-01 text-ink mt-4 max-w-[22ch] text-balance">
+            <h1 className="type-heading-01 text-ink mt-4 text-balance">
               Custom <span className="text-brand">tea bags &amp; blends</span>{' '}
               for global brands
             </h1>
