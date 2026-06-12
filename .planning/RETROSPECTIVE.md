@@ -86,12 +86,47 @@ Bulk-savings purchasing end-to-end (PDP tiers → quantity add → Shopify disco
 - Sessions: two days end-to-end including two gap-closure rounds and milestone close.
 - Notable: single integration-checker subagent handled the entire cross-phase audit (~73k tokens).
 
+## Milestone: v1.2 — SEO-Safe PLP Pagination Parity
+
+**Shipped:** 2026-06-12
+**Phases:** 1 | **Plans:** 2
+
+### What Was Built
+
+Production-style numbered collection pagination for PLPs: public `?page=N` URLs, cached cursor-index resolution over Shopify Storefront GraphQL, bounded page payloads, shared Pagination UI, production-parity canonical/prev/next behavior, sticky-header-aware `#product-grid` anchoring, and client-side sort/filter interactions that reset pagination to page 1.
+
+### What Worked
+
+- The milestone audit caught an integration gap missed by phase verification: server-rendered sort/filter hrefs dropped `page`, but client leaves did not.
+- Gap closure stayed small and surgical: two URL helper fixes plus focused unit tests for the client builders.
+- Human UAT caught the scroll-anchor issue before close, and the final grid-anchor fix produced a cleaner DOM than an offset sentinel.
+
+### What Was Inefficient
+
+- Phase verification over-weighted server helpers and under-tested interactive client URL builders, so D-25 needed a milestone-audit pass to surface fully.
+- The archive helper handled file movement but left living docs with stale active-milestone labels, requiring manual cleanup.
+
+### Patterns Established
+
+- Client URL builders for PLP controls should live as small exported pure helpers next to the interactive leaf, with tests for query-param reset rules.
+- UAT terminal status should use `complete` for compatibility with the installed `gsd-sdk` close scanner.
+
+### Key Lessons
+
+- Requirement checks need to follow the actual interaction path, not only the shared server helper path.
+- For launch-parity SEO work, canonical safety is not enough; user-facing URL generation still needs to preserve production navigation semantics.
+
+### Cost Observations
+
+- Sessions: same-day milestone from audit through gap closure and archive.
+- Notable: a focused pre-archive implementation commit kept the `v1.2` tag aligned with the passing audit.
+
 ## Cross-Milestone Trends
 
-| Metric | v1.0 | v1.1 |
-| --- | --- | --- |
-| Phases / plans | 9 / 35 | 1 / 4 |
-| Duration | ~6.5 weeks | ~2 days |
-| Commits | 476 | ~25 |
-| UAT fix rounds | 3 | 0 (2 pre-UAT gap-closure rounds) |
-| Known gaps at close | 2 requirement-level (CQA-05, CARD-01-superseded) + tech-debt list | 0 blockers; 3 tech-debt items (W2/W4/W5) |
+| Metric | v1.0 | v1.1 | v1.2 |
+| --- | --- | --- | --- |
+| Phases / plans | 9 / 35 | 1 / 4 | 1 / 2 |
+| Duration | ~6.5 weeks | ~2 days | 1 day |
+| Commits | 476 | ~25 | ~10 |
+| UAT fix rounds | 3 | 0 (2 pre-UAT gap-closure rounds) | 1 human UAT gap + 1 audit gap |
+| Known gaps at close | 2 requirement-level (CQA-05, CARD-01-superseded) + tech-debt list | 0 blockers; 3 tech-debt items (W2/W4/W5) | 0 blockers; non-blocking tech debt in audit |

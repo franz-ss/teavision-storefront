@@ -1,22 +1,20 @@
 # Milestones
 
-## v1.2 SEO-Safe PLP Pagination Parity (Active)
+## v1.2 SEO-Safe PLP Pagination Parity (Shipped: 2026-06-12)
 
-**Phases planned:** 1 phase (13), 1 plan
-**Timeline:** 2026-06-12 → active
+**Phases completed:** 1 phase, 2 plans, 9 tasks
 
-**Planned:** Restore production-style collection pagination on headless PLPs
-using `?page=N` URLs while preserving the live Shopify site's SEO contract for
-launch: base collection canonicals, prev/next links where available, existing
-robots intent for sort/filter URLs, and no public cursor-navigation URLs.
+**Delivered:** Production-style numbered collection pagination using `?page=N`, with production canonical/crawler parity, bounded Shopify Storefront GraphQL payloads, sticky-header-aware grid anchoring, and client-side sort/filter interactions that reset pagination safely.
 
-**Key planned outcomes:**
+**Key accomplishments:**
 
-- Public collection pagination parity with production (`/collections/all?page=2`)
-- Launch-safe production canonical behavior instead of a simultaneous SEO strategy change
-- Internal page-number-to-cursor resolution over Shopify Storefront GraphQL
-- Bounded PLP payloads preserved from Phase 05-03
-- Classic accessible pagination UI replacing "Next products"
+- Replaced ?cursor= forward-only PLP navigation with ?page=N numbered pagination backed by a cached id-only cursor index query, shared Pagination UI primitive (Storybook-covered), and production-parity canonical/prev/next SEO behavior including category route canonical gap fix.
+- Merged `id="product-grid"` onto the `<ul>` grid element and added `scroll-mt-24 lg:scroll-mt-32` so pager clicks land with the product grid visible below the sticky header (D-26 gap closure)
+- Closed D-25 client-navigation audit gap: sort and checkbox filter changes now drop stale `page` params before applying new state.
+
+**Audit:** passed (6/6 requirements, 5/5 flows) — see `milestones/v1.2-MILESTONE-AUDIT.md`
+
+**What's next:** Start the next milestone with `$gsd-new-milestone`.
 
 ---
 
