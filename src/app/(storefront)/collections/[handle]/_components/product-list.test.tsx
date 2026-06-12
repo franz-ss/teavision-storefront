@@ -109,7 +109,7 @@ describe('ProductList', () => {
     expect(html).not.toContain('Next products')
   })
 
-  it('pager links include the product-grid anchor for scroll-to-grid (D-26)', () => {
+  it('pager links include the product-grid anchor and target offset for scroll-to-grid (D-26)', () => {
     const html = renderToStaticMarkup(
       <ProductList
         products={[product]}
@@ -119,7 +119,9 @@ describe('ProductList', () => {
       />,
     )
 
-    // Links should include #product-grid anchor
     expect(html).toContain('#product-grid')
+    expect(html).toContain('id="product-grid"')
+    expect(html).toContain('scroll-mt-24')
+    expect(html).toContain('lg:scroll-mt-32')
   })
 })

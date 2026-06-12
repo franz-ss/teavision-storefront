@@ -43,10 +43,9 @@ export function ProductList({
 
   return (
     <div>
-      {/* Anchor target for scroll-to-grid on pager clicks (D-26) */}
-      <div id="product-grid" />
       <ul
-        className="grid grid-cols-2 gap-x-3 gap-y-4 sm:gap-x-4.5 sm:gap-y-5.5 lg:grid-cols-3"
+        id="product-grid"
+        className="grid scroll-mt-24 grid-cols-2 gap-x-3 gap-y-4 sm:gap-x-4.5 sm:gap-y-5.5 lg:scroll-mt-32 lg:grid-cols-3"
         role="list"
       >
         {products.map((product, index) => (
