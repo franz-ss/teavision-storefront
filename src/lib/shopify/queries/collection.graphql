@@ -132,6 +132,9 @@ query GetCollectionCursorIndex(
       }
       edges {
         cursor
+        node {
+          tags
+        }
       }
     }
   }
