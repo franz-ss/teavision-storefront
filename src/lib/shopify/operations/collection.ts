@@ -2,6 +2,7 @@ import { cacheLife, cacheTag } from 'next/cache'
 
 import { shopifyFetch } from '@/lib/shopify/client'
 import {
+  GetCollectionCursorIndexDocument,
   GetCollectionDocument,
   GetCollectionMenuDocument,
   GetCollectionProductsDocument,
@@ -9,10 +10,12 @@ import {
   GetCollectionsDocument,
   ProductCollectionSortKeys,
   type Collection,
+  type CollectionPageIndex,
   type CollectionProductFilter,
   type CollectionProductsResult,
   type CollectionProductSummary,
   type CollectionSummary,
+  type GetCollectionCursorIndexQuery,
   type GetCollectionQuery,
   type GetCollectionMenuQuery,
   type GetCollectionProductsQuery,
@@ -420,4 +423,126 @@ export async function getCollectionProductsWithFilters(
       endCursor: data.collection.products.pageInfo.endCursor ?? null,
     },
   }
+}
+
+/**
+ * Fetch cursor-only index for a collection (id/cursor edges, no product fields).
+ * Chunks at SHOPIFY_PAGE_SIZE (250) to handle collections larger than 250 products.
+ * Returns all cursors so that any page's `after` cursor can be resolved in O(1).
+ *
+ * Cached with the same policy as product fetches so index and page data cannot
+ * diverge by more than one cache window (D-11).
+ */
+async function fetchCollectionCursorIndex(
+  handle: string,
+  sortKey: ProductCollectionSortKeys,
+  reverse: boolean,
+  filters: ProductFilter[],
+): Promise<string[]> {
+  const cursors: string[] = []
+  let after: string | null | undefined
+  let hasNextPage = true
+
+  while (hasNextPage) {
+    const data: GetCollectionCursorIndexQuery = await shopifyFetch({
+      query: GetCollectionCursorIndexDocument,
+      variables: {
+        handle,
+        first: SHOPIFY_PAGE_SIZE,
+        after,
+        sortKey,
+        reverse,
+        filters,
+      },
+    })
+
+    if (!data.collection) break
+
+    const edges = data.collection.products.edges
+    cursors.push(...edges.map((edge) => edge.cursor))
+    hasNextPage = data.collection.products.pageInfo.hasNextPage
+    after = data.collection.products.pageInfo.endCursor
+  }
+
+  return cursors
+}
+
+/**
+ * Returns total product count, true total pages, and the `after` cursor
+ * for page N (i.e. the cursor at position `(N-1) * pageSize - 1`).
+ *
+ * Cached with the same policy as product fetches (D-11).
+ */
+export async function getCollectionPageIndex(
+  handle: string,
+  pageSize = COLLECTION_PRODUCT_PAGE_SIZE,
+  sortKey = ProductCollectionSortKeys.CollectionDefault,
+  reverse = false,
+  filters: ProductFilter[] = [],
+): Promise<CollectionPageIndex> {
+  'use cache'
+  cacheTag('collection', `collection-${handle}`)
+  cacheLife('hours')
+
+  const cursors = await fetchCollectionCursorIndex(
+    handle,
+    sortKey,
+    reverse,
+    filters,
+  )
+  const totalCount = cursors.length
+  const totalPages = totalCount === 0 ? 1 : Math.ceil(totalCount / pageSize)
+
+  return {
+    totalCount,
+    totalPages,
+    // afterCursor for page N is the cursor at index (N-1)*pageSize - 1
+    // This is resolved by getCollectionProductsPage per call
+    afterCursor: null,
+  }
+}
+
+/**
+ * Returns the `after` cursor to use for fetching page N.
+ * For page 1 returns null (fetch from the start).
+ * For page N returns the cursor at position (N-1)*pageSize - 1 in the full index.
+ */
+function resolveAfterCursor(
+  cursors: string[],
+  page: number,
+  pageSize: number,
+): string | null {
+  if (page <= 1) return null
+  const cursorIndex = (page - 1) * pageSize - 1
+  return cursors[cursorIndex] ?? cursors[cursors.length - 1] ?? null
+}
+
+/**
+ * Fetch a single page of products for a collection, using the cursor index
+ * to resolve the `after` cursor for page N without sequential product-payload requests.
+ *
+ * Cached with same policy as `getCollectionProductsWithFilters` (D-11).
+ */
+export async function getCollectionProductsPage(
+  handle: string,
+  page = 1,
+  first = COLLECTION_PRODUCT_PAGE_SIZE,
+  sortKey = ProductCollectionSortKeys.CollectionDefault,
+  reverse = false,
+  filters: ProductFilter[] = [],
+): Promise<CollectionProductsResult> {
+  'use cache'
+  cacheTag('collection', `collection-${handle}`)
+  cacheLife('hours')
+
+  // Resolve cursor for page N via the index (id-only, no product fields)
+  const cursors = await fetchCollectionCursorIndex(
+    handle,
+    sortKey,
+    reverse,
+    filters,
+  )
+  const after = resolveAfterCursor(cursors, page, first)
+
+  return getCollectionProductsWithFilters(handle, first, sortKey, reverse, filters, after)
 }

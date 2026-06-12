@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type {
   Collection,
+  CollectionPageIndex,
   CollectionProductsResult,
   CollectionSummary,
 } from '@/lib/shopify/types'
@@ -11,8 +12,9 @@ import { PageContent } from './page-content'
 
 const shopifyMocks = vi.hoisted(() => ({
   getCollection: vi.fn<() => Promise<Collection | null>>(),
-  getCollectionProductsWithFilters:
+  getCollectionProductsPage:
     vi.fn<() => Promise<CollectionProductsResult>>(),
+  getCollectionPageIndex: vi.fn<() => Promise<CollectionPageIndex>>(),
   getCollectionSummaries: vi.fn<() => Promise<CollectionSummary[]>>(),
 }))
 
@@ -21,14 +23,17 @@ vi.mock('server-only', () => ({}))
 vi.mock('@/lib/shopify/operations/collection', () => ({
   COLLECTION_PRODUCT_PAGE_SIZE: 24,
   getCollection: shopifyMocks.getCollection,
-  getCollectionProductsWithFilters:
-    shopifyMocks.getCollectionProductsWithFilters,
+  getCollectionProductsPage: shopifyMocks.getCollectionProductsPage,
+  getCollectionPageIndex: shopifyMocks.getCollectionPageIndex,
   getCollectionSummaries: shopifyMocks.getCollectionSummaries,
 }))
 
 vi.mock('next/navigation', () => ({
   notFound: () => {
     throw new Error('notFound')
+  },
+  redirect: (url: string) => {
+    throw new Error(`redirect:${url}`)
   },
   usePathname: () => '/collections/bulk-tea-bags',
   useRouter: () => ({ replace: vi.fn() }),
@@ -71,11 +76,23 @@ function emptyProductsResult(): CollectionProductsResult {
   }
 }
 
+function pageIndexFixture(
+  overrides: Partial<CollectionPageIndex> = {},
+): CollectionPageIndex {
+  return {
+    totalCount: 0,
+    totalPages: 1,
+    afterCursor: null,
+    ...overrides,
+  }
+}
+
 describe('PageContent collection rich hero rendering', () => {
   beforeEach(() => {
-    shopifyMocks.getCollectionProductsWithFilters.mockResolvedValue(
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue(
       emptyProductsResult(),
     )
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(pageIndexFixture())
     shopifyMocks.getCollectionSummaries.mockResolvedValue([])
   })
 
