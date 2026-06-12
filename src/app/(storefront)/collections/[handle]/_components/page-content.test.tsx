@@ -112,11 +112,13 @@ describe('PageContent out-of-range and stale-cursor handling', () => {
     ).rejects.toThrow('redirect:/collections/all?page=3')
   })
 
-  it('redirects stale-cursor result (empty products on in-range page > 1) to last valid page', async () => {
+  it('redirects stale-cursor result (empty products on in-range page > 1) strictly downward', async () => {
     shopifyMocks.getCollectionPageIndex.mockResolvedValue(
       pageIndexFixture({ totalCount: 48, totalPages: 2 }),
     )
-    // page 2 returns empty (stale cursor)
+    // page 2 returns empty (stale cursor): the index says 2 pages exist but
+    // the collection has shrunk. Redirecting back to page 2 would loop forever,
+    // so the fallback must step down to page 1 (the clean URL).
     shopifyMocks.getCollectionProductsPage.mockResolvedValue(
       emptyProductsResult(),
     )
@@ -126,7 +128,42 @@ describe('PageContent out-of-range and stale-cursor handling', () => {
         params: Promise.resolve({ handle: 'all' }),
         searchParams: Promise.resolve({ page: '2' }),
       }),
-    ).rejects.toThrow('redirect:/collections/all?page=2')
+    ).rejects.toThrow(/^redirect:\/collections\/all$/)
+  })
+
+  it('redirects an empty last page downward — never to the URL being served', async () => {
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 72, totalPages: 3 }),
+    )
+    // Requested page IS the last page (3 of 3) and comes back empty:
+    // the redirect target must strictly decrease (page 2), not self-redirect.
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue(
+      emptyProductsResult(),
+    )
+
+    await expect(
+      PageContent({
+        params: Promise.resolve({ handle: 'all' }),
+        searchParams: Promise.resolve({ page: '3' }),
+      }),
+    ).rejects.toThrow(/^redirect:\/collections\/all\?page=2$/)
+  })
+
+  it('renders the empty state on page 1 with genuinely empty results — no redirect', async () => {
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 0, totalPages: 1 }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue(
+      emptyProductsResult(),
+    )
+
+    const element = await PageContent({
+      params: Promise.resolve({ handle: 'all' }),
+      searchParams: Promise.resolve({}),
+    })
+    const html = renderToStaticMarkup(element)
+
+    expect(html).toContain('No matches')
   })
 
   it('renders normally for in-range page with products', async () => {

@@ -126,20 +126,22 @@ export async function PageContent({ params, searchParams }: PageProps) {
           activeProductFilters,
         )
 
-  // Stale-cursor fallback: if page is within range but returns empty/short, redirect to last valid page (D-22)
-  if (
-    collectionProductsResult.products.length === 0 &&
-    page > 1 &&
-    pageIndex.totalPages > 0
-  ) {
-    const lastPageHref = getPaginationHref({
-      category,
-      handle,
-      page: pageIndex.totalPages,
-      selectedFilters: activeSelectedFilters,
-      sort,
-    })
-    redirect(lastPageHref)
+  // Stale-cursor fallback (D-22): the index and page caches can disagree after
+  // a collection shrinks, so an in-range page can come back empty. Always step
+  // strictly downward so we can never redirect to the URL currently being
+  // served — the chain terminates at page 1, which renders the normal empty
+  // state instead of redirecting.
+  if (collectionProductsResult.products.length === 0 && page > 1) {
+    const fallbackPage = Math.min(page - 1, pageIndex.totalPages)
+    redirect(
+      getPaginationHref({
+        category,
+        handle,
+        page: fallbackPage,
+        selectedFilters: activeSelectedFilters,
+        sort,
+      }),
+    )
   }
 
   const clearFiltersHref = getHref(handle, sort)
