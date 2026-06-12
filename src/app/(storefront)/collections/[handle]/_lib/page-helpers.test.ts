@@ -62,3 +62,128 @@ describe('parseCollectionRichHero', () => {
     ).toBeNull()
   })
 })
+
+describe('parsePageParam', () => {
+  it('returns 1 for undefined', () => {
+    expect(pageHelpers.parsePageParam(undefined)).toBe(1)
+  })
+
+  it('returns 1 for empty string', () => {
+    expect(pageHelpers.parsePageParam('')).toBe(1)
+  })
+
+  it('returns 1 for non-numeric string', () => {
+    expect(pageHelpers.parsePageParam('abc')).toBe(1)
+  })
+
+  it('returns 1 for zero', () => {
+    expect(pageHelpers.parsePageParam('0')).toBe(1)
+  })
+
+  it('returns 1 for negative number', () => {
+    expect(pageHelpers.parsePageParam('-5')).toBe(1)
+  })
+
+  it('returns 1 for decimal number', () => {
+    expect(pageHelpers.parsePageParam('2.5')).toBe(1)
+  })
+
+  it('returns valid positive integer', () => {
+    expect(pageHelpers.parsePageParam('3')).toBe(3)
+  })
+
+  it('returns 1 for large invalid-looking decimal', () => {
+    expect(pageHelpers.parsePageParam('1.0')).toBe(1)
+  })
+
+  it('handles array param — uses first value', () => {
+    expect(pageHelpers.parsePageParam(['4', '5'])).toBe(4)
+  })
+
+  it('handles array with invalid first value', () => {
+    expect(pageHelpers.parsePageParam(['abc', '2'])).toBe(1)
+  })
+
+  it('returns large valid page number', () => {
+    expect(pageHelpers.parsePageParam('999')).toBe(999)
+  })
+})
+
+describe('getPaginationHref', () => {
+  it('generates page 1 URL without page param (clean base URL)', () => {
+    const href = pageHelpers.getPaginationHref({
+      category: undefined,
+      handle: 'all',
+      page: 1,
+      selectedFilters: [],
+      sort: 'featured',
+    })
+    expect(href).toBe('/collections/all')
+  })
+
+  it('generates page 2 URL with page param', () => {
+    const href = pageHelpers.getPaginationHref({
+      category: undefined,
+      handle: 'all',
+      page: 2,
+      selectedFilters: [],
+      sort: 'featured',
+    })
+    expect(href).toBe('/collections/all?page=2')
+  })
+
+  it('generates page URL for category collection', () => {
+    const href = pageHelpers.getPaginationHref({
+      category: 'categories_all-herbs',
+      handle: 'all',
+      page: 3,
+      selectedFilters: [],
+      sort: 'featured',
+    })
+    expect(href).toBe('/collections/all/categories_all-herbs?page=3')
+  })
+
+  it('preserves sort param alongside page', () => {
+    const href = pageHelpers.getPaginationHref({
+      category: undefined,
+      handle: 'all',
+      page: 2,
+      selectedFilters: [],
+      sort: 'title-asc',
+    })
+    expect(href).toBe('/collections/all?sort=title-asc&page=2')
+  })
+
+  it('preserves filter params alongside page', () => {
+    const href = pageHelpers.getPaginationHref({
+      category: undefined,
+      handle: 'all',
+      page: 2,
+      selectedFilters: ['{"productVendor":"test"}'],
+      sort: 'featured',
+    })
+    expect(href).toContain('page=2')
+    expect(href).toContain('filter=')
+  })
+})
+
+describe('getHref (sort/filter hrefs drop page param)', () => {
+  it('generates base collection href without page', () => {
+    const href = pageHelpers.getHref('all', 'featured')
+    expect(href).toBe('/collections/all')
+    expect(href).not.toContain('page')
+  })
+
+  it('generates sorted href without page', () => {
+    const href = pageHelpers.getHref('all', 'title-asc')
+    expect(href).toBe('/collections/all?sort=title-asc')
+    expect(href).not.toContain('page')
+  })
+
+  it('generates filtered href without page (page-reset on sort/filter change per D-25)', () => {
+    const href = pageHelpers.getHref('all', 'featured', [
+      '{"productVendor":"test"}',
+    ])
+    expect(href).not.toContain('page')
+  })
+})

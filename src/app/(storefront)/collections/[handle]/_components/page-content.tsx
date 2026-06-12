@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
 
 import { StoryDisclosure, Toolbar } from '@/components/collection'
@@ -7,7 +8,8 @@ import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import {
   COLLECTION_PRODUCT_PAGE_SIZE,
   getCollection,
-  getCollectionProductsWithFilters,
+  getCollectionPageIndex,
+  getCollectionProductsPage,
   getCollectionSummaries,
 } from '@/lib/shopify/operations/collection'
 import type { CollectionProductFilter } from '@/lib/shopify/types'
@@ -31,6 +33,7 @@ import {
   normalizeHtml,
   paramValues,
   parseCollectionRichHero,
+  parsePageParam,
   parseSelectedFilterParams,
   shouldRenderRichDescription,
   SORT_MAP,
@@ -50,22 +53,24 @@ export async function PageContent({ params, searchParams }: PageProps) {
 
   const sortParam = firstParam(resolvedSearchParams.sort)
   const sort = sortParam && sortParam in SORT_MAP ? sortParam : 'featured'
-  const cursor = firstParam(resolvedSearchParams.cursor)
+  const page = parsePageParam(resolvedSearchParams.page)
   const { sortKey, reverse } = SORT_MAP[sort]
   const { selectedFilters, productFilters } = parseSelectedFilterParams(
     paramValues(resolvedSearchParams.filter),
   )
 
+  // Resolve category tag and validate from initial (no-cursor) products fetch
+  // We need filters for category tag lookup — fetch page 1 without cursor for filter metadata
   const [collection, initialProductsResult, collectionSummaries] =
     await Promise.all([
       getCollection(handle),
-      getCollectionProductsWithFilters(
+      getCollectionProductsPage(
         handle,
+        1,
         COLLECTION_PRODUCT_PAGE_SIZE,
         sortKey,
         reverse,
         productFilters,
-        category ? null : cursor,
       ),
       getCollectionSummaries(),
     ])
@@ -83,19 +88,60 @@ export async function PageContent({ params, searchParams }: PageProps) {
   const activeProductFilters = selectedCategoryTag
     ? [{ tag: selectedCategoryTag }, ...productFilters]
     : productFilters
-  const collectionProductsResult = selectedCategoryTag
-    ? await getCollectionProductsWithFilters(
-        handle,
-        COLLECTION_PRODUCT_PAGE_SIZE,
-        sortKey,
-        reverse,
-        activeProductFilters,
-        cursor,
-      )
-    : initialProductsResult
   const activeSelectedFilters = selectedCategoryTag
     ? [getCategoryFilterInput(selectedCategoryTag), ...selectedFilters]
     : selectedFilters
+
+  // Get cursor index for true total pages and resolve the requested page
+  const pageIndex = await getCollectionPageIndex(
+    handle,
+    COLLECTION_PRODUCT_PAGE_SIZE,
+    sortKey,
+    reverse,
+    activeProductFilters,
+  )
+
+  // Redirect out-of-range pages to last valid page (D-24)
+  if (page > pageIndex.totalPages && pageIndex.totalPages > 0) {
+    const lastPageHref = getPaginationHref({
+      category,
+      handle,
+      page: pageIndex.totalPages,
+      selectedFilters: activeSelectedFilters,
+      sort,
+    })
+    redirect(lastPageHref)
+  }
+
+  // Fetch the actual products for this page
+  const collectionProductsResult =
+    page === 1 && !selectedCategoryTag
+      ? initialProductsResult
+      : await getCollectionProductsPage(
+          handle,
+          page,
+          COLLECTION_PRODUCT_PAGE_SIZE,
+          sortKey,
+          reverse,
+          activeProductFilters,
+        )
+
+  // Stale-cursor fallback: if page is within range but returns empty/short, redirect to last valid page (D-22)
+  if (
+    collectionProductsResult.products.length === 0 &&
+    page > 1 &&
+    pageIndex.totalPages > 0
+  ) {
+    const lastPageHref = getPaginationHref({
+      category,
+      handle,
+      page: pageIndex.totalPages,
+      selectedFilters: activeSelectedFilters,
+      sort,
+    })
+    redirect(lastPageHref)
+  }
+
   const clearFiltersHref = getHref(handle, sort)
   const categoryFilter = buildCategoryFilter({
     products: initialProductsResult.products,
@@ -109,17 +155,9 @@ export async function PageContent({ params, searchParams }: PageProps) {
     collectionProductsResult.products,
     selectedCategoryTag,
   )
-  const nextPageHref =
-    collectionProductsResult.pageInfo.hasNextPage &&
-    collectionProductsResult.pageInfo.endCursor
-      ? getPaginationHref({
-          category,
-          cursor: collectionProductsResult.pageInfo.endCursor,
-          handle,
-          selectedFilters,
-          sort,
-        })
-      : null
+
+  const totalPages = pageIndex.totalPages
+  const currentPage = page
   const visibleFilters = [
     categoryFilter,
     ...collectionProductsResult.filters.filter(
@@ -151,8 +189,22 @@ export async function PageContent({ params, searchParams }: PageProps) {
   )
   const richHero = parseCollectionRichHero(collection.descriptionHtml)
 
+  // Prev/next link tags for adjacent pages — hoisted to <head> by React 19 (D-05)
+  // The Next 16 Metadata API has no prev/next field, so we render them as JSX links.
+  const prevPageHref =
+    currentPage > 1
+      ? `${SITE_URL}${getPaginationHref({ category, handle, page: currentPage - 1, selectedFilters: activeSelectedFilters, sort })}`
+      : null
+  const nextPageHref =
+    currentPage < totalPages
+      ? `${SITE_URL}${getPaginationHref({ category, handle, page: currentPage + 1, selectedFilters: activeSelectedFilters, sort })}`
+      : null
+
   return (
     <>
+      {prevPageHref && <link rel="prev" href={prevPageHref} />}
+      {nextPageHref && <link rel="next" href={nextPageHref} />}
+
       <JsonLd
         baseUrl={SITE_URL}
         collection={collection}
@@ -202,7 +254,17 @@ export async function PageContent({ params, searchParams }: PageProps) {
 
             <ProductList
               clearFiltersHref={clearFiltersHref}
-              nextPageHref={nextPageHref}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              buildPageHref={(p) =>
+                getPaginationHref({
+                  category,
+                  handle,
+                  page: p,
+                  selectedFilters: activeSelectedFilters,
+                  sort,
+                })
+              }
               products={products}
             />
           </div>

@@ -4,7 +4,7 @@ export type RouteParams = {
 }
 
 export type SearchParams = {
-  cursor?: string | string[]
+  page?: string | string[]
   sort?: string | string[]
   filter?: string | string[]
 }

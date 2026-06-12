@@ -110,6 +110,33 @@ query GetCollectionProducts(
   }
 }
 
+query GetCollectionCursorIndex(
+  $handle: String!
+  $first: Int!
+  $after: String
+  $sortKey: ProductCollectionSortKeys
+  $reverse: Boolean
+  $filters: [ProductFilter!]
+) {
+  collection(handle: $handle) {
+    products(
+      first: $first
+      after: $after
+      sortKey: $sortKey
+      reverse: $reverse
+      filters: $filters
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        cursor
+      }
+    }
+  }
+}
+
 query GetCollections($first: Int!, $after: String) {
   collections(first: $first, after: $after) {
     pageInfo {

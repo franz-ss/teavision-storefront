@@ -116,6 +116,15 @@ export type CollectionProductsResult = {
   }
 }
 
+export type CollectionPageIndex = {
+  /** Total number of products in this collection/filter combination */
+  totalCount: number
+  /** True total pages, based on cursor index */
+  totalPages: number
+  /** The resolved `after` cursor for the requested page (null = start from beginning) */
+  afterCursor: string | null
+}
+
 export type Collection = {
   id: string
   handle: string
@@ -183,6 +192,7 @@ export {
   GetArticleDocument,
   GetBlogDocument,
   GetCartDocument,
+  GetCollectionCursorIndexDocument,
   GetCollectionDocument,
   GetCollectionMenuDocument,
   GetCollectionProductsDocument,
@@ -206,6 +216,8 @@ export type {
   GetArticleQuery,
   GetBlogQuery,
   GetCartQuery,
+  GetCollectionCursorIndexQuery,
+  GetCollectionCursorIndexQueryVariables,
   GetCollectionMenuQuery,
   GetCollectionProductsQuery,
   GetCollectionQuery,

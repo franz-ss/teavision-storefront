@@ -434,16 +434,29 @@ export function getPath(handle: string): string {
   return `/collections/${handle}`
 }
 
+/**
+ * Parse a `page` query-param value into a valid 1-based page number.
+ * Returns 1 for missing, invalid, zero, negative, decimal, or NaN values.
+ */
+export function parsePageParam(value: string | string[] | undefined): number {
+  const raw = Array.isArray(value) ? value[0] : value
+  if (!raw) return 1
+  const parsed = Number(raw)
+  if (!Number.isInteger(parsed) || parsed < 1) return 1
+  return parsed
+}
+
 function withQuery(
   href: string,
   sort: string,
   selectedFilters: string[] = [],
-  cursor?: string | null,
+  page?: number | null,
 ): string {
   const params = new URLSearchParams()
   if (sort !== 'featured') params.set('sort', sort)
   selectedFilters.forEach((filter) => params.append('filter', filter))
-  if (cursor) params.set('cursor', cursor)
+  // Omit page=1 from URLs (clean base URL == page 1)
+  if (page && page > 1) params.set('page', String(page))
   const queryString = params.toString()
 
   return queryString ? `${href}?${queryString}` : href
@@ -454,6 +467,7 @@ export function getHref(
   sort: string,
   selectedFilters: string[] = [],
 ): string {
+  // Sort/filter hrefs always drop the page param (D-25)
   return withQuery(getPath(handle), sort, selectedFilters)
 }
 
@@ -463,6 +477,7 @@ function getCategoryHref(
   sort: string,
   selectedFilters: string[],
 ): string {
+  // Sort/filter/category hrefs always drop the page param (D-25)
   return withQuery(
     `${getPath(handle)}/${toCategoryPathSegment(tag)}`,
     sort,
@@ -472,20 +487,20 @@ function getCategoryHref(
 
 export function getPaginationHref({
   category,
-  cursor,
   handle,
+  page,
   selectedFilters,
   sort,
 }: {
   category: string | undefined
-  cursor: string
   handle: string
+  page: number
   selectedFilters: string[]
   sort: string
 }): string {
   const path = category ? `${getPath(handle)}/${category}` : getPath(handle)
 
-  return withQuery(path, sort, selectedFilters, cursor)
+  return withQuery(path, sort, selectedFilters, page)
 }
 
 function compareSidebarCollections(

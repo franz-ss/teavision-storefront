@@ -11850,6 +11850,34 @@ export type GetCollectionQuery = {
   } | null
 }
 
+export type GetCollectionCursorIndexQueryVariables = Exact<{
+  handle: Scalars['String']['input']
+  first: Scalars['Int']['input']
+  after?: InputMaybe<Scalars['String']['input']>
+  sortKey?: InputMaybe<ProductCollectionSortKeys>
+  reverse?: InputMaybe<Scalars['Boolean']['input']>
+  filters?: InputMaybe<Array<ProductFilter> | ProductFilter>
+}>
+
+export type GetCollectionCursorIndexQuery = {
+  __typename?: 'QueryRoot'
+  collection?: {
+    __typename?: 'Collection'
+    products: {
+      __typename?: 'ProductConnection'
+      pageInfo: {
+        __typename?: 'PageInfo'
+        hasNextPage: boolean
+        endCursor?: string | null
+      }
+      edges: Array<{
+        __typename?: 'ProductEdge'
+        cursor: string
+      }>
+    }
+  } | null
+}
+
 export type GetCollectionProductsQueryVariables = Exact<{
   handle: Scalars['String']['input']
   first: Scalars['Int']['input']
@@ -17874,6 +17902,129 @@ export const GetCollectionProductsDocument = {
 } as unknown as DocumentNode<
   GetCollectionProductsQuery,
   GetCollectionProductsQueryVariables
+>
+export const GetCollectionCursorIndexDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetCollectionCursorIndex' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'handle' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'sortKey' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProductCollectionSortKeys' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'reverse' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'filters' } },
+          type: { kind: 'ListType', type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'ProductFilter' } } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'collection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'handle' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'handle' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'products' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'first' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'after' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'sortKey' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'sortKey' } },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'reverse' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'reverse' } },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'filters' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'filters' } },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pageInfo' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'hasNextPage' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'endCursor' } },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'edges' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'cursor' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetCollectionCursorIndexQuery,
+  GetCollectionCursorIndexQueryVariables
 >
 export const GetCollectionsDocument = {
   kind: 'Document',
