@@ -26,7 +26,11 @@ findings:
   warning: 3
   info: 6
   total: 10
-status: issues_found
+fixed:
+  critical: 1
+  warning: 3
+  fixed_at: 2026-06-12
+status: info_only
 ---
 
 # Phase 13: Code Review Report
@@ -34,7 +38,7 @@ status: issues_found
 **Reviewed:** 2026-06-12T00:53:36Z
 **Depth:** standard
 **Files Reviewed:** 17
-**Status:** issues_found
+**Status:** info_only — all Critical and Warning findings fixed (2026-06-12); only Info findings remain open
 
 ## Summary
 
@@ -46,6 +50,7 @@ One Critical defect exists: the stale-cursor fallback can redirect a page to its
 
 ### CR-01: Stale-cursor fallback redirects a page to itself — infinite redirect loop
 
+**Status:** fixed in `44f3a54` — fallback now targets `Math.min(page - 1, totalPages)` so the redirect chain strictly descends and terminates at page 1 (which renders the empty state, never redirects); the looping test was replaced with descending-redirect assertions plus new last-page and page-1 empty-state tests.
 **File:** `src/app/(storefront)/collections/[handle]/_components/page-content.tsx:129-143`
 **Issue:** The stale-cursor fallback fires when `collectionProductsResult.products.length === 0 && page > 1`, and redirects to `pageIndex.totalPages`. When the requested page *is* the last page (`page === pageIndex.totalPages`) and it comes back empty, the redirect target is the exact URL currently being served. Because `getCollectionPageIndex` and `getCollectionProductsPage` are independent `'use cache'` entries with `cacheLife('hours')`, they routinely diverge after a collection shrinks: the cached index still reports `totalPages = 2` while a fresh product fetch resolves the page-2 cursor past the new end of the collection and returns zero products. Every request to `/collections/all?page=2` then 307-redirects to `/collections/all?page=2`, looping until the browser aborts with `ERR_TOO_MANY_REDIRECTS` — and the loop persists until the stale cache entry expires (up to an hour). The same trap exists via the out-of-range path: `page > totalPages` redirects to `totalPages`, which, if empty, re-enters the self-redirect.
 
@@ -76,18 +81,21 @@ Update the test at `page-content.test.tsx:115-130` to assert the new target (`re
 
 ### WR-01: Category-page pagination, prev/next, and redirect URLs embed a redundant serialized category filter param
 
+**Status:** fixed in `0e484e8` — all four pagination URL builders now pass the plain `selectedFilters`; Toolbar/Sidebar keep `activeSelectedFilters` for display state; added a test asserting category pager/prev/next hrefs contain no `filter=` param.
 **File:** `src/app/(storefront)/collections/[handle]/_components/page-content.tsx:106-114, 135-143, 194-201, 259-267`
 **Issue:** All four pagination href call sites pass `selectedFilters: activeSelectedFilters`, which on a category route includes `getCategoryFilterInput(selectedCategoryTag)` — i.e. `{"tag":"categories_…"}` — even though the category is already encoded in the URL path. On `/collections/all/herbs`, page-2 links, the hoisted `<link rel="prev/next">` hrefs, and the out-of-range/stale redirect `Location` headers all become `/collections/all/herbs?filter=%7B%22tag%22%3A%22categories_herbs%22%7D&page=2`. The state round-trips only by accident: `parseSelectedFilterParams` silently discards category filters on the next request and the tag is re-derived from the path. The result is two URL variants for every category page — directly at odds with this phase's production-parity SEO goal (prev/next links advertise non-canonical URLs to crawlers) — and it contradicts the codebase's own convention, since `getHref`/`getCategoryHref` (sort/filter links) correctly use the plain `selectedFilters`. Note `Toolbar`/`Sidebar` should keep receiving `activeSelectedFilters` (display state); only the URL builders are wrong.
 **Fix:** Pass `selectedFilters` (without the synthesized category input) to every `getPaginationHref` call in this file; the `category` argument already encodes that state in the path. Add a `page-helpers`/`page-content` test asserting that category-page pagination hrefs contain no `filter=` param.
 
 ### WR-02: Dead spread in generateMetadata — pagination metadata intent silently does nothing
 
+**Status:** fixed in `602f3ea` — D-03/D-27 (canonical always points at the base collection URL) is the final decision, so the inert spread, the unused `parsePageParam` call/import, and the now-unneeded `searchParams` resolution were removed.
 **File:** `src/app/(storefront)/collections/[handle]/page.tsx:37-38, 57-58`
 **Issue:** `...(currentPage === 1 && {})` is a no-op for every input: when `currentPage === 1` it spreads an empty object; otherwise it spreads `false`, which object spread ignores. The `parsePageParam` call and its result are therefore entirely unused, and the comment "Suppress page=1 from the URL: the clean collection URL IS page 1" describes behavior the code does not implement. This is dead code masking unfinished intent — either paginated pages were meant to get distinct metadata (e.g. a `Page N` title suffix or page-aware canonical) and never did, or the block should not exist. Either way a reader cannot tell which behavior is the decision.
 **Fix:** If D-03 ("canonical always points at the base collection") is the final decision, delete lines 37-38 and 57-58 and the now-unused `parsePageParam` import. If paginated metadata was intended, implement it explicitly instead of the inert spread.
 
 ### WR-03: Cursor index fetched twice per request from independently cached entries that can diverge mid-render
 
+**Status:** fixed in `9af0c52` — `'use cache'` (same cacheTag/cacheLife policy) moved onto `fetchCollectionCursorIndex` so both `getCollectionPageIndex` and `getCollectionProductsPage` derive from one cached index snapshot; `getCollectionProductsPage` short-circuits `page <= 1` with `after = null` before touching the index.
 **File:** `src/lib/shopify/operations/collection.ts:476-503, 526-548`; `src/app/(storefront)/collections/[handle]/_components/page-content.tsx:64-76, 96-102`
 **Issue:** `getCollectionPageIndex` and `getCollectionProductsPage` each call the uncached `fetchCollectionCursorIndex` and are cached as *separate* `'use cache'` entries. Within a single render, `page-content.tsx` consumes `totalPages` from one entry and the resolved `after` cursor from the other; because the entries are created and expire at different times, they can disagree about the collection's contents inside one request — this divergence is exactly what arms the CR-01 redirect loop, and it falsifies the code comment claiming the shared cache policy keeps "index and page data" within one window of each other (two independent windows can straddle a collection edit). Additionally, the initial `getCollectionProductsPage(handle, 1, …)` call walks the *entire* collection cursor index (sequential 250-item round trips) even though `resolveAfterCursor` returns `null` for page 1 without ever reading the cursors, and on `page > 1`/category requests the full index walk runs a second time inside the page fetch.
 **Fix:** Extract a single cached cursor-index function (e.g. `'use cache'` on `fetchCollectionCursorIndex` keyed by handle/sort/reverse/filters) and have both `getCollectionPageIndex` and `getCollectionProductsPage` read from it, so total-pages and cursor resolution come from one snapshot. In `getCollectionProductsPage`, short-circuit `page <= 1` before fetching the index:
