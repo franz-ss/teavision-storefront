@@ -36,7 +36,7 @@ Full phase details: `milestones/v1.1-ROADMAP.md` · Audit: `milestones/v1.1-MILE
 
 ### 🚧 v1.2 SEO-Safe PLP Pagination Parity
 
-- [ ] **Phase 13: Production-parity collection pagination** — Restore classic `?page=N` PLP pagination while preserving production SEO canonicals, robots behavior, and bounded Shopify Storefront GraphQL payloads. (1/1 plans ready)
+- [x] **Phase 13: Production-parity collection pagination** — Restore classic `?page=N` PLP pagination while preserving production SEO canonicals, robots behavior, and bounded Shopify Storefront GraphQL payloads. (1/1 plans ready) (completed 2026-06-12)
 
 ## Progress
 
@@ -52,7 +52,7 @@ Full phase details: `milestones/v1.1-ROADMAP.md` · Audit: `milestones/v1.1-MILE
 | 10. Cart/Checkout Critical Flow Tests    | v1.0      | 4/4            | Complete   | —          |
 | 11. Full Visual Redesign                 | v1.0      | 22/22          | Complete   | 2026-06-11 |
 | 12. Optimize blog loading                | v1.1      | 4/4            | Complete   | 2026-06-12 |
-| 13. Production-parity collection pagination | v1.2   | 1/1            | Ready      | —          |
+| 13. Production-parity collection pagination | v1.2   | 1/1 | Complete   | 2026-06-12 |
 
 ## Phase Details
 
@@ -61,7 +61,7 @@ Full phase details: `milestones/v1.1-ROADMAP.md` · Audit: `milestones/v1.1-MILE
 **Goal:** Restore production-style `?page=N` collection pagination in the headless PLP while preserving production canonical/crawler behavior and the Phase 05-03 bounded payload contract.
 **Requirements**: PLP-PAGE-01, PLP-PAGE-02, PLP-PAGE-03, PLP-PAGE-04, PLP-PAGE-05, PLP-PAGE-06
 **Depends on:** Phase 12
-**Plans:** 1/1 plans ready
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 13-01: Production-Parity PLP Numbered Pagination (Wave 1)
+- [x] 13-01: Production-Parity PLP Numbered Pagination (Wave 1)
