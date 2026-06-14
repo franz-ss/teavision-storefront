@@ -94,7 +94,7 @@ export const Large: Story = {
 }
 
 export const CallToAction: Story = {
-  args: { children: 'Apply for wholesale', variant: 'primary', size: 'cta' },
+  args: { children: 'Browse wholesale', variant: 'primary', size: 'cta' },
 }
 
 export const AsSubmit: Story = {

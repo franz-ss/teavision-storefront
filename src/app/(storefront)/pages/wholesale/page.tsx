@@ -8,13 +8,13 @@ import { WholesaleHero } from './_components/wholesale-hero'
 import { WholesaleInclusions } from './_components/wholesale-inclusions'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: 'Wholesale Accounts | Teavision',
+  title: 'Wholesale Supply | Teavision',
   description:
-    'Apply for a Teavision wholesale account. Bulk tea, herbs and spices for cafes, restaurants, and retailers across Australia.',
+    'Buy bulk tea, herbs and spices direct from Teavision for cafes, restaurants, and retailers across Australia.',
   openGraph: {
-    title: 'Wholesale Accounts | Teavision',
+    title: 'Wholesale Supply | Teavision',
     description:
-      'Apply for a Teavision wholesale account. Bulk tea, herbs and spices for cafes, restaurants, and retailers.',
+      'Buy bulk tea, herbs and spices direct from Teavision for cafes, restaurants, and retailers.',
     url: '/pages/wholesale',
   },
   alternates: { canonical: '/pages/wholesale' },

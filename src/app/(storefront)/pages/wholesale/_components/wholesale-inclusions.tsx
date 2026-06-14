@@ -7,11 +7,11 @@ export function WholesaleInclusions() {
     <Card as="aside" className="p-5 sm:p-7">
       <ContactForm
         action={submitContactFormAction}
-        eyebrow="Wholesale application"
-        title="Apply for a trade account"
+        eyebrow="Wholesale enquiry"
+        title="Contact the wholesale team"
         description="Share your sourcing needs and monthly volume. The wholesale team will review your enquiry through the protected Teavision contact workflow."
-        submitLabel="Apply for wholesale"
-        pendingLabel="Sending application..."
+        submitLabel="Send enquiry"
+        pendingLabel="Sending enquiry..."
       />
 
       <div className="border-hairline mt-7 border-t pt-6">

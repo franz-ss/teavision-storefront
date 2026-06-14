@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, within } from 'storybook/test'
 
 import { ProductRange } from './product-range'
 
@@ -13,4 +14,11 @@ type Story = StoryObj<typeof ProductRange>
 
 export const Default: Story = {
   args: {},
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.queryByText(/apply for a bulk wholesale account/i),
+    ).not.toBeInTheDocument()
+  },
 }

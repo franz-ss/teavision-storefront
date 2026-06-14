@@ -14,9 +14,9 @@ export function ProductRange() {
             <h2 className="type-heading-01">Explore Our Product Range</h2>
           </div>
           <p className="text-ink-soft max-w-[34ch] lg:text-right">
-            We offer Wholesale products online direct to consumers and
-            businesses or you can apply for a bulk wholesale account and receive
-            further discounts on 100kg+ orders.
+            We offer wholesale products online direct to consumers and
+            businesses, with volume pricing available across eligible bulk
+            quantities.
           </p>
         </div>
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">

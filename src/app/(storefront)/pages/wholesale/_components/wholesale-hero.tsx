@@ -30,7 +30,7 @@ export function WholesaleHero() {
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(18rem,0.28fr)] lg:items-end">
           <div>
-            <Eyebrow tone="gold">Wholesale accounts</Eyebrow>
+            <Eyebrow tone="gold">Wholesale supply</Eyebrow>
             <h1 className="type-display text-paper mt-5 max-w-[16ch] text-balance">
               Bulk tea, herbs, and spices for serious buyers.
             </h1>
@@ -40,13 +40,6 @@ export function WholesaleHero() {
               retailers, and wellness brands across Australia.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button
-                href="/pages/wholesale-account-request"
-                variant="inverse"
-                size="lg"
-              >
-                Apply for wholesale
-              </Button>
               <Button
                 href="/collections/all"
                 variant="inverseSecondary"

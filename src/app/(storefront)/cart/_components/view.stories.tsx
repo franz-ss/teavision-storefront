@@ -46,8 +46,8 @@ export const Empty: Story = {
 
     await expect(canvas.getByText('Your cart is empty')).toBeInTheDocument()
     await expect(
-      canvas.getByRole('link', { name: 'Apply for wholesale' }),
-    ).toBeVisible()
+      canvas.queryByRole('link', { name: 'Apply for wholesale' }),
+    ).not.toBeInTheDocument()
     await expect(
       canvas.getByRole('link', { name: 'Browse teas' }),
     ).toBeVisible()

@@ -22,7 +22,7 @@ const TERMS_PLACEHOLDER_ANSWER =
   'By agreeing to these Terms of Service, you represent that you are at least the age of majority in your state or province of residence, or that you are the age of majority in your state or province of residence and you have given us your consent to allow any of your minor dependents to use this site.\n\nYou may not use our products for any illegal or unauthorized purpose nor may you, in the use of the Service, violate any laws in your jurisdiction (including but not limited to copyright laws).\n\nYou must not transmit any worms or viruses or any code of a destructive nature. A breach or violation of any of the Terms will result in an immediate termination of your Services.'
 
 const WHOLESALE_PRICING_ANSWER =
-  'We are pleased to offer wholesale pricing direct on our website or if your volumes are larger than 100kg you can apply for a bulk wholesale account and receive further discounts. Please contact our sales team for further information or apply for a bulk wholesale account.'
+  'We are pleased to offer wholesale pricing direct on our website, with volume discounts available across eligible bulk quantities. Please contact our sales team if you need guidance on large repeat orders.'
 
 const RETAIL_ORDERS_ANSWER =
   'You can place retail orders directly through our website by adding products to your cart and proceeding to checkout. We accept all major credit cards and PayPal.'

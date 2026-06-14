@@ -1,6 +1,3 @@
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-
 import type { BulkPricingTier, Money } from '@/lib/shopify/types'
 import { cn } from '@/lib/utils'
 import { Button, ToggleButton } from '@/components/ui'
@@ -202,13 +199,6 @@ export function BulkSavings({
             packed in individual 1kg bags and will instead come in bulk packed
             bags (2kg 5kg 10kg etc)
           </p>
-          <Link
-            href="/pages/wholesale-account-request"
-            className="type-label border-hairline text-ink hover:border-brand hover:text-brand focus-visible:ring-ring inline-flex items-center self-start border-b-[1.5px] pb-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            Apply for a wholesale account
-            <ArrowRight aria-hidden="true" className="ml-2 size-4" />
-          </Link>
         </>
       ) : null}
     </div>

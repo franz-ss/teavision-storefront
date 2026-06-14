@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, within } from 'storybook/test'
 
 import { Header } from './header'
 
@@ -17,6 +18,17 @@ type Story = StoryObj<typeof Header>
 
 /**
  * Full header: ink utility bar (EST. MELBOURNE 2014 ticker) + translucent
- * sticky main bar with pill nav, gold cart badge, and wholesale CTA.
+ * sticky main bar with pill nav, search, and cart affordances.
  */
-export const Default: Story = {}
+export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.queryByRole('link', { name: /apply for wholesale/i }),
+    ).not.toBeInTheDocument()
+    await expect(
+      canvas.queryByRole('link', { name: /wholesale account/i }),
+    ).not.toBeInTheDocument()
+  },
+}

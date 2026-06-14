@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, within } from 'storybook/test'
 
 import { BulkSavings } from './bulk-savings'
 
@@ -46,6 +47,13 @@ export const NativePriceBreaks: Story = {
         },
       },
     ],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.queryByRole('link', { name: /apply for a wholesale account/i }),
+    ).not.toBeInTheDocument()
   },
 }
 

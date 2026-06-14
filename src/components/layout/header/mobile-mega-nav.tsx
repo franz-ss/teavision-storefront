@@ -143,14 +143,6 @@ export function MobileMegaNav({ open, onClose }: MobileMegaNavProps) {
         {/* Footer CTA row */}
         <div className="px-gutter flex flex-col gap-3 py-8">
           <Button
-            href="/pages/wholesale"
-            variant="brand"
-            size="lg"
-            onClick={closeAll}
-          >
-            Apply for Wholesale
-          </Button>
-          <Button
             href="tel:1300729617"
             variant="secondary"
             size="lg"

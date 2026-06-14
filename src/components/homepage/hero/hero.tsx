@@ -55,13 +55,6 @@ export function HomepageHero() {
               strokeWidth={1.8}
             />
           </Button>
-          <Button
-            href="/pages/wholesale-account-request"
-            variant="inverseSecondary"
-            size="lg"
-          >
-            Open a wholesale account
-          </Button>
         </div>
       </Section.Container>
 

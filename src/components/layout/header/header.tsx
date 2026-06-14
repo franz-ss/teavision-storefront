@@ -2,10 +2,10 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, Phone, Search, ShoppingCart, Sparkles, X } from 'lucide-react'
+import { Menu, Phone, Search, ShoppingCart, X } from 'lucide-react'
 import { Suspense, useCallback, useState } from 'react'
 
-import { Button, IconButton } from '@/components/ui'
+import { IconButton } from '@/components/ui'
 
 import { CartCount } from './cart-count'
 import { MegaNav, MobileMegaNav } from './mega-nav'
@@ -42,16 +42,6 @@ export function Header() {
               <span>FREIGHT-INSURED, WORLDWIDE</span>
             </div>
             <div className="flex items-center gap-3">
-              <Link
-                href="/pages/wholesale-account-request"
-                className="text-paper/85 hover:text-paper focus-visible:ring-ring flex items-center gap-1 rounded-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
-              >
-                <Sparkles className="size-3" aria-hidden="true" />
-                Apply for wholesale
-              </Link>
-              <span className="text-paper/50" aria-hidden="true">
-                ·
-              </span>
               <a
                 href="tel:1300729617"
                 className="text-paper/85 hover:text-paper focus-visible:ring-ring flex items-center gap-1 rounded-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none"
@@ -90,8 +80,7 @@ export function Header() {
             </div>
 
             {/* Right cluster — negative margin aligns the last icon glyph (not its
-                44px hit area) with the gutter, mirroring the logo's left edge.
-                Desktop ends with the solid Wholesale pill, which needs no offset. */}
+                44px hit area) with the gutter, mirroring the logo's left edge. */}
             <div className="-mr-3.5 flex shrink-0 items-center gap-1 lg:mr-0">
               {/* Search icon */}
               <IconButton
@@ -123,16 +112,6 @@ export function Header() {
                   <CartCount />
                 </Suspense>
               </Link>
-
-              {/* Wholesale CTA — desktop only */}
-              <Button
-                href="/pages/wholesale-account-request"
-                variant="brand"
-                size="sm"
-                className="ml-2 hidden lg:inline-flex"
-              >
-                Wholesale Account
-              </Button>
 
               {/* Burger — mobile only */}
               <IconButton

@@ -15,9 +15,6 @@ export function CtaSection() {
             offerings with global, high-quality tea and ingredients.
           </p>
           <div className="mt-2 flex flex-wrap justify-center gap-3">
-            <Button href="/pages/wholesale" variant="brand" size="lg">
-              Apply Now - Wholesale Account
-            </Button>
             <Button href="tel:+611300729617" variant="secondary" size="lg">
               <Phone className="size-4" aria-hidden="true" />
               Call 1300 729 617

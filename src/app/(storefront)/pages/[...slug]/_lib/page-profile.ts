@@ -73,8 +73,8 @@ const DEFAULT_PROFILE: PageProfile = {
   supportCopy:
     'Use this page as a starting point, then bring the Teavision team into the supply conversation when you need detail.',
   primaryAction: {
-    href: '/pages/wholesale-account-request',
-    label: 'Request wholesale access',
+    href: '/collections/all',
+    label: 'Browse ingredients',
   },
   secondaryAction: {
     href: '/pages/contact',
@@ -125,8 +125,8 @@ const SERVICE_PROFILE: PageProfile = {
     label: 'Discuss this service',
   },
   secondaryAction: {
-    href: '/pages/wholesale-account-request',
-    label: 'Apply for wholesale',
+    href: '/pages/contact',
+    label: 'Speak with our team',
   },
   proofPoints: [
     {
@@ -264,8 +264,8 @@ const COMPANY_PROFILE: PageProfile = {
   supportCopy:
     'These pages help procurement teams understand the business behind the catalogue.',
   primaryAction: {
-    href: '/pages/wholesale-account-request',
-    label: 'Request wholesale access',
+    href: '/collections/all',
+    label: 'Browse ingredients',
   },
   secondaryAction: {
     href: '/pages/contact',
@@ -317,12 +317,12 @@ const PAGE_PROFILE_OVERRIDES: Record<string, Partial<PageProfile>> = {
     kicker: 'Wholesale access',
     supportTitle: 'Start the trade relationship',
     primaryAction: {
-      href: '/pages/wholesale',
-      label: 'Open wholesale page',
+      href: '/collections/all',
+      label: 'Browse ingredients',
     },
     secondaryAction: {
       href: '/pages/contact',
-      label: 'Ask before applying',
+      label: 'Speak with our team',
     },
   },
   'new-product-development-order-form': {

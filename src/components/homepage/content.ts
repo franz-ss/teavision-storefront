@@ -465,7 +465,7 @@ export const FAQS = [
   {
     question: 'What are the terms for wholesale purchases?',
     answer:
-      'We are pleased to offer wholesale pricing direct on our website or if your volumes are larger than 100kg you can apply for a bulk wholesale account and receive further discounts. Please contact our sales team for further information or apply for a bulk wholesale account.',
+      'We are pleased to offer wholesale pricing direct on our website, with volume discounts available across eligible bulk quantities. Please contact our sales team if you need guidance on large repeat orders.',
   },
   {
     question: 'How do I place an order for retail purchases?',

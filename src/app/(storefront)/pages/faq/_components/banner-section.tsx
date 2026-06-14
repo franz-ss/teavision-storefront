@@ -1,4 +1,4 @@
-import { Button, Section } from '@/components/ui'
+import { Section } from '@/components/ui'
 
 export function BannerSection() {
   return (
@@ -12,13 +12,6 @@ export function BannerSection() {
             Access 1500+ Ingredients Direct from Farms and Save
           </p>
         </div>
-        <Button
-          href="/pages/wholesale-account-request"
-          variant="inverse"
-          size="sm"
-        >
-          Apply Now
-        </Button>
       </Section.Container>
     </Section.Root>
   )

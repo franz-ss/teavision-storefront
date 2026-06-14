@@ -272,15 +272,12 @@ export function CartView({ cart }: CartViewProps) {
         </div>
         <h2 className="type-heading-02 text-ink">Your cart is empty</h2>
         <p className="type-body text-ink-soft mx-auto mt-3 max-w-lg">
-          Browse our range of 1,000+ teas, herbs, and spices, or get in touch to
-          set up a wholesale account.
+          Browse our range of 1,000+ teas, herbs, and spices available for
+          direct wholesale ordering.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Button href="/collections/all" variant="ghost" size="cta">
             Browse teas
-          </Button>
-          <Button href="/pages/wholesale" variant="secondary" size="md">
-            Apply for wholesale
           </Button>
         </div>
         <TrustSignalList layout="inline" />
