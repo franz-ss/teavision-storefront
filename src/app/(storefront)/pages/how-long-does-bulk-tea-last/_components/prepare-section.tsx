@@ -5,7 +5,7 @@ import { PREPARE } from '../_lib/data'
 export function PrepareSection() {
   return (
     <Section.Root tone="surface" spacing="compact">
-      <Section.Container variant="base">
+      <Section.Container>
         <div className="grid gap-x-12 gap-y-8 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <Eyebrow>{PREPARE.eyebrow}</Eyebrow>

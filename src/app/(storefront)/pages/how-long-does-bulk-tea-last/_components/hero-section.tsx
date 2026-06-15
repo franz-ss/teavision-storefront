@@ -5,7 +5,7 @@ import { HERO } from '../_lib/data'
 export function HeroSection() {
   return (
     <Section.Root tone="brand">
-      <Section.Container variant="base">
+      <Section.Container>
         <Eyebrow tone="gold">{HERO.eyebrow}</Eyebrow>
         <h1 className="type-display text-paper mt-5 max-w-[20ch] text-balance">
           {HERO.title}
