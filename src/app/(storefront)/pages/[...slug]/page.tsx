@@ -21,6 +21,7 @@ const RESERVED_HANDLES = new Set([
   'contact',
   'custom-tea-blends',
   'download-catalogues',
+  'how-long-does-bulk-tea-last',
   'our-story',
   'terms-conditions',
   'wholesale',
