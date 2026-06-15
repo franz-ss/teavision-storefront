@@ -5,7 +5,7 @@ import { CTA } from '../_lib/data'
 export function CtaSection() {
   return (
     <Section.Root tone="brand">
-      <Section.Container variant="compact" className="text-center">
+      <Section.Container variant="base" className="text-center">
         <p className="type-heading-02 text-gold mx-auto max-w-[20ch] text-balance italic">
           {CTA.tagline}
         </p>
