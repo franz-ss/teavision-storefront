@@ -39,10 +39,6 @@ function expectPageContent(canvasElement: HTMLElement) {
 
   const requiredLinks = [
     { href: '/collections', label: 'Browse Products' },
-    {
-      href: '/pages/tea-importers-australia',
-      label: 'Get Wholesale Pricing',
-    },
     { href: 'tel:1300729617', label: '1300 729 617' },
     { href: 'mailto:info@teavision.com.au', label: 'info@teavision.com.au' },
   ]
@@ -52,6 +48,18 @@ function expectPageContent(canvasElement: HTMLElement) {
 
     if (!link?.textContent?.includes(requiredLink.label)) {
       throw new Error(`Expected Our Story link not found: ${requiredLink.href}`)
+    }
+  }
+
+  const rejectedCopy = [
+    'Wholesale Partnership',
+    'Get Wholesale Pricing',
+    'Become a wholesale partner',
+  ]
+
+  for (const copy of rejectedCopy) {
+    if (text.includes(copy)) {
+      throw new Error(`Rejected Our Story wholesale CTA still present: ${copy}`)
     }
   }
 

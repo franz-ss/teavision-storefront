@@ -8,22 +8,26 @@ export function CtaSection() {
       <Section.Container className="flex flex-col gap-10">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="type-heading-02 text-paper">
-            Ready to Partner with Australia&apos;s{' '}
+            Ready to Order from Australia&apos;s{' '}
             <span className="text-gold">Premier Tea Suppliers?</span>
           </h2>
           <p className="type-body text-paper/80 mx-auto mt-5 max-w-3xl">
             Join hundreds of satisfied customers who trust us for premium bulk
-            tea, tea bags, and wholesale tea supply. Experience the Teavision
+            tea, tea bags, herbs, and spices. Experience the Teavision
             difference today.
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card padding="lg" radius="lg" className="border-paper/20">
+        <div className="mx-auto w-full max-w-2xl">
+          <Card
+            padding="lg"
+            radius="lg"
+            className="border-paper/20 text-center"
+          >
             <h3 className="type-heading-04 text-ink">Bulk Tea Orders</h3>
             <p className="type-body-sm text-ink-soft mt-3">
               Explore our extensive range of bulk tea online and loose tea bulk
-              options. Perfect for cafés, restaurants, and retailers.
+              options. Perfect for cafes, restaurants, and retailers.
             </p>
             <Button
               href="/collections"
@@ -32,23 +36,6 @@ export function CtaSection() {
               size="lg"
             >
               Browse Products
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Button>
-          </Card>
-
-          <Card padding="lg" radius="lg" className="border-paper/20">
-            <h3 className="type-heading-04 text-ink">Wholesale Partnership</h3>
-            <p className="type-body-sm text-ink-soft mt-3">
-              Become a wholesale partner and access our full range as tea
-              manufacturers and wholesale bulk spices suppliers.
-            </p>
-            <Button
-              href="/pages/tea-importers-australia"
-              variant="brand"
-              className="mt-6"
-              size="lg"
-            >
-              Get Wholesale Pricing
               <ArrowRight className="size-4" aria-hidden="true" />
             </Button>
           </Card>
@@ -72,8 +59,7 @@ export function CtaSection() {
         </div>
 
         <p className="type-body text-paper/75 text-center">
-          Contact our team today to discuss your bulk tea and wholesale tea
-          supply requirements.
+          Contact our team today to discuss your bulk tea order requirements.
         </p>
       </Section.Container>
     </Section.Root>
