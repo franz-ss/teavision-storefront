@@ -61,10 +61,30 @@ a verbatim copy.
   - APPI: adds "Do not Sell My Personal Information to Third Party".
   - Regression: `/pages/how-to-store-bulk-tea` still renders the Shopify body.
 
+## UX improvement (final direction)
+
+After review, the production pattern was judged poor UX: it repeats an
+"Enter your email to confirm your identity" field under every action (six times
+on the GDPR page). The pages were rebuilt to fix this:
+
+- The identity rule is stated once at the top of the section.
+- Each right has a single "Request by email" action (a pre-filled
+  `mailto:info@teavision.com.au`); the customer's own address is the identity
+  check, so there are no inline inputs.
+- Rights use clear titles (Correct / Access / Export / Delete, plus Opt out for
+  US and APPI). "Delete your data" is set apart in danger colour.
+- Per-page variation preserved: US adds Opt out of sale + the four-state list;
+  PIPEDA has only Correct/Access/Export; APPI uses the third-party opt-out.
+- Layout uses the house max-w-wide two-column grid (identity panel left, rights
+  list right) for page-width parity with the hero and the guide pages.
+
+`buildRequestHref` builds the mailto with a `"<law>: <request>"` subject and a
+short body template. `_lib/compliance.ts` + `_components/compliance.tsx`.
+
 ## Notes
 
-- The request controls are inert by design decision (matches production 1:1;
-  the ConsentMo backend is not available in headless). If functional handling
-  is wanted later, that is a separate backend feature.
 - The notice's "Privacy Policy & Terms of Service" link points at
-  `/pages/terms-conditions` (the production link targets the privacy app).
+  `/pages/terms-conditions`.
+- The page no longer routes through the third-party privacy app, so the old
+  app-collection notice was dropped. If the store owner needs that specific
+  disclosure for legal reasons, it should be re-added to the privacy policy.
