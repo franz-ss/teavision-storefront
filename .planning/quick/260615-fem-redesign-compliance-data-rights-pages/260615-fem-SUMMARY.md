@@ -5,63 +5,66 @@ date: 2026-06-15
 status: complete
 ---
 
-# Quick Task 260615-fem: Redesign compliance data-rights pages — Summary
+# Quick Task 260615-fem: Compliance pages — verbatim copy of production
 
-## What changed
+## Goal
 
-The four compliance handles served by the `[...slug]` catch-all route now render
-a bespoke, per-jurisdiction data-rights page instead of the sanitized (and
-partly broken) Shopify privacy-app widget HTML:
+Reproduce the four compliance pages to match the production site exactly:
 
 - `/pages/gdpr-compliance`
 - `/pages/us-laws-compliance`
 - `/pages/pipeda-compliance`
 - `/pages/appi-compliance`
 
-### Files
+These are served by the shared `[...slug]` catch-all route. On production they
+are a privacy-app (ConsentMo) data-rights widget. In this headless build the
+Shopify `page.body` is sanitized (`src/lib/shopify/html-content.ts` strips
+`form`/`input`/`button`/`script`), so the pages rendered broken. The task is to
+reproduce the production content faithfully.
 
-- **Added** `src/app/(storefront)/pages/[...slug]/_lib/data-rights.ts`
-  - Per-jurisdiction `DataRightsProfile` config (jurisdiction label, lede, law
-    badges, optional coverage note, rights, process notes, support copy).
-  - `buildRequestHref(subject)` builds a pre-filled
-    `mailto:info@teavision.com.au` link (encoded subject + body template).
-  - `isDataRightsHandle` / `resolveDataRightsProfile` helpers.
-- **Added** `src/app/(storefront)/pages/[...slug]/_components/data-rights.tsx`
-  - Server component: numbered, hairline-divided rights list with a mailto
-    action per right (erasure rights use the outlined `secondary` button plus a
-    `danger-tint` warning note), followed by a "How requests work" band.
-- **Edited** `src/app/(storefront)/pages/[...slug]/_components/hero.tsx`
-  - Added an optional `meta` slot rendered under the lede (used for the
-    last-reviewed date and law badges).
-- **Edited** `src/app/(storefront)/pages/[...slug]/_components/content.tsx`
-  - Branches on `resolveDataRightsProfile(handle)`: data-rights handles get the
-    jurisdiction kicker, hero meta, bespoke `DataRights` body, and tailored
-    support copy. All other `[...slug]` pages are unchanged.
+## Course correction
 
-## Design
+The first attempt redesigned the pages and invented content (rights wording,
+response windows, law badges, a "how requests work" band). That was wrong: the
+ask was to copy production. This summary reflects the corrected implementation —
+a verbatim copy.
 
-Follows the approved preview and the project DESIGN.md: warm paper/brand/gold
-tokens, Spectral/Hanken/Space Mono type, no card grid, no side-stripe accents,
-no gradient text. Requests route via pre-filled email (no backend), per the
-agreed scope.
+## What changed (final)
+
+- **Added** `src/app/(storefront)/pages/[...slug]/_lib/compliance.ts`
+  - Verbatim production content per handle: the compliance notice, the sections
+    (Data Rectification, Data Portability, Access to Personal Data, and Do not
+    Sell / Right to be Forgotten where production includes them), exact link
+    labels, the email-confirm label, and the US jurisdiction statement.
+  - Per-page differences preserved: PIPEDA has only three sections; US adds Do
+    not Sell + the four-state list; APPI adds the third-party Do-not-Sell
+    variant; GDPR has Right to be Forgotten but no Do not Sell.
+- **Added** `src/app/(storefront)/pages/[...slug]/_components/compliance.tsx`
+  - Renders the notice + Privacy Policy & Terms of Service link, then each
+    section with its description, action button(s), and an "Enter your email to
+    confirm your identity" field. Controls are styled with the design system
+    but inert (the privacy app that powers them does not run headless).
+- **Edited** `content.tsx` — branches compliance handles to `Compliance`
+  (replacing the stripped Shopify body); all other `[...slug]` pages unchanged.
+- **Edited** `hero.tsx` — reverted the temporary `meta` slot; compliance pages
+  use the standard policy hero (no invented lede/badges).
+- **Removed** the invented `_lib/data-rights.ts` and `_components/data-rights.tsx`.
 
 ## Verification
 
-- `pnpm typecheck` — clean.
-- `pnpm lint` (tailwind class check + eslint) — clean.
+- `pnpm typecheck` clean; `pnpm lint` clean.
 - Dev preview:
-  - GDPR page renders 5 rights, encoded mailto links, erasure warning, EU/UK
-    badges, last-reviewed date; no console errors.
-  - US page renders the "Do not sell or share" right, CCPA-CPRA/VCDPA/CPA/CTDPA
-    badges, coverage note, and 45-day window.
-  - Mobile (375px) hero and rights stack correctly.
-  - Regression: `/pages/how-to-store-bulk-tea` still renders the full Shopify
-    body with no data-rights band.
+  - GDPR: notice + Privacy link (→ /pages/terms-conditions), 4 sections, 6
+    actions each with an email field, no jurisdiction line; no console errors.
+  - US: adds "Do not Sell My Personal Information" + the four-state statement.
+  - PIPEDA: only Rectification, Portability ("PIPEDA requests"), Access.
+  - APPI: adds "Do not Sell My Personal Information to Third Party".
+  - Regression: `/pages/how-to-store-bulk-tea` still renders the Shopify body.
 
-## Notes / follow-ups
+## Notes
 
-- Requests are routed to email by design. If functional in-headless request
-  handling (forms → server action → Shopify customer API / deletion) is wanted
-  later, that is a separate, larger backend feature.
-- "Last reviewed" uses the Shopify page `updatedAt` (currently 19 Dec 2023 for
-  GDPR). Re-saving the page in Shopify will refresh the date.
+- The request controls are inert by design decision (matches production 1:1;
+  the ConsentMo backend is not available in headless). If functional handling
+  is wanted later, that is a separate backend feature.
+- The notice's "Privacy Policy & Terms of Service" link points at
+  `/pages/terms-conditions` (the production link targets the privacy app).
