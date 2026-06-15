@@ -4,8 +4,8 @@ milestone: v1.2
 milestone_name: SEO-Safe PLP Pagination Parity
 status: Awaiting next milestone
 stopped_at: Milestone v1.2 completed and archived
-last_updated: "2026-06-12T04:09:09.631Z"
-last_activity: 2026-06-12 — Milestone v1.2 completed and archived
+last_updated: "2026-06-15T00:15:47.208Z"
+last_activity: 2026-06-15 — Completed quick task 260615-b9e: Make the herb feature section full page width and roughly half height
 progress:
   total_phases: 1
   completed_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 Phase: Milestone v1.2 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-06-12 — Milestone v1.2 completed and archived
+Last activity: 2026-06-15 — Completed quick task 260615-b9e: Make the herb feature section full page width and roughly half height
 
 ## Performance Metrics
 
@@ -147,6 +147,12 @@ Recent decisions affecting current work:
 - Searchanise's API key is public and already present locally, but API response shape should still be narrowed defensively because Searchanise returns JSON outside the Shopify generated type system.
 - Phase 5 remediated the production-readiness gaps found in `CODEBASE_REVIEW.md`. See `.planning/phases/05-codebase-review-remediation/05-VERIFICATION.md` and the `05-*-SUMMARY.md` files for evidence and accepted residual risks.
 - Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260615-b9e | Make the herb feature section full page width and roughly half height | 2026-06-15 | 0854415 | [260615-b9e-make-the-herb-feature-section-full-page-](./quick/260615-b9e-make-the-herb-feature-section-full-page-/) |
 
 ## Deferred Items
 
