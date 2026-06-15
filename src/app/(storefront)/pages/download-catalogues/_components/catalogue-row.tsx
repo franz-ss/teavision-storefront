@@ -27,11 +27,11 @@ export function CatalogueRow({ catalogue }: { catalogue: Catalogue }) {
   const Icon = ICONS[catalogue.icon]
 
   return (
-    <article className="border-hairline flex flex-col gap-5 border-t py-7 first:border-t-0 first:pt-0 sm:flex-row sm:items-center sm:gap-7">
+    <article className="grid gap-5 p-5 sm:grid-cols-[4.5rem_minmax(0,1fr)] sm:items-center sm:gap-6 lg:grid-cols-[4.5rem_minmax(0,1fr)_7rem_auto] lg:px-6">
       <div
         aria-hidden="true"
         className={cn(
-          'flex h-24 w-18 shrink-0 flex-col justify-between rounded-md p-3',
+          'flex h-20 w-18 shrink-0 flex-col justify-between rounded-md p-3',
           catalogue.isCertificate
             ? 'bg-gold text-brand-deep'
             : 'bg-brand-deep text-paper',
@@ -49,19 +49,25 @@ export function CatalogueRow({ catalogue }: { catalogue: Catalogue }) {
       </div>
 
       <div className="min-w-0 flex-1">
-        <h3 className="type-heading-05 text-ink">{catalogue.title}</h3>
-        <p className="type-body text-ink-soft mt-1.5">{catalogue.description}</p>
+        <h3 className="type-heading-05 text-ink wrap-break-word">
+          {catalogue.title}
+        </h3>
+        <p className="type-body text-ink-soft mt-1.5">
+          {catalogue.description}
+        </p>
       </div>
 
-      <div className="flex items-center justify-between gap-4 sm:flex-col sm:items-end sm:gap-3">
-        <span className="type-mono-meta text-ink-faint whitespace-nowrap">
-          PDF &middot; {catalogue.fileSize}
-        </span>
+      <span className="type-mono-meta text-ink-faint whitespace-nowrap sm:col-start-2 lg:col-start-auto">
+        PDF &middot; {catalogue.fileSize}
+      </span>
+
+      <div className="sm:col-start-2 lg:col-start-auto lg:justify-self-end">
         <Button
           href={catalogue.href}
           variant="primary"
           size="sm"
           download
+          aria-label={`Download ${catalogue.title}`}
           target="_blank"
           rel="noopener"
         >
