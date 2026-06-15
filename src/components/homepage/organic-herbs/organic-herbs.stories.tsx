@@ -5,6 +5,9 @@ import { OrganicHerbs } from './organic-herbs'
 const meta: Meta<typeof OrganicHerbs> = {
   title: 'Homepage/OrganicHerbs',
   component: OrganicHerbs,
+  parameters: {
+    layout: 'fullscreen',
+  },
   tags: ['autodocs'],
 }
 export default meta

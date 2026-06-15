@@ -14,25 +14,23 @@ const HERB_CHECKLIST = [
 
 export function OrganicHerbs() {
   return (
-    // Original-site layout: the herbs photo fills a contained, rounded card
-    // (not the full-width band); the copy sits over the photo's light left half.
-    <Section.Root tone="sunken">
-      <Section.Container>
-        <div className="relative isolate overflow-hidden rounded-lg">
-          <Image
-            src={HERBS_IMAGE.src}
-            alt=""
-            aria-hidden="true"
-            fill
-            sizes="(max-width: 1440px) 100vw, 1440px"
-            className="absolute inset-0 -z-20 object-cover object-right"
-          />
-          {/* Left-to-right fade keeps the copy legible at every width */}
-          <div
-            aria-hidden="true"
-            className="from-paper-2 via-paper-2/85 absolute inset-0 -z-10 bg-linear-to-r via-35% to-transparent"
-          />
-          <div className="max-w-xl px-6 py-12 lg:px-14 lg:py-24">
+    <Section.Root tone="sunken" spacing="none" className="overflow-hidden">
+      <div className="relative isolate min-h-110 overflow-hidden md:min-h-120 lg:min-h-130">
+        <Image
+          src={HERBS_IMAGE.src}
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes="100vw"
+          className="absolute inset-0 -z-20 object-cover object-right"
+        />
+        {/* Left-to-right fade keeps the copy legible at every width. */}
+        <div
+          aria-hidden="true"
+          className="from-paper-2 via-paper-2/90 absolute inset-0 -z-10 bg-linear-to-r via-45% to-transparent"
+        />
+        <Section.Container className="flex min-h-110 items-center py-10 md:min-h-120 md:py-12 lg:min-h-130 lg:py-14">
+          <div className="max-w-xl">
             <h2 className="type-heading-02">
               Wild Grown &amp; Certified Organic Herbs
             </h2>
@@ -43,7 +41,7 @@ export function OrganicHerbs() {
               ensure quality, sustainability, and reliability to meet the
               diverse needs of cafes, retailers, and wellness brands.
             </p>
-            <ul className="mt-8 flex flex-col gap-4">
+            <ul className="mt-6 flex flex-col gap-3">
               {HERB_CHECKLIST.map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <Check
@@ -54,7 +52,7 @@ export function OrganicHerbs() {
                 </li>
               ))}
             </ul>
-            <div className="mt-8">
+            <div className="mt-7">
               <Button
                 href="/collections/herbs-and-spices"
                 variant="brand"
@@ -65,8 +63,8 @@ export function OrganicHerbs() {
               </Button>
             </div>
           </div>
-        </div>
-      </Section.Container>
+        </Section.Container>
+      </div>
     </Section.Root>
   )
 }
