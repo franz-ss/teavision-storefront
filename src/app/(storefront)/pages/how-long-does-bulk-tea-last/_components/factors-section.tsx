@@ -4,9 +4,9 @@ import { FACTORS } from '../_lib/data'
 
 export function FactorsSection() {
   return (
-    <Section.Root tone="sunken">
-      <Section.Container>
-        <div className="max-w-prose">
+    <Section.Root tone="sunken" spacing="compact">
+      <Section.Container variant="compact">
+        <div>
           <Eyebrow>{FACTORS.eyebrow}</Eyebrow>
           <h2 className="type-heading-02 text-ink mt-4 text-balance">
             {FACTORS.title}

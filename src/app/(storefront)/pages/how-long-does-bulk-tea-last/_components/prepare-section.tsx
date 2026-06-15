@@ -4,9 +4,9 @@ import { PREPARE } from '../_lib/data'
 
 export function PrepareSection() {
   return (
-    <Section.Root tone="surface">
-      <Section.Container>
-        <div className="max-w-prose">
+    <Section.Root tone="surface" spacing="compact">
+      <Section.Container variant="compact">
+        <div>
           <Eyebrow>{PREPARE.eyebrow}</Eyebrow>
           <h2 className="type-heading-02 text-ink mt-4 text-balance">
             {PREPARE.title}
