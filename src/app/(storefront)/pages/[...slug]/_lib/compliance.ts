@@ -1,104 +1,99 @@
-export type ComplianceAction = {
-  label: string
-}
+const PRIVACY_EMAIL = 'info@teavision.com.au'
 
-export type ComplianceSection = {
-  heading: string
+export const COMPLIANCE_PRIVACY_EMAIL = PRIVACY_EMAIL
+export const COMPLIANCE_PRIVACY_LINK_LABEL = 'Privacy Policy & Terms of Service'
+export const COMPLIANCE_PRIVACY_LINK_HREF = '/pages/terms-conditions'
+
+export type ComplianceRight = {
+  title: string
   description: string
-  actions: ComplianceAction[]
+  /** Request type, combined with the page prefix to form the email subject. */
+  subject: string
+  tone?: 'default' | 'danger'
 }
 
 export type CompliancePage = {
-  sections: ComplianceSection[]
+  /** Law context for the request, e.g. "GDPR". */
+  requestPrefix: string
+  rights: ComplianceRight[]
   jurisdiction?: string
 }
 
-export const COMPLIANCE_NOTICE_LEAD =
-  'The app used for assuring the GDPR, LGPD, CCPA-CPRA, VCDPA, CPA, CTDPA, APPI, PIPEDA compliance of this site, collects your IP and the email address in order to process the data. For more check '
-export const COMPLIANCE_NOTICE_LINK_LABEL = 'Privacy Policy & Terms of Service'
-export const COMPLIANCE_NOTICE_LINK_HREF = '/pages/terms-conditions'
-export const COMPLIANCE_EMAIL_CONFIRM_LABEL =
-  'Enter your email to confirm your identity'
+export function buildRequestHref(prefix: string, subject: string): string {
+  const fullSubject = `${prefix}: ${subject}`
+  const body = [
+    'Hello Teavision team,',
+    '',
+    `I would like to make the following request: ${subject} (${prefix}).`,
+    '',
+    'This email is the address on my account.',
+    'Full name:',
+    'Order number (if relevant):',
+    '',
+    'Thank you.',
+  ].join('\n')
 
-const RECTIFICATION: ComplianceSection = {
-  heading: 'Data Rectification',
-  description:
-    'You can use the link below to update your account data if it is not accurate.',
-  actions: [{ label: 'Edit your account information' }],
+  const query = `subject=${encodeURIComponent(fullSubject)}&body=${encodeURIComponent(body)}`
+
+  return `mailto:${PRIVACY_EMAIL}?${query}`
 }
 
-function portability(requestsLabel: string): ComplianceSection {
-  return {
-    heading: 'Data Portability',
-    description:
-      'You can use the links below to download all the data we store and use for a better experience in our store.',
-    actions: [
-      { label: requestsLabel },
-      { label: 'Personal information' },
-      { label: 'Orders' },
-    ],
-  }
+const CORRECT: ComplianceRight = {
+  title: 'Correct your data',
+  description: 'Update account information that is inaccurate or incomplete.',
+  subject: 'Data correction request',
 }
 
-const ACCESS: ComplianceSection = {
-  heading: 'Access to Personal Data',
-  description:
-    'You can use the link below to request a report which will contain all personal information that we store for you.',
-  actions: [{ label: 'Request a report' }],
+const ACCESS: ComplianceRight = {
+  title: 'Access your data',
+  description: 'Get a report of the personal data we hold about you.',
+  subject: 'Data access request',
 }
 
-const RIGHT_TO_BE_FORGOTTEN: ComplianceSection = {
-  heading: 'Right to be Forgotten',
-  description:
-    'Use this option if you want to remove your personal and other data from our store. Keep in mind that this process will delete your account, so you will no longer be able to access or use it anymore.',
-  actions: [{ label: 'Request personal data deletion' }],
+const EXPORT: ComplianceRight = {
+  title: 'Export your data',
+  description: 'Receive your data, including order history, in a portable format.',
+  subject: 'Data export request',
 }
 
-const DO_NOT_SELL: ComplianceSection = {
-  heading: 'Do not Sell My Personal Information',
-  description:
-    'You can submit a request to let us know that you do not agree for your personal information to be collected or sold.',
-  actions: [{ label: 'Do not sell my personal information' }],
+const OPT_OUT: ComplianceRight = {
+  title: 'Opt out of sale',
+  description: 'Tell us not to sell or share your personal information.',
+  subject: 'Do not sell my personal information',
 }
 
-const DO_NOT_SELL_THIRD_PARTY: ComplianceSection = {
-  heading: 'Do not Sell My Personal Information to Third Party',
+const OPT_OUT_THIRD_PARTY: ComplianceRight = {
+  title: 'Opt out of third-party sharing',
+  description: 'Tell us not to share your personal information with third parties.',
+  subject: 'Do not sell my personal information to third parties',
+}
+
+const DELETE: ComplianceRight = {
+  title: 'Delete your data',
   description:
-    'You can submit a request to let us know that you do not agree for your personal information to be collected or sold to a third party.',
-  actions: [{ label: 'Do not sell my personal information' }],
+    'Permanently erase your account and personal data. This cannot be undone.',
+  subject: 'Data deletion request',
+  tone: 'danger',
 }
 
 const COMPLIANCE_PAGES: Record<string, CompliancePage> = {
   'gdpr-compliance': {
-    sections: [
-      RECTIFICATION,
-      portability('GDPR requests'),
-      ACCESS,
-      RIGHT_TO_BE_FORGOTTEN,
-    ],
+    requestPrefix: 'GDPR',
+    rights: [CORRECT, ACCESS, EXPORT, DELETE],
   },
   'us-laws-compliance': {
-    sections: [
-      RECTIFICATION,
-      portability('US Laws requests'),
-      ACCESS,
-      DO_NOT_SELL,
-      RIGHT_TO_BE_FORGOTTEN,
-    ],
+    requestPrefix: 'US state privacy law',
+    rights: [CORRECT, ACCESS, EXPORT, OPT_OUT, DELETE],
     jurisdiction:
-      'This page covers the laws in the following states: California (CCPA-CPRA), Virginia (VCDPA), Colorado (CPA), Connecticut (CTDPA).',
+      'This page covers California (CCPA-CPRA), Virginia (VCDPA), Colorado (CPA), and Connecticut (CTDPA).',
   },
   'pipeda-compliance': {
-    sections: [RECTIFICATION, portability('PIPEDA requests'), ACCESS],
+    requestPrefix: 'PIPEDA',
+    rights: [CORRECT, ACCESS, EXPORT],
   },
   'appi-compliance': {
-    sections: [
-      RECTIFICATION,
-      portability('APPI requests'),
-      ACCESS,
-      DO_NOT_SELL_THIRD_PARTY,
-      RIGHT_TO_BE_FORGOTTEN,
-    ],
+    requestPrefix: 'APPI',
+    rights: [CORRECT, ACCESS, EXPORT, OPT_OUT_THIRD_PARTY, DELETE],
   },
 }
 
