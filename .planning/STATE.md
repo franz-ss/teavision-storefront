@@ -4,8 +4,8 @@ milestone: v1.2
 milestone_name: SEO-Safe PLP Pagination Parity
 status: Awaiting next milestone
 stopped_at: Milestone v1.2 completed and archived
-last_updated: "2026-06-15T00:36:30.000Z"
-last_activity: 2026-06-15 — Completed quick task 260615-bsr: Remove wholesale account/pricing CTA from Our Story bulk CTA per client feedback
+last_updated: "2026-06-15T01:48:08.331Z"
+last_activity: 2026-06-15 — Completed quick task 260615-dm4: Bespoke /pages/how-long-does-bulk-tea-last guide page (verbatim copy)
 progress:
   total_phases: 1
   completed_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 Phase: Milestone v1.2 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-06-15 — Completed quick task 260615-bpt: Redesign /pages/download-catalogues into a bespoke catalogue download page
+Last activity: 2026-06-15 — Completed quick task 260615-dm4: Bespoke /pages/how-long-does-bulk-tea-last guide page (verbatim copy)
 
 ## Performance Metrics
 
@@ -155,6 +155,7 @@ Recent decisions affecting current work:
 | 260615-b9e | Make the herb feature section full page width and roughly half height | 2026-06-15 | 0854415 | [260615-b9e-make-the-herb-feature-section-full-page-](./quick/260615-b9e-make-the-herb-feature-section-full-page-/) |
 | 260615-bsr | Remove wholesale account/pricing CTA from Our Story bulk CTA per client feedback | 2026-06-15 | ec26a86 | [260615-bsr-remove-wholesale-account-pricing-cta-fro](./quick/260615-bsr-remove-wholesale-account-pricing-cta-fro/) |
 | 260615-bpt | Redesign /pages/download-catalogues into a bespoke catalogue download page | 2026-06-15 | 40e9e7a | [260615-bpt-redesign-download-catalogues-page](./quick/260615-bpt-redesign-download-catalogues-page/) |
+| 260615-dm4 | Bespoke /pages/how-long-does-bulk-tea-last guide page (verbatim copy) | 2026-06-15 | 88cd2ff | [260615-dm4-bespoke-how-long-does-bulk-tea-last-guid](./quick/260615-dm4-bespoke-how-long-does-bulk-tea-last-guid/) |
 
 ## Deferred Items
 
