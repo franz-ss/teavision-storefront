@@ -17,10 +17,7 @@ export const META_DESCRIPTION =
 export const HERO = {
   eyebrow: 'Buyer guide',
   title: 'How Long Does Bulk Tea Last?',
-  lede: [
-    'Casual tea drinkers are probably a little better placed to note the difference between nice tea and tea that’s gone off. Why, well, because they only have a cup now and again, so the chances of their stock passing its expiration date are higher.',
-    'For those that love tea and want to make sure that they benefit from the wonderful unique flavours that they invest in, the inevitable question that is asked is how long does bulk tea last? There are differences to consider - such as if the buyer opted for bags or loose-leaf tea. But, even after that, the answer is not exactly a straightforward one.',
-  ],
+  lede: 'Casual tea drinkers are probably a little better placed to note the difference between nice tea and tea that’s gone off. Why, well, because they only have a cup now and again, so the chances of their stock passing its expiration date are higher.',
   badges: ['ACO Organic', 'HACCP Program', 'Ships from Australia'],
 } as const
 
@@ -28,6 +25,7 @@ export const LONGEVITY = {
   eyebrow: 'Why your order lasts',
   title: 'Why Our Bulk Tea Order Lasts for Long Time',
   body: [
+    'For those that love tea and want to make sure that they benefit from the wonderful unique flavours that they invest in, the inevitable question that is asked is how long does bulk tea last? There are differences to consider - such as if the buyer opted for bags or loose-leaf tea. But, even after that, the answer is not exactly a straightforward one.',
     'At Teavision, we have a vast range of different teas ready to ship from Australia today. We cater to the tastes of customers from a variety of different backgrounds and needs. As such, we have undertaken considerable research into how best we can protect our products so that they are in peak condition when they arrive at your door.',
     'Our tea experts have earned our business an excellent reputation by adhering to one thing above all others – quality. We understand that for tea to last as long as it can there are many other factors to take into consideration.',
     'Storage is the main concern for anyone that invests in an order that they hope to see a good return from. In optimal conditions, your tea order can last anywhere between twelve and thirty-six months.',
