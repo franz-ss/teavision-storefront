@@ -9,7 +9,7 @@ export function DataRights({ profile }: { profile: DataRightsProfile }) {
   return (
     <>
       <Section.Root tone="surface">
-        <Section.Container variant="base">
+        <Section.Container>
           <div className="max-w-3xl">
             <Eyebrow>Your data rights</Eyebrow>
             <h2 className="type-heading-02 text-ink mt-4 max-w-[18ch]">
@@ -67,7 +67,7 @@ export function DataRights({ profile }: { profile: DataRightsProfile }) {
         spacing="compact"
         className="border-hairline border-t"
       >
-        <Section.Container variant="base">
+        <Section.Container>
           <Eyebrow>How requests work</Eyebrow>
           <dl
             className={cn(
