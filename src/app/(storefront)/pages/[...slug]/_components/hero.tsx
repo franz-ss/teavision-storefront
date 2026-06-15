@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import { Eyebrow, Section } from '@/components/ui'
 import { getPagePath } from '@/lib/shopify/operations/storefront-page'
 import type { ShopifyPage } from '@/lib/shopify/operations/storefront-page'
@@ -8,11 +10,13 @@ import { Breadcrumb } from './breadcrumb'
 
 export function Hero({
   description,
+  meta,
   page,
   profile,
   showActions = true,
 }: {
   description?: string
+  meta?: ReactNode
   page: ShopifyPage
   profile: PageProfile
   showActions?: boolean
@@ -33,6 +37,7 @@ export function Hero({
                 {description}
               </p>
             ) : null}
+            {meta}
             {showActions ? (
               <Actions
                 currentPath={getPagePath(page.handle)}
