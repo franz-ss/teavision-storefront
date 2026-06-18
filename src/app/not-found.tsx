@@ -3,7 +3,6 @@ import Link from 'next/link'
 
 import { Button, Eyebrow } from '@/components/ui'
 import { Section } from '@/components/ui/section/section'
-import { BrushCircle } from '@/components/homepage/brush-circle/brush-circle'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { cn } from '@/lib/utils'
 
@@ -17,9 +16,6 @@ export default function NotFound() {
     <Section.Root tone="sunken" spacing="default">
       <Section.Container>
         <div className="flex flex-col items-center gap-8 py-8 text-center">
-          {/* Floating teapot illustration */}
-          <BrushCircle illo="teapot" className="w-[clamp(160px,20vw,220px)]" />
-
           {/* Eyebrow + heading + body */}
           <div className="max-w-sm">
             <Eyebrow tone="muted" className="mb-4 justify-center" rule={false}>

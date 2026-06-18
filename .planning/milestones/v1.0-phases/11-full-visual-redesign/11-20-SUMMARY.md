@@ -34,7 +34,7 @@ key_files:
     - src/components/layout/footer/newsletter-form/newsletter-form.tsx
     - src/components/layout/footer/payment-mark/payment-mark.tsx
 decisions:
-  - 'BlogNewsletterBand imports BrushCircle/Stamp/HomepageNewsletterForm cross-route from homepage/ following the certifications precedent; promotion deferred'
+  - 'BlogNewsletterBand imports legacy animated artwork components/HomepageNewsletterForm cross-route from homepage/ following the certifications precedent; promotion deferred'
   - 'Popular Searches rendered as sr-only SEO block below the footer bar (hidden visually, accessible for screen readers and search engines)'
   - 'Quality pills retained per prior owner decision; only underlying HACCP copy text restored'
 metrics:
@@ -59,7 +59,7 @@ metrics:
 
 ### Task 1: Blog Newsletter Ink Band
 
-- Created `blog-newsletter-band.tsx` as a route-only `_components/` component: `Section.Root tone="inverse"` with a 3-column grid matching the SupplyChain motif layout, using `BrushCircle illo="teapot"` + centered newsletter heading/form + `Stamp top="Business" bottom="Teavision"`.
+- Created `blog-newsletter-band.tsx` as a route-only `_components/` component: `Section.Root tone="inverse"` with a 3-column grid matching the SupplyChain motif layout, using `legacy brush illustration component illo="teapot"` + centered newsletter heading/form + `Stamp top="Business" bottom="Teavision"`.
 - Updated `listing-content.tsx` to remove the small `NewsletterSignup` card and mount `<BlogNewsletterBand />` then `<ContactSection action={submitContactFormAction} />` at the end of the listing.
 - Added `className` prop to `FeaturedArticles` and `ArticleResults` to accept external spacing overrides. Passes `pt-0` to `ArticleResults` when preceded by `FeaturedArticles` (same-tone `sunken` bands), eliminating the doubled `py-section` (~260px) inter-band gap.
 

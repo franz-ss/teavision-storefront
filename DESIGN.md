@@ -161,6 +161,7 @@ Write for buyers who are deciding whether Teavision is credible enough to contac
 - Meet WCAG AA for text and meaningful UI states.
 - Use `focus-visible:ring-ring` for keyboard focus.
 - Respect `prefers-reduced-motion`. Non-essential animation should stop when reduced motion is requested.
+- Decorative floating artwork should use the shared `AnimatedElement` primitive with generic motion variants, not content-specific animation components. Owning sections provide image source and dimensions so future CMS fields can drive the artwork without changing component names.
 - Never rely on color alone for state or error communication.
 - Hit targets should be at least 40px on touch surfaces.
 - Animate only intentional properties: `color`, `background-color`, `border-color`, `box-shadow`, `opacity`, and occasional `transform`. Never use `transition-all` as a system rule.

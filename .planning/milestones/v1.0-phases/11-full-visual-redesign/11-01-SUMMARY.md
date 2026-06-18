@@ -6,7 +6,7 @@ tags: [tailwind, next-font, design-tokens, css, storybook, spectral, oklch]
 
 requires: []
 provides:
-  - 'Four brand-motif PNGs in public/images/ (stamp-ring, illo-cup, illo-teapot, illo-handshake)'
+  - 'Four brand-motif PNGs in public/images/ (newsletter-label, catalogue-cup, newsletter-teapot, business-handshake)'
   - 'Self-hosted Spectral/Hanken Grotesk/Space Mono/Caveat fonts via next/font'
   - 'Phase 11 dual-token globals.css: new @theme tokens alongside old --tv-* tokens'
   - 'New type utilities: type-display, type-lede, type-mono-meta'
@@ -43,11 +43,11 @@ tech-stack:
 
 key-files:
   created:
-    - scripts/extract-redesign-assets.mjs
-    - public/images/stamp-ring.png
-    - public/images/illo-cup.png
-    - public/images/illo-teapot.png
-    - public/images/illo-handshake.png
+    - retired one-off asset extraction script
+    - public/images/newsletter-label.png
+    - public/images/catalogue-cup.png
+    - public/images/newsletter-teapot.png
+    - public/images/business-handshake.png
   modified:
     - src/app/layout.tsx
     - src/app/globals.css
@@ -85,7 +85,7 @@ completed: 2026-06-10
 
 ## Accomplishments
 
-- Four brand-motif PNGs (stamp-ring, illo-cup, illo-teapot, illo-handshake) extracted from the design bundle and verified as valid PNG files
+- Four brand-motif PNGs (newsletter-label, catalogue-cup, newsletter-teapot, business-handshake) extracted from the design bundle and verified as valid PNG files
 - Next.js root layout updated to load Spectral, Hanken Grotesk, Space Mono, and Caveat as CSS-variable fonts via next/font (self-hosted, no runtime Google Fonts requests)
 - globals.css `@theme inline` remapped font tokens to new families; complete Phase 11 OKLCH token set added alongside old system (surfaces, ink, hairlines, brand greens, gold, danger, focus ring, new radii, rhythm spacing, containers, shadows)
 - New type utilities added: `type-display` (Spectral clamp fluid), `type-lede`, `type-mono-meta`; existing utilities redefined with new UI-SPEC values; `type-display-01`/`type-display-02` preserved for consumer migration
@@ -101,11 +101,11 @@ completed: 2026-06-10
 
 ## Files Created/Modified
 
-- `scripts/extract-redesign-assets.mjs` — One-off motif PNG extractor from design/teavision-redesign.html
-- `public/images/stamp-ring.png` — Brand stamp/ring motif (28 KB)
-- `public/images/illo-cup.png` — Cup illustration motif (68 KB)
-- `public/images/illo-teapot.png` — Teapot illustration motif (45 KB)
-- `public/images/illo-handshake.png` — Handshake illustration motif (72 KB)
+- `retired one-off asset extraction script` — One-off motif PNG extractor from design/teavision-redesign.html
+- `public/images/newsletter-label.png` — Brand stamp/ring motif (28 KB)
+- `public/images/catalogue-cup.png` — Cup illustration motif (68 KB)
+- `public/images/newsletter-teapot.png` — Teapot illustration motif (45 KB)
+- `public/images/business-handshake.png` — Handshake illustration motif (72 KB)
 - `src/app/layout.tsx` — Spectral/Hanken_Grotesk/Space_Mono/Caveat font loading
 - `src/app/globals.css` — Font token remap + full Phase 11 @theme token set + new type utilities + updated @layer base
 - `.storybook/preview.ts` — Background tokens updated to new system
@@ -156,11 +156,11 @@ No new security-relevant surface identified beyond what is documented in the pla
 
 ## Self-Check: PASSED
 
-- `public/images/stamp-ring.png` — FOUND
-- `public/images/illo-cup.png` — FOUND
-- `public/images/illo-teapot.png` — FOUND
-- `public/images/illo-handshake.png` — FOUND
-- `scripts/extract-redesign-assets.mjs` — FOUND
+- `public/images/newsletter-label.png` — FOUND
+- `public/images/catalogue-cup.png` — FOUND
+- `public/images/newsletter-teapot.png` — FOUND
+- `public/images/business-handshake.png` — FOUND
+- `retired one-off asset extraction script` — FOUND
 - `src/app/layout.tsx` — FOUND (Spectral fonts)
 - `src/app/globals.css` — FOUND (--color-paper, type-display, type-mono-meta)
 - `.storybook/preview.ts` — FOUND (color-paper backgrounds)

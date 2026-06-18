@@ -1,6 +1,4 @@
-import Image from 'next/image'
-
-import { Button, Eyebrow, Section } from '@/components/ui'
+import { AnimatedElement, Button, Eyebrow, Section } from '@/components/ui'
 
 export function SupplyChain() {
   return (
@@ -10,14 +8,12 @@ export function SupplyChain() {
             images bleed past the content edge, the copy column gets wider */}
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,200px)_1fr_minmax(0,160px)]">
           <div className="flex justify-center lg:-ml-18">
-            {/* Original-site handshake brush illustration (owner-supplied asset) */}
-            <Image
+            <AnimatedElement
+              animation="float-primary"
               src="/images/business-handshake.png"
-              alt=""
-              aria-hidden="true"
               width={678}
               height={594}
-              className="animate-bc-float h-auto w-[clamp(188px,23.5vw,252px)] max-w-none object-contain motion-reduce:animate-none"
+              className="w-[clamp(188px,23.5vw,252px)]"
               sizes="(min-width: 1024px) 252px, 40vw"
             />
           </div>
@@ -45,14 +41,12 @@ export function SupplyChain() {
           </div>
 
           <div className="flex justify-center lg:-mr-20">
-            {/* Plain brush ring — no text overlay (owner: curved text overlapped) */}
-            <Image
+            <AnimatedElement
+              animation="float-secondary"
               src="/images/business-stamp.png"
-              alt=""
-              aria-hidden="true"
               width={562}
               height={567}
-              className="animate-st-float h-auto w-[clamp(140px,14vw,200px)] max-w-none object-contain motion-reduce:animate-none"
+              className="w-[clamp(140px,14vw,200px)]"
               sizes="(min-width: 1024px) 200px, 30vw"
             />
           </div>

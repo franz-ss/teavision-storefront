@@ -115,6 +115,13 @@ Only on Server Actions files (`src/lib/*/actions.ts`). Never on a component file
 - **Exception:** dynamic computed values that Tailwind cannot statically extract (e.g. `repeat(${n}, 1fr)`) must use `style={{ ... }}` — Tailwind's JIT only processes static string literals
 - Palette is warm/botanical — never introduce cool grays
 
+## Animated decorative media
+
+- Use `src/components/ui/animated-element` for decorative floating images that reuse the shared motion utilities.
+- Keep animation variant names generic, such as `float-primary` and `float-secondary`, so CMS-driven content can swap image sources without renaming components.
+- Pass `src`, intrinsic `width`/`height`, responsive `sizes`, and width classes from the owning section. Do not create content-specific animation components for individual campaigns, products, or sections.
+- Keep decorative animated media hidden from assistive technology. Meaningful product or editorial images should use ordinary `next/image` with useful alt text.
+
 ## Section layout
 
 - Do not write raw page-level `<section>` elements for storefront layout. Use `Section.Root` for semantic section bands, vertical rhythm, background tone, and default foreground contrast.

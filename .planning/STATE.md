@@ -121,7 +121,7 @@ Recent decisions affecting current work:
 - [Phase 11]: Phase 11-14 uses --color-\*: initial in the Tailwind theme so default palette color utilities are not generated.
 - [Phase 11]: Phase 11-14 uses a shared browser cart-changed event to refresh header cart count after cart mutations without adding client-side cart storage.
 - [Phase ?]: Phase 11-22: Concept A (calm base-scale) approved for search overlay — type-body input replaces clamp(1.4rem,3vw,2.2rem) serif; border-b-2 border-ink removed in favour of shared .field focus ring
-- [Phase ?]: Phase 11-22: Concept A (illustrated BrushCircle) approved for 404 — teapot on Section.Root tone=sunken, tea-brand copy, three action buttons, collection pill links
+- [Phase ?]: Phase 11-22: Concept A (illustrated legacy brush illustration component) approved for 404 — teapot on Section.Root tone=sunken, tea-brand copy, three action buttons, collection pill links
 - [Phase 13]: Phase 13-02-GAP: Merged id="product-grid" onto the ul grid element with scroll-mt-24/lg:scroll-mt-32 instead of offsetting a zero-height sentinel div — cleaner DOM, semantically correct anchor target, eliminates the gap-under-header bug (D-26)
 
 ### Roadmap Evolution

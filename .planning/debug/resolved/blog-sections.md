@@ -39,18 +39,18 @@ started: redesign phase — sections never mounted on blog listing route
 
 - timestamp: 2026-06-10
   checked: src/components/homepage/supply-chain/supply-chain.tsx
-  found: `Section.Root tone="inverse"` (bg-ink black band) with `<BrushCircle illo="handshake" />` + center copy + `<Stamp top="Business" bottom="Teavision" />` in a 3-column grid. This is the BrushCircle+Stamp "ink motif band" treatment the UAT describes — but its copy is the business CTA ("Let the experts help grow your business"), not the newsletter copy, and it has no form.
+  found: `Section.Root tone="inverse"` (bg-ink black band) with `<legacy brush illustration component illo="handshake" />` + center copy + `<legacy curved-label component top="Business" bottom="Teavision" />` in a 3-column grid. This is the legacy animated artwork components "ink motif band" treatment the UAT describes — but its copy is the business CTA ("Let the experts help grow your business"), not the newsletter copy, and it has no form.
   implication: SupplyChain is the layout/motif template; production blog band = this treatment with `illo="teapot"` + newsletter copy/form.
 
 - timestamp: 2026-06-10
-  checked: src/components/homepage/brush-circle/brush-circle.tsx
-  found: ILLO_MAP already includes `teapot: { src: '/images/illo-teapot.png', ... }`. `illo="teapot"` is currently only used in brush-circle.stories.tsx — nowhere in app code.
+  checked: src/components/homepage/legacy-brush-illustration/legacy-brush-illustration.tsx
+  found: ILLO_MAP already includes `teapot: { src: '/images/newsletter-teapot.png', ... }`. `illo="teapot"` is currently only used in legacy-brush-illustration.stories.tsx — nowhere in app code.
   implication: The teapot asset and variant exist and are ready to use; no new asset work needed.
 
 - timestamp: 2026-06-10
   checked: src/components/homepage/newsletter/newsletter.tsx (HomepageNewsletter)
-  found: Newsletter copy ("Explore the world of tea, monthly.") + `HomepageNewsletterForm`, rendered as a `bg-brand-deep` rounded card inside `Section.Root tone="sunken" className="pt-0"`. No BrushCircle, no Stamp. Hardcoded `pt-0` couples it to its homepage position (immediately after Cta band).
-  implication: HomepageNewsletter has the right copy + form but the wrong visual treatment (brand-deep card, not full-bleed ink band with motifs). The exact production band (newsletter copy + teapot BrushCircle + Stamp + form) does not exist as a single component — it must be composed.
+  found: Newsletter copy ("Explore the world of tea, monthly.") + `HomepageNewsletterForm`, rendered as a `bg-brand-deep` rounded card inside `Section.Root tone="sunken" className="pt-0"`. No legacy brush illustration component, no Stamp. Hardcoded `pt-0` couples it to its homepage position (immediately after Cta band).
+  implication: HomepageNewsletter has the right copy + form but the wrong visual treatment (brand-deep card, not full-bleed ink band with motifs). The exact production band (newsletter copy + teapot legacy brush illustration component + legacy curved-label component + form) does not exist as a single component — it must be composed.
 
 - timestamp: 2026-06-10
   checked: src/components/homepage/contact/contact.tsx
@@ -60,7 +60,7 @@ started: redesign phase — sections never mounted on blog listing route
 - timestamp: 2026-06-10
   checked: src/app/(storefront)/pages/certifications/\_components/page-content.tsx
   found: Already imports `ProofPoints` and `SupplyChain` from `@/components/homepage` on a non-homepage route.
-  implication: Cross-route reuse of homepage/ components has precedent in this codebase, but per docs/conventions.md folder map, `src/components/homepage/` is "Homepage feature sections, homepage-only UI helpers" — strict compliance would require promoting reused components (Contact, BrushCircle, Stamp, newsletter band) out of homepage/ (e.g. to a shared marketing/ domain or ui/) rather than widening the precedent.
+  implication: Cross-route reuse of homepage/ components has precedent in this codebase, but per docs/conventions.md folder map, `src/components/homepage/` is "Homepage feature sections, homepage-only UI helpers" — strict compliance would require promoting reused components (Contact, legacy brush illustration component, legacy curved-label component, newsletter band) out of homepage/ (e.g. to a shared marketing/ domain or ui/) rather than widening the precedent.
 
 - timestamp: 2026-06-10
   checked: src/app/globals.css + src/components/ui/section/section.tsx
@@ -81,7 +81,7 @@ started: redesign phase — sections never mounted on blog listing route
 
 root_cause: |
 
-1. MISSING SECTIONS — composition gap in listing-content.tsx: the route tail renders only the small ui NewsletterSignup card. The production-matching pieces exist but are split across homepage components: the ink-band BrushCircle+Stamp treatment is SupplyChain (tone="inverse", Stamp "Business Teavision"); the teapot illo exists in BrushCircle's ILLO_MAP (unused in app code); the newsletter copy+form is HomepageNewsletter (different visual treatment, no motifs); the contact section is homepage Contact (directly reusable). No single component implements "newsletter band with teapot + stamp" — it must be composed. Conventions blocker: all candidates live in src/components/homepage/, defined as homepage-only; certifications already breaks this precedent.
+1. MISSING SECTIONS — composition gap in listing-content.tsx: the route tail renders only the small ui NewsletterSignup card. The production-matching pieces exist but are split across homepage components: the ink-band legacy animated artwork components treatment is SupplyChain (tone="inverse", legacy curved-label component "Business Teavision"); the teapot illo exists in legacy brush illustration component's ILLO_MAP (unused in app code); the newsletter copy+form is HomepageNewsletter (different visual treatment, no motifs); the contact section is homepage Contact (directly reusable). No single component implements "newsletter band with teapot + stamp" — it must be composed. Conventions blocker: all candidates live in src/components/homepage/, defined as homepage-only; certifications already breaks this precedent.
 2. SPACING — three stacked Section.Root tone="sunken" bands (FeaturedArticles, ArticleResults, newsletter wrapper) each contribute py-section (clamp(4rem,9vw,8.125rem)) top AND bottom, producing ~2× py-section (up to ~260px) of empty same-background space between adjacent content blocks.
 3. IMAGES — no defect. ArticleCard and blog Hero use next/image correctly (sizes, lazy default, Next 16 preload only on LCP/first featured).
    fix: not applied (audit-only)

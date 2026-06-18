@@ -1,6 +1,5 @@
-import Image from 'next/image'
-
 import {
+  AnimatedElement,
   Button,
   ButtonProps,
   Eyebrow,
@@ -23,14 +22,12 @@ export function Cta({ tone, intro, cta }: CtaProps) {
             images bleed past the content edge, the copy column gets wider */}
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,200px)_1fr_minmax(0,160px)]">
           <div className="flex justify-center lg:order-0 lg:-ml-18">
-            {/* Original-site cup-in-hands illustration (owner-supplied asset) */}
-            <Image
+            <AnimatedElement
+              animation="float-primary"
               src="/images/catalogue-cup.png"
-              alt=""
-              aria-hidden="true"
               width={680}
               height={567}
-              className="animate-bc-float h-auto w-[clamp(184px,23vw,248px)] max-w-none object-contain motion-reduce:animate-none"
+              className="w-[clamp(184px,23vw,248px)]"
               sizes="(min-width: 1024px) 248px, 40vw"
             />
           </div>
@@ -61,14 +58,12 @@ export function Cta({ tone, intro, cta }: CtaProps) {
           </div>
 
           <div className="flex justify-center lg:order-0 lg:-mr-20">
-            {/* Plain brush ring — no text overlay (owner: curved text overlapped) */}
-            <Image
+            <AnimatedElement
+              animation="float-secondary"
               src="/images/catalogue-stamp.png"
-              alt=""
-              aria-hidden="true"
               width={562}
               height={567}
-              className="animate-st-float h-auto w-[clamp(140px,14vw,200px)] max-w-none object-contain motion-reduce:animate-none"
+              className="w-[clamp(140px,14vw,200px)]"
               sizes="(min-width: 1024px) 200px, 30vw"
             />
           </div>

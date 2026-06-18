@@ -8,7 +8,7 @@ requires:
     provides: Phase 11 foundation tokens, homepage upper sections, and extracted motif PNG assets
 provides:
   - redesigned lower homepage composition
-  - brush-circle and stamp motif band treatment
+  - legacy-brush-illustration and stamp motif band treatment
   - restyled testimonials, Tea Journal, newsletter, contact, and FAQ sections
 affects: [homepage, header-cart-count, phase-11-verification]
 tech-stack:
@@ -21,8 +21,8 @@ key-files:
   created: []
   modified:
     - src/app/(storefront)/page.tsx
-    - src/components/homepage/brush-circle/brush-circle.tsx
-    - src/components/homepage/stamp/stamp.tsx
+    - src/components/homepage/legacy-brush-illustration/legacy-brush-illustration.tsx
+    - retired homepage curved-label component
     - src/components/homepage/supply-chain/supply-chain.tsx
     - src/components/homepage/catalogues/cta.tsx
     - src/components/homepage/testimonials/testimonials.tsx
@@ -39,7 +39,7 @@ key-decisions:
   - 'Homepage lower section order follows the redesign as hero, stats, range, services, organic, testimonials, motif band, journal, catalogue band, newsletter, contact, FAQ.'
   - 'Cart count now reads through a small client leaf after hydration to satisfy Next.js 16 Server Function initial-render restrictions.'
 patterns-established:
-  - 'Stamp uses the extracted ring PNG for brush texture and masks baked lettering so JSX textPath copy owns each band label.'
+  - 'The legacy curved-label component used the extracted ring PNG for brush texture and masks baked lettering so JSX textPath copy owns each band label.'
   - 'Homepage contact and newsletter forms may be visually restyled while preserving existing Server Action, honeypot, pending, and aria-live contracts.'
 requirements-completed: [RD-04]
 duration: 26 min
@@ -61,7 +61,7 @@ completed: 2026-06-10
 ## Accomplishments
 
 - Finished the lower homepage section composition with testimonials, supply-chain motif band, Tea Journal, catalogue motif band, newsletter, contact/help, and FAQ in redesign order.
-- Refined `BrushCircle` and `Stamp` motif components with token-only styling, reduced-motion guards, stable SVG arc IDs, and Storybook coverage.
+- Refined `legacy brush illustration component` and `legacy curved-label component` motif components with token-only styling, reduced-motion guards, stable SVG arc IDs, and Storybook coverage.
 - Preserved newsletter and contact Server Actions, honeypots, pending states, and aria-live feedback while moving them into the new green/ink visual system.
 - Cleared the previously documented Next.js 16 build blocker in the header cart count boundary.
 
@@ -69,7 +69,7 @@ completed: 2026-06-10
 
 Each task was committed atomically:
 
-1. **Task 1: BrushCircle + Stamp motif components** - `f1be8a2` (feat)
+1. **Task 1: legacy brush illustration component + legacy curved-label motif components** - `f1be8a2` (feat)
 2. **Task 2: Brand bands + testimonials + tea-journal** - `77d3dd2` (feat)
 3. **Task 3: Newsletter + contact/help + FAQ + page composition** - `6c8951b` (feat)
 4. **Motif visual correction** - `58eea4e` (fix)
@@ -78,9 +78,9 @@ Note: motif folders already existed when execution began; Task 1 verified the sc
 
 ## Files Created/Modified
 
-- `src/components/homepage/brush-circle/brush-circle.tsx` - decorative brush illustration component with per-illustration sizing and reduced-motion-safe float.
-- `src/components/homepage/stamp/stamp.tsx` - stamp ring motif with masked extracted PNG and curved SVG `textPath` copy.
-- `src/components/homepage/supply-chain/supply-chain.tsx` - ink motif CTA band with BrushCircle, Stamp, gold eyebrow, highlighted headline, and inverse CTA.
+- `src/components/homepage/legacy-brush-illustration/legacy-brush-illustration.tsx` - decorative brush illustration component with per-illustration sizing and reduced-motion-safe float.
+- `retired homepage curved-label component` - stamp ring motif with masked extracted PNG and curved SVG `textPath` copy.
+- `src/components/homepage/supply-chain/supply-chain.tsx` - ink motif CTA band with legacy brush illustration component, legacy curved-label component, gold eyebrow, highlighted headline, and inverse CTA.
 - `src/components/homepage/catalogues/cta.tsx` - green-deep catalogue motif band with stamp/brush sides and dual CTAs.
 - `src/components/homepage/testimonials/*` - selector-driven testimonial layout with gold quote mark and mono attribution.
 - `src/components/homepage/tea-journal/tea-journal.tsx` - three-card journal grid with motion-reduce-safe image hover treatment.
@@ -94,7 +94,7 @@ Note: motif folders already existed when execution began; Task 1 verified the sc
 ## Decisions Made
 
 - Homepage `SupplyChain` is now the redesign's business-growth motif band rather than the previous logo strip because the plan assigns supply-chain ownership to the lower homepage motif CTA.
-- `Stamp` keeps the extracted ring PNG but masks baked text so the component's `textPath` props define the visible label for each band.
+- `legacy curved-label component` keeps the extracted ring PNG but masks baked text so the component's `textPath` props define the visible label for each band.
 - The header cart badge now loads count after hydration through a client leaf; this preserves the existing Server Action while avoiding Server Function calls during prerender.
 
 ## Deviations from Plan
@@ -103,10 +103,10 @@ Note: motif folders already existed when execution began; Task 1 verified the sc
 
 **1. [Rule 2 - Missing Critical] Removed banned inline SVG text styles and stabilized stamp IDs**
 
-- **Found during:** Task 1 (BrushCircle + Stamp motif components)
-- **Issue:** Existing `Stamp` used inline `style={{ fontSize: ... }}` and defaulted multiple instances to the same SVG arc IDs.
+- **Found during:** Task 1 (legacy brush illustration component + legacy curved-label motif components)
+- **Issue:** Existing `legacy curved-label component` used inline `style={{ fontSize: ... }}` and defaulted multiple instances to the same SVG arc IDs.
 - **Fix:** Replaced inline styles with token/static Tailwind classes and derived stable per-copy arc IDs.
-- **Files modified:** `src/components/homepage/stamp/stamp.tsx`
+- **Files modified:** `retired homepage curved-label component`
 - **Verification:** `pnpm lint`, `pnpm typecheck`, `pnpm lint:tailwind`; acceptance grep confirmed `textPath`, no `use client`, no `dangerouslySetInnerHTML`.
 - **Committed in:** `f1be8a2`
 
@@ -122,9 +122,9 @@ Note: motif folders already existed when execution began; Task 1 verified the sc
 **3. [Rule 1 - Visual Bug] Masked baked stamp PNG lettering so motif labels render correctly**
 
 - **Found during:** Dev-server visual pass
-- **Issue:** The extracted `stamp-ring.png` contained baked "Subscribe Teavision" text that conflicted with Business/Catalogue `textPath` labels.
+- **Issue:** The extracted `newsletter-label.png` contained baked "Subscribe Teavision" text that conflicted with Business/Catalogue `textPath` labels.
 - **Fix:** Added a token-colored inner mask while preserving the brush ring texture and JSX curved text labels.
-- **Files modified:** `src/components/homepage/stamp/stamp.tsx`, `src/components/homepage/catalogues/cta.tsx`
+- **Files modified:** `retired homepage curved-label component`, `src/components/homepage/catalogues/cta.tsx`
 - **Verification:** `pnpm lint:tailwind`, `pnpm typecheck`, `pnpm test:contracts`, and browser scroll screenshots confirmed loaded motifs.
 - **Committed in:** `58eea4e`
 

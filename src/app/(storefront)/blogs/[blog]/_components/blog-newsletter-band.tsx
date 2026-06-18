@@ -1,7 +1,5 @@
-import { Eyebrow, Section } from '@/components/ui'
-import { BrushCircle } from '@/components/homepage/brush-circle'
 import { HomepageNewsletterForm } from '@/components/homepage/newsletter/newsletter-form'
-import { Stamp } from '@/components/homepage/stamp'
+import { AnimatedElement, Eyebrow, Section } from '@/components/ui'
 import { sendNewsletterSignupAction } from '@/lib/contact/actions'
 
 export function BlogNewsletterBand() {
@@ -9,8 +7,15 @@ export function BlogNewsletterBand() {
     <Section.Root tone="inverse" className="overflow-hidden">
       <Section.Container>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,260px)_1fr_minmax(0,210px)]">
-          <div className="flex justify-center">
-            <BrushCircle illo="teapot" />
+          <div className="flex justify-center lg:-ml-18">
+            <AnimatedElement
+              animation="float-primary"
+              src="/images/business-handshake.png"
+              width={678}
+              height={594}
+              className="w-[clamp(188px,23.5vw,252px)]"
+              sizes="(min-width: 1024px) 252px, 40vw"
+            />
           </div>
 
           <div className="mx-auto max-w-[52ch] text-center">
@@ -30,8 +35,15 @@ export function BlogNewsletterBand() {
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <Stamp top="Business" bottom="Teavision" />
+          <div className="flex justify-center lg:-mr-20">
+            <AnimatedElement
+              animation="float-secondary"
+              src="/images/business-stamp.png"
+              width={562}
+              height={567}
+              className="w-[clamp(140px,14vw,200px)]"
+              sizes="(min-width: 1024px) 200px, 30vw"
+            />
           </div>
         </div>
       </Section.Container>

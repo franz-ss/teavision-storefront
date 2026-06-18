@@ -108,7 +108,7 @@ The hard constraint is the repo's own guard tooling. `scripts/check-tailwind-cla
 - `Spectral` — **not a variable font**; must pass explicit `weight: ['300','400','500','600']` and `style: ['normal','italic']` (italic is load-bearing: `.italic-accent` display headlines, `.hl` gold italic in bands) `[ASSUMED: training knowledge; build fails fast with a clear error if weights are wrong]`
 - `Hanken_Grotesk` — variable font, no weight array needed `[ASSUMED: same]`
 - `Space_Mono` — not variable; `weight: ['400','700']` (700 used by eyebrows) `[ASSUMED: same]`
-- `Caveat` — variable; used **only** by the `Stamp` motif (`.stamp__txt`). The stamp appears in the homepage brand bands (RD-04 scope) → include Caveat `[VERIFIED: brand-motifs.js + design-system.css line 816]`
+- `Caveat` — variable; used **only** by the `legacy curved-label component` motif (`.stamp__txt`). The stamp appears in the homepage brand bands (RD-04 scope) → include Caveat `[VERIFIED: brand-motifs.js + design-system.css line 816]`
 
 ## New Design System Inventory
 
@@ -195,7 +195,7 @@ All buttons: pill (`border-radius: 100px`), Hanken 600, 0.94rem, ls 0.01em, gap 
 - Alternating `--paper` / `--paper-2` sections; `.section-pad` rhythm
 - `.statband`: bg green-deep, 4-col grid, white serif 2.4rem stat + gold icon, white/12 column rules
 - `.certs` marquee: hairline top/bottom borders, 38s CSS `marquee` keyframe loop (pause on hover, reduced-motion aware)
-- `.bband` (brand motif band): bg ink (or `.green` → green-deep), 3-col grid `260px / 1fr / 210px`, centered text, gold eyebrow, serif white h2 with gold-italic `.hl` word, brush-circle illustration one side + hand-drawn stamp the other; gentle float keyframes (reduced-motion aware)
+- `.bband` (brand motif band): bg ink (or `.green` → green-deep), 3-col grid `260px / 1fr / 210px`, centered text, gold eyebrow, serif white h2 with gold-italic `.hl` word, legacy-brush-illustration illustration one side + hand-drawn stamp the other; gentle float keyframes (reduced-motion aware)
 - `.news` (newsletter card): bg green-deep, radius-lg, clamp padding, pill input white/10 bg + white/25 border, gold focus border
 - `.coll__hero`: bg green-deep, white display h1, gold eyebrow, mono meta stats, 35%-opacity background image
 - `.hdr`: 38px ink utility bar (mono 11.5px ticker + phone/wholesale links) over 76px main bar `oklch(paper / 0.82)` + `backdrop-blur(14px)` + hairline bottom border; sticky; nav links are pills hover green-tint/green; 42px round icon buttons; gold cart-count badge; mega menu full-width panel (grid 1.1fr/2.4fr/1.3fr: intro + 3 link columns + feature card) with scrim; search overlay (serif input under 2px ink rule + popular pills); fullscreen mobile menu (serif 1.5rem accordion rows)
@@ -213,7 +213,7 @@ All buttons: pill (`border-radius: 100px`), Hanken 600, 0.94rem, ls 0.01em, gap 
 
 ### Brand motif assets (extraction required)
 
-`brand-motifs.js` references 4 real PNGs (`illo-handshake`, `illo-cup`, `illo-teapot`, `stamp-ring`) that exist **only as gzip+base64 blobs inside `design/teavision-redesign.html`** (`script[type="__bundler/manifest"]` keyed by UUID; `script[type="__bundler/ext_resources"]` maps ids→UUIDs: stampRing→`0af1329f…`, illoCup→`9dca5ed0…`, illoTeapot→`4d92e050…`, illoHandshake→`852c2c73…`) `[VERIFIED: parsed the HTML]`. A one-off Node script (parse JSON, `Buffer.from(data,'base64')`, `zlib.gunzipSync` when `compressed`, write to `public/images/`) extracts them. `public/images/` currently has only `australian-flag.svg` and `homepage-hero.jpg` `[VERIFIED]`. The `Stamp` component overlays Caveat curved `<textPath>` SVG text on the ring PNG — port as a small presentational component.
+`brand-motifs.js` references 4 real PNGs (`business-handshake`, `catalogue-cup`, `newsletter-teapot`, `newsletter-label`) that exist **only as gzip+base64 blobs inside `design/teavision-redesign.html`** (`script[type="__bundler/manifest"]` keyed by UUID; `script[type="__bundler/ext_resources"]` maps ids→UUIDs: newsletterLabel→`0af1329f…`, catalogueCup→`9dca5ed0…`, newsletterTeapot→`4d92e050…`, businessHandshake→`852c2c73…`) `[VERIFIED: parsed the HTML]`. A one-off Node script (parse JSON, `Buffer.from(data,'base64')`, `zlib.gunzipSync` when `compressed`, write to `public/images/`) extracts them. `public/images/` currently has only `australian-flag.svg` and `homepage-hero.jpg` `[VERIFIED]`. The `legacy curved-label component` component overlays Caveat curved `<textPath>` SVG text on the ring PNG — port as a small presentational component.
 
 ## Old Design System Usage Map (file-by-file)
 
@@ -289,7 +289,7 @@ Work classes: **S** = pure class-name swap, **R** = restyle (class swaps + visua
 | `homepage/faq/faq.tsx`                                                           |     1 | R (`.faq__*`)                                                                                                |
 | `homepage/overlay-image-card/overlay-image-card.tsx`                             |     3 | R (`.rtile`; motion-reduce trio)                                                                             |
 | `homepage/catalogues/*`, `supply-chain/*`, `content.ts`                          |     — | R/W (CTA bands → `.bband` motif bands; `content.ts` `variant: 'inverseSecondary'` asserted by contract test) |
-| new: brush-circle + stamp motif components (`src/components/homepage/` or `ui/`) |     — | NEW (`brand-motifs.js`)                                                                                      |
+| new: legacy-brush-illustration + stamp motif components (`src/components/homepage/` or `ui/`) |     — | NEW (`brand-motifs.js`)                                                                                      |
 
 ### Collections / PLP / Search (Plan 4) — mockup `collection-page.js`, `product-card-footer.js`
 
@@ -415,10 +415,10 @@ Full `@theme` block, font-loading spec, and complete class rename table are in *
 | Button/Section styling at call sites | per-page pill button classes                   | extend `Button`/`Section` cva variants                                        | ESLint guards literally ban the alternative                                       |
 | className validity checking          | manual review                                  | `pnpm lint:tailwind` (existing)                                               | Compiles every token against the design system                                    |
 | Variant maps                         | object-lookup + template literals              | `cva()` + `cn()`                                                              | Guard scripts parse `cva` calls; project convention                               |
-| Curved stamp text                    | hand-positioned letters                        | SVG `<textPath>` (port mockup `Stamp` as-is)                                  | Mockup already solved it; reduced-motion handled in CSS                           |
+| Curved stamp text                    | hand-positioned letters                        | SVG `<textPath>` (port mockup `legacy curved-label component` as-is)                                  | Mockup already solved it; reduced-motion handled in CSS                           |
 | Carousel (testimonials, if needed)   | custom slider                                  | `embla-carousel-react` (already used by testimonials-slider)                  | existing dependency                                                               |
 
-**Key insight:** every "new" visual element in the mockup maps onto an existing primitive or an extension of one — the phase needs **zero new dependencies** and at most 2–3 new small components (`Eyebrow`, `BrushCircle`, `Stamp`).
+**Key insight:** every "new" visual element in the mockup maps onto an existing primitive or an extension of one — the phase needs **zero new dependencies** and at most 2–3 new small components (`Eyebrow`, `legacy brush illustration component`, `legacy curved-label component`).
 
 ## Runtime State Inventory
 
@@ -515,7 +515,7 @@ variant: {
 ### Asset extraction (one-off script, Plan 1 task)
 
 ```js
-// scripts/extract-redesign-assets.mjs — verified manifest format
+// retired one-off asset extraction script — verified manifest format
 import { readFileSync, writeFileSync } from 'node:fs'
 import { gunzipSync } from 'node:zlib'
 const html = readFileSync('design/teavision-redesign.html', 'utf8')
@@ -526,7 +526,7 @@ const ids = JSON.parse(
   html.match(/<script type="__bundler\/ext_resources">([\s\S]*?)<\/script>/)[1],
 )
 for (const { id, uuid } of ids) {
-  // stampRing, illoCup, illoTeapot, illoHandshake
+  // newsletterLabel, catalogueCup, newsletterTeapot, businessHandshake
   const e = manifest[uuid]
   let bytes = Buffer.from(e.data, 'base64')
   if (e.compressed) bytes = gunzipSync(bytes)
@@ -618,7 +618,7 @@ for (const { id, uuid } of ids) {
 
 ### Wave 0 Gaps
 
-- [ ] `scripts/extract-redesign-assets.mjs` — one-off motif PNG extraction (RD-04 prerequisite; verified format above)
+- [ ] `retired one-off asset extraction script` — one-off motif PNG extraction (RD-04 prerequisite; verified format above)
 - Otherwise: **None** — existing test infrastructure covers all phase requirements; class-string assertions are updated in lockstep rather than pre-created.
 
 ## Security Domain
@@ -664,7 +664,7 @@ This phase is restyling-only; it must not widen the attack surface.
 | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------- |
 | **11-01 Foundation**                         | Asset-extraction script + motif PNGs; `layout.tsx` font swap; new `@theme` tokens + redefined `@utility` type roles **added alongside old tokens**; `Section` tones, `Button` variants/sizes, `Eyebrow` (new), `Badge`→pill, inputs/checkbox/select/labels, quantity-stepper, icon-button, card, accordion, dialog, price, star-rating; `.storybook/preview.ts`; ui stories                         | —                          | `button-system.test.mjs`, `.storybook/preview.ts`                                                     |
 | **11-02 Layout chrome**                      | Header (utility bar, main bar, mega menus, search overlay, mobile menu, cart badge), footer (ink restyle, keep links/newsletter action), storefront layout skip-link, root error/not-found pages                                                                                                                                                                                                    | 11-01                      | —                                                                                                     |
-| **11-03 Homepage**                           | Hero A + stat strip, range tiles, services cards, organic split, certs marquee, testimonials, journal cards, brand-motif bands (BrushCircle/Stamp), help/contact section, FAQ, newsletter band, `content.ts`                                                                                                                                                                                        | 11-01 (02 for visual QA)   | `button-system.test.mjs` (hero `variant="brand"`, content.ts `inverseSecondary`), motion-reduce trios |
+| **11-03 Homepage**                           | Hero A + stat strip, range tiles, services cards, organic split, certs marquee, testimonials, journal cards, brand-motif bands (legacy animated artwork components), help/contact section, FAQ, newsletter band, `content.ts`                                                                                                                                                                                        | 11-01 (02 for visual QA)   | `button-system.test.mjs` (hero `variant="brand"`, content.ts `inverseSecondary`), motion-reduce trios |
 | **11-04 Collections + search**               | Collection hero, filters, toolbar/sort, product grid, **product card** (absorbing Phase 9 CARD-02..06 — see Open Q1), purchase form, collections index, search results/filters/pagination                                                                                                                                                                                                           | 11-01                      | `product-card.test.tsx`, `product-list.test.tsx`                                                      |
 | **11-05 PDP + cart**                         | PDP layout/gallery/eyebrow/price/sizes/buy-row/assurance, bulk-savings → tiers grid, quick view, recommendation cards, related rail; cart page restyle (drawer styling applied to page), skeleton, line actions, checkout form                                                                                                                                                                      | 11-01 (04 for shared card) | `cart-view.test.tsx`, skeleton mirrors                                                                |
 | **11-06 Remaining surfaces + removal sweep** | Blog/article + portable-text + `html-content.ts`, wholesale/contact/our-story/certifications/custom-tea-blends/[...slug], remaining stories; **delete** `--tv-*`/steep/stone/legacy tokens + stale utilities, add `--color-*: initial` wipe, retire `brandStrong`, update `no-section-root-tone-class` regex, update `docs/conventions.md`/`AGENTS.md` token examples; full phase-gate verification | all                        | grep gates, full suite                                                                                |

@@ -39,5 +39,5 @@ source: Materialized from 11-RESEARCH.md §Validation Architecture (plan-checker
 
 ## Wave 0 Gaps
 
-- [x] `scripts/extract-redesign-assets.mjs` — one-off motif PNG extraction (RD-04 prerequisite; format verified in research) — **implemented as plan 11-01 Task 1**
+- [x] `retired one-off asset extraction script` — one-off motif PNG extraction (RD-04 prerequisite; format verified in research) — **implemented as plan 11-01 Task 1**
 - Otherwise: **None** — existing test infrastructure covers all phase requirements; class-string assertions are updated in lockstep rather than pre-created.
