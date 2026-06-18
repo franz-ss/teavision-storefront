@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: SEO-Safe PLP Pagination Parity
-status: Awaiting next milestone
-stopped_at: Milestone v1.2 completed and archived
-last_updated: "2026-06-18T04:17:16.860Z"
-last_activity: 2026-06-18 - Completed quick task 260618-h2e: Project cleanup for animated artwork primitives and CMS-ready naming
+milestone: v1.3
+milestone_name: Shopify Customer Accounts
+status: planning
+last_updated: "2026-06-18T23:15:28.806Z"
+last_activity: 2026-06-18
 progress:
-  total_phases: 1
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 
 ## Current Position
 
-Phase: Milestone v1.2 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-18 - Completed quick task 260618-h2e: Project cleanup for animated artwork primitives and CMS-ready naming
+Status: Defining requirements
+Last activity: 2026-06-18 — Milestone v1.3 started
 
 ## Performance Metrics
 

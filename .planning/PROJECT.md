@@ -10,6 +10,20 @@ v1.0 shipped the migration of Shopify-theme storefront behavior into the Next st
 
 Customers can confidently choose the right bulk product, quantity, and price path before checkout.
 
+## Current Milestone: v1.3 Shopify Customer Accounts
+
+**Goal:** Add modern Shopify Customer Account support to the headless storefront while preserving Tea Vision's account, address, order-history, and checkout identity expectations.
+
+**Target features:**
+- Customer Account API OAuth/session foundation.
+- `/account` login/logout/callback and protected account routes.
+- Account dashboard/profile details.
+- Address list/add/edit/delete/default address management.
+- Order history and order detail pages.
+- Cart buyer identity sync before checkout.
+- Tea Vision theme parity review, including reorder and wholesale/B2B pricing considerations.
+- Explicit boundaries around legacy password forms, guest orders, real checkout testing, and customer-tag pricing.
+
 ## Requirements
 
 ### Validated
@@ -32,13 +46,16 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ### Active
 
+- [ ] Add Shopify Customer Account API authentication, session management, protected account routes, account profile, address management, order history, and cart buyer identity sync.
+- [ ] Preserve the customer-facing intent of the sibling Liquid theme account experience while adapting implementation to the current headless Shopify architecture.
 - [ ] Close v1.0 known gaps: collection empty-state "Clear filters" misdirect (CQA-05), human UAT items (visual sweep, live Resend newsletter), and the tech-debt list in `milestones/v1.0-MILESTONE-AUDIT.md`.
 - [ ] Close v1.1 remaining tech debt (W2 heavy `getBlog()` on default blog route for hero/metadata, W4 light-projection type honesty, W5 featured backfill trade-off) — see `milestones/v1.1-MILESTONE-AUDIT.md`.
+
 ### Out of Scope
 
 - Reinstalling or injecting HulkApps app scripts into the headless storefront - third-party browser scripts from the Liquid theme are not a stable headless data contract.
 - Recreating discount calculation rules in client code - Shopify checkout/cart remains the authority for actual discounts.
-- Building wholesale account pricing for 100kg+ orders - this is a separate B2B/account feature.
+- Implementing wholesale/customer-specific pricing as an unverified client-side calculation - v1.3 may research and prepare B2B/cart identity foundations, but Shopify remains the source of truth for actual customer pricing and checkout totals.
 - Editing sibling `teavision-theme` - it is used as a reference only.
 
 ## Context
@@ -73,6 +90,23 @@ The codebase map in `.planning/codebase/` predates the redesign and has known dr
 | LQIP blur placeholders with truthy guards plus bounded image URL options    | Blur-in perceived performance without render crashes on empty/absent LQIP; image weight capped per use case                            | Good    |
 | Preserve production PLP pagination SEO behavior for launch                  | Platform migration risk is lower when `?page=N`, base canonicals, prev/next links, and crawler exclusions match the live Shopify site before post-launch SEO tuning | Good |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `$gsd-transition`):
+1. Requirements invalidated? -> Move to Out of Scope with reason
+2. Requirements validated? -> Move to Validated with phase reference
+3. New requirements emerged? -> Add to Active
+4. Decisions to log? -> Add to Key Decisions
+5. "What This Is" still accurate? -> Update if drifted
+
+**After each milestone** (via `$gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check - still the right priority?
+3. Audit Out of Scope - reasons still valid?
+4. Update Context with current state
+
 ---
 
-_Last updated: 2026-06-12 after v1.2 milestone close_
+_Last updated: 2026-06-19 after starting v1.3 Shopify Customer Accounts milestone_
