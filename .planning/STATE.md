@@ -4,8 +4,8 @@ milestone: v1.2
 milestone_name: SEO-Safe PLP Pagination Parity
 status: Awaiting next milestone
 stopped_at: Milestone v1.2 completed and archived
-last_updated: "2026-06-15T01:48:08.331Z"
-last_activity: 2026-06-15 — Completed quick task 260615-fem: Rebuild GDPR/US/PIPEDA/APPI compliance pages with a streamlined data-request UX
+last_updated: "2026-06-18T04:17:16.860Z"
+last_activity: 2026-06-18 - Completed quick task 260618-h2e: Project cleanup for animated artwork primitives and CMS-ready naming
 progress:
   total_phases: 1
   completed_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-12)
 Phase: Milestone v1.2 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-06-15 — Completed quick task 260615-fem: Rebuild GDPR/US/PIPEDA/APPI compliance pages with a streamlined data-request UX
+Last activity: 2026-06-18 - Completed quick task 260618-h2e: Project cleanup for animated artwork primitives and CMS-ready naming
 
 ## Performance Metrics
 
@@ -157,6 +157,7 @@ Recent decisions affecting current work:
 | 260615-bpt | Redesign /pages/download-catalogues into a bespoke catalogue download page | 2026-06-15 | 40e9e7a | [260615-bpt-redesign-download-catalogues-page](./quick/260615-bpt-redesign-download-catalogues-page/) |
 | 260615-dm4 | Bespoke /pages/how-long-does-bulk-tea-last guide page (verbatim copy) | 2026-06-15 | 88cd2ff | [260615-dm4-bespoke-how-long-does-bulk-tea-last-guid](./quick/260615-dm4-bespoke-how-long-does-bulk-tea-last-guid/) |
 | 260615-fem | Rebuild GDPR/US/PIPEDA/APPI compliance pages with a streamlined data-request UX (one email action per right) | 2026-06-15 | 7f98492 | [260615-fem-redesign-compliance-data-rights-pages](./quick/260615-fem-redesign-compliance-data-rights-pages/) |
+| 260618-h2e | Project cleanup for animated artwork primitives and CMS-ready naming | 2026-06-18 | 9c7a54b | [260618-h2e-project-cleanup-animation-primitives](./quick/260618-h2e-project-cleanup-animation-primitives/) |
 
 ## Deferred Items
 
