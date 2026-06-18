@@ -91,12 +91,38 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
+| AUTH-01 | Phase 14 | Pending |
+| AUTH-02 | Phase 14 | Pending |
+| AUTH-03 | Phase 14 | Pending |
+| AUTH-04 | Phase 14 | Pending |
+| AUTH-05 | Phase 14 | Pending |
+| ACCT-01 | Phase 14 | Pending |
+| ACCT-02 | Phase 14 | Pending |
+| ACCT-03 | Phase 14 | Pending |
+| ADDR-01 | Phase 14 | Pending |
+| ADDR-02 | Phase 14 | Pending |
+| ADDR-03 | Phase 14 | Pending |
+| ADDR-04 | Phase 14 | Pending |
+| ADDR-05 | Phase 14 | Pending |
+| ORD-01 | Phase 14 | Pending |
+| ORD-02 | Phase 14 | Pending |
+| ORD-03 | Phase 14 | Pending |
+| ORD-04 | Phase 14 | Pending |
+| CART-01 | Phase 14 | Pending |
+| CART-02 | Phase 14 | Pending |
+| MIG-01 | Phase 14 | Pending |
+| MIG-02 | Phase 14 | Pending |
+| MIG-03 | Phase 14 | Pending |
+| SEC-01 | Phase 14 | Pending |
+| SEC-02 | Phase 14 | Pending |
+| SEC-03 | Phase 14 | Pending |
+| SEC-04 | Phase 14 | Pending |
 
 **Coverage:**
 - v1 requirements: 26 total
-- Mapped to phases: 0
-- Unmapped: 26
+- Mapped to phases: 26
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-19*
-*Last updated: 2026-06-19 after initial definition*
+*Last updated: 2026-06-19 after roadmap creation*

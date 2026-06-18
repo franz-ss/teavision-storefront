@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Shopify Customer Accounts
 status: planning
-last_updated: "2026-06-18T23:15:28.806Z"
-last_activity: 2026-06-18
+last_updated: "2026-06-19T00:00:00.000Z"
+last_activity: 2026-06-19
 progress:
-  total_phases: 0
+  total_phases: 1
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,17 +17,17 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-12)
+See: .planning/PROJECT.md (updated 2026-06-19)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Planning next milestone
+**Current focus:** Phase 14 Shopify Customer Accounts
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 14 Shopify Customer Accounts
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-18 — Milestone v1.3 started
+Status: Roadmap ready; planning pending
+Last activity: 2026-06-19 — Milestone v1.3 roadmap created
 
 ## Performance Metrics
 
@@ -133,10 +133,11 @@ Recent decisions affecting current work:
 - Phase 9 edited: edited fields: title, goal, requirements, success_criteria, plans
 - Phase 12 added: optimize /blogs/teavision-blogs loading and image rendering
 - Phase 13 added: Production-parity collection pagination
+- Phase 14 added: Shopify Customer Accounts
 
 ### Pending Todos
 
-- None for v1.2. Start the next milestone with /gsd-new-milestone.
+- Plan Phase 14 with `$gsd-plan-phase 14 --research`.
 
 ### Blockers/Concerns
 
