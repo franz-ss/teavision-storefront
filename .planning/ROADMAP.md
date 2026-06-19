@@ -46,7 +46,7 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 
 ### 🚧 v1.3 Shopify Customer Accounts
 
-- [ ] **Phase 14: Shopify Customer Accounts** — Add modern Shopify Customer Account API authentication, protected account pages, address management, order history, cart buyer identity sync, and migration parity decisions for the Tea Vision account experience. (0 plans created)
+- [ ] **Phase 14: Shopify Customer Accounts** — Add modern Shopify Customer Account API authentication, protected account pages, address management, order history, cart buyer identity sync, and migration parity decisions for the Tea Vision account experience. (5 plans ready)
 
 ## Progress
 
@@ -63,7 +63,7 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 | 11. Full Visual Redesign                   | v1.0      | 22/22          | Complete   | 2026-06-11 |
 | 12. Optimize blog loading                  | v1.1      | 4/4            | Complete   | 2026-06-12 |
 | 13. Production-parity collection pagination | v1.2      | 2/2            | Complete   | 2026-06-12 |
-| 14. Shopify Customer Accounts              | v1.3      | 0/0            | Pending    | —          |
+| 14. Shopify Customer Accounts              | v1.3      | 0/5            | Ready      | —          |
 
 ## Phase Details
 
@@ -89,6 +89,28 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 - Customer data must be session-scoped and should not use public product/collection cache tags.
 - Reorder and customer-specific pricing are parity findings from `teavision-theme`; only ship them in Phase 14 if the implementation can stay checkout-authoritative.
 
+**Plans:** 5 plans ready
+
+**Wave 1**
+- [ ] 14-01: Customer Account API foundation and OAuth session
+
+**Wave 2 *(blocked on Wave 1 completion)***
+- [ ] 14-02: Protected account dashboard and order history
+- [ ] 14-03: Address book and supported profile mutations
+
+**Wave 3 *(blocked on Wave 1 completion)***
+- [ ] 14-04: Cart buyer identity sync and blocked checkout handoff
+
+**Wave 4 *(blocked on Waves 1-3 completion)***
+- [ ] 14-05: Migration parity, account entry links, readiness docs, and final coverage
+
+**Cross-cutting constraints:**
+- Customer Account tokens, refresh material, and pending OAuth state stay in secure HttpOnly server-owned cookies.
+- Customer/account data is session-scoped, no-store, and never cached with public product/collection tags.
+- Server Actions and Route Handlers verify the customer session before mutating profile, address, cart identity, or checkout handoff state.
+- Real Shopify hosted checkout, payment, shipping-rate, tax, order-creation, and success-redirect tests stay blocked until store-owner approval.
+- Account UI uses the approved warm Tailwind token system, `cn()`, route-local client leaves, and Storybook state coverage.
+
 ## Next
 
-Plan Phase 14 with `$gsd-plan-phase 14 --research`.
+Execute Phase 14 with `$gsd-execute-phase 14`.
