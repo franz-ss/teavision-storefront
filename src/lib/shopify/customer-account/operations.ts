@@ -238,13 +238,21 @@ export async function getCustomerAccountDashboard(
     }
   }
 
+  const sectionErrors: CustomerAccountDashboard['sectionErrors'] = {}
+  if (!data.customer.addresses) {
+    sectionErrors.addresses = 'We could not load saved addresses.'
+  }
+  if (!data.customer.orders) {
+    sectionErrors.orders = 'We could not load recent orders.'
+  }
+
   const profile = reshapeCustomer(data.customer)
 
   return {
     defaultAddress: profile.defaultAddress,
     profile,
     recentOrders: profile.orders,
-    sectionErrors: {},
+    sectionErrors,
   }
 }
 

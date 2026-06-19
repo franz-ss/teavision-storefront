@@ -1,0 +1,23 @@
+import { Card, Button } from '@/components/ui'
+
+export function SupportBlock() {
+  return (
+    <Card as="aside" padding="lg" radius="lg" tone="sunken">
+      <div className="grid gap-3">
+        <h2 className="type-heading-05 text-ink">Need account help?</h2>
+        <p className="type-body-sm text-ink-soft">
+          This account shows orders tied to the signed-in Shopify customer.
+          Contact us if you need help with a guest order.
+        </p>
+        <div className="flex flex-col gap-2">
+          <Button href="/pages/contact" variant="secondary" size="sm">
+            Contact support
+          </Button>
+          <Button href="/pages/wholesale" variant="quiet" size="quiet">
+            Wholesale questions
+          </Button>
+        </div>
+      </div>
+    </Card>
+  )
+}

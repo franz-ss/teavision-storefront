@@ -56,6 +56,27 @@ describe('Customer Account read operations', () => {
     expect(dashboard.sectionErrors).toEqual({})
   })
 
+  test('keeps loaded dashboard sections when recent orders are unavailable', async () => {
+    const partialServer = await createFakeCustomerAccountApiServer({
+      omitViewerSections: ['orders'],
+    })
+    vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', partialServer.url)
+
+    try {
+      const dashboard = await getCustomerAccountDashboard(makeSession())
+
+      expect(dashboard.profile?.emailAddress).toBe('avery@example.test')
+      expect(dashboard.defaultAddress?.city).toBe('Melbourne')
+      expect(dashboard.recentOrders).toEqual([])
+      expect(dashboard.sectionErrors.orders).toBe(
+        'We could not load recent orders.',
+      )
+    } finally {
+      await partialServer.close()
+      vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', serverUrl)
+    }
+  })
+
   test('loads paginated orders and order detail by order id', async () => {
     const orders = await getCustomerAccountOrders(makeSession(), { first: 10 })
     const order = await getCustomerAccountOrder(
@@ -66,5 +87,26 @@ describe('Customer Account read operations', () => {
     expect(orders.items[0]?.name).toBe('#TV1001')
     expect(orders.pageInfo.hasNextPage).toBe(false)
     expect(order?.lineItems[0]?.title).toBe('Organic Sencha')
+  })
+
+  test('order detail fetch sends no client-provided customer id variable', async () => {
+    const requestServer = await createFakeCustomerAccountApiServer()
+    vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', requestServer.url)
+
+    try {
+      await getCustomerAccountOrder(
+        makeSession(),
+        'gid://shopify/Order/test-order-1',
+      )
+
+      expect(
+        requestServer.requests.find(
+          (request) => request.operationName === 'CustomerAccountOrder',
+        )?.variables,
+      ).toEqual({ orderId: 'gid://shopify/Order/test-order-1' })
+    } finally {
+      await requestServer.close()
+      vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', serverUrl)
+    }
   })
 })

@@ -26,12 +26,14 @@ type FakeTokenRecord = {
 type FakeCustomerAccountServerOptions = {
   initialProfile?: CustomerAccountProfile
   invalidTokenCode?: string
+  omitViewerSections?: Array<'addresses' | 'orders'>
   port?: number
 }
 
 type FakeCustomerAccountServer = {
   close: () => Promise<void>
   profile: CustomerAccountProfile
+  requests: GraphqlRequest[]
   reset: () => void
   tokens: FakeTokenRecord
   url: string
@@ -105,12 +107,21 @@ function toOrderConnection(orders: CustomerAccountOrder[]) {
   }
 }
 
-function toCustomerPayload(profile: CustomerAccountProfile) {
-  return {
+function toCustomerPayload(
+  profile: CustomerAccountProfile,
+  omitSections: Array<'addresses' | 'orders'>,
+) {
+  const payload = {
     ...profile,
-    addresses: toAddressConnection(profile.addresses),
-    orders: toOrderConnection(profile.orders),
+    addresses: omitSections.includes('addresses')
+      ? undefined
+      : toAddressConnection(profile.addresses),
+    orders: omitSections.includes('orders')
+      ? undefined
+      : toOrderConnection(profile.orders),
   }
+
+  return payload
 }
 
 function findAddress(
@@ -140,9 +151,11 @@ function readRecord(value: unknown): Record<string, unknown> {
 export async function createFakeCustomerAccountApiServer({
   initialProfile = makeCustomerAccountProfile(),
   invalidTokenCode = 'invalid-code',
+  omitViewerSections = [],
   port = 0,
 }: FakeCustomerAccountServerOptions = {}): Promise<FakeCustomerAccountServer> {
   let profile = initialProfile
+  const requests: GraphqlRequest[] = []
   let tokens: FakeTokenRecord = {
     accessToken: 'customer-access-token',
     idToken: makeIdToken('test-nonce', profile.id),
@@ -226,10 +239,11 @@ export async function createFakeCustomerAccountApiServer({
       const body = await readRequestBody(request)
       const graphqlRequest = JSON.parse(body) as GraphqlRequest
       const operationName = getOperationName(graphqlRequest)
+      requests.push({ ...graphqlRequest, operationName })
 
       if (operationName === 'CustomerAccountViewer') {
         writeJson(response, 200, {
-          data: { customer: toCustomerPayload(profile) },
+          data: { customer: toCustomerPayload(profile, omitViewerSections) },
         })
         return
       }
@@ -369,8 +383,12 @@ export async function createFakeCustomerAccountApiServer({
     get profile() {
       return profile
     },
+    get requests() {
+      return requests
+    },
     reset: () => {
       profile = initialProfile
+      requests.length = 0
     },
     get tokens() {
       return tokens
