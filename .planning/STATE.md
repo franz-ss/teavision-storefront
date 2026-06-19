@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Shopify Customer Accounts
 status: executing
-stopped_at: Phase 14 planned
-last_updated: "2026-06-19T02:53:07.812Z"
-last_activity: 2026-06-19 -- Phase 14 planning complete
+stopped_at: Phase 14 Plan 14-01 complete
+last_updated: "2026-06-19T03:18:17.002Z"
+last_activity: 2026-06-19 -- Phase 14 Plan 14-01 customer account OAuth foundation complete
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 5
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 20
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-19)
 ## Current Position
 
 Phase: 14 Shopify Customer Accounts
-Plan: 5 plans ready
-Status: Ready to execute
-Last activity: 2026-06-19 -- Phase 14 planning complete
+Plan: 14-02 Protected account dashboard and order history
+Status: Executing Wave 2
+Last activity: 2026-06-19 -- Plan 14-01 complete; OAuth/session foundation committed in ac2bda4
 
 ## Performance Metrics
 
@@ -135,10 +135,11 @@ Recent decisions affecting current work:
 - Phase 12 added: optimize /blogs/teavision-blogs loading and image rendering
 - Phase 13 added: Production-parity collection pagination
 - Phase 14 added: Shopify Customer Accounts
+- Phase 14 executing: Plan 14-01 Customer Account API foundation and OAuth session complete.
 
 ### Pending Todos
 
-- Execute Phase 14 with `$gsd-execute-phase 14`.
+- Continue Phase 14 with plan 14-02 Protected account dashboard and order history.
 
 ### Blockers/Concerns
 
@@ -195,8 +196,8 @@ debug/resolved. The UAT/verification items are the two human-only tests
 ## Session Continuity
 
 Last session: 2026-06-19T02:38:01.596Z
-Stopped at: Phase 14 planned
-Resume file: .planning/phases/teavision-14-shopify-customer-accounts/14-01-PLAN.md
+Stopped at: Phase 14 Plan 14-01 complete
+Resume file: .planning/phases/teavision-14-shopify-customer-accounts/14-02-PLAN.md
 
 ## Operator Next Steps
 

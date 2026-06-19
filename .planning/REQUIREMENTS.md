@@ -9,11 +9,11 @@ Requirements for v1.3 Shopify Customer Accounts. Each maps to roadmap phases.
 
 ### Authentication
 
-- [ ] **AUTH-01**: Customer can start sign-in from `/account/login` using Shopify Customer Account API OAuth.
-- [ ] **AUTH-02**: Customer can complete OAuth callback and receive a secure server-owned session.
-- [ ] **AUTH-03**: Customer can log out and have local session state cleared.
-- [ ] **AUTH-04**: Protected account routes redirect unauthenticated users safely.
-- [ ] **AUTH-05**: Session refresh/expiry is handled without exposing tokens to browser JavaScript.
+- [x] **AUTH-01**: Customer can start sign-in from `/account/login` using Shopify Customer Account API OAuth.
+- [x] **AUTH-02**: Customer can complete OAuth callback and receive a secure server-owned session.
+- [x] **AUTH-03**: Customer can log out and have local session state cleared.
+- [x] **AUTH-04**: Protected account routes redirect unauthenticated users safely.
+- [x] **AUTH-05**: Session refresh/expiry is handled without exposing tokens to browser JavaScript.
 
 ### Account
 
@@ -49,10 +49,10 @@ Requirements for v1.3 Shopify Customer Accounts. Each maps to roadmap phases.
 
 ### Security
 
-- [ ] **SEC-01**: OAuth state/nonce/PKCE and callback validation are implemented.
-- [ ] **SEC-02**: Customer data fetches are session-scoped and not globally cached.
-- [ ] **SEC-03**: Customer Account API credentials, tokens, and PII are not logged or exposed.
-- [ ] **SEC-04**: Shopify protected customer data, callback/logout URLs, and HTTPS dev tunnel prerequisites are documented.
+- [x] **SEC-01**: OAuth state/nonce/PKCE and callback validation are implemented.
+- [x] **SEC-02**: Customer data fetches are session-scoped and not globally cached.
+- [x] **SEC-03**: Customer Account API credentials, tokens, and PII are not logged or exposed.
+- [x] **SEC-04**: Shopify protected customer data, callback/logout URLs, and HTTPS dev tunnel prerequisites are documented.
 
 ## v2 Requirements
 
@@ -91,11 +91,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 14 | Pending |
-| AUTH-02 | Phase 14 | Pending |
-| AUTH-03 | Phase 14 | Pending |
-| AUTH-04 | Phase 14 | Pending |
-| AUTH-05 | Phase 14 | Pending |
+| AUTH-01 | Phase 14 | Complete |
+| AUTH-02 | Phase 14 | Complete |
+| AUTH-03 | Phase 14 | Complete |
+| AUTH-04 | Phase 14 | Complete |
+| AUTH-05 | Phase 14 | Complete |
 | ACCT-01 | Phase 14 | Pending |
 | ACCT-02 | Phase 14 | Pending |
 | ACCT-03 | Phase 14 | Pending |
@@ -113,10 +113,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIG-01 | Phase 14 | Pending |
 | MIG-02 | Phase 14 | Pending |
 | MIG-03 | Phase 14 | Pending |
-| SEC-01 | Phase 14 | Pending |
-| SEC-02 | Phase 14 | Pending |
-| SEC-03 | Phase 14 | Pending |
-| SEC-04 | Phase 14 | Pending |
+| SEC-01 | Phase 14 | Complete |
+| SEC-02 | Phase 14 | Complete |
+| SEC-03 | Phase 14 | Complete |
+| SEC-04 | Phase 14 | Complete |
 
 **Coverage:**
 - v1 requirements: 26 total
