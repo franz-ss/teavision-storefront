@@ -69,7 +69,7 @@ Exceptions:
 
 | Surface | Mobile | Desktop |
 |---------|--------|---------|
-| `/account` dashboard | Single column, `gap-6`, recent orders first | `grid-cols-[minmax(0,1fr)_22rem]`, `gap-8` or `gap-10`; main column recent orders, side column profile/default address/support |
+| `/account` dashboard | Single column, `gap-6`, recent orders first | `grid-cols-[minmax(0,1fr)_22rem]`, `gap-8` or `gap-12`; main column recent orders, side column profile/default address/support |
 | Address book | Stacked address cards, default first | 2-column card grid when width allows; default card spans first visual position |
 | Address form pages | One-column form in compact container | Two-column field rows for name, city/state/postcode where useful; action row aligned right |
 | Order history | Card list with summary rows | Semantic table with columns: order, date, payment, fulfillment, total, details |
