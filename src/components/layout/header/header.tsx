@@ -2,7 +2,14 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, Phone, Search, ShoppingCart, X } from 'lucide-react'
+import {
+  CircleUserRound,
+  Menu,
+  Phone,
+  Search,
+  ShoppingCart,
+  X,
+} from 'lucide-react'
 import { Suspense, useCallback, useState } from 'react'
 
 import { IconButton } from '@/components/ui'
@@ -96,6 +103,19 @@ export function Header() {
                   strokeWidth={1.8}
                 />
               </IconButton>
+
+              {/* Account icon */}
+              <Link
+                href="/account"
+                className="text-ink-soft hover:bg-brand-tint hover:text-brand focus-visible:ring-ring inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                aria-label="Account"
+              >
+                <CircleUserRound
+                  className="size-4"
+                  aria-hidden="true"
+                  strokeWidth={1.8}
+                />
+              </Link>
 
               {/* Cart icon */}
               <Link

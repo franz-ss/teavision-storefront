@@ -17,7 +17,7 @@ export const MAIN_MENU_LINKS = [
 
 export const FOOTER_LINKS = [
   { href: '/search', label: 'Search' },
-  { href: 'https://mrtea.com.au/account/login', label: 'Login' },
+  { href: '/account', label: 'Login' },
   {
     href: 'https://www.teavision.com.au/pages/terms-conditions-1',
     label: "T's & C's",
