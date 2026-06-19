@@ -5,16 +5,40 @@ import Link from 'next/link'
 
 import { Button, Checkbox, Textarea } from '@/components/ui'
 
+import {
+  CartAccountContext,
+  type CartAccountContextState,
+} from './account-context'
+
 type CartCheckoutFormProps = {
-  checkoutUrl: string
+  accountContextState: CartAccountContextState
 }
 
-export function CartCheckoutForm({ checkoutUrl }: CartCheckoutFormProps) {
+export function CartCheckoutForm({
+  accountContextState,
+}: CartCheckoutFormProps) {
   const [agreedToTerms, setAgreedToTerms] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const isBlocked = accountContextState === 'sync-failed-blocked'
+  const currentAccountContextState = isSubmitting
+    ? 'sync-pending'
+    : accountContextState
 
   return (
-    <div className="mt-8 space-y-4">
+    <form
+      id="cart-checkout-form"
+      action="/cart/checkout"
+      method="post"
+      className="mt-8 space-y-4"
+      onSubmit={() => setIsSubmitting(true)}
+    >
+      <CartAccountContext
+        state={currentAccountContextState}
+        retryDisabled={!agreedToTerms || isSubmitting}
+      />
+
       <Textarea
+        name="note"
         placeholder="Order Notes"
         className="min-h-28"
         aria-label="Order notes"
@@ -22,6 +46,8 @@ export function CartCheckoutForm({ checkoutUrl }: CartCheckoutFormProps) {
 
       <label className="flex cursor-pointer items-start gap-2.5">
         <Checkbox
+          name="terms"
+          value="accepted"
           checked={agreedToTerms}
           onChange={(e) => setAgreedToTerms(e.target.checked)}
           className="mt-0.5"
@@ -43,20 +69,18 @@ export function CartCheckoutForm({ checkoutUrl }: CartCheckoutFormProps) {
         <Button href="/collections/all" variant="brand" size="cta">
           Continue Shopping
         </Button>
-        {agreedToTerms ? (
+        {isBlocked ? null : (
           <Button
-            href={checkoutUrl}
+            type="submit"
             size="cta"
+            disabled={!agreedToTerms || isSubmitting}
+            isLoading={isSubmitting}
             aria-label="Proceed to checkout"
           >
             Check Out
           </Button>
-        ) : (
-          <Button size="cta" disabled aria-label="Proceed to checkout">
-            Check Out
-          </Button>
         )}
       </div>
-    </div>
+    </form>
   )
 }

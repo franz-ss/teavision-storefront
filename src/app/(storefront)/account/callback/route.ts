@@ -1,3 +1,4 @@
+import { syncCartBuyerIdentityForCurrentSession } from '@/lib/cart/actions'
 import { discoverCustomerAccountEndpoints } from '@/lib/shopify/customer-account/discovery'
 import {
   decodeIdTokenClaims,
@@ -56,6 +57,7 @@ export async function GET(request: Request): Promise<Response> {
       idToken: tokenExchange.idToken,
       refreshToken: tokenExchange.refreshToken,
     })
+    await syncCartBuyerIdentityForCurrentSession()
     await clearPendingCustomerAuth()
 
     return Response.redirect(new URL(pendingAuth.returnTo, request.url))

@@ -12,11 +12,13 @@ import {
 import type { Cart, Money } from '@/lib/shopify/types'
 
 import { CartCheckoutForm } from './checkout-form'
+import type { CartAccountContextState } from './account-context'
 import { CartLineActions } from './line-actions'
 import { CartLineRemove } from './line-remove'
 import { TrustSignalList } from './trust-signal-list'
 
 type CartViewProps = {
+  accountContextState?: CartAccountContextState
   cart: Cart | null
 }
 
@@ -259,7 +261,7 @@ function isBulkDiscountAllocation(
   return title.includes('bulk') || title.includes('quantity')
 }
 
-export function CartView({ cart }: CartViewProps) {
+export function CartView({ accountContextState = null, cart }: CartViewProps) {
   if (!cart || cart.totalQuantity === 0) {
     return (
       <div className="py-16 text-center sm:py-24">
@@ -502,7 +504,7 @@ export function CartView({ cart }: CartViewProps) {
           ) : null}
 
           {/* Order notes, terms, and checkout actions */}
-          <CartCheckoutForm checkoutUrl={cart.checkoutUrl} />
+          <CartCheckoutForm accountContextState={accountContextState} />
         </div>
 
         {/* Order summary sidebar */}

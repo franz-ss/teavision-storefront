@@ -1,9 +1,11 @@
 import { shopifyFetch } from '@/lib/shopify/client'
 import {
+  CartBuyerIdentityUpdateDocument,
   CartCreateDocument,
   CartLinesAddDocument,
   CartLinesRemoveDocument,
   CartLinesUpdateDocument,
+  type CartBuyerIdentityInput,
   GetCartDocument,
   type Cart,
   type GetCartQuery,
@@ -31,6 +33,39 @@ type ShopifyCartLineDiscountAllocation =
 type ShopifyUserError = {
   field?: string[] | null
   message: string
+}
+
+export type CartBuyerIdentity = {
+  customerAccessToken?: string
+  email?: string
+  phone?: string
+  countryCode?: string
+  companyLocationId?: string
+}
+
+function toStorefrontBuyerIdentity(
+  buyerIdentity: CartBuyerIdentity,
+): CartBuyerIdentityInput {
+  const input: CartBuyerIdentityInput = {}
+
+  if (buyerIdentity.customerAccessToken) {
+    input.customerAccessToken = buyerIdentity.customerAccessToken
+  }
+  if (buyerIdentity.email) {
+    input.email = buyerIdentity.email
+  }
+  if (buyerIdentity.phone) {
+    input.phone = buyerIdentity.phone
+  }
+  if (buyerIdentity.countryCode) {
+    input.countryCode =
+      buyerIdentity.countryCode as CartBuyerIdentityInput['countryCode']
+  }
+  if (buyerIdentity.companyLocationId) {
+    input.companyLocationId = buyerIdentity.companyLocationId
+  }
+
+  return input
 }
 
 function reshapeProduct(
@@ -168,15 +203,51 @@ export async function getCart(cartId: string): Promise<Cart | null> {
   return data.cart ? await reshapeCart(data.cart) : null
 }
 
-export async function createCart(): Promise<Cart> {
+export async function createCart(input?: {
+  buyerIdentity?: CartBuyerIdentity
+}): Promise<Cart> {
   const data = await shopifyFetch({
     query: CartCreateDocument,
-    variables: { input: {} },
+    variables: {
+      input: input?.buyerIdentity
+        ? { buyerIdentity: toStorefrontBuyerIdentity(input.buyerIdentity) }
+        : {},
+    },
     cache: 'no-store',
   })
   handleUserErrors(data.cartCreate?.userErrors ?? [])
   if (!data.cartCreate?.cart) throw new Error('Unable to create cart')
   return await reshapeCart(data.cartCreate.cart)
+}
+
+export async function syncCartBuyerIdentity(
+  cartId: string,
+  buyerIdentity: CartBuyerIdentity,
+): Promise<Cart> {
+  const data = await shopifyFetch({
+    query: CartBuyerIdentityUpdateDocument,
+    variables: {
+      cartId,
+      buyerIdentity: toStorefrontBuyerIdentity(buyerIdentity),
+    },
+    cache: 'no-store',
+  })
+  handleUserErrors(data.cartBuyerIdentityUpdate?.userErrors ?? [])
+  if (!data.cartBuyerIdentityUpdate?.cart)
+    throw new Error('Unable to update cart buyer identity')
+
+  return await reshapeCart(data.cartBuyerIdentityUpdate.cart)
+}
+
+export async function tryClearCartBuyerIdentity(
+  cartId: string,
+): Promise<'cleared' | 'unsupported'> {
+  try {
+    await syncCartBuyerIdentity(cartId, {})
+    return 'cleared'
+  } catch {
+    return 'unsupported'
+  }
 }
 
 export async function addCartLines(

@@ -2,6 +2,14 @@ fragment CartFields on Cart {
   id
   checkoutUrl
   totalQuantity
+  buyerIdentity {
+    customer {
+      id
+    }
+    email
+    phone
+    countryCode
+  }
   cost {
     totalAmount {
       amount
@@ -99,6 +107,21 @@ query GetCart($cartId: ID!) {
 
 mutation CartCreate($input: CartInput!) {
   cartCreate(input: $input) {
+    cart {
+      ...CartFields
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+
+mutation CartBuyerIdentityUpdate(
+  $cartId: ID!
+  $buyerIdentity: CartBuyerIdentityInput!
+) {
+  cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {
     cart {
       ...CartFields
     }

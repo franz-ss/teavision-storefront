@@ -191,6 +191,7 @@ export type Cart = {
 }
 
 export {
+  CartBuyerIdentityUpdateDocument,
   CartCreateDocument,
   CartLinesAddDocument,
   CartLinesRemoveDocument,
@@ -216,6 +217,8 @@ export {
 } from './generated/graphql'
 
 export type {
+  CartBuyerIdentityInput,
+  CartBuyerIdentityUpdateMutation,
   CartCreateMutation,
   CartLinesAddMutation,
   CartLinesRemoveMutation,

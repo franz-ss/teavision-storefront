@@ -1,6 +1,9 @@
+import type { Mock } from 'vitest'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { sealCustomerSession } from '@/lib/shopify/customer-account/session'
+import { getCartIdFromCookie } from '@/lib/cart/actions'
+import { tryClearCartBuyerIdentity } from '@/lib/shopify/operations/cart'
 
 import { GET, POST } from './route'
 
@@ -21,6 +24,20 @@ const cookieState = vi.hoisted(() => ({
 vi.mock('next/headers', () => ({
   cookies: vi.fn(async () => cookieState),
 }))
+
+vi.mock('@/lib/cart/actions', () => ({
+  getCartIdFromCookie: vi.fn(),
+}))
+
+vi.mock('@/lib/shopify/operations/cart', () => ({
+  tryClearCartBuyerIdentity: vi.fn(),
+}))
+
+const getCartIdFromCookieMock = getCartIdFromCookie as unknown as Mock<
+  typeof getCartIdFromCookie
+>
+const tryClearCartBuyerIdentityMock =
+  tryClearCartBuyerIdentity as unknown as Mock<typeof tryClearCartBuyerIdentity>
 
 describe('account logout route', () => {
   beforeEach(() => {
@@ -55,6 +72,8 @@ describe('account logout route', () => {
         })
       }),
     )
+    getCartIdFromCookieMock.mockResolvedValue(null)
+    tryClearCartBuyerIdentityMock.mockResolvedValue('unsupported')
   })
 
   test('GET clears session and redirects through Shopify logout endpoint', async () => {
@@ -80,7 +99,10 @@ describe('account logout route', () => {
     )
   })
 
-  test('POST clears local cookies when there is no session', async () => {
+  test('POST clears local cookies but preserves cart when there is no session', async () => {
+    cookieState.values.set('teavision_cart', 'gid://shopify/Cart/current')
+    getCartIdFromCookieMock.mockResolvedValue('gid://shopify/Cart/current')
+
     const response = await POST(
       new Request('https://teavision.test/account/logout', { method: 'POST' }),
     )
@@ -90,6 +112,12 @@ describe('account logout route', () => {
     )
     expect(cookieState.delete).toHaveBeenCalledWith(
       'teavision_customer_session',
+    )
+    expect(tryClearCartBuyerIdentityMock).toHaveBeenCalledWith(
+      'gid://shopify/Cart/current',
+    )
+    expect(cookieState.values.get('teavision_cart')).toBe(
+      'gid://shopify/Cart/current',
     )
   })
 })

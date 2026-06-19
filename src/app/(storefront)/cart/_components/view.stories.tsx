@@ -71,24 +71,55 @@ export const SingleItem: Story = {
     ).toBeVisible()
     await expect(canvas.getByLabelText('Order notes')).toBeVisible()
     await expect(
-      canvas.getByLabelText('I have read and agree to the Terms and Conditions'),
+      canvas.getByLabelText(
+        'I have read and agree to the Terms and Conditions',
+      ),
     ).toBeVisible()
     await expect(
       canvas.getByRole('button', { name: 'Proceed to checkout' }),
     ).toBeDisabled()
 
     await userEvent.click(
-      canvas.getByLabelText('I have read and agree to the Terms and Conditions'),
+      canvas.getByLabelText(
+        'I have read and agree to the Terms and Conditions',
+      ),
     )
 
-    const checkoutLinks = canvas.getAllByRole('link', {
+    const checkoutButtons = canvas.getAllByRole('button', {
       name: 'Proceed to checkout',
     })
-    await expect(checkoutLinks).toHaveLength(1)
-    await expect(checkoutLinks[0]).toHaveAttribute(
-      'href',
-      'https://checkout.test/cart/test-cart',
-    )
+    await expect(checkoutButtons).toHaveLength(1)
+    await expect(checkoutButtons[0]).toBeEnabled()
+  },
+}
+
+export const SignedInCheckout: Story = {
+  args: {
+    accountContextState: 'signed-in',
+    cart: makeCart(),
+  },
+}
+
+export const BlockedCheckout: Story = {
+  args: {
+    accountContextState: 'sync-failed-blocked',
+    cart: makeCart(),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.getByText(/We could not confirm your account for checkout/),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('button', { name: 'Retry checkout' }),
+    ).toBeDisabled()
+    await expect(
+      canvas.getByRole('link', { name: 'Sign in again' }),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('link', { name: 'Contact support' }),
+    ).toBeVisible()
   },
 }
 

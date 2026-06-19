@@ -16,6 +16,8 @@ import {
   createCart,
   getCart,
   removeCartLines,
+  syncCartBuyerIdentity,
+  tryClearCartBuyerIdentity,
   updateCartLines,
 } from './cart'
 import { getProduct } from './product'
@@ -186,6 +188,86 @@ describe('Shopify cart operations', () => {
       },
     })
     await expect(createCart()).rejects.toThrow('Unable to create cart')
+  })
+
+  test('createCart passes buyer identity when provided', async () => {
+    const cart = makeCart()
+    shopifyFetchMock.mockResolvedValueOnce({
+      cartCreate: { cart: makeShopifyCartPayload(cart), userErrors: [] },
+    })
+
+    await expect(
+      createCart({
+        buyerIdentity: {
+          customerAccessToken: 'customer-access-token',
+        },
+      }),
+    ).resolves.toMatchObject({ id: cart.id })
+
+    expect(shopifyFetchMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        cache: 'no-store',
+        variables: {
+          input: {
+            buyerIdentity: {
+              customerAccessToken: 'customer-access-token',
+            },
+          },
+        },
+      }),
+    )
+  })
+
+  test('syncCartBuyerIdentity updates buyer identity with no-store fetches', async () => {
+    const cart = makeCart()
+    shopifyFetchMock.mockResolvedValueOnce({
+      cartBuyerIdentityUpdate: {
+        cart: makeShopifyCartPayload(cart),
+        userErrors: [],
+      },
+    })
+
+    await expect(
+      syncCartBuyerIdentity(cart.id, {
+        countryCode: 'AU',
+        customerAccessToken: 'customer-access-token',
+      }),
+    ).resolves.toMatchObject({ id: cart.id })
+
+    expect(shopifyFetchMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        cache: 'no-store',
+        variables: {
+          buyerIdentity: {
+            countryCode: 'AU',
+            customerAccessToken: 'customer-access-token',
+          },
+          cartId: cart.id,
+        },
+      }),
+    )
+  })
+
+  test('tryClearCartBuyerIdentity reports unsupported clearing without surfacing provider details', async () => {
+    const cart = makeCart()
+    shopifyFetchMock
+      .mockResolvedValueOnce({
+        cartBuyerIdentityUpdate: {
+          cart: makeShopifyCartPayload(cart),
+          userErrors: [],
+        },
+      })
+      .mockResolvedValueOnce({
+        cartBuyerIdentityUpdate: {
+          cart: null,
+          userErrors: [{ message: 'Cannot clear buyer identity' }],
+        },
+      })
+
+    await expect(tryClearCartBuyerIdentity(cart.id)).resolves.toBe('cleared')
+    await expect(tryClearCartBuyerIdentity(cart.id)).resolves.toBe(
+      'unsupported',
+    )
   })
 
   test('addCartLines passes line variables and surfaces userErrors', async () => {

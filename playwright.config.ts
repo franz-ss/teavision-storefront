@@ -39,6 +39,12 @@ export default defineConfig({
       url: BASE_URL,
       reuseExistingServer: false,
       env: {
+        SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID: 'test-client-id',
+        SHOPIFY_CUSTOMER_ACCOUNT_LOGOUT_REDIRECT_URI: `${BASE_URL}/account/login`,
+        SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI: `${BASE_URL}/account/callback`,
+        SHOPIFY_CUSTOMER_ACCOUNT_SESSION_SECRET:
+          'test-session-secret-with-at-least-32-characters',
+        SHOPIFY_CUSTOMER_ACCOUNT_TEST_MODE: 'true',
         SHOPIFY_STOREFRONT_TEST_MODE: 'true',
         SHOPIFY_STOREFRONT_TEST_URL: FAKE_SHOPIFY_URL,
         SHOPIFY_STORE_DOMAIN: 'fake-shopify.test',

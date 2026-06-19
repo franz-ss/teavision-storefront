@@ -1,3 +1,5 @@
+import { getCartIdFromCookie } from '@/lib/cart/actions'
+import { tryClearCartBuyerIdentity } from '@/lib/shopify/operations/cart'
 import { getCustomerAccountConfig } from '@/lib/shopify/customer-account/env'
 import { discoverCustomerAccountEndpoints } from '@/lib/shopify/customer-account/discovery'
 import {
@@ -6,6 +8,8 @@ import {
 } from '@/lib/shopify/customer-account/session'
 
 async function redirectAfterLocalLogout(request: Request): Promise<Response> {
+  const cartId = await getCartIdFromCookie()
+  if (cartId) await tryClearCartBuyerIdentity(cartId)
   await clearCustomerAccountCookies()
 
   return Response.redirect(
@@ -17,6 +21,8 @@ async function logout(request: Request): Promise<Response> {
   const session = await getCustomerAccountSession()
   if (!session) return await redirectAfterLocalLogout(request)
 
+  const cartId = await getCartIdFromCookie()
+  if (cartId) await tryClearCartBuyerIdentity(cartId)
   const endpoints = await discoverCustomerAccountEndpoints()
   const config = getCustomerAccountConfig()
   const logoutUrl = new URL(endpoints.logoutEndpoint)

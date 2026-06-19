@@ -5,6 +5,7 @@ import {
   sealPendingCustomerAuth,
   unsealCustomerSession,
 } from '@/lib/shopify/customer-account/session'
+import { syncCartBuyerIdentityForCurrentSession } from '@/lib/cart/actions'
 
 import { GET } from './route'
 
@@ -25,6 +26,15 @@ const cookieState = vi.hoisted(() => ({
 vi.mock('next/headers', () => ({
   cookies: vi.fn(async () => cookieState),
 }))
+
+vi.mock('@/lib/cart/actions', () => ({
+  syncCartBuyerIdentityForCurrentSession: vi.fn(),
+}))
+
+const syncCartBuyerIdentityForCurrentSessionMock =
+  syncCartBuyerIdentityForCurrentSession as unknown as Mock<
+    typeof syncCartBuyerIdentityForCurrentSession
+  >
 
 function encodeTokenSegment(value: unknown): string {
   return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url')
@@ -76,6 +86,10 @@ describe('account OAuth callback route', () => {
         })
       }),
     )
+    syncCartBuyerIdentityForCurrentSessionMock.mockResolvedValue({
+      message: null,
+      synced: false,
+    })
   })
 
   test('state mismatch prevents token exchange', async () => {
@@ -129,5 +143,31 @@ describe('account OAuth callback route', () => {
       accessToken: 'customer-access-token',
     })
     expect(cookieState.delete).toHaveBeenCalledWith('teavision_customer_auth')
+  })
+
+  test('successful callback syncs an existing cart after session creation', async () => {
+    cookieState.values.set('teavision_cart', 'gid://shopify/Cart/current')
+    cookieState.values.set(
+      'teavision_customer_auth',
+      sealPendingCustomerAuth({
+        codeVerifier: 'verifier',
+        createdAt: Date.now(),
+        nonce: 'nonce-1',
+        returnTo: '/cart',
+        state: 'state-1',
+      }),
+    )
+
+    await GET(
+      new Request(
+        'https://teavision.test/account/callback?code=abc&state=state-1',
+      ),
+    )
+
+    expect(syncCartBuyerIdentityForCurrentSessionMock).toHaveBeenCalledTimes(1)
+    expect(cookieState.set.mock.invocationCallOrder[0]).toBeLessThan(
+      syncCartBuyerIdentityForCurrentSessionMock.mock.invocationCallOrder[0] ??
+        0,
+    )
   })
 })

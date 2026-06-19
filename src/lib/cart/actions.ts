@@ -10,8 +10,10 @@ import {
   addCartLines,
   updateCartLines,
   removeCartLines,
+  syncCartBuyerIdentity,
 } from '@/lib/shopify/operations/cart'
 import type { Cart } from '@/lib/shopify/types'
+import type { CustomerAccountSession } from '@/lib/shopify/customer-account/types'
 
 const CART_COOKIE = 'teavision_cart'
 const MAXIMUM_QUANTITY_ERROR = 'Maximum quantity available reached.'
@@ -20,6 +22,8 @@ const CART_SESSION_EXPIRED_ERROR =
 const CART_REQUEST_ERROR = 'We could not update your cart. Please try again.'
 const INVALID_CART_REQUEST_ERROR =
   'We could not read that cart request. Refresh the page and try again.'
+const CART_IDENTITY_SYNC_ERROR =
+  'We could not confirm your account for checkout. Retry checkout or sign in again before continuing.'
 const MAXIMUM_QUANTITY_ERROR_PATTERNS = [
   'maximum quantity',
   'quantity available',
@@ -30,6 +34,12 @@ export type CartLineFormState = {
   cartChanged?: boolean
   message: string | null
 }
+
+export type CheckoutHandoffResult =
+  | { status: 'ready'; checkoutUrl: string }
+  | { status: 'identity-sync-failed'; message: string }
+  | { status: 'missing-cart' }
+  | { status: 'terms-required' }
 
 function normalizeCartQuantity(quantity: number): number {
   if (!Number.isFinite(quantity)) {
@@ -84,6 +94,20 @@ function isMaximumQuantityError(error: unknown): boolean {
   )
 }
 
+async function getOptionalCustomerAccountSession(): Promise<CustomerAccountSession | null> {
+  const { getCustomerAccountSession } =
+    await import('@/lib/shopify/customer-account/session')
+
+  return await getCustomerAccountSession()
+}
+
+export async function getCartIdFromCookie(): Promise<string | null> {
+  const cookieStore = await cookies()
+  const cartId = cookieStore.get(CART_COOKIE)?.value
+
+  return cartId ?? null
+}
+
 async function getOrCreateCart(): Promise<Cart> {
   const cookieStore = await cookies()
   const cartId = cookieStore.get(CART_COOKIE)?.value
@@ -94,7 +118,12 @@ async function getOrCreateCart(): Promise<Cart> {
     cookieStore.delete(CART_COOKIE)
   }
 
-  const cart = await createCart()
+  const session = await getOptionalCustomerAccountSession()
+  const cart = await createCart(
+    session
+      ? { buyerIdentity: { customerAccessToken: session.accessToken } }
+      : undefined,
+  )
   cookieStore.set(CART_COOKIE, cart.id, {
     httpOnly: true,
     sameSite: 'lax',
@@ -102,6 +131,49 @@ async function getOrCreateCart(): Promise<Cart> {
     secure: isProductionRuntime(),
   })
   return cart
+}
+
+export async function syncCartBuyerIdentityForCurrentSession(): Promise<{
+  message: string | null
+  synced: boolean
+}> {
+  const cartId = await getCartIdFromCookie()
+  if (!cartId) return { message: null, synced: false }
+
+  const session = await getOptionalCustomerAccountSession()
+  if (!session) return { message: null, synced: false }
+
+  try {
+    await syncCartBuyerIdentity(cartId, {
+      customerAccessToken: session.accessToken,
+    })
+    revalidatePath('/cart')
+    return { message: null, synced: true }
+  } catch {
+    return { message: CART_IDENTITY_SYNC_ERROR, synced: false }
+  }
+}
+
+export async function prepareCheckoutHandoff(
+  agreedToTerms: boolean,
+): Promise<CheckoutHandoffResult> {
+  if (!agreedToTerms) return { status: 'terms-required' }
+
+  const cartId = await getCartIdFromCookie()
+  if (!cartId) return { status: 'missing-cart' }
+
+  const cart = await getCart(cartId)
+  if (!cart || cart.totalQuantity === 0) return { status: 'missing-cart' }
+
+  const syncResult = await syncCartBuyerIdentityForCurrentSession()
+  if (syncResult.message) {
+    return {
+      message: syncResult.message,
+      status: 'identity-sync-failed',
+    }
+  }
+
+  return { checkoutUrl: cart.checkoutUrl, status: 'ready' }
 }
 
 export async function getCartAction(): Promise<Cart | null> {

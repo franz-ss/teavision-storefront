@@ -5,6 +5,7 @@ import {
   makeCart,
   makeCartLine,
   makeShopifyCartPayload,
+  type ShopifyCartPayload,
 } from '@/tests/fixtures/shopify/cart'
 import { makeProduct } from '@/tests/fixtures/shopify/product'
 
@@ -15,8 +16,10 @@ type GraphqlRequest = {
 }
 
 type FakeShopifyServer = {
+  buyerIdentity: ShopifyCartPayload['buyerIdentity']
   cart: Cart
   close: () => Promise<void>
+  requests: GraphqlRequest[]
   reset: () => void
   url: string
 }
@@ -56,6 +59,37 @@ function writeJson(response: ServerResponse, status: number, value: unknown) {
     'Content-Type': 'application/json',
   })
   response.end(JSON.stringify(value))
+}
+
+function readRecord(value: unknown): Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+    ? (value as Record<string, unknown>)
+    : {}
+}
+
+function readString(value: unknown): string | null {
+  return typeof value === 'string' ? value : null
+}
+
+function toBuyerIdentityPayload(
+  input: Record<string, unknown>,
+): ShopifyCartPayload['buyerIdentity'] {
+  const customerAccessToken = readString(input.customerAccessToken)
+
+  return {
+    countryCode: readString(input.countryCode),
+    customer: customerAccessToken
+      ? { id: 'gid://shopify/Customer/fake-customer' }
+      : null,
+    email: readString(input.email),
+    phone: readString(input.phone),
+  }
+}
+
+function shouldFailBuyerIdentityUpdate(
+  input: Record<string, unknown>,
+): boolean {
+  return readString(input.customerAccessToken) === 'force-identity-sync-failure'
 }
 
 function setLineTotals(cart: Cart): Cart {
@@ -162,7 +196,18 @@ export async function createFakeShopifyServer({
   port = 0,
 }: FakeShopifyServerOptions = {}): Promise<FakeShopifyServer> {
   let cart = setLineTotals(initialCart)
+  let buyerIdentity: ShopifyCartPayload['buyerIdentity'] = {
+    countryCode: null,
+    customer: null,
+    email: null,
+    phone: null,
+  }
   let lineSequence = cart.lines.length + 1
+  const requests: GraphqlRequest[] = []
+
+  function cartPayload() {
+    return makeShopifyCartPayload(cart, buyerIdentity)
+  }
 
   const server = createServer(async (request, response) => {
     if (request.method === 'GET' && request.url === '/health') {
@@ -178,6 +223,7 @@ export async function createFakeShopifyServer({
     const body = await readRequestBody(request)
     const graphqlRequest = JSON.parse(body) as GraphqlRequest
     const operationName = getOperationName(graphqlRequest)
+    requests.push({ ...graphqlRequest, operationName })
 
     if (operationName === 'GetProduct') {
       writeJson(response, 200, { data: { product: makeRawProduct() } })
@@ -249,11 +295,14 @@ export async function createFakeShopifyServer({
     }
 
     if (operationName === 'GetCart') {
-      writeJson(response, 200, { data: { cart: makeShopifyCartPayload(cart) } })
+      writeJson(response, 200, { data: { cart: cartPayload() } })
       return
     }
 
     if (operationName === 'CartCreate') {
+      const input = readRecord(graphqlRequest.variables?.input)
+      const identityInput = readRecord(input.buyerIdentity)
+      buyerIdentity = toBuyerIdentityPayload(identityInput)
       cart = setLineTotals(
         makeCart({
           id: 'gid://shopify/Cart/fake-cart',
@@ -264,7 +313,39 @@ export async function createFakeShopifyServer({
       writeJson(response, 200, {
         data: {
           cartCreate: {
-            cart: makeShopifyCartPayload(cart),
+            cart: cartPayload(),
+            userErrors: [],
+          },
+        },
+      })
+      return
+    }
+
+    if (operationName === 'CartBuyerIdentityUpdate') {
+      const identityInput = readRecord(graphqlRequest.variables?.buyerIdentity)
+
+      if (shouldFailBuyerIdentityUpdate(identityInput)) {
+        writeJson(response, 200, {
+          data: {
+            cartBuyerIdentityUpdate: {
+              cart: null,
+              userErrors: [
+                {
+                  field: ['buyerIdentity'],
+                  message: 'Unable to confirm customer identity',
+                },
+              ],
+            },
+          },
+        })
+        return
+      }
+
+      buyerIdentity = toBuyerIdentityPayload(identityInput)
+      writeJson(response, 200, {
+        data: {
+          cartBuyerIdentityUpdate: {
+            cart: cartPayload(),
             userErrors: [],
           },
         },
@@ -303,7 +384,7 @@ export async function createFakeShopifyServer({
       writeJson(response, 200, {
         data: {
           cartLinesAdd: {
-            cart: makeShopifyCartPayload(cart),
+            cart: cartPayload(),
             userErrors: [],
           },
         },
@@ -341,7 +422,7 @@ export async function createFakeShopifyServer({
       writeJson(response, 200, {
         data: {
           cartLinesUpdate: {
-            cart: makeShopifyCartPayload(cart),
+            cart: cartPayload(),
             userErrors: [],
           },
         },
@@ -360,7 +441,7 @@ export async function createFakeShopifyServer({
       writeJson(response, 200, {
         data: {
           cartLinesRemove: {
-            cart: makeShopifyCartPayload(cart),
+            cart: cartPayload(),
             userErrors: [],
           },
         },
@@ -387,13 +468,26 @@ export async function createFakeShopifyServer({
   }
 
   return {
+    get buyerIdentity() {
+      return buyerIdentity
+    },
     get cart() {
       return cart
     },
     close: () => closeServer(server),
+    get requests() {
+      return requests
+    },
     reset: () => {
       cart = setLineTotals(initialCart)
+      buyerIdentity = {
+        countryCode: null,
+        customer: null,
+        email: null,
+        phone: null,
+      }
       lineSequence = cart.lines.length + 1
+      requests.length = 0
     },
     url: `http://127.0.0.1:${address.port}/graphql`,
   }

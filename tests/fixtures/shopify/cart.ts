@@ -32,6 +32,12 @@ export type ShopifyCartPayload = {
   id: string
   checkoutUrl: string
   totalQuantity: number
+  buyerIdentity: {
+    countryCode: string | null
+    customer: { id: string } | null
+    email: string | null
+    phone: string | null
+  }
   cost: {
     totalAmount: Money
     subtotalAmount: Money
@@ -158,11 +164,18 @@ function makeShopifyDiscountAllocation(
 
 export function makeShopifyCartPayload(
   cart: Cart = makeCart(),
+  buyerIdentity: ShopifyCartPayload['buyerIdentity'] = {
+    countryCode: null,
+    customer: null,
+    email: null,
+    phone: null,
+  },
 ): ShopifyCartPayload {
   return {
     id: cart.id,
     checkoutUrl: cart.checkoutUrl,
     totalQuantity: cart.totalQuantity,
+    buyerIdentity,
     cost: cart.cost,
     lines: {
       edges: cart.lines.map((line) => ({
