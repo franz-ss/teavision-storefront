@@ -18,16 +18,16 @@ Requirements for v1.3 Shopify Customer Accounts. Each maps to roadmap phases.
 ### Account
 
 - [x] **ACCT-01**: Customer can view an account dashboard with profile summary, default address, and recent orders.
-- [ ] **ACCT-02**: Customer can view and update supported profile/contact fields.
+- [x] **ACCT-02**: Customer can view and update supported profile/contact fields.
 - [x] **ACCT-03**: Account UI follows the current redesign system and preserves Tea Vision theme intent.
 
 ### Addresses
 
-- [ ] **ADDR-01**: Customer can view saved addresses.
-- [ ] **ADDR-02**: Customer can add a new address.
-- [ ] **ADDR-03**: Customer can edit an existing address.
-- [ ] **ADDR-04**: Customer can delete an address.
-- [ ] **ADDR-05**: Customer can set or update the default address.
+- [x] **ADDR-01**: Customer can view saved addresses.
+- [x] **ADDR-02**: Customer can add a new address.
+- [x] **ADDR-03**: Customer can edit an existing address.
+- [x] **ADDR-04**: Customer can delete an address.
+- [x] **ADDR-05**: Customer can set or update the default address.
 
 ### Orders
 
@@ -97,13 +97,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-04 | Phase 14 | Complete |
 | AUTH-05 | Phase 14 | Complete |
 | ACCT-01 | Phase 14 | Complete |
-| ACCT-02 | Phase 14 | Pending |
+| ACCT-02 | Phase 14 | Complete |
 | ACCT-03 | Phase 14 | Complete |
-| ADDR-01 | Phase 14 | Pending |
-| ADDR-02 | Phase 14 | Pending |
-| ADDR-03 | Phase 14 | Pending |
-| ADDR-04 | Phase 14 | Pending |
-| ADDR-05 | Phase 14 | Pending |
+| ADDR-01 | Phase 14 | Complete |
+| ADDR-02 | Phase 14 | Complete |
+| ADDR-03 | Phase 14 | Complete |
+| ADDR-04 | Phase 14 | Complete |
+| ADDR-05 | Phase 14 | Complete |
 | ORD-01 | Phase 14 | Complete |
 | ORD-02 | Phase 14 | Complete |
 | ORD-03 | Phase 14 | Complete |
