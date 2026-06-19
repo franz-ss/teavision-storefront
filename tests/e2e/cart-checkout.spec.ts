@@ -138,3 +138,32 @@ test('buyer identity sync failure blocks checkout with recovery actions', async 
     blockedHostedCheckoutPatterns.some((pattern) => pattern.test(page.url())),
   ).toBe(false)
 })
+
+test('account migration links and legacy routes use the modern bridge', async ({
+  page,
+}) => {
+  await page.goto('/products/test-standard-tea')
+
+  await expect(page.getByRole('link', { name: 'Account' })).toHaveAttribute(
+    'href',
+    '/account',
+  )
+  await expect(
+    page.getByRole('contentinfo').getByRole('link', { name: 'Login' }),
+  ).toHaveAttribute('href', '/account')
+
+  await page.goto('/account/register?returnTo=%2Fcart')
+  await expect(
+    page.getByText('Shopify-hosted Customer Account sign-in'),
+  ).toBeVisible()
+  await expect(page.locator('input[type="password"]')).toHaveCount(0)
+  await expect(
+    page.getByRole('link', { name: 'Sign in with Shopify' }),
+  ).toHaveAttribute('href', '/account/login/start?returnTo=%2Fcart')
+
+  await page.goto('/account/classic/bookmark?redirect=https%3A%2F%2Fevil.test')
+  await expect(page.getByText('This classic account link')).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: 'Sign in with Shopify' }),
+  ).toHaveAttribute('href', '/account/login/start?returnTo=%2Faccount')
+})
