@@ -46,7 +46,7 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 
 ### 🚧 v1.3 Shopify Customer Accounts
 
-- [ ] **Phase 14: Shopify Customer Accounts** — Add modern Shopify Customer Account API authentication, protected account pages, address management, order history, cart buyer identity sync, and migration parity decisions for the Tea Vision account experience. (3/5 plans complete)
+- [ ] **Phase 14: Shopify Customer Accounts** — Add modern Shopify Customer Account API authentication, protected account pages, address management, order history, cart buyer identity sync, and migration parity decisions for the Tea Vision account experience. (4/5 plans complete)
 
 ## Progress
 
@@ -63,7 +63,7 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 | 11. Full Visual Redesign                   | v1.0      | 22/22          | Complete   | 2026-06-11 |
 | 12. Optimize blog loading                  | v1.1      | 4/4            | Complete   | 2026-06-12 |
 | 13. Production-parity collection pagination | v1.2      | 2/2            | Complete   | 2026-06-12 |
-| 14. Shopify Customer Accounts              | v1.3      | 3/5            | In Progress | —          |
+| 14. Shopify Customer Accounts              | v1.3      | 4/5            | In Progress | —          |
 
 ## Phase Details
 
@@ -89,7 +89,7 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 - Customer data must be session-scoped and should not use public product/collection cache tags.
 - Reorder and customer-specific pricing are parity findings from `teavision-theme`; only ship them in Phase 14 if the implementation can stay checkout-authoritative.
 
-**Plans:** 3/5 plans complete
+**Plans:** 4/5 plans complete
 
 **Wave 1**
 - [x] 14-01: Customer Account API foundation and OAuth session
@@ -99,7 +99,7 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 - [x] 14-03: Address book and supported profile mutations
 
 **Wave 3 *(blocked on Wave 1 completion)***
-- [ ] 14-04: Cart buyer identity sync and blocked checkout handoff
+- [x] 14-04: Cart buyer identity sync and blocked checkout handoff
 
 **Wave 4 *(blocked on Waves 1-3 completion)***
 - [ ] 14-05: Migration parity, account entry links, readiness docs, and final coverage

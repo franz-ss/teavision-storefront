@@ -38,8 +38,8 @@ Requirements for v1.3 Shopify Customer Accounts. Each maps to roadmap phases.
 
 ### Cart And Checkout
 
-- [ ] **CART-01**: Logged-in customer identity is synced to the Shopify cart after login or before checkout.
-- [ ] **CART-02**: Cart-to-checkout handoff remains covered by fake-Shopify tests only.
+- [x] **CART-01**: Logged-in customer identity is synced to the Shopify cart after login or before checkout.
+- [x] **CART-02**: Cart-to-checkout handoff remains covered by fake-Shopify tests only.
 
 ### Migration And Parity
 
@@ -108,8 +108,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ORD-02 | Phase 14 | Complete |
 | ORD-03 | Phase 14 | Complete |
 | ORD-04 | Phase 14 | Complete |
-| CART-01 | Phase 14 | Pending |
-| CART-02 | Phase 14 | Pending |
+| CART-01 | Phase 14 | Complete |
+| CART-02 | Phase 14 | Complete |
 | MIG-01 | Phase 14 | Pending |
 | MIG-02 | Phase 14 | Pending |
 | MIG-03 | Phase 14 | Pending |
