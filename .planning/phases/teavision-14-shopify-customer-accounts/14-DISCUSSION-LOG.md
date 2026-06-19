@@ -5,7 +5,7 @@
 
 **Date:** 2026-06-19
 **Phase:** 14-Shopify Customer Accounts
-**Areas discussed:** OAuth And Session Experience, Account Dashboard Shape, Address And Order Self-Service, Cart Identity And Checkout Handoff, Migration Parity Boundaries, Header Account Entry, Legacy Account Route Behavior, B2B Account Signals, Checkout Identity Failure UX, Setup/Readiness Checklist
+**Areas discussed:** OAuth And Session Experience, Account Dashboard Shape, Address And Order Self-Service, Cart Identity And Checkout Handoff, Migration Parity Boundaries, Header Account Entry, Legacy Account Route Behavior, B2B Account Signals, Checkout Identity Failure UX, Setup/Readiness Checklist, Context Refresh
 
 ---
 
@@ -166,6 +166,16 @@
 ## Agent Discretion
 
 - Exact component boundaries, file layout, helper names, and test organization are left to downstream planning/execution, provided they follow the locked context and project conventions.
+
+## Context Refresh
+
+**Date:** 2026-06-19
+
+**Reason:** Phase 14 already had a completed context file, and later artifacts now exist for research, UI design, and validation. The user approved the recommended "Update it" path rather than reopening the full discussion.
+
+**Update made:** Added `14-RESEARCH.md`, `14-UI-SPEC.md`, and `14-VALIDATION.md` to the canonical references in `14-CONTEXT.md`; refreshed code-context notes for fake Customer Account/OIDC fixtures, cart buyer identity fake-Shopify coverage, Storybook state requirements, and test-script wiring.
+
+**New decisions:** None. The refresh did not reopen product, UX, auth, cart, B2B, migration, or readiness decisions.
 
 ## Deferred Ideas
 

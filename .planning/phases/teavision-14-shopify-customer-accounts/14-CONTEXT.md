@@ -102,6 +102,11 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - `.planning/ROADMAP.md` - Phase 14 goal, success criteria, dependencies, and planning notes.
 - `.planning/STATE.md` - Current project state, accumulated decisions, known pending todo for Phase 14, and deferred B2B/pricing items.
 
+### Phase 14 Contracts And Research
+- `.planning/phases/teavision-14-shopify-customer-accounts/14-RESEARCH.md` - Current Shopify Customer Account API, OAuth/session, Customer Account GraphQL, cart buyer identity, Next.js 16, and validation research.
+- `.planning/phases/teavision-14-shopify-customer-accounts/14-UI-SPEC.md` - Approved visual and interaction contract for account routes, cart account context, header/footer account entry, and required Storybook states.
+- `.planning/phases/teavision-14-shopify-customer-accounts/14-VALIDATION.md` - Phase validation strategy, Wave 0 fake API/test fixture requirements, per-task verification map, and manual-only Shopify approval gates.
+
 ### Prior Discovery And Migration Context
 - `docs/teavision-project-reference.md` - Historical account route/domain notes, including `mrtea.com.au`, account template expectations, and wholesale/customer-service context.
 - `docs/teavision-phase-1-audit.md` - Original parity audit noting header/footer login mismatch, B2B-first storefront reality, and customer account uncertainty.
@@ -126,6 +131,7 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - `src/components/layout/header/*` and `src/components/layout/footer/*` - Account entry links connect here; footer currently has the stale external login link in `src/components/layout/footer/data.ts`.
 - `src/components/layout/header/header.tsx` - Account access should be added to the existing right-side icon cluster beside search and cart, linking to `/account`.
 - `src/app/(storefront)/cart/_components/checkout-form.tsx` and `src/app/(storefront)/cart/_components/view.tsx` - Checkout controls are the right place for subtle account context and blocked identity-sync recovery states.
+- `tests/mocks/shopify-graphql-server.ts`, `tests/fixtures/shopify/*`, and `tests/e2e/cart-checkout.spec.ts` - Existing fake-Shopify cart-to-checkout coverage should be extended for buyer identity and blocked checkout; do not exercise hosted Shopify checkout.
 
 ### Established Patterns
 - Server Components fetch data through `src/lib/*/operations` helpers; mutations live in `'use server'` action modules or route handlers.
@@ -134,6 +140,8 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - Dynamic App Router params use the Next.js 16 `params: Promise<{...}>` pattern.
 - Tailwind 4 token classes and `cn()` are required for class composition; no raw hex/rgb classes, inline styles, CSS modules, or cool gray palette additions.
 - Generated Shopify Storefront types are imported through `src/lib/shopify/types/index.ts`; Customer Account API types should have their own local barrel and should not be mixed into generated Storefront internals directly.
+- Customer/account fetches should use a dedicated Customer Account API boundary rather than extending the Storefront `shopifyFetch()` contract directly, because auth headers, endpoint, PII handling, and cache policy differ.
+- Current standard test scripts use explicit whitelists in places; Phase 14 plans must ensure newly added unit/integration tests are wired into the relevant `package.json` scripts or covered by the selected verification command.
 
 ### Integration Points
 - New account routes belong under `src/app/(storefront)/account` and adjacent route-local `_components`/`_lib` folders unless a component is genuinely reusable and deserves Storybook coverage.
@@ -142,6 +150,7 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - Cart checkout handoff needs a pre-checkout identity sync path and fake-Shopify tests around Server Actions/route-handler boundaries.
 - Header/footer account links need migration from external/stale routes to owned headless account routes.
 - Legacy account compatibility routes need a safe allowlist for return/context parameters and an explanatory fallback page for unmapped classic account URLs.
+- Wave 0 should establish the fake Customer Account/OIDC fixture, Customer Account fixtures, and Storefront fake responses for `CartBuyerIdentityUpdate` and identity-aware `CartCreate` before feature tasks depend on them.
 
 </code_context>
 
@@ -156,6 +165,8 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - Header account entry is an icon-only route to `/account`, including on mobile.
 - Buyer identity sync failures should feel recoverable: retry first, then sign in again or contact support.
 - Setup/readiness failures are operator-facing launch blockers, not customer-facing feature toggles.
+- The approved UI contract keeps account pages practical and restrained: no marketing hero, no shadcn, no duplicate mobile account menu row, and required Storybook states for dashboard, orders, addresses, cart checkout context, and login/bridge states.
+- Validation should start with fake Customer Account and fake Shopify buyer-identity coverage before implementation waves, while real Customer Account OAuth and hosted checkout remain manual/approval-gated.
 
 </specifics>
 
