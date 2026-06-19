@@ -17,9 +17,9 @@ Requirements for v1.3 Shopify Customer Accounts. Each maps to roadmap phases.
 
 ### Account
 
-- [ ] **ACCT-01**: Customer can view an account dashboard with profile summary, default address, and recent orders.
+- [x] **ACCT-01**: Customer can view an account dashboard with profile summary, default address, and recent orders.
 - [ ] **ACCT-02**: Customer can view and update supported profile/contact fields.
-- [ ] **ACCT-03**: Account UI follows the current redesign system and preserves Tea Vision theme intent.
+- [x] **ACCT-03**: Account UI follows the current redesign system and preserves Tea Vision theme intent.
 
 ### Addresses
 
@@ -31,10 +31,10 @@ Requirements for v1.3 Shopify Customer Accounts. Each maps to roadmap phases.
 
 ### Orders
 
-- [ ] **ORD-01**: Customer can view paginated order history.
-- [ ] **ORD-02**: Customer can view individual order details.
-- [ ] **ORD-03**: Customer can see order financial/fulfillment status, totals, line items, and tracking links when available.
-- [ ] **ORD-04**: Guest orders are handled with clear authenticated-account messaging.
+- [x] **ORD-01**: Customer can view paginated order history.
+- [x] **ORD-02**: Customer can view individual order details.
+- [x] **ORD-03**: Customer can see order financial/fulfillment status, totals, line items, and tracking links when available.
+- [x] **ORD-04**: Guest orders are handled with clear authenticated-account messaging.
 
 ### Cart And Checkout
 
@@ -96,18 +96,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-03 | Phase 14 | Complete |
 | AUTH-04 | Phase 14 | Complete |
 | AUTH-05 | Phase 14 | Complete |
-| ACCT-01 | Phase 14 | Pending |
+| ACCT-01 | Phase 14 | Complete |
 | ACCT-02 | Phase 14 | Pending |
-| ACCT-03 | Phase 14 | Pending |
+| ACCT-03 | Phase 14 | Complete |
 | ADDR-01 | Phase 14 | Pending |
 | ADDR-02 | Phase 14 | Pending |
 | ADDR-03 | Phase 14 | Pending |
 | ADDR-04 | Phase 14 | Pending |
 | ADDR-05 | Phase 14 | Pending |
-| ORD-01 | Phase 14 | Pending |
-| ORD-02 | Phase 14 | Pending |
-| ORD-03 | Phase 14 | Pending |
-| ORD-04 | Phase 14 | Pending |
+| ORD-01 | Phase 14 | Complete |
+| ORD-02 | Phase 14 | Complete |
+| ORD-03 | Phase 14 | Complete |
+| ORD-04 | Phase 14 | Complete |
 | CART-01 | Phase 14 | Pending |
 | CART-02 | Phase 14 | Pending |
 | MIG-01 | Phase 14 | Pending |

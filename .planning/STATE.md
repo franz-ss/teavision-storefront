@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Shopify Customer Accounts
 status: executing
-stopped_at: Phase 14 Plan 14-01 complete
-last_updated: "2026-06-19T03:18:17.002Z"
-last_activity: 2026-06-19 -- Phase 14 Plan 14-01 customer account OAuth foundation complete
+stopped_at: Phase 14 Plan 14-02 complete
+last_updated: "2026-06-19T03:33:15.000Z"
+last_activity: 2026-06-19 -- Phase 14 Plan 14-02 protected account dashboard and orders complete
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
-  percent: 20
+  completed_plans: 2
+  percent: 40
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-19)
 ## Current Position
 
 Phase: 14 Shopify Customer Accounts
-Plan: 14-02 Protected account dashboard and order history
+Plan: 14-03 Address book and supported profile mutations
 Status: Executing Wave 2
-Last activity: 2026-06-19 -- Plan 14-01 complete; OAuth/session foundation committed in ac2bda4
+Last activity: 2026-06-19 -- Plan 14-02 complete; protected account dashboard and orders committed in a2bbf63
 
 ## Performance Metrics
 
@@ -135,11 +135,11 @@ Recent decisions affecting current work:
 - Phase 12 added: optimize /blogs/teavision-blogs loading and image rendering
 - Phase 13 added: Production-parity collection pagination
 - Phase 14 added: Shopify Customer Accounts
-- Phase 14 executing: Plan 14-01 Customer Account API foundation and OAuth session complete.
+- Phase 14 executing: Plan 14-02 Protected account dashboard and order history complete.
 
 ### Pending Todos
 
-- Continue Phase 14 with plan 14-02 Protected account dashboard and order history.
+- Continue Phase 14 with plan 14-03 Address book and supported profile mutations.
 
 ### Blockers/Concerns
 
@@ -196,8 +196,8 @@ debug/resolved. The UAT/verification items are the two human-only tests
 ## Session Continuity
 
 Last session: 2026-06-19T02:38:01.596Z
-Stopped at: Phase 14 Plan 14-01 complete
-Resume file: .planning/phases/teavision-14-shopify-customer-accounts/14-02-PLAN.md
+Stopped at: Phase 14 Plan 14-02 complete
+Resume file: .planning/phases/teavision-14-shopify-customer-accounts/14-03-PLAN.md
 
 ## Operator Next Steps
 
