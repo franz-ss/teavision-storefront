@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test:contracts": "node --test scripts/eslint-rules/*.test.mjs scripts/component-contracts/*.test.mjs",
     "test:unit": "vitest run --exclude src/lib/cart/actions.test.ts --exclude \"src/app/api/**/*.test.ts\"",
-    "test:integration": "vitest run --environment node src/lib/cart/actions.test.ts \"src/app/api/products/[handle]/quick-view/route.test.ts\" \"src/app/(storefront)/account/**/*.test.ts\" \"src/app/(storefront)/account/**/*.test.tsx\" \"src/app/(storefront)/account/_lib/protection.test.ts\" \"src/app/(storefront)/account/login/start/route.test.ts\" \"src/app/(storefront)/account/callback/route.test.ts\" \"src/app/(storefront)/account/logout/route.test.ts\"",
+    "test:integration": "vitest run --environment node src/lib/cart/actions.test.ts src/lib/shopify/customer-account/actions.test.ts \"src/app/api/products/[handle]/quick-view/route.test.ts\" \"src/app/(storefront)/account/**/*.test.ts\" \"src/app/(storefront)/account/**/*.test.tsx\" \"src/app/(storefront)/account/_lib/protection.test.ts\" \"src/app/(storefront)/account/login/start/route.test.ts\" \"src/app/(storefront)/account/callback/route.test.ts\" \"src/app/(storefront)/account/logout/route.test.ts\"",
     "test:e2e": "playwright test",
     "test:stories": "vitest run --config vitest.storybook.config.mts",
     "lint": "node scripts/check-tailwind-classes.mjs && eslint .",

@@ -1,14 +1,35 @@
 import { customerAccountFetch } from './client'
 import type {
   CustomerAccountAddress,
+  CustomerAccountAddressInput,
   CustomerAccountConnection,
   CustomerAccountDashboard,
+  CustomerAccountMutationResult,
   CustomerAccountOrder,
   CustomerAccountPageInfo,
   CustomerAccountPaginatedResult,
   CustomerAccountProfile,
+  CustomerAccountProfileInput,
   CustomerAccountSession,
+  CustomerAccountUserError,
+  NormalizedCustomerAccountUserErrors,
 } from './types'
+
+const CUSTOMER_ACCOUNT_ADDRESS_FIELDS = /* GraphQL */ `
+  fragment CustomerAccountAddressFields on CustomerAddress {
+    id
+    firstName
+    lastName
+    address1
+    address2
+    city
+    provinceCode
+    zip
+    countryCodeV2
+    phone
+    formatted
+  }
+`
 
 const CUSTOMER_ACCOUNT_VIEWER_QUERY = /* GraphQL */ `
   query CustomerAccountViewer {
@@ -59,6 +80,95 @@ const CUSTOMER_ACCOUNT_VIEWER_QUERY = /* GraphQL */ `
           }
           statusPageUrl
         }
+      }
+    }
+  }
+`
+
+const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
+  mutation CustomerUpdate($input: CustomerUpdateInput!) {
+    customerUpdate(input: $input) {
+      customer {
+        id
+        emailAddress
+        firstName
+        lastName
+        phoneNumber
+        defaultAddress {
+          ...CustomerAccountAddressFields
+        }
+        addresses(first: 20) {
+          nodes {
+            ...CustomerAccountAddressFields
+          }
+        }
+        orders(first: 5) {
+          nodes {
+            id
+            name
+            processedAt
+            financialStatus
+            fulfillmentStatus
+            totalPrice {
+              amount
+              currencyCode
+            }
+            statusPageUrl
+          }
+        }
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+
+  ${CUSTOMER_ACCOUNT_ADDRESS_FIELDS}
+`
+
+const CUSTOMER_ADDRESS_CREATE_MUTATION = /* GraphQL */ `
+  mutation CustomerAddressCreate($address: CustomerAddressInput!) {
+    customerAddressCreate(address: $address) {
+      customerAddress {
+        ...CustomerAccountAddressFields
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+
+  ${CUSTOMER_ACCOUNT_ADDRESS_FIELDS}
+`
+
+const CUSTOMER_ADDRESS_UPDATE_MUTATION = /* GraphQL */ `
+  mutation CustomerAddressUpdate(
+    $addressId: ID!
+    $address: CustomerAddressInput!
+  ) {
+    customerAddressUpdate(addressId: $addressId, address: $address) {
+      customerAddress {
+        ...CustomerAccountAddressFields
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+
+  ${CUSTOMER_ACCOUNT_ADDRESS_FIELDS}
+`
+
+const CUSTOMER_ADDRESS_DELETE_MUTATION = /* GraphQL */ `
+  mutation CustomerAddressDelete($addressId: ID!) {
+    customerAddressDelete(addressId: $addressId) {
+      deletedAddressId
+      userErrors {
+        field
+        message
       }
     }
   }
@@ -168,6 +278,31 @@ type OrderResponse = {
   order: RawCustomerAccountOrder | null
 }
 
+type CustomerUpdateResponse = {
+  customerUpdate: {
+    customer: RawCustomer | null
+    userErrors: CustomerAccountUserError[]
+  }
+}
+
+type AddressMutationResponse = {
+  customerAddressCreate?: {
+    customerAddress: CustomerAccountAddress | null
+    userErrors: CustomerAccountUserError[]
+  }
+  customerAddressUpdate?: {
+    customerAddress: CustomerAccountAddress | null
+    userErrors: CustomerAccountUserError[]
+  }
+}
+
+type AddressDeleteResponse = {
+  customerAddressDelete: {
+    deletedAddressId: string | null
+    userErrors: CustomerAccountUserError[]
+  }
+}
+
 type RawCustomerAccountOrder = Omit<CustomerAccountOrder, 'lineItems'> & {
   lineItems?: RawConnection<CustomerAccountOrder['lineItems'][number]>
 }
@@ -219,6 +354,33 @@ function reshapeOrder(order: RawCustomerAccountOrder): CustomerAccountOrder {
     ...order,
     lineItems: connectionNodes(order.lineItems),
   }
+}
+
+function fieldKeyFromUserError(error: CustomerAccountUserError): string | null {
+  const field = error.field?.filter(Boolean)
+  if (!field?.length) return null
+
+  return field[field.length - 1] ?? null
+}
+
+export function normalizeCustomerAccountUserErrors(
+  errors: CustomerAccountUserError[],
+): NormalizedCustomerAccountUserErrors {
+  const fieldErrors: Record<string, string> = {}
+  let formError: string | null = null
+
+  errors.forEach((error) => {
+    const fieldKey = fieldKeyFromUserError(error)
+
+    if (fieldKey) {
+      fieldErrors[fieldKey] ??= error.message
+      return
+    }
+
+    formError ??= error.message
+  })
+
+  return { fieldErrors, formError }
 }
 
 export async function getCustomerAccountDashboard(
@@ -289,4 +451,92 @@ export async function getCustomerAccountOrder(
   })
 
   return data.order ? reshapeOrder(data.order) : null
+}
+
+export async function updateCustomerProfile(
+  session: CustomerAccountSession,
+  input: CustomerAccountProfileInput,
+): Promise<CustomerAccountMutationResult<CustomerAccountProfile>> {
+  const data = await customerAccountFetch<
+    CustomerUpdateResponse,
+    { input: CustomerAccountProfileInput }
+  >({
+    query: CUSTOMER_UPDATE_MUTATION,
+    session,
+    variables: { input },
+  })
+
+  return {
+    data: data.customerUpdate.customer
+      ? reshapeCustomer(data.customerUpdate.customer)
+      : null,
+    userErrors: data.customerUpdate.userErrors,
+  }
+}
+
+export async function createCustomerAddress(
+  session: CustomerAccountSession,
+  input: CustomerAccountAddressInput,
+): Promise<CustomerAccountMutationResult<CustomerAccountAddress>> {
+  const data = await customerAccountFetch<
+    AddressMutationResponse,
+    { address: CustomerAccountAddressInput }
+  >({
+    query: CUSTOMER_ADDRESS_CREATE_MUTATION,
+    session,
+    variables: { address: input },
+  })
+  const result = data.customerAddressCreate
+
+  return {
+    data: result?.customerAddress ?? null,
+    userErrors: result?.userErrors ?? [],
+  }
+}
+
+export async function updateCustomerAddress(
+  session: CustomerAccountSession,
+  addressId: string,
+  input: CustomerAccountAddressInput,
+): Promise<CustomerAccountMutationResult<CustomerAccountAddress>> {
+  const data = await customerAccountFetch<
+    AddressMutationResponse,
+    { addressId: string; address: CustomerAccountAddressInput }
+  >({
+    query: CUSTOMER_ADDRESS_UPDATE_MUTATION,
+    session,
+    variables: { addressId, address: input },
+  })
+  const result = data.customerAddressUpdate
+
+  return {
+    data: result?.customerAddress ?? null,
+    userErrors: result?.userErrors ?? [],
+  }
+}
+
+export async function deleteCustomerAddress(
+  session: CustomerAccountSession,
+  addressId: string,
+): Promise<CustomerAccountMutationResult<string>> {
+  const data = await customerAccountFetch<
+    AddressDeleteResponse,
+    { addressId: string }
+  >({
+    query: CUSTOMER_ADDRESS_DELETE_MUTATION,
+    session,
+    variables: { addressId },
+  })
+
+  return {
+    data: data.customerAddressDelete.deletedAddressId,
+    userErrors: data.customerAddressDelete.userErrors,
+  }
+}
+
+export async function setDefaultCustomerAddress(
+  session: CustomerAccountSession,
+  addressId: string,
+): Promise<CustomerAccountMutationResult<CustomerAccountAddress>> {
+  return updateCustomerAddress(session, addressId, { defaultAddress: true })
 }

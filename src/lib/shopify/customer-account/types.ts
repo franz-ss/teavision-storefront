@@ -55,6 +55,25 @@ export type CustomerAccountProfile = {
   orders: CustomerAccountOrder[]
 }
 
+export type CustomerAccountProfileInput = {
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+}
+
+export type CustomerAccountAddressInput = {
+  firstName?: string | null
+  lastName?: string | null
+  address1?: string | null
+  address2?: string | null
+  city?: string | null
+  provinceCode?: string | null
+  zip?: string | null
+  countryCodeV2?: string | null
+  phone?: string | null
+  defaultAddress?: boolean
+}
+
 export type CustomerAccountPageInfo = {
   endCursor: string | null
   hasNextPage: boolean
@@ -94,6 +113,17 @@ export type CustomerAccountUserError = {
 export type NormalizedCustomerAccountUserErrors = {
   fieldErrors: Record<string, string>
   formError: string | null
+}
+
+export type CustomerAccountMutationResult<T> = {
+  data: T | null
+  userErrors: CustomerAccountUserError[]
+}
+
+export type CustomerAccountFormState = {
+  fieldErrors: Record<string, string>
+  message: string | null
+  status: 'idle' | 'success' | 'error'
 }
 
 export type CustomerAccountSession = {

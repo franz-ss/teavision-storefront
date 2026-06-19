@@ -11,9 +11,13 @@ import {
 import { createFakeCustomerAccountApiServer } from '@/tests/mocks/customer-account-api-server'
 
 import {
+  createCustomerAddress,
   getCustomerAccountDashboard,
   getCustomerAccountOrder,
   getCustomerAccountOrders,
+  normalizeCustomerAccountUserErrors,
+  setDefaultCustomerAddress,
+  updateCustomerProfile,
 } from './operations'
 import type { CustomerAccountSession } from './types'
 
@@ -104,6 +108,82 @@ describe('Customer Account read operations', () => {
           (request) => request.operationName === 'CustomerAccountOrder',
         )?.variables,
       ).toEqual({ orderId: 'gid://shopify/Order/test-order-1' })
+    } finally {
+      await requestServer.close()
+      vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', serverUrl)
+    }
+  })
+
+  test('normalizes Shopify user errors to field and form messages', () => {
+    expect(
+      normalizeCustomerAccountUserErrors([
+        { field: ['address1'], message: 'Enter an address.' },
+        { field: ['input', 'phone'], message: 'Enter a valid phone number.' },
+        { field: null, message: 'We could not save this address.' },
+      ]),
+    ).toEqual({
+      fieldErrors: {
+        address1: 'Enter an address.',
+        phone: 'Enter a valid phone number.',
+      },
+      formError: 'We could not save this address.',
+    })
+  })
+
+  test('sends supported profile and address mutation variables', async () => {
+    const requestServer = await createFakeCustomerAccountApiServer()
+    vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', requestServer.url)
+
+    try {
+      await updateCustomerProfile(makeSession(), {
+        firstName: 'Mira',
+        lastName: 'Patel',
+        phone: '+61 411 111 111',
+      })
+      await createCustomerAddress(makeSession(), {
+        address1: '99 Tea Road',
+        city: 'Brisbane',
+        countryCodeV2: 'AU',
+        firstName: 'Mira',
+        lastName: 'Patel',
+        phone: '+61 411 111 111',
+        provinceCode: 'QLD',
+        zip: '4000',
+      })
+      await setDefaultCustomerAddress(
+        makeSession(),
+        'gid://shopify/CustomerAddress/test-address-1',
+      )
+
+      expect(
+        requestServer.requests.find(
+          (request) => request.operationName === 'CustomerUpdate',
+        )?.variables,
+      ).toEqual({
+        input: {
+          firstName: 'Mira',
+          lastName: 'Patel',
+          phone: '+61 411 111 111',
+        },
+      })
+      expect(
+        requestServer.requests.find(
+          (request) => request.operationName === 'CustomerAddressCreate',
+        )?.variables,
+      ).toMatchObject({
+        address: {
+          address1: '99 Tea Road',
+          countryCodeV2: 'AU',
+        },
+      })
+      expect(
+        requestServer.requests.find(
+          (request) => request.operationName === 'CustomerAddressUpdate',
+        )?.variables,
+      ).toEqual({
+        address: { defaultAddress: true },
+        addressId: 'gid://shopify/CustomerAddress/test-address-1',
+      })
     } finally {
       await requestServer.close()
       vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', serverUrl)
