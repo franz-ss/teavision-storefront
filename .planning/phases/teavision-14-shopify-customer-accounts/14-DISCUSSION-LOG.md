@@ -5,7 +5,7 @@
 
 **Date:** 2026-06-19
 **Phase:** 14-Shopify Customer Accounts
-**Areas discussed:** OAuth And Session Experience, Account Dashboard Shape, Address And Order Self-Service, Cart Identity And Checkout Handoff, Migration Parity Boundaries
+**Areas discussed:** OAuth And Session Experience, Account Dashboard Shape, Address And Order Self-Service, Cart Identity And Checkout Handoff, Migration Parity Boundaries, Header Account Entry, Legacy Account Route Behavior, B2B Account Signals, Checkout Identity Failure UX, Setup/Readiness Checklist
 
 ---
 
@@ -95,6 +95,71 @@
 | How should launch readiness for Customer Account API admin setup be captured? | Explicit setup checklist; Inline notes in code only; Assume admin is ready | Explicit setup checklist |
 
 **Notes:** Migration should preserve customer intent while moving account ownership into the headless storefront and documenting admin-dependent gaps.
+
+---
+
+## Header Account Entry
+
+| Question | Options Presented | User's Choice |
+|---|---|---|
+| How should customers access account login from the main header? | Account icon in the right cluster; Text link in desktop nav; Icon + text on desktop, icon on mobile; You decide | Account icon in the right cluster |
+| Should the header try to show signed-in state? | Stable Account icon always links to `/account`; State-aware label/icon when safe; Always link directly to `/account/login`; You decide | Stable Account icon always links to `/account` |
+| How should the account entry appear in the mobile menu? | Header icon only; Also add a menu row; Menu row only on mobile; You decide | Header icon only |
+| What should happen if Customer Account API setup is missing but the header account icon is visible? | Fail fast on click/route render; Hide the icon until configured; Show icon with support fallback; You decide | Fail fast on click/route render |
+
+**Notes:** Header account access should be an icon-only entry in the existing right cluster beside search and cart. The icon links to `/account` on desktop and mobile; the account route owns auth redirects and setup failures.
+
+---
+
+## Legacy Account Route Behavior
+
+| Question | Options Presented | User's Choice |
+|---|---|---|
+| How should the stale `https://mrtea.com.au/account/login` account link be treated in the Phase 14 plan? | Replace it everywhere with `/account`; Keep support for it as a special legacy source; Preserve external link until owner confirms; You decide | Replace it everywhere with `/account` |
+| What should old classic account URLs do, such as `/account/register`, `/account/reset`, or password activation routes? | Redirect to modern OAuth login with explanatory copy when needed; Silent redirect to `/account`; Dedicated bridge pages for each classic intent; You decide | Redirect to modern OAuth login with explanatory copy when needed |
+| If an old account URL includes query parameters from Liquid or emails, what should Phase 14 preserve? | Only safe return/context parameters; Preserve all query parameters; Drop all parameters; You decide | Only safe return/context parameters |
+| What should customers see if a legacy account route cannot be mapped cleanly? | Account-focused explanatory page; Direct support/contact page; Generic 404; You decide | Account-focused explanatory page |
+
+**Notes:** Legacy account routes should preserve intent without rebuilding classic password flows or passing unsafe Liquid-era parameters through the modern auth flow.
+
+---
+
+## B2B Account Signals
+
+| Question | Options Presented | User's Choice |
+|---|---|---|
+| Should the account dashboard show wholesale/B2B status if Shopify exposes customer/company context? | Show informational status only; Hide B2B signals entirely; Prominent wholesale panel; You decide | Show informational status only |
+| What should signed-in customers see if no wholesale/company signal is available? | Neutral account experience; Wholesale application prompt; Explain that no wholesale status was found; You decide | Neutral account experience |
+| If a customer asks about wholesale pricing from the account page, where should the UI send them? | Existing wholesale/contact paths; Cart/checkout only; Dedicated future B2B page placeholder; You decide | Existing wholesale/contact paths |
+| How should company/location context affect checkout preparation if Shopify exposes it? | Use it only if Shopify/cart supports it authoritatively; Show a manual company selector; Ignore company/location context for Phase 14; You decide | Use it only if Shopify/cart supports it authoritatively |
+
+**Notes:** Account pages may acknowledge Shopify-exposed B2B/company context, but pricing and company-location behavior must stay Shopify/cart/checkout authoritative.
+
+---
+
+## Checkout Identity Failure UX
+
+| Question | Options Presented | User's Choice |
+|---|---|---|
+| If buyer identity sync fails right before checkout, should the customer be allowed to continue as guest? | Block checkout until resolved; Allow guest checkout with warning; Ask customer to choose; You decide | Block checkout until resolved |
+| What recovery action should the blocked checkout message prioritize? | Retry identity sync; Sign in again; Contact support; You decide | Retry identity sync |
+| What secondary fallback should the blocked checkout message offer? | Sign in again + support link; Support link only; Return to account dashboard; You decide | Sign in again + support link |
+| How should the cart communicate signed-in/account context before checkout? | Subtle account context near checkout; No account context unless there is an error; Prominent account panel in cart; You decide | Subtle account context near checkout |
+
+**Notes:** Identity-sync failures should block checkout without silently falling back to guest, but the recovery path should be customer-friendly: retry first, then sign in again or contact support.
+
+---
+
+## Setup/Readiness Checklist
+
+| Question | Options Presented | User's Choice |
+|---|---|---|
+| Where should the Customer Account API setup checklist live? | In Phase 14 docs/context plus developer error messages; Dedicated internal preflight route; Only in thrown errors; You decide | In Phase 14 docs/context plus developer error messages |
+| How strict should missing setup be in production? | Fail closed with clear operator error; Show customer support fallback; Hide account entry points; You decide | Fail closed with clear operator error |
+| Which setup prerequisites should downstream agents treat as launch-blocking? | Full Shopify account/OAuth/API checklist; Only credentials and callback URLs; Planner decides from Shopify docs; You decide | Full Shopify account/OAuth/API checklist |
+| How should real checkout testing be represented in readiness docs? | Explicit blocked gate; Manual UAT checklist item; Omit from account readiness; You decide | Explicit blocked gate |
+
+**Notes:** Setup readiness is a launch-blocking operator concern. Missing Customer Account API setup should fail closed, and real hosted checkout testing remains blocked until store-owner approval.
 
 ---
 

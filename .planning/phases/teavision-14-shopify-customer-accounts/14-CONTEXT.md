@@ -23,7 +23,10 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - **D-05:** Missing or incomplete Customer Account setup must fail fast with developer-facing setup guidance. Do not silently hide account features or use stub customer data.
 - **D-06:** OAuth callback validation failures for `state`, `nonce`, or PKCE reject the callback, clear pending auth cookies, avoid token exchange/use, show a safe verification-failed message, and offer a fresh login.
 - **D-07:** Session, refresh, and pending-auth material must stay in secure HttpOnly server-owned cookies. Do not expose customer tokens to browser JavaScript.
-- **D-08:** Once configured, header and footer account links point into the headless account routes. Missing required setup fails fast rather than quietly hiding links.
+- **D-08:** Header and footer account links point into the headless account routes. Missing required setup fails fast rather than quietly hiding links.
+- **D-45:** Header account access uses an account icon in the existing right-side icon cluster beside search and cart.
+- **D-46:** The header account icon always links to `/account`; the account route owns signed-in handling and redirects unauthenticated customers to login as needed.
+- **D-47:** Mobile uses the same header account icon only. Do not duplicate account access as a separate mobile-menu row by default.
 
 ### Account Dashboard Shape
 - **D-09:** `/account` leads with recent orders and default address so returning customers can quickly check order state, delivery context, and account details.
@@ -34,6 +37,8 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - **D-14:** Account pages use warm, restrained, work-focused panels, tables, and lists that fit the current redesign and support repeat self-service tasks.
 - **D-15:** Valid sessions with partial data failures render the loaded dashboard sections and show scoped section-level errors for failed sections. Do not log customers out for provider/data failures.
 - **D-16:** Logout is available as a secondary account action, not a primary dashboard CTA.
+- **D-48:** Customers without Shopify-exposed wholesale/company signals get a neutral dashboard with normal order/address/profile surfaces and compact support links. Do not upsell wholesale status inside the account dashboard.
+- **D-49:** Wholesale pricing questions from account pages route to existing wholesale/contact paths such as `/pages/wholesale-account-request`, `/pages/wholesale`, or support/contact. Do not create client-side pricing logic or new B2B surfaces in Phase 14.
 
 ### Address And Order Self-Service
 - **D-17:** The address book puts the default address first, followed by the rest of the addresses with edit, delete, and set-default actions.
@@ -58,6 +63,11 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - **D-34:** Buyer identity may enable Shopify-authoritative account/company context, but the UI must not promise B2B/customer pricing unless cart or checkout data returns it authoritatively.
 - **D-35:** Pre-checkout identity sync is tested with fake-Shopify unit/integration/e2e boundaries only. Do not run real checkout, payment, tax, shipping-rate, order-creation, or success-redirect tests without store-owner approval.
 - **D-36:** Signing in must not create an empty cart. Create or sync a cart only when an actual cart action needs it.
+- **D-50:** If pre-checkout buyer identity sync fails, checkout remains blocked until resolved. Do not offer a silent guest-checkout fallback.
+- **D-51:** The primary recovery action for blocked checkout is retrying buyer identity sync from the cart/checkout handoff path.
+- **D-52:** Blocked checkout states also offer secondary actions to sign in again and contact support.
+- **D-53:** Cart account context stays subtle near checkout controls, such as a compact "checking out as..." or account-status line. Do not turn the cart into an account dashboard.
+- **D-54:** Company/location context may affect checkout preparation only when Shopify/cart supports it authoritatively. Do not invent a manual company selector or pricing UI in Phase 14.
 
 ### Migration Parity Boundaries
 - **D-37:** Important legacy account URLs are preserved with headless routes or redirects. Unsupported classic paths redirect to modern login or a clear explanatory page.
@@ -65,9 +75,16 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - **D-39:** Classic register/reset paths redirect or bridge to Shopify Customer Account OAuth with clear explanatory copy. Do not rebuild classic password forms.
 - **D-40:** Reorder parity is documented and deferred by default unless implementation can safely use authoritative cart actions and current Shopify variant availability.
 - **D-41:** B2B/customer-specific pricing parity is documented as admin-dependent and checkout-authoritative. Record what Shopify exposes, what needs Shopify admin/B2B setup, and avoid client-side pricing promises.
-- **D-42:** Account navigation uses one stable account entry route with a state-aware label, such as "Account" when signed in and "Log in" when signed out, when server-side state is safely available.
+- **D-42:** Account navigation uses one stable account entry route, `/account`. The account route owns signed-in versus sign-in behavior; the header does not need a state-aware label for Phase 14.
 - **D-43:** Legacy account links from emails/bookmarks preserve safe return or context parameters where useful, ignore Liquid/template-only or unknown parameters, and route into the modern account flow.
 - **D-44:** Launch readiness must include an explicit Customer Account API setup checklist covering Shopify customer accounts, Headless/Hydrogen channel credentials, protected customer data, callback/logout URLs, HTTPS tunnel, and owner approvals.
+- **D-55:** Classic register/reset/password routes should bridge or redirect into modern OAuth with explanatory copy when needed. Do not rebuild classic password forms.
+- **D-56:** Unmapped legacy account routes show an account-focused explanatory page with a modern sign-in path and support/contact fallback instead of a generic 404.
+- **D-57:** Keep the account icon visible even when setup is missing; route rendering fails fast with setup guidance rather than hiding the feature.
+- **D-58:** Customer Account API setup guidance belongs in Phase 14 docs/context and developer-facing error messages, not a new customer-facing or internal preflight route by default.
+- **D-59:** Missing required account setup fails closed with a clear operator/developer error, including in production. Do not serve fake, stubbed, or partial account experiences.
+- **D-60:** Launch-blocking setup prerequisites include Shopify customer accounts, Headless/Hydrogen channel credentials, protected customer data access, callback/logout URLs, HTTPS tunnel/dev callback setup, and owner approval boundaries.
+- **D-61:** Readiness docs must include an explicit blocked gate for real Shopify hosted checkout, payment, shipping-rate, tax, order-creation, and success-redirect testing until store-owner approval.
 
 ### Agent Discretion
 - Downstream agents may choose exact component boundaries, route filenames, mutation grouping, form validation helpers, and test file layout as long as they follow the decisions above, project conventions, and the Shopify/Next.js constraints.
@@ -106,7 +123,9 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - `src/lib/cart/actions.ts` - Existing server-owned cart cookie and Server Action boundary for cart reads/mutations; Phase 14 should extend this pattern rather than adding client-side cart state.
 - `src/lib/shopify/env.ts` and `src/lib/env/*` - Existing environment reader/fail-fast pattern for Shopify and server/public envs.
 - `src/components/ui/section/section.tsx` and shared UI primitives - Account pages should reuse existing warm design primitives and token utilities rather than inventing a new visual system.
-- `src/components/layout/header/*` and `src/components/layout/footer/*` - Account entry links and state-aware labels connect here; footer currently has the stale external login link in `src/components/layout/footer/data.ts`.
+- `src/components/layout/header/*` and `src/components/layout/footer/*` - Account entry links connect here; footer currently has the stale external login link in `src/components/layout/footer/data.ts`.
+- `src/components/layout/header/header.tsx` - Account access should be added to the existing right-side icon cluster beside search and cart, linking to `/account`.
+- `src/app/(storefront)/cart/_components/checkout-form.tsx` and `src/app/(storefront)/cart/_components/view.tsx` - Checkout controls are the right place for subtle account context and blocked identity-sync recovery states.
 
 ### Established Patterns
 - Server Components fetch data through `src/lib/*/operations` helpers; mutations live in `'use server'` action modules or route handlers.
@@ -122,6 +141,7 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - Protected account pages need session-scoped Customer Account API operations for dashboard, profile, addresses, and orders.
 - Cart checkout handoff needs a pre-checkout identity sync path and fake-Shopify tests around Server Actions/route-handler boundaries.
 - Header/footer account links need migration from external/stale routes to owned headless account routes.
+- Legacy account compatibility routes need a safe allowlist for return/context parameters and an explanatory fallback page for unmapped classic account URLs.
 
 </code_context>
 
@@ -133,6 +153,9 @@ This phase clarifies how to implement the v1.3 account experience. It does not a
 - Use dedicated address form pages instead of modals or inline edit-heavy address lists.
 - Keep account support visible but compact.
 - Treat B2B, wholesale status, and reorder as parity findings unless Shopify/cart/checkout data makes them authoritative.
+- Header account entry is an icon-only route to `/account`, including on mobile.
+- Buyer identity sync failures should feel recoverable: retry first, then sign in again or contact support.
+- Setup/readiness failures are operator-facing launch blockers, not customer-facing feature toggles.
 
 </specifics>
 
