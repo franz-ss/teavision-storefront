@@ -37,7 +37,7 @@ Use existing primitives before adding anything new:
 | Actions | `Button` | Primary actions use `variant="brand"` for account/OAuth and save actions; secondary uses `variant="secondary"`; quiet text actions use `variant="quiet"`. |
 | Icon-only header action | Link styled like the existing cart icon | Use `UserRound` or `CircleUserRound`; `aria-label="Account"`; href `/account`. Do not add a state-aware label in Phase 14. |
 | Forms | `FormLabel`, `TextInput`, `Textarea`, `Select`, `Checkbox` | Use existing field focus, min-height, disabled, and placeholder styling. |
-| Delete confirmation | Existing `Dialog` in a route-local client leaf | Required for address deletion only; include cancel and destructive submit actions. |
+| Delete confirmation | Existing `Dialog` in a route-local client leaf | Required for address deletion only; include `Keep address` and `Delete address` actions. |
 | Pagination | `Pagination` | Use for order history cursor pages; no infinite scroll. |
 | Status pills | `Badge` or local pill markup | Use `organic`, `gold`, or neutral `bg-paper-2` treatment; preserve Shopify status accuracy. |
 
@@ -141,13 +141,13 @@ Do not use accent color for every link or every table row. Ordinary account navi
 | Expired session | Sign in again | Return to cart, where relevant |
 | OAuth verification failure | Start sign-in again | Contact support |
 | Dashboard no orders | Browse teas | Contact support |
-| Profile form | Update profile | Cancel |
-| New address form | Save address | Cancel |
-| Edit address form | Save address | Cancel |
+| Profile form | Update profile | Return to account |
+| New address form | Save address | Return to addresses |
+| Edit address form | Save address | Discard address changes |
 | Address delete dialog | Delete address | Keep address |
 | Order history | View order | Browse teas, when empty |
 | Checkout identity blocked | Retry checkout | Sign in again; Contact support |
-| Logout | Log out | Cancel |
+| Logout | Log out | Stay signed in |
 
 ### State Copy
 
