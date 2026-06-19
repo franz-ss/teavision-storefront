@@ -5,7 +5,7 @@
 - ✅ **v1.0 Headless Storefront Launch** — Phases 1–11 (shipped 2026-06-11) — see `milestones/v1.0-ROADMAP.md`
 - ✅ **v1.1 Blog Performance** — Phase 12 (shipped 2026-06-12) — see `milestones/v1.1-ROADMAP.md`
 - ✅ **v1.2 SEO-Safe PLP Pagination Parity** — Phase 13 (shipped 2026-06-12) — see `milestones/v1.2-ROADMAP.md`
-- 🚧 **v1.3 Shopify Customer Accounts** — Phase 14 (executing 2026-06-19)
+- ✅ **v1.3 Shopify Customer Accounts** — Phase 14 (completed 2026-06-19)
 
 ## Phases
 
@@ -44,9 +44,9 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 
 </details>
 
-### 🚧 v1.3 Shopify Customer Accounts
+### ✅ v1.3 Shopify Customer Accounts
 
-- [ ] **Phase 14: Shopify Customer Accounts** — Add modern Shopify Customer Account API authentication, protected account pages, address management, order history, cart buyer identity sync, and migration parity decisions for the Tea Vision account experience. (5/5 plans complete; verification pending)
+- [x] **Phase 14: Shopify Customer Accounts** — Add modern Shopify Customer Account API authentication, protected account pages, address management, order history, cart buyer identity sync, and migration parity decisions for the Tea Vision account experience. (5/5 plans complete; verified 2026-06-19)
 
 ## Progress
 
@@ -63,7 +63,7 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 | 11. Full Visual Redesign                   | v1.0      | 22/22          | Complete   | 2026-06-11 |
 | 12. Optimize blog loading                  | v1.1      | 4/4            | Complete   | 2026-06-12 |
 | 13. Production-parity collection pagination | v1.2      | 2/2            | Complete   | 2026-06-12 |
-| 14. Shopify Customer Accounts              | v1.3      | 5/5            | In Progress | —          |
+| 14. Shopify Customer Accounts              | v1.3      | 5/5            | Complete   | 2026-06-19 |
 
 ## Phase Details
 
@@ -113,4 +113,4 @@ Full phase details: `milestones/v1.2-ROADMAP.md` · Audit: `milestones/v1.2-MILE
 
 ## Next
 
-Execute Phase 14 with `$gsd-execute-phase 14`.
+Complete the v1.3 milestone with `$gsd-complete-milestone`.
