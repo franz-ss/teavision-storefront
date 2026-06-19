@@ -43,9 +43,9 @@ Requirements for v1.3 Shopify Customer Accounts. Each maps to roadmap phases.
 
 ### Migration And Parity
 
-- [ ] **MIG-01**: Header/footer account links point to the headless account routes, not stale external domains.
-- [ ] **MIG-02**: Legacy account URLs are preserved with redirects or bridge pages.
-- [ ] **MIG-03**: Theme reorder and B2B/customer-pricing behavior is documented as implemented, deferred, or requiring Shopify admin decisions.
+- [x] **MIG-01**: Header/footer account links point to the headless account routes, not stale external domains.
+- [x] **MIG-02**: Legacy account URLs are preserved with redirects or bridge pages.
+- [x] **MIG-03**: Theme reorder and B2B/customer-pricing behavior is documented as implemented, deferred, or requiring Shopify admin decisions.
 
 ### Security
 
@@ -110,9 +110,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ORD-04 | Phase 14 | Complete |
 | CART-01 | Phase 14 | Complete |
 | CART-02 | Phase 14 | Complete |
-| MIG-01 | Phase 14 | Pending |
-| MIG-02 | Phase 14 | Pending |
-| MIG-03 | Phase 14 | Pending |
+| MIG-01 | Phase 14 | Complete |
+| MIG-02 | Phase 14 | Complete |
+| MIG-03 | Phase 14 | Complete |
 | SEC-01 | Phase 14 | Complete |
 | SEC-02 | Phase 14 | Complete |
 | SEC-03 | Phase 14 | Complete |
