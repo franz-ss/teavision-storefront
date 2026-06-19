@@ -1,7 +1,8 @@
 ---
 phase: 14
 slug: shopify-customer-accounts
-status: draft
+status: approved
+reviewed_at: 2026-06-19T10:14:46.0727552+08:00
 shadcn_initialized: false
 preset: none
 created: 2026-06-19
