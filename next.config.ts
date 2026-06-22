@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next'
 
+import { securityHeaders } from './src/lib/security/headers'
+
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['detonate-trickster-venus.ngrok-free.dev'],
   cacheComponents: true,
@@ -14,6 +16,14 @@ const nextConfig: NextConfig = {
         source: '/collections/:handle/products/:productHandle',
         destination: '/products/:productHandle',
         permanent: true,
+      },
+    ]
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: securityHeaders,
       },
     ]
   },
@@ -36,6 +46,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  poweredByHeader: false,
 }
 
 export default nextConfig
