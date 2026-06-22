@@ -60,10 +60,6 @@ pnpm up next@16.2.9 eslint-config-next@16.2.9 next-sanity@13.1.1 @storybook/next
 }
 ```
 
-## Residual Findings
-
-Pending remediation.
-
 ## Task 2 Remediation Log
 
 | Item | Result |
@@ -76,3 +72,57 @@ Pending remediation.
 | Rejected override | `vite@^8.0.0: 8.0.16` removed because it made pnpm peer checking expect Vite 8 inside Sanity's Vite 7 toolchain. Direct dev `vite@8.0.16` replaced it and left Sanity's Vite 7 path intact. |
 | Peer verification | `pnpm peers check` reported no peer dependency issues after the `sanity: 5.29.0` override. |
 | Severity verification | `pnpm audit --audit-level high` exited 0 and reported only 1 low and 4 moderate findings. |
+
+## Final Audit
+
+| Field | Value |
+|-------|-------|
+| Command | `pnpm audit --audit-level moderate --json` |
+| Date | 2026-06-22 |
+| Exit code | 1 |
+| Critical | 0 critical |
+| High | 0 high |
+| Moderate | 4 moderate |
+| Low | 1 low |
+| Total | 5 |
+| Pass status | Pass for SEC-01 launch blocker threshold: 0 critical and 0 high. Moderate/low findings are documented below. |
+
+`pnpm audit --audit-level high` exited 0 and reported: `5 vulnerabilities found; Severity: 1 low | 4 moderate`.
+
+## Applied Changes
+
+| Area | Change |
+|------|--------|
+| Next runtime | Upgraded `next` from `16.2.4` to `16.2.9`. |
+| Next lint config | Upgraded `eslint-config-next` from `16.2.4` to `16.2.9`. |
+| Sanity integration | Upgraded `next-sanity` from `^13.0.6` to `^13.1.1`; pinned auto-installed `sanity` peer to `5.29.0`. |
+| Email runtime | Upgraded `resend` from `^6.12.2` to `^6.14.0`, removing the runtime `svix -> uuid@10.0.0` path. |
+| Storybook tooling | Upgraded Storybook packages from `10.4.1` to `10.4.6`. |
+| Codegen tooling | Upgraded `@graphql-codegen/cli` from `^6.3.1` to `^7.1.3`. |
+| Audit tooling | Upgraded `lighthouse` from `^13.2.0` to `^13.4.0`. |
+| Vite tooling | Added direct dev dependency `vite@8.0.16` so Storybook/Vitest peers resolve to the patched Vite 8 line. |
+| Active pnpm overrides | `@sanity/uuid: 3.0.3`, `postcss: 8.5.15`, and `sanity: 5.29.0` in `pnpm-workspace.yaml`. |
+
+## Residual Findings
+
+| Package | Severity | Path root | Runtime exposure | Rationale / follow-up |
+|---------|----------|-----------|------------------|-----------------------|
+| `js-yaml` | moderate | `next-sanity -> sanity -> @sanity/cli -> @vercel/frameworks -> js-yaml@3.13.1` | no | Sanity CLI/tooling path. Not imported by storefront runtime code; retained because forcing a broad `js-yaml` major override across Vercel framework detection is higher compatibility risk than this moderate tooling residual. |
+| `js-yaml` | moderate | `eslint -> @eslint/eslintrc -> js-yaml@4.1.1` and related ESLint tooling paths | no | Lint/config tooling path only. `pnpm lint` passes on the final graph. |
+| `uuid` | moderate | `next-sanity -> sanity -> @sanity/cli -> typeid-js -> uuid@10.0.0` | no | Remaining `uuid@10.0.0` path is Sanity CLI tooling after `resend` runtime and `@sanity/uuid` paths were patched. Avoided broad `uuid` major override because it would cross package API boundaries. |
+| `@opentelemetry/core` | moderate | `lighthouse -> @sentry/node -> @opentelemetry/core@1.30.1` | no | Lighthouse/Sentry audit tooling path. Not part of storefront runtime bundle. Revisit when Lighthouse/Sentry publishes an OpenTelemetry 2.8-compatible chain. |
+
+## Verification
+
+| Command | Exit | Result |
+|---------|------|--------|
+| `pnpm install --frozen-lockfile=false` | 0 | Passed after workspace overrides; peer install completed. |
+| `pnpm peers check` | 0 | No peer dependency issues found. |
+| `pnpm audit --audit-level high` | 0 | Passed: no critical or high findings. |
+| `pnpm audit --audit-level moderate --json` | 1 | Expected residual: 1 low and 4 moderate; 0 critical and 0 high. |
+| `pnpm lint` | 0 | Passed; Tailwind class check and ESLint completed. |
+| `pnpm typecheck` | 0 | Passed; `tsc --noEmit`. |
+| `pnpm build` | 0 | Passed on Next.js 16.2.9 with Cache Components enabled. |
+| `pnpm test:unit` | 0 | Passed; 48 test files, 181 tests. |
+| `pnpm test:integration` | 0 | Passed; 8 test files, 39 tests. |
+| `git diff -- src/lib/shopify/types/generated` | 0 | Empty; generated Shopify types untouched. |
