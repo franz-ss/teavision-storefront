@@ -1,86 +1,157 @@
-# Research Summary
+# Project Research Summary
 
-**Domain:** Shopify Customer Accounts for Tea Vision
-**Researched:** 2026-06-19
+**Project:** Teavision Headless Storefront
+**Domain:** Headless Shopify ecommerce production-readiness remediation
+**Researched:** 2026-06-22
 **Confidence:** HIGH
 
 ## Executive Summary
 
-v1.3 should implement modern Shopify Customer Account API support as one tightly scoped milestone: OAuth/session foundation, account dashboard/profile, address management, order history/detail, and cart buyer identity sync. The sibling Liquid theme is a strong UX and parity reference, but its classic customer forms, third-party reorder script, and SAW/WCP/Locksmith customer-tag pricing snippets should not be copied directly into the headless app.
+v1.4 should treat "100/100 production readiness" as a measurable launch-hardening program, not as a broad polish pass. The current audit blockers map cleanly to eight workstreams: dependency/security cleanup, security headers/CSP, Customer Account OAuth launch behavior, legal/policy/SEO route coverage, consent-aware analytics, observability/operations, performance remediation, and final automated plus owner-gated launch evidence.
 
-The first roadmap phase should be Phase 14 and should build the full customer-account MVP vertically enough that auth, protected account data, address/order workflows, and checkout identity are tested together. Reorder and B2B/customer-specific pricing should be explicit stretch/follow-up decisions unless Shopify admin configuration is ready.
+The most urgent technical issue is the dependency audit: `pnpm audit --audit-level moderate` currently reports 45 advisories including 1 critical and 16 high findings. Next.js 16.2.4 is directly affected by several high/moderate advisories fixed in 16.2.5/16.2.6, and transitive tooling paths include critical `shell-quote` plus high `undici`, `vite`, `ws`, and `form-data` findings. A perfect readiness score requires resolving or explicitly proving non-runtime residuals.
 
-## Stack Additions
+The second key risk is that production-readiness cannot be fully automated: Shopify hosted checkout, payment, tax, shipping, Customer Account OAuth, protected customer data, and B2B/company pricing still depend on Shopify admin configuration and store-owner approval. The milestone should separate code-complete evidence from owner/admin-gated launch evidence, then produce a final score artifact.
 
-- Shopify Customer Account API 2026-04.
-- OAuth/OIDC with discovery endpoints, state, nonce, and PKCE/confidential-client handling.
-- Server-only session module using encrypted HTTP-only cookies initially, with DB/KV as optional hardening.
-- Separate Customer Account GraphQL operations and generated types.
-- Storefront `cartBuyerIdentityUpdate` operation added to the existing cart boundary.
+## Key Findings
 
-## Table Stakes
+### Recommended Stack
 
-- `/account/login` entry route and logout.
-- OAuth callback/session persistence.
-- Protected `/account` dashboard.
-- Profile details view/update.
-- Address list/create/update/delete/default.
-- Paginated order history and order detail.
-- Cart buyer identity sync before checkout.
-- Header/footer account links with stale `mrtea.com.au` login cleanup.
+**Core technologies:**
+- Next.js 16.2.6+ patch line: removes known current high/moderate Next advisories.
+- Next response headers via `next.config.ts`: matches local Next 16 docs and keeps header policy centralized.
+- Static/report-only CSP first: lower risk with Cache Components/PPR than nonce CSP, which can force dynamic rendering.
+- Sentry/OTel/Vercel-equivalent observability: required because the repo currently has no external error tracking.
+- Google consent mode + GA4 ecommerce recommended events + Shopify Customer Privacy API: consent-aware tracking for headless Shopify.
+- Playwright/Lighthouse/header probes: repeatable final readiness evidence.
 
-## Watch Out For
+### Expected Features
 
-- Modern Customer Accounts are not classic Liquid password forms. Preserve URLs and intent, not necessarily form mechanics.
-- Shopify does not support localhost/HTTP callbacks for Customer Account API; local development needs HTTPS tunneling.
-- Customer Account API requires protected customer data access for first name, last name, email, and order-related use.
-- Customer data must not be globally cached like public product/collection data.
-- Do not expose access or refresh tokens to browser JavaScript.
-- Do not promise customer-specific discounts unless Shopify cart/checkout confirms them.
-- Real hosted checkout/payment/shipping/tax/order tests remain prohibited without owner approval.
+**Must have:**
+- Clean dependency audit policy and patches.
+- Global security headers, including CSP or staged CSP report-only, HSTS, content-type, referrer, permissions, frame protection, and no `x-powered-by`.
+- OAuth/login-start route hardening to avoid prefetch/cross-origin CORS failures.
+- Legal/policy route and legacy redirect coverage.
+- Consent-aware analytics and ecommerce event adapter.
+- Health/readiness endpoint, monitoring/error tracking, redacted structured logs, and alert/runbook coverage.
+- Performance fixes for home/PDP LCP.
+- Full production-smoke and launch-audit script.
+- Owner-approved Shopify launch test matrix.
 
-## Recommended Milestone Shape
+**Should have:**
+- Synthetic post-launch monitoring.
+- Search Console/404/revenue monitoring checklist.
+- Durable rate limiting or documented provider-level protection.
+- Webhook observability for ignored topics and revalidation outcomes.
 
-| Phase | Name | Purpose |
-|-------|------|---------|
-| 14 | Shopify Customer Accounts | Build auth/session, account pages, address/order workflows, cart buyer identity, migration routes, and tests as one coherent account MVP. |
+**Defer:**
+- Server-side Meta/Klaviyo conversion APIs unless marketing requires them for launch.
+- Personalization, A/B testing, international expansion, and pricing-system migrations.
 
-If the roadmapper chooses to split, preserve this dependency order:
+### Architecture Approach
 
-1. Auth/session/client foundation.
-2. Account dashboard/profile/address/order surfaces.
-3. Cart buyer identity/checkout handoff.
-4. Reorder/B2B parity decisions or deferred follow-up.
+Keep changes inside established Next/App Router boundaries: security headers in config plus `lib/security`, analytics in a consent-aware adapter, policy routes under storefront pages or redirects, health under API route handlers, observability in instrumentation/logging helpers, and launch evidence in docs/scripts. Avoid redesigning the storefront or changing commerce authority: Shopify remains authoritative for prices, cart, checkout, customer data, payments, tax, shipping, and orders.
 
-## Suggested Requirement Categories
+**Major components:**
+1. Dependency/security hardening boundary: package upgrades, overrides, and audit evidence.
+2. Runtime protection boundary: headers/CSP, account OAuth, rate limiting, webhook visibility.
+3. Compliance/SEO boundary: policy routes, privacy/cookie content, redirects, sitemap/noindex/canonical checks.
+4. Measurement boundary: consent banner/API, GA4/Meta/Klaviyo adapters, ecommerce event tests.
+5. Operations boundary: health, monitoring, logging, alerts, backups/runbook, final score artifact.
 
-- **AUTH:** Customer Account API setup, login, logout, session persistence, protected routes.
-- **ACCT:** Dashboard and profile details/update.
-- **ADDR:** Address CRUD/default address sync.
-- **ORD:** Order history, order detail, statuses, pagination.
-- **CART:** Buyer identity update and checkout handoff.
-- **MIG:** Legacy route/header/footer parity.
-- **SEC:** token handling, protected data, no real checkout tests, no customer data cache leaks.
+### Critical Pitfalls
 
-## Key Open Decisions
+1. **Vague 100/100 scope**: fix by converting the audit into atomic requirements and a final evidence table.
+2. **Known vulnerabilities left in dependencies**: fix critical/high advisories before launch.
+3. **CSP breaking revenue scripts**: inventory third-party hosts and test report-only/static CSP before enforcing.
+4. **OAuth route prefetch CORS**: use non-prefetched OAuth-start links and verify Shopify HTTPS callback settings.
+5. **Legal policy 404s**: own headless routes/redirects for privacy, shipping, returns, terms, cookies, and old Shopify policy URLs.
+6. **Consent drift**: initialize consent defaults before tags and coordinate Shopify Customer Privacy API where needed.
+7. **Fake checkout mistaken for launch readiness**: require owner-approved Shopify test-mode or refunded real-order evidence.
+8. **Noindex left on at launch**: make noindex flip and sitemap/Search Console checks explicit gates.
 
-1. Use Customer Account API as the primary path unless the owner explicitly asks for legacy password form parity.
-2. Decide whether v1.3 includes reorder or only prepares order/cart foundations for a follow-up.
-3. Decide whether customer-specific/B2B pricing is in scope for implementation or only research/decision capture.
-4. Confirm Shopify admin prerequisites: Customer Accounts enabled, Headless/Hydrogen sales channel configured, callback/logout URLs, scopes/protected data access, and development HTTPS tunnel.
+## Implications for Roadmap
+
+### Phase 15: Security, Dependency, and Runtime Header Hardening
+
+**Rationale:** Known critical/high advisories and missing security headers are launch blockers.
+**Delivers:** Dependency patch/override plan, clean audit policy, global security headers, CSP strategy, account OAuth prefetch fix, header/security tests.
+**Addresses:** Security headers, dependency audit, OAuth CORS, rate-limit production stance.
+**Avoids:** Shipping known vulnerabilities or brittle CSP.
+
+### Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage
+
+**Rationale:** Policy 404s, cookie/consent gaps, and missing conversion tracking block trust, compliance, and launch visibility.
+**Delivers:** Policy routes/redirects, cookie/privacy review hooks, consent-aware analytics adapter, GA4 ecommerce event tests, sitemap/noindex/redirect checks.
+**Addresses:** Legal/compliance, analytics, SEO fundamentals.
+**Avoids:** Tracking before consent and policy-route launch failures.
+
+### Phase 17: Operations, Performance, and Final Production-Readiness Audit
+
+**Rationale:** A 100/100 launch needs monitoring, health, performance evidence, e2e confidence, and owner-gated Shopify launch proof.
+**Delivers:** Health/readiness endpoint, observability/logging/alerts/runbook, LCP remediation, local production e2e unblock, final audit script/report, owner-gated Shopify checklist.
+**Addresses:** Operational readiness, reliability, performance, checkout/payment/tax/shipping/OAuth UAT.
+**Avoids:** "Works locally" launch with no observability or external checkout evidence.
+
+### Phase Ordering Rationale
+
+- Patch dependencies and headers before analytics/consent so security policy does not need to be rewritten after third-party script inventory.
+- Legal/policy/SEO and analytics belong together because privacy/cookie disclosures must match actual tracking behavior.
+- Performance/operations/final audit come last because they validate the integrated result across real pages and launch workflows.
+
+### Research Flags
+
+- **Phase 15:** Read local Next 16 docs before code changes; especially headers and CSP trade-offs.
+- **Phase 16:** Confirm owner/legal content for policy pages; do not invent legal promises.
+- **Phase 16:** Confirm exact analytics destinations: GA4, GTM, Meta, Klaviyo, Shopify pixels.
+- **Phase 17:** Confirm production host: Vercel docs are relevant only if deployment is Vercel.
+- **Phase 17:** Confirm owner approval before hosted checkout/payment/order tests.
+
+## Confidence Assessment
+
+| Area | Confidence | Notes |
+|------|------------|-------|
+| Stack | HIGH | Verified against local package state, pnpm audit, Next docs, Shopify docs, Google docs, OWASP. |
+| Features | HIGH | Derived directly from production-readiness audit findings and primary-source launch expectations. |
+| Architecture | HIGH | Matches existing codebase architecture and avoids new platform migrations. |
+| Pitfalls | HIGH | Based on observed audit failures and official guidance for headers, consent, Shopify, SEO, WCAG, and web vitals. |
+
+**Overall confidence:** HIGH
+
+### Gaps to Address During Planning/Execution
+
+- Exact production hosting/observability provider must be confirmed before implementing alerts/drains.
+- Exact analytics destinations and IDs must be provided by the owner; code should support disabled/fake mode safely.
+- Legal policy text needs owner/legal approval; engineering can guarantee routes, redirects, metadata, and content placeholders but not legal correctness.
+- Hosted checkout/payment/tax/shipping/order tests require explicit owner approval and Shopify test-mode configuration.
+- B2B/company pricing checks require authoritative Shopify admin/customer account setup and test customers.
 
 ## Sources
 
-- `STACK.md`
-- `FEATURES.md`
-- `ARCHITECTURE.md`
-- `PITFALLS.md`
-- https://shopify.dev/docs/storefronts/headless/building-with-the-customer-account-api/getting-started
-- https://shopify.dev/docs/api/customer/latest
-- https://shopify.dev/docs/storefronts/headless/building-with-the-customer-account-api/customer-accounts
-- https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/customer-accounts
-- https://www.teavision.com.au/account/login
+### Primary
+
+- OWASP HTTP Headers Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html
+- OWASP Content Security Policy Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html
+- Next.js headers docs: https://nextjs.org/docs/app/api-reference/config/next-config-js/headers
+- Next.js CSP guide: https://nextjs.org/docs/app/guides/content-security-policy
+- Next.js OpenTelemetry guide: https://nextjs.org/docs/app/guides/open-telemetry
+- Shopify Customer Account API setup: https://shopify.dev/docs/storefronts/headless/building-with-the-customer-account-api/getting-started
+- Shopify Customer Account authentication: https://shopify.dev/docs/storefronts/headless/building-with-the-customer-account-api/authenticate-customers
+- Shopify Customer Privacy API: https://shopify.dev/docs/api/customer-privacy
+- Shopify store policies: https://help.shopify.com/en/manual/checkout-settings/refund-privacy-tos
+- Shopify test orders: https://help.shopify.com/en/manual/checkout-settings/test-orders
+- Google Consent Mode: https://developers.google.com/tag-platform/security/guides/consent
+- GA4 ecommerce measurement: https://developers.google.com/analytics/devguides/collection/ga4/ecommerce
+- web.dev Web Vitals: https://web.dev/articles/vitals
+- Google Search Central site moves: https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes
+- Google Search Central robots.txt: https://developers.google.com/search/docs/crawling-indexing/robots/intro
+- OAIC Australian Privacy Principles: https://www.oaic.gov.au/privacy/australian-privacy-principles
+- ACCC consumer guarantees: https://www.accc.gov.au/consumers/buying-products-and-services/consumer-rights-and-guarantees
+- ACMA spam rules: https://www.acma.gov.au/avoid-sending-spam
+- W3C WCAG 2.2: https://www.w3.org/TR/WCAG22/
+- Vercel Observability: https://vercel.com/docs/observability
+- Sentry Next.js docs: https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 ---
-*Research summary for: Shopify Customer Accounts*
-*Researched: 2026-06-19*
+*Research completed: 2026-06-22*
+*Ready for roadmap: yes*

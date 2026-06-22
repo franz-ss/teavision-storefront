@@ -1,95 +1,106 @@
 # Stack Research
 
-**Domain:** Shopify Customer Accounts for a Next.js 16 headless storefront
-**Researched:** 2026-06-19
+**Domain:** Headless Shopify ecommerce production-readiness remediation
+**Researched:** 2026-06-22
 **Confidence:** HIGH
 
 ## Recommended Stack
 
 ### Core Technologies
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| Shopify Customer Account API | 2026-04 latest | Customer profile, address, and order data | Shopify's recommended cross-platform method for authenticated customer data. |
-| OAuth 2.0 / OpenID Connect | Shopify discovery endpoints | Customer authentication | Required by Customer Account API; supports hosted login and persistent Shopify customer identity. |
-| Next.js App Router Route Handlers | 16.2.x | OAuth start/callback/logout endpoints | Fits current app architecture and keeps token exchange server-side. |
-| React Server Components + Server Actions | React 19 | Protected account reads and mutations | Matches current project conventions for server-owned data and mutations. |
-| Shopify Storefront API | 2026-04 | Cart and checkout handoff | Existing source of truth for carts; must add cart buyer identity sync. |
+| Technology | Version / Target | Purpose | Why Recommended |
+|------------|------------------|---------|-----------------|
+| Next.js | Upgrade from 16.2.4 to at least 16.2.6; prefer latest compatible 16.x patch | Storefront runtime, App Router, Cache Components, headers, image optimization | Current audit reports multiple high/moderate Next.js advisories patched in 16.2.5/16.2.6. Production launch should not ship known framework security advisories. |
+| React | Keep aligned with Next-supported 19.x | UI runtime | React 19.2.4 is already installed; do not create an unrelated framework migration during hardening. |
+| Tailwind CSS | Keep Tailwind 4.2.x unless audit fix requires a patch | Design-token utility system | Existing storefront conventions rely on Tailwind 4 tokens and no raw color classes. |
+| Shopify Storefront + Customer Account APIs | Existing 2026-04 Storefront API; Customer Account OAuth configured in Shopify Headless/Hydrogen settings | Commerce, cart, checkout handoff, customer account session | Shopify remains source of truth for prices, checkout, taxes, shipping, customer identity, and orders. |
+| Next.js `headers()` config | Next 16 docs: `next.config.ts` `async headers()` | Security response headers | Next provides route-wide response header configuration. Local docs are present under `node_modules/next/dist/docs/01-app/03-api-reference/05-config/01-next-config-js/headers.md`. |
+| Next.js CSP guidance | Next 16 App Router CSP guide | Content Security Policy | Nonce CSP can force dynamic rendering and conflict with PPR/static shells, so the first production pass should use a static CSP/report-only ramp unless strict nonce CSP is explicitly required. |
 
-### Supporting Libraries
+### Supporting Libraries / Services
 
-| Library | Version | Purpose | When to Use |
-|---------|---------|---------|-------------|
-| `jose` or equivalent Web Crypto helpers | TBD | Encrypt/sign customer session cookies or token envelopes | Use if the project chooses stateless encrypted HTTP-only sessions. |
-| Existing `vitest` and `@playwright/test` | Current repo versions | Unit/integration/fake-Shopify coverage | Extend current cart/checkout testing pattern without real hosted checkout. |
-| Existing GraphQL Code Generator | Current repo version | Generate typed Customer Account operations | Add a separate Customer Account output, not direct imports from generated Storefront types. |
+| Library / Service | Version / Target | Purpose | When to Use |
+|-------------------|------------------|---------|-------------|
+| Sentry for Next.js or equivalent | Current package compatible with Next 15+/App Router | Error, trace, logs, release tracking | Use if no platform-native observability is already committed; repo currently has no external error tracking dependency. |
+| OpenTelemetry | Next instrumentation support or provider SDK | Vendor-neutral traces | Use for server route/action latency and third-party call visibility; Next recommends OpenTelemetry for instrumentation. |
+| Vercel Observability / Runtime Logs / Drains / Alerts | Deployment-plan dependent | Runtime logs, dashboards, log forwarding, alerts | Use if production hosting is Vercel as earlier project docs recommend. Otherwise map equivalent capabilities in the chosen host. |
+| Google Tag / GTM Consent Mode | Current Google Tag Platform consent mode | Consent-aware analytics and ads tags | Use before GA4/GTM/Ads tags read or store user data. Default consent state must be set before tags fire. |
+| GA4 ecommerce events | Current GA4 recommended ecommerce events | Product/search/cart/checkout/purchase analytics | Use the recommended event names and `items` array model so reports populate correctly. |
+| Shopify Customer Privacy API | Browser API from Shopify | Sync consent to Shopify-managed pixels, audiences, and checkout surfaces | Use when Shopify pixels or customer privacy settings are active and a headless banner must coordinate with Shopify. |
+| Playwright + Lighthouse | Existing dependencies | Production-smoke and page-performance gates | Keep, but fix local e2e port/server lifecycle and add launch audit scripts so readiness is repeatable. |
 
-### Development Tools
+### Development / Verification Tools
 
 | Tool | Purpose | Notes |
 |------|---------|-------|
-| HTTPS tunnel such as ngrok | Local OAuth callback testing | Shopify Customer Account API does not support localhost or HTTP callback URLs. |
-| Shopify Headless or Hydrogen sales channel | Customer Account API credentials | Required for Customer Account API setup. |
-| Storybook | Account component review | Required for reusable components in `src/components/account/*`. |
+| `pnpm audit --audit-level moderate` | Dependency gate | Current state: 45 advisories: 10 low, 18 moderate, 16 high, 1 critical. A 100/100 milestone requires zero critical/high and no launch-relevant moderate findings. |
+| Lighthouse CLI | Performance, accessibility, SEO, best-practices evidence | Current audit showed home LCP 4.6s and PDP LCP 6.0s. Target should be LCP <= 2.5s lab for representative pages, with page-specific budgets documented. |
+| Playwright | Browser smoke/e2e coverage | Fix current port conflict and validate account login links do not prefetch/cross-origin-fail, cart-to-checkout handoff, legal routes, consent, analytics stubs, and headers. |
+| Header probe script | Security header regression test | Assert CSP, HSTS, X-Frame-Options or `frame-ancestors`, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, COOP/CORP where applicable, and no `x-powered-by`. |
+| Rich Results / structured data validation | SEO validation | Use Google tools on representative production/staging URLs after noindex launch gate is flipped. |
 
-## Installation
-
-No large framework addition is recommended. Add only a minimal crypto/session helper dependency if Web Crypto alone is not ergonomic enough.
+## Installation / Upgrade Direction
 
 ```bash
-pnpm add jose
-pnpm codegen
+# First implementation phase should determine exact patch set from lockfile.
+pnpm up next eslint-config-next @storybook/nextjs-vite
+pnpm up @graphql-codegen/cli next-sanity sanity storybook vite vitest lighthouse
+pnpm audit --audit-level moderate
+```
+
+Add observability/analytics packages only after choosing the provider and consent model:
+
+```bash
+# Example only; choose provider during implementation.
+pnpm add @sentry/nextjs
 ```
 
 ## Alternatives Considered
 
 | Recommended | Alternative | When to Use Alternative |
 |-------------|-------------|-------------------------|
-| Customer Account API | Legacy Storefront customer API | Only if the business explicitly requires classic password login/register/reset parity over Shopify's current recommendation. |
-| Secure HTTP-only session cookie | Database/KV-backed sessions | Use DB/KV if refresh token rotation, revocation, multi-device sessions, or audit logs are required immediately. |
-| Separate Customer Account GraphQL types | Reusing Storefront generated types | Never reuse Storefront generated types for Customer Account operations; schemas differ. |
+| Static/report-only CSP first | Full nonce CSP from day one | Use nonce CSP only if compliance requires it and the team accepts dynamic-rendering/PPR trade-offs. |
+| Sentry or platform observability | Console logs only | Console-only is not enough for launch because alerting, release correlation, and error aggregation are missing. |
+| Consent-aware first-party analytics wrapper | Direct GTM snippets scattered in components | Direct snippets are faster to add but create consent drift, CSP sprawl, and hard-to-test ecommerce events. |
+| Shopify-hosted checkout test order | Fake-only checkout tests | Fake tests remain valuable, but production readiness needs owner-approved Shopify test-mode or refunded real-order evidence. |
 
 ## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| Custom client-side password forms for modern Customer Accounts | Customer Account API authentication is OAuth/OIDC and Shopify-hosted, not classic password form submission. | `/account/login` as a branded entry page that starts Shopify auth. |
-| Browser-exposed access or refresh tokens | Customer tokens unlock protected customer data. | HTTP-only encrypted cookie or server-side session store. |
-| Client-side customer-tag pricing decisions | Pricing can diverge from checkout and leak business logic. | Shopify buyer identity, B2B/company/catalog configuration, or server-side verified pricing integration. |
-| Real hosted checkout tests | Project rules prohibit real checkout/payment/shipping/tax/order tests without owner approval. | Fake-Shopify unit/integration/e2e coverage for cart-to-checkout handoff. |
-
-## Stack Patterns by Variant
-
-**If v1.3 uses a stateless session:**
-- Store an encrypted token envelope in an HTTP-only, secure, SameSite=Lax cookie.
-- Keep PKCE verifier, state, nonce, and return URL in short-lived HTTP-only cookies.
-- Refresh access tokens server-side and retry once on expiry.
-
-**If v1.3 requires revocation/audit:**
-- Store only an opaque session ID in the browser.
-- Keep encrypted access/refresh tokens in DB/KV with expiry, rotated refresh tokens, user-agent hash, and created/updated timestamps.
-
-**If wholesale/B2B pricing must ship in the same milestone:**
-- Prefer native Shopify B2B/customer identity/catalog paths.
-- Treat legacy SAW/WCP/Locksmith snippets from `teavision-theme` as parity references, not executable headless contracts.
+| Shipping with known critical/high advisories | Audit score cannot reach 100/100 while known exploitable dependencies remain. | Patch, override, or remove vulnerable dependency paths. |
+| Next OAuth-start route rendered through default prefetching `<Link>` | Local audit observed CORS noise because the internal login start route redirects cross-origin during prefetch. | Use plain `<a>` or `prefetch={false}` for OAuth-start routes. |
+| Blanket `unsafe-inline` CSP in production | Weakens the main value of CSP and masks third-party script inventory. | Static allowlisted CSP, report-only ramp, and nonce/SRI where required. |
+| In-memory rate limiting as the only production abuse control | Serverless/multi-instance deployments reset and do not coordinate counters. | External/provider protection or durable KV/Redis limiter, with explicit fail-closed behavior. |
+| Analytics before consent defaults | Tags can read consent state too late or set storage before consent. | Initialize consent defaults before loading analytics/ads pixels. |
+| Noindex left enabled at launch | Organic pages remain excluded from search. | Launch gate checklist that flips `DISABLE_INDEXING=false` only when SEO checks pass. |
 
 ## Version Compatibility
 
-| Package A | Compatible With | Notes |
-|-----------|-----------------|-------|
-| Next.js 16.2.x | async cookies/headers/params | Account routes and guards must follow local Next 16 docs. |
-| Customer Account API 2026-04 | Shopify customer accounts | Requires customer accounts enabled and Headless/Hydrogen channel configuration. |
-| Storefront API 2026-04 | Current cart code | Add `cartBuyerIdentityUpdate`; do not use Customer Account buyer token for Storefront customer queries. |
+| Package / Surface | Compatible With | Notes |
+|-------------------|-----------------|-------|
+| `next@16.2.4` | Not production-ready per audit | Multiple advisories patched in `>=16.2.5` and one in `>=16.2.6`; use at least `16.2.6`. |
+| `eslint-config-next@16.2.4` | Should track Next patch | Keep aligned with the Next runtime patch. |
+| `next-sanity` / `sanity` | Needs audit-driven patching | Current transitive advisories include `form-data`, `undici`, `dompurify`, `js-yaml`, `uuid`. |
+| `@graphql-codegen/cli` | Needs audit-driven patching | Critical `shell-quote` path is from codegen CLI. |
+| Storybook/Vite/Vitest | Needs audit-driven patching | Current high Vite/ws/undici advisories are mostly dev-tool paths, but 100/100 requires clean policy or documented non-runtime exception. |
 
 ## Sources
 
-- https://shopify.dev/docs/storefronts/headless/building-with-the-customer-account-api/getting-started
-- https://shopify.dev/docs/api/customer/latest
-- https://shopify.dev/docs/storefronts/headless/building-with-the-customer-account-api/customer-accounts
-- https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/customer-accounts
-- Local Next 16 docs: `node_modules/next/dist/docs/01-app/02-guides/authentication.md`
-- Local theme reference: `D:/Work/teavision/teavision-theme/templates/customers/*.liquid`
+- OWASP HTTP Headers Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html
+- OWASP Content Security Policy Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html
+- Next.js headers docs: https://nextjs.org/docs/app/api-reference/config/next-config-js/headers
+- Next.js CSP guide: https://nextjs.org/docs/app/guides/content-security-policy
+- Next.js OpenTelemetry guide: https://nextjs.org/docs/app/guides/open-telemetry
+- Sentry Next.js docs: https://docs.sentry.io/platforms/javascript/guides/nextjs/
+- Vercel Observability: https://vercel.com/docs/observability
+- Vercel Runtime Logs: https://vercel.com/docs/logs/runtime
+- Vercel Drains: https://vercel.com/docs/drains
+- Google consent mode: https://developers.google.com/tag-platform/security/guides/consent
+- GA4 ecommerce events: https://developers.google.com/analytics/devguides/collection/ga4/ecommerce
+- Shopify Customer Privacy API: https://shopify.dev/docs/api/customer-privacy
+- Shopify Customer Account API setup: https://shopify.dev/docs/storefronts/headless/building-with-the-customer-account-api/getting-started
 
 ---
-*Stack research for: Shopify Customer Accounts*
-*Researched: 2026-06-19*
+*Stack research for: Teavision v1.4 Production Readiness 100/100*
+*Researched: 2026-06-22*
