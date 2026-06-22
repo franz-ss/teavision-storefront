@@ -4,8 +4,8 @@ milestone: v1.3
 milestone_name: Shopify Customer Accounts
 status: milestone_complete
 stopped_at: Milestone complete (Phase 14 was final phase)
-last_updated: 2026-06-22T03:25:32.152Z
-last_activity: 2026-06-22 -- Phase 14 gap closure verified and complete
+last_updated: 2026-06-22T03:39:21.252Z
+last_activity: 2026-06-22 -- Completed quick task 260622-g38: in /account/profile just remove the phone field if it is not editable
 progress:
   total_phases: 1
   completed_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-19)
 Phase: 14
 Plan: Not started
 Status: Milestone complete
-Last activity: 2026-06-22 -- Phase 14 gap closure verified and complete
+Last activity: 2026-06-22 -- Completed quick task 260622-g38: in /account/profile just remove the phone field if it is not editable
 
 ## Performance Metrics
 
@@ -161,6 +161,7 @@ Recent decisions affecting current work:
 | 260615-dm4 | Bespoke /pages/how-long-does-bulk-tea-last guide page (verbatim copy) | 2026-06-15 | 88cd2ff | [260615-dm4-bespoke-how-long-does-bulk-tea-last-guid](./quick/260615-dm4-bespoke-how-long-does-bulk-tea-last-guid/) |
 | 260615-fem | Rebuild GDPR/US/PIPEDA/APPI compliance pages with a streamlined data-request UX (one email action per right) | 2026-06-15 | 7f98492 | [260615-fem-redesign-compliance-data-rights-pages](./quick/260615-fem-redesign-compliance-data-rights-pages/) |
 | 260618-h2e | Project cleanup for animated artwork primitives and CMS-ready naming | 2026-06-18 | 9c7a54b | [260618-h2e-project-cleanup-animation-primitives](./quick/260618-h2e-project-cleanup-animation-primitives/) |
+| 260622-g38 | in /account/profile just remove the phone field if it is not editable | 2026-06-22 | cd784ab | [260622-g38-in-account-profile-just-remove-the-phone](./quick/260622-g38-in-account-profile-just-remove-the-phone/) |
 
 ## Deferred Items
 
