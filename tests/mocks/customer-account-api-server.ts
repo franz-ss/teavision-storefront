@@ -1,5 +1,7 @@
 import { createServer, type Server, type ServerResponse } from 'node:http'
 
+import { parse, visit } from 'graphql'
+
 import {
   makeCustomerAccountAddress,
   makeCustomerAccountProfile,
@@ -89,7 +91,9 @@ function makeIdToken(nonce: string, customerId: string): string {
 function toAddressConnection(addresses: CustomerAccountAddress[]) {
   return {
     nodes: addresses.map(toCustomerAddressApiPayload),
-    edges: addresses.map((node) => ({ node: toCustomerAddressApiPayload(node) })),
+    edges: addresses.map((node) => ({
+      node: toCustomerAddressApiPayload(node),
+    })),
     pageInfo: { hasNextPage: false, hasPreviousPage: false },
   }
 }
@@ -175,21 +179,66 @@ function toCustomerPayload(
   return payload
 }
 
+function getParentFieldName(ancestors: readonly unknown[]): string | null {
+  for (let index = ancestors.length - 1; index >= 0; index -= 1) {
+    const ancestor = ancestors[index]
+    if (
+      typeof ancestor === 'object' &&
+      ancestor !== null &&
+      'kind' in ancestor &&
+      ancestor.kind === 'Field' &&
+      'name' in ancestor &&
+      typeof ancestor.name === 'object' &&
+      ancestor.name !== null &&
+      'value' in ancestor.name &&
+      typeof ancestor.name.value === 'string'
+    ) {
+      return ancestor.name.value
+    }
+  }
+
+  return null
+}
+
 function hasLegacyCustomerAccountFields(query: string | undefined): boolean {
   if (!query) return false
 
-  const legacyFields = new Set([
+  const legacyAliasedFields = new Set([
     'countryCodeV2',
     'phone',
     'provinceCode',
     'trackingCompany',
     'trackingInfo',
   ])
+  const currentObjectFields = new Set(['emailAddress', 'phoneNumber'])
+  let hasLegacySelection = false
 
-  return query
-    .split('\n')
-    .map((line) => line.trim())
-    .some((line) => legacyFields.has(line))
+  try {
+    visit(parse(query), {
+      Field(node, _key, _parent, _path, ancestors) {
+        if (node.alias) return
+
+        const fieldName = node.name.value
+        if (legacyAliasedFields.has(fieldName)) {
+          hasLegacySelection = true
+          return false
+        }
+
+        if (
+          currentObjectFields.has(fieldName) &&
+          !node.selectionSet &&
+          getParentFieldName(ancestors) !== fieldName
+        ) {
+          hasLegacySelection = true
+          return false
+        }
+      },
+    })
+  } catch {
+    return false
+  }
+
+  return hasLegacySelection
 }
 
 function findAddress(
@@ -214,6 +263,13 @@ function readRecord(value: unknown): Record<string, unknown> {
   return typeof value === 'object' && value !== null
     ? (value as Record<string, unknown>)
     : {}
+}
+
+function hasUnsupportedFields(
+  value: Record<string, unknown>,
+  supportedFields: Set<string>,
+): boolean {
+  return Object.keys(value).some((key) => !supportedFields.has(key))
 }
 
 export async function createFakeCustomerAccountApiServer({
@@ -334,9 +390,11 @@ export async function createFakeCustomerAccountApiServer({
 
       if (operationName === 'CustomerAccountOrder') {
         const orderId = readString(graphqlRequest.variables?.orderId)
+        const order = orderId ? findOrder(profile, orderId) : null
+
         writeJson(response, 200, {
           data: {
-            order: orderId ? findOrder(profile, orderId) : null,
+            order: order ? toOrderApiPayload(order) : null,
           },
         })
         return
@@ -344,20 +402,65 @@ export async function createFakeCustomerAccountApiServer({
 
       if (operationName === 'CustomerUpdate') {
         const input = readRecord(graphqlRequest.variables?.input)
+
+        if (hasUnsupportedFields(input, new Set(['firstName', 'lastName']))) {
+          writeJson(response, 400, {
+            errors: [
+              {
+                message:
+                  'CustomerUpdateInput supports firstName and lastName only',
+              },
+            ],
+          })
+          return
+        }
+
         profile = {
           ...profile,
           firstName: readString(input.firstName) ?? profile.firstName,
           lastName: readString(input.lastName) ?? profile.lastName,
-          phoneNumber: readString(input.phone) ?? profile.phoneNumber,
         }
         writeJson(response, 200, {
-          data: { customerUpdate: { customer: profile, userErrors: [] } },
+          data: {
+            customerUpdate: {
+              customer: toCustomerPayload(profile, omitViewerSections),
+              userErrors: [],
+            },
+          },
         })
         return
       }
 
       if (operationName === 'CustomerAddressCreate') {
         const input = readRecord(graphqlRequest.variables?.address)
+
+        if (
+          hasUnsupportedFields(
+            input,
+            new Set([
+              'address1',
+              'address2',
+              'city',
+              'firstName',
+              'lastName',
+              'phoneNumber',
+              'territoryCode',
+              'zip',
+              'zoneCode',
+            ]),
+          )
+        ) {
+          writeJson(response, 400, {
+            errors: [
+              {
+                message:
+                  'CustomerAddressInput uses phoneNumber, territoryCode, and zoneCode',
+              },
+            ],
+          })
+          return
+        }
+
         const address = makeCustomerAccountAddress({
           id: `gid://shopify/CustomerAddress/test-address-${profile.addresses.length + 1}`,
           address1: readString(input.address1) ?? 'New address',
@@ -382,6 +485,33 @@ export async function createFakeCustomerAccountApiServer({
         const input = readRecord(graphqlRequest.variables?.address)
         const existing = addressId ? findAddress(profile, addressId) : null
 
+        if (
+          hasUnsupportedFields(
+            input,
+            new Set([
+              'address1',
+              'address2',
+              'city',
+              'firstName',
+              'lastName',
+              'phoneNumber',
+              'territoryCode',
+              'zip',
+              'zoneCode',
+            ]),
+          )
+        ) {
+          writeJson(response, 400, {
+            errors: [
+              {
+                message:
+                  'CustomerAddressInput uses phoneNumber, territoryCode, and zoneCode',
+              },
+            ],
+          })
+          return
+        }
+
         if (!addressId || !existing) {
           writeJson(response, 200, {
             data: {
@@ -399,6 +529,7 @@ export async function createFakeCustomerAccountApiServer({
           return
         }
 
+        const defaultAddress = graphqlRequest.variables?.defaultAddress === true
         const updated = {
           ...existing,
           address1: readString(input.address1) ?? existing.address1,
@@ -409,8 +540,7 @@ export async function createFakeCustomerAccountApiServer({
         }
         profile = {
           ...profile,
-          defaultAddress:
-            input.defaultAddress === true ? updated : profile.defaultAddress,
+          defaultAddress: defaultAddress ? updated : profile.defaultAddress,
           addresses: profile.addresses.map((address) =>
             address.id === addressId ? updated : address,
           ),

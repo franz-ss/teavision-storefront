@@ -91,6 +91,9 @@ describe('Customer Account read operations', () => {
     expect(orders.items[0]?.name).toBe('#TV1001')
     expect(orders.pageInfo.hasNextPage).toBe(false)
     expect(order?.lineItems[0]?.title).toBe('Organic Sencha')
+    expect(order?.fulfillments[0]?.trackingInfo[0]?.url).toBe(
+      'https://tracking.test/TRACK123',
+    )
   })
 
   test('order detail fetch sends no client-provided customer id variable', async () => {
@@ -184,6 +187,9 @@ describe('Customer Account read operations', () => {
         addressId: 'gid://shopify/CustomerAddress/test-address-1',
         defaultAddress: true,
       })
+      expect(requestServer.profile.defaultAddress?.id).toBe(
+        'gid://shopify/CustomerAddress/test-address-1',
+      )
 
       const viewerRequest = requestServer.requests.find(
         (request) => request.operationName === 'CustomerUpdate',
@@ -195,6 +201,46 @@ describe('Customer Account read operations', () => {
     } finally {
       await requestServer.close()
       vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', serverUrl)
+    }
+  })
+
+  test('fake Customer Account API rejects stale schema field selections', async () => {
+    const requestServer = await createFakeCustomerAccountApiServer()
+
+    try {
+      const response = await fetch(
+        `${requestServer.url}/customer-account/graphql`,
+        {
+          method: 'POST',
+          headers: { Authorization: 'customer-access-token' },
+          body: JSON.stringify({
+            operationName: 'CustomerAccountViewer',
+            query: /* GraphQL */ `
+              query CustomerAccountViewer {
+                customer {
+                  id
+                  emailAddress
+                  phoneNumber
+                  defaultAddress {
+                    provinceCode
+                    countryCodeV2
+                    phone
+                  }
+                }
+              }
+            `,
+          }),
+        },
+      )
+
+      await expect(response.json()).resolves.toMatchObject({
+        errors: [
+          { message: 'Query includes fields outside Customer Account API' },
+        ],
+      })
+      expect(response.ok).toBe(false)
+    } finally {
+      await requestServer.close()
     }
   })
 })
