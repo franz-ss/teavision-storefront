@@ -1,5 +1,8 @@
 packages:
   - '.'
+overrides:
+  postcss: 8.5.15
+  sanity: 5.29.0
 allowBuilds:
   esbuild: true
   sharp: true
