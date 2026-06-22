@@ -47,8 +47,31 @@ export const Loaded: Story = {
     await expect(
       canvas.queryByRole('textbox', { name: 'Phone' }),
     ).not.toBeInTheDocument()
-    await expect(canvas.queryByText('Phone')).not.toBeInTheDocument()
-    await expect(canvas.queryByText('+61 400 000 000')).not.toBeInTheDocument()
+    await expect(canvas.getByText('Phone')).toBeVisible()
+    await expect(canvas.getByText('+61 400 000 000')).toBeVisible()
+    await expect(
+      canvas.getByText(
+        'Phone changes are managed through Shopify account sign-in.',
+      ),
+    ).toBeVisible()
+  },
+}
+
+export const PhoneUnavailable: Story = {
+  name: 'phone-unavailable',
+  args: {
+    action: successAction,
+    profile: makeCustomerAccountProfile({ phoneNumber: null }),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.queryByRole('textbox', { name: 'Phone' }),
+    ).not.toBeInTheDocument()
+    await expect(
+      canvas.getByText('No phone number on this account'),
+    ).toBeVisible()
   },
 }
 

@@ -44,8 +44,8 @@ export function ProfileForm({
         <div className="grid gap-2">
           <h1 className="type-heading-01 text-ink">Profile</h1>
           <p className="type-body-sm text-ink-soft">
-            Update the name Shopify allows us to manage here. Email stays tied
-            to Shopify account sign-in.
+            Update the name Shopify allows us to manage here. Email and phone
+            stay tied to Shopify account sign-in.
           </p>
         </div>
 
@@ -112,6 +112,16 @@ export function ProfileForm({
           </p>
           <p className="type-body-sm text-ink-soft">
             Email changes are managed through Shopify account sign-in.
+          </p>
+        </div>
+
+        <div className="grid gap-2">
+          <p className="type-mono-meta text-ink-faint">Phone</p>
+          <p className="type-body-sm border-hairline bg-paper-2 text-ink min-h-12 rounded-sm border px-4 py-3.5">
+            {profile.phoneNumber ?? 'No phone number on this account'}
+          </p>
+          <p className="type-body-sm text-ink-soft">
+            Phone changes are managed through Shopify account sign-in.
           </p>
         </div>
 
