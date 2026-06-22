@@ -17,24 +17,34 @@ const reasonCopy: Record<LoginReason, string> = {
 export function LoginPanel({ loginHref, reason = 'default' }: LoginPanelProps) {
   return (
     <Card
-      padding="lg"
+      padding="md"
       radius="lg"
       tone="surface"
-      className="mx-auto grid max-w-xl gap-6"
+      className="mx-auto grid w-full max-w-md gap-5"
     >
-      <div className="grid gap-3">
-        <p className="type-mono-meta text-gold-deep">Customer account</p>
-        <h1 className="type-heading-01 text-ink">Welcome back</h1>
-        <p className="type-body text-ink-soft">{reasonCopy[reason]}</p>
+      <div className="grid gap-2">
+        <p className="type-label text-brand">Account sign-in</p>
+        <h1 className="type-heading-04 text-ink">Welcome back</h1>
+        <p className="type-body-sm text-ink-soft">{reasonCopy[reason]}</p>
       </div>
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button href={loginHref} variant="brand" size="lg">
+
+      <div className="grid gap-2.5">
+        <Button href={loginHref} variant="primary" size="md" className="w-full">
           Sign in with Shopify
         </Button>
-        <Button href="/collections/all" variant="secondary" size="lg">
+        <Button
+          href="/collections/all"
+          variant="secondary"
+          size="md"
+          className="w-full"
+        >
           Continue shopping
         </Button>
       </div>
+
+      <p className="type-caption text-ink-faint">
+        Secure account access is handled by Shopify.
+      </p>
     </Card>
   )
 }

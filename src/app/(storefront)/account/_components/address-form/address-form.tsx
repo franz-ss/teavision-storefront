@@ -53,7 +53,12 @@ export function AddressForm({
   const zipError = state.fieldErrors.zip
 
   return (
-    <Card padding="lg" radius="lg" tone="surface">
+    <Card
+      padding="lg"
+      radius="lg"
+      tone="surface"
+      className="mx-auto w-full max-w-3xl"
+    >
       <form action={formAction} className="grid gap-6">
         <div className="grid gap-2">
           <h1 className="type-heading-01 text-ink">{title}</h1>

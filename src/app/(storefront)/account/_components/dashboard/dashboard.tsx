@@ -8,9 +8,9 @@ import {
   formatAccountOrderDate,
   formatFulfillmentStatus,
   formatOrderStatus,
-} from '../_lib/order-formatting'
-import { StatusPill } from './status-pill'
-import { SupportBlock } from './support-block'
+} from '../../_lib/order-formatting'
+import { StatusPill } from '../status-pill'
+import { SupportBlock } from '../support-block'
 
 type DashboardProps = {
   dashboard: CustomerAccountDashboard
@@ -125,12 +125,6 @@ export function Dashboard({ dashboard }: DashboardProps) {
                 {profile?.emailAddress ?? 'Unavailable'}
               </dd>
             </div>
-            <div>
-              <dt className="type-mono-meta text-ink-faint">Phone</dt>
-              <dd className="type-body-sm text-ink">
-                {profile?.phoneNumber ?? 'Not provided'}
-              </dd>
-            </div>
           </dl>
           <Button
             href="/account/profile"
@@ -172,12 +166,6 @@ export function Dashboard({ dashboard }: DashboardProps) {
           >
             Manage addresses
           </Button>
-        </Card>
-
-        <Card padding="lg" radius="lg" tone="sunken">
-          <p className="type-body-sm text-ink-soft">
-            Wholesale pricing is confirmed in Shopify checkout when available.
-          </p>
         </Card>
 
         <SupportBlock />

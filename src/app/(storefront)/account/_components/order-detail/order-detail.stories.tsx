@@ -3,7 +3,7 @@ import { expect, within } from 'storybook/test'
 
 import { makeCustomerAccountOrder } from '@/tests/fixtures/shopify/customer-account'
 
-import { OrderDetail } from './order-detail'
+import { OrderDetail } from '.'
 
 const meta: Meta<typeof OrderDetail> = {
   title: 'Account/OrderDetail',

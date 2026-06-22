@@ -9,7 +9,7 @@ type AccountLayoutProps = {
 export default function AccountLayout({ children }: AccountLayoutProps) {
   return (
     <Section.Root tone="surface" spacing="compact">
-      <Section.Container variant="base">{children}</Section.Container>
+      <Section.Container>{children}</Section.Container>
     </Section.Root>
   )
 }

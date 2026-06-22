@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, within } from 'storybook/test'
 
 import { makeCustomerAccountProfile } from '@/tests/fixtures/shopify/customer-account'
 import type { CustomerAccountFormState } from '@/lib/shopify/customer-account/types'
 
-import { ProfileForm } from './profile-form'
+import { ProfileForm } from '.'
 
 const meta: Meta<typeof ProfileForm> = {
-  title: 'Account/ProfileForm',
+  title: 'Account/Profile/Form',
   component: ProfileForm,
   tags: ['autodocs'],
   parameters: {
@@ -34,6 +35,21 @@ export const Loaded: Story = {
     action: successAction,
     profile: makeCustomerAccountProfile(),
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(
+      canvas.getByRole('textbox', { name: 'First name' }),
+    ).toBeVisible()
+    await expect(
+      canvas.getByRole('textbox', { name: 'Last name' }),
+    ).toBeVisible()
+    await expect(
+      canvas.queryByRole('textbox', { name: 'Phone' }),
+    ).not.toBeInTheDocument()
+    await expect(canvas.queryByText('Phone')).not.toBeInTheDocument()
+    await expect(canvas.queryByText('+61 400 000 000')).not.toBeInTheDocument()
+  },
 }
 
 export const FieldError: Story = {
@@ -41,7 +57,7 @@ export const FieldError: Story = {
   args: {
     ...Loaded.args,
     initialState: {
-      fieldErrors: { phone: 'Enter a valid phone number.' },
+      fieldErrors: { firstName: 'Enter your first name.' },
       message: null,
       status: 'error',
     },

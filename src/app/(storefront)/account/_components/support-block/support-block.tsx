@@ -9,14 +9,9 @@ export function SupportBlock() {
           This account shows orders tied to the signed-in Shopify customer.
           Contact us if you need help with a guest order.
         </p>
-        <div className="flex flex-col gap-2">
-          <Button href="/pages/contact" variant="secondary" size="sm">
-            Contact support
-          </Button>
-          <Button href="/pages/wholesale" variant="quiet" size="quiet">
-            Wholesale questions
-          </Button>
-        </div>
+        <Button href="/pages/contact" variant="secondary" size="sm">
+          Contact support
+        </Button>
       </div>
     </Card>
   )

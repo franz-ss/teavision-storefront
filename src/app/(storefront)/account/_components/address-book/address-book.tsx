@@ -10,8 +10,8 @@ import {
   formatAddressLines,
   getAddressDisplayName,
   sortDefaultAddressFirst,
-} from '../_lib/address-formatting'
-import { DeleteAddressDialog } from './delete-address-dialog'
+} from '../../_lib/address-formatting'
+import { DeleteAddressDialog } from '../delete-address-dialog'
 
 type AddressBookProps = {
   addresses: CustomerAccountAddress[]

@@ -11,8 +11,8 @@ import {
   formatAccountOrderDate,
   formatFulfillmentStatus,
   formatOrderStatus,
-} from '../_lib/order-formatting'
-import { StatusPill } from './status-pill'
+} from '../../_lib/order-formatting'
+import { StatusPill } from '../status-pill'
 
 type OrderHistoryProps = {
   orders: CustomerAccountOrder[]

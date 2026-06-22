@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
 
-import { LoginPanel } from './login-panel'
+import { LoginPanel } from '.'
 
 const meta: Meta<typeof LoginPanel> = {
   title: 'Account/LoginPanel',
@@ -33,6 +33,12 @@ export const Normal: Story = {
     await expect(
       canvas.getByRole('link', { name: 'Sign in with Shopify' }),
     ).toHaveAttribute('href', '/account/login/start?returnTo=%2Faccount')
+    await expect(
+      canvas.getByRole('link', { name: 'Continue shopping' }),
+    ).toHaveAttribute('href', '/collections/all')
+    await expect(
+      canvas.getByText('Secure account access is handled by Shopify.'),
+    ).toBeVisible()
   },
 }
 

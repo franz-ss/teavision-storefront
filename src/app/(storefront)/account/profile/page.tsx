@@ -7,8 +7,8 @@ import { updateProfileAction } from '@/lib/shopify/customer-account/actions'
 import { getCustomerAccountDashboard } from '@/lib/shopify/customer-account'
 
 import { ProfileForm } from '../_components/profile-form'
+import { ProfileLoading } from '../_components/profile-loading'
 import { requireAccountSessionForPath } from '../_lib/protection'
-import AccountLoading from '../loading'
 
 export const metadata: Metadata = withNoindexRobots({
   title: 'Edit Profile',
@@ -27,7 +27,7 @@ async function ProfileContent() {
 
 export default function AccountProfilePage() {
   return (
-    <Suspense fallback={<AccountLoading />}>
+    <Suspense fallback={<ProfileLoading />}>
       <ProfileContent />
     </Suspense>
   )

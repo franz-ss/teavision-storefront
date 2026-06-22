@@ -32,15 +32,20 @@ export function ProfileForm({
   const pending = isPendingOverride ?? isPending
   const firstNameError = state.fieldErrors.firstName
   const lastNameError = state.fieldErrors.lastName
-  const phoneError = state.fieldErrors.phone
 
   return (
-    <Card padding="lg" radius="lg" tone="surface">
+    <Card
+      padding="lg"
+      radius="lg"
+      tone="surface"
+      className="mx-auto w-full max-w-3xl"
+    >
       <form action={formAction} className="grid gap-6">
         <div className="grid gap-2">
           <h1 className="type-heading-01 text-ink">Profile</h1>
           <p className="type-body-sm text-ink-soft">
-            Update the contact details Shopify allows us to manage here.
+            Update the name Shopify allows us to manage here. Email stays tied
+            to Shopify account sign-in.
           </p>
         </div>
 
@@ -100,33 +105,14 @@ export function ProfileForm({
           </div>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="grid gap-2">
-            <FormLabel htmlFor="phone">Phone</FormLabel>
-            <TextInput
-              id="phone"
-              name="phone"
-              autoComplete="tel"
-              defaultValue={profile.phoneNumber ?? ''}
-              aria-invalid={phoneError ? true : undefined}
-              aria-describedby={phoneError ? 'profile-phone-error' : undefined}
-            />
-            {phoneError ? (
-              <p id="profile-phone-error" className="type-body-sm text-danger">
-                {phoneError}
-              </p>
-            ) : null}
-          </div>
-
-          <div className="grid gap-2">
-            <p className="type-mono-meta text-ink-faint">Email</p>
-            <p className="type-body-sm border-hairline bg-paper-2 text-ink min-h-12 rounded-sm border px-4 py-3.5">
-              {profile.emailAddress ?? 'Unavailable'}
-            </p>
-            <p className="type-body-sm text-ink-soft">
-              Email changes are managed through Shopify account sign-in.
-            </p>
-          </div>
+        <div className="grid gap-2">
+          <p className="type-mono-meta text-ink-faint">Email</p>
+          <p className="type-body-sm border-hairline bg-paper-2 text-ink min-h-12 rounded-sm border px-4 py-3.5">
+            {profile.emailAddress ?? 'Unavailable'}
+          </p>
+          <p className="type-body-sm text-ink-soft">
+            Email changes are managed through Shopify account sign-in.
+          </p>
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">

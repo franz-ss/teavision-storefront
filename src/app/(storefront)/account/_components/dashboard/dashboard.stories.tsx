@@ -3,7 +3,7 @@ import { expect, within } from 'storybook/test'
 
 import { makeCustomerAccountProfile } from '@/tests/fixtures/shopify/customer-account'
 
-import { Dashboard } from './dashboard'
+import { Dashboard } from '.'
 
 const profile = makeCustomerAccountProfile()
 
@@ -72,21 +72,5 @@ export const PartialAddressesError: Story = {
       recentOrders: profile.orders,
       sectionErrors: { addresses: 'We could not load saved addresses.' },
     },
-  },
-}
-
-export const WholesaleNeutral: Story = {
-  args: Loaded.args,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    await expect(
-      canvas.getByText(
-        'Wholesale pricing is confirmed in Shopify checkout when available.',
-      ),
-    ).toBeVisible()
-    await expect(
-      canvas.queryByRole('link', { name: 'Apply for wholesale' }),
-    ).not.toBeInTheDocument()
   },
 }

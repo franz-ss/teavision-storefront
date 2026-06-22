@@ -7,7 +7,7 @@ import {
 } from '@/tests/fixtures/shopify/customer-account'
 import type { CustomerAccountFormState } from '@/lib/shopify/customer-account/types'
 
-import { AddressBook } from './address-book'
+import { AddressBook } from '.'
 
 const meta: Meta<typeof AddressBook> = {
   title: 'Account/AddressBook',
