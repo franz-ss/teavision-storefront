@@ -1,6 +1,10 @@
 import 'server-only'
 
-import { shouldWarnAboutRateLimitMemoryFallback } from '@/lib/env/server'
+import {
+  getRateLimitTrustedIpHeader,
+  isRateLimitProductionExplicit,
+  shouldWarnAboutRateLimitMemoryFallback,
+} from '@/lib/env/server'
 
 type HeaderReader = Pick<Headers, 'get'>
 
@@ -73,16 +77,27 @@ function warnIfProductionFallbackIsImplicit() {
 
   productionFallbackWarningLogged = true
   console.warn(
-    'Using in-memory rate limiting without RATE_LIMIT_EXTERNAL_PROTECTION=true. Configure provider-level or durable-store rate limiting for production.',
+    'Rate limiting is failing closed because production abuse protection is not explicit. Configure RATE_LIMIT_EXTERNAL_PROTECTION=true or RATE_LIMIT_ALLOW_MEMORY_FALLBACK=true with RATE_LIMIT_TRUSTED_IP_HEADER.',
   )
 }
 
+function getFirstForwardedIp(headers: HeaderReader): string | undefined {
+  return headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined
+}
+
 export function getClientIpFromHeaders(headers: HeaderReader): string {
-  const forwardedFor = headers.get('x-forwarded-for')
-  const firstForwardedIp = forwardedFor?.split(',')[0]?.trim()
+  const trustedHeader = getRateLimitTrustedIpHeader()
+
+  if (trustedHeader === 'x-forwarded-for') {
+    return getFirstForwardedIp(headers) ?? 'unknown'
+  }
+
+  if (trustedHeader) {
+    return headers.get(trustedHeader)?.trim() || 'unknown'
+  }
 
   return (
-    firstForwardedIp ||
+    getFirstForwardedIp(headers) ||
     headers.get('x-real-ip')?.trim() ||
     headers.get('cf-connecting-ip')?.trim() ||
     'unknown'
@@ -99,11 +114,21 @@ export async function checkRateLimit({
 
   const safeLimit = Math.max(1, Math.trunc(limit))
   const safeWindowMs = Math.max(1, Math.trunc(windowMs))
+  const now = Date.now()
+
+  if (!isRateLimitProductionExplicit()) {
+    return {
+      limited: true,
+      remaining: 0,
+      resetAt: now + safeWindowMs,
+    }
+  }
+
   const key = `${namespace}:${identifier}`
   const bucket = await getDefaultStore().increment(
     key,
     safeWindowMs,
-    Date.now(),
+    now,
   )
   const remaining = Math.max(0, safeLimit - bucket.count)
 
