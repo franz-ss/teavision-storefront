@@ -4,8 +4,8 @@ milestone: v1.3
 milestone_name: Shopify Customer Accounts
 status: Awaiting next milestone
 stopped_at: Completed Phase 14 gap closure plans
-last_updated: "2026-06-22T03:48:54.397Z"
-last_activity: 2026-06-22 — Milestone v1.3 completed and archived
+last_updated: "2026-06-22T04:32:25.538Z"
+last_activity: 2026-06-22 — Quick task 260622-h9f completed: Harden Shopify cart checkout identity sync and retained-cart behavior
 progress:
   total_phases: 1
   completed_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 Phase: Milestone v1.3 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-06-22 — Milestone v1.3 completed and archived
+Last activity: 2026-06-22 — Quick task 260622-h9f completed: Harden Shopify cart checkout identity sync and retained-cart behavior
 
 ## Performance Metrics
 
@@ -163,6 +163,7 @@ Recent decisions affecting current work:
 | 260615-fem | Rebuild GDPR/US/PIPEDA/APPI compliance pages with a streamlined data-request UX (one email action per right) | 2026-06-15 | 7f98492 | [260615-fem-redesign-compliance-data-rights-pages](./quick/260615-fem-redesign-compliance-data-rights-pages/) |
 | 260618-h2e | Project cleanup for animated artwork primitives and CMS-ready naming | 2026-06-18 | 9c7a54b | [260618-h2e-project-cleanup-animation-primitives](./quick/260618-h2e-project-cleanup-animation-primitives/) |
 | 260622-g38 | in /account/profile just remove the phone field if it is not editable | 2026-06-22 | cd784ab | [260622-g38-in-account-profile-just-remove-the-phone](./quick/260622-g38-in-account-profile-just-remove-the-phone/) |
+| 260622-h9f | Harden Shopify cart checkout identity sync and retained-cart behavior | 2026-06-22 | 4237cce | [260622-h9f-harden-shopify-cart-checkout-identity-sy](./quick/260622-h9f-harden-shopify-cart-checkout-identity-sy/) |
 
 ## Deferred Items
 
