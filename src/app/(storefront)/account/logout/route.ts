@@ -7,10 +7,13 @@ import {
   getCustomerAccountSession,
 } from '@/lib/shopify/customer-account/session'
 
-function getLocalLogoutRedirectUrl(): URL {
+function getLocalLogoutRedirectUrl(cartRetained: boolean): URL {
   const config = getCustomerAccountConfig()
   const loginUrl = new URL(config.logoutRedirectUri)
-  loginUrl.searchParams.set('reason', 'logged-out')
+  loginUrl.searchParams.set(
+    'reason',
+    cartRetained ? 'logged-out-cart-retained' : 'logged-out',
+  )
 
   return loginUrl
 }
@@ -20,7 +23,7 @@ async function redirectAfterLocalLogout(): Promise<Response> {
   if (cartId) await tryClearCartBuyerIdentity(cartId)
   await clearCustomerAccountCookies()
 
-  return Response.redirect(getLocalLogoutRedirectUrl())
+  return Response.redirect(getLocalLogoutRedirectUrl(Boolean(cartId)))
 }
 
 async function logout(): Promise<Response> {

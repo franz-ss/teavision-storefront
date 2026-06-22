@@ -191,6 +191,7 @@ describe('cart Server Actions', () => {
     })
 
     await expect(syncCartBuyerIdentityForCurrentSession()).resolves.toEqual({
+      cart: null,
       message: null,
       synced: false,
     })
@@ -199,6 +200,9 @@ describe('cart Server Actions', () => {
   })
 
   test('syncCartBuyerIdentityForCurrentSession syncs an existing cart when signed in', async () => {
+    const syncedCart = makeCart({
+      checkoutUrl: 'https://checkout.test/cart/synced',
+    })
     cookiesMock.mockResolvedValue(makeCookieStore('gid://shopify/Cart/current'))
     getCustomerAccountSessionMock.mockResolvedValue({
       accessToken: 'customer-access-token',
@@ -206,9 +210,10 @@ describe('cart Server Actions', () => {
       idToken: 'id-token',
       refreshToken: 'refresh-token',
     })
-    syncCartBuyerIdentityMock.mockResolvedValue(makeCart())
+    syncCartBuyerIdentityMock.mockResolvedValue(syncedCart)
 
     await expect(syncCartBuyerIdentityForCurrentSession()).resolves.toEqual({
+      cart: syncedCart,
       message: null,
       synced: true,
     })
@@ -235,6 +240,31 @@ describe('cart Server Actions', () => {
       message:
         'We could not confirm your account for checkout. Retry checkout or sign in again before continuing.',
       status: 'identity-sync-failed',
+    })
+  })
+
+  test('prepareCheckoutHandoff uses the refreshed checkout URL after buyer identity sync', async () => {
+    const cart = makeCart({
+      checkoutUrl: 'https://checkout.test/cart/original',
+      id: 'gid://shopify/Cart/current',
+    })
+    const syncedCart = makeCart({
+      checkoutUrl: 'https://checkout.test/cart/synced',
+      id: cart.id,
+    })
+    cookiesMock.mockResolvedValue(makeCookieStore(cart.id))
+    getCartMock.mockResolvedValue(cart)
+    getCustomerAccountSessionMock.mockResolvedValue({
+      accessToken: 'customer-access-token',
+      expiresAt: Date.now() + 60000,
+      idToken: 'id-token',
+      refreshToken: 'refresh-token',
+    })
+    syncCartBuyerIdentityMock.mockResolvedValue(syncedCart)
+
+    await expect(prepareCheckoutHandoff(true)).resolves.toEqual({
+      checkoutUrl: syncedCart.checkoutUrl,
+      status: 'ready',
     })
   })
 

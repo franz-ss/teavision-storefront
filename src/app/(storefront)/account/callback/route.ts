@@ -22,6 +22,15 @@ function redirectToLoginFailure(): Response {
   )
 }
 
+function getCartIdentitySyncFailedRedirect(returnTo: string): URL | null {
+  if (returnTo !== '/cart') return null
+
+  const cartUrl = getAccountRedirectUrl('/cart')
+  cartUrl.searchParams.set('checkout', 'identity-sync-failed')
+
+  return cartUrl
+}
+
 async function failCallback(): Promise<Response> {
   await clearPendingCustomerAuth()
   await setCustomerFlash(
@@ -62,8 +71,17 @@ export async function GET(request: Request): Promise<Response> {
       idToken: tokenExchange.idToken,
       refreshToken: tokenExchange.refreshToken,
     })
-    await syncCartBuyerIdentityForCurrentSession()
+    const syncResult = await syncCartBuyerIdentityForCurrentSession()
     await clearPendingCustomerAuth()
+
+    if (syncResult.message) {
+      await setCustomerFlash(syncResult.message)
+
+      const cartRedirect = getCartIdentitySyncFailedRedirect(
+        pendingAuth.returnTo,
+      )
+      if (cartRedirect) return Response.redirect(cartRedirect)
+    }
 
     return Response.redirect(getAccountRedirectUrl(pendingAuth.returnTo))
   } catch {

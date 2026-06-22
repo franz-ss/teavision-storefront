@@ -41,6 +41,12 @@ export type CheckoutHandoffResult =
   | { status: 'missing-cart' }
   | { status: 'terms-required' }
 
+export type CartIdentitySyncResult = {
+  cart: Cart | null
+  message: string | null
+  synced: boolean
+}
+
 function normalizeCartQuantity(quantity: number): number {
   if (!Number.isFinite(quantity)) {
     throw new Error('Quantity must be a whole number.')
@@ -133,24 +139,21 @@ async function getOrCreateCart(): Promise<Cart> {
   return cart
 }
 
-export async function syncCartBuyerIdentityForCurrentSession(): Promise<{
-  message: string | null
-  synced: boolean
-}> {
+export async function syncCartBuyerIdentityForCurrentSession(): Promise<CartIdentitySyncResult> {
   const cartId = await getCartIdFromCookie()
-  if (!cartId) return { message: null, synced: false }
+  if (!cartId) return { cart: null, message: null, synced: false }
 
   const session = await getOptionalCustomerAccountSession()
-  if (!session) return { message: null, synced: false }
+  if (!session) return { cart: null, message: null, synced: false }
 
   try {
-    await syncCartBuyerIdentity(cartId, {
+    const cart = await syncCartBuyerIdentity(cartId, {
       customerAccessToken: session.accessToken,
     })
     revalidatePath('/cart')
-    return { message: null, synced: true }
+    return { cart, message: null, synced: true }
   } catch {
-    return { message: CART_IDENTITY_SYNC_ERROR, synced: false }
+    return { cart: null, message: CART_IDENTITY_SYNC_ERROR, synced: false }
   }
 }
 
@@ -173,7 +176,10 @@ export async function prepareCheckoutHandoff(
     }
   }
 
-  return { checkoutUrl: cart.checkoutUrl, status: 'ready' }
+  return {
+    checkoutUrl: syncResult.cart?.checkoutUrl ?? cart.checkoutUrl,
+    status: 'ready',
+  }
 }
 
 export async function getCartAction(): Promise<Cart | null> {

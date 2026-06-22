@@ -108,7 +108,7 @@ describe('account logout route', () => {
     const response = await POST()
 
     expect(response.headers.get('location')).toBe(
-      'https://teavision.test/account/login?reason=logged-out',
+      'https://teavision.test/account/login?reason=logged-out-cart-retained',
     )
     expect(cookieState.delete).toHaveBeenCalledWith(
       'teavision_customer_session',

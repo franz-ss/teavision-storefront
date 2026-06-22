@@ -1,6 +1,10 @@
 import { Button, Card } from '@/components/ui'
 
-export type LoginReason = 'expired' | 'verification-failed' | 'default'
+export type LoginReason =
+  | 'expired'
+  | 'verification-failed'
+  | 'logged-out-cart-retained'
+  | 'default'
 
 type LoginPanelProps = {
   loginHref: string
@@ -10,6 +14,8 @@ type LoginPanelProps = {
 const reasonCopy: Record<LoginReason, string> = {
   default: 'Sign in to continue to your account.',
   expired: 'Your session has expired. Sign in again to continue.',
+  'logged-out-cart-retained':
+    'You are signed out. Your cart is still available on this browser.',
   'verification-failed':
     'We could not verify that sign-in. Start sign-in again.',
 }

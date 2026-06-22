@@ -13,6 +13,9 @@ type LoginPageProps = {
 function getLoginReason(reason: string | undefined): LoginReason {
   if (reason === 'expired') return 'expired'
   if (reason === 'verification-failed') return 'verification-failed'
+  if (reason === 'logged-out-cart-retained') {
+    return 'logged-out-cart-retained'
+  }
 
   return 'default'
 }

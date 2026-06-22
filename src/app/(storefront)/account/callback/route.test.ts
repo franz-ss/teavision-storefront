@@ -2,6 +2,7 @@ import type { Mock } from 'vitest'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import {
+  CUSTOMER_FLASH_COOKIE,
   sealPendingCustomerAuth,
   unsealCustomerSession,
 } from '@/lib/shopify/customer-account/session'
@@ -91,6 +92,7 @@ describe('account OAuth callback route', () => {
       }),
     )
     syncCartBuyerIdentityForCurrentSessionMock.mockResolvedValue({
+      cart: null,
       message: null,
       synced: false,
     })
@@ -191,5 +193,40 @@ describe('account OAuth callback route', () => {
       syncCartBuyerIdentityForCurrentSessionMock.mock.invocationCallOrder[0] ??
         0,
     )
+  })
+
+  test('successful callback returns cart shoppers to blocked checkout state when cart identity sync fails', async () => {
+    const syncFailureMessage =
+      'We could not confirm your account for checkout. Retry checkout or sign in again before continuing.'
+    cookieState.values.set('teavision_cart', 'gid://shopify/Cart/current')
+    cookieState.values.set(
+      'teavision_customer_auth',
+      sealPendingCustomerAuth({
+        codeVerifier: 'verifier',
+        createdAt: Date.now(),
+        nonce: 'nonce-1',
+        returnTo: '/cart',
+        state: 'state-1',
+      }),
+    )
+    syncCartBuyerIdentityForCurrentSessionMock.mockResolvedValue({
+      cart: null,
+      message: syncFailureMessage,
+      synced: false,
+    })
+
+    const response = await GET(
+      new Request(
+        'https://teavision.test/account/callback?code=abc&state=state-1',
+      ),
+    )
+
+    expect(response.headers.get('location')).toBe(
+      'https://teavision.test/cart?checkout=identity-sync-failed',
+    )
+    expect(cookieState.values.get(CUSTOMER_FLASH_COOKIE)).toBe(
+      syncFailureMessage,
+    )
+    expect(cookieState.delete).toHaveBeenCalledWith('teavision_customer_auth')
   })
 })
