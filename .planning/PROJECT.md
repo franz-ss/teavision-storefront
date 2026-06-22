@@ -14,7 +14,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 **Goal:** Add modern Shopify Customer Account support to the headless storefront while preserving Tea Vision's account, address, order-history, and checkout identity expectations.
 
-**Status:** Phase 14 complete on 2026-06-19; ready for milestone archive/completion.
+**Status:** Phase 14 gap closure complete on 2026-06-22; ready for milestone archive/completion.
 
 **Target features:**
 - Customer Account API OAuth/session foundation.
@@ -45,7 +45,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - ✓ Optimized `/blogs/teavision-blogs` loading and image rendering (bounded image URLs, LQIP placeholders, hero preload discipline, light default-listing query) while preserving the Phase 11 Tea Journal design — v1.1
 
 - ✓ Production-style `?page=N` collection pagination with production canonical/crawler parity, bounded Shopify Storefront GraphQL payloads, and sticky-header-aware scroll-to-grid anchoring (PLP-PAGE-01..06) — Validated in Phase 13 — v1.2
-- ✓ Shopify Customer Account API OAuth/session foundation, protected account dashboard, profile/address self-service, order history/detail, cart buyer identity sync, legacy account bridges, and launch-readiness documentation — Validated in Phase 14 — v1.3
+- ✓ Shopify Customer Account API OAuth/session foundation, protected account dashboard, profile/address self-service, order history/detail, cart buyer identity sync, legacy account bridges, launch-readiness documentation, and UAT gap closure — Validated in Phase 14 — v1.3
 
 ### Active
 
@@ -61,7 +61,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ## Context
 
-Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Phase 13 (v1.2 SEO-safe PLP pagination parity) complete 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Phase 14 (v1.3 Shopify Customer Accounts) complete 2026-06-19: Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, and launch-readiness docs. Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
+Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Phase 13 (v1.2 SEO-safe PLP pagination parity) complete 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Phase 14 (v1.3 Shopify Customer Accounts) complete 2026-06-22: 9 plans covering Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, launch-readiness docs, and UAT gap closure. Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
 
 The site remains noindexed pending launch sign-off (Phase 6 controls; flip `DISABLE_INDEXING` at launch and add the new landing pages to the sitemap). The owner actively authors new landing surfaces directly in the codebase (bulk-wholesale-supply, private-label-packing, tea-bag-manufacturer, NPD order form, supply-chain protection band).
 
@@ -110,4 +110,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-06-19 after completing Phase 14 Shopify Customer Accounts_
+_Last updated: 2026-06-22 after completing Phase 14 Shopify Customer Accounts gap closure_

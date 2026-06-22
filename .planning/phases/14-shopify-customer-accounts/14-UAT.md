@@ -1,5 +1,5 @@
 ---
-status: diagnosed
+status: resolved
 phase: teavision-14-shopify-customer-accounts
 source:
   - 14-01-SUMMARY.md
@@ -8,7 +8,7 @@ source:
   - 14-04-SUMMARY.md
   - 14-05-SUMMARY.md
 started: 2026-06-19T12:46:57.8047522+08:00
-updated: 2026-06-22T10:28:23.0964145+08:00
+updated: 2026-06-22T11:24:00+08:00
 ---
 
 ## Current Test
@@ -19,9 +19,10 @@ updated: 2026-06-22T10:28:23.0964145+08:00
 
 ### 1. Customer Account Sign-In Entry
 expected: Visiting `/account/login` shows a compact Shopify sign-in panel with the primary action "Sign in with Shopify", account-oriented recovery states when requested, and no classic password form.
-result: issue
+result: resolved
 reported: "After supplying the `.env` vars, the OAuth/account flow redirects to `localhost:3000/account/login?reason=verification-failed` and Chrome shows `ERR_SSL_PROTOCOL_ERROR` instead of returning to the account sign-in experience."
 severity: blocker
+resolution: "Implementation gap closed by 14-06. Live OAuth retesting remains gated by Shopify admin setup and HTTPS callback/logout configuration."
 
 ### 2. Protected Account Dashboard
 expected: Visiting `/account` while signed in shows the protected account workspace with recent orders, profile summary, default address, support paths, a quiet logout action, and scoped alerts if only one account section fails.
@@ -37,9 +38,10 @@ reason: "User reported all same; order verification cannot proceed because the a
 
 ### 4. Profile Editing
 expected: The profile page lets a signed-in customer update supported fields, keeps email read-only with Shopify sign-in helper copy, surfaces Shopify field/form errors accessibly, and returns a clear success or recovery state.
-result: issue
+result: resolved
 reported: "User reported that changing phone number does not work on the account profile page."
 severity: major
+resolution: "Closed by 14-07. Phone now renders as read-only Shopify-managed account information and stale phone form data is ignored."
 
 ### 5. Address Book Management
 expected: The address book sorts the default address first, supports add/edit/default/delete flows, uses dedicated address form pages, and requires a confirmation dialog before deleting an address.
@@ -61,15 +63,17 @@ reason: "User reported all same; checkout handoff verification cannot proceed be
 
 ### 8. Header And Footer Account Links
 expected: The header account icon links to `/account` with an accessible name, and the footer Login link points to the owned `/account` route rather than the old `mrtea.com.au` URL.
-result: issue
+result: resolved
 reported: "Screenshot shows the account path resolving to `/account/login?returnTo=%2Faccount`; footer Login link target is not shown/verified, so the full header/footer link expectation is not confirmed."
 severity: major
+resolution: "Closed by 14-08. Browser coverage verifies direct header/footer hrefs before protected-route navigation, and the stale footer story fixture was removed."
 
 ### 9. Legacy Account Bridge Routes
 expected: Classic account routes such as register, recover, reset, activate, and unknown account paths show explanatory bridge pages for Shopify Customer Accounts, preserve only safe return/context values, and never show password inputs.
-result: issue
+result: resolved
 reported: "Legacy account bridge UIs do not look good; screenshots show large wrapped headings on compact cards, making create/recover account bridge pages feel awkward and cramped."
 severity: cosmetic
+resolution: "Closed by 14-09. LegacyBridge uses compact typography with desktop and mobile Storybook fit assertions."
 
 ### 10. Launch Readiness Documentation
 expected: `docs/testing/customer-accounts-setup.md` documents Customer Account admin setup, environment variables, local HTTPS OAuth testing, protected data access, manual checkout approval gates, reorder parity, B2B/customer-pricing parity, and launch checklist items.
@@ -78,8 +82,8 @@ result: pass
 ## Summary
 
 total: 10
-passed: 1
-issues: 4
+passed: 5
+issues: 0
 pending: 0
 skipped: 0
 blocked: 5
@@ -87,7 +91,7 @@ blocked: 5
 ## Gaps
 
 - truth: "Visiting `/account/login` shows a compact Shopify sign-in panel with the primary action \"Sign in with Shopify\", account-oriented recovery states when requested, and no classic password form."
-  status: failed
+  status: resolved
   reason: "User reported: After supplying the `.env` vars, the OAuth/account flow redirects to `localhost:3000/account/login?reason=verification-failed` and Chrome shows `ERR_SSL_PROTOCOL_ERROR` instead of returning to the account sign-in experience."
   severity: blocker
   test: 1
@@ -110,7 +114,7 @@ blocked: 5
     - "Query nested Customer Account `emailAddress`/`phoneNumber`, alias current address fields back to app types, use current fulfillment tracking connections, and map address mutation variables to `phoneNumber`, `territoryCode`, `zoneCode`, plus top-level `defaultAddress`."
     - "Make the fake Customer Account API server return current-schema payloads and reject old Customer Account field selections."
 - truth: "The header account icon links to `/account` with an accessible name, and the footer Login link points to the owned `/account` route rather than the old `mrtea.com.au` URL."
-  status: failed
+  status: resolved
   reason: "User reported: Screenshot shows the account path resolving to `/account/login?returnTo=%2Faccount`; footer Login link target is not shown/verified, so the full header/footer link expectation is not confirmed."
   severity: major
   test: 8
@@ -130,7 +134,7 @@ blocked: 5
     - "Optionally update the stale isolated footer link Storybook fixture to avoid future confusion."
   debug_session: ".planning/debug/account-link-routing.md"
 - truth: "Classic account routes such as register, recover, reset, activate, and unknown account paths show explanatory bridge pages for Shopify Customer Accounts, preserve only safe return/context values, and never show password inputs."
-  status: failed
+  status: resolved
   reason: "User reported: Legacy account bridge UIs do not look good; screenshots show large wrapped headings on compact cards, making create/recover account bridge pages feel awkward and cramped."
   severity: cosmetic
   test: 9
@@ -148,7 +152,7 @@ blocked: 5
     - "Preserve safe return handling and no-password-input guarantees while improving the visual treatment."
   debug_session: ".planning/debug/legacy-account-bridge-ui.md"
 - truth: "The profile page lets a signed-in customer update supported fields, keeps email read-only with Shopify sign-in helper copy, surfaces Shopify field/form errors accessibly, and returns a clear success or recovery state."
-  status: failed
+  status: resolved
   reason: "User reported: changing phone number does not work on the account profile page."
   severity: major
   test: 4

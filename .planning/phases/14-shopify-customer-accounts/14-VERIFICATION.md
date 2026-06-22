@@ -1,8 +1,8 @@
 ---
 phase: 14-shopify-customer-accounts
 status: passed
-verified_at: 2026-06-19T12:45:00+08:00
-plans_verified: 5
+verified_at: 2026-06-22T11:24:00+08:00
+plans_verified: 9
 requirements_verified: 26
 automated_checks_passed: true
 manual_launch_gates: documented
@@ -23,6 +23,10 @@ manual_launch_gates: documented
 | 14-03 Address book and supported profile mutations | `14-03-SUMMARY.md` | Passed |
 | 14-04 Cart buyer identity sync and blocked checkout handoff | `14-04-SUMMARY.md` | Passed |
 | 14-05 Migration parity, account entry links, readiness docs, and final coverage | `14-05-SUMMARY.md` | Passed |
+| 14-06 OAuth and Customer Account schema gap closure | `14-06-SUMMARY.md` | Passed |
+| 14-07 Read-only profile phone gap closure | `14-07-SUMMARY.md` | Passed |
+| 14-08 Account-link evidence gap closure | `14-08-SUMMARY.md` | Passed |
+| 14-09 Legacy account bridge visual gap closure | `14-09-SUMMARY.md` | Passed |
 
 ## Requirement Traceability
 
@@ -50,9 +54,9 @@ All Phase 14 requirements are marked complete in `.planning/REQUIREMENTS.md`.
 
 - `pnpm lint` - passed.
 - `pnpm typecheck` - passed.
-- `pnpm test:unit` - passed, 48 files / 173 tests.
-- `pnpm test:integration` - passed, 8 files / 33 tests.
-- `pnpm test:stories` - passed, 101 files / 354 tests.
+- `pnpm test:unit` - passed, 48 files / 180 tests.
+- `pnpm test:integration` - passed, 8 files / 37 tests.
+- `pnpm test:stories` - passed, 102 files / 357 tests.
 - `pnpm test:e2e` - passed, 4 fake-Shopify browser tests.
 - `pnpm build` - passed with Next.js 16.2.4 and Cache Components enabled.
 - `pnpm codegen` - passed during Plan 14-04 after schema-supported cart buyer identity fields were selected.
@@ -62,6 +66,7 @@ All Phase 14 requirements are marked complete in `.planning/REQUIREMENTS.md`.
 
 - Customer Account tokens stay in server-owned sealed HttpOnly cookies.
 - Customer Account API fetches use `cache: 'no-store'` and are not tagged with public product/collection cache tags.
+- Fake Customer Account API rejects stale Customer Account field selections and unsupported mutation input shapes before live Shopify UAT.
 - Storybook/client leaves avoid importing server-only Customer Account session or crypto modules.
 - Legacy account return/context values reject external URLs, protocol-relative URLs, Liquid/template-looking values, unknown parameter names, and unsupported destinations.
 - Checkout handoff uses a POST route and redirects externally only after terms and buyer identity checks pass.
@@ -76,9 +81,17 @@ These are intentionally documented manual gates, not implementation gaps:
 - Run real hosted checkout/payment/shipping/tax/order/success-redirect testing only after explicit store-owner approval.
 - Verify any B2B/company-location pricing behavior only when Shopify returns authoritative cart/checkout data for the configured store.
 
+## Gap Closure Evidence
+
+- `14-06` closes the live OAuth/API blocker root cause locally by verifying configured-origin OAuth redirects, raw Customer Account Authorization headers, current-schema operations, and fake API stale-field rejection.
+- `14-07` closes the profile phone UAT gap by presenting phone as read-only Shopify-managed account data and proving stale phone form data is ignored.
+- `14-08` closes the account-link evidence gap by preserving direct `/account` href assertions and removing the stale isolated footer fixture.
+- `14-09` closes the legacy bridge visual gap by using compact heading typography with Storybook overflow and line-count assertions at desktop and mobile widths.
+
 ## Gate Notes
 
-- Schema drift check was non-blocking and found no drift; the SDK still reports the known phase-directory lookup issue for numeric `14`, so verification used `.planning/phases/14-shopify-customer-accounts/` directly.
+- Schema drift check found no drift.
+- Codebase drift check returned a non-blocking warning about older planning-map freshness outside this gap closure's touched source paths. No remap was required by this workflow.
 - No pending todos were found for `resolves_phase: 14`.
 
 ## Verification Decision
@@ -87,4 +100,4 @@ Phase 14 is ready to mark complete and route to milestone completion.
 
 ---
 
-*Verified: 2026-06-19*
+*Verified: 2026-06-22*
