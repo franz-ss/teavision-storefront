@@ -6,7 +6,8 @@ type LegacyBridgeProps = {
   primaryHref: string
 }
 
-const hostedSignInCopy = 'Teavision now uses Shopify-hosted Customer Account sign-in.'
+const hostedSignInCopy =
+  'Teavision now uses Shopify-hosted Customer Account sign-in.'
 
 export function LegacyBridge({
   body,
@@ -24,7 +25,9 @@ export function LegacyBridge({
         >
           <div className="grid gap-3">
             <p className="type-mono-meta text-gold-deep">Customer account</p>
-            <h1 className="type-heading-01 text-ink">{heading}</h1>
+            <h1 className="type-heading-04 text-ink max-w-[20ch] text-balance">
+              {heading}
+            </h1>
             <div className="type-body text-ink-soft grid gap-3">
               <p>{hostedSignInCopy}</p>
               <p>{body}</p>

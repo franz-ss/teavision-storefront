@@ -22,29 +22,87 @@ export default meta
 
 type Story = StoryObj<typeof LegacyBridge>
 
-export const Register: Story = {
-  args: {
-    body: 'Classic account registration has moved to the modern Shopify customer account flow.',
-    heading: 'Create your account with Shopify',
-    primaryHref: '/account/login/start?returnTo=%2Faccount',
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+const registerArgs = {
+  body: 'Classic account registration has moved to the modern Shopify customer account flow.',
+  heading: 'Create your account with Shopify',
+  primaryHref: '/account/login/start?returnTo=%2Faccount',
+}
 
-    await expect(
-      canvas.getByText('Teavision now uses Shopify-hosted Customer Account sign-in.'),
-    ).toBeInTheDocument()
-    await expect(
-      canvas.getByRole('link', { name: 'Sign in with Shopify' }),
-    ).toHaveAttribute('href', '/account/login/start?returnTo=%2Faccount')
+const recoverArgs = {
+  body: 'Classic password recovery has moved. Start Shopify sign-in and use the hosted account recovery options when prompted.',
+  heading: 'Recover your account with Shopify',
+  primaryHref: '/account/login/start?returnTo=%2Faccount',
+}
+
+function getRenderedLineCount(element: HTMLElement): number {
+  const lineHeight = Number.parseFloat(getComputedStyle(element).lineHeight)
+  if (!Number.isFinite(lineHeight) || lineHeight <= 0) return 1
+
+  return Math.ceil(element.getBoundingClientRect().height / lineHeight)
+}
+
+async function assertBridgeFit(
+  canvasElement: HTMLElement,
+  heading: string,
+  maxLines: number,
+) {
+  const canvas = within(canvasElement)
+  const headingElement = canvas.getByRole('heading', { name: heading })
+
+  expect(canvasElement.scrollWidth).toBeLessThanOrEqual(
+    canvasElement.clientWidth + 1,
+  )
+  expect(headingElement.scrollWidth).toBeLessThanOrEqual(
+    headingElement.clientWidth + 1,
+  )
+  expect(getRenderedLineCount(headingElement)).toBeLessThanOrEqual(maxLines)
+  await expect(
+    canvas.getByText(
+      'Teavision now uses Shopify-hosted Customer Account sign-in.',
+    ),
+  ).toBeInTheDocument()
+  await expect(
+    canvas.getByRole('link', { name: 'Sign in with Shopify' }),
+  ).toHaveAttribute('href', '/account/login/start?returnTo=%2Faccount')
+}
+
+export const Register: Story = {
+  args: registerArgs,
+  play: async ({ canvasElement }) => {
+    await assertBridgeFit(canvasElement, registerArgs.heading, 2)
   },
 }
 
 export const Recover: Story = {
-  args: {
-    body: 'Classic password recovery has moved. Start Shopify sign-in and use the hosted account recovery options when prompted.',
-    heading: 'Recover your account with Shopify',
-    primaryHref: '/account/login/start?returnTo=%2Faccount',
+  args: recoverArgs,
+  play: async ({ canvasElement }) => {
+    await assertBridgeFit(canvasElement, recoverArgs.heading, 2)
+  },
+}
+
+export const RegisterMobile: Story = {
+  name: 'register-mobile',
+  args: registerArgs,
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await assertBridgeFit(canvasElement, registerArgs.heading, 3)
+  },
+}
+
+export const RecoverMobile: Story = {
+  name: 'recover-mobile',
+  args: recoverArgs,
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await assertBridgeFit(canvasElement, recoverArgs.heading, 3)
   },
 }
 
