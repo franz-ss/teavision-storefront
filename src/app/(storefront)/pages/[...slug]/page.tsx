@@ -19,11 +19,16 @@ type Props = {
 
 const RESERVED_HANDLES = new Set([
   'contact',
+  'cookie-preferences',
   'custom-tea-blends',
   'download-catalogues',
   'how-long-does-bulk-tea-last',
   'our-story',
+  'privacy-policy',
+  'refund-policy',
+  'shipping-policy',
   'terms-conditions',
+  'terms-of-service',
   'wholesale',
   'wholesale-account-request',
 ])
