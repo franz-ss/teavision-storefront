@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+
 import { describe, expect, test } from 'vitest'
 
 import {
@@ -22,6 +24,10 @@ const FOOTER_LABELS = [
   'Terms of Service',
   'Cookie Preferences',
 ]
+
+function readLegalApprovalMatrix(): string {
+  return readFileSync('docs/launch/legal-approval-matrix.md', 'utf8')
+}
 
 describe('legal policy registry', () => {
   test('contains the launch canonical policy hrefs', () => {
@@ -70,5 +76,14 @@ describe('legal policy registry', () => {
   test('narrows legal policy handles', () => {
     expect(isLegalPolicyHandle('privacy-policy')).toBe(true)
     expect(isLegalPolicyHandle('wholesale')).toBe(false)
+  })
+
+  test('keeps every registry policy represented in the approval matrix', () => {
+    const matrix = readLegalApprovalMatrix()
+
+    for (const policy of LEGAL_POLICIES) {
+      expect(matrix).toContain(policy.href)
+      expect(matrix).toContain(policy.lastReviewed)
+    }
   })
 })
