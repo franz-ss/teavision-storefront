@@ -56,7 +56,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ### ◆ v1.4 Production Readiness 100/100
 
-- [ ] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (0/5 plans ready)
+- [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [ ] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (0/TBD plans)
 - [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (0/TBD plans)
 
@@ -76,7 +76,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 12. Optimize blog loading                  | v1.1      | 4/4            | Complete   | 2026-06-12 |
 | 13. Production-parity collection pagination | v1.2      | 2/2            | Complete   | 2026-06-12 |
 | 14. Shopify Customer Accounts              | v1.3      | 9/9            | Complete   | 2026-06-22 |
-| 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 4/5 | In Progress|  |
+| 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 0/TBD | Planned | — |
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 0/TBD | Planned | — |
 

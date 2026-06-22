@@ -10,10 +10,10 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 ### Security
 
 - [x] **SEC-01**: Site owner can verify `pnpm audit --audit-level moderate` has no critical or high findings and no launch-relevant moderate findings.
-- [ ] **SEC-02**: User receives production responses with tested security headers across storefront, account, cart, policy, and API surfaces.
-- [ ] **SEC-03**: Site can enforce or stage a CSP that allows required Shopify, Sanity, Searchanise, Trustoo, and analytics assets without unsafe broad rules.
-- [ ] **SEC-04**: Customer can start Shopify account login without prefetch or CORS errors, and production OAuth callback/logout URLs are verified.
-- [ ] **SEC-05**: Public form and search abuse controls are production-explicit through provider protection, durable limiting, or a documented fail-closed policy.
+- [x] **SEC-02**: User receives production responses with tested security headers across storefront, account, cart, policy, and API surfaces.
+- [x] **SEC-03**: Site can enforce or stage a CSP that allows required Shopify, Sanity, Searchanise, Trustoo, and analytics assets without unsafe broad rules.
+- [x] **SEC-04**: Customer can start Shopify account login without prefetch or CORS errors, and production OAuth callback/logout URLs are verified.
+- [x] **SEC-05**: Public form and search abuse controls are production-explicit through provider protection, durable limiting, or a documented fail-closed policy.
 
 ### Legal, SEO, And Consent
 
@@ -78,10 +78,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | SEC-01 | Phase 15 | Complete |
-| SEC-02 | Phase 15 | Pending |
-| SEC-03 | Phase 15 | Pending |
-| SEC-04 | Phase 15 | Pending |
-| SEC-05 | Phase 15 | Pending |
+| SEC-02 | Phase 15 | Complete |
+| SEC-03 | Phase 15 | Complete |
+| SEC-04 | Phase 15 | Complete |
+| SEC-05 | Phase 15 | Complete |
 | LEGAL-01 | Phase 16 | Pending |
 | LEGAL-02 | Phase 16 | Pending |
 | SEO-01 | Phase 16 | Pending |
@@ -107,4 +107,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-06-22*
-*Last updated: 2026-06-22 after roadmap creation*
+*Last updated: 2026-06-22 after Phase 15 execution*
