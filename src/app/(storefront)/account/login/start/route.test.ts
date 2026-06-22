@@ -20,6 +20,10 @@ describe('account login start route', () => {
     vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_MODE', 'true')
     vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', 'http://127.0.0.1:9012')
     vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID', 'test-client-id')
+    vi.stubEnv(
+      'SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI',
+      'https://teavision.test/account/callback',
+    )
     vi.stubGlobal(
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
@@ -54,5 +58,22 @@ describe('account login start route', () => {
       expect.any(String),
       expect.objectContaining({ httpOnly: true }),
     )
+  })
+
+  test('canonicalizes localhost starts to the configured callback origin before setting state', async () => {
+    vi.stubEnv(
+      'SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI',
+      'https://detonate-trickster-venus.ngrok-free.dev/account/callback',
+    )
+
+    const response = await GET(
+      new Request('http://localhost:3000/account/login/start?returnTo=/account'),
+    )
+
+    expect(response.headers.get('location')).toBe(
+      'https://detonate-trickster-venus.ngrok-free.dev/account/login/start?returnTo=%2Faccount&_accountOrigin=1',
+    )
+    expect(cookieState.set).not.toHaveBeenCalled()
+    expect(fetch as unknown as Mock).not.toHaveBeenCalled()
   })
 })

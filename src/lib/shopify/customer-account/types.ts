@@ -58,7 +58,6 @@ export type CustomerAccountProfile = {
 export type CustomerAccountProfileInput = {
   firstName?: string | null
   lastName?: string | null
-  phone?: string | null
 }
 
 export type CustomerAccountAddressInput = {

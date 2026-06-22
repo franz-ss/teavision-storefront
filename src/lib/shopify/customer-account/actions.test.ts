@@ -126,6 +126,27 @@ describe('Customer Account Server Actions', () => {
       makeFormData({
         firstName: 'Mira',
         lastName: 'Patel',
+      }),
+    )
+
+    expect(updateCustomerProfile).toHaveBeenCalledWith(
+      expect.objectContaining({ accessToken: 'customer-access-token' }),
+      {
+        firstName: 'Mira',
+        lastName: 'Patel',
+      },
+    )
+    expect(revalidatePath).toHaveBeenCalledWith('/account')
+    expect(revalidatePath).toHaveBeenCalledWith('/account/profile')
+    expect(state.status).toBe('success')
+  })
+
+  test('profile action ignores stale phone fields because Shopify manages phone sign-in', async () => {
+    await updateProfileAction(
+      initialState,
+      makeFormData({
+        firstName: 'Mira',
+        lastName: 'Patel',
         phone: '+61 411 111 111',
       }),
     )
@@ -135,12 +156,8 @@ describe('Customer Account Server Actions', () => {
       {
         firstName: 'Mira',
         lastName: 'Patel',
-        phone: '+61 411 111 111',
       },
     )
-    expect(revalidatePath).toHaveBeenCalledWith('/account')
-    expect(revalidatePath).toHaveBeenCalledWith('/account/profile')
-    expect(state.status).toBe('success')
   })
 
   test('address action ignores client-provided customer identity', async () => {

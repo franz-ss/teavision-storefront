@@ -1,5 +1,6 @@
 import { syncCartBuyerIdentityForCurrentSession } from '@/lib/cart/actions'
 import { discoverCustomerAccountEndpoints } from '@/lib/shopify/customer-account/discovery'
+import { getCustomerAccountRedirectOrigin } from '@/lib/shopify/customer-account/env'
 import {
   decodeIdTokenClaims,
   exchangeCustomerAccountCode,
@@ -11,19 +12,23 @@ import {
   setCustomerFlash,
 } from '@/lib/shopify/customer-account/session'
 
-function redirectToLoginFailure(request: Request): Response {
+function getAccountRedirectUrl(path: string): URL {
+  return new URL(path, getCustomerAccountRedirectOrigin())
+}
+
+function redirectToLoginFailure(): Response {
   return Response.redirect(
-    new URL('/account/login?reason=verification-failed', request.url),
+    getAccountRedirectUrl('/account/login?reason=verification-failed'),
   )
 }
 
-async function failCallback(request: Request): Promise<Response> {
+async function failCallback(): Promise<Response> {
   await clearPendingCustomerAuth()
   await setCustomerFlash(
     'We could not verify that sign-in. Start sign-in again.',
   )
 
-  return redirectToLoginFailure(request)
+  return redirectToLoginFailure()
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -33,7 +38,7 @@ export async function GET(request: Request): Promise<Response> {
   const pendingAuth = await getPendingCustomerAuth()
 
   if (!code || !state || !pendingAuth || pendingAuth.state !== state) {
-    return await failCallback(request)
+    return await failCallback()
   }
 
   try {
@@ -47,7 +52,7 @@ export async function GET(request: Request): Promise<Response> {
     const claims = decodeIdTokenClaims(tokenExchange.idToken)
 
     if (!claims || claims.nonce !== pendingAuth.nonce) {
-      return await failCallback(request)
+      return await failCallback()
     }
 
     await setCustomerAccountSession({
@@ -60,8 +65,8 @@ export async function GET(request: Request): Promise<Response> {
     await syncCartBuyerIdentityForCurrentSession()
     await clearPendingCustomerAuth()
 
-    return Response.redirect(new URL(pendingAuth.returnTo, request.url))
+    return Response.redirect(getAccountRedirectUrl(pendingAuth.returnTo))
   } catch {
-    return await failCallback(request)
+    return await failCallback()
   }
 }

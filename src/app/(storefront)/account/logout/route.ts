@@ -7,19 +7,25 @@ import {
   getCustomerAccountSession,
 } from '@/lib/shopify/customer-account/session'
 
-async function redirectAfterLocalLogout(request: Request): Promise<Response> {
+function getLocalLogoutRedirectUrl(): URL {
+  const config = getCustomerAccountConfig()
+  const loginUrl = new URL(config.logoutRedirectUri)
+  loginUrl.searchParams.set('reason', 'logged-out')
+
+  return loginUrl
+}
+
+async function redirectAfterLocalLogout(): Promise<Response> {
   const cartId = await getCartIdFromCookie()
   if (cartId) await tryClearCartBuyerIdentity(cartId)
   await clearCustomerAccountCookies()
 
-  return Response.redirect(
-    new URL('/account/login?reason=logged-out', request.url),
-  )
+  return Response.redirect(getLocalLogoutRedirectUrl())
 }
 
-async function logout(request: Request): Promise<Response> {
+async function logout(): Promise<Response> {
   const session = await getCustomerAccountSession()
-  if (!session) return await redirectAfterLocalLogout(request)
+  if (!session) return await redirectAfterLocalLogout()
 
   const cartId = await getCartIdFromCookie()
   if (cartId) await tryClearCartBuyerIdentity(cartId)
@@ -36,10 +42,10 @@ async function logout(request: Request): Promise<Response> {
   return Response.redirect(logoutUrl)
 }
 
-export async function GET(request: Request): Promise<Response> {
-  return await logout(request)
+export async function GET(): Promise<Response> {
+  return await logout()
 }
 
-export async function POST(request: Request): Promise<Response> {
-  return await logout(request)
+export async function POST(): Promise<Response> {
+  return await logout()
 }

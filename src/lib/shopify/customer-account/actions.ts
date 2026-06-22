@@ -73,7 +73,6 @@ function getProfileInput(formData: FormData): CustomerAccountProfileInput {
   return {
     firstName: getOptionalFormString(formData, 'firstName'),
     lastName: getOptionalFormString(formData, 'lastName'),
-    phone: getOptionalFormString(formData, 'phone'),
   }
 }
 

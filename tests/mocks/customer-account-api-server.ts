@@ -88,16 +88,16 @@ function makeIdToken(nonce: string, customerId: string): string {
 
 function toAddressConnection(addresses: CustomerAccountAddress[]) {
   return {
-    nodes: addresses,
-    edges: addresses.map((node) => ({ node })),
+    nodes: addresses.map(toCustomerAddressApiPayload),
+    edges: addresses.map((node) => ({ node: toCustomerAddressApiPayload(node) })),
     pageInfo: { hasNextPage: false, hasPreviousPage: false },
   }
 }
 
 function toOrderConnection(orders: CustomerAccountOrder[]) {
   return {
-    nodes: orders,
-    edges: orders.map((node) => ({ node })),
+    nodes: orders.map(toOrderApiPayload),
+    edges: orders.map((node) => ({ node: toOrderApiPayload(node) })),
     pageInfo: {
       endCursor: null,
       hasNextPage: false,
@@ -107,12 +107,63 @@ function toOrderConnection(orders: CustomerAccountOrder[]) {
   }
 }
 
+function toCustomerAddressApiPayload(address: CustomerAccountAddress) {
+  return {
+    ...address,
+    phoneNumber: address.phone,
+    territoryCode: address.countryCodeV2,
+    zoneCode: address.provinceCode,
+  }
+}
+
+function toFulfillmentApiPayload(
+  fulfillment: CustomerAccountOrder['fulfillments'][number],
+) {
+  return {
+    trackingInformation: fulfillment.trackingInfo.map((tracking) => ({
+      company: fulfillment.trackingCompany,
+      number: tracking.number,
+      url: tracking.url,
+    })),
+  }
+}
+
+function toOrderApiPayload(order: CustomerAccountOrder) {
+  return {
+    ...order,
+    fulfillments: {
+      nodes: order.fulfillments.map(toFulfillmentApiPayload),
+      edges: order.fulfillments.map((node) => ({
+        node: toFulfillmentApiPayload(node),
+      })),
+      pageInfo: { hasNextPage: false, hasPreviousPage: false },
+    },
+    lineItems: {
+      nodes: order.lineItems,
+      edges: order.lineItems.map((node) => ({ node })),
+      pageInfo: { hasNextPage: false, hasPreviousPage: false },
+    },
+    shippingAddress: order.shippingAddress
+      ? toCustomerAddressApiPayload(order.shippingAddress)
+      : null,
+  }
+}
+
 function toCustomerPayload(
   profile: CustomerAccountProfile,
   omitSections: Array<'addresses' | 'orders'>,
 ) {
   const payload = {
     ...profile,
+    defaultAddress: profile.defaultAddress
+      ? toCustomerAddressApiPayload(profile.defaultAddress)
+      : null,
+    emailAddress: profile.emailAddress
+      ? { emailAddress: profile.emailAddress }
+      : null,
+    phoneNumber: profile.phoneNumber
+      ? { phoneNumber: profile.phoneNumber }
+      : null,
     addresses: omitSections.includes('addresses')
       ? undefined
       : toAddressConnection(profile.addresses),
@@ -122,6 +173,23 @@ function toCustomerPayload(
   }
 
   return payload
+}
+
+function hasLegacyCustomerAccountFields(query: string | undefined): boolean {
+  if (!query) return false
+
+  const legacyFields = new Set([
+    'countryCodeV2',
+    'phone',
+    'provinceCode',
+    'trackingCompany',
+    'trackingInfo',
+  ])
+
+  return query
+    .split('\n')
+    .map((line) => line.trim())
+    .some((line) => legacyFields.has(line))
 }
 
 function findAddress(
@@ -241,6 +309,15 @@ export async function createFakeCustomerAccountApiServer({
       const operationName = getOperationName(graphqlRequest)
       requests.push({ ...graphqlRequest, operationName })
 
+      if (hasLegacyCustomerAccountFields(graphqlRequest.query)) {
+        writeJson(response, 400, {
+          errors: [
+            { message: 'Query includes fields outside Customer Account API' },
+          ],
+        })
+        return
+      }
+
       if (operationName === 'CustomerAccountViewer') {
         writeJson(response, 200, {
           data: { customer: toCustomerPayload(profile, omitViewerSections) },
@@ -284,11 +361,17 @@ export async function createFakeCustomerAccountApiServer({
         const address = makeCustomerAccountAddress({
           id: `gid://shopify/CustomerAddress/test-address-${profile.addresses.length + 1}`,
           address1: readString(input.address1) ?? 'New address',
+          countryCodeV2: readString(input.territoryCode) ?? 'AU',
+          phone: readString(input.phoneNumber),
+          provinceCode: readString(input.zoneCode),
         })
         profile = { ...profile, addresses: [...profile.addresses, address] }
         writeJson(response, 200, {
           data: {
-            customerAddressCreate: { customerAddress: address, userErrors: [] },
+            customerAddressCreate: {
+              customerAddress: toCustomerAddressApiPayload(address),
+              userErrors: [],
+            },
           },
         })
         return
@@ -319,6 +402,10 @@ export async function createFakeCustomerAccountApiServer({
         const updated = {
           ...existing,
           address1: readString(input.address1) ?? existing.address1,
+          phone: readString(input.phoneNumber) ?? existing.phone,
+          provinceCode: readString(input.zoneCode) ?? existing.provinceCode,
+          countryCodeV2:
+            readString(input.territoryCode) ?? existing.countryCodeV2,
         }
         profile = {
           ...profile,
@@ -331,7 +418,7 @@ export async function createFakeCustomerAccountApiServer({
         writeJson(response, 200, {
           data: {
             customerAddressUpdate: {
-              customerAddress: updated,
+              customerAddress: toCustomerAddressApiPayload(updated),
               userErrors: [],
             },
           },

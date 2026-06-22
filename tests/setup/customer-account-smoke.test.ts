@@ -51,17 +51,20 @@ describe('Customer Account API test infrastructure smoke test', () => {
       `${server.url}/customer-account/graphql`,
       {
         method: 'POST',
-        headers: { Authorization: 'Bearer customer-access-token-valid-code' },
+        headers: { Authorization: 'customer-access-token-valid-code' },
         body: JSON.stringify({
           operationName: 'CustomerAccountViewer',
-          query: 'query CustomerAccountViewer { customer { id emailAddress } }',
+          query:
+            'query CustomerAccountViewer { customer { id emailAddress { emailAddress } } }',
         }),
       },
     )
     const payload = (await viewerResponse.json()) as {
-      data: { customer: { emailAddress: string } }
+      data: { customer: { emailAddress: { emailAddress: string } } }
     }
 
-    expect(payload.data.customer.emailAddress).toBe('avery@example.test')
+    expect(payload.data.customer.emailAddress.emailAddress).toBe(
+      'avery@example.test',
+    )
   })
 })

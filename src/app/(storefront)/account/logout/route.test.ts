@@ -54,6 +54,10 @@ describe('account logout route', () => {
       'SHOPIFY_CUSTOMER_ACCOUNT_LOGOUT_REDIRECT_URI',
       'https://teavision.test/account/login',
     )
+    vi.stubEnv(
+      'SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI',
+      'https://teavision.test/account/callback',
+    )
     vi.stubGlobal(
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
@@ -87,9 +91,7 @@ describe('account logout route', () => {
       }),
     )
 
-    const response = await GET(
-      new Request('https://teavision.test/account/logout'),
-    )
+    const response = await GET()
     const location = response.headers.get('location')
 
     expect(location).toContain('http://127.0.0.1:9014/logout')
@@ -103,9 +105,7 @@ describe('account logout route', () => {
     cookieState.values.set('teavision_cart', 'gid://shopify/Cart/current')
     getCartIdFromCookieMock.mockResolvedValue('gid://shopify/Cart/current')
 
-    const response = await POST(
-      new Request('https://teavision.test/account/logout', { method: 'POST' }),
-    )
+    const response = await POST()
 
     expect(response.headers.get('location')).toBe(
       'https://teavision.test/account/login?reason=logged-out',
@@ -118,6 +118,19 @@ describe('account logout route', () => {
     )
     expect(cookieState.values.get('teavision_cart')).toBe(
       'gid://shopify/Cart/current',
+    )
+  })
+
+  test('local logout fallback redirects to the configured account origin', async () => {
+    vi.stubEnv(
+      'SHOPIFY_CUSTOMER_ACCOUNT_LOGOUT_REDIRECT_URI',
+      'https://detonate-trickster-venus.ngrok-free.dev/account/login',
+    )
+
+    const response = await GET()
+
+    expect(response.headers.get('location')).toBe(
+      'https://detonate-trickster-venus.ngrok-free.dev/account/login?reason=logged-out',
     )
   })
 })

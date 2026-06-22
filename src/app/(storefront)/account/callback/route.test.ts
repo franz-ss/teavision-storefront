@@ -59,6 +59,10 @@ describe('account OAuth callback route', () => {
       'SHOPIFY_CUSTOMER_ACCOUNT_SESSION_SECRET',
       'test-session-secret-with-at-least-32-characters',
     )
+    vi.stubEnv(
+      'SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI',
+      'https://teavision.test/account/callback',
+    )
     vi.stubGlobal(
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
@@ -112,6 +116,24 @@ describe('account OAuth callback route', () => {
 
     expect(response.headers.get('location')).toBe(
       'https://teavision.test/account/login?reason=verification-failed',
+    )
+    expect(fetch as unknown as Mock).not.toHaveBeenCalled()
+  })
+
+  test('failed callback redirects to the configured callback origin', async () => {
+    vi.stubEnv(
+      'SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI',
+      'https://detonate-trickster-venus.ngrok-free.dev/account/callback',
+    )
+
+    const response = await GET(
+      new Request(
+        'https://localhost:3000/account/callback?code=abc&state=wrong',
+      ),
+    )
+
+    expect(response.headers.get('location')).toBe(
+      'https://detonate-trickster-venus.ngrok-free.dev/account/login?reason=verification-failed',
     )
     expect(fetch as unknown as Mock).not.toHaveBeenCalled()
   })

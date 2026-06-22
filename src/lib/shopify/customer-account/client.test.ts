@@ -54,6 +54,41 @@ function createCustomerFetchMock() {
   return { calls }
 }
 
+function createFailedCustomerFetchMock() {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).endsWith('/.well-known/openid-configuration')) {
+        return Response.json({
+          authorization_endpoint: 'http://127.0.0.1:9011/auth',
+          end_session_endpoint: 'http://127.0.0.1:9011/logout',
+          issuer: 'http://127.0.0.1:9011',
+          jwks_uri: 'http://127.0.0.1:9011/jwks',
+          token_endpoint: 'http://127.0.0.1:9011/token',
+        })
+      }
+
+      if (String(input).endsWith('/.well-known/customer-account-api')) {
+        return Response.json({
+          customer_account_api_endpoint: 'http://127.0.0.1:9011/graphql',
+        })
+      }
+
+      return Response.json(
+        {
+          errors: [
+            {
+              message:
+                'Field provinceCode does not exist for customer-access-token-secret',
+            },
+          ],
+        },
+        { status: 400, statusText: 'Bad Request' },
+      )
+    }),
+  )
+}
+
 describe('customerAccountFetch', () => {
   beforeEach(() => {
     vi.stubEnv('NODE_ENV', 'test')
@@ -66,7 +101,7 @@ describe('customerAccountFetch', () => {
     vi.unstubAllGlobals()
   })
 
-  test('sends bearer auth and redacts token-like values from GraphQL errors', async () => {
+  test('sends customer account token auth and redacts token-like values from GraphQL errors', async () => {
     const { calls } = createCustomerFetchMock()
 
     await expect(
@@ -77,8 +112,21 @@ describe('customerAccountFetch', () => {
     ).rejects.toThrow('GraphQL failed with [redacted] still inside')
 
     expect(calls[2]?.headers.get('Authorization')).toBe(
-      'Bearer customer-access-token-secret',
+      'customer-access-token-secret',
     )
     expect(calls[2]?.body?.query).toBe('query Test { ok }')
+  })
+
+  test('includes redacted Shopify error body for failed HTTP responses', async () => {
+    createFailedCustomerFetchMock()
+
+    await expect(
+      customerAccountFetch<{ ok: boolean }>({
+        accessToken: 'customer-access-token-secret',
+        query: 'query Test { ok }',
+      }),
+    ).rejects.toThrow(
+      'Shopify Customer Account API error: 400 Bad Request: {"errors":[{"message":"Field provinceCode does not exist for [redacted]"}]}',
+    )
   })
 })

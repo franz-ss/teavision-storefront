@@ -2,7 +2,6 @@ import { optionalEnv, truthyEnv } from '@/lib/env/read'
 import { isProductionRuntime, isTestRuntime } from '@/lib/env/runtime'
 import { getShopifyStoreDomain } from '@/lib/shopify/env'
 
-const CUSTOMER_ACCOUNT_API_VERSION = '2026-04'
 const LOCAL_TEST_ENDPOINT_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]'])
 
 export type CustomerAccountConfig = {
@@ -97,5 +96,15 @@ export function getCustomerAccountDiscoveryBaseUrl(): string {
 
   if (config.testUrl && config.testMode) return config.testUrl
 
-  return `https://${config.shopDomain}/account/customer/api/${CUSTOMER_ACCOUNT_API_VERSION}`
+  return `https://${config.shopDomain}`
+}
+
+export function getCustomerAccountRedirectOrigin(): string {
+  try {
+    return new URL(getCustomerAccountConfig().redirectUri).origin
+  } catch {
+    throw new Error(
+      'Missing Shopify Customer Account setup: SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI must be a valid URL',
+    )
+  }
 }

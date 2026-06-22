@@ -27,6 +27,17 @@ function redactTokenValues(message: string, tokenValues: string[]): string {
   )
 }
 
+async function readErrorBody(response: Response, token: string): Promise<string> {
+  try {
+    const body = await response.text()
+    if (!body) return ''
+
+    return `: ${redactTokenValues(body, [token])}`
+  } catch {
+    return ''
+  }
+}
+
 export async function customerAccountFetch<
   TData,
   TVariables = Record<string, unknown>,
@@ -46,7 +57,7 @@ export async function customerAccountFetch<
   const response = await fetch(endpoints.graphqlEndpoint, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: token,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -57,8 +68,9 @@ export async function customerAccountFetch<
   })
 
   if (!response.ok) {
+    const body = await readErrorBody(response, token)
     throw new Error(
-      `Shopify Customer Account API error: ${response.status} ${response.statusText}`,
+      `Shopify Customer Account API error: ${response.status} ${response.statusText}${body}`,
     )
   }
 

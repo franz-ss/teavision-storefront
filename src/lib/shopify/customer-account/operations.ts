@@ -23,10 +23,10 @@ const CUSTOMER_ACCOUNT_ADDRESS_FIELDS = /* GraphQL */ `
     address1
     address2
     city
-    provinceCode
+    provinceCode: zoneCode
     zip
-    countryCodeV2
-    phone
+    countryCodeV2: territoryCode
+    phone: phoneNumber
     formatted
   }
 `
@@ -35,10 +35,14 @@ const CUSTOMER_ACCOUNT_VIEWER_QUERY = /* GraphQL */ `
   query CustomerAccountViewer {
     customer {
       id
-      emailAddress
+      emailAddress {
+        emailAddress
+      }
       firstName
       lastName
-      phoneNumber
+      phoneNumber {
+        phoneNumber
+      }
       defaultAddress {
         id
         firstName
@@ -46,10 +50,10 @@ const CUSTOMER_ACCOUNT_VIEWER_QUERY = /* GraphQL */ `
         address1
         address2
         city
-        provinceCode
+        provinceCode: zoneCode
         zip
-        countryCodeV2
-        phone
+        countryCodeV2: territoryCode
+        phone: phoneNumber
         formatted
       }
       addresses(first: 20) {
@@ -60,10 +64,10 @@ const CUSTOMER_ACCOUNT_VIEWER_QUERY = /* GraphQL */ `
           address1
           address2
           city
-          provinceCode
+          provinceCode: zoneCode
           zip
-          countryCodeV2
-          phone
+          countryCodeV2: territoryCode
+          phone: phoneNumber
           formatted
         }
       }
@@ -90,10 +94,14 @@ const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
     customerUpdate(input: $input) {
       customer {
         id
-        emailAddress
+        emailAddress {
+          emailAddress
+        }
         firstName
         lastName
-        phoneNumber
+        phoneNumber {
+          phoneNumber
+        }
         defaultAddress {
           ...CustomerAccountAddressFields
         }
@@ -128,8 +136,11 @@ const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
 `
 
 const CUSTOMER_ADDRESS_CREATE_MUTATION = /* GraphQL */ `
-  mutation CustomerAddressCreate($address: CustomerAddressInput!) {
-    customerAddressCreate(address: $address) {
+  mutation CustomerAddressCreate(
+    $address: CustomerAddressInput!
+    $defaultAddress: Boolean
+  ) {
+    customerAddressCreate(address: $address, defaultAddress: $defaultAddress) {
       customerAddress {
         ...CustomerAccountAddressFields
       }
@@ -146,9 +157,14 @@ const CUSTOMER_ADDRESS_CREATE_MUTATION = /* GraphQL */ `
 const CUSTOMER_ADDRESS_UPDATE_MUTATION = /* GraphQL */ `
   mutation CustomerAddressUpdate(
     $addressId: ID!
-    $address: CustomerAddressInput!
+    $address: CustomerAddressInput
+    $defaultAddress: Boolean
   ) {
-    customerAddressUpdate(addressId: $addressId, address: $address) {
+    customerAddressUpdate(
+      addressId: $addressId
+      address: $address
+      defaultAddress: $defaultAddress
+    ) {
       customerAddress {
         ...CustomerAccountAddressFields
       }
@@ -222,7 +238,7 @@ const CUSTOMER_ACCOUNT_ORDER_QUERY = /* GraphQL */ `
         nodes {
           title
           quantity
-          unitPrice {
+          unitPrice: price {
             amount
             currencyCode
           }
@@ -239,17 +255,19 @@ const CUSTOMER_ACCOUNT_ORDER_QUERY = /* GraphQL */ `
         address1
         address2
         city
-        provinceCode
+        provinceCode: zoneCode
         zip
-        countryCodeV2
-        phone
+        countryCodeV2: territoryCode
+        phone: phoneNumber
         formatted
       }
-      fulfillments {
-        trackingCompany
-        trackingInfo {
-          number
-          url
+      fulfillments(first: 10) {
+        nodes {
+          trackingInformation {
+            company
+            number
+            url
+          }
         }
       }
       statusPageUrl
@@ -259,9 +277,25 @@ const CUSTOMER_ACCOUNT_ORDER_QUERY = /* GraphQL */ `
 
 type RawConnection<T> = CustomerAccountConnection<T> | T[] | null | undefined
 
-type RawCustomer = Omit<CustomerAccountProfile, 'addresses' | 'orders'> & {
-  addresses?: RawConnection<CustomerAccountAddress>
+type RawCustomerAccountAddress = CustomerAccountAddress
+
+type RawCustomerAccountEmailAddress = {
+  emailAddress?: string | null
+}
+
+type RawCustomerAccountPhoneNumber = {
+  phoneNumber?: string | null
+}
+
+type RawCustomer = Omit<
+  CustomerAccountProfile,
+  'addresses' | 'defaultAddress' | 'emailAddress' | 'orders' | 'phoneNumber'
+> & {
+  addresses?: RawConnection<RawCustomerAccountAddress>
+  defaultAddress?: RawCustomerAccountAddress | null
+  emailAddress?: RawCustomerAccountEmailAddress | null
   orders?: RawConnection<CustomerAccountOrder>
+  phoneNumber?: RawCustomerAccountPhoneNumber | null
 }
 
 type ViewerResponse = {
@@ -303,8 +337,37 @@ type AddressDeleteResponse = {
   }
 }
 
-type RawCustomerAccountOrder = Omit<CustomerAccountOrder, 'lineItems'> & {
+type RawCustomerAccountFulfillment = {
+  trackingInformation?: Array<{
+    company: string | null
+    number: string | null
+    url: string | null
+  }>
+}
+
+type RawCustomerAccountOrder = Omit<
+  CustomerAccountOrder,
+  'fulfillments' | 'lineItems'
+> & {
+  fulfillments?: RawConnection<RawCustomerAccountFulfillment>
   lineItems?: RawConnection<CustomerAccountOrder['lineItems'][number]>
+}
+
+type CustomerAccountAddressApiInput = {
+  address1?: string | null
+  address2?: string | null
+  city?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  phoneNumber?: string | null
+  territoryCode?: string | null
+  zip?: string | null
+  zoneCode?: string | null
+}
+
+type CustomerAccountAddressVariables = {
+  address: CustomerAccountAddressApiInput
+  defaultAddress?: boolean
 }
 
 function emptyPageInfo(): CustomerAccountPageInfo {
@@ -345,13 +408,32 @@ function reshapeCustomer(customer: RawCustomer): CustomerAccountProfile {
   return {
     ...customer,
     addresses: connectionNodes(customer.addresses),
+    defaultAddress: customer.defaultAddress ?? null,
+    emailAddress: customer.emailAddress?.emailAddress ?? null,
     orders: connectionNodes(customer.orders),
+    phoneNumber: customer.phoneNumber?.phoneNumber ?? null,
   }
 }
 
 function reshapeOrder(order: RawCustomerAccountOrder): CustomerAccountOrder {
+  const fulfillments = connectionNodes(order.fulfillments).map(
+    (fulfillment) => {
+      const trackingInfo =
+        fulfillment.trackingInformation?.map((tracking) => ({
+          number: tracking.number,
+          url: tracking.url,
+        })) ?? []
+
+      return {
+        trackingCompany: fulfillment.trackingInformation?.[0]?.company ?? null,
+        trackingInfo,
+      }
+    },
+  )
+
   return {
     ...order,
+    fulfillments,
     lineItems: connectionNodes(order.lineItems),
   }
 }
@@ -361,6 +443,25 @@ function fieldKeyFromUserError(error: CustomerAccountUserError): string | null {
   if (!field?.length) return null
 
   return field[field.length - 1] ?? null
+}
+
+function toCustomerAddressApiInput(
+  input: CustomerAccountAddressInput,
+): CustomerAccountAddressVariables {
+  return {
+    address: {
+      address1: input.address1,
+      address2: input.address2,
+      city: input.city,
+      firstName: input.firstName,
+      lastName: input.lastName,
+      phoneNumber: input.phone,
+      territoryCode: input.countryCodeV2,
+      zip: input.zip,
+      zoneCode: input.provinceCode,
+    },
+    defaultAddress: input.defaultAddress,
+  }
 }
 
 export function normalizeCustomerAccountUserErrors(
@@ -457,13 +558,17 @@ export async function updateCustomerProfile(
   session: CustomerAccountSession,
   input: CustomerAccountProfileInput,
 ): Promise<CustomerAccountMutationResult<CustomerAccountProfile>> {
+  const customerInput = {
+    firstName: input.firstName,
+    lastName: input.lastName,
+  }
   const data = await customerAccountFetch<
     CustomerUpdateResponse,
-    { input: CustomerAccountProfileInput }
+    { input: typeof customerInput }
   >({
     query: CUSTOMER_UPDATE_MUTATION,
     session,
-    variables: { input },
+    variables: { input: customerInput },
   })
 
   return {
@@ -478,13 +583,14 @@ export async function createCustomerAddress(
   session: CustomerAccountSession,
   input: CustomerAccountAddressInput,
 ): Promise<CustomerAccountMutationResult<CustomerAccountAddress>> {
+  const variables = toCustomerAddressApiInput(input)
   const data = await customerAccountFetch<
     AddressMutationResponse,
-    { address: CustomerAccountAddressInput }
+    CustomerAccountAddressVariables
   >({
     query: CUSTOMER_ADDRESS_CREATE_MUTATION,
     session,
-    variables: { address: input },
+    variables,
   })
   const result = data.customerAddressCreate
 
@@ -499,13 +605,18 @@ export async function updateCustomerAddress(
   addressId: string,
   input: CustomerAccountAddressInput,
 ): Promise<CustomerAccountMutationResult<CustomerAccountAddress>> {
+  const variables = toCustomerAddressApiInput(input)
   const data = await customerAccountFetch<
     AddressMutationResponse,
-    { addressId: string; address: CustomerAccountAddressInput }
+    {
+      address: CustomerAccountAddressApiInput
+      addressId: string
+      defaultAddress?: boolean
+    }
   >({
     query: CUSTOMER_ADDRESS_UPDATE_MUTATION,
     session,
-    variables: { addressId, address: input },
+    variables: { addressId, ...variables },
   })
   const result = data.customerAddressUpdate
 
@@ -538,5 +649,18 @@ export async function setDefaultCustomerAddress(
   session: CustomerAccountSession,
   addressId: string,
 ): Promise<CustomerAccountMutationResult<CustomerAccountAddress>> {
-  return updateCustomerAddress(session, addressId, { defaultAddress: true })
+  const data = await customerAccountFetch<
+    AddressMutationResponse,
+    { addressId: string; defaultAddress: boolean }
+  >({
+    query: CUSTOMER_ADDRESS_UPDATE_MUTATION,
+    session,
+    variables: { addressId, defaultAddress: true },
+  })
+  const result = data.customerAddressUpdate
+
+  return {
+    data: result?.customerAddress ?? null,
+    userErrors: result?.userErrors ?? [],
+  }
 }

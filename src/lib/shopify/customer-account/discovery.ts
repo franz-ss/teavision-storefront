@@ -11,6 +11,7 @@ type OpenIdConfigurationResponse = {
 
 type CustomerAccountApiDiscoveryResponse = {
   customer_account_api_endpoint?: string
+  graphql_api?: string
 }
 
 function requireString(
@@ -54,8 +55,9 @@ export async function discoverCustomerAccountEndpoints(): Promise<CustomerAccoun
       'OpenID discovery',
     ),
     graphqlEndpoint: requireString(
-      customerAccountApi.customer_account_api_endpoint,
-      'customer_account_api_endpoint',
+      customerAccountApi.graphql_api ??
+        customerAccountApi.customer_account_api_endpoint,
+      'graphql_api',
       'Customer Account API discovery',
     ),
     issuer: requireString(

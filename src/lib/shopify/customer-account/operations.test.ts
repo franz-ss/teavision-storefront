@@ -138,7 +138,6 @@ describe('Customer Account read operations', () => {
       await updateCustomerProfile(makeSession(), {
         firstName: 'Mira',
         lastName: 'Patel',
-        phone: '+61 411 111 111',
       })
       await createCustomerAddress(makeSession(), {
         address1: '99 Tea Road',
@@ -163,7 +162,6 @@ describe('Customer Account read operations', () => {
         input: {
           firstName: 'Mira',
           lastName: 'Patel',
-          phone: '+61 411 111 111',
         },
       })
       expect(
@@ -173,7 +171,9 @@ describe('Customer Account read operations', () => {
       ).toMatchObject({
         address: {
           address1: '99 Tea Road',
-          countryCodeV2: 'AU',
+          phoneNumber: '+61 411 111 111',
+          territoryCode: 'AU',
+          zoneCode: 'QLD',
         },
       })
       expect(
@@ -181,9 +181,17 @@ describe('Customer Account read operations', () => {
           (request) => request.operationName === 'CustomerAddressUpdate',
         )?.variables,
       ).toEqual({
-        address: { defaultAddress: true },
         addressId: 'gid://shopify/CustomerAddress/test-address-1',
+        defaultAddress: true,
       })
+
+      const viewerRequest = requestServer.requests.find(
+        (request) => request.operationName === 'CustomerUpdate',
+      )
+      expect(viewerRequest?.query).toContain('emailAddress {')
+      expect(viewerRequest?.query).toContain('phoneNumber {')
+      expect(viewerRequest?.query).toContain('countryCodeV2: territoryCode')
+      expect(viewerRequest?.query).toContain('provinceCode: zoneCode')
     } finally {
       await requestServer.close()
       vi.stubEnv('SHOPIFY_CUSTOMER_ACCOUNT_TEST_URL', serverUrl)
