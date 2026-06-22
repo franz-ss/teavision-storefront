@@ -8,11 +8,17 @@ import {
   submitContactFormAction,
 } from './actions'
 
+type ResendSendResult = {
+  error: unknown | null
+}
+
+type ResendSend = () => Promise<ResendSendResult>
+
 const { checkRateLimitMock, getClientIpFromHeadersMock, resendSendMock } =
   vi.hoisted(() => ({
     checkRateLimitMock: vi.fn(),
     getClientIpFromHeadersMock: vi.fn(() => '127.0.0.1'),
-    resendSendMock: vi.fn(async () => ({ error: null })),
+    resendSendMock: vi.fn<ResendSend>(async () => ({ error: null })),
   }))
 
 const LIMITED_RESULT = {
