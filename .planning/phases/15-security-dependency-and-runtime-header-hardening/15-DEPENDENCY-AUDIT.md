@@ -120,9 +120,12 @@ pnpm up next@16.2.9 eslint-config-next@16.2.9 next-sanity@13.1.1 @storybook/next
 | `pnpm peers check` | 0 | No peer dependency issues found. |
 | `pnpm audit --audit-level high` | 0 | Passed: no critical or high findings. |
 | `pnpm audit --audit-level moderate --json` | 1 | Expected residual: 1 low and 4 moderate; 0 critical and 0 high. |
-| `pnpm lint` | 0 | Passed; Tailwind class check and ESLint completed. |
-| `pnpm typecheck` | 0 | Passed; `tsc --noEmit`. |
-| `pnpm build` | 0 | Passed on Next.js 16.2.9 with Cache Components enabled. |
-| `pnpm test:unit` | 0 | Passed; 48 test files, 181 tests. |
-| `pnpm test:integration` | 0 | Passed; 8 test files, 39 tests. |
+| `pnpm lint` | 0 | Passed on final Phase 15 tree; Tailwind class check and ESLint completed. |
+| `pnpm typecheck` | 0 | Passed on final Phase 15 tree; `tsc --noEmit`. |
+| `pnpm build` | 0 | Passed on Next.js 16.2.9 with Cache Components enabled; generated 75 static pages. |
+| `pnpm test:unit` | 0 | Passed; 51 test files, 200 tests. |
+| `pnpm test:integration` | 0 | Passed; 9 test files, 43 tests. |
+| `pnpm test:contracts` | 0 | Passed; 38 Node contract subtests. |
+| `pnpm test:e2e` | 0 | Passed; 4 fake-Shopify Playwright tests stopping at fake checkout handoff. |
+| `node scripts/security/probe-production-security.mjs http://127.0.0.1:4316` | 0 | Passed; 7 representative routes returned required headers and no `x-powered-by`. |
 | `git diff -- src/lib/shopify/types/generated` | 0 | Empty; generated Shopify types untouched. |
