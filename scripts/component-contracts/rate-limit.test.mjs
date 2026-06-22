@@ -28,6 +28,9 @@ test('rate-limit helper documents production fallback explicitly', async () => {
   assert.match(source, /shouldWarnAboutRateLimitMemoryFallback/)
   assert.match(envSource, /RATE_LIMIT_EXTERNAL_PROTECTION/)
   assert.match(envSource, /RATE_LIMIT_ALLOW_MEMORY_FALLBACK/)
+  assert.match(envSource, /RATE_LIMIT_TRUSTED_IP_HEADER/)
+  assert.match(envSource, /isRateLimitProductionExplicit/)
+  assert.match(envSource, /getRateLimitTrustedIpHeader/)
   assert.match(source, /console\.warn/)
 })
 

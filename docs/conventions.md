@@ -155,8 +155,10 @@ Only on Server Actions files (`src/lib/*/actions.ts`). Never on a component file
 
 - Public form and search surfaces use `src/lib/rate-limit/index.ts`.
 - The helper exposes a `RateLimitStore` interface and currently ships with an in-memory fallback for local development.
-- In production, configure provider-level or durable-store rate limiting and set `RATE_LIMIT_EXTERNAL_PROTECTION=true`.
-- If a production deployment intentionally accepts the per-instance memory fallback, set `RATE_LIMIT_ALLOW_MEMORY_FALLBACK=true` so the choice is explicit.
+- Production fails closed when rate-limit posture is implicit. Public form/search requests return the existing user-safe rate-limit response instead of silently using per-process memory buckets.
+- In production, configure provider-level, CDN, WAF, or durable-store rate limiting and set `RATE_LIMIT_EXTERNAL_PROTECTION=true`.
+- If a production deployment intentionally accepts the per-instance memory fallback, set `RATE_LIMIT_ALLOW_MEMORY_FALLBACK=true` and configure `RATE_LIMIT_TRUSTED_IP_HEADER`.
+- `RATE_LIMIT_TRUSTED_IP_HEADER` must match the deployment provider's trusted client-IP header and must be one of `x-forwarded-for`, `x-real-ip`, or `cf-connecting-ip`.
 - Never log request bodies, credentials, or submitted form values from limiter code.
 
 ---
