@@ -1,32 +1,68 @@
 /**
  * @vitest-environment jsdom
  */
-import type { AnchorHTMLAttributes, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { LegacyBridge } from '.'
 ;(
   globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true
 
-vi.mock('next/link', () => ({
-  default: ({
+const buttonCalls = vi.hoisted(() => ({
+  props: [] as Array<{
+    href?: string
+    prefetch?: boolean | null
+  }>,
+}))
+
+type MockButtonProps = {
+  children?: ReactNode
+  className?: string
+  href?: string
+  prefetch?: boolean | null
+}
+
+type MockFrameProps = {
+  children?: ReactNode
+  className?: string
+}
+
+vi.mock('@/components/ui', () => ({
+  Button: ({
     children,
+    className,
     href,
-    ...props
-  }: AnchorHTMLAttributes<HTMLAnchorElement> & {
-    children: ReactNode
-    href: string
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
+    prefetch,
+  }: MockButtonProps) => {
+    buttonCalls.props.push({ href, prefetch })
+
+    return (
+      <a className={className} href={href} data-prefetch={String(prefetch)}>
+        {children}
+      </a>
+    )
+  },
+  Card: ({ children, className }: MockFrameProps) => (
+    <div className={className}>{children}</div>
   ),
+  Section: {
+    Container: ({ children, className }: MockFrameProps) => (
+      <div className={className}>{children}</div>
+    ),
+    Root: ({ children, className }: MockFrameProps) => (
+      <div className={className}>{children}</div>
+    ),
+  },
 }))
 
 describe('LegacyBridge', () => {
+  beforeEach(() => {
+    buttonCalls.props = []
+  })
+
   it('does not use type-heading-01', async () => {
     const host = document.createElement('div')
     document.body.append(host)
@@ -80,6 +116,38 @@ describe('LegacyBridge', () => {
           'a[href="/account/login/start?returnTo=%2Faccount"]',
         ),
       ).not.toBeNull()
+    } finally {
+      await act(async () => {
+        root.unmount()
+      })
+      host.remove()
+    }
+  })
+
+  it('disables prefetch on the primary OAuth-start link only', async () => {
+    const host = document.createElement('div')
+    document.body.append(host)
+    const root = createRoot(host)
+
+    try {
+      await act(async () => {
+        root.render(
+          <LegacyBridge
+            body="This classic account link is no longer used by the headless storefront."
+            heading="Account access has moved"
+            primaryHref="/account/login/start?returnTo=%2Faccount"
+          />,
+        )
+      })
+
+      expect(buttonCalls.props).toContainEqual({
+        href: '/account/login/start?returnTo=%2Faccount',
+        prefetch: false,
+      })
+      expect(buttonCalls.props).toContainEqual({
+        href: '/pages/contact',
+        prefetch: undefined,
+      })
     } finally {
       await act(async () => {
         root.unmount()

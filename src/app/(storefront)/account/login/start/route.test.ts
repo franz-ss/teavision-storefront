@@ -76,4 +76,35 @@ describe('account login start route', () => {
     expect(cookieState.set).not.toHaveBeenCalled()
     expect(fetch as unknown as Mock).not.toHaveBeenCalled()
   })
+
+  test('uses forwarded host and proto to avoid canonical redirect loops', async () => {
+    vi.stubEnv(
+      'SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI',
+      'https://detonate-trickster-venus.ngrok-free.dev/account/callback',
+    )
+
+    const response = await GET(
+      new Request(
+        'http://127.0.0.1:3000/account/login/start?returnTo=/account',
+        {
+          headers: {
+            'x-forwarded-host': 'detonate-trickster-venus.ngrok-free.dev',
+            'x-forwarded-proto': 'https',
+          },
+        },
+      ),
+    )
+    const location = response.headers.get('location')
+
+    expect(location).toContain('http://127.0.0.1:9012/auth')
+    expect(location).toContain(
+      'redirect_uri=https%3A%2F%2Fdetonate-trickster-venus.ngrok-free.dev%2Faccount%2Fcallback',
+    )
+    expect(location).not.toContain('_accountOrigin=1')
+    expect(cookieState.set).toHaveBeenCalledWith(
+      'teavision_customer_auth',
+      expect.any(String),
+      expect.objectContaining({ httpOnly: true }),
+    )
+  })
 })
