@@ -29,8 +29,8 @@ export const Menu: Story = {}
 
 export const External: Story = {
   args: {
-    href: 'https://mrtea.com.au/account/login',
-    label: 'Login',
-    title: 'External customer login',
+    href: 'https://www.teavision.com.au/pages/terms-conditions-1',
+    label: "T's & C's",
+    title: 'External terms page',
   },
 }
