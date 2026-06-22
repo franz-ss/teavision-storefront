@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.3
-milestone_name: Shopify Customer Accounts
-status: Awaiting next milestone
-stopped_at: Completed Phase 14 gap closure plans
-last_updated: "2026-06-22T04:32:25.538Z"
-last_activity: 2026-06-22 — Quick task 260622-h9f completed: Harden Shopify cart checkout identity sync and retained-cart behavior
+milestone: v1.4
+milestone_name: Production Readiness 100/100
+status: planning
+last_updated: "2026-06-22T06:34:50.164Z"
+last_activity: 2026-06-22
 progress:
-  total_phases: 1
-  completed_phases: 1
-  total_plans: 9
-  completed_plans: 9
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 
 ## Current Position
 
-Phase: Milestone v1.3 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-22 — Quick task 260622-h9f completed: Harden Shopify cart checkout identity sync and retained-cart behavior
+Status: Defining requirements
+Last activity: 2026-06-22 — Milestone v1.4 started
 
 ## Performance Metrics
 

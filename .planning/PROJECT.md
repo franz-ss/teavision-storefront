@@ -23,7 +23,20 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - Legacy account bridge routes and owned header/footer account links.
 - Launch-readiness documentation for Shopify admin setup, protected customer data, HTTPS OAuth testing, real checkout approval gates, reorder parity, and B2B/customer-pricing parity.
 
-**Next milestone:** Not defined yet. Use `$gsd-new-milestone` to define fresh requirements and roadmap scope.
+**Next milestone:** v1.4 Production Readiness 100/100.
+
+## Current Milestone: v1.4 Production Readiness 100/100
+
+**Goal:** Close every launch-blocking QA, security, compliance, performance, analytics, reliability, and operational gap found in the production-readiness audit so the storefront can earn a 100/100 readiness score.
+
+**Target features:**
+- Security and dependency remediation for all critical, high, and launch-relevant medium findings.
+- Production-safe account login/OAuth behavior with verified callback and local-production e2e coverage.
+- Complete legal, privacy, policy, cookie-consent, SEO redirect, and sitemap coverage for launch.
+- Analytics and conversion tracking readiness with consent-aware instrumentation.
+- Health checks, monitoring/logging hooks, alerting documentation, backup/runbook coverage, and deploy-time launch gates.
+- Performance remediation for home/PDP LCP and other page-load concerns identified by Lighthouse.
+- A repeatable production-readiness audit proving no critical, high, or medium blockers remain.
 
 ## Requirements
 
@@ -48,9 +61,8 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ### Active
 
-- [ ] Close v1.0 known gaps: collection empty-state "Clear filters" misdirect (CQA-05), human UAT items (visual sweep, live Resend newsletter), and the tech-debt list in `milestones/v1.0-MILESTONE-AUDIT.md`.
-- [ ] Close v1.1 remaining tech debt (W2 heavy `getBlog()` on default blog route for hero/metadata, W4 light-projection type honesty, W5 featured backfill trade-off) — see `milestones/v1.1-MILESTONE-AUDIT.md`.
-- [ ] Complete post-v1.3 launch gates after Shopify admin setup and owner approval: real Customer Account OAuth, protected customer data scopes, hosted checkout/payment/shipping/tax/order/success redirect tests, and authoritative B2B/company-location pricing checks.
+- [ ] v1.4 Production Readiness 100/100: close all critical, high, and launch-relevant medium findings from the production-readiness audit across dependencies, account login/OAuth, legal routes, security headers, analytics/consent, operations, monitoring, performance, and verification.
+- [ ] Close inherited launch gaps from v1.0/v1.1/v1.3 where they affect the production-readiness score: collection empty-state behavior, human visual/newsletter UAT, blog performance debt, real Customer Account OAuth, protected customer data scopes, hosted checkout/payment/shipping/tax/order/success redirect tests, and authoritative B2B/company-location pricing checks.
 
 ### Out of Scope
 
@@ -62,7 +74,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ## Context
 
-Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Shipped v1.2 on 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Shipped v1.3 on 2026-06-22: Phase 14 Shopify Customer Accounts (9 plans, 31 tasks, 26/26 requirements) covering Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, launch-readiness docs, and UAT gap closure. Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL and Customer Account API, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
+Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Shipped v1.2 on 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Shipped v1.3 on 2026-06-22: Phase 14 Shopify Customer Accounts (9 plans, 31 tasks, 26/26 requirements) covering Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, launch-readiness docs, and UAT gap closure. v1.4 focuses on turning the 2026-06-22 production-readiness audit from 61/100 "Not Ready" into a documented 100/100 launch posture. Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL and Customer Account API, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
 
 The site remains noindexed pending launch sign-off (Phase 6 controls; flip `DISABLE_INDEXING` at launch and add the new landing pages to the sitemap). The owner actively authors new landing surfaces directly in the codebase (bulk-wholesale-supply, private-label-packing, tea-bag-manufacturer, NPD order form, supply-chain protection band).
 
@@ -116,4 +128,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-06-22 after v1.3 Shopify Customer Accounts milestone archive_
+_Last updated: 2026-06-22 after v1.4 Production Readiness 100/100 milestone start_
