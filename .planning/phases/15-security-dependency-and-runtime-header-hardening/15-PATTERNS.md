@@ -13,7 +13,7 @@ Map Phase 15 planned files to nearby codebase patterns so execution can reuse ex
 |--------------|------|-------------------------|------------------|
 | `package.json` | Direct dependency and script manifest | Current `package.json` scripts and Phase 10 test exception | Preserve existing script names; add only security-specific scripts if needed. |
 | `pnpm-lock.yaml` | Dependency lockfile | Current lockfile | Update through `pnpm install`/`pnpm up`, not manual editing. |
-| `.planning/phases/teavision-15-security-dependency-and-runtime-header-hardening/15-DEPENDENCY-AUDIT.md` | Phase evidence artifact | `.planning/phases/*/*-VERIFICATION.md` and `.planning/research/SUMMARY.md` | Keep command, before/after counts, residual rationale, and exact dates. |
+| `.planning/phases/15-security-dependency-and-runtime-header-hardening/15-DEPENDENCY-AUDIT.md` | Phase evidence artifact | `.planning/phases/*/*-VERIFICATION.md` and `.planning/research/SUMMARY.md` | Keep command, before/after counts, residual rationale, and exact dates. |
 | `next.config.ts` | Next runtime config | Existing redirects/images/cacheComponents in `next.config.ts`; local Next headers docs | Add `poweredByHeader: false` and `headers()` while preserving existing config keys. |
 | `src/lib/security/headers.ts` | Testable header/CSP policy builder | `src/lib/seo/noindex.ts`, `src/lib/env/*.ts` | Named exports only, pure helpers, no client directive, no default export. |
 | `src/lib/security/headers.test.ts` | Unit tests for header/CSP helper | `src/lib/seo/site-url.test.ts`, `src/lib/env/read.test.ts` | Vitest node tests with explicit strings and no runtime network. |
@@ -29,7 +29,7 @@ Map Phase 15 planned files to nearby codebase patterns so execution can reuse ex
 | `src/lib/contact/actions.ts` | Contact/newsletter/NPD/wholesale Server Actions | Existing validation + honeypot + rate limit flow | Preserve user-safe copy; replace raw provider error logs with redacted structured logs. |
 | `src/app/api/search/suggestions/route.ts` | Public search API route | Existing 429 handling | Keep response shape stable; ensure rate-limit configuration failure returns user-safe 429/503 without leaking internals. |
 | `scripts/security/probe-production-security.mjs` | Production header/audit probe | `scripts/component-contracts/*.test.mjs`, Playwright fake server lifecycle | Node script, explicit route list, fails on missing headers or `x-powered-by`. |
-| `.planning/phases/teavision-15-security-dependency-and-runtime-header-hardening/15-RUNTIME-SECURITY-EVIDENCE.md` | Final Phase 15 evidence | `docs/testing/cart-checkout-uat.md`, Customer Accounts setup doc | Separate automated local/fake proof from owner-gated live proof. |
+| `.planning/phases/15-security-dependency-and-runtime-header-hardening/15-RUNTIME-SECURITY-EVIDENCE.md` | Final Phase 15 evidence | `docs/testing/cart-checkout-uat.md`, Customer Accounts setup doc | Separate automated local/fake proof from owner-gated live proof. |
 
 ## Cross-Cutting Patterns
 

@@ -33,7 +33,7 @@ created: 2026-06-22
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
 | 15-01-01 | 01 | 1 | SEC-01 | T-15-01 | Critical/high advisories removed or documented as non-runtime only after attempted remediation | audit | `pnpm audit --audit-level moderate --json` | yes | pending |
-| 15-01-02 | 01 | 1 | SEC-01 | T-15-02 | Dependency evidence records before/after counts and residual moderate rationale | docs | `Test-Path .planning/phases/teavision-15-security-dependency-and-runtime-header-hardening/15-DEPENDENCY-AUDIT.md` | missing | pending |
+| 15-01-02 | 01 | 1 | SEC-01 | T-15-02 | Dependency evidence records before/after counts and residual moderate rationale | docs | `Test-Path .planning/phases/15-security-dependency-and-runtime-header-hardening/15-DEPENDENCY-AUDIT.md` | missing | pending |
 | 15-02-01 | 02 | 2 | SEC-02, SEC-03 | T-15-03 | Required headers and report-only CSP produced by tested helper | unit | `pnpm test:unit -- src/lib/security/headers.test.ts` | missing | pending |
 | 15-02-02 | 02 | 2 | SEC-02, SEC-03 | T-15-04 | Next production config disables `x-powered-by` and applies headers globally | contract | `pnpm test:contracts` | yes | pending |
 | 15-03-01 | 03 | 2 | SEC-04 | T-15-05 | Direct OAuth-start links opt out of Next prefetch | integration | `pnpm test:integration -- "src/app/(storefront)/account/**/*.test.tsx" "src/app/(storefront)/account/login/start/route.test.ts"` | yes | pending |
@@ -41,7 +41,7 @@ created: 2026-06-22
 | 15-04-01 | 04 | 2 | SEC-05 | T-15-07 | Production rate-limit posture fails closed unless protection or explicit fallback is configured | unit/contract | `pnpm test:unit -- src/lib/rate-limit/index.test.ts && pnpm test:contracts` | missing | pending |
 | 15-04-02 | 04 | 2 | SEC-05 | T-15-08 | Public form/search logs are structured and redacted on provider failures | unit | `pnpm test:unit -- src/lib/contact/actions.test.ts "src/app/api/search/suggestions/route.test.ts"` | partial | pending |
 | 15-05-01 | 05 | 3 | SEC-01..SEC-05 | T-15-09 | Production-like responses include headers, report-only CSP, and no `x-powered-by` | probe | `node scripts/security/probe-production-security.mjs http://127.0.0.1:3000` | missing | pending |
-| 15-05-02 | 05 | 3 | SEC-01..SEC-05 | T-15-10 | Final evidence separates automated proof from owner-gated live Shopify proof | docs | `Test-Path .planning/phases/teavision-15-security-dependency-and-runtime-header-hardening/15-RUNTIME-SECURITY-EVIDENCE.md` | missing | pending |
+| 15-05-02 | 05 | 3 | SEC-01..SEC-05 | T-15-10 | Final evidence separates automated proof from owner-gated live Shopify proof | docs | `Test-Path .planning/phases/15-security-dependency-and-runtime-header-hardening/15-RUNTIME-SECURITY-EVIDENCE.md` | missing | pending |
 
 ## Wave 0 Requirements
 

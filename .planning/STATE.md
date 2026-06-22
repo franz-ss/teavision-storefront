@@ -218,7 +218,7 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 Last session: 2026-06-22T08:18:16.541Z
 Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/teavision-15-security-dependency-and-runtime-header-hardening/15-CONTEXT.md
+Resume file: .planning/phases/15-security-dependency-and-runtime-header-hardening/15-CONTEXT.md
 
 ## Operator Next Steps
 

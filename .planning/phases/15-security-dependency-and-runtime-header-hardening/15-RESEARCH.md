@@ -15,7 +15,7 @@ Research what is needed to plan Phase 15 well: dependency audit remediation, pro
 - `.planning/STATE.md`
 - `.planning/PROJECT.md`
 - `.planning/research/SUMMARY.md`
-- `.planning/phases/teavision-15-security-dependency-and-runtime-header-hardening/15-CONTEXT.md`
+- `.planning/phases/15-security-dependency-and-runtime-header-hardening/15-CONTEXT.md`
 - `node_modules/next/dist/docs/01-app/03-api-reference/05-config/01-next-config-js/headers.md`
 - `node_modules/next/dist/docs/01-app/02-guides/content-security-policy.md`
 - `docs/testing/customer-accounts-setup.md`
