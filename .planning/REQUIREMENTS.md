@@ -77,34 +77,34 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEC-01 | TBD | Pending |
-| SEC-02 | TBD | Pending |
-| SEC-03 | TBD | Pending |
-| SEC-04 | TBD | Pending |
-| SEC-05 | TBD | Pending |
-| LEGAL-01 | TBD | Pending |
-| LEGAL-02 | TBD | Pending |
-| SEO-01 | TBD | Pending |
-| CONSENT-01 | TBD | Pending |
-| CONSENT-02 | TBD | Pending |
-| ANALYTICS-01 | TBD | Pending |
-| ANALYTICS-02 | TBD | Pending |
-| ANALYTICS-03 | TBD | Pending |
-| OPS-01 | TBD | Pending |
-| OPS-02 | TBD | Pending |
-| OPS-03 | TBD | Pending |
-| OPS-04 | TBD | Pending |
-| PERF-01 | TBD | Pending |
-| UX-01 | TBD | Pending |
-| QA-01 | TBD | Pending |
-| QA-02 | TBD | Pending |
-| QA-03 | TBD | Pending |
+| SEC-01 | Phase 15 | Pending |
+| SEC-02 | Phase 15 | Pending |
+| SEC-03 | Phase 15 | Pending |
+| SEC-04 | Phase 15 | Pending |
+| SEC-05 | Phase 15 | Pending |
+| LEGAL-01 | Phase 16 | Pending |
+| LEGAL-02 | Phase 16 | Pending |
+| SEO-01 | Phase 16 | Pending |
+| CONSENT-01 | Phase 16 | Pending |
+| CONSENT-02 | Phase 16 | Pending |
+| ANALYTICS-01 | Phase 16 | Pending |
+| ANALYTICS-02 | Phase 16 | Pending |
+| ANALYTICS-03 | Phase 16 | Pending |
+| OPS-01 | Phase 17 | Pending |
+| OPS-02 | Phase 17 | Pending |
+| OPS-03 | Phase 17 | Pending |
+| OPS-04 | Phase 17 | Pending |
+| PERF-01 | Phase 17 | Pending |
+| UX-01 | Phase 17 | Pending |
+| QA-01 | Phase 17 | Pending |
+| QA-02 | Phase 17 | Pending |
+| QA-03 | Phase 17 | Pending |
 
 **Coverage:**
 - v1 requirements: 22 total
-- Mapped to phases: 0
-- Unmapped: 22
+- Mapped to phases: 22
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-22*
-*Last updated: 2026-06-22 after requirements definition*
+*Last updated: 2026-06-22 after roadmap creation*
