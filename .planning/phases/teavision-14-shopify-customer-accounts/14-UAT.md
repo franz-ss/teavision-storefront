@@ -1,5 +1,5 @@
 ---
-status: partial
+status: diagnosed
 phase: teavision-14-shopify-customer-accounts
 source:
   - 14-01-SUMMARY.md
@@ -8,7 +8,7 @@ source:
   - 14-04-SUMMARY.md
   - 14-05-SUMMARY.md
 started: 2026-06-19T12:46:57.8047522+08:00
-updated: 2026-06-22T10:22:15.2218088+08:00
+updated: 2026-06-22T10:28:23.0964145+08:00
 ---
 
 ## Current Test
@@ -114,15 +114,39 @@ blocked: 5
   reason: "User reported: Screenshot shows the account path resolving to `/account/login?returnTo=%2Faccount`; footer Login link target is not shown/verified, so the full header/footer link expectation is not confirmed."
   severity: major
   test: 8
-  artifacts: []
-  missing: []
+  root_cause: "Test 8 used the post-navigation unauthenticated redirect URL as evidence about the header link target. `/account` is a protected route, so resolving to `/account/login?returnTo=%2Faccount` is expected auth behavior. The footer target was not captured in UAT evidence, even though production footer data points Login to `/account`."
+  artifacts:
+    - path: "src/components/layout/header/header.tsx"
+      issue: "Header account link is correct (`href=\"/account\"`, accessible name `Account`), but the UAT screenshot captured the expected protected-route redirect after navigation."
+    - path: "src/components/layout/footer/data.ts"
+      issue: "Production footer Login link is correct (`href: '/account'`), but the UAT evidence did not capture or verify it."
+    - path: "src/lib/shopify/customer-account/session.ts"
+      issue: "Missing customer sessions redirect protected `/account` visits to `/account/login?returnTo=%2Faccount`, which is expected behavior."
+    - path: "src/components/layout/footer/link/link-item.stories.tsx"
+      issue: "An isolated Storybook external-link fixture still references `mrtea.com.au`, which can confuse verification even though it is not production footer data."
+  missing:
+    - "Verify header and footer anchor `href` values directly before navigation rather than using the post-auth-redirect URL."
+    - "Capture footer Login evidence during UAT."
+    - "Optionally update the stale isolated footer link Storybook fixture to avoid future confusion."
+  debug_session: ".planning/debug/account-link-routing.md"
 - truth: "Classic account routes such as register, recover, reset, activate, and unknown account paths show explanatory bridge pages for Shopify Customer Accounts, preserve only safe return/context values, and never show password inputs."
   status: failed
   reason: "User reported: Legacy account bridge UIs do not look good; screenshots show large wrapped headings on compact cards, making create/recover account bridge pages feel awkward and cramped."
   severity: cosmetic
   test: 9
-  artifacts: []
-  missing: []
+  root_cause: "`LegacyBridge` uses a compact/prose-width container plus a `max-w-xl` card, but renders register/recover headings with `type-heading-01` (`clamp(2rem, 4vw, 3.4rem)`). Medium-length headings like \"Create your account with Shopify\" wrap heavily inside that compact card, producing the cramped UI reported in UAT."
+  artifacts:
+    - path: "src/app/(storefront)/account/_components/legacy-bridge/legacy-bridge.tsx"
+      issue: "The bridge uses oversized page-heading typography inside a compact card layout."
+    - path: "src/app/(storefront)/account/_lib/legacy-routing.ts"
+      issue: "Longer register/recover headings expose the compact layout problem."
+    - path: "src/app/globals.css"
+      issue: "`type-heading-01` is large page-heading typography and is not appropriate for this compact account bridge surface."
+  missing:
+    - "Redesign `LegacyBridge` as a calmer account bridge surface with smaller compact-card heading typography."
+    - "Add text balancing or tighter width constraints so register/recover headings do not wrap awkwardly."
+    - "Preserve safe return handling and no-password-input guarantees while improving the visual treatment."
+  debug_session: ".planning/debug/legacy-account-bridge-ui.md"
 - truth: "The profile page lets a signed-in customer update supported fields, keeps email read-only with Shopify sign-in helper copy, surfaces Shopify field/form errors accessibly, and returns a clear success or recovery state."
   status: failed
   reason: "User reported: changing phone number does not work on the account profile page."
