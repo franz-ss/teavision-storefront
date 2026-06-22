@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Phase 16 UI-SPEC approved
-last_updated: "2026-06-22T23:16:36.653Z"
-last_activity: 2026-06-22 -- Phase 16 planning complete
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-06-22T23:56:11.300Z"
+last_activity: 2026-06-22 -- Completed 16-01-PLAN.md
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 9
+  completed_plans: 6
   percent: 33
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 15 — security-dependency-and-runtime-header-hardening
+**Current focus:** Phase 16 — legal-consent-analytics-and-seo-launch-coverage
 
 ## Current Position
 
-Phase: 15 (security-dependency-and-runtime-header-hardening) — EXECUTING
-Plan: 2 of 5
+Phase: 16 (legal-consent-analytics-and-seo-launch-coverage) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-06-22 -- Phase 16 planning complete
+Last activity: 2026-06-22 -- Completed 16-01-PLAN.md
 
 ## Performance Metrics
 
@@ -83,6 +83,7 @@ Last activity: 2026-06-22 -- Phase 16 planning complete
 | Phase 15 P03 | 8 min | 3 tasks | 6 files |
 | Phase 15 P04 | 13 min | 3 tasks | 10 files |
 | Phase 15 P05 | 13 min | 3 tasks | 4 files |
+| Phase 16 P01 | 13 min | 4 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -129,6 +130,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 11-22: Concept A (calm base-scale) approved for search overlay — type-body input replaces clamp(1.4rem,3vw,2.2rem) serif; border-b-2 border-ink removed in favour of shared .field focus ring
 - [Phase ?]: Phase 11-22: Concept A (illustrated legacy brush illustration component) approved for 404 — teapot on Section.Root tone=sunken, tea-brand copy, three action buttons, collection pill links
 - [Phase 13]: Phase 13-02-GAP: Merged id="product-grid" onto the ul grid element with scroll-mt-24/lg:scroll-mt-32 instead of offsetting a zero-height sentinel div — cleaner DOM, semantically correct anchor target, eliminates the gap-under-header bug (D-26)
+- [Phase 16]: Policy routes remain code-owned and visibly pending owner/legal review until approval proof is recorded. — Phase 16 forbids inventing final legal promises; code-owned routes provide launch coverage while preserving owner/legal approval gates.
+- [Phase 16]: Footer legal links are registry-backed while retaining explicit canonical href order for acceptance and drift checks. — The footer must expose all canonical policy URLs and stay aligned with the central legal policy registry.
 
 ### Roadmap Evolution
 
@@ -221,10 +224,10 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-22T22:43:51.440Z
-Stopped at: Phase 16 UI-SPEC approved
-Resume file: .planning/phases/teavision-16-legal-consent-analytics-and-seo-launch-coverage/16-UI-SPEC.md
+Last session: 2026-06-22T23:55:19.333Z
+Stopped at: Completed 16-01-PLAN.md
+Resume file: None
 
 ## Operator Next Steps
 
-- Start Phase 15 with /gsd-discuss-phase 15 or /gsd-plan-phase 15
+- Continue Phase 16 with 16-02 Consent Foundation and Preferences.

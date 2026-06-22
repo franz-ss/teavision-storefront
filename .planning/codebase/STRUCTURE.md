@@ -10,7 +10,7 @@ teavision.com.au/
 ├── .planning/                      # GSD project planning, generated codebase maps, graphs, and phase artifacts
 ├── .storybook/                     # Storybook configuration
 ├── design/                         # Design/reference assets and artifacts
-├── docs/                           # Project documentation and canonical conventions
+├── docs/                           # Project documentation, launch evidence, and canonical conventions
 ├── public/                         # Static public assets served by Next.js
 ├── scripts/                        # Scaffolding and tooling scripts
 ├── src/                            # Application source root
@@ -151,15 +151,20 @@ teavision.com.au/
 - Contains: Site URL, noindex mode helpers, safe inline JSON serialization.
 - Key files: `src/lib/seo/site-url.ts`, `src/lib/seo/noindex.ts`, `src/lib/seo/serialize-inline-json.ts`.
 
+**`src/lib/legal`:**
+- Purpose: Shared legal/policy launch registry for canonical routes, footer links, redirects, sitemap inclusion, and evidence checks.
+- Contains: Policy registry and route/evidence tests.
+- Key files: `src/lib/legal/policies.ts`, `src/lib/legal/policies.test.ts`.
+
 **`src/lib/rate-limit`:**
 - Purpose: Shared server-side rate-limit helper.
 - Contains: Rate-limit store interface, in-memory fallback, client IP extraction.
 - Key files: `src/lib/rate-limit/index.ts`.
 
 **`docs`:**
-- Purpose: Canonical project documentation and conventions.
-- Contains: Folder map, naming rules, component anatomy, styling rules, scaffolding shortcuts, import style.
-- Key files: `docs/conventions.md`.
+- Purpose: Canonical project documentation, launch evidence, and conventions.
+- Contains: Folder map, naming rules, component anatomy, styling rules, scaffolding shortcuts, import style, and launch approval matrices.
+- Key files: `docs/conventions.md`, `docs/launch/legal-approval-matrix.md`.
 
 **`scripts`:**
 - Purpose: Project tooling and scaffolding.
@@ -214,6 +219,7 @@ teavision.com.au/
 - `src/lib/sanity/client.ts`: Sanity clients and image URL builder.
 - `src/lib/searchanise/search.ts`: Searchanise API adapter.
 - `src/lib/reviews/trustoo.ts`: Trustoo review fetches.
+- `src/lib/legal/policies.ts`: Canonical legal policy route registry, footer link helper, redirect helper, and sitemap policy helper.
 - `src/lib/rate-limit/index.ts`: Shared rate limiting.
 - `src/lib/utils.ts`: `cn()` class composition helper.
 
@@ -317,6 +323,12 @@ teavision.com.au/
 - Shared helper: `src/lib/seo/`
 - Route metadata: adjacent route `page.tsx` or route `_lib/metadata.ts`.
 - JSON-LD: route-local `_components/json-ld.tsx` when used by one route; shared helper only when reused.
+
+**New Legal/Policy Route:**
+- Canonical route page: `src/app/(storefront)/pages/<policy-handle>/page.tsx`
+- Shared policy metadata: `src/lib/legal/policies.ts`
+- Launch approval evidence: `docs/launch/<evidence-name>.md`
+- Legacy redirects: derive from `getPolicyRedirects()` in `next.config.ts` when static and permanent.
 
 **New Utility:**
 - Cross-domain helper: `src/lib/<domain-or-purpose>/`

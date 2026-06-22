@@ -17,11 +17,11 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 
 ### Legal, SEO, And Consent
 
-- [ ] **LEGAL-01**: User can access privacy, terms, shipping, returns/refunds, and cookie/privacy preference pages without 404s.
-- [ ] **LEGAL-02**: Legacy Shopify policy URLs and footer/legal links redirect or resolve correctly.
+- [x] **LEGAL-01**: User can access privacy, terms, shipping, returns/refunds, and cookie/privacy preference pages without 404s.
+- [x] **LEGAL-02**: Legacy Shopify policy URLs and footer/legal links redirect or resolve correctly.
 - [ ] **SEO-01**: Site owner can flip launch indexing safely, with robots, sitemap, canonicals, structured data, and noindex behavior verified.
 - [ ] **CONSENT-01**: Visitor consent defaults are set before analytics or advertising tags load.
-- [ ] **CONSENT-02**: Shopify Customer Privacy API integration is evaluated or wired where Shopify-managed pixels or checkout consent apply.
+- [x] **CONSENT-02**: Shopify Customer Privacy API integration is evaluated or wired where Shopify-managed pixels or checkout consent apply.
 
 ### Analytics
 
@@ -82,11 +82,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-03 | Phase 15 | Complete |
 | SEC-04 | Phase 15 | Complete |
 | SEC-05 | Phase 15 | Complete |
-| LEGAL-01 | Phase 16 | Pending |
-| LEGAL-02 | Phase 16 | Pending |
+| LEGAL-01 | Phase 16 | Complete |
+| LEGAL-02 | Phase 16 | Complete |
 | SEO-01 | Phase 16 | Pending |
 | CONSENT-01 | Phase 16 | Pending |
-| CONSENT-02 | Phase 16 | Pending |
+| CONSENT-02 | Phase 16 | Complete |
 | ANALYTICS-01 | Phase 16 | Pending |
 | ANALYTICS-02 | Phase 16 | Pending |
 | ANALYTICS-03 | Phase 16 | Pending |
