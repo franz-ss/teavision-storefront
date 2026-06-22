@@ -35,7 +35,13 @@ export function LoginPanel({ loginHref, reason = 'default' }: LoginPanelProps) {
       </div>
 
       <div className="grid gap-2.5">
-        <Button href={loginHref} variant="primary" size="md" className="w-full">
+        <Button
+          href={loginHref}
+          variant="primary"
+          size="md"
+          className="w-full"
+          prefetch={false}
+        >
           Sign in with Shopify
         </Button>
         <Button

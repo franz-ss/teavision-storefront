@@ -34,7 +34,12 @@ export function LegacyBridge({
             </div>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button href={primaryHref} variant="brand" size="lg">
+            <Button
+              href={primaryHref}
+              variant="brand"
+              size="lg"
+              prefetch={false}
+            >
               Sign in with Shopify
             </Button>
             <Button href="/pages/contact" variant="secondary" size="lg">
