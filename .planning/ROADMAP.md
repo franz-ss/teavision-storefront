@@ -76,7 +76,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 12. Optimize blog loading                  | v1.1      | 4/4            | Complete   | 2026-06-12 |
 | 13. Production-parity collection pagination | v1.2      | 2/2            | Complete   | 2026-06-12 |
 | 14. Shopify Customer Accounts              | v1.3      | 9/9            | Complete   | 2026-06-22 |
-| 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 1/5 | In Progress|  |
+| 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 2/5 | In Progress|  |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 0/TBD | Planned | — |
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 0/TBD | Planned | — |
 
