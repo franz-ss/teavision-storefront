@@ -38,6 +38,16 @@ Shopify Customer Account OAuth requires a public HTTPS callback. Localhost callb
 
 Keep the local fake Customer Account API for automated unit, integration, Storybook, and Playwright coverage. The fake endpoint must stay local and must only be enabled with `SHOPIFY_CUSTOMER_ACCOUNT_TEST_MODE=true`.
 
+## Phase 15 OAuth Launch Evidence
+
+Before recording Customer Account OAuth as launch-ready, confirm that the production `SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI` and `SHOPIFY_CUSTOMER_ACCOUNT_LOGOUT_REDIRECT_URI` values match the callback and logout redirect URLs configured in Shopify admin.
+
+Direct `/account/login/start` links must use `prefetch={false}` so Next.js does not prefetch into the OAuth-start redirect path. Normal internal `/account` links can remain regular app navigation.
+
+Automated local/fake tests cover `/account`, `/account/login`, `/account/login/start`, `/account/callback`, `/account/logout`, legacy account bridge routes, and cart buyer-identity checkout handoff. They prove app-side routing, local callback/logout behavior, fake OAuth exchange, protected route handling, and fake checkout handoff only.
+
+Live Shopify Customer Account OAuth is blocked until owner/admin approval is recorded. The evidence record must include owner approval, date, tester, configured callback URL, configured logout URL, store/admin context, and pass/fail result.
+
 ## Protected Customer Data Access
 
 Before launch, verify the Shopify admin protected customer data access covers:
