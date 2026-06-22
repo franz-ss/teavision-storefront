@@ -59,6 +59,18 @@ type WholesaleAccountSubmission = {
   website: string
 }
 
+type ContactProviderSurface =
+  | 'contact'
+  | 'custom-tea-blend'
+  | 'newsletter'
+  | 'npd-order'
+  | 'wholesale-account'
+
+type ContactProviderStatus =
+  | 'exception'
+  | 'provider-error'
+  | 'provider-not-configured'
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const VALIDATION_ERROR = 'Please fill in all required fields.'
 const SEND_ERROR =
@@ -108,6 +120,20 @@ async function isRateLimited(): Promise<boolean> {
   })
 
   return result.limited
+}
+
+function logProviderWarning(
+  surface: ContactProviderSurface,
+  status: ContactProviderStatus,
+) {
+  console.warn('[contact]', { surface, status })
+}
+
+function logProviderError(
+  surface: ContactProviderSurface,
+  status: ContactProviderStatus,
+) {
+  console.error('[contact]', { surface, status })
 }
 
 function readSubmission(formData: FormData): ContactSubmission {
@@ -304,6 +330,8 @@ function formatWholesaleAccountSubmission(
 
 async function submitContactSubmission(
   submission: ContactSubmission,
+  surface: Extract<ContactProviderSurface, 'contact' | 'custom-tea-blend'> =
+    'contact',
 ): Promise<ContactActionResult> {
   if (submission.website) {
     return { success: true }
@@ -319,10 +347,7 @@ async function submitContactSubmission(
 
   const resendApiKey = getResendApiKey()
   if (!resendApiKey) {
-    console.warn(
-      '[contact] Email provider not configured: RESEND_API_KEY is absent. ' +
-        'Set RESEND_API_KEY in .env.local to enable contact form email delivery.',
-    )
+    logProviderWarning(surface, 'provider-not-configured')
     return { success: false, error: SEND_ERROR }
   }
 
@@ -337,13 +362,13 @@ async function submitContactSubmission(
     })
 
     if (error) {
-      console.error('Resend contact form error', error)
+      logProviderError(surface, 'provider-error')
       return { success: false, error: SEND_ERROR }
     }
 
     return { success: true }
-  } catch (error: unknown) {
-    console.error('Contact form submission failed', error)
+  } catch {
+    logProviderError(surface, 'exception')
     return { success: false, error: SEND_ERROR }
   }
 }
@@ -375,13 +400,16 @@ export async function sendCustomTeaBlendAction(
     return { success: false, error: VALIDATION_ERROR }
   }
 
-  return submitContactSubmission({
-    name: submission.name,
-    phone: submission.phone,
-    email: submission.email,
-    message,
-    website: submission.website,
-  })
+  return submitContactSubmission(
+    {
+      name: submission.name,
+      phone: submission.phone,
+      email: submission.email,
+      message,
+      website: submission.website,
+    },
+    'custom-tea-blend',
+  )
 }
 
 export async function sendWholesaleAccountAction(
@@ -403,10 +431,7 @@ export async function sendWholesaleAccountAction(
 
   const resendApiKey = getResendApiKey()
   if (!resendApiKey) {
-    console.warn(
-      '[wholesale-account] Email provider not configured: RESEND_API_KEY is absent. ' +
-        'Set RESEND_API_KEY in .env.local to enable wholesale account form email delivery.',
-    )
+    logProviderWarning('wholesale-account', 'provider-not-configured')
     return { success: false, error: SEND_ERROR }
   }
 
@@ -421,13 +446,13 @@ export async function sendWholesaleAccountAction(
     })
 
     if (error) {
-      console.error('Resend wholesale account form error', error)
+      logProviderError('wholesale-account', 'provider-error')
       return { success: false, error: SEND_ERROR }
     }
 
     return { success: true }
-  } catch (error: unknown) {
-    console.error('Wholesale account form submission failed', error)
+  } catch {
+    logProviderError('wholesale-account', 'exception')
     return { success: false, error: SEND_ERROR }
   }
 }
@@ -672,10 +697,7 @@ export async function sendNpdOrderAction(
 
   const resendApiKey = getResendApiKey()
   if (!resendApiKey) {
-    console.warn(
-      '[npd-order] Email provider not configured: RESEND_API_KEY is absent. ' +
-        'Set RESEND_API_KEY in .env.local to enable NPD order form email delivery.',
-    )
+    logProviderWarning('npd-order', 'provider-not-configured')
     return { success: false, error: SEND_ERROR }
   }
 
@@ -690,13 +712,13 @@ export async function sendNpdOrderAction(
     })
 
     if (error) {
-      console.error('Resend NPD order form error', error)
+      logProviderError('npd-order', 'provider-error')
       return { success: false, error: SEND_ERROR }
     }
 
     return { success: true }
-  } catch (error: unknown) {
-    console.error('NPD order form submission failed', error)
+  } catch {
+    logProviderError('npd-order', 'exception')
     return { success: false, error: SEND_ERROR }
   }
 }
@@ -725,10 +747,7 @@ export async function sendNewsletterSignupAction(
 
   const resendApiKey = getResendApiKey()
   if (!resendApiKey) {
-    console.warn(
-      '[newsletter] Email provider not configured: RESEND_API_KEY is absent. ' +
-        'Set RESEND_API_KEY in .env.local to enable newsletter signup email delivery.',
-    )
+    logProviderWarning('newsletter', 'provider-not-configured')
     return { success: false, error: NEWSLETTER_SEND_ERROR }
   }
 
@@ -743,13 +762,13 @@ export async function sendNewsletterSignupAction(
     })
 
     if (error) {
-      console.error('Resend newsletter signup error', error)
+      logProviderError('newsletter', 'provider-error')
       return { success: false, error: NEWSLETTER_SEND_ERROR }
     }
 
     return { success: true }
-  } catch (error: unknown) {
-    console.error('Newsletter signup failed', error)
+  } catch {
+    logProviderError('newsletter', 'exception')
     return { success: false, error: NEWSLETTER_SEND_ERROR }
   }
 }
