@@ -56,7 +56,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ### ◆ v1.4 Production Readiness 100/100
 
-- [ ] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (0/TBD plans)
+- [ ] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (0/5 plans ready)
 - [ ] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (0/TBD plans)
 - [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (0/TBD plans)
 
@@ -76,7 +76,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 12. Optimize blog loading                  | v1.1      | 4/4            | Complete   | 2026-06-12 |
 | 13. Production-parity collection pagination | v1.2      | 2/2            | Complete   | 2026-06-12 |
 | 14. Shopify Customer Accounts              | v1.3      | 9/9            | Complete   | 2026-06-22 |
-| 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 0/TBD | Planned | — |
+| 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 0/5 | Ready to execute | — |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 0/TBD | Planned | — |
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 0/TBD | Planned | — |
 
@@ -102,7 +102,23 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - Avoid nonce CSP unless the plan explicitly accepts the dynamic-rendering/PPR trade-offs.
 - Keep rate-limit improvements aligned with existing `src/lib/rate-limit/` boundaries and `.env.example`.
 
-**Plans:** TBD by `$gsd-plan-phase 15`
+**Plans:**
+
+**Wave 1**
+- [ ] `15-01` — Dependency Audit Remediation and Evidence
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] `15-02` — Security Headers and Report-Only CSP Baseline
+- [ ] `15-03` — Customer Account OAuth-Start Prefetch and Origin Hardening
+- [ ] `15-04` — Public Form and Search Abuse-Control Posture
+
+**Wave 3** *(blocked on Wave 2 completion)*
+- [ ] `15-05` — Final Runtime Security Probe and Phase Evidence
+
+**Cross-cutting constraints:**
+- Live Shopify Customer Account OAuth, hosted checkout, payment, shipping, tax, order, and success-redirect testing remain owner-gated unless approval is recorded.
+- Phase 15 evidence must separate automated local/fake proof from owner/admin-gated live proof.
+- Dependency remediation must avoid `pnpm codegen` and generated Shopify type churn unless an upgrade genuinely requires it.
 
 ### Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage
 
