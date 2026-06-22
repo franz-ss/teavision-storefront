@@ -71,7 +71,6 @@ export function makeCustomerAccountProfile(
     emailAddress: 'avery@example.test',
     firstName: 'Avery',
     lastName: 'Nguyen',
-    phoneNumber: '+61 400 000 000',
     defaultAddress,
     addresses: [
       defaultAddress,

@@ -61,27 +61,6 @@ export const Loaded: Story = {
   },
 }
 
-export const PhoneUnavailable: Story = {
-  name: 'phone-unavailable',
-  args: {
-    action: successAction,
-    profile: makeCustomerAccountProfile({ phoneNumber: null }),
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    await expect(
-      canvas.queryByRole('textbox', { name: 'Phone' }),
-    ).not.toBeInTheDocument()
-    await expect(
-      canvas.queryByText('Phone'),
-    ).not.toBeInTheDocument()
-    await expect(
-      canvas.queryByText('No phone number on this account'),
-    ).not.toBeInTheDocument()
-  },
-}
-
 export const FieldError: Story = {
   name: 'field-error',
   args: {

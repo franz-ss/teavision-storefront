@@ -40,9 +40,6 @@ const CUSTOMER_ACCOUNT_VIEWER_QUERY = /* GraphQL */ `
       }
       firstName
       lastName
-      phoneNumber {
-        phoneNumber
-      }
       defaultAddress {
         id
         firstName
@@ -99,9 +96,6 @@ const CUSTOMER_UPDATE_MUTATION = /* GraphQL */ `
         }
         firstName
         lastName
-        phoneNumber {
-          phoneNumber
-        }
         defaultAddress {
           ...CustomerAccountAddressFields
         }
@@ -283,19 +277,14 @@ type RawCustomerAccountEmailAddress = {
   emailAddress?: string | null
 }
 
-type RawCustomerAccountPhoneNumber = {
-  phoneNumber?: string | null
-}
-
 type RawCustomer = Omit<
   CustomerAccountProfile,
-  'addresses' | 'defaultAddress' | 'emailAddress' | 'orders' | 'phoneNumber'
+  'addresses' | 'defaultAddress' | 'emailAddress' | 'orders'
 > & {
   addresses?: RawConnection<RawCustomerAccountAddress>
   defaultAddress?: RawCustomerAccountAddress | null
   emailAddress?: RawCustomerAccountEmailAddress | null
   orders?: RawConnection<CustomerAccountOrder>
-  phoneNumber?: RawCustomerAccountPhoneNumber | null
 }
 
 type ViewerResponse = {
@@ -411,7 +400,6 @@ function reshapeCustomer(customer: RawCustomer): CustomerAccountProfile {
     defaultAddress: customer.defaultAddress ?? null,
     emailAddress: customer.emailAddress?.emailAddress ?? null,
     orders: connectionNodes(customer.orders),
-    phoneNumber: customer.phoneNumber?.phoneNumber ?? null,
   }
 }
 

@@ -49,7 +49,6 @@ export type CustomerAccountProfile = {
   emailAddress: string | null
   firstName: string | null
   lastName: string | null
-  phoneNumber: string | null
   defaultAddress: CustomerAccountAddress | null
   addresses: CustomerAccountAddress[]
   orders: CustomerAccountOrder[]

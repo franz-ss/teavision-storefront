@@ -195,7 +195,7 @@ describe('Customer Account read operations', () => {
         (request) => request.operationName === 'CustomerUpdate',
       )
       expect(viewerRequest?.query).toContain('emailAddress {')
-      expect(viewerRequest?.query).toContain('phoneNumber {')
+      expect(viewerRequest?.query).not.toContain('phoneNumber {')
       expect(viewerRequest?.query).toContain('countryCodeV2: territoryCode')
       expect(viewerRequest?.query).toContain('provinceCode: zoneCode')
     } finally {

@@ -165,9 +165,6 @@ function toCustomerPayload(
     emailAddress: profile.emailAddress
       ? { emailAddress: profile.emailAddress }
       : null,
-    phoneNumber: profile.phoneNumber
-      ? { phoneNumber: profile.phoneNumber }
-      : null,
     addresses: omitSections.includes('addresses')
       ? undefined
       : toAddressConnection(profile.addresses),
