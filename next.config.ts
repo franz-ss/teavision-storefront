@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ['detonate-trickster-venus.ngrok-free.dev'],
   cacheComponents: true,
   env: {
     // Build-time copyright year — avoids per-request new Date() in components,

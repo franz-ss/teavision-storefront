@@ -27,6 +27,8 @@ const CLOSE_GRACE_MS = 200
 export function MegaNav() {
   const navRef = useRef<HTMLDivElement | null>(null)
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hoverOpenedMenuRef = useRef<MenuKey | null>(null)
+  const clickConfirmedMenuRef = useRef<MenuKey | null>(null)
   const [openMenu, setOpenMenu] = useState<MenuKey | null>(null)
   const [activeShopKey, setActiveShopKey] = useState<ShopKey>('tea')
   const activeShop =
@@ -40,23 +42,56 @@ export function MegaNav() {
     }
   }, [])
 
-  /** Immediately cancel any pending close and open the given menu. */
-  const openMenuNow = useCallback((key: MenuKey) => {
+  const clearCloseTimer = useCallback(() => {
     if (closeTimerRef.current !== null) {
       clearTimeout(closeTimerRef.current)
       closeTimerRef.current = null
     }
-    setOpenMenu(key)
   }, [])
 
-  /** Schedule the close after the grace period. Cancelled by openMenuNow or keepOpen. */
+  /** Immediately cancel any pending close and open the given menu. */
+  const openMenuFromHover = useCallback(
+    (key: MenuKey) => {
+      clearCloseTimer()
+      if (clickConfirmedMenuRef.current !== key) {
+        clickConfirmedMenuRef.current = null
+      }
+      hoverOpenedMenuRef.current = key
+      setOpenMenu(key)
+    },
+    [clearCloseTimer],
+  )
+
+  const toggleMenu = useCallback(
+    (key: MenuKey) => {
+      clearCloseTimer()
+      setOpenMenu((current) => {
+        const wasOpenedByHover = hoverOpenedMenuRef.current === key
+        const wasConfirmedByClick = clickConfirmedMenuRef.current === key
+        hoverOpenedMenuRef.current = null
+
+        if (wasOpenedByHover && !wasConfirmedByClick) {
+          clickConfirmedMenuRef.current = key
+          return key
+        }
+
+        clickConfirmedMenuRef.current = null
+        return current === key ? null : key
+      })
+    },
+    [clearCloseTimer],
+  )
+
+  /** Schedule the close after the grace period. Cancelled by openMenuFromHover or keepOpen. */
   const scheduleClose = useCallback(() => {
-    if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current)
+    clearCloseTimer()
     closeTimerRef.current = setTimeout(() => {
       closeTimerRef.current = null
+      hoverOpenedMenuRef.current = null
+      clickConfirmedMenuRef.current = null
       setOpenMenu(null)
     }, CLOSE_GRACE_MS)
-  }, [])
+  }, [clearCloseTimer])
 
   /** Cancel a pending close (called from panel onMouseEnter). */
   const cancelClose = useCallback(() => {
@@ -67,10 +102,11 @@ export function MegaNav() {
   }, [])
 
   const closeMenus = useCallback(() => {
-    if (closeTimerRef.current !== null) clearTimeout(closeTimerRef.current)
-    closeTimerRef.current = null
+    clearCloseTimer()
+    hoverOpenedMenuRef.current = null
+    clickConfirmedMenuRef.current = null
     setOpenMenu(null)
-  }, [])
+  }, [clearCloseTimer])
 
   useOutsideClose(navRef, closeMenus)
 
@@ -87,15 +123,13 @@ export function MegaNav() {
         <ul className="flex h-full items-stretch gap-1" role="list">
           <li
             className={DESKTOP_MENU_ITEM_CLASS}
-            onMouseEnter={() => openMenuNow('shop')}
+            onMouseEnter={() => openMenuFromHover('shop')}
             onMouseLeave={scheduleClose}
           >
             <DisclosureButton
               aria-controls="shop-mega"
               aria-expanded={openMenu === 'shop'}
-              onClick={() =>
-                setOpenMenu((current) => (current === 'shop' ? null : 'shop'))
-              }
+              onClick={() => toggleMenu('shop')}
               className={NAV_TRIGGER_CLASS}
             >
               Shop
@@ -112,17 +146,13 @@ export function MegaNav() {
 
           <li
             className={DESKTOP_MENU_ITEM_CLASS}
-            onMouseEnter={() => openMenuNow('services')}
+            onMouseEnter={() => openMenuFromHover('services')}
             onMouseLeave={scheduleClose}
           >
             <DisclosureButton
               aria-controls="services-menu"
               aria-expanded={openMenu === 'services'}
-              onClick={() =>
-                setOpenMenu((current) =>
-                  current === 'services' ? null : 'services',
-                )
-              }
+              onClick={() => toggleMenu('services')}
               className={NAV_TRIGGER_CLASS}
             >
               Services

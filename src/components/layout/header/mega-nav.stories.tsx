@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { userEvent } from 'storybook/test'
 
 import { MegaNav, MobileMegaNav } from './mega-nav'
 import { SHOP_SECTIONS, type ShopKey } from './mega-nav-data'
@@ -49,7 +50,7 @@ export const Default: Story = {
     )
     if (!shopButton) throw new Error('Shop disclosure button not found')
 
-    shopButton.click()
+    await userEvent.click(shopButton)
     await new Promise((resolve) => window.requestAnimationFrame(resolve))
 
     const shopPanel = document.querySelector<HTMLElement>('#shop-mega')
@@ -57,7 +58,7 @@ export const Default: Story = {
       throw new Error('Shop mega panel did not open')
     }
 
-    shopButton.click()
+    await userEvent.click(shopButton)
     await new Promise((resolve) => window.requestAnimationFrame(resolve))
 
     if (
@@ -67,7 +68,7 @@ export const Default: Story = {
       throw new Error('Shop mega panel did not close on second click')
     }
 
-    shopButton.click()
+    await userEvent.click(shopButton)
     await new Promise((resolve) => window.requestAnimationFrame(resolve))
 
     const servicesButton = canvasElement.querySelector<HTMLButtonElement>(
@@ -75,7 +76,7 @@ export const Default: Story = {
     )
     if (!servicesButton) throw new Error('Services disclosure button not found')
 
-    servicesButton.click()
+    await userEvent.click(servicesButton)
     await new Promise((resolve) => window.requestAnimationFrame(resolve))
 
     const servicesPanel = document.querySelector<HTMLElement>('#services-menu')
