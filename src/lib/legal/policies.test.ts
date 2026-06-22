@@ -45,6 +45,28 @@ describe('legal policy registry', () => {
     expect(new Set(sources).size).toBe(sources.length)
   })
 
+  test('returns permanent legacy policy redirects', () => {
+    expect(getPolicyRedirects()).toEqual(
+      expect.arrayContaining([
+        {
+          source: '/policies/privacy-policy',
+          destination: '/pages/privacy-policy',
+          permanent: true,
+        },
+        {
+          source: '/policies/terms-of-service',
+          destination: '/pages/terms-of-service',
+          permanent: true,
+        },
+        {
+          source: '/7868339/policies/privacy-policy.html',
+          destination: '/pages/privacy-policy',
+          permanent: true,
+        },
+      ]),
+    )
+  })
+
   test('narrows legal policy handles', () => {
     expect(isLegalPolicyHandle('privacy-policy')).toBe(true)
     expect(isLegalPolicyHandle('wholesale')).toBe(false)

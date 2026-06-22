@@ -1,3 +1,5 @@
+import { getFooterLegalLinks } from '@/lib/legal/policies'
+
 import type {
   FooterColumn,
   FooterContactLink,
@@ -15,16 +17,35 @@ export const MAIN_MENU_LINKS = [
   { href: '/pages/our-story', label: 'Our Story' },
 ] satisfies FooterLink[]
 
+const FOOTER_LEGAL_HREFS = [
+  '/pages/privacy-policy',
+  '/pages/shipping-policy',
+  '/pages/refund-policy',
+  '/pages/terms-of-service',
+  '/pages/cookie-preferences',
+] as const
+
+function getRequiredFooterLegalLinks(): FooterLink[] {
+  const legalLinks = getFooterLegalLinks()
+
+  return FOOTER_LEGAL_HREFS.map((href) => {
+    const link = legalLinks.find((candidate) => candidate.href === href)
+
+    if (!link) {
+      throw new Error(`Missing legal footer policy link: ${href}`)
+    }
+
+    return link
+  })
+}
+
+const LEGAL_POLICY_LINKS = getRequiredFooterLegalLinks()
+
 export const FOOTER_LINKS = [
   { href: '/search', label: 'Search' },
   { href: '/account', label: 'Login' },
-  {
-    href: 'https://www.teavision.com.au/pages/terms-conditions-1',
-    label: "T's & C's",
-  },
   { href: '/pages/contact', label: 'Contact us' },
-  { href: '/pages/refund-policy', label: 'Refund Policy' },
-  { href: '/pages/terms-of-service', label: 'Terms of Service' },
+  ...LEGAL_POLICY_LINKS,
 ] satisfies FooterLink[]
 
 export const FOOTER_COLUMNS = [

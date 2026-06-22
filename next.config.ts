@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next'
 
+import { getPolicyRedirects } from './src/lib/legal/policies'
 import { securityHeaders } from './src/lib/security/headers'
 
 const nextConfig: NextConfig = {
@@ -17,6 +18,7 @@ const nextConfig: NextConfig = {
         destination: '/products/:productHandle',
         permanent: true,
       },
+      ...getPolicyRedirects(),
     ]
   },
   async headers() {
