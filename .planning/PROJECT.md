@@ -4,27 +4,26 @@
 
 Teavision is a headless Shopify storefront built with Next.js 16 App Router and React 19. It sells wholesale tea, herbs, spices, and related products to Australian retail, cafe, foodservice, and direct customers.
 
-v1.0 shipped the migration of Shopify-theme storefront behavior into the Next storefront — product discovery, product detail with bulk savings, cart, checkout handoff, owned Searchanise search, trust signals — plus a complete visual redesign of every surface on the new warm-paper/green/gold design system. v1.1 followed with Tea Journal (blog) loading and image-rendering performance work. v1.2 restored production-style numbered collection pagination for launch parity.
+v1.0 shipped the migration of Shopify-theme storefront behavior into the Next storefront — product discovery, product detail with bulk savings, cart, checkout handoff, owned Searchanise search, trust signals — plus a complete visual redesign of every surface on the new warm-paper/green/gold design system. v1.1 followed with Tea Journal (blog) loading and image-rendering performance work. v1.2 restored production-style numbered collection pagination for launch parity. v1.3 added modern Shopify Customer Account authentication and account self-service, with protected account pages, address/profile management, order history, cart buyer identity sync, legacy account bridges, and launch-readiness documentation.
 
 ## Core Value
 
 Customers can confidently choose the right bulk product, quantity, and price path before checkout.
 
-## Current Milestone: v1.3 Shopify Customer Accounts
+## Current State
 
-**Goal:** Add modern Shopify Customer Account support to the headless storefront while preserving Tea Vision's account, address, order-history, and checkout identity expectations.
+**Shipped through:** v1.3 Shopify Customer Accounts (2026-06-22).
 
-**Status:** Phase 14 gap closure complete on 2026-06-22; ready for milestone archive/completion.
-
-**Target features:**
-- Customer Account API OAuth/session foundation.
+**Customer-account capability now available:**
+- Customer Account API OAuth/session foundation with secure server-owned cookies.
 - `/account` login/logout/callback and protected account routes.
-- Account dashboard/profile details.
-- Address list/add/edit/delete/default address management.
-- Order history and order detail pages.
-- Cart buyer identity sync before checkout.
-- Tea Vision theme parity review, including reorder and wholesale/B2B pricing considerations.
-- Explicit boundaries around legacy password forms, guest orders, real checkout testing, and customer-tag pricing.
+- Account dashboard/profile details, saved addresses, default address handling, paginated orders, and order detail pages.
+- Address and supported profile mutations through session-verified Server Actions.
+- Cart buyer identity sync before checkout with fake-Shopify checkout-handoff coverage.
+- Legacy account bridge routes and owned header/footer account links.
+- Launch-readiness documentation for Shopify admin setup, protected customer data, HTTPS OAuth testing, real checkout approval gates, reorder parity, and B2B/customer-pricing parity.
+
+**Next milestone:** Not defined yet. Use `$gsd-new-milestone` to define fresh requirements and roadmap scope.
 
 ## Requirements
 
@@ -51,17 +50,19 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 - [ ] Close v1.0 known gaps: collection empty-state "Clear filters" misdirect (CQA-05), human UAT items (visual sweep, live Resend newsletter), and the tech-debt list in `milestones/v1.0-MILESTONE-AUDIT.md`.
 - [ ] Close v1.1 remaining tech debt (W2 heavy `getBlog()` on default blog route for hero/metadata, W4 light-projection type honesty, W5 featured backfill trade-off) — see `milestones/v1.1-MILESTONE-AUDIT.md`.
+- [ ] Complete post-v1.3 launch gates after Shopify admin setup and owner approval: real Customer Account OAuth, protected customer data scopes, hosted checkout/payment/shipping/tax/order/success redirect tests, and authoritative B2B/company-location pricing checks.
 
 ### Out of Scope
 
 - Reinstalling or injecting HulkApps app scripts into the headless storefront - third-party browser scripts from the Liquid theme are not a stable headless data contract.
 - Recreating discount calculation rules in client code - Shopify checkout/cart remains the authority for actual discounts.
-- Implementing wholesale/customer-specific pricing as an unverified client-side calculation - v1.3 may research and prepare B2B/cart identity foundations, but Shopify remains the source of truth for actual customer pricing and checkout totals.
+- Implementing wholesale/customer-specific pricing as an unverified client-side calculation - Shopify remains the source of truth for actual customer pricing and checkout totals.
+- Recreating classic password-based customer account forms - modern Shopify Customer Account API uses Shopify-hosted OAuth unless the owner explicitly chooses a legacy fallback later.
 - Editing sibling `teavision-theme` - it is used as a reference only.
 
 ## Context
 
-Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Phase 13 (v1.2 SEO-safe PLP pagination parity) complete 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Phase 14 (v1.3 Shopify Customer Accounts) complete 2026-06-22: 9 plans covering Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, launch-readiness docs, and UAT gap closure. Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
+Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/−15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Shipped v1.2 on 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Shipped v1.3 on 2026-06-22: Phase 14 Shopify Customer Accounts (9 plans, 31 tasks, 26/26 requirements) covering Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, launch-readiness docs, and UAT gap closure. Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL and Customer Account API, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
 
 The site remains noindexed pending launch sign-off (Phase 6 controls; flip `DISABLE_INDEXING` at launch and add the new landing pages to the sitemap). The owner actively authors new landing surfaces directly in the codebase (bulk-wholesale-supply, private-label-packing, tea-bag-manufacturer, NPD order form, supply-chain protection band).
 
@@ -90,6 +91,11 @@ The codebase map in `.planning/codebase/` predates the redesign and has known dr
 | Revert CDN-backed Sanity reads to authenticated `sanityFetch`                | Token-less CDN client broke reads against the dataset; authenticated non-CDN reads are correct, CDN helper removed at v1.1 audit       | Good    |
 | LQIP blur placeholders with truthy guards plus bounded image URL options    | Blur-in perceived performance without render crashes on empty/absent LQIP; image weight capped per use case                            | Good    |
 | Preserve production PLP pagination SEO behavior for launch                  | Platform migration risk is lower when `?page=N`, base canonicals, prev/next links, and crawler exclusions match the live Shopify site before post-launch SEO tuning | Good |
+| Use a dedicated Customer Account API boundary                               | Customer auth headers, endpoints, PII handling, schema shape, and no-store cache policy differ from Storefront product/cart reads       | Good    |
+| Keep customer session and OAuth material server-owned in HttpOnly cookies   | Prevents token exposure to browser JavaScript and keeps account data session-scoped                                                     | Good    |
+| Block checkout when signed-in buyer identity sync fails                     | Avoids silently continuing as guest when customer identity should be attached before Shopify checkout                                   | Good    |
+| Bridge legacy account routes instead of recreating password forms           | Modern Shopify Customer Accounts are OAuth-hosted; bridge pages preserve intent without rebuilding classic account flows                | Good    |
+| Treat real Customer Account OAuth and hosted checkout as launch gates       | Shopify admin setup, protected data scopes, and store-owner approval are required before live OAuth/checkout/payment/order testing      | Pending |
 
 ## Evolution
 
@@ -110,4 +116,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-06-22 after completing Phase 14 Shopify Customer Accounts gap closure_
+_Last updated: 2026-06-22 after v1.3 Shopify Customer Accounts milestone archive_

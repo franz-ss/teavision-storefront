@@ -121,12 +121,53 @@ Production-style numbered collection pagination for PLPs: public `?page=N` URLs,
 - Sessions: same-day milestone from audit through gap closure and archive.
 - Notable: a focused pre-archive implementation commit kept the `v1.2` tag aligned with the passing audit.
 
+## Milestone: v1.3 — Shopify Customer Accounts
+
+**Shipped:** 2026-06-22
+**Phases:** 1 | **Plans:** 9
+
+### What Was Built
+
+Modern Shopify Customer Account support: OAuth login/logout/callback, secure server-owned account sessions, protected `/account` routes, dashboard/profile details, address management, order history and order detail pages, cart buyer identity sync before checkout, legacy account bridge routes, account-link parity, and launch-readiness documentation for Shopify admin setup and owner-approved live testing.
+
+### What Worked
+
+- The fake Customer Account API and fake Storefront buyer-identity fixtures let the team verify account/cart/checkout wiring locally without touching real hosted checkout.
+- Gap-closure plans were small and precise: schema/OAuth hardening, read-only phone affordance, account-link evidence, and legacy bridge visual polish each landed with focused verification.
+- Separating Customer Account API transport/types from Storefront generated types kept PII/session behavior out of public product caching and made schema drift easier to isolate.
+- The final milestone audit was able to pass from three independent evidence sources: REQUIREMENTS.md, 14-VERIFICATION.md, and SUMMARY frontmatter.
+
+### What Was Inefficient
+
+- A duplicate Phase 14 directory (`teavision-14-shopify-customer-accounts`) remained on disk and continued to show stale UAT metadata in open-artifact scans.
+- `14-VALIDATION.md` still contains pending Wave 0/task-table placeholders even though final verification superseded it with green full-suite evidence.
+- Several live OAuth failures were discovered only after environment setup, which forced a late schema/redirect fake-API hardening pass.
+
+### Patterns Established
+
+- Customer account data uses a dedicated no-store Customer Account API boundary instead of extending Storefront product/cart fetch helpers.
+- Customer tokens, refresh material, pending OAuth state, and buyer-identity sync stay server-owned; client leaves receive only presentational state.
+- Checkout handoff now has a POST boundary that can block signed-in checkout on identity-sync failure and offer retry/sign-in/support recovery.
+- Legacy account routes should preserve intent through bridge pages instead of recreating classic password forms.
+
+### Key Lessons
+
+- Fake third-party APIs should reject stale schema selections, not merely return happy-path fixtures; otherwise live API drift slips through local verification.
+- UAT evidence for protected links should inspect anchor hrefs before navigation, because the post-click URL may be a correct auth redirect rather than the link target.
+- If a field is readable but not writable through Shopify Customer Account API, render it as account-managed information rather than a disabled or doomed input.
+- Validation strategy files need a close-time refresh when final verification supersedes initial Wave 0 placeholders.
+
+### Cost Observations
+
+- Sessions: 2026-06-19 implementation wave plus 2026-06-22 UAT/gap-closure/archive pass.
+- Notable: Phase 14 produced 26 commits from `feat(14-01)` through `docs(phase-14)` and 31 tracked tasks.
+
 ## Cross-Milestone Trends
 
-| Metric | v1.0 | v1.1 | v1.2 |
-| --- | --- | --- | --- |
-| Phases / plans | 9 / 35 | 1 / 4 | 1 / 2 |
-| Duration | ~6.5 weeks | ~2 days | 1 day |
-| Commits | 476 | ~25 | ~10 |
-| UAT fix rounds | 3 | 0 (2 pre-UAT gap-closure rounds) | 1 human UAT gap + 1 audit gap |
-| Known gaps at close | 2 requirement-level (CQA-05, CARD-01-superseded) + tech-debt list | 0 blockers; 3 tech-debt items (W2/W4/W5) | 0 blockers; non-blocking tech debt in audit |
+| Metric | v1.0 | v1.1 | v1.2 | v1.3 |
+| --- | --- | --- | --- | --- |
+| Phases / plans | 9 / 35 | 1 / 4 | 1 / 2 | 1 / 9 |
+| Duration | ~6.5 weeks | ~2 days | 1 day | 4 days elapsed |
+| Commits | 476 | ~25 | ~10 | 26 |
+| UAT fix rounds | 3 | 0 (2 pre-UAT gap-closure rounds) | 1 human UAT gap + 1 audit gap | 1 UAT gap-closure wave |
+| Known gaps at close | 2 requirement-level (CQA-05, CARD-01-superseded) + tech-debt list | 0 blockers; 3 tech-debt items (W2/W4/W5) | 0 blockers; non-blocking tech debt in audit | 0 blockers; launch gates and stale validation table tracked |

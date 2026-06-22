@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Shopify Customer Accounts
-status: milestone_complete
-stopped_at: Milestone complete (Phase 14 was final phase)
-last_updated: 2026-06-22T03:39:21.252Z
-last_activity: 2026-06-22 -- Completed quick task 260622-g38: in /account/profile just remove the phone field if it is not editable
+status: Awaiting next milestone
+stopped_at: Completed Phase 14 gap closure plans
+last_updated: "2026-06-22T03:48:54.397Z"
+last_activity: 2026-06-22 — Milestone v1.3 completed and archived
 progress:
   total_phases: 1
   completed_phases: 1
@@ -18,17 +18,17 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-19)
+See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Milestone complete
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 14
-Plan: Not started
-Status: Milestone complete
-Last activity: 2026-06-22 -- Completed quick task 260622-g38: in /account/profile just remove the phone field if it is not editable
+Phase: Milestone v1.3 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-22 — Milestone v1.3 completed and archived
 
 ## Performance Metrics
 
@@ -140,7 +140,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Complete/archive the v1.3 milestone with `$gsd-complete-milestone`.
+- None. Start the next milestone with `$gsd-new-milestone` when ready.
 
 ### Blockers/Concerns
 
@@ -150,6 +150,7 @@ Recent decisions affecting current work:
 - Searchanise's API key is public and already present locally, but API response shape should still be narrowed defensively because Searchanise returns JSON outside the Shopify generated type system.
 - Phase 5 remediated the production-readiness gaps found in `CODEBASE_REVIEW.md`. See `.planning/phases/05-codebase-review-remediation/05-VERIFICATION.md` and the `05-*-SUMMARY.md` files for evidence and accepted residual risks.
 - Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
+- v1.3 Customer Account launch gates remain external/admin-dependent: Shopify Customer Accounts setup, Headless/Hydrogen credentials, protected customer data access, callback/logout URLs, HTTPS OAuth testing, real hosted checkout approval, and authoritative B2B/company-location pricing checks.
 
 ### Quick Tasks Completed
 
@@ -195,6 +196,22 @@ Phase 11 gap-closure plans (11-15..11-22); the files were never moved to
 debug/resolved. The UAT/verification items are the two human-only tests
 (visual parity sweep, live Resend newsletter signup).
 
+Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
+
+| Category       | Item                                               | Status    |
+| -------------- | -------------------------------------------------- | --------- |
+| debug_sessions | account-link-routing                               | diagnosed |
+| debug_sessions | legacy-account-bridge-ui                           | diagnosed |
+| quick_tasks    | 260615-b9e-make-the-herb-feature-section-full-page- | missing   |
+| quick_tasks    | 260615-bpt-redesign-download-catalogues-page       | missing   |
+| quick_tasks    | 260615-bsr-remove-wholesale-account-pricing-cta-fro | missing   |
+| quick_tasks    | 260615-dm4-bespoke-how-long-does-bulk-tea-last-guid | missing   |
+| quick_tasks    | 260615-fem-redesign-compliance-data-rights-pages   | missing   |
+| quick_tasks    | 260618-h2e-project-cleanup-animation-primitives    | missing   |
+| quick_tasks    | 260622-g38-in-account-profile-just-remove-the-phone | missing   |
+| uat_gaps       | 14-UAT.md                                          | resolved  |
+| uat_gaps       | 14-UAT.md                                          | diagnosed |
+
 ## Session Continuity
 
 Last session: 2026-06-22T03:21:23.294Z
@@ -203,5 +220,4 @@ Resume file: None
 
 ## Operator Next Steps
 
-- Complete/archive v1.3 with `$gsd-complete-milestone`
-- Start the next milestone with `$gsd-new-milestone`
+- Start the next milestone with /gsd-new-milestone

@@ -1,5 +1,37 @@
 # Milestones
 
+## v1.3 Shopify Customer Accounts (Shipped: 2026-06-22)
+
+**Delivered:** Modern Shopify Customer Account authentication and account self-service for the headless storefront, including protected account pages, address/profile management, order history, cart buyer identity sync, legacy account bridges, and launch-readiness documentation.
+
+**Phases completed:** 1 phase (14), 9 plans, 31 tasks
+**Timeline:** 2026-06-19 -> 2026-06-22, 26 commits
+**Git range:** `feat(14-01)` -> `docs(phase-14)`
+
+**Key accomplishments:**
+
+- Customer Account OAuth with PKCE/state/nonce, sealed HttpOnly sessions, fake OIDC/API coverage, and a Shopify sign-in entry page
+- Protected `/account` workspace, paginated order history, and authenticated order detail pages
+- Profile editing, saved address management, Shopify user-error normalization, and accessible delete confirmation
+- Signed-in customer identity is attached to carts and verified before checkout, with fake-only blocked checkout coverage
+- Account entry and legacy migration surfaces now route to the modern Shopify Customer Account flow, with launch readiness documented and fake-only coverage extended
+- Customer Account local verification now catches stale live-Shopify schema failures before UAT.
+- Profile phone is visible as Shopify-managed account information without an editable control.
+- Account link evidence now distinguishes owned `/account` hrefs from expected protected-route redirects.
+- Legacy account bridge headings now fit the compact card at desktop and mobile widths.
+
+**Stats:**
+
+- 152 files changed across Phase 14 commits (+14,664/-145 LOC)
+- Full verification passed: lint, typecheck, unit, integration, Storybook, fake-Shopify e2e, build, and codegen evidence recorded in `14-VERIFICATION.md`
+- Audit: passed (26/26 requirements, 7/7 local/fake flows) — see `milestones/v1.3-MILESTONE-AUDIT.md`
+
+Known deferred items at close: 11 (see STATE.md Deferred Items)
+
+**What's next:** Start the next milestone with `$gsd-new-milestone`.
+
+---
+
 ## v1.2 SEO-Safe PLP Pagination Parity (Shipped: 2026-06-12)
 
 **Phases completed:** 1 phase, 2 plans, 9 tasks
