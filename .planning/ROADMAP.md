@@ -57,7 +57,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 ### ◆ v1.4 Production Readiness 100/100
 
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
-- [ ] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (0/TBD plans)
+- [ ] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (0/4 plans)
 - [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (0/TBD plans)
 
 ## Progress
@@ -77,7 +77,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 13. Production-parity collection pagination | v1.2      | 2/2            | Complete   | 2026-06-12 |
 | 14. Shopify Customer Accounts              | v1.3      | 9/9            | Complete   | 2026-06-22 |
 | 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
-| 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 0/TBD | Planned | — |
+| 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 0/4 | Planned    | — |
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 0/TBD | Planned | — |
 
 ## Phase Details
@@ -140,7 +140,15 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - Confirm whether GA4, GTM, Meta, Klaviyo, Shopify pixels, and Search Console are available before implementation.
 - Analytics tests must not send real production events from CI.
 
-**Plans:** TBD by `$gsd-plan-phase 16`
+**Plans:**
+
+**Wave 1**
+- [ ] `16-01` — Legal Policy Route Foundation
+- [ ] `16-02` — Consent Foundation and Preferences
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] `16-03` — Consent-Aware Analytics Instrumentation
+- [ ] `16-04` — Launch SEO Route Matrix and Evidence
 
 ### Phase 17: Operations, Performance, and Final Production-Readiness Audit
 
