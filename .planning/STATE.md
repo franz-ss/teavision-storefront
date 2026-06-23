@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 Phase: 17 (operations-performance-and-final-production-readiness-audit) — EXECUTING
 Plan: 5 of 5
 Status: Ready to execute
-Last activity: 2026-06-23
+Last activity: 2026-06-23 - Completed quick task 260623-ngx: Smooth the hover background overlay transition in the Explore Our Product Range section
 
 ## Performance Metrics
 
@@ -204,6 +204,7 @@ Recent decisions affecting current work:
 | 260622-g38 | in /account/profile just remove the phone field if it is not editable | 2026-06-22 | cd784ab | [260622-g38-in-account-profile-just-remove-the-phone](./quick/260622-g38-in-account-profile-just-remove-the-phone/) |
 | 260622-h9f | Harden Shopify cart checkout identity sync and retained-cart behavior | 2026-06-22 | 4237cce | [260622-h9f-harden-shopify-cart-checkout-identity-sy](./quick/260622-h9f-harden-shopify-cart-checkout-identity-sy/) |
 | 260623-fmq | Remove the Wholesale upsell card from the collection sidebar | 2026-06-23 | afa98ce | [260623-fmq-remove-the-wholesale-upsell-card-from-th](./quick/260623-fmq-remove-the-wholesale-upsell-card-from-th/) |
+| 260623-ngx | Smooth the hover background overlay transition in the Explore Our Product Range section | 2026-06-23 | 93d9c2f | [260623-ngx-smooth-the-hover-background-overlay-tran](./quick/260623-ngx-smooth-the-hover-background-overlay-tran/) |
 
 ## Deferred Items
 
