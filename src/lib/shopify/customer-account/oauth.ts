@@ -1,5 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto'
 
+import { logEvent } from '@/lib/observability/logger'
+
 import { getCustomerAccountConfig } from './env'
 
 const SAFE_RETURN_PREFIXES = ['/account', '/cart', '/checkout']
@@ -96,7 +98,13 @@ export type IdTokenClaims = {
 
 export function decodeIdTokenClaims(idToken: string): IdTokenClaims | null {
   const [, payload] = idToken.split('.')
-  if (!payload) return null
+  if (!payload) {
+    logEvent('error', 'account_oauth_failed', {
+      status: 'missing-id-token-payload',
+    })
+
+    return null
+  }
 
   try {
     const claims = JSON.parse(
@@ -108,6 +116,10 @@ export function decodeIdTokenClaims(idToken: string): IdTokenClaims | null {
       sub: typeof claims.sub === 'string' ? claims.sub : undefined,
     }
   } catch {
+    logEvent('error', 'account_oauth_failed', {
+      status: 'invalid-id-token-payload',
+    })
+
     return null
   }
 }
@@ -134,6 +146,12 @@ export async function exchangeCustomerAccountCode(input: {
   })
 
   if (!response.ok) {
+    logEvent('error', 'account_oauth_failed', {
+      status: response.status,
+      statusText: response.statusText,
+      step: 'token-exchange',
+    })
+
     throw new Error('Customer Account token exchange failed')
   }
 
@@ -144,6 +162,11 @@ export async function exchangeCustomerAccountCode(input: {
     !payload.id_token ||
     typeof payload.expires_in !== 'number'
   ) {
+    logEvent('error', 'account_oauth_failed', {
+      status: 'invalid-token-response',
+      step: 'token-exchange',
+    })
+
     throw new Error('Customer Account token exchange returned invalid tokens')
   }
 

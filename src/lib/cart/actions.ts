@@ -4,6 +4,8 @@ import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 
 import { isProductionRuntime } from '@/lib/env/runtime'
+import { hashIdentifier } from '@/lib/observability/redact'
+import { logEvent } from '@/lib/observability/logger'
 import {
   getCart,
   createCart,
@@ -36,9 +38,9 @@ export type CartLineFormState = {
 }
 
 export type CheckoutHandoffResult =
-  | { status: 'ready'; checkoutUrl: string }
-  | { status: 'identity-sync-failed'; message: string }
-  | { status: 'missing-cart' }
+  | { status: 'ready'; checkoutUrl: string; cartIdHash: string }
+  | { status: 'identity-sync-failed'; message: string; cartIdHash: string }
+  | { status: 'missing-cart'; cartIdHash?: string }
   | { status: 'terms-required' }
 
 export type CartIdentitySyncResult = {
@@ -153,6 +155,10 @@ export async function syncCartBuyerIdentityForCurrentSession(): Promise<CartIden
     revalidatePath('/cart')
     return { cart, message: null, synced: true }
   } catch {
+    logEvent('error', 'cart_buyer_identity_sync_failed', {
+      cartIdHash: hashIdentifier(cartId),
+    })
+
     return { cart: null, message: CART_IDENTITY_SYNC_ERROR, synced: false }
   }
 }
@@ -165,18 +171,23 @@ export async function prepareCheckoutHandoff(
   const cartId = await getCartIdFromCookie()
   if (!cartId) return { status: 'missing-cart' }
 
+  const cartIdHash = hashIdentifier(cartId)
   const cart = await getCart(cartId)
-  if (!cart || cart.totalQuantity === 0) return { status: 'missing-cart' }
+  if (!cart || cart.totalQuantity === 0) {
+    return { status: 'missing-cart', cartIdHash }
+  }
 
   const syncResult = await syncCartBuyerIdentityForCurrentSession()
   if (syncResult.message) {
     return {
+      cartIdHash,
       message: syncResult.message,
       status: 'identity-sync-failed',
     }
   }
 
   return {
+    cartIdHash,
     checkoutUrl: syncResult.cart?.checkoutUrl ?? cart.checkoutUrl,
     status: 'ready',
   }

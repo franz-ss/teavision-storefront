@@ -1,6 +1,8 @@
 import { print } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
+import { logEvent } from '@/lib/observability/logger'
+
 import { discoverCustomerAccountEndpoints } from './discovery'
 import type { CustomerAccountSession } from './types'
 
@@ -69,6 +71,11 @@ export async function customerAccountFetch<
 
   if (!response.ok) {
     const body = await readErrorBody(response, token)
+    logEvent('error', 'customer_account_failed', {
+      status: response.status,
+      statusText: response.statusText,
+    })
+
     throw new Error(
       `Shopify Customer Account API error: ${response.status} ${response.statusText}${body}`,
     )
@@ -77,6 +84,11 @@ export async function customerAccountFetch<
   const json = (await response.json()) as CustomerAccountResponse<TData>
 
   if (json.errors?.length) {
+    logEvent('error', 'customer_account_failed', {
+      errorCount: json.errors.length,
+      status: 'graphql-errors',
+    })
+
     throw new Error(
       redactTokenValues(json.errors.map((error) => error.message).join('\n'), [
         token,

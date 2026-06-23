@@ -12,6 +12,8 @@ import {
   updateCartLines,
 } from '@/lib/shopify/operations/cart'
 import { getCustomerAccountSession } from '@/lib/shopify/customer-account/session'
+import { logEvent } from '@/lib/observability/logger'
+import { hashIdentifier } from '@/lib/observability/redact'
 import { makeCart } from '@/tests/fixtures/shopify/cart'
 
 import {
@@ -43,6 +45,10 @@ vi.mock('@/lib/shopify/operations/cart', () => ({
 
 vi.mock('@/lib/shopify/customer-account/session', () => ({
   getCustomerAccountSession: vi.fn(),
+}))
+
+vi.mock('@/lib/observability/logger', () => ({
+  logEvent: vi.fn(),
 }))
 
 type CookieStore = {
@@ -100,6 +106,7 @@ const syncCartBuyerIdentityMock = syncCartBuyerIdentity as unknown as Mock<
 >
 const getCustomerAccountSessionMock =
   getCustomerAccountSession as unknown as Mock<typeof getCustomerAccountSession>
+const logEventMock = logEvent as unknown as Mock<typeof logEvent>
 
 describe('cart Server Actions', () => {
   beforeEach(() => {
@@ -237,10 +244,21 @@ describe('cart Server Actions', () => {
     syncCartBuyerIdentityMock.mockRejectedValue(new Error('sync failed'))
 
     await expect(prepareCheckoutHandoff(true)).resolves.toEqual({
+      cartIdHash: hashIdentifier(cart.id),
       message:
         'We could not confirm your account for checkout. Retry checkout or sign in again before continuing.',
       status: 'identity-sync-failed',
     })
+    expect(logEventMock).toHaveBeenCalledWith(
+      'error',
+      'cart_buyer_identity_sync_failed',
+      {
+        cartIdHash: hashIdentifier(cart.id),
+      },
+    )
+    expect(JSON.stringify(logEventMock.mock.calls)).not.toContain(
+      'customer-access-token',
+    )
   })
 
   test('prepareCheckoutHandoff uses the refreshed checkout URL after buyer identity sync', async () => {
@@ -263,6 +281,7 @@ describe('cart Server Actions', () => {
     syncCartBuyerIdentityMock.mockResolvedValue(syncedCart)
 
     await expect(prepareCheckoutHandoff(true)).resolves.toEqual({
+      cartIdHash: hashIdentifier(cart.id),
       checkoutUrl: syncedCart.checkoutUrl,
       status: 'ready',
     })
@@ -277,6 +296,7 @@ describe('cart Server Actions', () => {
       status: 'terms-required',
     })
     await expect(prepareCheckoutHandoff(true)).resolves.toEqual({
+      cartIdHash: hashIdentifier(cart.id),
       checkoutUrl: cart.checkoutUrl,
       status: 'ready',
     })

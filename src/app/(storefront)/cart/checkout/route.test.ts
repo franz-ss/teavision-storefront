@@ -1,6 +1,7 @@
 import type { Mock } from 'vitest'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
+import { logEvent } from '@/lib/observability/logger'
 import { prepareCheckoutHandoff } from '@/lib/cart/actions'
 
 import { POST } from './route'
@@ -9,9 +10,14 @@ vi.mock('@/lib/cart/actions', () => ({
   prepareCheckoutHandoff: vi.fn(),
 }))
 
+vi.mock('@/lib/observability/logger', () => ({
+  logEvent: vi.fn(),
+}))
+
 const prepareCheckoutHandoffMock = prepareCheckoutHandoff as unknown as Mock<
   typeof prepareCheckoutHandoff
 >
+const logEventMock = logEvent as unknown as Mock<typeof logEvent>
 
 function makeCheckoutRequest(terms = 'accepted'): Request {
   const formData = new FormData()
@@ -51,6 +57,7 @@ describe('cart checkout route', () => {
 
   test('redirects to blocked cart state when identity sync fails', async () => {
     prepareCheckoutHandoffMock.mockResolvedValue({
+      cartIdHash: 'cart-hash',
       message:
         'We could not confirm your account for checkout. Retry checkout or sign in again before continuing.',
       status: 'identity-sync-failed',
@@ -61,10 +68,19 @@ describe('cart checkout route', () => {
     expect(response.headers.get('location')).toBe(
       'https://teavision.test/cart?checkout=identity-sync-failed',
     )
+    expect(logEventMock).toHaveBeenCalledWith(
+      'error',
+      'checkout_handoff_failed',
+      {
+        cartIdHash: 'cart-hash',
+        status: 'identity-sync-failed',
+      },
+    )
   })
 
   test('redirects to fake checkout only after handoff is ready', async () => {
     prepareCheckoutHandoffMock.mockResolvedValue({
+      cartIdHash: 'cart-hash',
       checkoutUrl: 'https://checkout.test/cart/fake-cart',
       status: 'ready',
     })
@@ -72,6 +88,17 @@ describe('cart checkout route', () => {
     const response = await POST(makeCheckoutRequest())
 
     expect(response.headers.get('location')).toBe(
+      'https://checkout.test/cart/fake-cart',
+    )
+    expect(logEventMock).toHaveBeenCalledWith(
+      'info',
+      'checkout_handoff_ready',
+      {
+        cartIdHash: 'cart-hash',
+        status: 'ready',
+      },
+    )
+    expect(JSON.stringify(logEventMock.mock.calls)).not.toContain(
       'https://checkout.test/cart/fake-cart',
     )
   })

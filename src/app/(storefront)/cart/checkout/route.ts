@@ -1,4 +1,5 @@
 import { prepareCheckoutHandoff } from '@/lib/cart/actions'
+import { logEvent } from '@/lib/observability/logger'
 
 function redirectToCart(request: Request, checkout: string): Response {
   const url = new URL('/cart', request.url)
@@ -13,16 +14,35 @@ export async function POST(request: Request): Promise<Response> {
   const result = await prepareCheckoutHandoff(agreedToTerms)
 
   if (result.status === 'ready') {
+    logEvent('info', 'checkout_handoff_ready', {
+      cartIdHash: result.cartIdHash,
+      status: result.status,
+    })
+
     return Response.redirect(result.checkoutUrl)
   }
 
   if (result.status === 'identity-sync-failed') {
+    logEvent('error', 'checkout_handoff_failed', {
+      cartIdHash: result.cartIdHash,
+      status: result.status,
+    })
+
     return redirectToCart(request, 'identity-sync-failed')
   }
 
   if (result.status === 'terms-required') {
+    logEvent('warn', 'checkout_handoff_failed', {
+      status: result.status,
+    })
+
     return redirectToCart(request, 'terms-required')
   }
+
+  logEvent('warn', 'checkout_handoff_failed', {
+    cartIdHash: result.cartIdHash,
+    status: result.status,
+  })
 
   return redirectToCart(request, 'missing-cart')
 }

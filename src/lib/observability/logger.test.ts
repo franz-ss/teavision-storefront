@@ -89,4 +89,29 @@ describe('observability logger', () => {
       consoleWarn.mockRestore()
     }
   })
+
+  test('logs account failure events without raw checkout URL, token, or email', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined)
+
+    try {
+      logEvent('error', 'customer_account_failed', {
+        checkoutUrl: 'https://checkout.test/cart/fake-cart?key=secret',
+        email: 'tea@example.com',
+        token: 'customer-access-token-abc',
+      })
+
+      const calls = JSON.stringify(consoleError.mock.calls)
+
+      expect(calls).not.toContain(
+        'https://checkout.test/cart/fake-cart?key=secret',
+      )
+      expect(calls).not.toContain('customer-access-token-abc')
+      expect(calls).not.toContain('tea@example.com')
+      expect(calls).toContain(REDACTED_VALUE)
+    } finally {
+      consoleError.mockRestore()
+    }
+  })
 })
