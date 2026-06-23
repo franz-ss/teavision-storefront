@@ -77,7 +77,7 @@ must never be copied into analytics payloads.
 6. Record command output, launch host, timestamp, verifier, and any skipped
    product structured-data warning in the Evidence Log and SEO evidence doc.
 
-## Post-Cutover Analytics And Indexing Verification
+## Post-Cutover Analytics Verification
 
 1. Confirm production was built with the owner-approved public destination IDs.
 2. Confirm denied optional consent blocks destination loading on the live site.
@@ -86,12 +86,17 @@ must never be copied into analytics payloads.
 4. Verify GTM only if the owner approved `NEXT_PUBLIC_GTM_CONTAINER_ID`.
 5. Verify Meta, Klaviyo, and Shopify pixels only if the owner approved the
    matching marketing destination and consent copy.
-6. Submit `/sitemap.xml` in Google Search Console only after owner property
-   access is available.
-7. Inspect representative legal, product, collection, and static landing URLs
-   in Google Search Console after cutover.
-8. Record destination, URL, consent state, event name, timestamp, verifier, and
+6. Record destination, URL, consent state, event name, timestamp, verifier, and
    evidence link in the Evidence Log.
+
+## Post-Cutover Indexing Verification
+
+1. Submit `/sitemap.xml` in Google Search Console only after owner property
+   access is available.
+2. Inspect representative legal, product, collection, and static landing URLs
+   in Google Search Console after cutover.
+3. Record URL, indexing state, timestamp, verifier, and evidence link in the
+   Evidence Log and `docs/launch/seo-route-evidence.md`.
 
 ## Owner-Gated Purchase And Order Tracking
 
