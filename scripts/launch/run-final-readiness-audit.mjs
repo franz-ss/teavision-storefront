@@ -396,17 +396,31 @@ ${ownerGates.map(renderOwnerGateRow).join('\n')}
 ## Representative Surface Evidence
 
 - Home, PDP, collection, cart, search, account, legal/static routes, and \`/api/health\` are represented by \`pnpm test:e2e:production\`, \`pnpm test:e2e:production -- tests/e2e/production-smoke.spec.ts\`, and \`docs/launch/production-e2e-evidence.md\`.
+- Production e2e status summary: \`${getResultStatus(checkResults, 'production e2e')}\`; browser smoke status summary: \`${getResultStatus(checkResults, 'browser smoke')}\`.
 - Local browser evidence uses fake Shopify and fake Customer Account providers and must not be treated as live hosted checkout, payment, order, OAuth, protected-data, B2B pricing, or Search Console proof.
 
 ## Operations Evidence
 
 - Safe public health/readiness evidence: \`node scripts/launch/probe-readiness.mjs --json\` and \`docs/launch/operations-runbook.md\`.
 - Monitoring/logging evidence: \`docs/launch/operations-runbook.md\` records Sentry/Vercel launch watch signals and redacted logging boundaries.
+- Security headers evidence: \`pnpm test:security -- ${baseUrl}\` runs \`scripts/security/probe-production-security.mjs\`; current status summary: \`${getResultStatus(
+    checkResults,
+    'security headers',
+  )}\`.
+- SEO/indexing evidence: \`node scripts/seo/probe-launch-seo.mjs --mode disabled\`, \`--mode enabled\`, \`--mode redirects\`, and \`--mode runbook\`; current summaries: disabled \`${getResultStatus(
+    checkResults,
+    'seo disabled',
+  )}\`, enabled \`${getResultStatus(checkResults, 'seo enabled')}\`, redirects \`${getResultStatus(
+    checkResults,
+    'seo redirects',
+  )}\`, runbook \`${getResultStatus(checkResults, 'seo runbook')}\`.
+- Analytics/indexing owner-gated proof remains in \`docs/launch/analytics-and-indexing-runbook.md\`; Search Console rows stay \`pending\`, \`owner-blocked\`, or \`approved\` only when owner evidence is recorded.
 - Owner approval gates: \`docs/testing/cart-checkout-uat.md\`, \`docs/testing/customer-accounts-setup.md\`, and \`docs/launch/analytics-and-indexing-runbook.md\`.
 
 ## Performance And UX Evidence
 
 - Performance command: \`pnpm test:performance -- --start-server --base-url ${baseUrl}\`.
+- Performance status summary: \`${getResultStatus(checkResults, 'performance')}\`.
 - Current local Lighthouse evidence is recorded in \`docs/launch/performance-evidence.md\`. Metric FAIL/WARN rows remain launch evidence with mitigations; command success only means the probe ran and recorded evidence.
 - UX/accessibility polish evidence is recorded through production smoke coverage and \`docs/launch/performance-evidence.md\`.
 
@@ -435,6 +449,18 @@ function renderScoreExplanation(score) {
   }
 
   return `${score.passed}/${score.total} non-skipped automated checks passed. ${skippedText}`
+}
+
+function getResultStatus(checkResults, label) {
+  const result = checkResults.find((candidate) => candidate.label === label)
+
+  if (!result) return 'not recorded'
+
+  if (result.status === 'SKIPPED') {
+    return `SKIPPED - ${result.skipReason ?? 'no reason recorded'}`
+  }
+
+  return `${result.status} - exit ${formatExitCode(result.exitCode)}`
 }
 
 function renderResidualRisks({ checkResults, ownerPending }) {

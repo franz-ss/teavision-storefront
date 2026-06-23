@@ -153,6 +153,7 @@ Run this checklist daily for the first week after launch:
 | Pending | Local/CI | Deep readiness docs mode | Pending | `node scripts/launch/probe-readiness.mjs --mode docs` | Engineering |
 | Pending | Production | Deploy and health watch | Pending | Deployment ID, `/api/health` result, runtime log review | Engineering |
 | Pending | Production | Vercel instant rollback proof | Pending | Rollback deployment ID or "not needed" note | Engineering |
+| Pending | Local/CI | Final production-readiness audit | Pending | `pnpm audit:readiness` and `docs/launch/final-production-readiness-report.md` | Engineering |
 | Owner-gated | Shopify | Hosted checkout/payment/order proof | Pending owner approval | Approved test plan and dated evidence | Owner/Engineering |
 | Owner-gated | Shopify | Customer Account OAuth and protected data proof | Pending owner approval | Shopify admin configuration and live OAuth result | Owner/Engineering |
 | Owner-gated | Google Search Console | Sitemap submission and URL inspection | Pending owner access | Property, URL, timestamp, and result | Owner |

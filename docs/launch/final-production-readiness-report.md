@@ -53,17 +53,22 @@ Owner-gated Shopify/admin proof is listed separately below and does not reduce t
 ## Representative Surface Evidence
 
 - Home, PDP, collection, cart, search, account, legal/static routes, and `/api/health` are represented by `pnpm test:e2e:production`, `pnpm test:e2e:production -- tests/e2e/production-smoke.spec.ts`, and `docs/launch/production-e2e-evidence.md`.
+- Production e2e status summary: `SKIPPED - Initial report scaffold; Task 4 records current command results.`; browser smoke status summary: `SKIPPED - Initial report scaffold; Task 4 records current command results.`.
 - Local browser evidence uses fake Shopify and fake Customer Account providers and must not be treated as live hosted checkout, payment, order, OAuth, protected-data, B2B pricing, or Search Console proof.
 
 ## Operations Evidence
 
 - Safe public health/readiness evidence: `node scripts/launch/probe-readiness.mjs --json` and `docs/launch/operations-runbook.md`.
 - Monitoring/logging evidence: `docs/launch/operations-runbook.md` records Sentry/Vercel launch watch signals and redacted logging boundaries.
+- Security headers evidence: `pnpm test:security -- http://127.0.0.1:4173` runs `scripts/security/probe-production-security.mjs`; current status summary: `SKIPPED - Initial report scaffold; Task 4 records current command results.`.
+- SEO/indexing evidence: `node scripts/seo/probe-launch-seo.mjs --mode disabled`, `--mode enabled`, `--mode redirects`, and `--mode runbook`; current summaries: disabled `SKIPPED - Initial report scaffold; Task 4 records current command results.`, enabled `SKIPPED - Initial report scaffold; Task 4 records current command results.`, redirects `SKIPPED - Initial report scaffold; Task 4 records current command results.`, runbook `SKIPPED - Initial report scaffold; Task 4 records current command results.`.
+- Analytics/indexing owner-gated proof remains in `docs/launch/analytics-and-indexing-runbook.md`; Search Console rows stay `pending`, `owner-blocked`, or `approved` only when owner evidence is recorded.
 - Owner approval gates: `docs/testing/cart-checkout-uat.md`, `docs/testing/customer-accounts-setup.md`, and `docs/launch/analytics-and-indexing-runbook.md`.
 
 ## Performance And UX Evidence
 
 - Performance command: `pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173`.
+- Performance status summary: `SKIPPED - Initial report scaffold; Task 4 records current command results.`.
 - Current local Lighthouse evidence is recorded in `docs/launch/performance-evidence.md`. Metric FAIL/WARN rows remain launch evidence with mitigations; command success only means the probe ran and recorded evidence.
 - UX/accessibility polish evidence is recorded through production smoke coverage and `docs/launch/performance-evidence.md`.
 

@@ -121,6 +121,37 @@ test('report renderer includes the required final report headings', () => {
   }
 })
 
+test('report renderer links inherited Phase 15 and Phase 16 evidence sources', () => {
+  const report = renderFinalReadinessReport({
+    checkResults: [
+      result('security headers', 'PASS'),
+      result('seo disabled', 'PASS'),
+      result('seo enabled', 'PASS'),
+      result('seo redirects', 'PASS'),
+      result('seo runbook', 'PASS'),
+      result('production e2e', 'PASS'),
+      result('performance', 'PASS'),
+      result('browser smoke', 'PASS'),
+    ],
+    ownerGates: buildOwnerGateRows({
+      env: {},
+    }),
+  })
+
+  for (const source of [
+    'scripts/security/probe-production-security.mjs',
+    'scripts/seo/probe-launch-seo.mjs',
+    'docs/launch/analytics-and-indexing-runbook.md',
+    'docs/launch/operations-runbook.md',
+    'docs/launch/production-e2e-evidence.md',
+    'docs/launch/performance-evidence.md',
+  ]) {
+    assert.ok(report.includes(source), `missing ${source}`)
+  }
+
+  assert.match(report, /Search Console rows stay `pending`, `owner-blocked`, or `approved`/)
+})
+
 test('all-skipped report is not treated as launch-ready', () => {
   const report = renderFinalReadinessReport({
     checkResults: [
