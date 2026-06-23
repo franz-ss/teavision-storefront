@@ -39,6 +39,20 @@ test('metadata, robots, and sitemap routes use shared noindex controls', () => {
   assert.match(robots, /disallow:\s*\[['"]\/api\/['"]\]/)
 })
 
+test('final readiness flips enabled SEO through launch-indexing lifecycle', () => {
+  const layout = readSource('src/app/layout.tsx')
+  const audit = readSource('scripts/launch/run-final-readiness-audit.mjs')
+
+  assert.match(layout, /withNoindexRobots/)
+  assert.match(audit, /'seo enabled'[\s\S]*lifecycleProfile:\s*'indexable'/)
+  assert.match(
+    audit,
+    /lifecycleFactory\(\s*baseUrl,\s*lifecycleOptionsForProfile\(requiredProfile\),\s*\)/s,
+  )
+  assert.match(audit, /disableIndexing:\s*false/)
+  assert.match(audit, /disableIndexing:\s*true/)
+})
+
 test('sitemap static coverage is driven by the launch route matrix', () => {
   const sitemap = readSource('src/app/sitemap.ts')
   const matrix = readSource('src/lib/seo/launch-route-matrix.ts')
@@ -75,6 +89,7 @@ test('sitemap static coverage is driven by the launch route matrix', () => {
 test('enabled SEO probe fails when indexable routes still render noindex', () => {
   const probe = readSource('scripts/seo/probe-launch-seo.mjs')
 
+  assert.match(probe, /shouldIndexWhenEnabled/)
   assert.match(probe, /const hasNoindex = hasNoindexMeta\(text\)/)
   assert.match(
     probe,
