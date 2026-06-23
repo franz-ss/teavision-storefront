@@ -129,6 +129,8 @@ test('production lifecycle command construction matches fake-provider server flo
   const commands = getProductionLifecycleCommands({
     baseUrl: 'http://127.0.0.1:4999',
   })
+  const nextBuild = commands.find((command) => command.name === 'next build')
+  const nextStart = commands.find((command) => command.name === 'next start')
 
   assert.equal(commands[0].name, 'fake Shopify')
   assert.deepEqual(commands[0].args, [
@@ -146,11 +148,25 @@ test('production lifecycle command construction matches fake-provider server flo
     '-p',
     '4999',
   ])
+  assert.equal(nextBuild?.env.DISABLE_INDEXING, 'true')
+  assert.equal(nextStart?.env.DISABLE_INDEXING, 'true')
   assert.equal(commands[3].env.PLAYWRIGHT_PRODUCTION_TEST_MODE, 'true')
   assert.equal(
     commands[3].env.SHOPIFY_STOREFRONT_TEST_URL,
     'http://127.0.0.1:4517/graphql',
   )
+})
+
+test('production lifecycle can build launch-indexing mode explicitly', () => {
+  const commands = getProductionLifecycleCommands({
+    baseUrl: 'http://127.0.0.1:4999',
+    disableIndexing: false,
+  })
+  const nextBuild = commands.find((command) => command.name === 'next build')
+  const nextStart = commands.find((command) => command.name === 'next start')
+
+  assert.equal(nextBuild?.env.DISABLE_INDEXING, 'false')
+  assert.equal(nextStart?.env.DISABLE_INDEXING, 'false')
 })
 
 test('lighthouse command uses local dependency with mobile launch categories', () => {

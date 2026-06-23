@@ -121,6 +121,7 @@ export function getPortFromBaseUrl(baseUrl) {
 
 export function getProductionLifecycleCommands({
   baseUrl = DEFAULT_BASE_URL,
+  disableIndexing = true,
   fakeCustomerAccountPort = DEFAULT_FAKE_CUSTOMER_ACCOUNT_PORT,
   fakeShopifyPort = DEFAULT_FAKE_SHOPIFY_PORT,
 } = {}) {
@@ -129,7 +130,7 @@ export function getProductionLifecycleCommands({
   const fakeCustomerAccountUrl = `http://127.0.0.1:${fakeCustomerAccountPort}`
 
   const nextEnv = {
-    DISABLE_INDEXING: 'true',
+    DISABLE_INDEXING: disableIndexing ? 'true' : 'false',
     NEXT_PUBLIC_ANALYTICS_MODE: 'fake',
     NEXT_PUBLIC_SEARCHANISE_API_KEY: '',
     NEXT_PUBLIC_SEARCHANISE_ENABLED: 'false',
@@ -249,8 +250,8 @@ async function stopChild(child) {
   child.kill('SIGTERM')
 }
 
-export async function startProductionLifecycle(baseUrl) {
-  const commands = getProductionLifecycleCommands({ baseUrl })
+export async function startProductionLifecycle(baseUrl, options = {}) {
+  const commands = getProductionLifecycleCommands({ baseUrl, ...options })
   const children = []
 
   try {
