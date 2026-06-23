@@ -650,7 +650,7 @@ export async function main(argv = process.argv.slice(2)) {
       const evidence = renderEvidenceDocument({
         baseUrl: args.baseUrl,
         rows,
-        routes: DEFAULT_ROUTES,
+        routes: args.routes,
       })
       mkdirSync(dirname(EVIDENCE_PATH), { recursive: true })
       writeFileSync(EVIDENCE_PATH, evidence)
