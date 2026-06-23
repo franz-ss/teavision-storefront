@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 17-03-PLAN.md
-last_updated: "2026-06-23T07:46:33.009Z"
+stopped_at: Completed 17-04-PLAN.md
+last_updated: "2026-06-23T08:47:38.994Z"
 last_activity: 2026-06-23
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 14
-  completed_plans: 12
+  completed_plans: 13
   percent: 67
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 ## Current Position
 
 Phase: 17 (operations-performance-and-final-production-readiness-audit) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-06-23
 
@@ -91,6 +91,7 @@ Last activity: 2026-06-23
 | Phase 17 P01 | 14 min | 4 tasks | 8 files |
 | Phase 17 P02 | 23 min | 5 tasks | 27 files |
 | Phase 17 P03 | 24 min | 4 tasks | 14 files |
+| Phase 17 P04 | 3098 seconds | 4 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -158,6 +159,9 @@ Recent decisions affecting current work:
 - [Phase 17]: Production e2e uses an explicit PLAYWRIGHT_PRODUCTION_TEST_MODE local-only gate so built Next verification can use fake providers without allowing normal production test endpoints. — Normal production runtime still rejects guarded test endpoints unless the Playwright-only gate and local endpoint checks are present.
 - [Phase 17]: Searchanise is disabled and analytics stay fake in the production Playwright server environment. — Local browser evidence must not depend on production third-party services.
 - [Phase 17]: Real Shopify hosted checkout, live Customer Account OAuth, protected customer data, and B2B pricing remain owner-gated evidence, not automated test behavior. — Automated local e2e stops at fake providers and documented launch gates.
+- [Phase 17]: 17-04: Local Lighthouse metric FAIL/WARN rows are recorded as launch evidence; process failures are reserved for probe/runtime errors.
+- [Phase 17]: 17-04: Fake-provider PDP performance evidence includes a local rich-media image so Lighthouse exercises the product gallery path.
+- [Phase 17]: 17-04: Storybook browser tests use a cart Server Action mock rather than bundling production server action modules.
 
 ### Roadmap Evolution
 
@@ -251,8 +255,8 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-23T07:46:32.996Z
-Stopped at: Completed 17-03-PLAN.md
+Last session: 2026-06-23T08:47:38.982Z
+Stopped at: Completed 17-04-PLAN.md
 Resume file: None
 
 ## Operator Next Steps

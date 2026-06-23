@@ -38,8 +38,8 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 
 ### Performance, UX, And QA
 
-- [ ] **PERF-01**: Home and PDP Lighthouse/Core Web Vitals evidence no longer shows launch-blocking LCP regressions.
-- [ ] **UX-01**: Audit UX/accessibility polish items are resolved or documented as non-blocking, including mobile text wrapping and duplicate skip links.
+- [x] **PERF-01**: Home and PDP Lighthouse/Core Web Vitals evidence no longer shows launch-blocking LCP regressions.
+- [x] **UX-01**: Audit UX/accessibility polish items are resolved or documented as non-blocking, including mobile text wrapping and duplicate skip links.
 - [x] **QA-01**: Local production e2e is unblocked and passes without relying on an already-running dev server.
 - [x] **QA-02**: Final readiness audit script/report proves build, lint, typecheck, unit, integration, Storybook, e2e, dependency audit, headers, policy routes, SEO, performance, and browser smoke checks.
 - [x] **QA-03**: Shopify hosted checkout, payment, shipping, tax, order creation, success redirect, Customer Account OAuth, protected customer data, and B2B pricing checks have owner-approved test evidence or explicit owner-blocked status.
@@ -94,8 +94,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPS-02 | Phase 17 | Complete |
 | OPS-03 | Phase 17 | Complete |
 | OPS-04 | Phase 17 | Complete |
-| PERF-01 | Phase 17 | Pending |
-| UX-01 | Phase 17 | Pending |
+| PERF-01 | Phase 17 | Complete |
+| UX-01 | Phase 17 | Complete |
 | QA-01 | Phase 17 | Complete |
 | QA-02 | Phase 17 | Complete |
 | QA-03 | Phase 17 | Complete |
