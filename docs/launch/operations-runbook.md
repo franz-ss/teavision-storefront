@@ -8,25 +8,30 @@ checkout/payment/order testing requires store-owner approval before execution.
 ## Launch Watch
 
 Monitor these launch-critical signals during cutover and the first operating
-window:
+window. Use Sentry issues/events for app error tracking, Vercel deployment and
+runtime logs for launch-day triage, and the private readiness probe for local
+documentation/config evidence.
 
-- deploy failure
-- health failure
-- checkout handoff errors
-- account/OAuth errors
-- provider failures
-- elevated server errors
+| Signal | Source | Severity | First responder | Escalation |
+| --- | --- | --- | --- | --- |
+| deploy failure | Vercel deployment status and build logs | Critical | Engineering owner | Roll back or redeploy after env/build fix |
+| `/api/health` failure | Vercel runtime logs, production health probe, `/api/health` response | Critical | Engineering owner | Roll back if the current deployment caused the failure |
+| checkout handoff errors | Sentry, Vercel runtime logs, `checkout_handoff_failed` events | Critical | Engineering owner | Store owner if customer checkout is blocked |
+| cart buyer identity sync failures | Sentry, Vercel runtime logs, `cart_buyer_identity_sync_failed` events | Critical | Engineering owner | Store owner if signed-in checkout is blocked |
+| account/OAuth errors | Sentry, Vercel runtime logs, `account_oauth_failed` and `customer_account_failed` events | High | Engineering owner | Store owner for Shopify Customer Account admin/config evidence |
+| Shopify Storefront API failures | Sentry, Vercel runtime logs, `shopify_storefront_failed` events | Critical | Engineering owner | Store owner if catalog/cart reads are unavailable |
+| Customer Account API failures | Sentry, Vercel runtime logs, `customer_account_failed` events | High | Engineering owner | Store owner if account access or protected data scope is blocked |
+| Sanity failures | Sentry, Vercel runtime logs, `sanity_failed` or `sanity_webhook_rejected` events | Medium | Engineering owner | Content owner if editorial publishing is blocked |
+| Searchanise failures | Sentry, Vercel runtime logs, `searchanise_failed` events | Medium | Engineering owner | Disable/degrade search features if product discovery is affected |
+| Trustoo/HulkApps degradations | Sentry, Vercel runtime logs, `trustoo_failed` and `hulkapps_failed` events | Medium | Engineering owner | Store owner if pricing/review parity becomes launch-blocking |
+| contact/newsletter/NPD/wholesale provider failures | Sentry, Vercel runtime logs, `contact_provider_failed` events | Medium | Engineering owner | Store owner if lead capture is unavailable |
+| webhook rejected events | Sentry, Vercel runtime logs, `shopify_webhook_rejected` and `sanity_webhook_rejected` events | High | Engineering owner | Rotate/reconfigure secrets if signatures or HMAC validation fail |
+| elevated server route/action errors | Sentry issues, Vercel runtime logs, Next `onRequestError`, `route_action_failed` events | High | Engineering owner | Roll back if the issue is release-correlated |
 
-Primary operator checks:
-
-- Confirm the production deploy completed and the release identifier matches
-  the approved cutover build.
-- Confirm `/api/health` returns a 200 response with only safe public fields.
-- Run `node scripts/launch/probe-readiness.mjs --mode docs`.
-- Watch storefront, account, cart, checkout handoff, policy, and search routes
-  for elevated 4xx/5xx responses.
-- Confirm fake/local verification remains separate from owner-approved Shopify
-  hosted checkout/payment/order evidence.
+Vercel runtime logs are acceptable for launch-day triage. For longer retention,
+alert routing, or cross-provider analysis, configure Sentry, Vercel Log Drains,
+or another approved observability provider before relying on the data beyond
+the host retention window.
 
 ## Alerts And Escalation
 
@@ -38,9 +43,11 @@ single retry:
 | deploy failure | Check build logs and env availability | Engineering owner |
 | health failure | Check `/api/health`, release, and runtime logs | Engineering owner |
 | checkout handoff errors | Disable new launch changes if cart handoff is affected | Engineering owner + store owner |
+| cart buyer identity sync failures | Confirm signed-in checkout sync events are not rising | Engineering owner + store owner |
 | account/OAuth errors | Verify Customer Account env and Shopify admin callback/logout URLs | Engineering owner + store owner |
-| provider failures | Identify Shopify, Sanity, Searchanise, reviews, analytics, or email boundary | Engineering owner |
-| elevated server errors | Inspect redacted runtime logs and affected routes/actions | Engineering owner |
+| provider failures | Identify Shopify, Sanity, Searchanise, Trustoo, HulkApps, analytics, or email boundary | Engineering owner |
+| webhook rejected events | Verify webhook secrets, HMAC/signature headers, and sender configuration | Engineering owner |
+| elevated server route/action errors | Inspect redacted runtime logs, Sentry events, and affected routes/actions | Engineering owner |
 
 Do not paste customer PII, tokens, cart IDs, checkout URLs, order details, raw
 provider payloads, or submitted message bodies into incident notes.
@@ -117,17 +124,25 @@ approval and an approved test boundary.
 Run this checklist daily for the first week after launch:
 
 - Confirm `/api/health` is responding with safe public fields only.
-- Review deploy health, rollback history, and elevated server errors.
-- Review checkout handoff errors and cart identity sync failures.
-- Review account/OAuth errors and protected route failures.
-- Review provider failures for Shopify, Sanity, Searchanise, reviews, email,
-  and analytics destinations.
+- Review Sentry issues for new checkout, account, provider, webhook, and
+  route/action errors.
+- Review Vercel runtime errors, deploy health, rollback history, and elevated
+  server route/action errors.
+- Review checkout handoff events and cart buyer identity sync failures.
+- Review account OAuth events, Customer Account API failures, and protected
+  route failures.
+- Review provider warnings for Shopify, Sanity, Searchanise, Trustoo,
+  HulkApps, contact, newsletter, NPD, wholesale, email, and analytics
+  destinations.
 - Confirm `DISABLE_INDEXING` and `NEXT_PUBLIC_ANALYTICS_MODE` are still set to
   the owner-approved launch values.
 - Confirm CSP/reporting controls do not show launch-blocking required source
   failures.
 - Confirm owner-gated Shopify, Customer Account, B2B, and Search Console
   evidence is approved, pending, or owner-blocked.
+- Confirm final owner-gate status is recorded for hosted checkout/payment/order
+  testing before any real Shopify hosted checkout, payment, shipping-rate, tax,
+  order-creation, or success-redirect test is run.
 - Record actions and evidence in the Evidence Log.
 
 ## Evidence Log
