@@ -3,6 +3,7 @@ import 'server-only'
 import sanitizeHtml from 'sanitize-html'
 
 import { searchanisePublicConfig } from '@/lib/env/public'
+import { logEvent } from '@/lib/observability/logger'
 import type {
   CollectionProductSummary,
   Money,
@@ -65,6 +66,15 @@ function createEmptyResult(
     products: [],
     facets: [],
     pagination,
+  }
+}
+
+function getSearchLogContext(
+  input: SearchaniseSearchInput,
+): Record<string, unknown> {
+  return {
+    page: input.page,
+    queryLength: input.query.length,
   }
 }
 
@@ -489,6 +499,12 @@ function mapResponse(
   const errorCode = getString(response, 'error')
 
   if (errorCode) {
+    logEvent('warn', 'searchanise_failed', {
+      ...getSearchLogContext(input),
+      errorCode,
+      status: 'provider-error',
+    })
+
     return createEmptyResult(
       input,
       'error',
@@ -537,6 +553,11 @@ export async function getSearchaniseSearchResults(
     )
 
     if (!response.ok) {
+      logEvent('warn', 'searchanise_failed', {
+        ...getSearchLogContext(input),
+        status: response.status,
+      })
+
       return createEmptyResult(
         input,
         'error',
@@ -548,6 +569,11 @@ export async function getSearchaniseSearchResults(
 
     return mapResponse(data, input)
   } catch {
+    logEvent('warn', 'searchanise_failed', {
+      ...getSearchLogContext(input),
+      status: 'exception',
+    })
+
     return createEmptyResult(
       input,
       'error',

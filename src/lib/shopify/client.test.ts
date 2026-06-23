@@ -1,8 +1,15 @@
 import { parse, type DocumentNode } from 'graphql'
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
+import type { Mock } from 'vitest'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
+import { logEvent } from '@/lib/observability/logger'
+
 import { shopifyFetch } from './client'
+
+vi.mock('@/lib/observability/logger', () => ({
+  logEvent: vi.fn(),
+}))
 
 type FetchCall = {
   body: {
@@ -34,12 +41,15 @@ function createFetchMock(response: Response) {
   return { calls, fetchMock }
 }
 
+const logEventMock = logEvent as unknown as Mock<typeof logEvent>
+
 describe('shopifyFetch', () => {
   beforeEach(() => {
     vi.stubEnv('SHOPIFY_STORE_DOMAIN', '')
     vi.stubEnv('SHOPIFY_STOREFRONT_ACCESS_TOKEN', '')
     vi.stubEnv('SHOPIFY_STOREFRONT_TEST_URL', '')
     vi.stubEnv('SHOPIFY_STOREFRONT_TEST_MODE', '')
+    logEventMock.mockClear()
   })
 
   afterEach(() => {
@@ -134,6 +144,15 @@ describe('shopifyFetch', () => {
     await expect(
       shopifyFetch<{ ok: boolean }>({ query: 'query Test { ok }' }),
     ).rejects.toThrow('Shopify API error: 503 Down')
+    expect(logEventMock).toHaveBeenCalledWith(
+      'error',
+      'shopify_storefront_failed',
+      {
+        operation: 'Test',
+        status: 503,
+        statusText: 'Down',
+      },
+    )
   })
 
   test('throws joined GraphQL errors', async () => {
@@ -149,6 +168,15 @@ describe('shopifyFetch', () => {
     await expect(
       shopifyFetch<{ ok: boolean }>({ query: 'query Test { ok }' }),
     ).rejects.toThrow('First\nSecond')
+    expect(logEventMock).toHaveBeenCalledWith(
+      'error',
+      'shopify_storefront_failed',
+      {
+        errorCount: 2,
+        operation: 'Test',
+        status: 'graphql-errors',
+      },
+    )
   })
 
   test('serializes variables and TypedDocumentNode queries', async () => {

@@ -2,6 +2,7 @@ import { revalidateTag } from 'next/cache'
 import { NextRequest } from 'next/server'
 import { parseBody } from 'next-sanity/webhook'
 
+import { logEvent } from '@/lib/observability/logger'
 import { getSanityRevalidateSecret } from '@/lib/sanity/env'
 
 type SanityWebhookPayload = {
@@ -32,6 +33,10 @@ export async function POST(request: NextRequest): Promise<Response> {
   try {
     expectedSecret = getSanityRevalidateSecret()
   } catch {
+    logEvent('error', 'sanity_webhook_rejected', {
+      reason: 'missing-secret',
+    })
+
     return Response.json(
       { error: 'Webhook secret not configured' },
       { status: 500 },
@@ -46,10 +51,18 @@ export async function POST(request: NextRequest): Promise<Response> {
       true,
     )
   } catch {
+    logEvent('warn', 'sanity_webhook_rejected', {
+      reason: 'invalid-payload',
+    })
+
     return Response.json({ error: 'Invalid webhook payload' }, { status: 400 })
   }
 
   if (!parsedBody.isValidSignature) {
+    logEvent('warn', 'sanity_webhook_rejected', {
+      reason: 'invalid-signature',
+    })
+
     return Response.json(
       { error: 'Invalid webhook signature' },
       { status: 401 },
@@ -57,6 +70,10 @@ export async function POST(request: NextRequest): Promise<Response> {
   }
 
   if (!isRecord(parsedBody.body)) {
+    logEvent('warn', 'sanity_webhook_rejected', {
+      reason: 'invalid-payload',
+    })
+
     return Response.json({ error: 'Invalid webhook payload' }, { status: 400 })
   }
 
@@ -74,6 +91,13 @@ export async function POST(request: NextRequest): Promise<Response> {
   if (documentType === 'blogPost' && blogSlug && articleSlug) {
     revalidateTag(`article-${blogSlug}-${articleSlug}`, { expire: 0 })
   }
+
+  logEvent('info', 'sanity_webhook_received', {
+    documentType,
+    hasArticleSlug: Boolean(articleSlug),
+    hasBlogSlug: Boolean(blogSlug),
+    status: 'accepted',
+  })
 
   return Response.json({ revalidated: true }, { status: 200 })
 }

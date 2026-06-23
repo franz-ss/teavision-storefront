@@ -1,6 +1,7 @@
 import { cacheLife, cacheTag } from 'next/cache'
 
 import { trustooShopDomain } from '@/lib/env/public'
+import { logEvent } from '@/lib/observability/logger'
 
 export type ProductReviewSummary = {
   rating: number
@@ -80,9 +81,10 @@ export async function getTrustooProductRatings(
 
     if (!response.ok) {
       cacheLife('minutes')
-      console.warn('Trustoo ratings request failed', {
+      logEvent('warn', 'trustoo_failed', {
         status: response.status,
         handleCount: uniqueHandles.length,
+        reason: 'request-failed',
       })
       return {}
     }
@@ -90,8 +92,9 @@ export async function getTrustooProductRatings(
     const json = (await response.json()) as TrustooRatingsResponse
     if (json.code !== 0 || !Array.isArray(json.data)) {
       cacheLife('minutes')
-      console.warn('Trustoo ratings response was not usable', {
+      logEvent('warn', 'trustoo_failed', {
         handleCount: uniqueHandles.length,
+        reason: 'unusable-response',
       })
       return {}
     }
@@ -111,8 +114,9 @@ export async function getTrustooProductRatings(
     )
   } catch {
     cacheLife('minutes')
-    console.warn('Trustoo ratings request threw before completion', {
+    logEvent('warn', 'trustoo_failed', {
       handleCount: uniqueHandles.length,
+      reason: 'request-threw',
     })
     return {}
   }

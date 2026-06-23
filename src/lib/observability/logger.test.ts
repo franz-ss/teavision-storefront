@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
 
-import { logEvent } from './logger'
+import { logEvent, type ObservabilityEventName } from './logger'
 import {
   REDACTED_VALUE,
   hashIdentifier,
@@ -112,6 +112,47 @@ describe('observability logger', () => {
       expect(calls).toContain(REDACTED_VALUE)
     } finally {
       consoleError.mockRestore()
+    }
+  })
+
+  test('accepts provider and webhook event names with redacted sensitive fields', () => {
+    const consoleWarn = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => undefined)
+    const providerEvents: ObservabilityEventName[] = [
+      'shopify_storefront_failed',
+      'customer_account_failed',
+      'sanity_failed',
+      'searchanise_failed',
+      'trustoo_failed',
+      'hulkapps_failed',
+      'contact_provider_failed',
+      'shopify_webhook_received',
+      'shopify_webhook_rejected',
+      'sanity_webhook_received',
+      'sanity_webhook_rejected',
+    ]
+
+    try {
+      providerEvents.forEach((eventName) => {
+        logEvent('warn', eventName, {
+          body: { email: 'tea@example.com' },
+          email: 'tea@example.com',
+          message: 'Please call me about a private order',
+          payload: { token: 'customer-access-token-abc' },
+          token: 'customer-access-token-abc',
+        })
+      })
+
+      const calls = JSON.stringify(consoleWarn.mock.calls)
+
+      expect(consoleWarn).toHaveBeenCalledTimes(providerEvents.length)
+      expect(calls).not.toContain('tea@example.com')
+      expect(calls).not.toContain('customer-access-token-abc')
+      expect(calls).not.toContain('Please call me about a private order')
+      expect(calls).toContain(REDACTED_VALUE)
+    } finally {
+      consoleWarn.mockRestore()
     }
   })
 })

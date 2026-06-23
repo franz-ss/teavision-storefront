@@ -1,5 +1,7 @@
 import { cacheLife, cacheTag } from 'next/cache'
 
+import { logEvent } from '@/lib/observability/logger'
+import { hashIdentifier } from '@/lib/observability/redact'
 import { shopifyFetch } from '@/lib/shopify/client'
 import {
   getShopifyStoreDomain,
@@ -479,9 +481,10 @@ async function getLegacyHulkBulkPricingTiers(
     })
 
     if (!response.ok) {
-      console.warn('HulkApps volume discount request failed', {
+      logEvent('warn', 'hulkapps_failed', {
         status: response.status,
-        productId,
+        productIdHash: hashIdentifier(productId),
+        reason: 'request-failed',
       })
       return { tiers: [], degraded: true }
     }
@@ -492,8 +495,9 @@ async function getLegacyHulkBulkPricingTiers(
       degraded: false,
     }
   } catch {
-    console.warn('HulkApps volume discount request threw before completion', {
-      productId,
+    logEvent('warn', 'hulkapps_failed', {
+      productIdHash: hashIdentifier(productId),
+      reason: 'request-threw',
     })
     return { tiers: [], degraded: true }
   }

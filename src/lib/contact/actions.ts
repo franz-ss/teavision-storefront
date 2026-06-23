@@ -25,6 +25,7 @@ import {
   WHOLESALE_ACCOUNT_LIMITS,
   isWholesaleAccountStartOption,
 } from '@/lib/contact/wholesale-account'
+import { logEvent } from '@/lib/observability/logger'
 import { checkRateLimit, getClientIpFromHeaders } from '@/lib/rate-limit'
 
 type ContactSubmission = {
@@ -126,14 +127,14 @@ function logProviderWarning(
   surface: ContactProviderSurface,
   status: ContactProviderStatus,
 ) {
-  console.warn('[contact]', { surface, status })
+  logEvent('warn', 'contact_provider_failed', { surface, status })
 }
 
 function logProviderError(
   surface: ContactProviderSurface,
   status: ContactProviderStatus,
 ) {
-  console.error('[contact]', { surface, status })
+  logEvent('error', 'contact_provider_failed', { surface, status })
 }
 
 function readSubmission(formData: FormData): ContactSubmission {

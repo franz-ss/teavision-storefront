@@ -246,10 +246,17 @@ describe('sendWholesaleAccountAction', () => {
         success: false,
         error: 'Unable to send your message right now. Please try again shortly.',
       })
-      expect(consoleError).toHaveBeenCalledWith('[contact]', {
-        status: 'provider-error',
-        surface: 'wholesale-account',
-      })
+      expect(consoleError).toHaveBeenCalledWith(
+        '[observability]',
+        expect.objectContaining({
+          context: {
+            status: 'provider-error',
+            surface: 'wholesale-account',
+          },
+          event: 'contact_provider_failed',
+          level: 'error',
+        }),
+      )
       expect(JSON.stringify(consoleError.mock.calls)).not.toContain(
         'ada@example.com',
       )
