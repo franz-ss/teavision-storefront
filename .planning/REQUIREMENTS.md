@@ -32,8 +32,8 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 ### Operations
 
 - [x] **OPS-01**: Production exposes a safe health/readiness endpoint with no secrets or PII.
-- [ ] **OPS-02**: Errors, checkout failures, provider failures, and route/action failures are observable in the chosen monitoring stack.
-- [ ] **OPS-03**: Logs are structured and redact tokens, customer PII, message bodies, and provider payloads.
+- [x] **OPS-02**: Errors, checkout failures, provider failures, and route/action failures are observable in the chosen monitoring stack.
+- [x] **OPS-03**: Logs are structured and redact tokens, customer PII, message bodies, and provider payloads.
 - [x] **OPS-04**: Launch runbook covers alerts, rollback, backups/platform recovery, owner approvals, and post-launch monitoring.
 
 ### Performance, UX, And QA
@@ -91,8 +91,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANALYTICS-02 | Phase 16 | Complete |
 | ANALYTICS-03 | Phase 16 | Complete |
 | OPS-01 | Phase 17 | Complete |
-| OPS-02 | Phase 17 | Pending |
-| OPS-03 | Phase 17 | Pending |
+| OPS-02 | Phase 17 | Complete |
+| OPS-03 | Phase 17 | Complete |
 | OPS-04 | Phase 17 | Complete |
 | PERF-01 | Phase 17 | Pending |
 | UX-01 | Phase 17 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 17-01-PLAN.md
-last_updated: "2026-06-23T06:38:09.767Z"
-last_activity: 2026-06-23 -- Completed 17-01 safe health/readiness foundation
+stopped_at: Completed 17-02-PLAN.md
+last_updated: "2026-06-23T07:08:55.893Z"
+last_activity: 2026-06-23
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 14
-  completed_plans: 10
+  completed_plans: 11
   percent: 67
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 ## Current Position
 
 Phase: 17 (operations-performance-and-final-production-readiness-audit) — EXECUTING
-Plan: 2 of 5
-Status: Ready to execute Plan 2
-Last activity: 2026-06-23 -- Completed 17-01 safe health/readiness foundation
+Plan: 3 of 5
+Status: Ready to execute
+Last activity: 2026-06-23
 
 ## Performance Metrics
 
@@ -89,6 +89,7 @@ Last activity: 2026-06-23 -- Completed 17-01 safe health/readiness foundation
 | Phase 16 P03 | 24 min | 4 tasks | 32 files |
 | Phase 16 P04 | 17 min | 4 tasks | 7 files |
 | Phase 17 P01 | 14 min | 4 tasks | 8 files |
+| Phase 17 P02 | 23 min | 5 tasks | 27 files |
 
 ## Accumulated Context
 
@@ -150,6 +151,9 @@ Recent decisions affecting current work:
 - [Phase 17-01]: Public health remains intentionally shallow: status, service, release, and timestamp only. — Keeps the public endpoint safe under OPS-01 and leaves provider diagnostics to private probes.
 - [Phase 17-01]: Owner-gated Shopify/OAuth/B2B/Search Console proof is tracked as approved, pending, or owner-blocked evidence, not as an automated code failure. — Preserves the owner-approval boundary while allowing automated code readiness to be evaluated honestly.
 - [Phase 17-01]: Docs-mode readiness checks validate operations runbook headings once the runbook exists. — Prevents future edits from removing required launch watch, rollback, recovery, env gate, owner approval, and evidence sections.
+- [Phase 17]: Plan 17-02 uses Sentry as the runtime error capture provider, configured through Next.js instrumentation and disabled by default unless SENTRY_DSN is set. — Keeps production capture opt-in while preserving release and source map support when Sentry credentials are provided.
+- [Phase 17]: Launch observability logs use a shared redaction helper and hashed identifiers only. — Customer PII, checkout URLs, raw payloads, tokens, and submitted message bodies stay out of logs.
+- [Phase 17]: Vercel runtime logs are immediate triage only; longer retention routes through approved drains or Sentry. — Matches launch watch needs without relying on short-lived runtime log retention.
 
 ### Roadmap Evolution
 
@@ -243,8 +247,8 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-23T06:38:09.754Z
-Stopped at: Completed 17-01-PLAN.md
+Last session: 2026-06-23T07:08:55.879Z
+Stopped at: Completed 17-02-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
