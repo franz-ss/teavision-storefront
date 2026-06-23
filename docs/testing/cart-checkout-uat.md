@@ -20,6 +20,8 @@ This checklist covers Shopify-hosted checkout behavior that the Next.js storefro
 - Success or thank-you state
 
 Local automated tests cover only cart behavior and the `cart.checkoutUrl` handoff.
+Local production e2e evidence and its fake-provider boundary are recorded in
+`docs/launch/production-e2e-evidence.md`.
 
 ## Preconditions
 

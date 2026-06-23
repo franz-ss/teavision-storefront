@@ -63,6 +63,7 @@ If access is missing, account pages should fail closed with operator-facing setu
 Automated tests may cover OAuth helpers, fake OAuth discovery/token exchange, protected route handling, account UI states, address/profile Server Actions, cart buyer identity sync, and fake checkout URL handoff.
 
 Automated tests must stop at the fake checkout URL such as `https://checkout.test/`. They must not load or submit Shopify hosted checkout.
+Local production e2e evidence and its fake Customer Account boundary are recorded in `docs/launch/production-e2e-evidence.md`.
 
 ## Manual Approval Gate
 
