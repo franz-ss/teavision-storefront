@@ -38,7 +38,46 @@ must never be copied into analytics payloads.
    destinations, then confirm Meta, Klaviyo, or Shopify pixel hosts remain
    absent unless their env gates are explicitly configured.
 
-## Post-Cutover Analytics Verification
+## Pre-Cutover Indexing Verification
+
+1. Confirm the launch environment still has `DISABLE_INDEXING=true`.
+2. Run disabled-mode route evidence against the local production server or
+   staging host:
+
+   ```bash
+   node scripts/seo/probe-launch-seo.mjs --mode disabled
+   ```
+
+3. Verify legal policy redirects before cutover:
+
+   ```bash
+   node scripts/seo/probe-launch-seo.mjs --mode redirects
+   ```
+
+4. Confirm the legal approval matrix and owner/legal approval state are
+   recorded before presenting policy pages as final.
+5. Record disabled-mode and redirect proof in
+   `docs/launch/seo-route-evidence.md`.
+
+## Cutover Analytics And Indexing
+
+1. Confirm production destination IDs are owner-approved public values before
+   changing analytics mode away from fake/disabled.
+2. Set `DISABLE_INDEXING=false` for the launch deployment.
+3. Deploy through the approved production release path.
+4. Run enabled-mode route-matrix evidence against the launch host:
+
+   ```bash
+   SEO_PROBE_BASE_URL=https://www.teavision.com.au node scripts/seo/probe-launch-seo.mjs --mode enabled
+   ```
+
+5. Grant analytics consent in a browser session and verify approved analytics
+   destinations only; keep marketing destinations disabled unless owner
+   approval and matching consent copy exist.
+6. Record command output, launch host, timestamp, verifier, and any skipped
+   product structured-data warning in the Evidence Log and SEO evidence doc.
+
+## Post-Cutover Analytics And Indexing Verification
 
 1. Confirm production was built with the owner-approved public destination IDs.
 2. Confirm denied optional consent blocks destination loading on the live site.
@@ -47,7 +86,11 @@ must never be copied into analytics payloads.
 4. Verify GTM only if the owner approved `NEXT_PUBLIC_GTM_CONTAINER_ID`.
 5. Verify Meta, Klaviyo, and Shopify pixels only if the owner approved the
    matching marketing destination and consent copy.
-6. Record destination, URL, consent state, event name, timestamp, verifier, and
+6. Submit `/sitemap.xml` in Google Search Console only after owner property
+   access is available.
+7. Inspect representative legal, product, collection, and static landing URLs
+   in Google Search Console after cutover.
+8. Record destination, URL, consent state, event name, timestamp, verifier, and
    evidence link in the Evidence Log.
 
 ## Owner-Gated Purchase And Order Tracking
@@ -68,20 +111,28 @@ Before enabling purchase/order tracking, collect:
 
 ## Search Console And Sitemap Submission
 
-Search Console access and sitemap submission are owner-gated. Plan 16-04 owns
-the detailed indexing flip and sitemap verification. For this plan, keep the
-handoff checklist narrow:
+Search Console access and sitemap submission proof are owner-gated. Engineering
+can run local robots, sitemap, canonical, noindex, structured-data, and redirect
+checks, but cannot claim Search Console submission until owner access or dated
+proof exists.
 
 1. Confirm the owner has access to the canonical production property.
-2. Confirm launch indexing is intentionally enabled before submission.
-3. Submit the production sitemap URL after cutover.
-4. Inspect representative product, collection, legal, and landing URLs.
-5. Record proof or mark access as pending in the Evidence Log.
+2. Confirm launch indexing is intentionally enabled with
+   `DISABLE_INDEXING=false` before submission.
+3. Submit the production `/sitemap.xml` URL after cutover.
+4. Inspect representative URLs:
+   - Legal: `/pages/privacy-policy`, `/pages/terms-of-service`
+   - Product: one owner-approved product URL
+   - Collection: `/collections/all` or another launch collection URL
+   - Static: `/pages/bulk-wholesale-supply`, `/pages/private-label-packing`
+5. Record proof or mark access as owner-gated in the Evidence Log and
+   `docs/launch/seo-route-evidence.md`.
 
 ## Evidence Log
 
 | Date | Environment | Destination or tool | Consent state | Check | Evidence | Owner/Verifier |
 | --- | --- | --- | --- | --- | --- | --- |
 | Pending | Local/CI | fake/test sink | Analytics denied/granted | Unit tests prove fake sink and consent gates | `pnpm test:unit -- src/lib/analytics/adapter.test.ts` | Engineering |
+| Pending | Local production | SEO route matrix | Not applicable | Disabled mode, enabled mode, redirects, sitemap, canonical, noindex, and structured-data evidence | `node scripts/seo/probe-launch-seo.mjs --mode disabled` and `--mode enabled` | Engineering |
 | Pending | Production | GA4 | Analytics granted | Realtime/DebugView launch event verification | Pending owner public ID | Owner/Engineering |
-| Pending | Production | Search Console | Not applicable | Sitemap submission and URL inspection | Pending owner access | Owner |
+| Owner-gated | Production | Search Console | Not applicable | Sitemap submission and URL inspection | Pending owner property access or dated proof | Owner |

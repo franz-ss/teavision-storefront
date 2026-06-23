@@ -64,6 +64,7 @@ property access or dated proof.
 | --- | --- | --- | --- | --- |
 | Disabled indexing | `node scripts/seo/probe-launch-seo.mjs --mode disabled` | No robots sitemap line, zero sitemap URLs, legal routes noindexed | Pending | Pending local production run |
 | Enabled indexing | `node scripts/seo/probe-launch-seo.mjs --mode enabled` | Robots sitemap line, matrix sitemap URLs, canonical checks | Pending | Pending launch-host run |
-| Policy redirects | `node scripts/seo/probe-launch-seo.mjs --mode redirects` | Registry redirects include privacy and terms aliases | Pending | Pending command output |
+| Policy redirects | `node scripts/seo/probe-launch-seo.mjs --mode redirects` | Registry redirects include privacy and terms aliases | Pass | 2026-06-23 local command output: privacy and terms aliases present, 8 redirects total |
+| Runbook evidence | `node scripts/seo/probe-launch-seo.mjs --mode runbook` | Required evidence headings and runbook evidence text are present | Pass | 2026-06-23 local command output |
 | Structured data | `SEO_PROBE_PRODUCT_PATH=/products/example-product node scripts/seo/probe-launch-seo.mjs --mode enabled` | Product JSON-LD parses when a product page is renderable | Pending | Pending representative product path |
 | Search Console | Owner Search Console access | Submit `/sitemap.xml` and inspect representative URLs after cutover | Owner-gated | Pending owner access |
