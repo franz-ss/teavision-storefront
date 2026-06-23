@@ -147,8 +147,8 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - [x] `16-02` — Consent Foundation and Preferences
 
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] `16-03` — Consent-Aware Analytics Instrumentation
-- [ ] `16-04` — Launch SEO Route Matrix and Evidence
+- [x] `16-03` — Consent-Aware Analytics Instrumentation
+- [x] `16-04` — Launch SEO Route Matrix and Evidence
 
 ### Phase 17: Operations, Performance, and Final Production-Readiness Audit
 
@@ -174,4 +174,4 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ## Next
 
-Start Phase 15 with `$gsd-discuss-phase 15`, or skip directly to `$gsd-plan-phase 15`.
+Start Phase 17 with `$gsd-discuss-phase 17`, or skip directly to `$gsd-plan-phase 17`.
