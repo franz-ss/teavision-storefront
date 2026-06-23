@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import { withSentryConfig } from '@sentry/nextjs'
 
 import { getPolicyRedirects } from './src/lib/legal/policies'
 import { securityHeaders } from './src/lib/security/headers'
@@ -51,4 +52,24 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 }
 
-export default nextConfig
+export default withSentryConfig(nextConfig, {
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  release: {
+    create: Boolean(process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_RELEASE),
+    finalize: Boolean(process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_RELEASE),
+    name: process.env.SENTRY_RELEASE,
+  },
+  silent: !process.env.CI,
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+  },
+  telemetry: false,
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+  },
+  webpack: {
+    autoInstrumentServerFunctions: false,
+  },
+})
