@@ -29,6 +29,43 @@ test('metadata, robots, and sitemap routes use shared noindex controls', () => {
   assert.match(layout, /withNoindexRobots/)
   assert.match(robots, /isNoindexModeEnabled/)
   assert.match(sitemap, /isNoindexModeEnabled/)
+  assert.match(
+    sitemap,
+    /if\s*\(\s*isNoindexModeEnabled\(\)\s*\)\s*{\s*return\s*\[\]\s*}/s,
+  )
   assert.doesNotMatch(robots, /disallow:\s*['"]\/['"]/)
   assert.match(robots, /disallow:\s*\[['"]\/api\/['"]\]/)
+})
+
+test('sitemap static coverage is driven by the launch route matrix', () => {
+  const sitemap = readSource('src/app/sitemap.ts')
+  const matrix = readSource('src/lib/seo/launch-route-matrix.ts')
+  const policies = readSource('src/lib/legal/policies.ts')
+
+  assert.match(sitemap, /getLaunchSeoRouteExpectations/)
+  assert.match(sitemap, /shouldAppearInSitemap/)
+  assert.match(matrix, /LEGAL_POLICIES\.map/)
+  assert.match(matrix, /policy\.sitemap/)
+
+  for (const path of [
+    '/pages/privacy-policy',
+    '/pages/shipping-policy',
+    '/pages/refund-policy',
+    '/pages/terms-of-service',
+    '/pages/cookie-preferences',
+  ]) {
+    assert.match(policies, new RegExp(path.replaceAll('/', '\\/')))
+  }
+
+  for (const path of [
+    '/pages/bulk-wholesale-supply',
+    '/pages/private-label-packing',
+    '/pages/tea-bag-manufacturer',
+    '/pages/new-product-development-order-form',
+  ]) {
+    assert.match(matrix, new RegExp(path.replaceAll('/', '\\/')))
+  }
+
+  assert.match(matrix, /path:\s*'\/search'/)
+  assert.match(matrix, /path:\s*'\/search'[\s\S]*?shouldAppearInSitemap:\s*false/)
 })

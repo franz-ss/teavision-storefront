@@ -9,6 +9,7 @@ import {
   getUniqueArticleTags,
   isLocalCanonicalPath,
 } from '@/lib/blog/operations'
+import { getLaunchSeoRouteExpectations } from '@/lib/seo/launch-route-matrix'
 import { isNoindexModeEnabled } from '@/lib/seo/noindex'
 import { SITE_URL } from '@/lib/seo/site-url'
 import { getAllProducts } from '@/lib/shopify/operations/product'
@@ -16,44 +17,21 @@ import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 
 const STATIC_LAST_MODIFIED = '2026-06-02'
 
-const STATIC_PAGES: MetadataRoute.Sitemap = [
-  {
-    url: SITE_URL,
+function getSitemapUrl(path: string): string {
+  return path === '/' ? SITE_URL : `${SITE_URL}${path}`
+}
+
+const STATIC_PAGES: MetadataRoute.Sitemap = getLaunchSeoRouteExpectations()
+  .filter(
+    (expectation) =>
+      expectation.expectedStatus === 200 && expectation.shouldAppearInSitemap,
+  )
+  .map((expectation) => ({
+    url: getSitemapUrl(expectation.path),
     lastModified: STATIC_LAST_MODIFIED,
     changeFrequency: 'monthly',
-    priority: 1.0,
-  },
-  {
-    url: `${SITE_URL}/search`,
-    lastModified: STATIC_LAST_MODIFIED,
-    changeFrequency: 'monthly',
-    priority: 0.5,
-  },
-  {
-    url: `${SITE_URL}/pages/wholesale`,
-    lastModified: STATIC_LAST_MODIFIED,
-    changeFrequency: 'monthly',
-    priority: 0.5,
-  },
-  {
-    url: `${SITE_URL}/pages/wholesale-account-request`,
-    lastModified: STATIC_LAST_MODIFIED,
-    changeFrequency: 'monthly',
-    priority: 0.5,
-  },
-  {
-    url: `${SITE_URL}/pages/our-story`,
-    lastModified: STATIC_LAST_MODIFIED,
-    changeFrequency: 'monthly',
-    priority: 0.5,
-  },
-  {
-    url: `${SITE_URL}/pages/contact`,
-    lastModified: STATIC_LAST_MODIFIED,
-    changeFrequency: 'monthly',
-    priority: 0.5,
-  },
-]
+    priority: expectation.path === '/' ? 1.0 : 0.5,
+  }))
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (isNoindexModeEnabled()) {
