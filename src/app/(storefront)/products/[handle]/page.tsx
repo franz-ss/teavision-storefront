@@ -26,6 +26,7 @@ import {
   getShopifyAnalyticsScript,
   getShopifyStorefrontContext,
 } from './_lib/shopify-analytics'
+import { ProductViewAnalytics } from './_components/view-analytics'
 
 // Mirrors the Liquid tag display logic from the Teavision theme:
 // - Package_ tags are internal only, never shown
@@ -229,6 +230,11 @@ async function ProductContent({
           />
         </>
       ) : null}
+      <ProductViewAnalytics
+        id={product.id}
+        handle={product.handle}
+        title={product.title}
+      />
 
       <nav
         aria-label="Breadcrumb"

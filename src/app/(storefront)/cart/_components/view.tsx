@@ -504,7 +504,10 @@ export function CartView({ accountContextState = null, cart }: CartViewProps) {
           ) : null}
 
           {/* Order notes, terms, and checkout actions */}
-          <CartCheckoutForm accountContextState={accountContextState} />
+          <CartCheckoutForm
+            accountContextState={accountContextState}
+            cartIdPresent={Boolean(cart.id)}
+          />
         </div>
 
         {/* Order summary sidebar */}

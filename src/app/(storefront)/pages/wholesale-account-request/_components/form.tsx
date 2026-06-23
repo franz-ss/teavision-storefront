@@ -10,6 +10,8 @@ import {
   Textarea,
   TextInput,
 } from '@/components/ui'
+import { dispatchClientAnalyticsEvent } from '@/lib/analytics/client'
+import { createLeadSubmitEvent } from '@/lib/analytics/events'
 import { sendWholesaleAccountAction } from '@/lib/contact/actions'
 import {
   WHOLESALE_ACCOUNT_LIMITS,
@@ -40,6 +42,7 @@ export function WholesaleAccountForm() {
           formRef.current?.reset()
           setStatus('success')
           setError('')
+          void dispatchClientAnalyticsEvent(createLeadSubmitEvent('wholesale'))
           return
         }
 

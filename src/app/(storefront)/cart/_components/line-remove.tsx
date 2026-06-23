@@ -3,6 +3,8 @@
 import { useActionState, useEffect } from 'react'
 
 import { Button } from '@/components/ui'
+import { dispatchClientAnalyticsEvent } from '@/lib/analytics/client'
+import { createCartUpdateEvent } from '@/lib/analytics/events'
 import { cartLineFormAction, type CartLineFormState } from '@/lib/cart/actions'
 import { CART_CHANGED_EVENT } from '@/lib/cart/events'
 
@@ -30,7 +32,13 @@ export function CartLineRemove({
     if (!state.cartChanged) return
 
     window.dispatchEvent(new Event(CART_CHANGED_EVENT))
-  }, [state.cartChanged])
+    void dispatchClientAnalyticsEvent(
+      createCartUpdateEvent({
+        action: 'remove',
+        lineId,
+      }),
+    )
+  }, [lineId, state.cartChanged])
 
   return (
     <form action={formAction} className="mt-3">

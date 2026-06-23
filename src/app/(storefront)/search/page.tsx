@@ -10,6 +10,8 @@ import {
 import { getSearchaniseSearchResults } from '@/lib/searchanise/search'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 
+import { SearchAnalytics } from './_components/analytics'
+
 type Props = {
   searchParams: Promise<SearchParamsInput>
 }
@@ -36,8 +38,17 @@ async function SearchContent({
 }) {
   const state = parseSearchParams(await searchParams)
   const result = await getSearchaniseSearchResults(state)
+  const resultCount =
+    result.status === 'success' ? result.pagination.totalItems : 0
 
-  return <SearchResultsView result={result} state={state} />
+  return (
+    <>
+      {result.status === 'success' ? (
+        <SearchAnalytics query={state.query} resultCount={resultCount} />
+      ) : null}
+      <SearchResultsView result={result} state={state} />
+    </>
+  )
 }
 
 function SearchFallback() {

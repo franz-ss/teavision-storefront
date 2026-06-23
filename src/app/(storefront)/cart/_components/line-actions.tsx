@@ -3,6 +3,8 @@
 import { useOptimistic, useState, useTransition } from 'react'
 
 import { QuantityStepper } from '@/components/ui'
+import { dispatchClientAnalyticsEvent } from '@/lib/analytics/client'
+import { createCartUpdateEvent } from '@/lib/analytics/events'
 import { cartLineFormAction, type CartLineFormState } from '@/lib/cart/actions'
 import { CART_CHANGED_EVENT } from '@/lib/cart/events'
 import { clampQuantity } from '@/lib/shopify/quantity-rules'
@@ -60,6 +62,13 @@ export function CartLineActions({
       setStepperState(result)
       if (result.cartChanged) {
         window.dispatchEvent(new Event(CART_CHANGED_EVENT))
+        void dispatchClientAnalyticsEvent(
+          createCartUpdateEvent({
+            action: 'quantity_change',
+            lineId,
+            quantity: newQuantity,
+          }),
+        )
       }
     })
   }

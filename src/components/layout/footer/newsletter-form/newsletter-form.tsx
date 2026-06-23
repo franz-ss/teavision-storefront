@@ -1,8 +1,10 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 
 import { Button } from '@/components/ui'
+import { dispatchClientAnalyticsEvent } from '@/lib/analytics/client'
+import { createLeadSubmitEvent } from '@/lib/analytics/events'
 import type { NewsletterSignupActionResult } from '@/lib/contact/types'
 import { cn } from '@/lib/utils'
 
@@ -21,6 +23,12 @@ const DEFAULT_ERROR =
 
 export function FooterNewsletterForm({ action }: FooterNewsletterFormProps) {
   const [state, formAction, isPending] = useActionState(action, INITIAL_STATE)
+
+  useEffect(() => {
+    if (!state.success) return
+
+    void dispatchClientAnalyticsEvent(createLeadSubmitEvent('newsletter'))
+  }, [state.success])
 
   const messageId = state.success ? 'newsletter-success' : 'newsletter-error'
   const hasMessage = state.success || Boolean(state.error)

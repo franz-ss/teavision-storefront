@@ -10,6 +10,8 @@ import {
   Select,
   TextInput,
 } from '@/components/ui'
+import { dispatchClientAnalyticsEvent } from '@/lib/analytics/client'
+import { createLeadSubmitEvent } from '@/lib/analytics/events'
 import { sendNpdOrderAction } from '@/lib/contact/actions'
 import {
   NPD_BLEND_DEVELOPMENT_COST,
@@ -58,6 +60,7 @@ export function NpdOrderForm() {
           setTimeframe('')
           setBlendMode('one')
           setMultiBlendCount(2)
+          void dispatchClientAnalyticsEvent(createLeadSubmitEvent('npd'))
           return
         }
 

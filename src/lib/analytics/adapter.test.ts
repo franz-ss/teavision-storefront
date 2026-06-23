@@ -224,7 +224,7 @@ describe('GA4 analytics destination', () => {
       },
     })
 
-    const forbiddenKeys = new Set<ForbiddenAnalyticsField>([
+    const forbiddenKeys = new Set<string>([
       'email',
       'phone',
       'message',

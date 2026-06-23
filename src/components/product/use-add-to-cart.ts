@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 
 import { addToCartAction } from '@/lib/cart/actions'
 import { CART_CHANGED_EVENT } from '@/lib/cart/events'
+import { dispatchClientAnalyticsEvent } from '@/lib/analytics/client'
+import { createAddToCartEvent } from '@/lib/analytics/events'
 
 export type AddToCart = (
   variantId: string,
@@ -55,6 +57,12 @@ export function useAddToCart({
           router.refresh()
         }
         window.dispatchEvent(new Event(CART_CHANGED_EVENT))
+        void dispatchClientAnalyticsEvent(
+          createAddToCartEvent({
+            quantity,
+            variantId,
+          }),
+        )
       } catch (addError) {
         setMessage(null)
         setError(getErrorMessage(addError))

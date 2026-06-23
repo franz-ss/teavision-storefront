@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 import { Button, Checkbox, Textarea } from '@/components/ui'
+import { dispatchClientAnalyticsEvent } from '@/lib/analytics/client'
+import { createCheckoutStartEvent } from '@/lib/analytics/events'
 
 import {
   CartAccountContext,
@@ -12,10 +14,12 @@ import {
 
 type CartCheckoutFormProps = {
   accountContextState: CartAccountContextState
+  cartIdPresent: boolean
 }
 
 export function CartCheckoutForm({
   accountContextState,
+  cartIdPresent,
 }: CartCheckoutFormProps) {
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -30,7 +34,19 @@ export function CartCheckoutForm({
       action="/cart/checkout"
       method="post"
       className="mt-8 space-y-4"
-      onSubmit={() => setIsSubmitting(true)}
+      onSubmit={(event) => {
+        if (!agreedToTerms || isBlocked) {
+          event.preventDefault()
+          return
+        }
+
+        void dispatchClientAnalyticsEvent(
+          createCheckoutStartEvent({
+            cartIdPresent,
+          }),
+        )
+        setIsSubmitting(true)
+      }}
     >
       <CartAccountContext
         state={currentAccountContextState}

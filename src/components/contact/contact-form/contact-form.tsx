@@ -8,6 +8,8 @@ import {
 } from 'react'
 
 import { Button, FormLabel, Textarea, TextInput } from '@/components/ui'
+import { dispatchClientAnalyticsEvent } from '@/lib/analytics/client'
+import { createLeadSubmitEvent } from '@/lib/analytics/events'
 import type { ContactActionResult } from '@/lib/contact/types'
 
 export type { ContactActionResult } from '@/lib/contact/types'
@@ -78,6 +80,7 @@ export function ContactForm({
           setValues(INITIAL_FORM_VALUES)
           setStatus('success')
           setError('')
+          void dispatchClientAnalyticsEvent(createLeadSubmitEvent('contact'))
           return
         }
 

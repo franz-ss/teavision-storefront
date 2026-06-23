@@ -6,24 +6,25 @@ export type SecurityHeader = {
 export const contentSecurityPolicyReportOnlyHeaderName =
   'Content-Security-Policy-Report-Only'
 
-type SecurityHeaderEnv = {
-  NEXT_PUBLIC_GA4_MEASUREMENT_ID?: string
-  NEXT_PUBLIC_GTM_CONTAINER_ID?: string
-  NEXT_PUBLIC_META_PIXEL_ID?: string
-  NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY?: string
-  NEXT_PUBLIC_SHOPIFY_PIXEL_ENABLED?: string
-}
+type SecurityHeaderEnvKey =
+  | 'NEXT_PUBLIC_GA4_MEASUREMENT_ID'
+  | 'NEXT_PUBLIC_GTM_CONTAINER_ID'
+  | 'NEXT_PUBLIC_META_PIXEL_ID'
+  | 'NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY'
+  | 'NEXT_PUBLIC_SHOPIFY_PIXEL_ENABLED'
+
+type SecurityHeaderEnv = Record<string, string | undefined>
 
 function hasEnvValue(
   env: SecurityHeaderEnv,
-  key: keyof SecurityHeaderEnv,
+  key: SecurityHeaderEnvKey,
 ): boolean {
   return Boolean(env[key]?.trim())
 }
 
 function isTruthyEnv(
   env: SecurityHeaderEnv,
-  key: keyof SecurityHeaderEnv,
+  key: SecurityHeaderEnvKey,
 ): boolean {
   return env[key]?.trim() === 'true'
 }

@@ -47,3 +47,77 @@ export const ANALYTICS_EVENT_NAMES = [
   'checkout_start',
   'lead_submit',
 ] as const satisfies readonly AnalyticsEvent['name'][]
+
+export function createProductViewEvent(
+  product: Extract<AnalyticsEvent, { name: 'product_view' }>['product'],
+): AnalyticsEvent {
+  return {
+    name: 'product_view',
+    product,
+  }
+}
+
+export function createSearchEvent({
+  query,
+  resultCount,
+}: {
+  query: string
+  resultCount: number
+}): AnalyticsEvent {
+  return {
+    name: 'search',
+    query,
+    resultCount,
+  }
+}
+
+export function createAddToCartEvent({
+  quantity,
+  variantId,
+}: {
+  quantity: number
+  variantId: string
+}): AnalyticsEvent {
+  return {
+    name: 'add_to_cart',
+    item: {
+      quantity,
+      variantId,
+    },
+  }
+}
+
+export function createCartUpdateEvent({
+  action,
+  lineId,
+  quantity,
+}: {
+  action: Extract<AnalyticsEvent, { name: 'cart_update' }>['action']
+  lineId: string
+  quantity?: number
+}): AnalyticsEvent {
+  return {
+    name: 'cart_update',
+    action,
+    lineId,
+    quantity,
+  }
+}
+
+export function createCheckoutStartEvent({
+  cartIdPresent,
+}: {
+  cartIdPresent: boolean
+}): AnalyticsEvent {
+  return {
+    name: 'checkout_start',
+    cartIdPresent,
+  }
+}
+
+export function createLeadSubmitEvent(kind: LeadSubmitKind): AnalyticsEvent {
+  return {
+    name: 'lead_submit',
+    kind,
+  }
+}
