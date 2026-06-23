@@ -71,3 +71,14 @@ test('sitemap static coverage is driven by the launch route matrix', () => {
   assert.match(matrix, /path:\s*'\/search'/)
   assert.match(matrix, /path:\s*'\/search'[\s\S]*?shouldAppearInSitemap:\s*false/)
 })
+
+test('enabled SEO probe fails when indexable routes still render noindex', () => {
+  const probe = readSource('scripts/seo/probe-launch-seo.mjs')
+
+  assert.match(probe, /const hasNoindex = hasNoindexMeta\(text\)/)
+  assert.match(
+    probe,
+    /response\.ok &&\s*canonicalPath === expectation\.canonicalPath &&\s*!hasNoindex/s,
+  )
+  assert.match(probe, /noindex \$\{hasNoindex\}/)
+})

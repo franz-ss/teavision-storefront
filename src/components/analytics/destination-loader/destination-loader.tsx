@@ -37,11 +37,13 @@ const publicAnalyticsConfig = {
   klaviyoPublicKey: process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY,
 } satisfies AnalyticsDestinationLoaderConfig
 
+type ConsentModeValue = 'granted' | 'denied'
+
 type ConsentModePayload = {
-  ad_personalization: 'denied'
-  ad_storage: 'denied'
-  ad_user_data: 'denied'
-  analytics_storage: 'denied'
+  ad_personalization: ConsentModeValue
+  ad_storage: ConsentModeValue
+  ad_user_data: ConsentModeValue
+  analytics_storage: ConsentModeValue
 }
 
 type ConsentWindow = typeof globalThis & {
@@ -53,14 +55,8 @@ type ConsentWindow = typeof globalThis & {
   ) => void
 }
 
-const analyticsCookieNames = [
-  '_ga',
-  '_gat',
-  '_gid',
-  '_gcl_au',
-  '_fbp',
-  '_fbc',
-] as const
+const analyticsCookieNames = ['_ga', '_gat', '_gid'] as const
+const marketingCookieNames = ['_gcl_au', '_fbp', '_fbc'] as const
 
 function destinationId(value: string | undefined): string | undefined {
   const trimmed = value?.trim()
@@ -94,6 +90,12 @@ function expireCookie(name: string) {
   }
 }
 
+function clearCookies(names: Iterable<string>) {
+  for (const name of new Set(names)) {
+    expireCookie(name)
+  }
+}
+
 function clearAnalyticsCookies() {
   const dynamicCookieNames = document.cookie
     .split(';')
@@ -101,22 +103,54 @@ function clearAnalyticsCookies() {
     .filter((name): name is string => Boolean(name))
     .filter((name) => name.startsWith('_ga_'))
 
-  for (const name of new Set([...analyticsCookieNames, ...dynamicCookieNames])) {
-    expireCookie(name)
-  }
+  clearCookies([...analyticsCookieNames, ...dynamicCookieNames])
 }
 
-function revokeLoadedDestinations() {
+function clearMarketingCookies() {
+  clearCookies(marketingCookieNames)
+}
+
+function updateGoogleConsent({
+  analyticsAllowed,
+  marketingAllowed,
+}: {
+  analyticsAllowed: boolean
+  marketingAllowed: boolean
+}) {
   const target = globalThis as ConsentWindow
+  const adsValue = marketingAllowed ? 'granted' : 'denied'
 
   target.gtag?.('consent', 'update', {
-    ad_personalization: 'denied',
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    analytics_storage: 'denied',
+    ad_personalization: adsValue,
+    ad_storage: adsValue,
+    ad_user_data: adsValue,
+    analytics_storage: analyticsAllowed ? 'granted' : 'denied',
   })
-  target.fbq?.('consent', 'revoke')
-  clearAnalyticsCookies()
+}
+
+function revokeLoadedDestinations({
+  analyticsAllowed,
+  marketingAllowed,
+  revokedAnalytics,
+  revokedMarketing,
+}: {
+  analyticsAllowed: boolean
+  marketingAllowed: boolean
+  revokedAnalytics: boolean
+  revokedMarketing: boolean
+}) {
+  const target = globalThis as ConsentWindow
+
+  updateGoogleConsent({ analyticsAllowed, marketingAllowed })
+
+  if (revokedAnalytics) {
+    clearAnalyticsCookies()
+  }
+
+  if (revokedMarketing) {
+    target.fbq?.('consent', 'revoke')
+    clearMarketingCookies()
+  }
 }
 
 export function AnalyticsDestinationLoader({
@@ -174,7 +208,12 @@ export function AnalyticsDestinationLoader({
     const revokedMarketing = previous.marketing && !marketingAllowed
 
     if (revokedAnalytics || revokedMarketing) {
-      revokeLoadedDestinations()
+      revokeLoadedDestinations({
+        analyticsAllowed,
+        marketingAllowed,
+        revokedAnalytics,
+        revokedMarketing,
+      })
     }
 
     previousAllowedRef.current = {

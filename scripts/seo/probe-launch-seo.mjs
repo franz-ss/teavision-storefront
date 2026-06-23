@@ -480,15 +480,23 @@ async function runEnabledMode(baseUrl, productPath) {
   )) {
     const { response, text } = await fetchText(baseUrl, expectation.path)
     const canonicalPath = getCanonicalHref(text, baseUrl)
-    const ok = response.ok && canonicalPath === expectation.canonicalPath
+    const hasNoindex = hasNoindexMeta(text)
+    const ok =
+      response.ok &&
+      canonicalPath === expectation.canonicalPath &&
+      !hasNoindex
 
     results.push(
       ok
-        ? pass('enabled canonical live check', expectation.path, canonicalPath)
-        : fail(
-            'enabled canonical live check',
+        ? pass(
+            'enabled canonical and indexability live check',
             expectation.path,
-            `status ${response.status}; canonical ${canonicalPath ?? 'missing'}`,
+            canonicalPath,
+          )
+        : fail(
+            'enabled canonical and indexability live check',
+            expectation.path,
+            `status ${response.status}; canonical ${canonicalPath ?? 'missing'}; noindex ${hasNoindex}`,
           ),
     )
   }

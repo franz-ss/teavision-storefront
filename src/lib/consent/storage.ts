@@ -43,9 +43,7 @@ export function writeStoredConsent(consent: ConsentState): ConsentState {
         CONSENT_STORAGE_KEY,
         JSON.stringify(normalized),
       )
-    } catch {
-      return normalized
-    }
+    } catch {}
 
     if (typeof window.dispatchEvent === 'function') {
       window.dispatchEvent(

@@ -9,6 +9,7 @@ import {
   updateConsentCategories,
 } from './adapter'
 import {
+  CONSENT_CHANGED_EVENT,
   CONSENT_STORAGE_KEY,
   parseStoredConsent,
   readStoredConsent,
@@ -17,6 +18,7 @@ import {
 import { applyShopifyCustomerPrivacyConsent } from './shopify-customer-privacy'
 
 function stubWindowWithStorage(initialValue: string | null = null) {
+  const dispatchEvent = vi.fn()
   const storage = {
     getItem: vi.fn((key: string) =>
       key === CONSENT_STORAGE_KEY ? initialValue : null,
@@ -26,10 +28,11 @@ function stubWindowWithStorage(initialValue: string | null = null) {
   } satisfies Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>
 
   vi.stubGlobal('window', {
+    dispatchEvent,
     localStorage: storage,
   } as unknown as Window & typeof globalThis)
 
-  return storage
+  return { dispatchEvent, storage }
 }
 
 afterEach(() => {
@@ -101,7 +104,7 @@ describe('consent storage', () => {
 
   it('reads and writes the minimal consent storage shape in the browser', () => {
     const storedConsent = grantOptionalConsent()
-    const storage = stubWindowWithStorage(JSON.stringify(storedConsent))
+    const { storage } = stubWindowWithStorage(JSON.stringify(storedConsent))
 
     expect(readStoredConsent()).toEqual(storedConsent)
 
@@ -115,6 +118,22 @@ describe('consent storage', () => {
     expect(storage.setItem).toHaveBeenCalledWith(
       CONSENT_STORAGE_KEY,
       JSON.stringify(normalized),
+    )
+  })
+
+  it('notifies same-tab listeners even when consent persistence fails', () => {
+    const { dispatchEvent, storage } = stubWindowWithStorage()
+    storage.setItem.mockImplementation(() => {
+      throw new Error('storage blocked')
+    })
+
+    const normalized = writeStoredConsent(rejectOptionalConsent())
+
+    expect(dispatchEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: normalized,
+        type: CONSENT_CHANGED_EVENT,
+      }),
     )
   })
 })
