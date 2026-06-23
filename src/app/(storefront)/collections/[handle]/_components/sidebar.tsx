@@ -1,7 +1,6 @@
 import Link from 'next/link'
 
 import { FilterPanel } from '@/components/collection'
-import { Button } from '@/components/ui'
 import type {
   CollectionProductFilter,
   CollectionSummary,
@@ -29,27 +28,6 @@ export function Sidebar({
 }: SidebarProps) {
   return (
     <aside className="hidden lg:sticky lg:top-32 lg:grid lg:gap-5 lg:self-start">
-      {/* Wholesale upsell card */}
-      <div className="bg-brand-tint border-brand/20 rounded-lg border p-5.5">
-        <h2 className="font-display text-ink text-[1.1rem]">
-          Need help choosing?
-        </h2>
-        <p className="type-body-sm text-ink-soft mt-3">
-          Share your format, volume, and flavour brief with the Teavision team
-          before you sample or scale.
-        </p>
-        <div className="mt-4">
-          <Button
-            href="/pages/wholesale-account-request"
-            variant="brand"
-            size="sm"
-            className="w-full"
-          >
-            Wholesale access
-          </Button>
-        </div>
-      </div>
-
       {/* Filter panel */}
       <FilterPanel
         filters={visibleFilters}
