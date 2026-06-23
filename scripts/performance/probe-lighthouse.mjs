@@ -475,6 +475,36 @@ function renderRemainingMitigations(rows) {
     .join('\n')
 }
 
+function renderRouteMetricSummary(row) {
+  if (!row) {
+    return 'No current route row was recorded in this probe run.'
+  }
+
+  return `latest local mobile Lighthouse records ${formatDuration(
+    row.lcpMs,
+  )} LCP, CLS ${formatCls(row.cls)}, TBT ${formatDuration(
+    row.tbtMs,
+  )}, accessibility ${formatScore(row.a11yScore)}, and status ${row.status}.`
+}
+
+function renderRemediationNotes(rows) {
+  const homeRow = rows.find((row) => row.route === '/')
+  const productRow = rows.find(
+    (row) => row.route === '/products/test-standard-tea',
+  )
+
+  return [
+    `- Home hero image keeps \`loading="eager"\`, \`fetchPriority="high"\`, \`sizes="100vw"\`, stable fill dimensions, and image quality \`68\`; ${renderRouteMetricSummary(
+      homeRow,
+    )}`,
+    `- PDP gallery keeps first-image eager loading, high fetch priority, preload, stable responsive sizes, and image quality \`68\`; ${renderRouteMetricSummary(
+      productRow,
+    )}`,
+    '- The fake Shopify product includes a local rich-media image so `/products/test-standard-tea` exercises the PDP gallery rather than an empty placeholder.',
+    '- Remaining LCP misses are recorded as `FAIL` with mitigation instead of being silently passed. Field/staging Core Web Vitals should be used before launch sign-off because this command is local lab evidence.',
+  ].join('\n')
+}
+
 export function renderEvidenceDocument({
   baseUrl,
   generatedAt = new Date().toISOString(),
@@ -502,6 +532,10 @@ ${renderMarkdownTable(rows)}
 - duplicate skip link resolved: production smoke asserts exactly one \`Skip to main content\` link on \`/\`, verifies it receives first-tab focus, and confirms the \`main#main-content\` target exists.
 - mobile text wrapping checked: production smoke runs \`/cart\` and a long-query \`/search\` route at a 375px viewport and asserts document width does not exceed viewport width.
 - Remaining non-blocking UX/accessibility polish items: None - no launch-blocking UX/accessibility polish items remain.
+
+## Remediation Notes
+
+${renderRemediationNotes(rows)}
 
 ## Remaining Mitigations
 
