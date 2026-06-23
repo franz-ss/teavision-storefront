@@ -4,7 +4,7 @@ milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: ready_to_plan
 stopped_at: Phase 16 complete (4/4) — ready to discuss Phase 17
-last_updated: 2026-06-23T02:30:19.511Z
+last_updated: 2026-06-23T03:15:17.644Z
 last_activity: 2026-06-23
 progress:
   total_phases: 3
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 Phase: 17
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-06-23
+Last activity: 2026-06-23 - Completed quick task 260623-fmq: Remove the Wholesale upsell card from the collection sidebar
 
 ## Performance Metrics
 
@@ -187,6 +187,7 @@ Recent decisions affecting current work:
 | 260618-h2e | Project cleanup for animated artwork primitives and CMS-ready naming | 2026-06-18 | 9c7a54b | [260618-h2e-project-cleanup-animation-primitives](./quick/260618-h2e-project-cleanup-animation-primitives/) |
 | 260622-g38 | in /account/profile just remove the phone field if it is not editable | 2026-06-22 | cd784ab | [260622-g38-in-account-profile-just-remove-the-phone](./quick/260622-g38-in-account-profile-just-remove-the-phone/) |
 | 260622-h9f | Harden Shopify cart checkout identity sync and retained-cart behavior | 2026-06-22 | 4237cce | [260622-h9f-harden-shopify-cart-checkout-identity-sy](./quick/260622-h9f-harden-shopify-cart-checkout-identity-sy/) |
+| 260623-fmq | Remove the Wholesale upsell card from the collection sidebar | 2026-06-23 | afa98ce | [260623-fmq-remove-the-wholesale-upsell-card-from-th](./quick/260623-fmq-remove-the-wholesale-upsell-card-from-th/) |
 
 ## Deferred Items
 
