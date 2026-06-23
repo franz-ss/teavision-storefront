@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+
 import { afterEach, describe, expect, test, vi } from 'vitest'
 
 import {
@@ -243,6 +245,25 @@ describe('GA4 analytics destination', () => {
     for (const mappedEvent of mappedEvents) {
       const keys = collectKeys(mappedEvent.payload)
       expect(keys.filter((key) => forbiddenKeys.has(key))).toEqual([])
+    }
+  })
+})
+
+describe('analytics launch runbook contract', () => {
+  test('documents destination verification and owner-gated launch steps', () => {
+    const runbook = readFileSync(
+      'docs/launch/analytics-and-indexing-runbook.md',
+      'utf8',
+    )
+
+    for (const requiredText of [
+      'Pre-Cutover Analytics Verification',
+      'Post-Cutover Analytics Verification',
+      'Owner-Gated Purchase And Order Tracking',
+      'NEXT_PUBLIC_GA4_MEASUREMENT_ID',
+      'fake/test sink',
+    ]) {
+      expect(runbook).toContain(requiredText)
     }
   })
 })
