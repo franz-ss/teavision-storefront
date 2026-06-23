@@ -12,6 +12,7 @@ provides:
   - Strict performance readiness semantics for Lighthouse metric FAIL rows
   - Final audit required live-server probes that fail instead of skipping by default
   - Regenerated honest launch evidence with blocking SEO/performance status
+  - Custom performance probe evidence lists the actual probed route set
 affects: [phase-17-final-audit, launch-readiness, performance-evidence, seo-evidence]
 
 # Tech tracking
@@ -76,6 +77,7 @@ Each task was committed atomically:
 2. **Task 2: Make the final audit own required live-server probes** - `8e226ae7` (fix)
 3. **Deviation: Fix security probe argument forwarding exposed by strict live probes** - `93759df0` (fix)
 4. **Task 3: Re-run strict evidence and record the honest launch decision** - `668057ea` (docs)
+5. **Post-review fix: Align custom performance evidence route list** - `cc2eca6a` (fix)
 
 **Plan metadata:** this summary and tracking updates are captured in the final metadata commit.
 
@@ -110,6 +112,19 @@ Each task was committed atomically:
 
 **Total deviations:** 1 auto-fixed (1 bug)
 **Impact on plan:** The fix made the audit evidence more truthful. Security headers now pass from actual probe output instead of failing on argument parsing.
+
+### Post-review Fixes
+
+**2. [Rule 1 - Bug] Custom performance evidence listed default routes**
+- **Found during:** Phase 17 code-review gate
+- **Issue:** A custom `pnpm test:performance -- --url ...` run would render the probed rows correctly, but the evidence document's representative route list still displayed the default route matrix.
+- **Fix:** `scripts/performance/probe-lighthouse.mjs` now passes `args.routes` into `renderEvidenceDocument`.
+- **Verification:** `node --test scripts/performance/probe-lighthouse.test.mjs`; pre-commit Tailwind/ESLint/component-contract hook.
+- **Committed in:** `cc2eca6a`
+
+---
+
+**Total deviations after review:** 2 auto-fixed (2 bugs)
 
 ## Issues Encountered
 
