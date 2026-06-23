@@ -66,7 +66,7 @@ completed: 2026-06-23
 ## Accomplishments
 
 - Added a typed readiness model and `makePublicHealthPayload()` helper with unit coverage for exact public fields and owner-gate status parsing.
-- Added `/api/health` as a nodejs, force-dynamic Route Handler returning only the safe public payload with `Cache-Control: no-store, max-age=0`.
+- Added `/api/health` as a Cache Components-compatible Route Handler returning only the safe public payload with `Cache-Control: no-store, max-age=0`.
 - Added `scripts/launch/probe-readiness.mjs` for private readiness checks, JSON output, docs mode, owner-gate validation, and deterministic markdown output.
 - Added `docs/launch/operations-runbook.md` covering launch watch, alerts, rollback, platform recovery, reversible env gates, owner approvals, and week-one monitoring.
 
