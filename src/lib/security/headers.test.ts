@@ -47,7 +47,7 @@ describe('security headers', () => {
   })
 
   test('builds the approved content security policy directives', () => {
-    expect(buildContentSecurityPolicy()).toBe(
+    expect(buildContentSecurityPolicy({})).toBe(
       [
         "default-src 'self'",
         "base-uri 'self'",
@@ -68,7 +68,7 @@ describe('security headers', () => {
   })
 
   test('does not include newlines or speculative third-party hosts', () => {
-    const contentSecurityPolicy = buildContentSecurityPolicy()
+    const contentSecurityPolicy = buildContentSecurityPolicy({})
 
     expect(contentSecurityPolicy).not.toMatch(/\r|\n/)
     expect(contentSecurityPolicy).not.toContain('googletagmanager.com')
@@ -78,5 +78,27 @@ describe('security headers', () => {
     expect(contentSecurityPolicy).not.toContain(
       'cdn.shopify.com/s/shopify-pixels',
     )
+  })
+
+  test('adds GA4 hosts only when a measurement ID is configured', () => {
+    const contentSecurityPolicy = buildContentSecurityPolicy({
+      NEXT_PUBLIC_GA4_MEASUREMENT_ID: 'G-TEAVISION',
+    })
+
+    expect(contentSecurityPolicy).toContain('googletagmanager.com')
+    expect(contentSecurityPolicy).toContain('google-analytics.com')
+    expect(contentSecurityPolicy).not.toContain('facebook.net')
+    expect(contentSecurityPolicy).not.toContain('klaviyo')
+  })
+
+  test('adds GTM hosts only when a container ID is configured', () => {
+    const contentSecurityPolicy = buildContentSecurityPolicy({
+      NEXT_PUBLIC_GTM_CONTAINER_ID: 'GTM-TEAVISION',
+    })
+
+    expect(contentSecurityPolicy).toContain('googletagmanager.com')
+    expect(contentSecurityPolicy).toContain('google-analytics.com')
+    expect(contentSecurityPolicy).not.toContain('facebook.net')
+    expect(contentSecurityPolicy).not.toContain('klaviyo')
   })
 })

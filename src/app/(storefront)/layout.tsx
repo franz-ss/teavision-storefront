@@ -1,3 +1,4 @@
+import { AnalyticsDestinationLoader } from '@/components/analytics'
 import { ConsentBanner } from '@/components/consent'
 import { Footer, Header } from '@/components/layout'
 
@@ -20,6 +21,7 @@ export default function StorefrontLayout({
       </main>
       <Footer />
       <ConsentBanner />
+      <AnalyticsDestinationLoader />
     </div>
   )
 }

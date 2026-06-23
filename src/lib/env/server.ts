@@ -28,6 +28,30 @@ export function isNoindexModeEnabledFromEnv(): boolean {
   return truthyEnv('DISABLE_INDEXING')
 }
 
+export function getAnalyticsModeFromEnv(): string | undefined {
+  return optionalEnv('NEXT_PUBLIC_ANALYTICS_MODE')
+}
+
+export function getGa4MeasurementIdFromEnv(): string | undefined {
+  return optionalEnv('NEXT_PUBLIC_GA4_MEASUREMENT_ID')
+}
+
+export function getGtmContainerIdFromEnv(): string | undefined {
+  return optionalEnv('NEXT_PUBLIC_GTM_CONTAINER_ID')
+}
+
+export function getMetaPixelIdFromEnv(): string | undefined {
+  return optionalEnv('NEXT_PUBLIC_META_PIXEL_ID')
+}
+
+export function getKlaviyoPublicKeyFromEnv(): string | undefined {
+  return optionalEnv('NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY')
+}
+
+export function isShopifyPixelEnabledFromEnv(): boolean {
+  return truthyEnv('NEXT_PUBLIC_SHOPIFY_PIXEL_ENABLED')
+}
+
 export function getRateLimitTrustedIpHeader():
   | RateLimitTrustedIpHeader
   | undefined {
