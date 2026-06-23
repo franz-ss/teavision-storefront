@@ -1,8 +1,8 @@
 ---
 phase: 16-legal-consent-analytics-and-seo-launch-coverage
-reviewed: 2026-06-23T01:35:50Z
+reviewed: 2026-06-23T02:19:43Z
 depth: standard
-files_reviewed: 60
+files_reviewed: 62
 files_reviewed_list:
   - .env.example
   - docs/launch/analytics-and-indexing-runbook.md
@@ -12,6 +12,7 @@ files_reviewed_list:
   - scripts/component-contracts/noindex-mode.test.mjs
   - scripts/component-contracts/security-headers.test.mjs
   - scripts/seo/probe-launch-seo.mjs
+  - src/app/(storefront)/cart/_components/checkout-form.test.tsx
   - src/app/(storefront)/cart/_components/checkout-form.tsx
   - src/app/(storefront)/cart/_components/line-actions.tsx
   - src/app/(storefront)/cart/_components/line-remove.tsx
@@ -31,6 +32,7 @@ files_reviewed_list:
   - src/app/(storefront)/search/page.tsx
   - src/app/sitemap.ts
   - src/components/analytics/destination-loader/destination-loader.stories.tsx
+  - src/components/analytics/destination-loader/destination-loader.test.tsx
   - src/components/analytics/destination-loader/destination-loader.tsx
   - src/components/analytics/destination-loader/index.ts
   - src/components/analytics/index.ts
@@ -65,160 +67,46 @@ files_reviewed_list:
   - src/lib/seo/launch-route-matrix.ts
   - tests/e2e/consent.spec.ts
 findings:
-  critical: 4
-  warning: 3
+  critical: 0
+  warning: 0
   info: 0
-  total: 7
-status: issues_found
+  total: 0
+status: clean
 ---
 
 # Phase 16: Code Review Report
 
-**Reviewed:** 2026-06-23T01:35:50Z
+**Reviewed:** 2026-06-23T02:19:43Z
 **Depth:** standard
-**Files Reviewed:** 60
-**Status:** issues_found
+**Files Reviewed:** 62
+**Status:** passed/clean
 
 ## Summary
 
-Reviewed the Phase 16 legal, consent, analytics, security-header, sitemap, and launch evidence files at standard depth. The main launch risk is privacy/consent correctness: raw visitor-entered values and cart identifiers can reach GA4, consent revocation does not clean up already loaded destinations, and checkout still points users at the legacy terms route instead of the Phase 16 canonical legal route.
+Final rerun of the Phase 16 code-review gate after commit `efa201ce4c8e4ddc2d125497d69ac19e9489ed8f`. The two previous final findings are resolved, and no remaining BLOCKER or WARNING findings were found in the reviewed Phase 16 scope.
 
-## Critical Issues
+All reviewed files meet the gate's quality standard. No issues found.
 
-### CR-01: [BLOCKER] Raw Search Queries Are Sent To GA4
+## Previous Findings Verification
 
-**File:** `src/lib/analytics/destinations/ga4.ts:63`
+- Resolved BLOCKER: initial analytics-only Google consent now emits a default consent script before GA4/GTM can load. `src/components/analytics/destination-loader/destination-loader.tsx:79` defines the default consent payload, including denied ad fields when marketing is false, and `src/components/analytics/destination-loader/destination-loader.tsx:258` renders `teavision-google-consent-init` before the GA4 and GTM scripts at lines 264 and 280. The regression test at `src/components/analytics/destination-loader/destination-loader.test.tsx:45` asserts analytics-only consent denies ad storage/user data/personalization and precedes GA4 config and GTM loading.
+- Resolved WARNING: enabled SEO probing no longer excludes the homepage from noindex detection. `scripts/seo/probe-launch-seo.mjs:477` now filters only by `shouldIndexWhenEnabled`, then fails when canonical metadata is wrong or `hasNoindexMeta(text)` is true at lines 482-486. The contract test at `scripts/component-contracts/noindex-mode.test.mjs:75` asserts the old `candidate.path !== '/'` exclusion is absent.
 
-**Issue:** `SearchAnalytics` passes the visitor-entered query into `createSearchEvent` (`src/app/(storefront)/search/_components/analytics.tsx:18-20`), the event schema stores it as `query` (`src/lib/analytics/events.ts:17-20`), and GA4 maps it directly to `search_term`. Search boxes commonly receive emails, phone numbers, order IDs, and names by mistake. Analytics consent does not make it safe to disclose arbitrary visitor-entered PII to a third-party analytics destination.
+## Verification
 
-**Fix:**
+- `pnpm test:unit -- src/lib/consent/adapter.test.ts src/components/analytics/destination-loader/destination-loader.test.tsx src/lib/analytics/adapter.test.ts src/lib/seo/launch-route-matrix.test.ts src/lib/legal/policies.test.ts src/lib/security/headers.test.ts "src/app/(storefront)/cart/_components/checkout-form.test.tsx"` - passed, 7 files / 41 tests.
+- `node --test scripts/component-contracts/noindex-mode.test.mjs scripts/component-contracts/security-headers.test.mjs` - passed, 5 tests.
+- `node scripts/seo/probe-launch-seo.mjs --mode runbook` - passed.
+- `node scripts/seo/probe-launch-seo.mjs --mode redirects` - passed.
 
-Remove the raw query from browser analytics. Track only non-identifying search metadata, or redact before dispatch with tests that cover email, phone, and order-like inputs.
+## Residual Risks
 
-```ts
-export function createSearchEvent({
-  resultCount,
-}: {
-  resultCount: number
-}): AnalyticsEvent {
-  return {
-    name: 'search',
-    resultCount,
-  }
-}
-
-// GA4 payload
-payload: {
-  results_count: event.resultCount,
-}
-```
-
-### CR-02: [BLOCKER] Cart Line IDs Leak Per-Cart Identifiers To Analytics
-
-**File:** `src/lib/analytics/destinations/ga4.ts:79`
-
-**Issue:** Cart quantity changes and removals pass `line.id` into analytics (`src/app/(storefront)/cart/_components/line-actions.tsx:65-70`, `src/app/(storefront)/cart/_components/line-remove.tsx:35-39`), the event schema requires `lineId` (`src/lib/analytics/events.ts:28-31`), and GA4 receives it as `line_id`. A Shopify cart line ID is a per-cart identifier, not a generic product identifier. This undermines the code's own minimization pattern in `checkout_start`, which only sends `cartIdPresent` instead of the cart ID.
-
-**Fix:**
-
-Keep line IDs only in the server-action form payload. Remove them from the analytics schema and destination mapping; use action and quantity only, or a non-cart-scoped product/variant identifier if the business needs item-level aggregation.
-
-```ts
-export function createCartUpdateEvent({
-  action,
-  quantity,
-}: {
-  action: Extract<AnalyticsEvent, { name: 'cart_update' }>['action']
-  quantity?: number
-}): AnalyticsEvent {
-  return {
-    name: 'cart_update',
-    action,
-    quantity,
-  }
-}
-```
-
-### CR-03: [BLOCKER] Revoking Consent Does Not Disable Already Loaded Destinations
-
-**File:** `src/components/analytics/destination-loader/destination-loader.tsx:103`
-
-**Issue:** The loader conditionally renders GA4, GTM, Meta, and Klaviyo scripts while consent is allowed (`src/components/analytics/destination-loader/destination-loader.tsx:114-164`). When a visitor later saves denied consent, storage dispatches `CONSENT_CHANGED_EVENT` and the component state updates, but there is no cleanup path: already executed third-party scripts, globals, listeners, and cookies are not disabled or cleared. Returning `null` after revocation is not enough for consent withdrawal in the current browsing session.
-
-**Fix:**
-
-Add explicit revocation handling for every destination that can be loaded, and cover it in e2e tests. At minimum, update vendor consent APIs, clear known cookies, and force a clean reload when optional consent changes from allowed to denied.
-
-```ts
-useEffect(() => {
-  if (analyticsAllowed || marketingAllowed) return
-
-  globalThis.gtag?.('consent', 'update', {
-    analytics_storage: 'denied',
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
-  })
-
-  globalThis.fbq?.('consent', 'revoke')
-  clearAnalyticsCookies()
-}, [analyticsAllowed, marketingAllowed])
-```
-
-### CR-04: [BLOCKER] Checkout Terms Acceptance Points At The Legacy Terms Route
-
-**File:** `src/app/(storefront)/cart/_components/checkout-form.tsx:76`
-
-**Issue:** The checkout terms checkbox links to `/pages/terms-conditions`, while Phase 16 defines `/pages/terms-of-service` as the canonical legal route (`src/lib/legal/policies.ts:81-94`) and records that route in the launch approval matrix. Checkout users can accept terms through the legacy page instead of the new reviewed legal route, so the launch legal coverage and the checkout acceptance surface disagree.
-
-**Fix:**
-
-Point checkout to the canonical policy route and either redirect or canonicalize the legacy terms URL.
-
-```tsx
-<Link
-  id="terms-link"
-  href="/pages/terms-of-service"
-  className="text-brand hover:text-brand-deep underline"
->
-  Terms of Service
-</Link>
-```
-
-## Warnings
-
-### WR-01: [WARNING] Non-GA4 Destination Gates Are Documented But Not Fully Wired
-
-**File:** `src/components/analytics/destination-loader/destination-loader.tsx:25`
-
-**Issue:** The runbook and config expose GTM, Meta, Klaviyo, and Shopify pixel gates, and the loader reads `shopifyPixelEnabled`, but that flag is never used. Separately, `createDefaultAnalyticsDestinations` only creates a GA4 dispatcher (`src/lib/analytics/destinations/index.ts:26-43`), so owner-approved GTM without GA4 receives no launch events, and Meta/Klaviyo receive only whatever their boot scripts do by default. The documented destination matrix overstates what the implementation can verify.
-
-**Fix:** Either implement explicit destinations for each approved target, including a Shopify pixel path guarded by Shopify Customer Privacy consent, or remove/defer those env gates from the launch contract until they are actually supported.
-
-### WR-02: [WARNING] Example Environment Defaults To Indexing Enabled
-
-**File:** `.env.example:24`
-
-**Issue:** The example sets `DISABLE_INDEXING=false`, while the launch runbook says pre-cutover environments should confirm `DISABLE_INDEXING=true` (`docs/launch/analytics-and-indexing-runbook.md:43`). Copying the example into a staging or review environment can accidentally expose pending legal placeholder pages and launch review routes to indexing before owner/legal approval.
-
-**Fix:** Make the safe default noindex and document the explicit cutover override.
-
-```dotenv
-# Keep review and staging environments out of search indexes.
-# Set false only for the owner-approved launch deployment.
-DISABLE_INDEXING=true
-```
-
-### WR-03: [WARNING] Legal Approval Matrix Is Stale For Cookie Preferences
-
-**File:** `docs/launch/legal-approval-matrix.md:17`
-
-**Issue:** The matrix still says `/pages/cookie-preferences` has "consent controls pending Plan 16-02" and repeats that pending item at lines 29 and 50, but this phase now includes the live `ConsentPreferences` route. Launch reviewers relying on this matrix get incorrect implementation state for a privacy-critical page.
-
-**Fix:** Update the matrix to say the consent controls are implemented and keep only the owner/legal wording approval as pending.
+- Live disabled/enabled SEO probes were not run against a local production server or launch host during this review. The runbook and SEO evidence doc still track those as launch-host proof items.
+- Product structured-data proof still depends on Shopify credentials and a representative product path, and remains documented as pending/owner-gated evidence.
+- Final legal copy approval, Search Console access, sitemap submission, and URL inspection proof remain owner-gated and are not certified by this code review.
 
 ---
 
-_Reviewed: 2026-06-23T01:35:50Z_
+_Reviewed: 2026-06-23T02:19:43Z_
 _Reviewer: the agent (gsd-code-reviewer)_
 _Depth: standard_
