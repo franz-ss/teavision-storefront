@@ -27,10 +27,14 @@ export function OverlayImageCard({ card, className }: OverlayImageCardProps) {
         sizes="(min-width: 1280px) 25vw, (min-width: 768px) 48vw, 100vw"
         className="object-cover"
       />
-      {/* Bottom gradient scrim — deepens on hover */}
+      {/* Bottom gradient scrim deepens on hover via opacity so it fades smoothly. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(to_top,rgba(16,24,18,0.85),rgba(16,24,18,0.15)_65%)] transition-[background] duration-300 group-hover:bg-[linear-gradient(to_top,rgba(16,24,18,0.92),rgba(16,24,18,0.35)_70%)]"
+        className="from-ink/85 via-ink/15 absolute inset-0 bg-linear-to-t via-65% to-ink/15"
+      />
+      <div
+        aria-hidden="true"
+        className="from-ink/92 via-ink/35 absolute inset-0 bg-linear-to-t via-70% to-ink/35 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 motion-reduce:transition-none"
       />
       {card.badge && (
         <Image
