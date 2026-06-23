@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
-status: executing
-stopped_at: Completed 16-03-PLAN.md
-last_updated: "2026-06-23T00:57:23.925Z"
+status: verifying
+stopped_at: Completed 16-04-PLAN.md
+last_updated: "2026-06-23T01:22:44.357Z"
 last_activity: 2026-06-23
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 9
-  completed_plans: 8
-  percent: 33
+  completed_plans: 9
+  percent: 67
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 
 Phase: 16 (legal-consent-analytics-and-seo-launch-coverage) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-06-23
 
 ## Performance Metrics
@@ -86,6 +86,7 @@ Last activity: 2026-06-23
 | Phase 16 P01 | 13 min | 4 tasks | 11 files |
 | Phase 16 P02 | 22 min | 4 tasks | 14 files |
 | Phase 16 P03 | 24 min | 4 tasks | 32 files |
+| Phase 16 P04 | 17 min | 4 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -141,6 +142,9 @@ Recent decisions affecting current work:
 - [Phase 16]: Real analytics destinations require both visitor consent and public env gates; local and CI default to the fake/test sink. — Prevents production analytics leakage from local/CI and preserves consent-first loading.
 - [Phase 16]: Product view and search analytics use route-owned client leaves so App Router pages remain Server Components. — Server pages can pass non-PII rendered data while browser dispatch stays in small client leaves.
 - [Phase 16]: Purchase/order analytics remain owner-gated and documented, not enabled by default. — Real Shopify hosted checkout and order evidence require store-owner approval before instrumentation.
+- [Phase 16]: Launch sitemap route matrix — Launch sitemap static coverage is derived from getLaunchSeoRouteExpectations so legal and owner-authored service pages cannot drift from SEO evidence.
+- [Phase 16]: Owner-gated Search Console proof — Search Console submission and URL inspection remain owner-gated proof while robots, sitemap, canonical, noindex, and redirect checks are automated locally.
+- [Phase 16]: Search remains non-indexable — The /search route is represented in launch SEO checks but keeps shouldIndexWhenEnabled=false and shouldAppearInSitemap=false because it is explicitly noindexed.
 
 ### Roadmap Evolution
 
@@ -233,10 +237,10 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-23T00:57:03.155Z
-Stopped at: Completed 16-03-PLAN.md
+Last session: 2026-06-23T01:22:20.308Z
+Stopped at: Completed 16-04-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
 
-- Continue Phase 16 with 16-02 Consent Foundation and Preferences.
+- Verify Phase 16 launch legal/consent/analytics/SEO coverage, then continue with Phase 17 operations, performance, and final production-readiness audit.
