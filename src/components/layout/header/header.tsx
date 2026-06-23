@@ -26,13 +26,6 @@ export function Header() {
 
   return (
     <>
-      <a
-        href="#main-content"
-        className="focus-visible:ring-ring bg-paper text-ink type-label fixed top-2 left-2 z-100 -translate-y-16 rounded-full px-4 py-2 focus-visible:translate-y-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-      >
-        Skip to main content
-      </a>
-
       <header className="sticky top-0 z-60">
         {/* Utility bar — only shown at lg+ where content fits on a single line */}
         <div className="bg-ink text-paper hidden h-9.5 lg:block">

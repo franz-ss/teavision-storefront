@@ -44,6 +44,18 @@ async function gotoWithoutServerError(
   return response as Response
 }
 
+async function expectNoHorizontalOverflow(page: Page) {
+  const widths = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }))
+
+  expect(
+    widths.scrollWidth,
+    `Expected page width ${widths.scrollWidth}px to fit viewport ${widths.clientWidth}px`,
+  ).toBeLessThanOrEqual(widths.clientWidth)
+}
+
 test('home loads with Teavision navigation', async ({ page }) => {
   const assertNoLiveFlow = observeForbiddenLiveFlowUrls(page)
 
@@ -52,6 +64,24 @@ test('home loads with Teavision navigation', async ({ page }) => {
   await expect(
     page.getByRole('link', { name: /Teavision/i }).first(),
   ).toBeVisible()
+  assertNoLiveFlow()
+})
+
+test('home exposes a single keyboard-accessible skip link target', async ({
+  page,
+}) => {
+  const assertNoLiveFlow = observeForbiddenLiveFlowUrls(page)
+
+  await gotoWithoutServerError(page, '/')
+
+  const skipLink = page.getByRole('link', { name: 'Skip to main content' })
+
+  await expect(skipLink).toHaveCount(1)
+  await expect(page.locator('main#main-content')).toHaveCount(1)
+
+  await page.keyboard.press('Tab')
+  await expect(skipLink).toBeFocused()
+  await expect(skipLink).toBeVisible()
   assertNoLiveFlow()
 })
 
@@ -124,6 +154,26 @@ test('/pages/privacy-policy loads without 404', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: /Privacy Policy/i }),
   ).toBeVisible()
+  assertNoLiveFlow()
+})
+
+test('mobile launch routes do not create horizontal overflow', async ({
+  page,
+}) => {
+  const assertNoLiveFlow = observeForbiddenLiveFlowUrls(page)
+  const longSearchQuery =
+    'Organic ceremonial-grade green tea with a very long wholesale product title'
+
+  await page.setViewportSize({ width: 375, height: 812 })
+
+  await gotoWithoutServerError(page, '/cart')
+  await expectNoHorizontalOverflow(page)
+
+  await gotoWithoutServerError(
+    page,
+    `/search?q=${encodeURIComponent(longSearchQuery)}`,
+  )
+  await expectNoHorizontalOverflow(page)
   assertNoLiveFlow()
 })
 

@@ -1,4 +1,26 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import type { StorybookConfig } from '@storybook/nextjs-vite'
+import type { AliasOptions } from 'vite'
+
+const dirname = path.dirname(fileURLToPath(import.meta.url))
+
+function withCartActionsAlias(alias: AliasOptions | undefined): AliasOptions {
+  const cartActionsMock = path.resolve(dirname, 'mocks/cart-actions.ts')
+
+  if (Array.isArray(alias)) {
+    return [
+      ...alias,
+      { find: '@/lib/cart/actions', replacement: cartActionsMock },
+    ]
+  }
+
+  return {
+    ...(alias ?? {}),
+    '@/lib/cart/actions': cartActionsMock,
+  }
+}
 
 const config: StorybookConfig = {
   stories: [
@@ -17,6 +39,10 @@ const config: StorybookConfig = {
   viteFinal(config) {
     return {
       ...config,
+      resolve: {
+        ...config.resolve,
+        alias: withCartActionsAlias(config.resolve?.alias),
+      },
       build: {
         ...config.build,
         chunkSizeWarningLimit: 1400,
