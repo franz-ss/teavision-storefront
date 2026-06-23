@@ -98,6 +98,44 @@ test('report renderer does not print a perfect score when a check fails', () => 
   assert.match(report, /typecheck/)
 })
 
+test('report renderer includes the required final report headings', () => {
+  const report = renderFinalReadinessReport({
+    checkResults: [result('lint', 'PASS')],
+    ownerGates: buildOwnerGateRows({
+      env: {},
+    }),
+  })
+
+  for (const heading of [
+    '# Final Production Readiness Report',
+    '## Automated Code Readiness Score',
+    '## Automated Check Matrix',
+    '## Owner-Gated Launch Evidence',
+    '## Representative Surface Evidence',
+    '## Operations Evidence',
+    '## Performance And UX Evidence',
+    '## Residual Risks',
+    '## Launch Decision',
+  ]) {
+    assert.ok(report.includes(heading), `missing ${heading}`)
+  }
+})
+
+test('all-skipped report is not treated as launch-ready', () => {
+  const report = renderFinalReadinessReport({
+    checkResults: [
+      result('lint', 'SKIPPED'),
+      result('typecheck', 'SKIPPED'),
+    ],
+    ownerGates: buildOwnerGateRows({
+      env: {},
+    }),
+  })
+
+  assert.match(report, /0\/100/)
+  assert.match(report, /Not evaluated: every automated check was skipped/)
+})
+
 test('skipped checks are excluded from score denominator and listed', () => {
   const report = renderFinalReadinessReport({
     checkResults: [

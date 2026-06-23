@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -426,6 +426,10 @@ function renderScoreExplanation(score) {
       ? 'No automated checks were skipped.'
       : `${score.skipped} automated check(s) were skipped with explicit reasons and excluded from the denominator.`
 
+  if (score.total === 0) {
+    return `No automated checks were executed. ${skippedText}`
+  }
+
   if (score.failed > 0) {
     return `${score.passed}/${score.total} non-skipped automated checks passed; ${score.failed} failed. ${skippedText}`
   }
@@ -468,6 +472,10 @@ function renderResidualRisks({ checkResults, ownerPending }) {
 }
 
 function renderLaunchDecision({ ownerPending, score }) {
+  if (score.total === 0) {
+    return 'Not evaluated: every automated check was skipped, so command evidence must be recorded before launch readiness can be decided.'
+  }
+
   if (score.failed > 0) {
     return 'Not launch-ready: one or more non-skipped automated checks failed.'
   }
