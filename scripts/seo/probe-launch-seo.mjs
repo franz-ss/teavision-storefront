@@ -475,8 +475,7 @@ async function runEnabledMode(baseUrl, productPath) {
   }
 
   for (const expectation of [...expectations.static, ...expectations.legal].filter(
-    (candidate) =>
-      candidate.shouldIndexWhenEnabled && candidate.path !== '/',
+    (candidate) => candidate.shouldIndexWhenEnabled,
   )) {
     const { response, text } = await fetchText(baseUrl, expectation.path)
     const canonicalPath = getCanonicalHref(text, baseUrl)

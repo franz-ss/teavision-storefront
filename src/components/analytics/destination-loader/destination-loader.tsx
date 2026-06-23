@@ -76,6 +76,28 @@ function scriptLiteral(value: string): string {
   return JSON.stringify(value)
 }
 
+function googleConsentScript({
+  analyticsAllowed,
+  marketingAllowed,
+}: {
+  analyticsAllowed: boolean
+  marketingAllowed: boolean
+}): string {
+  const analyticsValue = analyticsAllowed ? 'granted' : 'denied'
+  const adsValue = marketingAllowed ? 'granted' : 'denied'
+
+  return `
+window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  analytics_storage: ${scriptLiteral(analyticsValue)},
+  ad_storage: ${scriptLiteral(adsValue)},
+  ad_user_data: ${scriptLiteral(adsValue)},
+  ad_personalization: ${scriptLiteral(adsValue)}
+});
+`
+}
+
 function expireCookie(name: string) {
   const hostname = window.location.hostname
   const domains = new Set<string>([
@@ -228,9 +250,17 @@ export function AnalyticsDestinationLoader({
   const gtmContainerId = destinationId(config.gtmContainerId)
   const metaPixelId = destinationId(config.metaPixelId)
   const klaviyoPublicKey = destinationId(config.klaviyoPublicKey)
+  const hasGoogleDestination =
+    analyticsAllowed && Boolean(ga4MeasurementId || gtmContainerId)
 
   return (
     <>
+      {hasGoogleDestination && (
+        <Script id="teavision-google-consent-init" strategy="afterInteractive">
+          {googleConsentScript({ analyticsAllowed, marketingAllowed })}
+        </Script>
+      )}
+
       {analyticsAllowed && ga4MeasurementId && (
         <>
           <Script
@@ -240,8 +270,6 @@ export function AnalyticsDestinationLoader({
           />
           <Script id="teavision-ga4-init" strategy="afterInteractive">
             {`
-window.dataLayer = window.dataLayer || [];
-function gtag(){window.dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', ${scriptLiteral(ga4MeasurementId)}, { send_page_view: false });
 `}

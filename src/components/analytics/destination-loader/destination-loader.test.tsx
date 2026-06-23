@@ -1,6 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
+import type { ReactNode } from 'react'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -15,7 +16,19 @@ import { CONSENT_CHANGED_EVENT } from '@/lib/consent/storage'
 import { AnalyticsDestinationLoader } from './destination-loader'
 
 vi.mock('next/script', () => ({
-  default: () => null,
+  default: ({
+    children,
+    id,
+    src,
+  }: {
+    children?: ReactNode
+    id?: string
+    src?: string
+  }) => (
+    <div data-script-id={id} data-script-src={src}>
+      {children}
+    </div>
+  ),
 }))
 
 type ConsentGlobals = typeof globalThis & {
@@ -29,6 +42,64 @@ afterEach(() => {
 })
 
 describe('AnalyticsDestinationLoader', () => {
+  it('applies analytics-only Google consent before loading Google destinations', async () => {
+    const host = document.createElement('div')
+    document.body.append(host)
+    const root = createRoot(host)
+
+    await act(async () => {
+      root.render(
+        <AnalyticsDestinationLoader
+          config={{
+            analyticsMode: 'ga4',
+            ga4MeasurementId: 'G-TEAVISION',
+            gtmContainerId: 'GTM-TEAVISION',
+          }}
+          initialConsent={updateConsentCategories({
+            analytics: true,
+            marketing: false,
+          })}
+        />,
+      )
+    })
+
+    const scriptIds = [...host.querySelectorAll('[data-script-id]')].map(
+      (element) => (element as HTMLElement).dataset.scriptId,
+    )
+    const consentScript = host.querySelector(
+      '[data-script-id="teavision-google-consent-init"]',
+    )
+    const renderedScripts = host.textContent ?? ''
+
+    expect(scriptIds).toEqual([
+      'teavision-google-consent-init',
+      'teavision-ga4-loader',
+      'teavision-ga4-init',
+      'teavision-gtm-loader',
+    ])
+    expect(consentScript?.textContent).toContain(
+      "gtag('consent', 'default'",
+    )
+    expect(consentScript?.textContent).toContain(
+      'analytics_storage: "granted"',
+    )
+    expect(consentScript?.textContent).toContain('ad_storage: "denied"')
+    expect(consentScript?.textContent).toContain('ad_user_data: "denied"')
+    expect(consentScript?.textContent).toContain(
+      'ad_personalization: "denied"',
+    )
+    expect(renderedScripts.indexOf("gtag('consent', 'default'")).toBeLessThan(
+      renderedScripts.indexOf("gtag('config'"),
+    )
+    expect(renderedScripts.indexOf("gtag('consent', 'default'")).toBeLessThan(
+      renderedScripts.indexOf('gtm.js'),
+    )
+
+    await act(async () => {
+      root.unmount()
+    })
+  })
+
   it('notifies loaded destinations when optional consent is revoked', async () => {
     const globals = globalThis as ConsentGlobals
     globals.gtag = vi.fn()

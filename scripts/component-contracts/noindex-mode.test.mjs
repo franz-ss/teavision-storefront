@@ -81,4 +81,5 @@ test('enabled SEO probe fails when indexable routes still render noindex', () =>
     /response\.ok &&\s*canonicalPath === expectation\.canonicalPath &&\s*!hasNoindex/s,
   )
   assert.match(probe, /noindex \$\{hasNoindex\}/)
+  assert.doesNotMatch(probe, /candidate\.path\s*!==\s*['"]\/['"]/)
 })
