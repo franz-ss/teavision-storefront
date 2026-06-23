@@ -1,3 +1,4 @@
+import { ConsentBanner } from '@/components/consent'
 import { Footer, Header } from '@/components/layout'
 
 export default function StorefrontLayout({
@@ -18,6 +19,7 @@ export default function StorefrontLayout({
         {children}
       </main>
       <Footer />
+      <ConsentBanner />
     </div>
   )
 }

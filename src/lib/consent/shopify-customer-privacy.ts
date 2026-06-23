@@ -117,14 +117,13 @@ export async function applyShopifyCustomerPrivacyConsent(
     return { status: 'unavailable', reason: 'set-tracking-consent-missing' }
   }
 
+  const setTrackingConsent = customerPrivacy.setTrackingConsent
+
   return new Promise((resolve) => {
     try {
-      customerPrivacy.setTrackingConsent(
-        toShopifyVisitorConsent(consent),
-        () => {
-          resolve({ status: 'applied' })
-        },
-      )
+      setTrackingConsent(toShopifyVisitorConsent(consent), () => {
+        resolve({ status: 'applied' })
+      })
     } catch (error) {
       resolve({
         status: 'failed',

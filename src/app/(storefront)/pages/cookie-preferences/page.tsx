@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { ConsentPreferences } from '@/components/consent'
 import { Card, Section } from '@/components/ui'
 import { getLegalPolicy } from '@/lib/legal/policies'
 import { withNoindexRobots } from '@/lib/seo/noindex'
@@ -22,13 +23,13 @@ export default function CookiePreferencesPage() {
   return (
     <Section.Root tone="surface">
       <Section.Container>
-        <div className="max-w-prose">
+        <div className="max-w-3xl">
           <p className="type-body text-gold-deep">Launch-review policy</p>
           <h1 className="type-heading-02 text-ink mt-3">{policy.title}</h1>
           <p className="type-body text-ink-soft mt-5">
-            This code-owned route keeps the cookie preferences URL available for
-            launch review before the consent controls are wired in the next
-            plan.
+            Choose whether Teavision can use optional analytics and marketing
+            cookies. Essential cookies stay on for cart, checkout handoff,
+            security, and saving these preferences.
           </p>
 
           <Card
@@ -48,20 +49,16 @@ export default function CookiePreferencesPage() {
             as="article"
             padding="lg"
             radius="md"
-            className="border-hairline bg-card mt-8"
+            className="mt-8"
           >
-            <h2 className="type-heading-05 text-ink">
-              Launch-review wording
-            </h2>
+            <h2 className="type-heading-05 text-ink">Your cookie choices</h2>
+            <div className="mt-5">
+              <ConsentPreferences />
+            </div>
             <p className="type-body text-ink-soft mt-4">
-              This page is a placeholder for the approved cookie preference
-              experience. It establishes the stable URL that will host consent
-              category controls for essential, analytics, and marketing cookies.
-            </p>
-            <p className="type-body text-ink-soft mt-4">
-              Until owner/legal approval and consent controls are recorded,
-              contact Teavision at info@teavision.com.au for questions about
-              cookie preferences or review status.
+              If these preferences cannot be saved, email
+              info@teavision.com.au and Teavision will help record your cookie
+              choice.
             </p>
           </Card>
         </div>
