@@ -69,6 +69,7 @@ Owner-gated Shopify/admin proof is listed separately below and does not reduce t
 
 - Performance command: `pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary`.
 - Performance status summary: `FAIL - exit 1`.
+- Performance acceptance status: no dated owner, staging, or field Core Web Vitals acceptance artifact was supplied to this audit; performance `FAIL` rows remain blocking.
 - Current local Lighthouse evidence is recorded in `docs/launch/performance-evidence.md`. Metric `FAIL` rows make this check fail by default; use `--allow-metric-failures` only for evidence-only diagnostics with explicit launch-risk follow-up.
 - UX/accessibility polish evidence is recorded through production smoke coverage and `docs/launch/performance-evidence.md`.
 

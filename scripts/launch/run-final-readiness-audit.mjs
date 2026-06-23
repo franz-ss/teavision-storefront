@@ -504,6 +504,7 @@ ${ownerGates.map(renderOwnerGateRow).join('\n')}
 
 - Performance command: \`pnpm test:performance -- --start-server --base-url ${baseUrl} --json-summary\`.
 - Performance status summary: \`${getResultStatus(checkResults, 'performance')}\`.
+- ${renderPerformanceAcceptanceStatus(checkResults)}
 - Current local Lighthouse evidence is recorded in \`docs/launch/performance-evidence.md\`. Metric \`FAIL\` rows make this check fail by default; use \`--allow-metric-failures\` only for evidence-only diagnostics with explicit launch-risk follow-up.
 - UX/accessibility polish evidence is recorded through production smoke coverage and \`docs/launch/performance-evidence.md\`.
 
@@ -578,6 +579,26 @@ function renderResidualRisks({ checkResults, ownerPending }) {
   }
 
   return lines.join('\n')
+}
+
+function renderPerformanceAcceptanceStatus(checkResults) {
+  const performanceResult = checkResults.find(
+    (result) => result.label === 'performance',
+  )
+
+  if (!performanceResult) {
+    return 'Performance acceptance status: not recorded because the performance check is missing from this report.'
+  }
+
+  if (performanceResult.status === 'PASS') {
+    return 'Performance acceptance status: not required because strict local performance evidence passed.'
+  }
+
+  if (performanceResult.status === 'SKIPPED') {
+    return 'Performance acceptance status: not evaluated because the performance check was explicitly skipped.'
+  }
+
+  return 'Performance acceptance status: no dated owner, staging, or field Core Web Vitals acceptance artifact was supplied to this audit; performance `FAIL` rows remain blocking.'
 }
 
 function renderLaunchDecision({ ownerPending, score }) {

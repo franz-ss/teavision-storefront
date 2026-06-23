@@ -157,6 +157,11 @@ test('failing performance result prevents a launch-ready report', () => {
 
   assert.doesNotMatch(report, /100\/100/)
   assert.match(report, /67\/100/)
+  assert.match(
+    report,
+    /no dated owner, staging, or field Core Web Vitals acceptance artifact was supplied/,
+  )
+  assert.match(report, /performance `FAIL` rows remain blocking/)
   assert.match(report, /Not launch-ready/)
 })
 
