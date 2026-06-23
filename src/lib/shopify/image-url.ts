@@ -42,5 +42,7 @@ export function getShopifyImageUrl(
 }
 
 export function getSizedShopifyImageUrl(source: string, width: number): string {
+  if (source.startsWith('/')) return source
+
   return getShopifyImageUrl(source, { width })
 }

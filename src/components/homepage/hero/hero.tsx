@@ -31,6 +31,7 @@ export function HomepageHero() {
         sizes="100vw"
         loading="eager"
         fetchPriority="high"
+        quality={68}
         className="absolute inset-0 -z-20 object-cover"
       />
       <div aria-hidden="true" className="hero-scrim absolute inset-0 -z-10" />

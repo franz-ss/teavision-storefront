@@ -35,6 +35,13 @@ const fakeVariantQuantityRule = {
   increment: 5,
 }
 
+const fakeProductImage = {
+  url: '/images/homepage/bulk-wholesale.jpg',
+  altText: 'Loose tea in bulk packaging',
+  width: 800,
+  height: 534,
+}
+
 function readRequestBody(request: NodeJS.ReadableStream): Promise<string> {
   return new Promise((resolve, reject) => {
     let body = ''
@@ -142,7 +149,7 @@ function makeRawProduct() {
       nodes: [{ id: 'gid://shopify/Collection/test-collection' }],
     },
     images: {
-      edges: [],
+      edges: [{ node: fakeProductImage }],
     },
     priceRange: product.priceRange,
     options: product.options,
@@ -163,6 +170,7 @@ function makeRawProduct() {
           node: {
             ...variant,
             currentlyNotInStock: false,
+            image: fakeProductImage,
             quantityRule: fakeVariantQuantityRule,
             quantityPriceBreaks: {
               nodes: [
@@ -208,7 +216,7 @@ function makeCollectionProductNode() {
     availableForSale: true,
     productType: 'Tea',
     tags: product.tags,
-    featuredImage: null,
+    featuredImage: fakeProductImage,
     priceRange: product.priceRange,
     variants: {
       edges: product.variants.edges.map((edge) => ({
@@ -219,7 +227,7 @@ function makeCollectionProductNode() {
           currentlyNotInStock: edge.node.currentlyNotInStock,
           quantityRule: edge.node.quantityRule,
           price: edge.node.price,
-          image: null,
+          image: fakeProductImage,
         },
       })),
     },

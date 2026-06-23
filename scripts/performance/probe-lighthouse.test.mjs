@@ -36,6 +36,13 @@ test('parseArgs supports defaults and repeated url overrides', () => {
   assert.deepEqual(parsed.routes, ['/', '/cart'])
 })
 
+test('parseArgs ignores the package-manager argument separator', () => {
+  const parsed = parseArgs(['--', '--start-server'])
+
+  assert.equal(parsed.baseUrl, 'http://127.0.0.1:4173')
+  assert.equal(parsed.startServer, true)
+})
+
 test('production lifecycle command construction matches fake-provider server flow', () => {
   const commands = getProductionLifecycleCommands({
     baseUrl: 'http://127.0.0.1:4999',
