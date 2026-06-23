@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 16-01-PLAN.md
-last_updated: "2026-06-22T23:56:11.300Z"
-last_activity: 2026-06-22 -- Completed 16-01-PLAN.md
+stopped_at: Completed 16-02-PLAN.md
+last_updated: "2026-06-23T00:24:31.042Z"
+last_activity: 2026-06-23
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 9
-  completed_plans: 6
+  completed_plans: 7
   percent: 33
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 ## Current Position
 
 Phase: 16 (legal-consent-analytics-and-seo-launch-coverage) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
-Last activity: 2026-06-22 -- Completed 16-01-PLAN.md
+Last activity: 2026-06-23
 
 ## Performance Metrics
 
@@ -84,6 +84,7 @@ Last activity: 2026-06-22 -- Completed 16-01-PLAN.md
 | Phase 15 P04 | 13 min | 3 tasks | 10 files |
 | Phase 15 P05 | 13 min | 3 tasks | 4 files |
 | Phase 16 P01 | 13 min | 4 tasks | 11 files |
+| Phase 16 P02 | 22 min | 4 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -132,6 +133,9 @@ Recent decisions affecting current work:
 - [Phase 13]: Phase 13-02-GAP: Merged id="product-grid" onto the ul grid element with scroll-mt-24/lg:scroll-mt-32 instead of offsetting a zero-height sentinel div — cleaner DOM, semantically correct anchor target, eliminates the gap-under-header bug (D-26)
 - [Phase 16]: Policy routes remain code-owned and visibly pending owner/legal review until approval proof is recorded. — Phase 16 forbids inventing final legal promises; code-owned routes provide launch coverage while preserving owner/legal approval gates.
 - [Phase 16]: Footer legal links are registry-backed while retaining explicit canonical href order for acceptance and drift checks. — The footer must expose all canonical policy URLs and stay aligned with the central legal policy registry.
+- [Phase ?]: Phase 16-02: Consent persists as a minimal versioned localStorage object under teavision_consent — Missing or malformed storage means no prior choice and optional categories remain denied until explicit visitor action.
+- [Phase ?]: Phase 16-02: Shopify Customer Privacy API propagation is isolated behind a browser-only adapter — The adapter returns typed unavailable or failed states instead of throwing when Shopify globals are absent.
+- [Phase ?]: Phase 16-02: Storefront layout remains a Server Component — Only consent banner and preferences leaves handle browser storage, dialogs, Shopify privacy propagation, and consent interactions.
 
 ### Roadmap Evolution
 
@@ -224,8 +228,8 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-22T23:55:19.333Z
-Stopped at: Completed 16-01-PLAN.md
+Last session: 2026-06-23T00:23:52.999Z
+Stopped at: Completed 16-02-PLAN.md
 Resume file: None
 
 ## Operator Next Steps

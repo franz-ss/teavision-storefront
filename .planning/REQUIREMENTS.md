@@ -20,7 +20,7 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 - [x] **LEGAL-01**: User can access privacy, terms, shipping, returns/refunds, and cookie/privacy preference pages without 404s.
 - [x] **LEGAL-02**: Legacy Shopify policy URLs and footer/legal links redirect or resolve correctly.
 - [ ] **SEO-01**: Site owner can flip launch indexing safely, with robots, sitemap, canonicals, structured data, and noindex behavior verified.
-- [ ] **CONSENT-01**: Visitor consent defaults are set before analytics or advertising tags load.
+- [x] **CONSENT-01**: Visitor consent defaults are set before analytics or advertising tags load.
 - [x] **CONSENT-02**: Shopify Customer Privacy API integration is evaluated or wired where Shopify-managed pixels or checkout consent apply.
 
 ### Analytics
@@ -85,7 +85,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LEGAL-01 | Phase 16 | Complete |
 | LEGAL-02 | Phase 16 | Complete |
 | SEO-01 | Phase 16 | Pending |
-| CONSENT-01 | Phase 16 | Pending |
+| CONSENT-01 | Phase 16 | Complete |
 | CONSENT-02 | Phase 16 | Complete |
 | ANALYTICS-01 | Phase 16 | Pending |
 | ANALYTICS-02 | Phase 16 | Pending |
