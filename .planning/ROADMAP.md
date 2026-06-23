@@ -58,7 +58,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
-- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (6/6 plans complete; verification pending after strict evidence)
+- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (6/6 plans complete; verification gaps found for enabled SEO and performance)
 
 ## Progress
 
@@ -78,7 +78,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 14. Shopify Customer Accounts              | v1.3      | 9/9            | Complete   | 2026-06-22 |
 | 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 4/4 | Complete    | 2026-06-23 |
-| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 6/6 | Verification Pending | — |
+| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 6/6 | Gaps Found | — |
 
 ## Phase Details
 
@@ -192,4 +192,4 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ## Next
 
-Verify Phase 17 against the regenerated final readiness evidence, then plan any remaining SEO/performance remediation gaps.
+Plan the next remediation pass for enabled SEO and performance blockers, then regenerate final readiness evidence.

@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: verifying
-stopped_at: Phase 17 plan 17-06 complete; phase verification pending
+stopped_at: Phase 17 verification gaps found: enabled SEO and performance
 last_updated: "2026-06-23T12:02:34.444Z"
 last_activity: 2026-06-23
 progress:
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 17 — verification after strict readiness evidence
+**Current focus:** Phase 17 — enabled SEO and performance remediation after strict readiness evidence
 
 ## Current Position
 
-Phase: 17 (operations-performance-and-final-production-readiness-audit) — READY FOR VERIFICATION
+Phase: 17 (operations-performance-and-final-production-readiness-audit) — GAPS FOUND
 Plan: 6 of 6
-Status: Plan execution complete; phase verification pending
-Last activity: 2026-06-23 -- strict readiness evidence recorded
+Status: Verification complete; enabled SEO and performance remain blocked
+Last activity: 2026-06-23 -- strict readiness verification recorded
 
 ## Performance Metrics
 
@@ -184,7 +184,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Run Phase 17 verification after strict readiness evidence; current final report blocks launch on enabled SEO and performance.
+- Plan or execute remediation for reopened `SEO-01` and blocked `PERF-01`.
 
 ### Blockers/Concerns
 
@@ -262,9 +262,9 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 ## Session Continuity
 
 Last session: 2026-06-23T12:02:34.178Z
-Stopped at: Phase 17 plan 17-06 complete; phase verification pending
+Stopped at: Phase 17 verification gaps found: enabled SEO and performance
 Resume file: None
 
 ## Operator Next Steps
 
-- Verify Phase 17 against the regenerated final readiness evidence, then plan any remaining SEO/performance remediation gaps.
+- Plan the next remediation pass for enabled SEO and performance blockers, then regenerate final readiness evidence.
