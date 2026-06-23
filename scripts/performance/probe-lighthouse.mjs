@@ -499,9 +499,9 @@ ${renderMarkdownTable(rows)}
 
 ## UX And Accessibility Polish
 
-- duplicate skip link resolved: Pending Task 3 verification.
-- mobile text wrapping checked: Pending Task 3 verification.
-- Remaining non-blocking UX/accessibility polish items: Pending Task 3 verification.
+- duplicate skip link resolved: production smoke asserts exactly one \`Skip to main content\` link on \`/\`, verifies it receives first-tab focus, and confirms the \`main#main-content\` target exists.
+- mobile text wrapping checked: production smoke runs \`/cart\` and a long-query \`/search\` route at a 375px viewport and asserts document width does not exceed viewport width.
+- Remaining non-blocking UX/accessibility polish items: None - no launch-blocking UX/accessibility polish items remain.
 
 ## Remaining Mitigations
 

@@ -21,6 +21,8 @@ Current automated evidence covers:
   `/products/test-standard-tea`, `/cart`, `/search?q=tea`, `/account`,
   `/pages/privacy-policy`, and `/api/health`.
 - Public health JSON returning `service: 'teavision-storefront'`.
+- A single keyboard-accessible skip link on `/` targeting `main#main-content`.
+- 375px mobile overflow checks for `/cart` and a long-query `/search` route.
 
 ## Fake Provider Boundary
 
