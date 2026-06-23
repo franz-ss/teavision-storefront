@@ -19,7 +19,7 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 
 - [x] **LEGAL-01**: User can access privacy, terms, shipping, returns/refunds, and cookie/privacy preference pages without 404s.
 - [x] **LEGAL-02**: Legacy Shopify policy URLs and footer/legal links redirect or resolve correctly.
-- [x] **SEO-01**: Site owner can flip launch indexing safely, with robots, sitemap, canonicals, structured data, and noindex behavior verified.
+- [ ] **SEO-01**: Site owner can flip launch indexing safely, with robots, sitemap, canonicals, structured data, and noindex behavior verified.
 - [x] **CONSENT-01**: Visitor consent defaults are set before analytics or advertising tags load.
 - [x] **CONSENT-02**: Shopify Customer Privacy API integration is evaluated or wired where Shopify-managed pixels or checkout consent apply.
 
@@ -38,7 +38,7 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 
 ### Performance, UX, And QA
 
-- [x] **PERF-01**: Home and PDP Lighthouse/Core Web Vitals evidence no longer shows launch-blocking LCP regressions.
+- [ ] **PERF-01**: Home and PDP Lighthouse/Core Web Vitals evidence no longer shows launch-blocking LCP regressions.
 - [x] **UX-01**: Audit UX/accessibility polish items are resolved or documented as non-blocking, including mobile text wrapping and duplicate skip links.
 - [x] **QA-01**: Local production e2e is unblocked and passes without relying on an already-running dev server.
 - [x] **QA-02**: Final readiness audit script/report proves build, lint, typecheck, unit, integration, Storybook, e2e, dependency audit, headers, policy routes, SEO, performance, and browser smoke checks.
@@ -84,7 +84,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-05 | Phase 15 | Complete |
 | LEGAL-01 | Phase 16 | Complete |
 | LEGAL-02 | Phase 16 | Complete |
-| SEO-01 | Phase 16 | Complete |
+| SEO-01 | Phase 16 | Blocked |
 | CONSENT-01 | Phase 16 | Complete |
 | CONSENT-02 | Phase 16 | Complete |
 | ANALYTICS-01 | Phase 16 | Complete |
@@ -94,7 +94,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OPS-02 | Phase 17 | Complete |
 | OPS-03 | Phase 17 | Complete |
 | OPS-04 | Phase 17 | Complete |
-| PERF-01 | Phase 17 | Complete |
+| PERF-01 | Phase 17 | Blocked |
 | UX-01 | Phase 17 | Complete |
 | QA-01 | Phase 17 | Complete |
 | QA-02 | Phase 17 | Complete |
@@ -107,4 +107,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-06-22*
-*Last updated: 2026-06-22 after Phase 15 execution*
+*Last updated: 2026-06-23 after Phase 17 strict readiness evidence*
