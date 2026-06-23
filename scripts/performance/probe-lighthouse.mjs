@@ -28,7 +28,9 @@ const DEFAULT_FAKE_CUSTOMER_ACCOUNT_PORT = 4518
 
 export function parseArgs(argv) {
   const args = {
+    allowMetricFailures: false,
     baseUrl: process.env.PERFORMANCE_PROBE_BASE_URL ?? DEFAULT_BASE_URL,
+    jsonSummary: false,
     startServer: false,
     stdoutOnly: false,
     urls: [],
@@ -66,6 +68,16 @@ export function parseArgs(argv) {
 
     if (value === '--start-server') {
       args.startServer = true
+      continue
+    }
+
+    if (value === '--allow-metric-failures') {
+      args.allowMetricFailures = true
+      continue
+    }
+
+    if (value === '--json-summary') {
+      args.jsonSummary = true
       continue
     }
 
@@ -487,6 +499,50 @@ function renderRouteMetricSummary(row) {
   )}, accessibility ${formatScore(row.a11yScore)}, and status ${row.status}.`
 }
 
+export function buildJsonSummary(rows) {
+  const summary = {
+    blocking: 0,
+    fail: 0,
+    pass: 0,
+    routes: rows.map((row) => ({
+      cls: row.cls,
+      lcpMs: row.lcpMs,
+      route: row.route,
+      status: row.status,
+      tbtMs: row.tbtMs,
+    })),
+    total: rows.length,
+    warn: 0,
+  }
+
+  for (const row of rows) {
+    if (row.status === 'PASS') summary.pass += 1
+    if (row.status === 'WARN') summary.warn += 1
+    if (row.status === 'FAIL') {
+      summary.fail += 1
+      summary.blocking += 1
+    }
+  }
+
+  return summary
+}
+
+export function evaluateReadinessRows(
+  rows,
+  { allowMetricFailures = false } = {},
+) {
+  const blockingRows = rows.filter((row) => row.status === 'FAIL')
+  const shouldFail = blockingRows.length > 0 && !allowMetricFailures
+
+  return {
+    blockingRows,
+    exitCode: shouldFail ? 1 : 0,
+    message: shouldFail
+      ? `Performance readiness failed: ${blockingRows.length} route(s) have FAIL metrics.`
+      : '',
+  }
+}
+
 function renderRemediationNotes(rows) {
   const homeRow = rows.find((row) => row.route === '/')
   const productRow = rows.find(
@@ -519,6 +575,8 @@ export function renderEvidenceDocument({
 
 Generated ${generatedAt}. This is local mobile Lighthouse lab evidence against the fake-provider production lifecycle. Lighthouse cannot replace field Core Web Vitals data; it is used here as repeatable launch regression evidence.
 
+For evidence-only local diagnostics that should not block a readiness script, run \`pnpm test:performance -- --allow-metric-failures\`.
+
 ## Representative Routes
 
 ${renderRouteList(routes)}
@@ -526,6 +584,10 @@ ${renderRouteList(routes)}
 ## Mobile Lighthouse Results
 
 ${renderMarkdownTable(rows)}
+
+## Launch Blocking Status
+
+${renderLaunchBlockingStatus(rows)}
 
 ## UX And Accessibility Polish
 
@@ -541,6 +603,16 @@ ${renderRemediationNotes(rows)}
 
 ${renderRemainingMitigations(rows)}
 `
+}
+
+function renderLaunchBlockingStatus(rows) {
+  const blockingRows = rows.filter((row) => row.status === 'FAIL')
+
+  if (blockingRows.length === 0) {
+    return 'Launch-blocking: no - strict local Lighthouse evidence has no `FAIL` metric rows.'
+  }
+
+  return `Launch-blocking: yes - ${blockingRows.length} strict local Lighthouse route(s) have \`FAIL\` metric rows.`
 }
 
 export async function runProbe(args) {
@@ -570,6 +642,10 @@ export async function main(argv = process.argv.slice(2)) {
     const markdown = renderMarkdownTable(rows)
     console.log(markdown)
 
+    if (args.jsonSummary) {
+      console.log(JSON.stringify(buildJsonSummary(rows), null, 2))
+    }
+
     if (!args.stdoutOnly) {
       const evidence = renderEvidenceDocument({
         baseUrl: args.baseUrl,
@@ -580,8 +656,11 @@ export async function main(argv = process.argv.slice(2)) {
       writeFileSync(EVIDENCE_PATH, evidence)
     }
 
-    // FAIL/WARN rows are launch evidence for the next remediation task; only
-    // runtime/tool errors should make this command exit nonzero.
+    const readiness = evaluateReadinessRows(rows, args)
+    if (readiness.exitCode !== 0) {
+      console.error(readiness.message)
+      process.exitCode = readiness.exitCode
+    }
   } finally {
     await lifecycle?.stop()
   }

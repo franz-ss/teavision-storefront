@@ -2,7 +2,9 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
+  buildJsonSummary,
   calculateStatus,
+  evaluateReadinessRows,
   getLighthouseCommand,
   getProductionLifecycleCommands,
   parseArgs,
@@ -14,6 +16,8 @@ import {
 test('parseArgs supports defaults and repeated url overrides', () => {
   const defaults = parseArgs([])
   assert.equal(defaults.baseUrl, 'http://127.0.0.1:4173')
+  assert.equal(defaults.allowMetricFailures, false)
+  assert.equal(defaults.jsonSummary, false)
   assert.equal(defaults.startServer, false)
   assert.equal(defaults.stdoutOnly, false)
   assert.deepEqual(defaults.routes.slice(0, 2), [
@@ -24,6 +28,8 @@ test('parseArgs supports defaults and repeated url overrides', () => {
   const parsed = parseArgs([
     '--start-server',
     '--stdout-only',
+    '--allow-metric-failures',
+    '--json-summary',
     '--base-url',
     'http://127.0.0.1:4999',
     '--url',
@@ -31,9 +37,85 @@ test('parseArgs supports defaults and repeated url overrides', () => {
     '--url=/cart',
   ])
   assert.equal(parsed.baseUrl, 'http://127.0.0.1:4999')
+  assert.equal(parsed.allowMetricFailures, true)
+  assert.equal(parsed.jsonSummary, true)
   assert.equal(parsed.startServer, true)
   assert.equal(parsed.stdoutOnly, true)
   assert.deepEqual(parsed.routes, ['/', '/cart'])
+})
+
+test('strict readiness fails on FAIL rows unless explicitly allowed', () => {
+  const rows = [
+    {
+      cls: 0,
+      lcpMs: 3000,
+      route: '/',
+      status: 'FAIL',
+      tbtMs: 10,
+    },
+    {
+      cls: 0,
+      lcpMs: 1800,
+      route: '/cart',
+      status: 'PASS',
+      tbtMs: 10,
+    },
+  ]
+
+  assert.deepEqual(evaluateReadinessRows(rows), {
+    blockingRows: [rows[0]],
+    exitCode: 1,
+    message: 'Performance readiness failed: 1 route(s) have FAIL metrics.',
+  })
+  assert.equal(
+    evaluateReadinessRows(rows, { allowMetricFailures: true }).exitCode,
+    0,
+  )
+})
+
+test('json summary exposes route-level readiness counts', () => {
+  const summary = buildJsonSummary([
+    {
+      cls: 0,
+      lcpMs: 1800,
+      route: '/',
+      status: 'PASS',
+      tbtMs: 10,
+    },
+    {
+      cls: null,
+      lcpMs: 1800,
+      route: '/account',
+      status: 'WARN',
+      tbtMs: 10,
+    },
+    {
+      cls: 0,
+      lcpMs: 3600,
+      route: '/products/test-standard-tea',
+      status: 'FAIL',
+      tbtMs: 10,
+    },
+  ])
+
+  assert.deepEqual(summary, {
+    blocking: 1,
+    fail: 1,
+    pass: 1,
+    routes: [
+      { cls: 0, lcpMs: 1800, route: '/', status: 'PASS', tbtMs: 10 },
+      { cls: null, lcpMs: 1800, route: '/account', status: 'WARN', tbtMs: 10 },
+      {
+        cls: 0,
+        lcpMs: 3600,
+        route: '/products/test-standard-tea',
+        status: 'FAIL',
+        tbtMs: 10,
+      },
+    ],
+    total: 3,
+    warn: 1,
+  })
 })
 
 test('parseArgs ignores the package-manager argument separator', () => {
