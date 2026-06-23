@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "audit:readiness": "node scripts/launch/run-final-readiness-audit.mjs",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test:contracts": "node --test scripts/eslint-rules/*.test.mjs scripts/component-contracts/*.test.mjs",
