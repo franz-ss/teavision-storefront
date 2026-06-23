@@ -170,8 +170,23 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - If production hosting is not Vercel, map observability requirements to the actual provider rather than assuming Vercel-specific APIs.
 - The final report is the source of truth for the requested production-readiness score.
 
-**Plans:** TBD by `$gsd-plan-phase 17`
+**Plans:**
+
+**Wave 1**
+- `17-01` - Safe health/readiness endpoint, private deep readiness probe, and operations runbook.
+- `17-02` - Sentry-style observability, typed redacted logging, and launch watch routing.
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- `17-03` - Production-like fake-provider e2e lifecycle and evidence.
+- `17-04` - Performance, Core Web Vitals, duplicate skip-link, and UX/accessibility evidence.
+
+**Wave 3** *(blocked on Waves 1-2 completion)*
+- `17-05` - Final production-readiness audit runner and separated automated/owner-gated report.
+
+**Cross-cutting constraints:**
+- Owner-gated Shopify hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, and Search Console proof must remain `approved`, `pending`, or `owner-blocked`; automated code readiness must not fabricate those approvals.
+- Public health/readiness and observability outputs must never expose secrets, tokens, customer PII, raw provider payloads, cart IDs, order IDs, checkout URLs, or submitted message bodies.
 
 ## Next
 
-Start Phase 17 with `$gsd-discuss-phase 17`, or skip directly to `$gsd-plan-phase 17`.
+Execute Phase 17 with `$gsd-execute-phase 17`.
