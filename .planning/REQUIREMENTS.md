@@ -31,17 +31,17 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 
 ### Operations
 
-- [ ] **OPS-01**: Production exposes a safe health/readiness endpoint with no secrets or PII.
+- [x] **OPS-01**: Production exposes a safe health/readiness endpoint with no secrets or PII.
 - [ ] **OPS-02**: Errors, checkout failures, provider failures, and route/action failures are observable in the chosen monitoring stack.
 - [ ] **OPS-03**: Logs are structured and redact tokens, customer PII, message bodies, and provider payloads.
-- [ ] **OPS-04**: Launch runbook covers alerts, rollback, backups/platform recovery, owner approvals, and post-launch monitoring.
+- [x] **OPS-04**: Launch runbook covers alerts, rollback, backups/platform recovery, owner approvals, and post-launch monitoring.
 
 ### Performance, UX, And QA
 
 - [ ] **PERF-01**: Home and PDP Lighthouse/Core Web Vitals evidence no longer shows launch-blocking LCP regressions.
 - [ ] **UX-01**: Audit UX/accessibility polish items are resolved or documented as non-blocking, including mobile text wrapping and duplicate skip links.
 - [ ] **QA-01**: Local production e2e is unblocked and passes without relying on an already-running dev server.
-- [ ] **QA-02**: Final readiness audit script/report proves build, lint, typecheck, unit, integration, Storybook, e2e, dependency audit, headers, policy routes, SEO, performance, and browser smoke checks.
+- [x] **QA-02**: Final readiness audit script/report proves build, lint, typecheck, unit, integration, Storybook, e2e, dependency audit, headers, policy routes, SEO, performance, and browser smoke checks.
 - [ ] **QA-03**: Shopify hosted checkout, payment, shipping, tax, order creation, success redirect, Customer Account OAuth, protected customer data, and B2B pricing checks have owner-approved test evidence or explicit owner-blocked status.
 
 ## v2 Requirements
@@ -90,14 +90,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANALYTICS-01 | Phase 16 | Complete |
 | ANALYTICS-02 | Phase 16 | Complete |
 | ANALYTICS-03 | Phase 16 | Complete |
-| OPS-01 | Phase 17 | Pending |
+| OPS-01 | Phase 17 | Complete |
 | OPS-02 | Phase 17 | Pending |
 | OPS-03 | Phase 17 | Pending |
-| OPS-04 | Phase 17 | Pending |
+| OPS-04 | Phase 17 | Complete |
 | PERF-01 | Phase 17 | Pending |
 | UX-01 | Phase 17 | Pending |
 | QA-01 | Phase 17 | Pending |
-| QA-02 | Phase 17 | Pending |
+| QA-02 | Phase 17 | Complete |
 | QA-03 | Phase 17 | Pending |
 
 **Coverage:**

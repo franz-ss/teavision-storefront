@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Phase 17 context gathered
-last_updated: "2026-06-23T05:55:16.274Z"
-last_activity: 2026-06-23 -- Phase 17 planning complete
+stopped_at: Completed 17-01-PLAN.md
+last_updated: "2026-06-23T06:38:09.767Z"
+last_activity: 2026-06-23 -- Completed 17-01 safe health/readiness foundation
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 14
-  completed_plans: 9
-  percent: 64
+  completed_plans: 10
+  percent: 67
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 17 — operations, performance, and final production readiness audit
+**Current focus:** Phase 17 — operations-performance-and-final-production-readiness-audit
 
 ## Current Position
 
-Phase: 17
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-23 -- Phase 17 planning complete
+Phase: 17 (operations-performance-and-final-production-readiness-audit) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute Plan 2
+Last activity: 2026-06-23 -- Completed 17-01 safe health/readiness foundation
 
 ## Performance Metrics
 
@@ -88,6 +88,7 @@ Last activity: 2026-06-23 -- Phase 17 planning complete
 | Phase 16 P02 | 22 min | 4 tasks | 14 files |
 | Phase 16 P03 | 24 min | 4 tasks | 32 files |
 | Phase 16 P04 | 17 min | 4 tasks | 7 files |
+| Phase 17 P01 | 14 min | 4 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -146,6 +147,9 @@ Recent decisions affecting current work:
 - [Phase 16]: Launch sitemap route matrix — Launch sitemap static coverage is derived from getLaunchSeoRouteExpectations so legal and owner-authored service pages cannot drift from SEO evidence.
 - [Phase 16]: Owner-gated Search Console proof — Search Console submission and URL inspection remain owner-gated proof while robots, sitemap, canonical, noindex, and redirect checks are automated locally.
 - [Phase 16]: Search remains non-indexable — The /search route is represented in launch SEO checks but keeps shouldIndexWhenEnabled=false and shouldAppearInSitemap=false because it is explicitly noindexed.
+- [Phase 17-01]: Public health remains intentionally shallow: status, service, release, and timestamp only. — Keeps the public endpoint safe under OPS-01 and leaves provider diagnostics to private probes.
+- [Phase 17-01]: Owner-gated Shopify/OAuth/B2B/Search Console proof is tracked as approved, pending, or owner-blocked evidence, not as an automated code failure. — Preserves the owner-approval boundary while allowing automated code readiness to be evaluated honestly.
+- [Phase 17-01]: Docs-mode readiness checks validate operations runbook headings once the runbook exists. — Prevents future edits from removing required launch watch, rollback, recovery, env gate, owner approval, and evidence sections.
 
 ### Roadmap Evolution
 
@@ -239,9 +243,9 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-23T05:35:59.816Z
-Stopped at: Phase 17 context gathered
-Resume file: .planning/phases/17-operations-performance-and-final-production-readiness-audit/17-CONTEXT.md
+Last session: 2026-06-23T06:38:09.754Z
+Stopped at: Completed 17-01-PLAN.md
+Resume file: None
 
 ## Operator Next Steps
 
