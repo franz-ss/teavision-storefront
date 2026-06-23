@@ -7,6 +7,7 @@ import {
   buildOwnerGateRows,
   calculateAutomatedScore,
   parseArgs,
+  parseEnvFile,
   renderFinalReadinessReport,
   runAutomatedChecks,
 } from './run-final-readiness-audit.mjs'
@@ -64,6 +65,24 @@ test('parseArgs supports required runner flags', () => {
       reportPath: 'docs/launch/final-production-readiness-report.md',
       skipOwnerGated: true,
       skipPerformance: true,
+    },
+  )
+})
+
+test('parseEnvFile reads local env values without exposing comments', () => {
+  assert.deepEqual(
+    parseEnvFile(
+      [
+        '# comment',
+        'SHOPIFY_STORE_DOMAIN=teavision.test',
+        'SHOPIFY_STOREFRONT_ACCESS_TOKEN="token-value"',
+        "SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID='client-id'",
+      ].join('\n'),
+    ),
+    {
+      SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID: 'client-id',
+      SHOPIFY_STOREFRONT_ACCESS_TOKEN: 'token-value',
+      SHOPIFY_STORE_DOMAIN: 'teavision.test',
     },
   )
 })

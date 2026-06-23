@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -35,6 +35,7 @@ export const OWNER_GATE_STATUSES = new Set([
 ])
 
 const OUTPUT_TAIL_LIMIT = 2000
+const LOCAL_ENV_PATH = '.env.local'
 
 const OWNER_GATE_DEFINITIONS = [
   {
@@ -570,7 +571,7 @@ async function checkBaseUrl(baseUrl, fetchImpl) {
 function runCommand(currentCheck) {
   const startedAt = Date.now()
   const child = spawn(currentCheck.command, currentCheck.args, {
-    env: process.env,
+    env: { ...loadLocalEnv(), ...process.env },
     shell: process.platform === 'win32',
     stdio: ['ignore', 'pipe', 'pipe'],
   })
@@ -640,6 +641,41 @@ function redactOutput(output) {
   return String(output)
     .replaceAll(/\b[A-Z0-9_]*(TOKEN|SECRET|PASSWORD|COOKIE|KEY)\b=[^\s]+/gi, '$1=[redacted]')
     .replaceAll(/https:\/\/checkout[^\s)]+/gi, '[redacted-checkout-url]')
+}
+
+export function parseEnvFile(source) {
+  const env = {}
+
+  for (const rawLine of source.split(/\r?\n/)) {
+    const line = rawLine.trim()
+
+    if (!line || line.startsWith('#')) continue
+
+    const match = line.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/)
+
+    if (!match) continue
+
+    env[match[1]] = unwrapEnvValue(match[2].trim())
+  }
+
+  return env
+}
+
+function loadLocalEnv(path = LOCAL_ENV_PATH) {
+  if (!existsSync(path)) return {}
+
+  return parseEnvFile(readFileSync(path, 'utf8'))
+}
+
+function unwrapEnvValue(value) {
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    return value.slice(1, -1)
+  }
+
+  return value
 }
 
 function readOptionalEnv(env, name) {
