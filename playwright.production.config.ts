@@ -56,6 +56,8 @@ export default defineConfig({
       env: {
         DISABLE_INDEXING: 'true',
         NEXT_PUBLIC_ANALYTICS_MODE: 'fake',
+        NEXT_PUBLIC_SEARCHANISE_API_KEY: '',
+        NEXT_PUBLIC_SEARCHANISE_ENABLED: 'false',
         PLAYWRIGHT_PORT: String(PORT),
         PLAYWRIGHT_PRODUCTION_TEST_MODE: 'true',
         SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID: 'test-client-id',

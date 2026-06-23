@@ -191,6 +191,43 @@ function makeCollectionSummary() {
   }
 }
 
+function makeCollection() {
+  return {
+    ...makeCollectionSummary(),
+    descriptionHtml: '<p>All test products.</p>',
+  }
+}
+
+function makeCollectionProductNode() {
+  const product = makeRawProduct()
+
+  return {
+    id: product.id,
+    handle: product.handle,
+    title: product.title,
+    availableForSale: true,
+    productType: 'Tea',
+    tags: product.tags,
+    featuredImage: null,
+    priceRange: product.priceRange,
+    variants: {
+      edges: product.variants.edges.map((edge) => ({
+        node: {
+          id: edge.node.id,
+          title: edge.node.title,
+          availableForSale: edge.node.availableForSale,
+          currentlyNotInStock: edge.node.currentlyNotInStock,
+          quantityRule: edge.node.quantityRule,
+          price: edge.node.price,
+          image: null,
+        },
+      })),
+    },
+    ratingMetafield: product.ratingMetafield,
+    ratingCountMetafield: product.ratingCountMetafield,
+  }
+}
+
 function makePageSummary() {
   return {
     id: 'gid://shopify/Page/fake-production-e2e-page',
@@ -305,6 +342,56 @@ export async function createFakeShopifyServer({
             edges: [{ node: makePageSummary() }],
             pageInfo: { hasNextPage: false, endCursor: null },
           },
+        },
+      })
+      return
+    }
+
+    if (operationName === 'GetCollection') {
+      const handle = readString(graphqlRequest.variables?.handle)
+      writeJson(response, 200, {
+        data: { collection: handle === 'all' ? makeCollection() : null },
+      })
+      return
+    }
+
+    if (operationName === 'GetCollectionProducts') {
+      const handle = readString(graphqlRequest.variables?.handle)
+      writeJson(response, 200, {
+        data: {
+          collection:
+            handle === 'all'
+              ? {
+                  products: {
+                    edges: [{ node: makeCollectionProductNode() }],
+                    filters: [],
+                    pageInfo: { hasNextPage: false, endCursor: null },
+                  },
+                }
+              : null,
+        },
+      })
+      return
+    }
+
+    if (operationName === 'GetCollectionCursorIndex') {
+      const handle = readString(graphqlRequest.variables?.handle)
+      writeJson(response, 200, {
+        data: {
+          collection:
+            handle === 'all'
+              ? {
+                  products: {
+                    edges: [
+                      {
+                        cursor: 'fake-product-cursor',
+                        node: { tags: makeCollectionProductNode().tags },
+                      },
+                    ],
+                    pageInfo: { hasNextPage: false, endCursor: null },
+                  },
+                }
+              : null,
         },
       })
       return
