@@ -15,7 +15,6 @@ export type AnalyticsEvent =
     }
   | {
       name: 'search'
-      query: string
       resultCount: number
     }
   | {
@@ -27,7 +26,6 @@ export type AnalyticsEvent =
   | {
       name: 'cart_update'
       action: 'quantity_change' | 'remove'
-      lineId: string
       quantity?: number
     }
   | {
@@ -58,15 +56,12 @@ export function createProductViewEvent(
 }
 
 export function createSearchEvent({
-  query,
   resultCount,
 }: {
-  query: string
   resultCount: number
 }): AnalyticsEvent {
   return {
     name: 'search',
-    query,
     resultCount,
   }
 }
@@ -89,17 +84,14 @@ export function createAddToCartEvent({
 
 export function createCartUpdateEvent({
   action,
-  lineId,
   quantity,
 }: {
   action: Extract<AnalyticsEvent, { name: 'cart_update' }>['action']
-  lineId: string
   quantity?: number
 }): AnalyticsEvent {
   return {
     name: 'cart_update',
     action,
-    lineId,
     quantity,
   }
 }

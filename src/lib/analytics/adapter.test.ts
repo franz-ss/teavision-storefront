@@ -49,7 +49,6 @@ const launchEvents = [
   },
   {
     name: 'search',
-    query: 'black tea',
     resultCount: 12,
   },
   {
@@ -65,7 +64,6 @@ const launchEvents = [
   {
     name: 'cart_update',
     action: 'quantity_change',
-    lineId: 'line-1',
     quantity: 3,
   },
   {
@@ -246,6 +244,35 @@ describe('GA4 analytics destination', () => {
       const keys = collectKeys(mappedEvent.payload)
       expect(keys.filter((key) => forbiddenKeys.has(key))).toEqual([])
     }
+  })
+
+  test('does not map visitor-entered search terms or cart line identifiers', () => {
+    const searchEvent: Extract<AnalyticsEvent, { name: 'search' }> = {
+      name: 'search',
+      resultCount: 12,
+    }
+    const cartUpdateEvent: Extract<
+      AnalyticsEvent,
+      { name: 'cart_update' }
+    > = {
+      name: 'cart_update',
+      action: 'quantity_change',
+      quantity: 3,
+    }
+
+    expect(mapAnalyticsEventToGa4(searchEvent)).toEqual({
+      eventName: 'search',
+      payload: {
+        results_count: 12,
+      },
+    })
+    expect(mapAnalyticsEventToGa4(cartUpdateEvent)).toEqual({
+      eventName: 'cart_update',
+      payload: {
+        cart_action: 'quantity_change',
+        quantity: 3,
+      },
+    })
   })
 })
 

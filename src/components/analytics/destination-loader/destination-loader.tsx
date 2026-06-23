@@ -1,7 +1,7 @@
 'use client'
 
 import Script from 'next/script'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import {
   canUseAnalytics,
@@ -22,7 +22,6 @@ export type AnalyticsDestinationLoaderConfig = {
   gtmContainerId?: string
   metaPixelId?: string
   klaviyoPublicKey?: string
-  shopifyPixelEnabled?: boolean
 }
 
 export type AnalyticsDestinationLoaderProps = {
@@ -36,9 +35,32 @@ const publicAnalyticsConfig = {
   gtmContainerId: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID,
   metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID,
   klaviyoPublicKey: process.env.NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY,
-  shopifyPixelEnabled:
-    process.env.NEXT_PUBLIC_SHOPIFY_PIXEL_ENABLED === 'true',
 } satisfies AnalyticsDestinationLoaderConfig
+
+type ConsentModePayload = {
+  ad_personalization: 'denied'
+  ad_storage: 'denied'
+  ad_user_data: 'denied'
+  analytics_storage: 'denied'
+}
+
+type ConsentWindow = typeof globalThis & {
+  fbq?: (command: 'consent', action: 'revoke') => void
+  gtag?: (
+    command: 'consent',
+    action: 'update',
+    payload: ConsentModePayload,
+  ) => void
+}
+
+const analyticsCookieNames = [
+  '_ga',
+  '_gat',
+  '_gid',
+  '_gcl_au',
+  '_fbp',
+  '_fbc',
+] as const
 
 function destinationId(value: string | undefined): string | undefined {
   const trimmed = value?.trim()
@@ -58,11 +80,54 @@ function scriptLiteral(value: string): string {
   return JSON.stringify(value)
 }
 
+function expireCookie(name: string) {
+  const hostname = window.location.hostname
+  const domains = new Set<string>([
+    hostname,
+    hostname.startsWith('www.') ? hostname.slice(4) : `.${hostname}`,
+  ])
+
+  document.cookie = `${name}=; Max-Age=0; path=/`
+  for (const domain of domains) {
+    if (!domain || domain === 'localhost') continue
+    document.cookie = `${name}=; Max-Age=0; path=/; domain=${domain}`
+  }
+}
+
+function clearAnalyticsCookies() {
+  const dynamicCookieNames = document.cookie
+    .split(';')
+    .map((cookie) => cookie.split('=')[0]?.trim())
+    .filter((name): name is string => Boolean(name))
+    .filter((name) => name.startsWith('_ga_'))
+
+  for (const name of new Set([...analyticsCookieNames, ...dynamicCookieNames])) {
+    expireCookie(name)
+  }
+}
+
+function revokeLoadedDestinations() {
+  const target = globalThis as ConsentWindow
+
+  target.gtag?.('consent', 'update', {
+    ad_personalization: 'denied',
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    analytics_storage: 'denied',
+  })
+  target.fbq?.('consent', 'revoke')
+  clearAnalyticsCookies()
+}
+
 export function AnalyticsDestinationLoader({
   config = publicAnalyticsConfig,
   initialConsent = DEFAULT_CONSENT,
 }: AnalyticsDestinationLoaderProps) {
   const [consent, setConsent] = useState<ConsentState>(initialConsent)
+  const previousAllowedRef = useRef({
+    analytics: canUseAnalytics(initialConsent),
+    marketing: canUseMarketing(initialConsent),
+  })
 
   useEffect(() => {
     function syncConsent() {
@@ -100,14 +165,30 @@ export function AnalyticsDestinationLoader({
     }
   }, [initialConsent])
 
+  const analyticsAllowed = canUseAnalytics(consent)
+  const marketingAllowed = canUseMarketing(consent)
+
+  useEffect(() => {
+    const previous = previousAllowedRef.current
+    const revokedAnalytics = previous.analytics && !analyticsAllowed
+    const revokedMarketing = previous.marketing && !marketingAllowed
+
+    if (revokedAnalytics || revokedMarketing) {
+      revokeLoadedDestinations()
+    }
+
+    previousAllowedRef.current = {
+      analytics: analyticsAllowed,
+      marketing: marketingAllowed,
+    }
+  }, [analyticsAllowed, marketingAllowed])
+
   if (!canLoadRealDestinations(config)) return null
 
   const ga4MeasurementId = destinationId(config.ga4MeasurementId)
   const gtmContainerId = destinationId(config.gtmContainerId)
   const metaPixelId = destinationId(config.metaPixelId)
   const klaviyoPublicKey = destinationId(config.klaviyoPublicKey)
-  const analyticsAllowed = canUseAnalytics(consent)
-  const marketingAllowed = canUseMarketing(consent)
 
   return (
     <>

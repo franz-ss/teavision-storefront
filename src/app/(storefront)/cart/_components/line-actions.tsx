@@ -65,7 +65,6 @@ export function CartLineActions({
         void dispatchClientAnalyticsEvent(
           createCartUpdateEvent({
             action: 'quantity_change',
-            lineId,
             quantity: newQuantity,
           }),
         )

@@ -35,10 +35,9 @@ export function CartLineRemove({
     void dispatchClientAnalyticsEvent(
       createCartUpdateEvent({
         action: 'remove',
-        lineId,
       }),
     )
-  }, [lineId, state.cartChanged])
+  }, [state.cartChanged])
 
   return (
     <form action={formAction} className="mt-3">

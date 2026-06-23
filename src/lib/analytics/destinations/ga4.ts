@@ -60,7 +60,6 @@ export function mapAnalyticsEventToGa4(
       return {
         eventName: 'search',
         payload: {
-          search_term: event.query,
           results_count: event.resultCount,
         },
       }
@@ -76,7 +75,6 @@ export function mapAnalyticsEventToGa4(
         eventName: 'cart_update',
         payload: {
           cart_action: event.action,
-          line_id: event.lineId,
           quantity: event.quantity ?? 0,
         },
       }

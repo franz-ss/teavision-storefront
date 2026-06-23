@@ -16,7 +16,6 @@ export function SearchAnalytics({ query, resultCount }: SearchAnalyticsProps) {
 
     void dispatchClientAnalyticsEvent(
       createSearchEvent({
-        query,
         resultCount,
       }),
     )

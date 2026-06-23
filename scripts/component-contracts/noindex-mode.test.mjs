@@ -9,10 +9,12 @@ test('noindex helper exposes an explicit server-side metadata overlay', () => {
 
   const source = readSource('src/lib/seo/noindex.ts')
   const envSource = readSource('src/lib/env/server.ts')
+  const envExampleSource = readSource('.env.example')
 
   assert.match(source, /export function isNoindexModeEnabled/)
   assert.match(source, /isNoindexModeEnabledFromEnv/)
   assert.match(envSource, /DISABLE_INDEXING/)
+  assert.match(envExampleSource, /DISABLE_INDEXING=true/)
   assert.match(envSource, /truthyEnv/)
   assert.match(source, /export function withNoindexRobots/)
   assert.match(source, /index: false/)

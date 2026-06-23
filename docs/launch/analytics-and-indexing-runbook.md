@@ -12,7 +12,7 @@ checkout evidence, and Search Console access remain owner-controlled.
 | GTM | Env-gated until owner approval | `NEXT_PUBLIC_GTM_CONTAINER_ID` plus non-fake `NEXT_PUBLIC_ANALYTICS_MODE` | Analytics | Do not add tags in GTM that bypass storefront consent categories. |
 | Meta Pixel | Disabled until owner approval | `NEXT_PUBLIC_META_PIXEL_ID` plus non-fake `NEXT_PUBLIC_ANALYTICS_MODE` | Marketing | Enable only after marketing consent copy and destination access are approved. |
 | Klaviyo | Disabled until owner approval | `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY` plus non-fake `NEXT_PUBLIC_ANALYTICS_MODE` | Marketing | Public key only; no private API keys in client code. |
-| Shopify pixels | Disabled until owner approval | `NEXT_PUBLIC_SHOPIFY_PIXEL_ENABLED=true` plus non-fake `NEXT_PUBLIC_ANALYTICS_MODE` | Marketing | Requires Shopify Customer Privacy API and owner-approved Shopify pixel configuration evidence. |
+| Shopify pixels | Documented disabled until owner implementation approval | CSP flag only: `NEXT_PUBLIC_SHOPIFY_PIXEL_ENABLED=true`; no browser loader is mounted at launch | Marketing | Requires Shopify Customer Privacy API, a dedicated loader implementation, and owner-approved Shopify pixel configuration evidence before enablement. |
 | fake/test sink | Local and CI default | `NEXT_PUBLIC_ANALYTICS_MODE=fake` | Analytics | Local and CI verification must use the fake/test sink and must not send production analytics. |
 
 Launch event coverage is limited to `product_view`, `search`,
@@ -26,8 +26,8 @@ must never be copied into analytics payloads.
 1. Keep local and CI configuration on `NEXT_PUBLIC_ANALYTICS_MODE=fake`.
 2. Confirm `.env.example` documents public destination variables only:
    `NEXT_PUBLIC_GA4_MEASUREMENT_ID`, `NEXT_PUBLIC_GTM_CONTAINER_ID`,
-   `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY`, and
-   `NEXT_PUBLIC_SHOPIFY_PIXEL_ENABLED`.
+   `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_KLAVIYO_PUBLIC_KEY`, and the
+   disabled Shopify pixel CSP reservation flag.
 3. Run the unit checks for consent-gated dispatch and CSP host gating.
 4. In a local browser, reject optional cookies and confirm no GA4, GTM, Meta,
    Klaviyo, or Shopify pixel scripts load.

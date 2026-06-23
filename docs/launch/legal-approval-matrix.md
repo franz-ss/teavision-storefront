@@ -14,7 +14,7 @@ Final policy wording remains owner/legal gated. The storefront routes are live s
 | `/pages/shipping-policy` | implemented - pending final copy | pending | 2026-06-22 | Code-owned route and visible pending-review banner added in Plan 16-01; owner/legal proof pending. |
 | `/pages/refund-policy` | implemented - pending final copy | pending | 2026-06-22 | Code-owned route and visible pending-review banner added in Plan 16-01; owner/legal proof pending. |
 | `/pages/terms-of-service` | implemented - pending final copy | pending | 2026-06-22 | Code-owned route and visible pending-review banner added in Plan 16-01; owner/legal proof pending. |
-| `/pages/cookie-preferences` | implemented - consent controls pending Plan 16-02 | pending | 2026-06-22 | Stable preference URL and visible pending-review banner added in Plan 16-01; consent UI and owner/legal proof pending. |
+| `/pages/cookie-preferences` | implemented - consent controls live | pending | 2026-06-23 | Stable preference URL added in Plan 16-01; consent UI, banner link, and preference controls implemented in Plan 16-02; owner/legal wording proof pending. |
 
 ## Owner/Legal Approval Evidence
 
@@ -26,7 +26,7 @@ No final owner/legal approval has been claimed in this implementation.
 | `/pages/shipping-policy` | pending | Owner/legal reviewer | Pending owner/legal review. |
 | `/pages/refund-policy` | pending | Owner/legal reviewer | Pending owner/legal review. |
 | `/pages/terms-of-service` | pending | Owner/legal reviewer | Pending owner/legal review. |
-| `/pages/cookie-preferences` | pending | Owner/legal reviewer | Pending owner/legal review and consent UI implementation in Plan 16-02. |
+| `/pages/cookie-preferences` | pending | Owner/legal reviewer | Pending owner/legal wording review; consent preference controls are implemented. |
 
 ## Redirect Evidence
 
@@ -47,5 +47,5 @@ The following legacy Shopify policy URLs are represented in the code-owned redir
 
 - Replace launch-review placeholder copy with owner/legal-approved policy wording.
 - Record approver, approval date, and proof location for each policy route.
-- Wire the consent preference controls on `/pages/cookie-preferences` in Plan 16-02.
+- Re-check implemented consent preference controls on `/pages/cookie-preferences` during owner/legal wording review.
 - Re-run the launch route matrix after owner/legal approval and before indexability is flipped.
