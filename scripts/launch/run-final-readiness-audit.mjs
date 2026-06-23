@@ -196,9 +196,13 @@ export function buildAutomatedCheckMatrix({
     check('storybook', ['pnpm', 'test:stories']),
     check('contracts', ['pnpm', 'test:contracts']),
     check('dependency audit', ['pnpm', 'audit', '--audit-level', 'moderate']),
-    check('security headers', ['pnpm', 'test:security', '--', baseUrl], {
-      requiresBaseUrl: true,
-    }),
+    check(
+      'security headers',
+      ['node', 'scripts/security/probe-production-security.mjs', baseUrl],
+      {
+        requiresBaseUrl: true,
+      },
+    ),
     check(
       'seo disabled',
       [
@@ -460,7 +464,7 @@ ${ownerGates.map(renderOwnerGateRow).join('\n')}
 
 - Safe public health/readiness evidence: \`node scripts/launch/probe-readiness.mjs --json\` and \`docs/launch/operations-runbook.md\`.
 - Monitoring/logging evidence: \`docs/launch/operations-runbook.md\` records Sentry/Vercel launch watch signals and redacted logging boundaries.
-- Security headers evidence: \`pnpm test:security -- ${baseUrl}\` runs \`scripts/security/probe-production-security.mjs\`; current status summary: \`${getResultStatus(
+- Security headers evidence: \`node scripts/security/probe-production-security.mjs ${baseUrl}\`; current status summary: \`${getResultStatus(
     checkResults,
     'security headers',
   )}\`.

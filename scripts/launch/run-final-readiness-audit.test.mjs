@@ -43,6 +43,14 @@ test('matrix labels and commands match the final readiness contract', () => {
   assert.ok(
     matrix.some(
       (check) =>
+        check.label === 'security headers' &&
+        check.commandText ===
+          'node scripts/security/probe-production-security.mjs http://127.0.0.1:4173',
+    ),
+  )
+  assert.ok(
+    matrix.some(
+      (check) =>
         check.label === 'performance' &&
         check.commandText ===
           'pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary',
