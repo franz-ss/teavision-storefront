@@ -407,13 +407,41 @@ function firstDetailItem(audit) {
   return asRecord(items[0])
 }
 
+function detailItems(audit) {
+  const details = asRecord(audit?.details)
+  return Array.isArray(details?.items) ? details.items : []
+}
+
 function stringValue(value) {
   return typeof value === 'string' && value.trim() ? value.trim() : null
 }
 
+function findLcpNode(lhr) {
+  const legacyItem = firstDetailItem(
+    lhr.audits?.['largest-contentful-paint-element'],
+  )
+  const legacyNode = asRecord(legacyItem?.node)
+  if (legacyNode) return { item: legacyItem, node: legacyNode }
+
+  for (const auditId of ['lcp-breakdown-insight', 'lcp-discovery-insight']) {
+    for (const item of detailItems(lhr.audits?.[auditId])) {
+      const record = asRecord(item)
+      if (!record) continue
+
+      if (record.type === 'node') {
+        return { item: record, node: record }
+      }
+
+      const node = asRecord(record.node)
+      if (node) return { item: record, node }
+    }
+  }
+
+  return { item: null, node: null }
+}
+
 function extractLcpElement(lhr) {
-  const item = firstDetailItem(lhr.audits?.['largest-contentful-paint-element'])
-  const node = asRecord(item?.node)
+  const { node } = findLcpNode(lhr)
 
   if (!node) return null
 
@@ -430,7 +458,7 @@ function extractUrlFromSnippet(snippet) {
 }
 
 function extractLcpResourceUrl(lhr) {
-  const item = firstDetailItem(lhr.audits?.['largest-contentful-paint-element'])
+  const { item, node } = findLcpNode(lhr)
   if (!item) return null
 
   const directUrl =
@@ -445,7 +473,6 @@ function extractLcpResourceUrl(lhr) {
   const requestUrl = stringValue(request?.url)
   if (requestUrl) return requestUrl
 
-  const node = asRecord(item.node)
   return extractUrlFromSnippet(stringValue(node?.snippet))
 }
 
@@ -566,7 +593,12 @@ function renderRemainingMitigations(rows) {
   }
 
   return misses
-    .map((row) => `- \`${row.route}\` ${row.status}: ${row.mitigation}`)
+    .map(
+      (row) =>
+        `- \`${row.route}\` ${row.status}: ${row.mitigation} ${formatRouteDiagnosticCause(
+          row,
+        )}`,
+    )
     .join('\n')
 }
 
@@ -634,17 +666,45 @@ function renderRemediationNotes(rows) {
   const productRow = rows.find(
     (row) => row.route === '/products/test-standard-tea',
   )
+  const collectionRow = rows.find((row) => row.route === '/collections/all')
+  const cartRow = rows.find((row) => row.route === '/cart')
+  const searchRow = rows.find((row) => row.route === '/search?q=tea')
+  const accountRow = rows.find((row) => row.route === '/account')
+  const privacyRow = rows.find((row) => row.route === '/pages/privacy-policy')
 
   return [
-    `- Home hero image keeps \`loading="eager"\`, \`fetchPriority="high"\`, \`sizes="100vw"\`, stable fill dimensions, and image quality \`68\`; ${renderRouteMetricSummary(
+    `- Home hero image keeps the supported Next 16 \`loading="eager"\` plus \`fetchPriority="high"\` strategy without \`preload\`, with \`sizes="100vw"\`, stable fill dimensions, and image quality \`68\`; ${renderRouteMetricSummary(
       homeRow,
     )}`,
-    `- PDP gallery keeps first-image eager loading, high fetch priority, preload, stable responsive sizes, and image quality \`68\`; ${renderRouteMetricSummary(
+    `- PDP gallery keeps the first image as the only eager/high-priority gallery image and removes \`preload\` so it does not combine preload with \`loading\` or \`fetchPriority\`; ${renderRouteMetricSummary(
       productRow,
+    )}`,
+    `- Collection listing passes \`priority={true}\` only to the first visible \`ProductCard\`; ${renderRouteMetricSummary(
+      collectionRow,
+    )}`,
+    `- Cart LCP is text content, not an image resource, so no cosmetic image edit was applied; ${renderRouteMetricSummary(
+      cartRow,
+    )}`,
+    `- Search LCP is trust-strip text content with no LCP resource, so the local miss is documented as render timing rather than image loading; ${renderRouteMetricSummary(
+      searchRow,
+    )}`,
+    `- Account route reserves stable account geometry in the account shell, login bridge, page wrapper, and loading fallback; remaining CLS is on the observed \`/account/login?returnTo=%2Faccount\` bridge and Lighthouse does not expose a shifting node; ${renderRouteMetricSummary(
+      accountRow,
+    )}`,
+    `- Privacy policy LCP is policy copy text with no LCP resource, so no arbitrary image edit was applied; ${renderRouteMetricSummary(
+      privacyRow,
     )}`,
     '- The fake Shopify product includes a local rich-media image so `/products/test-standard-tea` exercises the PDP gallery rather than an empty placeholder.',
     '- Remaining LCP misses are recorded as `FAIL` with mitigation instead of being silently passed. Field/staging Core Web Vitals should be used before launch sign-off because this command is local lab evidence.',
   ].join('\n')
+}
+
+function formatRouteDiagnosticCause(row) {
+  return `LCP diagnostic: element \`${formatLcpElement(
+    row.lcpElement,
+  )}\`; resource \`${formatNullableDiagnostic(
+    row.lcpResourceUrl,
+  )}\`; observed URL \`${row.observedUrl || row.finalUrl || 'unknown'}\`.`
 }
 
 function formatLcpElement(element) {

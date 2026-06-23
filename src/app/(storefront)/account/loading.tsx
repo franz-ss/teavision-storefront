@@ -1,7 +1,7 @@
 export default function AccountLoading() {
   return (
     <div
-      className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-start xl:gap-10"
+      className="grid min-h-136 gap-8 md:min-h-128 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-start xl:gap-10"
       role="status"
       aria-live="polite"
     >

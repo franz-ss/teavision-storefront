@@ -333,6 +333,47 @@ test('summarizeLhr falls back to snippet resource URLs when Lighthouse exposes n
   assert.equal(row.lcpResourceUrl, '/_next/image?url=%2Ftea.png&w=828&q=68')
 })
 
+test('summarizeLhr extracts LCP diagnostics from Lighthouse insight audits', () => {
+  const row = summarizeLhr('/', {
+    audits: {
+      'cumulative-layout-shift': { numericValue: 0 },
+      'largest-contentful-paint': { numericValue: 1800 },
+      'lcp-breakdown-insight': {
+        details: {
+          items: [
+            {
+              items: [],
+              type: 'table',
+            },
+            {
+              nodeLabel: 'main#main-content img.absolute',
+              selector: 'main#main-content img.absolute',
+              snippet:
+                '<img src="http://127.0.0.1:4173/_next/image?url=%2Fhero.png&w=828&q=68">',
+              type: 'node',
+            },
+          ],
+        },
+      },
+      'total-blocking-time': { numericValue: 50 },
+    },
+    categories: {
+      accessibility: { score: 1 },
+    },
+  })
+
+  assert.deepEqual(row.lcpElement, {
+    nodeLabel: 'main#main-content img.absolute',
+    selector: 'main#main-content img.absolute',
+    snippet:
+      '<img src="http://127.0.0.1:4173/_next/image?url=%2Fhero.png&w=828&q=68">',
+  })
+  assert.equal(
+    row.lcpResourceUrl,
+    'http://127.0.0.1:4173/_next/image?url=%2Fhero.png&w=828&q=68',
+  )
+})
+
 test('json summary includes LCP diagnostics and observed URL fields', () => {
   const summary = buildJsonSummary([
     {

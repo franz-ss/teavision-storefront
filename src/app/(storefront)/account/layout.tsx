@@ -8,7 +8,11 @@ type AccountLayoutProps = {
 
 export default function AccountLayout({ children }: AccountLayoutProps) {
   return (
-    <Section.Root tone="surface" spacing="compact">
+    <Section.Root
+      tone="surface"
+      spacing="compact"
+      className="min-h-136 md:min-h-128"
+    >
       <Section.Container>{children}</Section.Container>
     </Section.Root>
   )

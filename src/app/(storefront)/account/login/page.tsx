@@ -26,7 +26,11 @@ export default async function AccountLoginPage({
   const params = await searchParams
 
   return (
-    <Section.Root tone="surface" spacing="compact">
+    <Section.Root
+      tone="surface"
+      spacing="compact"
+      className="min-h-136 md:min-h-128"
+    >
       <Section.Container variant="compact">
         <LoginPanel
           loginHref={getAccountLoginStartHref(params.returnTo ?? null)}

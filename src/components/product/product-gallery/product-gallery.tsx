@@ -63,7 +63,6 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   height={image.height}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   fetchPriority={i === 0 ? 'high' : 'auto'}
-                  preload={i === 0}
                   quality={68}
                   sizes="(min-width: 1280px) 38rem, (min-width: 1024px) calc(50vw - 3.5rem), calc(100vw - 2rem)"
                   className="size-full object-cover"
