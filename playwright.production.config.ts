@@ -57,6 +57,7 @@ export default defineConfig({
         DISABLE_INDEXING: 'true',
         NEXT_PUBLIC_ANALYTICS_MODE: 'fake',
         PLAYWRIGHT_PORT: String(PORT),
+        PLAYWRIGHT_PRODUCTION_TEST_MODE: 'true',
         SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID: 'test-client-id',
         SHOPIFY_CUSTOMER_ACCOUNT_LOGOUT_REDIRECT_URI: `${BASE_URL}/account/login`,
         SHOPIFY_CUSTOMER_ACCOUNT_REDIRECT_URI: `${BASE_URL}/account/callback`,

@@ -98,6 +98,21 @@ describe('shopifyFetch', () => {
     ).rejects.toThrow('Shopify test endpoint is not allowed in production')
   })
 
+  test('allows the local test endpoint during explicit Playwright production test mode', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.stubEnv('PLAYWRIGHT_PRODUCTION_TEST_MODE', 'true')
+    vi.stubEnv('SHOPIFY_STOREFRONT_TEST_URL', 'http://127.0.0.1:9010/graphql')
+    vi.stubEnv('SHOPIFY_STOREFRONT_TEST_MODE', 'true')
+    vi.stubEnv('SHOPIFY_STOREFRONT_ACCESS_TOKEN', 'storefront-token')
+    const { calls } = createFetchMock(Response.json({ data: { ok: true } }))
+
+    await expect(
+      shopifyFetch<{ ok: boolean }>({ query: 'query Test { ok }' }),
+    ).resolves.toEqual({ ok: true })
+
+    expect(calls[0]?.url).toBe('http://127.0.0.1:9010/graphql')
+  })
+
   test('rejects non-local test endpoints', async () => {
     vi.stubEnv('SHOPIFY_STOREFRONT_TEST_URL', 'https://shopify.test/graphql')
     vi.stubEnv('SHOPIFY_STOREFRONT_TEST_MODE', 'true')

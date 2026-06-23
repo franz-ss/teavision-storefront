@@ -191,6 +191,24 @@ function makeCollectionSummary() {
   }
 }
 
+function makePageSummary() {
+  return {
+    id: 'gid://shopify/Page/fake-production-e2e-page',
+    handle: 'fake-production-e2e-page',
+    title: 'Fake production e2e page',
+    bodySummary: 'Fake page for production e2e prerendering.',
+    updatedAt: '2026-06-04T00:00:00Z',
+    seo: { title: null, description: null },
+  }
+}
+
+function makePage() {
+  return {
+    ...makePageSummary(),
+    body: '<p>Fake page for production e2e prerendering.</p>',
+  }
+}
+
 export async function createFakeShopifyServer({
   initialCart = makeCart({ lines: [] }),
   port = 0,
@@ -263,6 +281,28 @@ export async function createFakeShopifyServer({
                 },
               },
             ],
+            pageInfo: { hasNextPage: false, endCursor: null },
+          },
+        },
+      })
+      return
+    }
+
+    if (operationName === 'GetPage') {
+      const handle = readString(graphqlRequest.variables?.handle)
+      writeJson(response, 200, {
+        data: {
+          page: handle === 'fake-production-e2e-page' ? makePage() : null,
+        },
+      })
+      return
+    }
+
+    if (operationName === 'GetPages') {
+      writeJson(response, 200, {
+        data: {
+          pages: {
+            edges: [{ node: makePageSummary() }],
             pageInfo: { hasNextPage: false, endCursor: null },
           },
         },

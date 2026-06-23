@@ -22,6 +22,10 @@ function isLocalTestEndpoint(url: string): boolean {
   }
 }
 
+function allowsProductionTestEndpoint(): boolean {
+  return truthyEnv('PLAYWRIGHT_PRODUCTION_TEST_MODE')
+}
+
 function readRequiredCustomerEnv(name: string): string {
   const value = optionalEnv(name)
   if (value) return value
@@ -42,7 +46,7 @@ export function getCustomerAccountConfig(): CustomerAccountConfig {
   }
 
   if (testUrl && testMode) {
-    if (isProductionRuntime()) {
+    if (isProductionRuntime() && !allowsProductionTestEndpoint()) {
       throw new Error(
         'Missing Shopify Customer Account setup: test endpoint is not allowed in production',
       )

@@ -6,6 +6,8 @@ import { blockThirdPartyRequests } from '../mocks/third-party-network'
 
 const customerSessionSecret = 'test-session-secret-with-at-least-32-characters'
 const localBaseUrl = `http://localhost:${process.env.PLAYWRIGHT_PORT ?? '4173'}`
+const hostedShopifyCheckoutPattern =
+  /myshopify\.com\/checkouts|checkout\.shopify\.com/
 
 test.beforeEach(async ({ page }) => {
   await blockThirdPartyRequests(page)
@@ -76,6 +78,16 @@ test('adds a product to cart, updates the cart, removes it, and exposes only fak
 test('signed-in customer reaches only the fake checkout handoff', async ({
   page,
 }) => {
+  const observedBrowserUrls: string[] = []
+  page.on('response', (response) => {
+    observedBrowserUrls.push(response.url())
+  })
+  page.on('framenavigated', (frame) => {
+    if (frame === page.mainFrame()) {
+      observedBrowserUrls.push(frame.url())
+    }
+  })
+
   await setCustomerSession(page, 'customer-access-token')
   await page.goto('/products/test-standard-tea')
 
@@ -99,6 +111,10 @@ test('signed-in customer reaches only the fake checkout handoff', async ({
   expect(response.headers().location).toBe(
     'https://checkout.test/cart/fake-cart',
   )
+  expect(
+    observedBrowserUrls.some((url) => hostedShopifyCheckoutPattern.test(url)),
+  ).toBe(false)
+  expect(hostedShopifyCheckoutPattern.test(page.url())).toBe(false)
 })
 
 test('buyer identity sync failure blocks checkout with recovery actions', async ({
@@ -130,13 +146,7 @@ test('buyer identity sync failure blocks checkout with recovery actions', async 
     page.getByRole('link', { name: 'Contact support' }),
   ).toBeVisible()
 
-  const blockedHostedCheckoutPatterns = [
-    /myshopify\.com\/checkouts/,
-    /checkout\.shopify\.com/,
-  ]
-  expect(
-    blockedHostedCheckoutPatterns.some((pattern) => pattern.test(page.url())),
-  ).toBe(false)
+  expect(hostedShopifyCheckoutPattern.test(page.url())).toBe(false)
 })
 
 test('account migration links and legacy routes use the modern bridge', async ({

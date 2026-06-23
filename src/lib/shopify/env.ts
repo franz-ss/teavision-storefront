@@ -27,6 +27,10 @@ function isLocalTestEndpoint(url: string): boolean {
   }
 }
 
+function allowsProductionTestEndpoint(): boolean {
+  return truthyEnv('PLAYWRIGHT_PRODUCTION_TEST_MODE')
+}
+
 export function getShopifyStoreDomain(): string | undefined {
   return optionalEnv('SHOPIFY_STORE_DOMAIN')
 }
@@ -38,7 +42,7 @@ export function getStorefrontEndpoint(): StorefrontEndpoint {
   const isTestEndpointEnabled = truthyEnv('SHOPIFY_STOREFRONT_TEST_MODE')
 
   if (testUrl && isTestEndpointEnabled) {
-    if (isProductionRuntime()) {
+    if (isProductionRuntime() && !allowsProductionTestEndpoint()) {
       throw new Error('Shopify test endpoint is not allowed in production')
     }
 
