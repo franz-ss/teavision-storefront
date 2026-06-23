@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 17-07-PLAN.md
-last_updated: "2026-06-23T13:35:53.380Z"
+stopped_at: Completed 17-08-PLAN.md
+last_updated: "2026-06-23T23:11:17.591Z"
 last_activity: 2026-06-23
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 18
-  completed_plans: 16
+  completed_plans: 17
   percent: 67
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 ## Current Position
 
 Phase: 17 (operations-performance-and-final-production-readiness-audit) — EXECUTING
-Plan: 8 of 9
+Plan: 9 of 9
 Status: Ready to execute
 Last activity: 2026-06-23
 
@@ -95,6 +95,7 @@ Last activity: 2026-06-23
 | Phase 17 P05 | 41 min | 4 tasks | 8 files |
 | Phase 17 P06 | 2h 43m | 3 tasks | 7 files |
 | Phase 17 P07 | 17 min | 4 tasks | 9 files |
+| Phase 17 P08 | 9h 25m | 4 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -170,6 +171,8 @@ Recent decisions affecting current work:
 - [Phase 17-05]: Performance command pass means evidence was generated; route-level Lighthouse metric FAIL rows remain launch risks with mitigations. — Phase 17-05 must not fabricate a performance pass where current local Lighthouse metrics still fail.
 - [Phase 17]: Phase 17-07: Enabled SEO is now proven by an indexable fake-provider production lifecycle with DISABLE_INDEXING=false while disabled SEO remains noindex.
 - [Phase 17]: Phase 17-07: Search Console remains owner-gated and pending; automated readiness is 94/100 with performance as the only failed check.
+- [Phase 17]: Phase 17-08: No dated owner/staging/field Core Web Vitals performance acceptance evidence was provided, so no performance-acceptance artifact was created and performance FAIL rows remain launch-blocking. — Prevents a false performance exception and keeps PERF-01 blocked until strict evidence passes or valid dated acceptance exists.
+- [Phase 17]: Phase 17-08: Final readiness remains 94/100 and Not launch-ready with performance as the only failed automated check. — The user selected the strict-blocking continuation path without acceptance evidence.
 
 ### Roadmap Evolution
 
@@ -264,8 +267,8 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-23T13:35:52.570Z
-Stopped at: Completed 17-07-PLAN.md
+Last session: 2026-06-23T23:11:17.573Z
+Stopped at: Completed 17-08-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
