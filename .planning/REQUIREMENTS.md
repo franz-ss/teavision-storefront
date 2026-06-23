@@ -25,9 +25,9 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 
 ### Analytics
 
-- [ ] **ANALYTICS-01**: Site emits consent-aware ecommerce events for product view, search, add-to-cart, cart update, checkout start, and purchase or checkout evidence where possible.
-- [ ] **ANALYTICS-02**: GA4, GTM, Meta, Klaviyo, or disabled/fake destinations are configured safely with test evidence and no secrets in client code.
-- [ ] **ANALYTICS-03**: Launch runbook includes analytics destination verification before and after cutover.
+- [x] **ANALYTICS-01**: Site emits consent-aware ecommerce events for product view, search, add-to-cart, cart update, checkout start, and purchase or checkout evidence where possible.
+- [x] **ANALYTICS-02**: GA4, GTM, Meta, Klaviyo, or disabled/fake destinations are configured safely with test evidence and no secrets in client code.
+- [x] **ANALYTICS-03**: Launch runbook includes analytics destination verification before and after cutover.
 
 ### Operations
 
@@ -87,9 +87,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEO-01 | Phase 16 | Pending |
 | CONSENT-01 | Phase 16 | Complete |
 | CONSENT-02 | Phase 16 | Complete |
-| ANALYTICS-01 | Phase 16 | Pending |
-| ANALYTICS-02 | Phase 16 | Pending |
-| ANALYTICS-03 | Phase 16 | Pending |
+| ANALYTICS-01 | Phase 16 | Complete |
+| ANALYTICS-02 | Phase 16 | Complete |
+| ANALYTICS-03 | Phase 16 | Complete |
 | OPS-01 | Phase 17 | Pending |
 | OPS-02 | Phase 17 | Pending |
 | OPS-03 | Phase 17 | Pending |

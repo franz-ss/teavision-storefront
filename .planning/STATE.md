@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 16-02-PLAN.md
-last_updated: "2026-06-23T00:24:31.042Z"
+stopped_at: Completed 16-03-PLAN.md
+last_updated: "2026-06-23T00:57:23.925Z"
 last_activity: 2026-06-23
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
   percent: 33
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 ## Current Position
 
 Phase: 16 (legal-consent-analytics-and-seo-launch-coverage) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-06-23
 
@@ -85,6 +85,7 @@ Last activity: 2026-06-23
 | Phase 15 P05 | 13 min | 3 tasks | 4 files |
 | Phase 16 P01 | 13 min | 4 tasks | 11 files |
 | Phase 16 P02 | 22 min | 4 tasks | 14 files |
+| Phase 16 P03 | 24 min | 4 tasks | 32 files |
 
 ## Accumulated Context
 
@@ -136,6 +137,10 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 16-02: Consent persists as a minimal versioned localStorage object under teavision_consent — Missing or malformed storage means no prior choice and optional categories remain denied until explicit visitor action.
 - [Phase ?]: Phase 16-02: Shopify Customer Privacy API propagation is isolated behind a browser-only adapter — The adapter returns typed unavailable or failed states instead of throwing when Shopify globals are absent.
 - [Phase ?]: Phase 16-02: Storefront layout remains a Server Component — Only consent banner and preferences leaves handle browser storage, dialogs, Shopify privacy propagation, and consent interactions.
+- [Phase 16]: Analytics event names are centralized behind src/lib/analytics/events.ts factories so event sites do not hand-roll payload discriminants. — Keeps launch event payloads typed and prevents scattered raw event-name strings.
+- [Phase 16]: Real analytics destinations require both visitor consent and public env gates; local and CI default to the fake/test sink. — Prevents production analytics leakage from local/CI and preserves consent-first loading.
+- [Phase 16]: Product view and search analytics use route-owned client leaves so App Router pages remain Server Components. — Server pages can pass non-PII rendered data while browser dispatch stays in small client leaves.
+- [Phase 16]: Purchase/order analytics remain owner-gated and documented, not enabled by default. — Real Shopify hosted checkout and order evidence require store-owner approval before instrumentation.
 
 ### Roadmap Evolution
 
@@ -228,8 +233,8 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-23T00:23:52.999Z
-Stopped at: Completed 16-02-PLAN.md
+Last session: 2026-06-23T00:57:03.155Z
+Stopped at: Completed 16-03-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
