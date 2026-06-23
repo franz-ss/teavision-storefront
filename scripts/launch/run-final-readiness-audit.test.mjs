@@ -45,7 +45,7 @@ test('matrix labels and commands match the final readiness contract', () => {
       (check) =>
         check.label === 'performance' &&
         check.commandText ===
-          'pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173',
+          'pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary',
     ),
   )
 })
@@ -58,6 +58,7 @@ test('parseArgs supports required runner flags', () => {
       'http://127.0.0.1:4999',
       '--skip-performance',
       '--skip-owner-gated',
+      '--no-start-server',
     ]),
     {
       baseUrl: 'http://127.0.0.1:4999',
@@ -65,8 +66,12 @@ test('parseArgs supports required runner flags', () => {
       reportPath: 'docs/launch/final-production-readiness-report.md',
       skipOwnerGated: true,
       skipPerformance: true,
+      startServer: false,
     },
   )
+
+  assert.equal(parseArgs([]).startServer, true)
+  assert.equal(parseArgs(['--start-server']).startServer, true)
 })
 
 test('parseEnvFile reads local env values without exposing comments', () => {
@@ -115,6 +120,23 @@ test('report renderer does not print a perfect score when a check fails', () => 
   assert.doesNotMatch(report, /100\/100/)
   assert.match(report, /50\/100/)
   assert.match(report, /typecheck/)
+})
+
+test('failing performance result prevents a launch-ready report', () => {
+  const report = renderFinalReadinessReport({
+    checkResults: [
+      result('lint', 'PASS'),
+      result('performance', 'FAIL'),
+      result('browser smoke', 'PASS'),
+    ],
+    ownerGates: buildOwnerGateRows({
+      env: {},
+    }),
+  })
+
+  assert.doesNotMatch(report, /100\/100/)
+  assert.match(report, /67\/100/)
+  assert.match(report, /Not launch-ready/)
 })
 
 test('report renderer includes the required final report headings', () => {
@@ -168,15 +190,15 @@ test('report renderer links inherited Phase 15 and Phase 16 evidence sources', (
     assert.ok(report.includes(source), `missing ${source}`)
   }
 
-  assert.match(report, /Search Console rows stay `pending`, `owner-blocked`, or `approved`/)
+  assert.match(
+    report,
+    /Search Console rows stay `pending`, `owner-blocked`, or `approved`/,
+  )
 })
 
 test('all-skipped report is not treated as launch-ready', () => {
   const report = renderFinalReadinessReport({
-    checkResults: [
-      result('lint', 'SKIPPED'),
-      result('typecheck', 'SKIPPED'),
-    ],
+    checkResults: [result('lint', 'SKIPPED'), result('typecheck', 'SKIPPED')],
     ownerGates: buildOwnerGateRows({
       env: {},
     }),
@@ -255,7 +277,7 @@ test('owner-gated status rejects unsupported values', () => {
   )
 })
 
-test('unreachable base URL skips live-server probes with reasons', async () => {
+test('unreachable base URL fails required live-server probes', async () => {
   const matrix = buildAutomatedCheckMatrix({
     baseUrl: 'http://127.0.0.1:4173',
   }).filter((check) => check.requiresBaseUrl)
@@ -263,9 +285,16 @@ test('unreachable base URL skips live-server probes with reasons', async () => {
   const results = await runAutomatedChecks(matrix, {
     baseUrl: 'http://127.0.0.1:4173',
     isBaseUrlReachable: false,
+    lifecycleFactory: async () => ({
+      async stop() {},
+    }),
+    startServer: true,
   })
 
   assert.equal(results.length, 3)
-  assert.equal(results.every((current) => current.status === 'SKIPPED'), true)
-  assert.ok(results[0].skipReason.includes('was not reachable'))
+  assert.equal(
+    results.every((current) => current.status === 'FAIL'),
+    true,
+  )
+  assert.match(results[0].outputTail, /required live-server probe/)
 })

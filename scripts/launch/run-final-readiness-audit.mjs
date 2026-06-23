@@ -4,6 +4,8 @@ import { dirname } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 
+import { startProductionLifecycle } from '../performance/probe-lighthouse.mjs'
+
 export const DEFAULT_BASE_URL = 'http://127.0.0.1:4173'
 export const DEFAULT_REPORT_PATH =
   'docs/launch/final-production-readiness-report.md'
@@ -110,10 +112,10 @@ export function parseArgs(argv) {
   const args = {
     baseUrl: process.env.FINAL_READINESS_BASE_URL ?? DEFAULT_BASE_URL,
     dryRun: false,
-    reportPath:
-      process.env.FINAL_READINESS_REPORT_PATH ?? DEFAULT_REPORT_PATH,
+    reportPath: process.env.FINAL_READINESS_REPORT_PATH ?? DEFAULT_REPORT_PATH,
     skipOwnerGated: false,
     skipPerformance: false,
+    startServer: true,
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -125,6 +127,16 @@ export function parseArgs(argv) {
 
     if (value === '--dry-run') {
       args.dryRun = true
+      continue
+    }
+
+    if (value === '--start-server') {
+      args.startServer = true
+      continue
+    }
+
+    if (value === '--no-start-server') {
+      args.startServer = false
       continue
     }
 
@@ -184,11 +196,9 @@ export function buildAutomatedCheckMatrix({
     check('storybook', ['pnpm', 'test:stories']),
     check('contracts', ['pnpm', 'test:contracts']),
     check('dependency audit', ['pnpm', 'audit', '--audit-level', 'moderate']),
-    check(
-      'security headers',
-      ['pnpm', 'test:security', '--', baseUrl],
-      { requiresBaseUrl: true },
-    ),
+    check('security headers', ['pnpm', 'test:security', '--', baseUrl], {
+      requiresBaseUrl: true,
+    }),
     check(
       'seo disabled',
       [
@@ -240,10 +250,9 @@ export function buildAutomatedCheckMatrix({
         '--start-server',
         '--base-url',
         baseUrl,
+        '--json-summary',
       ],
-      skipPerformance
-        ? { skipReason: 'Skipped by --skip-performance.' }
-        : {},
+      skipPerformance ? { skipReason: 'Skipped by --skip-performance.' } : {},
     ),
     check('browser smoke', [
       'pnpm',
@@ -267,8 +276,10 @@ export function buildOwnerGateRows({
       readOptionalEnv(env, `FINAL_READINESS_${definition.envPrefix}_STATUS`) ??
       'pending'
     const evidence =
-      readOptionalEnv(env, `FINAL_READINESS_${definition.envPrefix}_EVIDENCE`) ??
-      definition.evidence
+      readOptionalEnv(
+        env,
+        `FINAL_READINESS_${definition.envPrefix}_EVIDENCE`,
+      ) ?? definition.evidence
 
     return {
       evidence: skipOwnerGated
@@ -300,37 +311,82 @@ export async function runAutomatedChecks(
     baseUrl = DEFAULT_BASE_URL,
     fetchImpl = globalThis.fetch,
     isBaseUrlReachable,
+    lifecycleFactory = startProductionLifecycle,
+    runCommandImpl = runCommand,
+    startServer = false,
   } = {},
 ) {
   const results = []
   let baseUrlReachable = null
+  let lifecycle = null
+  let lifecycleFailure = null
 
-  for (const currentCheck of checks) {
-    if (currentCheck.skipReason) {
-      results.push(skippedResult(currentCheck, currentCheck.skipReason))
-      continue
+  async function ensureLifecycle() {
+    if (lifecycle || lifecycleFailure) return
+
+    try {
+      lifecycle = await lifecycleFactory(baseUrl)
+    } catch (error) {
+      lifecycleFailure = `Owned production-like server failed to start for required live probe: ${formatError(
+        error,
+      )}`
     }
+  }
 
-    if (currentCheck.requiresBaseUrl) {
-      if (baseUrlReachable === null) {
-        baseUrlReachable =
-          typeof isBaseUrlReachable === 'boolean'
-            ? isBaseUrlReachable
-            : await checkBaseUrl(baseUrl, fetchImpl)
-      }
+  async function stopLifecycle() {
+    if (!lifecycle) return
 
-      if (!baseUrlReachable) {
-        results.push(
-          skippedResult(
-            currentCheck,
-            `${baseUrl} was not reachable, so this live-server probe was skipped.`,
-          ),
-        )
+    await lifecycle.stop()
+    lifecycle = null
+    baseUrlReachable = null
+  }
+
+  try {
+    for (const currentCheck of checks) {
+      if (currentCheck.skipReason) {
+        results.push(skippedResult(currentCheck, currentCheck.skipReason))
         continue
       }
-    }
 
-    results.push(await runCommand(currentCheck))
+      if (currentCheck.requiresBaseUrl) {
+        if (startServer) {
+          await ensureLifecycle()
+        }
+
+        if (lifecycleFailure) {
+          results.push(failedResult(currentCheck, lifecycleFailure))
+          continue
+        }
+
+        if (baseUrlReachable === null) {
+          baseUrlReachable =
+            typeof isBaseUrlReachable === 'boolean'
+              ? isBaseUrlReachable
+              : await checkBaseUrl(baseUrl, fetchImpl)
+        }
+
+        if (!baseUrlReachable) {
+          results.push(
+            failedResult(
+              currentCheck,
+              `${baseUrl} was not reachable for this required live-server probe.`,
+            ),
+          )
+          continue
+        }
+
+        results.push(await runCommandImpl(currentCheck))
+        continue
+      }
+
+      if (lifecycle) {
+        await stopLifecycle()
+      }
+
+      results.push(await runCommandImpl(currentCheck))
+    }
+  } finally {
+    await stopLifecycle()
   }
 
   return results
@@ -420,9 +476,9 @@ ${ownerGates.map(renderOwnerGateRow).join('\n')}
 
 ## Performance And UX Evidence
 
-- Performance command: \`pnpm test:performance -- --start-server --base-url ${baseUrl}\`.
+- Performance command: \`pnpm test:performance -- --start-server --base-url ${baseUrl} --json-summary\`.
 - Performance status summary: \`${getResultStatus(checkResults, 'performance')}\`.
-- Current local Lighthouse evidence is recorded in \`docs/launch/performance-evidence.md\`. Metric FAIL/WARN rows remain launch evidence with mitigations; command success only means the probe ran and recorded evidence.
+- Current local Lighthouse evidence is recorded in \`docs/launch/performance-evidence.md\`. Metric \`FAIL\` rows make this check fail by default; use \`--allow-metric-failures\` only for evidence-only diagnostics with explicit launch-risk follow-up.
 - UX/accessibility polish evidence is recorded through production smoke coverage and \`docs/launch/performance-evidence.md\`.
 
 ## Residual Risks
@@ -438,18 +494,18 @@ ${renderLaunchDecision({ ownerPending, score })}
 function renderScoreExplanation(score) {
   const skippedText =
     score.skipped === 0
-      ? 'No automated checks were skipped.'
-      : `${score.skipped} automated check(s) were skipped with explicit reasons and excluded from the denominator.`
+      ? 'No automated checks were explicitly skipped.'
+      : `${score.skipped} automated check(s) were explicitly skipped by CLI flag and excluded from the denominator.`
 
   if (score.total === 0) {
     return `No automated checks were executed. ${skippedText}`
   }
 
   if (score.failed > 0) {
-    return `${score.passed}/${score.total} non-skipped automated checks passed; ${score.failed} failed. ${skippedText}`
+    return `${score.passed}/${score.total} required automated checks passed; ${score.failed} failed. ${skippedText}`
   }
 
-  return `${score.passed}/${score.total} non-skipped automated checks passed. ${skippedText}`
+  return `${score.passed}/${score.total} required automated checks passed. ${skippedText}`
 }
 
 function getResultStatus(checkResults, label) {
@@ -479,7 +535,7 @@ function renderResidualRisks({ checkResults, ownerPending }) {
 
   if (skipped.length > 0) {
     lines.push(
-      `- Skipped automated checks require a reachable environment or explicit rerun: ${skipped
+      `- Explicitly skipped automated checks require a deliberate rerun before treating that evidence as covered: ${skipped
         .map((result) => result.label)
         .join(', ')}.`,
     )
@@ -508,10 +564,10 @@ function renderLaunchDecision({ ownerPending, score }) {
   }
 
   if (ownerPending > 0) {
-    return 'Automated code readiness is green for non-skipped checks, but launch remains gated by pending or owner-blocked Shopify/admin proof.'
+    return 'Automated code readiness is green for required checks that were not explicitly skipped, but launch remains gated by pending or owner-blocked Shopify/admin proof.'
   }
 
-  return 'Automated code readiness is green for non-skipped checks and owner-gated proof is approved.'
+  return 'Automated code readiness is green for required checks that were not explicitly skipped and owner-gated proof is approved.'
 }
 
 function renderCheckRow(result) {
@@ -629,6 +685,17 @@ function skippedResult(currentCheck, skipReason) {
   }
 }
 
+function failedResult(currentCheck, outputTail) {
+  return {
+    commandText: currentCheck.commandText,
+    durationMs: 0,
+    exitCode: 1,
+    label: currentCheck.label,
+    outputTail: redactOutput(outputTail),
+    status: 'FAIL',
+  }
+}
+
 function tailOutput(output) {
   const redacted = redactOutput(output.trim())
 
@@ -639,8 +706,15 @@ function tailOutput(output) {
 
 function redactOutput(output) {
   return String(output)
-    .replaceAll(/\b[A-Z0-9_]*(TOKEN|SECRET|PASSWORD|COOKIE|KEY)\b=[^\s]+/gi, '$1=[redacted]')
+    .replaceAll(
+      /\b[A-Z0-9_]*(TOKEN|SECRET|PASSWORD|COOKIE|KEY)\b=[^\s]+/gi,
+      '$1=[redacted]',
+    )
     .replaceAll(/https:\/\/checkout[^\s)]+/gi, '[redacted-checkout-url]')
+}
+
+function formatError(error) {
+  return error instanceof Error ? error.message : String(error)
 }
 
 export function parseEnvFile(source) {
@@ -715,7 +789,7 @@ function printDryRun(checks) {
 
 function printUsage() {
   console.error(
-    'Usage: node scripts/launch/run-final-readiness-audit.mjs [--dry-run] [--base-url URL] [--skip-performance] [--skip-owner-gated]',
+    'Usage: node scripts/launch/run-final-readiness-audit.mjs [--dry-run] [--base-url URL] [--start-server] [--no-start-server] [--skip-performance] [--skip-owner-gated]',
   )
 }
 
@@ -742,6 +816,7 @@ export async function main(argv = process.argv.slice(2)) {
   })
   const checkResults = await runAutomatedChecks(checks, {
     baseUrl: args.baseUrl,
+    startServer: args.startServer,
   })
   const report = renderFinalReadinessReport({
     baseUrl: args.baseUrl,
