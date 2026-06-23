@@ -56,6 +56,19 @@ test('matrix labels and commands match the final readiness contract', () => {
           'pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary',
     ),
   )
+  assert.equal(
+    matrix.find((check) => check.label === 'security headers')
+      ?.lifecycleProfile,
+    'noindex',
+  )
+  assert.equal(
+    matrix.find((check) => check.label === 'seo disabled')?.lifecycleProfile,
+    'noindex',
+  )
+  assert.equal(
+    matrix.find((check) => check.label === 'seo enabled')?.lifecycleProfile,
+    'indexable',
+  )
 })
 
 test('parseArgs supports required runner flags', () => {
@@ -204,6 +217,24 @@ test('report renderer links inherited Phase 15 and Phase 16 evidence sources', (
   )
 })
 
+test('enabled SEO pass keeps Search Console proof owner-gated', () => {
+  const report = renderFinalReadinessReport({
+    checkResults: [result('seo enabled', 'PASS')],
+    ownerGates: buildOwnerGateRows({
+      env: {},
+    }),
+  })
+
+  assert.match(report, /100\/100/)
+  assert.match(report, /Owner-gated Shopify\/admin proof is listed separately/)
+  assert.match(report, /Search Console sitemap submission \| pending/)
+  assert.match(report, /Search Console URL inspection \| pending/)
+  assert.match(
+    report,
+    /Automated code readiness is green[\s\S]*pending or owner-blocked Shopify\/admin proof/,
+  )
+})
+
 test('all-skipped report is not treated as launch-ready', () => {
   const report = renderFinalReadinessReport({
     checkResults: [result('lint', 'SKIPPED'), result('typecheck', 'SKIPPED')],
@@ -305,4 +336,66 @@ test('unreachable base URL fails required live-server probes', async () => {
     true,
   )
   assert.match(results[0].outputTail, /required live-server probe/)
+})
+
+test('required live probes use distinct indexing lifecycle profiles', async () => {
+  const matrix = buildAutomatedCheckMatrix({
+    baseUrl: 'http://127.0.0.1:4173',
+  }).filter((check) => check.requiresBaseUrl)
+  const lifecycleStarts = []
+  let lifecycleStops = 0
+
+  const results = await runAutomatedChecks(matrix, {
+    baseUrl: 'http://127.0.0.1:4173',
+    isBaseUrlReachable: true,
+    lifecycleFactory: async (_baseUrl, options) => {
+      lifecycleStarts.push(options)
+
+      return {
+        async stop() {
+          lifecycleStops += 1
+        },
+      }
+    },
+    runCommandImpl: async (currentCheck) => result(currentCheck.label, 'PASS'),
+    startServer: true,
+  })
+
+  assert.deepEqual(
+    lifecycleStarts.map((options) => options.disableIndexing),
+    [true, false],
+  )
+  assert.equal(lifecycleStops, 2)
+  assert.deepEqual(
+    results.map((current) => current.label),
+    ['security headers', 'seo disabled', 'seo enabled'],
+  )
+})
+
+test('no-start-server required live probes fail when the base URL is unreachable', async () => {
+  const matrix = buildAutomatedCheckMatrix({
+    baseUrl: 'http://127.0.0.1:4173',
+  }).filter((check) => check.requiresBaseUrl)
+  let lifecycleStarted = false
+
+  const results = await runAutomatedChecks(matrix, {
+    baseUrl: 'http://127.0.0.1:4173',
+    isBaseUrlReachable: false,
+    lifecycleFactory: async () => {
+      lifecycleStarted = true
+
+      return {
+        async stop() {},
+      }
+    },
+    startServer: false,
+  })
+
+  assert.equal(lifecycleStarted, false)
+  assert.equal(results.length, 3)
+  assert.equal(
+    results.every((current) => current.status === 'FAIL'),
+    true,
+  )
+  assert.match(results[0].outputTail, /was not reachable/)
 })

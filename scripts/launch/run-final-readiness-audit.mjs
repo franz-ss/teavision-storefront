@@ -200,6 +200,7 @@ export function buildAutomatedCheckMatrix({
       'security headers',
       ['node', 'scripts/security/probe-production-security.mjs', baseUrl],
       {
+        lifecycleProfile: 'noindex',
         requiresBaseUrl: true,
       },
     ),
@@ -213,7 +214,7 @@ export function buildAutomatedCheckMatrix({
         '--base-url',
         baseUrl,
       ],
-      { requiresBaseUrl: true },
+      { lifecycleProfile: 'noindex', requiresBaseUrl: true },
     ),
     check(
       'seo enabled',
@@ -225,7 +226,7 @@ export function buildAutomatedCheckMatrix({
         '--base-url',
         baseUrl,
       ],
-      { requiresBaseUrl: true },
+      { lifecycleProfile: 'indexable', requiresBaseUrl: true },
     ),
     check('seo redirects', [
       'node',
@@ -324,16 +325,34 @@ export async function runAutomatedChecks(
   let baseUrlReachable = null
   let lifecycle = null
   let lifecycleFailure = null
+  let lifecycleFailureProfile = null
+  let lifecycleProfile = null
 
-  async function ensureLifecycle() {
-    if (lifecycle || lifecycleFailure) return
+  async function ensureLifecycle(requiredProfile) {
+    if (lifecycle && lifecycleProfile === requiredProfile) return
+
+    if (lifecycle) {
+      await stopLifecycle()
+    }
+
+    if (lifecycleFailureProfile !== requiredProfile) {
+      lifecycleFailure = null
+      lifecycleFailureProfile = null
+    }
+
+    if (lifecycleFailure) return
 
     try {
-      lifecycle = await lifecycleFactory(baseUrl)
+      lifecycle = await lifecycleFactory(
+        baseUrl,
+        lifecycleOptionsForProfile(requiredProfile),
+      )
+      lifecycleProfile = requiredProfile
     } catch (error) {
       lifecycleFailure = `Owned production-like server failed to start for required live probe: ${formatError(
         error,
       )}`
+      lifecycleFailureProfile = requiredProfile
     }
   }
 
@@ -342,6 +361,7 @@ export async function runAutomatedChecks(
 
     await lifecycle.stop()
     lifecycle = null
+    lifecycleProfile = null
     baseUrlReachable = null
   }
 
@@ -353,8 +373,10 @@ export async function runAutomatedChecks(
       }
 
       if (currentCheck.requiresBaseUrl) {
+        const requiredProfile = currentCheck.lifecycleProfile ?? 'noindex'
+
         if (startServer) {
-          await ensureLifecycle()
+          await ensureLifecycle(requiredProfile)
         }
 
         if (lifecycleFailure) {
@@ -596,9 +618,22 @@ function check(label, commandParts, options = {}) {
     command,
     commandText: commandParts.join(' '),
     label,
+    lifecycleProfile: options.lifecycleProfile,
     requiresBaseUrl: options.requiresBaseUrl === true,
     skipReason: options.skipReason,
   }
+}
+
+function lifecycleOptionsForProfile(profile) {
+  if (profile === 'noindex') {
+    return { disableIndexing: true }
+  }
+
+  if (profile === 'indexable') {
+    return { disableIndexing: false }
+  }
+
+  throw new Error(`Unsupported lifecycle profile "${profile}".`)
 }
 
 function assertMatrixLabels(checks) {
