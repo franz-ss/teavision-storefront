@@ -30,6 +30,18 @@ For evidence-only local diagnostics that should not block a readiness script, ru
 | /account | 6960ms | 1.111 | 58ms | 95 | FAIL | LCP 6960ms exceeds 2500ms; CLS 1.111 exceeds 0.1. Preserve LCP image priority, inspect oversized media, and re-run mobile Lighthouse after remediation. |
 | /pages/privacy-policy | 5053ms | 0.000 | 54ms | 96 | FAIL | LCP 5053ms exceeds 2500ms. Preserve LCP image priority, inspect oversized media, and re-run mobile Lighthouse after remediation. |
 
+## LCP Diagnostics
+
+| Route | LCP Element | LCP Resource | Observed URL |
+| --- | --- | --- | --- |
+| / | Lighthouse did not expose it | Lighthouse did not expose it | http://127.0.0.1:4173/ |
+| /products/test-standard-tea | Lighthouse did not expose it | Lighthouse did not expose it | http://127.0.0.1:4173/products/test-standard-tea |
+| /collections/all | Lighthouse did not expose it | Lighthouse did not expose it | http://127.0.0.1:4173/collections/all |
+| /cart | Lighthouse did not expose it | Lighthouse did not expose it | http://127.0.0.1:4173/cart |
+| /search?q=tea | Lighthouse did not expose it | Lighthouse did not expose it | http://127.0.0.1:4173/search?q=tea |
+| /account | Lighthouse did not expose it | Lighthouse did not expose it | http://127.0.0.1:4173/account |
+| /pages/privacy-policy | Lighthouse did not expose it | Lighthouse did not expose it | http://127.0.0.1:4173/pages/privacy-policy |
+
 ## Launch Blocking Status
 
 Launch-blocking: yes - 7 strict local Lighthouse route(s) have `FAIL` metric rows.

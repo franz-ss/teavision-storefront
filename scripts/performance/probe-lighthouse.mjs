@@ -34,6 +34,7 @@ export function parseArgs(argv) {
     startServer: false,
     stdoutOnly: false,
     urls: [],
+    warmupRuns: 1,
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -76,6 +77,22 @@ export function parseArgs(argv) {
       continue
     }
 
+    if (value === '--warmup-runs') {
+      args.warmupRuns = parseWarmupRuns(argv[index + 1])
+      index += 1
+      continue
+    }
+
+    if (value.startsWith('--warmup-runs=')) {
+      args.warmupRuns = parseWarmupRuns(value.slice('--warmup-runs='.length))
+      continue
+    }
+
+    if (value === '--cold-run') {
+      args.warmupRuns = 0
+      continue
+    }
+
     if (value === '--json-summary') {
       args.jsonSummary = true
       continue
@@ -95,6 +112,16 @@ export function parseArgs(argv) {
     ...args,
     routes: args.urls.length > 0 ? args.urls : DEFAULT_ROUTES,
   }
+}
+
+function parseWarmupRuns(value) {
+  const raw = String(value ?? '')
+
+  if (!/^\d+$/.test(raw)) {
+    throw new Error(`Invalid --warmup-runs value: ${value}`)
+  }
+
+  return Number.parseInt(raw, 10)
 }
 
 function assertBaseUrl(value) {
@@ -370,6 +397,58 @@ function categoryScore(lhr, id) {
     : null
 }
 
+function asRecord(value) {
+  return value && typeof value === 'object' ? value : null
+}
+
+function firstDetailItem(audit) {
+  const details = asRecord(audit?.details)
+  const items = Array.isArray(details?.items) ? details.items : []
+  return asRecord(items[0])
+}
+
+function stringValue(value) {
+  return typeof value === 'string' && value.trim() ? value.trim() : null
+}
+
+function extractLcpElement(lhr) {
+  const item = firstDetailItem(lhr.audits?.['largest-contentful-paint-element'])
+  const node = asRecord(item?.node)
+
+  if (!node) return null
+
+  return {
+    nodeLabel: stringValue(node.nodeLabel),
+    selector: stringValue(node.selector),
+    snippet: stringValue(node.snippet),
+  }
+}
+
+function extractUrlFromSnippet(snippet) {
+  const match = snippet?.match(/\s(?:currentSrc|src|href)=["']([^"']+)["']/i)
+  return match ? match[1] : null
+}
+
+function extractLcpResourceUrl(lhr) {
+  const item = firstDetailItem(lhr.audits?.['largest-contentful-paint-element'])
+  if (!item) return null
+
+  const directUrl =
+    stringValue(item.url) ??
+    stringValue(item.source) ??
+    stringValue(item.resourceUrl) ??
+    stringValue(item.resourceURL)
+
+  if (directUrl) return directUrl
+
+  const request = asRecord(item.request)
+  const requestUrl = stringValue(request?.url)
+  if (requestUrl) return requestUrl
+
+  const node = asRecord(item.node)
+  return extractUrlFromSnippet(stringValue(node?.snippet))
+}
+
 export function calculateStatus(metrics) {
   const missing = []
   const failures = []
@@ -429,7 +508,10 @@ export function summarizeLhr(route, lhr) {
   return {
     ...metrics,
     finalUrl: lhr.finalDisplayedUrl ?? '',
+    lcpElement: extractLcpElement(lhr),
+    lcpResourceUrl: extractLcpResourceUrl(lhr),
     mitigation: result.mitigation,
+    observedUrl: lhr.finalDisplayedUrl ?? '',
     route,
     status: result.status,
   }
@@ -508,6 +590,9 @@ export function buildJsonSummary(rows) {
     routes: rows.map((row) => ({
       cls: row.cls,
       lcpMs: row.lcpMs,
+      lcpElement: row.lcpElement ?? null,
+      lcpResourceUrl: row.lcpResourceUrl ?? null,
+      observedUrl: row.observedUrl ?? '',
       route: row.route,
       status: row.status,
       tbtMs: row.tbtMs,
@@ -562,6 +647,42 @@ function renderRemediationNotes(rows) {
   ].join('\n')
 }
 
+function formatLcpElement(element) {
+  if (!element) return 'Lighthouse did not expose it'
+
+  return (
+    element.selector ??
+    element.nodeLabel ??
+    element.snippet ??
+    'Lighthouse did not expose it'
+  )
+}
+
+function formatNullableDiagnostic(value) {
+  return value ?? 'Lighthouse did not expose it'
+}
+
+export function renderLcpDiagnostics(rows) {
+  const lines = [
+    '| Route | LCP Element | LCP Resource | Observed URL |',
+    '| --- | --- | --- | --- |',
+  ]
+
+  for (const row of rows) {
+    lines.push(
+      `| ${escapeMarkdownCell(row.route)} | ${escapeMarkdownCell(
+        formatLcpElement(row.lcpElement),
+      )} | ${escapeMarkdownCell(
+        formatNullableDiagnostic(row.lcpResourceUrl),
+      )} | ${escapeMarkdownCell(
+        row.observedUrl || row.finalUrl || 'Lighthouse did not expose it',
+      )} |`,
+    )
+  }
+
+  return lines.join('\n')
+}
+
 export function renderEvidenceDocument({
   baseUrl,
   generatedAt = new Date().toISOString(),
@@ -578,6 +699,8 @@ Generated ${generatedAt}. This is local mobile Lighthouse lab evidence against t
 
 For evidence-only local diagnostics that should not block a readiness script, run \`pnpm test:performance -- --allow-metric-failures\`.
 
+By default, the probe performs one warmup fetch per route before measured Lighthouse runs to reduce first-request build/image-cache noise. Use \`--cold-run\` for a zero-warmup diagnostic.
+
 ## Representative Routes
 
 ${renderRouteList(routes)}
@@ -585,6 +708,10 @@ ${renderRouteList(routes)}
 ## Mobile Lighthouse Results
 
 ${renderMarkdownTable(rows)}
+
+## LCP Diagnostics
+
+${renderLcpDiagnostics(rows)}
 
 ## Launch Blocking Status
 
@@ -616,6 +743,30 @@ function renderLaunchBlockingStatus(rows) {
   return `Launch-blocking: yes - ${blockingRows.length} strict local Lighthouse route(s) have \`FAIL\` metric rows.`
 }
 
+export async function warmupRoutes({
+  baseUrl,
+  fetchImpl = globalThis.fetch,
+  routes,
+  runs,
+}) {
+  if (runs <= 0) return
+  if (typeof fetchImpl !== 'function') {
+    throw new Error('fetch is unavailable for performance probe warmup')
+  }
+
+  for (let run = 0; run < runs; run += 1) {
+    for (const route of routes) {
+      const url = targetUrl(baseUrl, route)
+      const response = await fetchImpl(url, { cache: 'no-store' })
+      if (!response.ok) {
+        throw new Error(
+          `Warmup fetch failed for ${route}: status ${response.status}`,
+        )
+      }
+    }
+  }
+}
+
 export async function runProbe(args) {
   const rows = []
 
@@ -638,6 +789,12 @@ export async function main(argv = process.argv.slice(2)) {
     if (args.startServer) {
       lifecycle = await startProductionLifecycle(args.baseUrl)
     }
+
+    await warmupRoutes({
+      baseUrl: args.baseUrl,
+      routes: args.routes,
+      runs: args.warmupRuns,
+    })
 
     const rows = await runProbe(args)
     const markdown = renderMarkdownTable(rows)
