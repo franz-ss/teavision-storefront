@@ -60,7 +60,7 @@ export function Price({
   discountTone = 'brand',
   layout = 'inline',
   size = 'md',
-  priceClassName,
+  priceClassName = 'font-sans',
   compareAtPriceClassName,
   className,
 }: PriceProps) {

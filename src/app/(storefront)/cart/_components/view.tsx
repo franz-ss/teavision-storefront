@@ -426,8 +426,7 @@ export function CartView({ accountContextState = null, cart }: CartViewProps) {
                         compareAtPrice={lineDisplayPricing.totalCompareAtPrice}
                         layout="stacked"
                         size="sm"
-                        className="shrink-0 items-end font-bold"
-                        priceClassName="font-bold"
+                        className="shrink-0 items-end"
                       />
                     </div>
                     {/* Remove: quiet text link under the line info per design .cart__remove */}
@@ -473,7 +472,6 @@ export function CartView({ accountContextState = null, cart }: CartViewProps) {
                       layout="stacked"
                       size="sm"
                       className="items-end font-bold"
-                      priceClassName="font-bold"
                     />
                   </div>
                 </li>
