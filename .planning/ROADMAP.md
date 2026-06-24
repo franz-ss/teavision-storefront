@@ -58,7 +58,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
-- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (11/11 plans executed; verification remains gaps_found on PERF-01)
+- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (11/15 plans executed; gap-closure plans 17-12..17-15 planned; verification remains gaps_found on PERF-01)
 
 ## Progress
 
@@ -78,7 +78,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 14. Shopify Customer Accounts              | v1.3      | 9/9            | Complete   | 2026-06-22 |
 | 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 4/4 | Complete    | 2026-06-23 |
-| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 11/11 | Gaps Found |  |
+| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 11/15 | Gaps Found |  |
 
 ## Phase Details
 
@@ -199,10 +199,20 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 **Wave 8** *(blocked on Wave 7 completion; final manual PERF-01 acceptance/evidence gate)*
 - `17-11` - Dated performance acceptance, refreshed final readiness, and Phase 17 verification closure.
 
+**Wave 9** *(blocked on Wave 8 completion; closes remaining PERF-01 implementation blockers)*
+- `17-12` - Image-resource LCP remediation for Home/PDP/PLP routes.
+- `17-13` - Font, cart, search, and privacy text-LCP shell remediation.
+
+**Wave 10** *(blocked on Wave 9 completion; closes account CLS and render-shell regression coverage)*
+- `17-14` - Account CLS stabilization and render-shell contract remediation.
+
+**Wave 11** *(blocked on Wave 10 completion; final PERF-01 closure evidence)*
+- `17-15` - Strict final performance, readiness, and Phase 17 verification evidence gate.
+
 **Cross-cutting constraints:**
 - Owner-gated Shopify hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, and Search Console proof must remain `approved`, `pending`, or `owner-blocked`; automated code readiness must not fabricate those approvals.
 - Public health/readiness and observability outputs must never expose secrets, tokens, customer PII, raw provider payloads, cart IDs, order IDs, checkout URLs, or submitted message bodies.
 
 ## Next
 
-Phase 17 has executed all 11 plans, but verification remains `gaps_found` on PERF-01. Remediate strict Home/PDP performance or provide a valid dated owner/staging/field performance acceptance artifact, then rerun final readiness evidence and Phase 17 verification.
+Phase 17 has executed 11 base plans, but verification remains `gaps_found` on PERF-01. Execute gap-closure plans 17-12 through 17-15 to remediate strict performance or validate a pre-existing dated owner/staging/field performance acceptance artifact, then rerun final readiness evidence and Phase 17 verification.
