@@ -1,6 +1,6 @@
 ---
 phase: 17-operations-performance-and-final-production-readiness-audit
-verified: 2026-06-24T02:43:35.022Z
+verified: 2026-06-24T09:05:27.039Z
 status: gaps_found
 score: "8/9 phase truths verified; performance remains launch-blocking"
 overrides_applied: 0
@@ -14,12 +14,12 @@ re_verification:
 gaps:
   - truth: "PERF-01: Home and PDP Lighthouse/Core Web Vitals evidence no longer shows launch-blocking LCP regressions, or a dated owner/staging/field acceptance marks local lab failures non-blocking"
     status: failed
-    reason: "Strict local performance evidence still records seven FAIL rows, final readiness is 94/100 and Not launch-ready, and the operator confirmed no dated owner/staging/field acceptance evidence exists."
+    reason: "Strict local performance evidence still records seven FAIL rows, final readiness is 94/100 and Not launch-ready, and no dated owner/staging/field acceptance artifact exists."
     artifacts:
       - path: "docs/launch/performance-evidence.md"
-        issue: "Launch-blocking yes; seven representative routes fail strict local Lighthouse thresholds, including Home LCP 4939ms, PDP LCP 4333ms, and account LCP 5279ms with CLS 0.128."
+        issue: "Generated 2026-06-24T09:04:43.405Z; launch-blocking yes; seven representative routes fail strict local Lighthouse thresholds, including Home LCP 4824ms, PDP LCP 4224ms, and account LCP 4977ms with CLS 0.128."
       - path: "docs/launch/final-production-readiness-report.md"
-        issue: "Generated 2026-06-24T02:36:37.166Z; automated score is 94/100; 16/17 required automated checks passed; performance is FAIL with exit code 1; launch decision is Not launch-ready."
+        issue: "Generated 2026-06-24T09:05:27.039Z; automated score is 94/100; 16/17 required automated checks passed; performance is the only failed automated check with exit code 1; launch decision is Not launch-ready."
       - path: "docs/launch/performance-acceptance.md"
         issue: "File is absent by design because no owner/staging/field Core Web Vitals acceptance evidence was supplied."
     missing:
@@ -30,7 +30,7 @@ gaps:
 # Phase 17: Operations, Performance, and Final Production-Readiness Audit Verification Report
 
 **Phase Goal:** Prove the storefront is operationally ready to launch with monitoring, performance, e2e, owner-gated Shopify test evidence, and a repeatable final 100/100 readiness audit.
-**Verified:** 2026-06-24T02:43:35.022Z
+**Verified:** 2026-06-24T09:05:27.039Z
 **Status:** gaps_found
 
 ## Goal Achievement
@@ -59,21 +59,21 @@ No `docs/launch/performance-acceptance.md` file exists. During plan 17-11 the op
 
 | Artifact | Current status | Details |
 | --- | --- | --- |
-| `docs/launch/final-production-readiness-report.md` | FAILED LAUNCH DECISION | Generated 2026-06-24T02:36:37.166Z; score `94/100`; 16/17 required automated checks passed; `performance` is `FAIL`; launch decision is `Not launch-ready`. |
-| `docs/launch/performance-evidence.md` | FAILED FOR PERF-01 | Generated 2026-06-24T02:35:55.824Z; seven strict mobile Lighthouse rows fail; includes LCP diagnostics, timing diagnostics, warmed asset counts, and layout shift diagnostics. |
+| `docs/launch/final-production-readiness-report.md` | FAILED LAUNCH DECISION | Generated 2026-06-24T09:05:27.039Z; score `94/100`; 16/17 required automated checks passed; `performance` is the only failed automated check; launch decision is `Not launch-ready`. |
+| `docs/launch/performance-evidence.md` | FAILED FOR PERF-01 | Generated 2026-06-24T09:04:43.405Z; seven strict mobile Lighthouse rows fail; includes LCP diagnostics, timing diagnostics, warmed asset counts, and layout shift diagnostics. |
 | `docs/launch/performance-acceptance.md` | ABSENT | No dated owner, staging, or field Core Web Vitals acceptance artifact was supplied, and the no-evidence path was explicitly selected. |
 
 ## Current Performance Metrics
 
 | Route | LCP | CLS | TBT | A11y | Primary Cause | Status |
 | --- | ---: | ---: | ---: | ---: | --- | --- |
-| `/` | 4939ms | 0.000 | 74ms | 97 | image-resource | FAIL |
-| `/products/test-standard-tea` | 4333ms | 0.000 | 63ms | 97 | image-resource | FAIL |
-| `/collections/all` | 4139ms | 0.000 | 46ms | 95 | image-resource | FAIL |
-| `/cart` | 3691ms | 0.000 | 53ms | 96 | render-delay | FAIL |
-| `/search?q=tea` | 3847ms | 0.000 | 56ms | 100 | render-delay | FAIL |
-| `/account` | 5279ms | 0.128 | 57ms | 95 | layout-shift | FAIL |
-| `/pages/privacy-policy` | 3694ms | 0.000 | 52ms | 96 | render-delay | FAIL |
+| `/` | 4824ms | 0.000 | 55ms | 97 | image-resource | FAIL |
+| `/products/test-standard-tea` | 4224ms | 0.000 | 56ms | 97 | image-resource | FAIL |
+| `/collections/all` | 4085ms | 0.000 | 59ms | 95 | image-resource | FAIL |
+| `/cart` | 3699ms | 0.000 | 56ms | 96 | render-delay | FAIL |
+| `/search?q=tea` | 3567ms | 0.000 | 63ms | 96 | render-delay | FAIL |
+| `/account` | 4977ms | 0.128 | 89ms | 95 | layout-shift | FAIL |
+| `/pages/privacy-policy` | 3926ms | 0.000 | 57ms | 96 | render-delay | FAIL |
 
 The account CLS row remains source-less in Lighthouse: `Lighthouse source 1 (node unavailable)`, node label unavailable, score `0.128`.
 
@@ -81,9 +81,15 @@ The account CLS row remains source-less in Lighthouse: `Lighthouse source 1 (nod
 
 | Command | Result | Notes |
 | --- | --- | --- |
-| `pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary --allow-metric-failures` | PASS, exit 0 | Regenerated local performance evidence while preserving seven route metric failures as blocking evidence. |
+| `node --test scripts/component-contracts/launch-image-performance.test.mjs scripts/component-contracts/performance-fonts.test.mjs scripts/component-contracts/account-performance.test.mjs scripts/component-contracts/render-shell-performance.test.mjs` | PASS, exit 0 | Focused launch performance contracts passed after account geometry and image-preload contract repairs. |
+| `pnpm test:contracts` | PASS, exit 0 | Full component contract suite passed. |
+| `pnpm lint` | PASS, exit 0 | Tailwind class check and ESLint passed. |
+| `pnpm typecheck` | PASS, exit 0 | TypeScript passed with `tsc --noEmit`. |
+| `node --test scripts/launch/run-final-readiness-audit.test.mjs` | PASS, exit 0 | Acceptance parser and final report contract tests passed. |
+| `pnpm test:unit` | PASS, exit 0 | Full unit suite passed after updating stale ProductCard/ProductList image-preload assertions. |
+| `pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary` | FAIL, exit 1 | Strict local Lighthouse evidence failed seven route metric rows, which remains the expected blocker without acceptance evidence. |
+| `pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary --allow-metric-failures` | PASS, exit 0 | Regenerated diagnostic local performance evidence while preserving route metric failures as blocking evidence. |
 | `pnpm audit:readiness` | FAIL, exit 1 | Expected while performance is red; regenerated final report as `94/100`, `16/17`, `performance` FAIL, and `Not launch-ready`. |
-| `node --test scripts/launch/run-final-readiness-audit.test.mjs` | PASS | Acceptance parser and final report contract tests passed. |
 | Acceptance artifact structure assertion | PASS | `docs/launch/performance-acceptance.md` remains absent; no placeholder acceptance fields were created. |
 
 ## Remaining Blocker
@@ -97,5 +103,5 @@ Until one of those happens, Phase 17 remains `gaps_found`.
 
 ---
 
-_Verified: 2026-06-24T02:43:35.022Z_
-_Verifier: the agent (gsd-execute-phase 17-11)_
+_Verified: 2026-06-24T09:05:27.039Z_
+_Verifier: the agent (gsd-execute-phase 17 --gaps-only / 17-15)_

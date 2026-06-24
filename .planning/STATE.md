@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
-status: Ready to execute revised PERF-01 gap plan
-stopped_at: "Replanned 17-15 after strict performance rerun exposed seven route FAIL rows and source/contract drift"
-last_updated: "2026-06-24T15:54:26.2561395+08:00"
-last_activity: 2026-06-24
+status: Blocked on revised PERF-01 gap plan
+stopped_at: "Plan 17-15 strict performance rerun still has seven route FAIL rows and no performance acceptance artifact exists"
+last_updated: "2026-06-24T09:07:27.573Z"
+last_activity: 2026-06-24 -- Plan 17-15 blocked on PERF-01 after strict readiness rerun
 progress:
   total_phases: 3
   completed_phases: 2
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 17 — PERF-01 gap-closure plans 17-12 through 17-14 complete; revised 17-15 is ready for execution
+**Current focus:** Phase 17 — Plan 17-15 remains blocked on PERF-01 after red performance/readiness evidence regeneration
 
 ## Current Position
 
-Phase: 17 (operations-performance-and-final-production-readiness-audit) — EXECUTING
-Plan: 15 of 15 pending (revised)
-Status: Ready to execute revised PERF-01 gap plan
-Last activity: 2026-06-24
+Phase: 17 (operations-performance-and-final-production-readiness-audit) — BLOCKED
+Plan: 15 of 15 blocked (revised 17-15)
+Status: Blocked on PERF-01
+Last activity: 2026-06-24 -- Plan 17-15 blocked on PERF-01 after strict readiness rerun
 
 ## Performance Metrics
 
@@ -204,7 +204,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Execute revised 17-15 to repair account/image contract drift, serve launch-critical local AVIFs directly, and regenerate strict performance, final readiness, and Phase 17 verification evidence; alternatively validate a pre-existing dated owner/staging/field Core Web Vitals acceptance artifact before treating local failures as non-blocking.
+- Resolve revised 17-15 PERF-01 blocker by either remediating strict/staging/field performance so representative routes pass, or validating a pre-existing dated owner/staging/field Core Web Vitals acceptance artifact before treating local failures as non-blocking.
 
 ### Blockers/Concerns
 
@@ -215,7 +215,8 @@ Recent decisions affecting current work:
 - Phase 5 remediated the production-readiness gaps found in `CODEBASE_REVIEW.md`. See `.planning/phases/05-codebase-review-remediation/05-VERIFICATION.md` and the `05-*-SUMMARY.md` files for evidence and accepted residual risks.
 - Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
 - v1.3 Customer Account launch gates remain external/admin-dependent: Shopify Customer Accounts setup, Headless/Hydrogen credentials, protected customer data access, callback/logout URLs, HTTPS OAuth testing, real hosted checkout approval, and authoritative B2B/company-location pricing checks.
-- Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14; revised plan 17-15 is pending and no valid dated owner/staging/field acceptance artifact exists.
+- Phase 17 has executed 11 base plans, gap-closure plans 17-12 through 17-14, and revised 17-15 contract repairs; 17-15 remains blocked because strict performance still fails and no valid dated owner/staging/field acceptance artifact exists.
+- Plan 17-15 remains blocked on PERF-01 after gap-closure execution: strict local Lighthouse still records seven FAIL route rows, final readiness is 94/100 with 16/17 automated checks passing, performance is the only failed automated check, and docs/launch/performance-acceptance.md is absent. Latest evidence: docs/launch/performance-evidence.md generated 2026-06-24T09:04:43.405Z and docs/launch/final-production-readiness-report.md generated 2026-06-24T09:05:27.039Z.
 
 ### Quick Tasks Completed
 
