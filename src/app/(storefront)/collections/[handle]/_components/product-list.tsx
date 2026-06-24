@@ -12,6 +12,8 @@ type ProductListProps = {
   products: CollectionProductSummary[]
 }
 
+const FIRST_VISIBLE_PRODUCT_ROW_COUNT = 3
+
 export function ProductList({
   clearFiltersHref = null,
   currentPage = 1,
@@ -50,7 +52,10 @@ export function ProductList({
       >
         {products.map((product, index) => (
           <li key={product.id} className="border-hairline-2">
-            <ProductCard product={product} priority={index === 0} />
+            <ProductCard
+              product={product}
+              priority={index < FIRST_VISIBLE_PRODUCT_ROW_COUNT}
+            />
           </li>
         ))}
       </ul>

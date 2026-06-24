@@ -118,6 +118,23 @@ describe('ProductCard', () => {
     expect(html).toContain('Add Tea Masters Sencha Green Tea to cart')
   })
 
+  it('marks priority product imagery eager for above-the-fold LCP candidates', () => {
+    const html = renderToStaticMarkup(
+      <ProductCard product={product} priority />,
+    )
+
+    expect(html).toContain('loading="eager"')
+    expect(html).toContain('fetchPriority="high"')
+  })
+
+  it('keeps non-priority product imagery lazy', () => {
+    const html = renderToStaticMarkup(<ProductCard product={product} />)
+
+    expect(html).toContain('loading="lazy"')
+    expect(html).toContain('fetchPriority="auto"')
+    expect(html).not.toContain('loading="eager"')
+  })
+
   it('shows Quick View trigger for multi-variant products (CQA-02)', () => {
     const multiVariantProduct: CollectionProductSummary = {
       ...product,

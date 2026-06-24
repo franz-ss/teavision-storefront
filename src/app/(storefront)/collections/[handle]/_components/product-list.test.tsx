@@ -75,6 +75,27 @@ describe('ProductList', () => {
     expect(html).not.toContain('divide-y')
   })
 
+  it('marks the first visible product row eager for product-image LCP candidates', () => {
+    const products = Array.from({ length: 4 }, (_, index) => ({
+      ...product,
+      id: `gid://shopify/Product/product-${index}`,
+      handle: `product-${index}`,
+      title: `Product ${index}`,
+      featuredImage: {
+        url: `https://cdn.shopify.com/s/files/1/0000/0001/products/product-${index}.jpg?v=1`,
+        altText: `Product ${index}`,
+        width: 900,
+        height: 900,
+      },
+    }))
+
+    const html = renderToStaticMarkup(<ProductList products={products} />)
+
+    expect(html.match(/<img[^>]*loading="eager"/g)).toHaveLength(3)
+    expect(html.match(/<img[^>]*fetchPriority="high"/g)).toHaveLength(3)
+    expect(html.match(/<img[^>]*loading="lazy"/g)).toHaveLength(1)
+  })
+
   it('renders numbered pagination with aria-label when totalPages > 1', () => {
     const html = renderToStaticMarkup(
       <ProductList

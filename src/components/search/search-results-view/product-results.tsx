@@ -3,6 +3,8 @@ import type { SearchaniseSearchResult } from '@/lib/searchanise/types'
 
 import { SearchAlert } from './search-alert'
 
+const FIRST_VISIBLE_PRODUCT_ROW_COUNT = 3
+
 export function ProductResults({
   clearHref,
   result,
@@ -28,7 +30,10 @@ export function ProductResults({
     >
       {result.products.map((product, index) => (
         <li key={product.id}>
-          <ProductCard product={product} priority={index === 0} />
+          <ProductCard
+            product={product}
+            priority={index < FIRST_VISIBLE_PRODUCT_ROW_COUNT}
+          />
         </li>
       ))}
     </ul>

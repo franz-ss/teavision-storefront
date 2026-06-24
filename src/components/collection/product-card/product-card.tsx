@@ -65,7 +65,8 @@ export function ProductCard({
               src={getSizedShopifyImageUrl(product.featuredImage.url, 640)}
               alt={product.featuredImage.altText ?? product.title}
               fill
-              preload={priority}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : 'auto'}
               sizes="(min-width: 1280px) 340px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 50vw"
               className="object-contain transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />

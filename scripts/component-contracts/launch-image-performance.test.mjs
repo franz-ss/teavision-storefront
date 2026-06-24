@@ -54,7 +54,7 @@ test('home and fake Shopify LCP routes use the launch AVIF sources', async () =>
   assert.match(fakeShopify, /bulk-wholesale-lcp\.avif/)
 })
 
-test('launch image components use Next 16 preload without conflicting props', async () => {
+test('launch image components avoid deprecated priority and invalid preload combinations', async () => {
   for (const relativePath of sourceFiles) {
     const source = await readSource(relativePath)
     const blocks = imageBlocks(source)
@@ -64,15 +64,8 @@ test('launch image components use Next 16 preload without conflicting props', as
     for (const block of blocks) {
       assert.doesNotMatch(
         block,
-        /\bpriority(?:\s|=|>)/,
+        /\bpriority\s*=/,
         `${relativePath} should not use deprecated Image priority`,
-      )
-      assert.ok(
-        !(
-          block.includes('loading="eager"') &&
-          block.includes('fetchPriority="high"')
-        ),
-        `${relativePath} should not combine eager loading with high fetchPriority`,
       )
       assert.ok(
         !(block.includes('preload') && block.includes('fetchPriority="high"')),
@@ -89,5 +82,7 @@ test('launch image components use Next 16 preload without conflicting props', as
 
   assert.match(homeHero, /\bpreload\b/)
   assert.match(productGallery, /\bpreload\b/)
-  assert.match(productCard, /\bpreload\b/)
+  assert.match(productCard, /loading=\{priority \? 'eager' : 'lazy'\}/)
+  assert.match(productCard, /fetchPriority=\{priority \? 'high' : 'auto'\}/)
+  assert.doesNotMatch(productCard, /\bpreload\b/)
 })
