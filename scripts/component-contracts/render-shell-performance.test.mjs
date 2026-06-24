@@ -79,8 +79,12 @@ test('cart render shell avoids the empty-cart account-session waterfall', async 
     cartPage,
     /shouldLoadAccountSession\s*\?\s*await getCustomerAccountSession\(\)\s*:\s*null/,
   )
-  assert.match(loadingSkeleton, /Checking your cart/)
-  assert.match(loadingSkeleton, /min-h-72/)
+  assert.match(loadingSkeleton, /Loading cart/)
+  assert.match(loadingSkeleton, /xl:grid-cols-\[minmax\(0,1fr\)_22rem\]/)
+  assert.match(loadingSkeleton, /CartLoadingHeader/)
+  assert.match(loadingSkeleton, /CartLoadingLine/)
+  assert.match(loadingSkeleton, /CartLoadingCheckoutForm/)
+  assert.match(loadingSkeleton, /CartLoadingSummary/)
 })
 
 test('search route streams the hero shell before results resolve', async () => {
