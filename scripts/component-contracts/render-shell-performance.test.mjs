@@ -29,14 +29,10 @@ async function readAccountWrapperSources() {
 
 function assertAccountShellContract(wrapperSources, loginPanel) {
   for (const source of wrapperSources) {
-    assert.ok(
-      /min-h-\[34rem\]/.test(source) || /min-h-136/.test(source),
-      'account wrappers should keep 34rem minimum height',
-    )
-    assert.ok(
-      /md:min-h-\[32rem\]/.test(source) || /md:min-h-128/.test(source),
-      'account wrappers should keep 32rem medium breakpoint minimum height',
-    )
+    assert.match(source, /min-h-\[34rem\]/)
+    assert.match(source, /md:min-h-\[32rem\]/)
+    assert.doesNotMatch(source, /min-h-136/)
+    assert.doesNotMatch(source, /md:min-h-128/)
   }
 
   assert.match(loginPanel, /min-h-72/)
