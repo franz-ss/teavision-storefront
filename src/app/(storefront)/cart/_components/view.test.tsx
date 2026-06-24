@@ -130,7 +130,8 @@ describe('CartView', () => {
         'wrap-break-word',
       ]),
     )
-    expect(html).toContain('font-display tabular-nums')
+    expect(html).toContain('font-sans')
+    expect(html).not.toContain('font-display tabular-nums')
     expect(html).not.toContain('line-clamp-2')
     expect(html).toContain('aria-label="Was $18.38"')
     expect(html).toContain('aria-label="Now $16.17"')
