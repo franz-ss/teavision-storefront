@@ -58,7 +58,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
-- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (10/11 plans complete; Wave 8 PERF-01 acceptance/evidence gate ready)
+- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (11/11 plans executed; verification remains gaps_found on PERF-01)
 
 ## Progress
 
@@ -78,7 +78,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 14. Shopify Customer Accounts              | v1.3      | 9/9            | Complete   | 2026-06-22 |
 | 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 4/4 | Complete    | 2026-06-23 |
-| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 10/11 | Ready to Execute |  |
+| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 11/11 | Gaps Found |  |
 
 ## Phase Details
 
@@ -205,4 +205,4 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ## Next
 
-Execute `17-11` to resolve the remaining PERF-01 blocker with strict green evidence or a valid dated owner/staging/field performance acceptance artifact, then rerun final readiness evidence and Phase 17 verification.
+Phase 17 has executed all 11 plans, but verification remains `gaps_found` on PERF-01. Remediate strict Home/PDP performance or provide a valid dated owner/staging/field performance acceptance artifact, then rerun final readiness evidence and Phase 17 verification.

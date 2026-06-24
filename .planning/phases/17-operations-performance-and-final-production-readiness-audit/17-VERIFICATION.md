@@ -1,6 +1,6 @@
 ---
 phase: 17-operations-performance-and-final-production-readiness-audit
-verified: 2026-06-24T02:47:00.000Z
+verified: 2026-06-24T02:43:35.022Z
 status: gaps_found
 score: "8/9 phase truths verified; performance remains launch-blocking"
 overrides_applied: 0
@@ -30,7 +30,7 @@ gaps:
 # Phase 17: Operations, Performance, and Final Production-Readiness Audit Verification Report
 
 **Phase Goal:** Prove the storefront is operationally ready to launch with monitoring, performance, e2e, owner-gated Shopify test evidence, and a repeatable final 100/100 readiness audit.
-**Verified:** 2026-06-24T02:47:00.000Z
+**Verified:** 2026-06-24T02:43:35.022Z
 **Status:** gaps_found
 
 ## Goal Achievement
@@ -97,5 +97,5 @@ Until one of those happens, Phase 17 remains `gaps_found`.
 
 ---
 
-_Verified: 2026-06-24T02:47:00.000Z_
+_Verified: 2026-06-24T02:43:35.022Z_
 _Verifier: the agent (gsd-execute-phase 17-11)_
