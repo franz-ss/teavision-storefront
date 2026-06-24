@@ -81,8 +81,17 @@ test('launch image components avoid deprecated priority and invalid preload comb
   ])
 
   assert.match(homeHero, /\bpreload\b/)
+  assert.match(homeHero, /\bunoptimized\b/)
   assert.match(productGallery, /\bpreload\b/)
-  assert.match(productCard, /loading=\{priority \? 'eager' : 'lazy'\}/)
-  assert.match(productCard, /fetchPriority=\{priority \? 'high' : 'auto'\}/)
-  assert.doesNotMatch(productCard, /\bpreload\b/)
+  assert.match(productGallery, /\bunoptimized=\{isLaunchLcpImage\}/)
+  assert.match(productCard, /preload=\{priority\}/)
+  assert.match(productCard, /\bunoptimized=\{isLaunchLcpImage\}/)
+  assert.doesNotMatch(
+    productCard,
+    /loading=\{priority \? 'eager' : 'lazy'\}/,
+  )
+  assert.doesNotMatch(
+    productCard,
+    /fetchPriority=\{priority \? 'high' : 'auto'\}/,
+  )
 })

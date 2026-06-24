@@ -33,6 +33,10 @@ type ProductCardProps = {
   className?: string
 }
 
+function isLocalLaunchLcpImage(url: string): boolean {
+  return url.startsWith('/images/homepage/') && url.endsWith('-lcp.avif')
+}
+
 export function ProductCard({
   product,
   priority = false,
@@ -47,6 +51,10 @@ export function ProductCard({
     variants.length === 1 && variants[0]?.availableForSale ? variants[0] : null
 
   const { organic, gold } = getCertBadges(product.tags ?? [])
+  const featuredImage = product.featuredImage
+  const isLaunchLcpImage = featuredImage
+    ? isLocalLaunchLcpImage(featuredImage.url)
+    : false
 
   return (
     <article className={cn('group relative flex flex-col', className)}>
@@ -58,15 +66,13 @@ export function ProductCard({
           aria-hidden="true"
           className="relative block size-full"
         >
-          {product.featuredImage &&
-          product.featuredImage.width &&
-          product.featuredImage.height ? (
+          {featuredImage && featuredImage.width && featuredImage.height ? (
             <Image
-              src={getSizedShopifyImageUrl(product.featuredImage.url, 640)}
-              alt={product.featuredImage.altText ?? product.title}
+              src={getSizedShopifyImageUrl(featuredImage.url, 640)}
+              alt={featuredImage.altText ?? product.title}
               fill
-              loading={priority ? 'eager' : 'lazy'}
-              fetchPriority={priority ? 'high' : 'auto'}
+              preload={priority}
+              unoptimized={isLaunchLcpImage}
               sizes="(min-width: 1280px) 340px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 50vw"
               className="object-contain transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />

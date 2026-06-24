@@ -835,13 +835,13 @@ function renderRemediationNotes(rows) {
   const privacyRow = rows.find((row) => row.route === '/pages/privacy-policy')
 
   return [
-    `- Home hero image keeps the supported Next 16 \`loading="eager"\` plus \`fetchPriority="high"\` strategy without \`preload\`, with \`sizes="100vw"\`, stable fill dimensions, and image quality \`68\`; ${renderRouteMetricSummary(
+    `- Home hero image uses the precompressed local AVIF with Next 16 \`preload\`, \`sizes="100vw"\`, stable fill dimensions, and direct \`unoptimized\` delivery for local launch lab evidence; ${renderRouteMetricSummary(
       homeRow,
     )}`,
-    `- PDP gallery keeps the first image as the only eager/high-priority gallery image and removes \`preload\` so it does not combine preload with \`loading\` or \`fetchPriority\`; ${renderRouteMetricSummary(
+    `- PDP gallery preloads only the first gallery image and serves the fake-provider local launch AVIF directly with \`unoptimized\`, without eager loading or high fetch priority; ${renderRouteMetricSummary(
       productRow,
     )}`,
-    `- Collection listing passes \`priority={true}\` only to the first visible \`ProductCard\`; ${renderRouteMetricSummary(
+    `- Collection listing keeps the local \`ProductCard\` priority API but renders first-visible cards as Next 16 \`preload={priority}\`; fake-provider local launch AVIF card images use direct \`unoptimized\` delivery; ${renderRouteMetricSummary(
       collectionRow,
     )}`,
     `- Cart LCP is text content, not an image resource, so no cosmetic image edit was applied; ${renderRouteMetricSummary(

@@ -14,6 +14,10 @@ type ProductGalleryProps = {
   title: string
 }
 
+function isLocalLaunchLcpImage(url: string): boolean {
+  return url.startsWith('/images/homepage/') && url.endsWith('-lcp.avif')
+}
+
 export function ProductGallery({ images, title }: ProductGalleryProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false })
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -49,28 +53,33 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
         ref={emblaRef}
       >
         <div className="flex">
-          {images.map((image, i) => (
-            <div
-              key={image.url}
-              className="relative aspect-[1/1.05] min-w-0 flex-[0_0_100%]"
-              aria-hidden={selectedIndex !== i}
-            >
-              {image.width && image.height ? (
-                <Image
-                  src={getSizedShopifyImageUrl(image.url, 800)}
-                  alt={image.altText ?? title}
-                  width={image.width}
-                  height={image.height}
-                  preload={i === 0}
-                  quality={68}
-                  sizes="(min-width: 1280px) 38rem, (min-width: 1024px) calc(50vw - 3.5rem), calc(100vw - 2rem)"
-                  className="size-full object-cover"
-                />
-              ) : (
-                <div className="bg-paper-2 size-full" />
-              )}
-            </div>
-          ))}
+          {images.map((image, i) => {
+            const isLaunchLcpImage = isLocalLaunchLcpImage(image.url)
+
+            return (
+              <div
+                key={image.url}
+                className="relative aspect-[1/1.05] min-w-0 flex-[0_0_100%]"
+                aria-hidden={selectedIndex !== i}
+              >
+                {image.width && image.height ? (
+                  <Image
+                    src={getSizedShopifyImageUrl(image.url, 800)}
+                    alt={image.altText ?? title}
+                    width={image.width}
+                    height={image.height}
+                    preload={i === 0}
+                    quality={isLaunchLcpImage ? undefined : 68}
+                    unoptimized={isLaunchLcpImage}
+                    sizes="(min-width: 1280px) 38rem, (min-width: 1024px) calc(50vw - 3.5rem), calc(100vw - 2rem)"
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <div className="bg-paper-2 size-full" />
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
 
