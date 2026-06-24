@@ -21,9 +21,12 @@ type CartPageProps = {
 }
 
 async function CartPageContent({ searchParams }: CartPageProps) {
-  const params = await searchParams
-  const cart = await getCartAction()
-  const session = await getCustomerAccountSession()
+  const [params, cart] = await Promise.all([searchParams, getCartAction()])
+  const shouldLoadAccountSession =
+    Boolean(cart) || params.checkout === 'identity-sync-failed'
+  const session = shouldLoadAccountSession
+    ? await getCustomerAccountSession()
+    : null
   const accountContextState =
     params.checkout === 'identity-sync-failed'
       ? 'sync-failed-blocked'
