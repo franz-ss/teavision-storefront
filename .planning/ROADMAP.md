@@ -58,7 +58,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
-- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (14/15 plans executed; 17-15 attempted but blocked; verification remains gaps_found on PERF-01)
+- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (14/15 plans executed; 17-15 replanned and ready for execution; verification remains gaps_found on PERF-01 until the revised gap plan passes)
 
 ## Progress
 
@@ -206,8 +206,8 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 **Wave 10** *(blocked on Wave 9 completion; closes account CLS and render-shell regression coverage)*
 - `17-14` - Account CLS stabilization and render-shell contract remediation.
 
-**Wave 11** *(blocked on Wave 10 completion; final PERF-01 closure evidence)*
-- `17-15` - Strict final performance, readiness, and Phase 17 verification evidence gate.
+**Wave 12** *(blocked on Wave 11 completion; revised PERF-01 remediation and final evidence gate)*
+- `17-15` - Account/image contract drift remediation, direct local AVIF delivery, strict final performance, readiness, and Phase 17 verification gate.
 
 **Cross-cutting constraints:**
 - Owner-gated Shopify hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, and Search Console proof must remain `approved`, `pending`, or `owner-blocked`; automated code readiness must not fabricate those approvals.
@@ -215,4 +215,4 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ## Next
 
-Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14, but verification remains `gaps_found` on PERF-01. Plan 17-15 was attempted and remains blocked because strict local performance still has seven unaccepted `FAIL` route rows and no valid dated owner/staging/field performance acceptance artifact exists.
+Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14, but verification remains `gaps_found` on PERF-01. Plan 17-15 has been replanned in place to repair account/image contract drift, serve launch-critical local AVIFs directly, and regenerate strict performance, final readiness, and Phase 17 verification evidence. Execute next with `$gsd-execute-phase 17 --gaps-only`.
