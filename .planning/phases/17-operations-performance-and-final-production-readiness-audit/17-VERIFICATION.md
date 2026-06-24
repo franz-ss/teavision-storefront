@@ -1,12 +1,12 @@
 ---
 phase: 17-operations-performance-and-final-production-readiness-audit
-verified: 2026-06-24T01:19:10.532Z
+verified: 2026-06-24T02:47:00.000Z
 status: gaps_found
 score: "8/9 phase truths verified; performance remains launch-blocking"
 overrides_applied: 0
 re_verification:
   previous_status: gaps_found
-  previous_score: "8/9 must-haves verified"
+  previous_score: "8/9 phase truths verified; performance remains launch-blocking"
   gaps_closed: []
   gaps_remaining:
     - "PERF-01 strict performance blocker"
@@ -14,14 +14,14 @@ re_verification:
 gaps:
   - truth: "PERF-01: Home and PDP Lighthouse/Core Web Vitals evidence no longer shows launch-blocking LCP regressions, or a dated owner/staging/field acceptance marks local lab failures non-blocking"
     status: failed
-    reason: "Strict local performance evidence still records seven FAIL rows, final readiness is 94/100 and Not launch-ready, and no dated acceptance artifact exists."
+    reason: "Strict local performance evidence still records seven FAIL rows, final readiness is 94/100 and Not launch-ready, and the operator confirmed no dated owner/staging/field acceptance evidence exists."
     artifacts:
       - path: "docs/launch/performance-evidence.md"
-        issue: "Launch-blocking yes; seven representative routes fail strict local Lighthouse thresholds, including Home LCP 4938ms, PDP LCP 4013ms, and account CLS 0.128."
+        issue: "Launch-blocking yes; seven representative routes fail strict local Lighthouse thresholds, including Home LCP 4939ms, PDP LCP 4333ms, and account LCP 5279ms with CLS 0.128."
       - path: "docs/launch/final-production-readiness-report.md"
-        issue: "Automated score is 94/100; 16/17 required automated checks passed; performance is FAIL with exit code 1; launch decision is Not launch-ready."
+        issue: "Generated 2026-06-24T02:36:37.166Z; automated score is 94/100; 16/17 required automated checks passed; performance is FAIL with exit code 1; launch decision is Not launch-ready."
       - path: "docs/launch/performance-acceptance.md"
-        issue: "File is absent, so no owner/staging/field Core Web Vitals acceptance can convert local lab failures to non-blocking."
+        issue: "File is absent by design because no owner/staging/field Core Web Vitals acceptance evidence was supplied."
     missing:
       - "Either remediate strict/staging/field performance so Home and PDP no longer show launch-blocking LCP regressions, or record a valid dated owner/staging/field Core Web Vitals acceptance artifact."
       - "Regenerate performance evidence, final readiness report, and this verification after remediation or acceptance."
@@ -30,14 +30,14 @@ gaps:
 # Phase 17: Operations, Performance, and Final Production-Readiness Audit Verification Report
 
 **Phase Goal:** Prove the storefront is operationally ready to launch with monitoring, performance, e2e, owner-gated Shopify test evidence, and a repeatable final 100/100 readiness audit.
-**Verified:** 2026-06-24T01:19:10.532Z
+**Verified:** 2026-06-24T02:47:00.000Z
 **Status:** gaps_found
 
 ## Goal Achievement
 
 Phase 17 is still not achieved. The current final readiness report was regenerated on 2026-06-24 and remains `94/100`, `Not launch-ready`, with `performance` as the only failed required automated check.
 
-No `docs/launch/performance-acceptance.md` file exists, and the final audit was not run with a performance-acceptance override. Owner-gated Shopify/admin/Search Console proof remains separate from automated code readiness and is not being counted as an automated failure.
+No `docs/launch/performance-acceptance.md` file exists. During plan 17-11 the operator selected the no-evidence path, so no dated owner, staging, or field Core Web Vitals acceptance artifact was created. Owner-gated Shopify/admin/Search Console proof remains separate from automated code readiness and is not being counted as an automated failure.
 
 ## Observable Truths
 
@@ -59,21 +59,21 @@ No `docs/launch/performance-acceptance.md` file exists, and the final audit was 
 
 | Artifact | Current status | Details |
 | --- | --- | --- |
-| `docs/launch/final-production-readiness-report.md` | FAILED LAUNCH DECISION | Generated 2026-06-24T01:18:39.497Z; score `94/100`; 16/17 required automated checks passed; `performance` is `FAIL`; launch decision is `Not launch-ready`. |
-| `docs/launch/performance-evidence.md` | FAILED FOR PERF-01 | Generated 2026-06-24T01:17:57.804Z; seven strict mobile Lighthouse rows fail; includes LCP diagnostics, timing diagnostics, warmed asset counts, and layout shift diagnostics. |
-| `docs/launch/performance-acceptance.md` | ABSENT | No dated owner, staging, or field Core Web Vitals acceptance artifact was supplied. |
+| `docs/launch/final-production-readiness-report.md` | FAILED LAUNCH DECISION | Generated 2026-06-24T02:36:37.166Z; score `94/100`; 16/17 required automated checks passed; `performance` is `FAIL`; launch decision is `Not launch-ready`. |
+| `docs/launch/performance-evidence.md` | FAILED FOR PERF-01 | Generated 2026-06-24T02:35:55.824Z; seven strict mobile Lighthouse rows fail; includes LCP diagnostics, timing diagnostics, warmed asset counts, and layout shift diagnostics. |
+| `docs/launch/performance-acceptance.md` | ABSENT | No dated owner, staging, or field Core Web Vitals acceptance artifact was supplied, and the no-evidence path was explicitly selected. |
 
 ## Current Performance Metrics
 
 | Route | LCP | CLS | TBT | A11y | Primary Cause | Status |
 | --- | ---: | ---: | ---: | ---: | --- | --- |
-| `/` | 4938ms | 0.000 | 73ms | 97 | image-resource | FAIL |
-| `/products/test-standard-tea` | 4013ms | 0.000 | 56ms | 97 | image-resource | FAIL |
-| `/collections/all` | 3844ms | 0.000 | 47ms | 95 | image-resource | FAIL |
-| `/cart` | 3695ms | 0.000 | 54ms | 96 | render-delay | FAIL |
-| `/search?q=tea` | 3841ms | 0.000 | 52ms | 100 | render-delay | FAIL |
-| `/account` | 4675ms | 0.128 | 69ms | 95 | layout-shift | FAIL |
-| `/pages/privacy-policy` | 3727ms | 0.000 | 67ms | 96 | render-delay | FAIL |
+| `/` | 4939ms | 0.000 | 74ms | 97 | image-resource | FAIL |
+| `/products/test-standard-tea` | 4333ms | 0.000 | 63ms | 97 | image-resource | FAIL |
+| `/collections/all` | 4139ms | 0.000 | 46ms | 95 | image-resource | FAIL |
+| `/cart` | 3691ms | 0.000 | 53ms | 96 | render-delay | FAIL |
+| `/search?q=tea` | 3847ms | 0.000 | 56ms | 100 | render-delay | FAIL |
+| `/account` | 5279ms | 0.128 | 57ms | 95 | layout-shift | FAIL |
+| `/pages/privacy-policy` | 3694ms | 0.000 | 52ms | 96 | render-delay | FAIL |
 
 The account CLS row remains source-less in Lighthouse: `Lighthouse source 1 (node unavailable)`, node label unavailable, score `0.128`.
 
@@ -81,10 +81,10 @@ The account CLS row remains source-less in Lighthouse: `Lighthouse source 1 (nod
 
 | Command | Result | Notes |
 | --- | --- | --- |
-| `pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary` | FAIL, exit 1 | Expected strict failure; regenerated local performance evidence and showed seven route metric failures. |
+| `pnpm test:performance -- --start-server --base-url http://127.0.0.1:4173 --json-summary --allow-metric-failures` | PASS, exit 0 | Regenerated local performance evidence while preserving seven route metric failures as blocking evidence. |
 | `pnpm audit:readiness` | FAIL, exit 1 | Expected while performance is red; regenerated final report as `94/100`, `16/17`, `performance` FAIL, and `Not launch-ready`. |
-| `gsd-sdk query verify.schema-drift "17"` | PASS | `drift_detected: false`, `blocking: false`. |
-| Report/verification consistency assertion | PASS | `17-VERIFICATION.md` stays `gaps_found` while the final report contains a performance `FAIL` row and no `100/100`. |
+| `node --test scripts/launch/run-final-readiness-audit.test.mjs` | PASS | Acceptance parser and final report contract tests passed. |
+| Acceptance artifact structure assertion | PASS | `docs/launch/performance-acceptance.md` remains absent; no placeholder acceptance fields were created. |
 
 ## Remaining Blocker
 
@@ -97,5 +97,5 @@ Until one of those happens, Phase 17 remains `gaps_found`.
 
 ---
 
-_Verified: 2026-06-24T01:19:10.532Z_
-_Verifier: the agent (gsd-execute-phase 17-10)_
+_Verified: 2026-06-24T02:47:00.000Z_
+_Verifier: the agent (gsd-execute-phase 17-11)_
