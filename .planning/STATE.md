@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
-status: blocked
-stopped_at: Completed 17-10-PLAN.md; PERF-01 still launch-blocking without valid performance acceptance
-last_updated: "2026-06-24T01:19:10.532Z"
-last_activity: 2026-06-24 -- Phase 17 plan 17-10 completed with PERF-01 still blocking
+status: ready_to_execute
+stopped_at: Planned 17-11-PLAN.md; PERF-01 requires strict green performance evidence or valid dated acceptance
+last_updated: "2026-06-24T10:14:08.769+08:00"
+last_activity: 2026-06-24 -- Phase 17 plan 17-11 ready for PERF-01 acceptance/evidence gate
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 19
+  total_plans: 20
   completed_plans: 19
   percent: 67
 ---
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 
 ## Current Position
 
-Phase: 17 (operations-performance-and-final-production-readiness-audit) - BLOCKED
-Plan: 10 of 10
-Status: Verification gaps found - PERF-01 remains blocking
-Last activity: 2026-06-24 -- Phase 17 plan 17-10 completed with PERF-01 still blocking
+Phase: 17 (operations-performance-and-final-production-readiness-audit) - READY TO EXECUTE
+Plan: 11 of 11
+Status: Ready to execute - PERF-01 acceptance/evidence gate
+Last activity: 2026-06-24 -- Phase 17 plan 17-11 ready for PERF-01 acceptance/evidence gate
 
 ## Performance Metrics
 
@@ -98,6 +98,7 @@ Last activity: 2026-06-24 -- Phase 17 plan 17-10 completed with PERF-01 still bl
 | Phase 17 P08 | 9h 25m | 4 tasks | 11 files |
 | Phase 17 P09 | 15 min | 3 tasks | 4 files |
 | Phase 17 P10 | 61 min | 5 tasks | 13 files |
+| Phase 17 P11 | planned | 4 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -195,7 +196,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Resolve `PERF-01` with strict green performance evidence or a valid dated owner/staging/field Core Web Vitals acceptance artifact.
+- Execute `17-11` to resolve `PERF-01` with strict green performance evidence or a valid dated owner/staging/field Core Web Vitals acceptance artifact.
 
 ### Blockers/Concerns
 
@@ -206,7 +207,7 @@ Recent decisions affecting current work:
 - Phase 5 remediated the production-readiness gaps found in `CODEBASE_REVIEW.md`. See `.planning/phases/05-codebase-review-remediation/05-VERIFICATION.md` and the `05-*-SUMMARY.md` files for evidence and accepted residual risks.
 - Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
 - v1.3 Customer Account launch gates remain external/admin-dependent: Shopify Customer Accounts setup, Headless/Hydrogen credentials, protected customer data access, callback/logout URLs, HTTPS OAuth testing, real hosted checkout approval, and authoritative B2B/company-location pricing checks.
-- Phase 17 remains blocked: strict local performance evidence still has seven FAIL rows and no dated performance acceptance artifact exists.
+- Phase 17 has a final executable gap plan: `17-11` must either supply strict green performance evidence, record valid dated owner/staging/field acceptance, or keep PERF-01 blocked with refreshed evidence.
 
 ### Quick Tasks Completed
 
@@ -273,10 +274,10 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-24T01:19:10.532Z
-Stopped at: Completed 17-10-PLAN.md; PERF-01 still launch-blocking without valid performance acceptance
+Last session: 2026-06-24T10:14:08.769+08:00
+Stopped at: Planned 17-11-PLAN.md; PERF-01 still requires strict green evidence or valid dated acceptance
 Resume file: None
 
 ## Operator Next Steps
 
-- Remediate `PERF-01` strict performance or supply a valid dated owner/staging/field Core Web Vitals acceptance artifact, then rerun strict performance, final readiness, and Phase 17 verification.
+- Execute `17-11`, then rerun strict performance, final readiness, and Phase 17 verification.
