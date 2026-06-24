@@ -112,6 +112,7 @@ export function parseArgs(argv) {
   const args = {
     baseUrl: process.env.FINAL_READINESS_BASE_URL ?? DEFAULT_BASE_URL,
     dryRun: false,
+    performanceAcceptancePath: null,
     reportPath: process.env.FINAL_READINESS_REPORT_PATH ?? DEFAULT_REPORT_PATH,
     skipOwnerGated: false,
     skipPerformance: false,
@@ -153,6 +154,19 @@ export function parseArgs(argv) {
 
     if (value === '--skip-performance') {
       args.skipPerformance = true
+      continue
+    }
+
+    if (value === '--performance-acceptance') {
+      args.performanceAcceptancePath = argv[index + 1] ?? null
+      index += 1
+      continue
+    }
+
+    if (value.startsWith('--performance-acceptance=')) {
+      args.performanceAcceptancePath = value.slice(
+        '--performance-acceptance='.length,
+      )
       continue
     }
 
@@ -298,6 +312,72 @@ export function buildOwnerGateRows({
   validateOwnerGateRows(rows)
 
   return rows
+}
+
+function requiredAcceptanceField(source, label) {
+  const escapedLabel = label.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const match = source.match(
+    new RegExp(`^${escapedLabel}:[^\\S\\r\\n]*([^\\r\\n]+?)\\s*$`, 'm'),
+  )
+
+  if (!match?.[1]?.trim()) {
+    throw new Error(`Performance acceptance is missing ${label}.`)
+  }
+
+  return match[1].trim()
+}
+
+export function validatePerformanceAcceptanceDocument(source) {
+  if (!/^Status:\s*accepted-non-blocking\s*$/m.test(source)) {
+    throw new Error(
+      'Performance acceptance must include Status: accepted-non-blocking.',
+    )
+  }
+
+  const date = requiredAcceptanceField(source, 'Date')
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    throw new Error('Performance acceptance Date must be ISO YYYY-MM-DD.')
+  }
+
+  const approver = requiredAcceptanceField(source, 'Approver')
+  const evidenceSource = requiredAcceptanceField(source, 'Evidence source')
+
+  return {
+    approver,
+    date,
+    evidenceSource,
+  }
+}
+
+export function applyPerformanceAcceptance(
+  checkResults,
+  acceptancePath,
+  { existsImpl = existsSync, readFileImpl = readFileSync } = {},
+) {
+  if (!acceptancePath) return checkResults
+
+  if (!existsImpl(acceptancePath)) {
+    throw new Error(
+      `Performance acceptance file does not exist: ${acceptancePath}`,
+    )
+  }
+
+  const acceptance = validatePerformanceAcceptanceDocument(
+    readFileImpl(acceptancePath, 'utf8'),
+  )
+
+  return checkResults.map((result) => {
+    if (result.label !== 'performance' || result.status !== 'FAIL') {
+      return result
+    }
+
+    return {
+      ...result,
+      exitCode: 0,
+      outputTail: `Accepted non-blocking by dated performance acceptance: ${acceptancePath}; Date: ${acceptance.date}; Approver: ${acceptance.approver}; Evidence source: ${acceptance.evidenceSource}`,
+      status: 'PASS',
+    }
+  })
 }
 
 export function validateOwnerGateRows(rows) {
@@ -591,6 +671,14 @@ function renderPerformanceAcceptanceStatus(checkResults) {
   }
 
   if (performanceResult.status === 'PASS') {
+    if (
+      performanceResult.outputTail?.startsWith(
+        'Accepted non-blocking by dated performance acceptance:',
+      )
+    ) {
+      return `Performance acceptance status: ${performanceResult.outputTail}`
+    }
+
     return 'Performance acceptance status: not required because strict local performance evidence passed.'
   }
 
@@ -849,7 +937,7 @@ function printDryRun(checks) {
 
 function printUsage() {
   console.error(
-    'Usage: node scripts/launch/run-final-readiness-audit.mjs [--dry-run] [--base-url URL] [--start-server] [--no-start-server] [--skip-performance] [--skip-owner-gated]',
+    'Usage: node scripts/launch/run-final-readiness-audit.mjs [--dry-run] [--base-url URL] [--start-server] [--no-start-server] [--skip-performance] [--skip-owner-gated] [--performance-acceptance PATH]',
   )
 }
 
@@ -874,10 +962,13 @@ export async function main(argv = process.argv.slice(2)) {
   const ownerGates = buildOwnerGateRows({
     skipOwnerGated: args.skipOwnerGated,
   })
-  const checkResults = await runAutomatedChecks(checks, {
-    baseUrl: args.baseUrl,
-    startServer: args.startServer,
-  })
+  const checkResults = applyPerformanceAcceptance(
+    await runAutomatedChecks(checks, {
+      baseUrl: args.baseUrl,
+      startServer: args.startServer,
+    }),
+    args.performanceAcceptancePath,
+  )
   const report = renderFinalReadinessReport({
     baseUrl: args.baseUrl,
     checkResults,

@@ -3,6 +3,7 @@ import test from 'node:test'
 
 import {
   AUTOMATED_CHECK_LABELS,
+  applyPerformanceAcceptance,
   buildAutomatedCheckMatrix,
   buildOwnerGateRows,
   calculateAutomatedScore,
@@ -10,6 +11,7 @@ import {
   parseEnvFile,
   renderFinalReadinessReport,
   runAutomatedChecks,
+  validatePerformanceAcceptanceDocument,
 } from './run-final-readiness-audit.mjs'
 
 function result(label, status) {
@@ -80,10 +82,13 @@ test('parseArgs supports required runner flags', () => {
       '--skip-performance',
       '--skip-owner-gated',
       '--no-start-server',
+      '--performance-acceptance',
+      'docs/launch/performance-acceptance.md',
     ]),
     {
       baseUrl: 'http://127.0.0.1:4999',
       dryRun: true,
+      performanceAcceptancePath: 'docs/launch/performance-acceptance.md',
       reportPath: 'docs/launch/final-production-readiness-report.md',
       skipOwnerGated: true,
       skipPerformance: true,
@@ -92,6 +97,7 @@ test('parseArgs supports required runner flags', () => {
   )
 
   assert.equal(parseArgs([]).startServer, true)
+  assert.equal(parseArgs([]).performanceAcceptancePath, null)
   assert.equal(parseArgs(['--start-server']).startServer, true)
 })
 
@@ -163,6 +169,89 @@ test('failing performance result prevents a launch-ready report', () => {
   )
   assert.match(report, /performance `FAIL` rows remain blocking/)
   assert.match(report, /Not launch-ready/)
+})
+
+const validPerformanceAcceptance = `# Performance Acceptance
+
+## Decision
+Status: accepted-non-blocking
+Date: 2026-06-24
+Approver: Store Owner
+Evidence source: Staging Lighthouse URL
+
+## Local Lab Failures Accepted
+- \`/\`: accepted
+- \`/products/test-standard-tea\`: accepted
+
+## Rationale
+Staging and field evidence are accepted for launch.
+`
+
+test('valid performance acceptance converts a failing performance row to accepted PASS evidence', () => {
+  const accepted = applyPerformanceAcceptance(
+    [result('lint', 'PASS'), result('performance', 'FAIL')],
+    'docs/launch/performance-acceptance.md',
+    {
+      existsImpl: () => true,
+      readFileImpl: () => validPerformanceAcceptance,
+    },
+  )
+  const performance = accepted.find(
+    (current) => current.label === 'performance',
+  )
+
+  assert.equal(performance?.status, 'PASS')
+  assert.equal(performance?.exitCode, 0)
+  assert.match(
+    performance?.outputTail ?? '',
+    /^Accepted non-blocking by dated performance acceptance:/,
+  )
+
+  const report = renderFinalReadinessReport({
+    checkResults: accepted,
+    ownerGates: [],
+  })
+
+  assert.match(
+    report,
+    /Performance acceptance status: Accepted non-blocking by dated performance acceptance:/,
+  )
+})
+
+test('performance acceptance requires an ISO date', () => {
+  assert.throws(
+    () =>
+      validatePerformanceAcceptanceDocument(
+        validPerformanceAcceptance.replace('Date: 2026-06-24', 'Date:'),
+      ),
+    /Date/,
+  )
+})
+
+test('performance acceptance requires an approver', () => {
+  assert.throws(
+    () =>
+      validatePerformanceAcceptanceDocument(
+        validPerformanceAcceptance.replace(
+          'Approver: Store Owner',
+          'Approver:',
+        ),
+      ),
+    /Approver/,
+  )
+})
+
+test('performance acceptance requires an evidence source', () => {
+  assert.throws(
+    () =>
+      validatePerformanceAcceptanceDocument(
+        validPerformanceAcceptance.replace(
+          'Evidence source: Staging Lighthouse URL',
+          'Evidence source:',
+        ),
+      ),
+    /Evidence source/,
+  )
 })
 
 test('report renderer includes the required final report headings', () => {
