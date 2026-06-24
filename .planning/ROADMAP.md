@@ -58,7 +58,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
-- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (13/15 plans executed; gap-closure plans 17-12 and 17-13 complete; plans 17-14..17-15 remain; verification remains gaps_found on PERF-01)
+- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (14/15 plans executed; gap-closure plans 17-12 through 17-14 complete; plan 17-15 remains; verification remains gaps_found on PERF-01)
 
 ## Progress
 
@@ -78,7 +78,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 14. Shopify Customer Accounts              | v1.3      | 9/9            | Complete   | 2026-06-22 |
 | 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 4/4 | Complete    | 2026-06-23 |
-| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 13/15 | In Progress|  |
+| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 14/15 | In Progress|  |
 
 ## Phase Details
 
@@ -215,4 +215,4 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ## Next
 
-Phase 17 has executed 11 base plans and gap-closure plans 17-12 and 17-13, but verification remains `gaps_found` on PERF-01. Execute gap-closure plans 17-14 through 17-15 to remediate strict performance or validate a pre-existing dated owner/staging/field performance acceptance artifact, then rerun final readiness evidence and Phase 17 verification.
+Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14, but verification remains `gaps_found` on PERF-01. Execute gap-closure plan 17-15 to remediate strict performance or validate a pre-existing dated owner/staging/field performance acceptance artifact, then rerun final readiness evidence and Phase 17 verification.
