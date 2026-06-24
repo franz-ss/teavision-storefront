@@ -26,7 +26,7 @@ export function LoginPanel({ loginHref, reason = 'default' }: LoginPanelProps) {
       padding="md"
       radius="lg"
       tone="surface"
-      className="mx-auto grid w-full max-w-md gap-5"
+      className="mx-auto grid min-h-72 w-full max-w-md content-start gap-5"
     >
       <div className="grid gap-2">
         <p className="type-label text-brand">Account sign-in</p>

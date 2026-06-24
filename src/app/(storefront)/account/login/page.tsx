@@ -24,7 +24,7 @@ export default async function AccountLoginPage({
   const params = await searchParams
 
   return (
-    <div className="min-h-136 md:min-h-128">
+    <div className="min-h-[34rem] md:min-h-[32rem]">
       <LoginPanel
         loginHref={getAccountLoginStartHref(params.returnTo ?? null)}
         reason={getLoginReason(params.reason)}

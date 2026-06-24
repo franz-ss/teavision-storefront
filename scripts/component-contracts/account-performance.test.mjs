@@ -15,28 +15,40 @@ function sourcePath(...segments) {
 }
 
 test('account login bridge keeps the shared account geometry stable', async () => {
-  const layout = await readFile(
+  const wrapperFiles = [
     sourcePath('src', 'app', '(storefront)', 'account', 'layout.tsx'),
-    'utf8',
-  )
-  const page = await readFile(
     sourcePath('src', 'app', '(storefront)', 'account', 'page.tsx'),
-    'utf8',
-  )
-  const loading = await readFile(
     sourcePath('src', 'app', '(storefront)', 'account', 'loading.tsx'),
-    'utf8',
-  )
-  const login = await readFile(
     sourcePath('src', 'app', '(storefront)', 'account', 'login', 'page.tsx'),
-    'utf8',
+  ]
+  const wrapperSources = await Promise.all(
+    wrapperFiles.map((filePath) => readFile(filePath, 'utf8')),
   )
 
-  for (const source of [layout, page, loading, login]) {
-    assert.match(source, /min-h-136/)
-    assert.match(source, /md:min-h-128/)
+  for (const source of wrapperSources) {
+    assert.match(source, /min-h-\[34rem\]/)
+    assert.match(source, /md:min-h-\[32rem\]/)
+    assert.doesNotMatch(source, /min-h-136/)
+    assert.doesNotMatch(source, /md:min-h-128/)
   }
 
+  const login = wrapperSources[3]
+  const loginPanel = await readFile(
+    sourcePath(
+      'src',
+      'app',
+      '(storefront)',
+      'account',
+      '_components',
+      'login-panel',
+      'login-panel.tsx',
+    ),
+    'utf8',
+  )
+
+  assert.match(loginPanel, /min-h-72/)
+  assert.match(loginPanel, /content-start/)
+  assert.match(loginPanel, /prefetch=\{false\}/)
   assert.doesNotMatch(login, /<Section\.Root/)
   assert.doesNotMatch(login, /<Section\.Container/)
 })

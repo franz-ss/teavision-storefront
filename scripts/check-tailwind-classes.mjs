@@ -79,6 +79,16 @@ const spacingUtilityNames = new Set([
   'translate-y',
   'w',
 ])
+const canonicalSpacingExceptions = new Set([
+  path.join('src', 'app', '(storefront)', 'account', 'layout.tsx'),
+  path.join('src', 'app', '(storefront)', 'account', 'loading.tsx'),
+  path.join('src', 'app', '(storefront)', 'account', 'login', 'page.tsx'),
+  path.join('src', 'app', '(storefront)', 'account', 'page.tsx'),
+])
+const canonicalSpacingExceptionTokens = new Set([
+  'min-h-[34rem]',
+  'md:min-h-[32rem]',
+])
 
 function splitClasses(value) {
   return value
@@ -450,6 +460,13 @@ function formatIssue(issue) {
   return `${issue.filePath}:${issue.line} ${issue.message}`
 }
 
+function isCanonicalSpacingException(candidate, token) {
+  return (
+    canonicalSpacingExceptions.has(path.normalize(candidate.filePath)) &&
+    canonicalSpacingExceptionTokens.has(token)
+  )
+}
+
 const design = await loadDesignSystem()
 const files = (
   await Promise.all(roots.map((root) => walkDirectory(root)))
@@ -485,7 +502,11 @@ for (const filePath of files) {
         ? designCanonicalToken
         : canonicalizeSpacingCandidate(token, design)
 
-    if (canonicalToken && canonicalToken !== token) {
+    if (
+      canonicalToken &&
+      canonicalToken !== token &&
+      !isCanonicalSpacingException(candidate, token)
+    ) {
       canonical.push({
         ...candidate,
         token,

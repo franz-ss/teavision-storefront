@@ -25,7 +25,7 @@ async function AccountContent() {
 
 export default function AccountPage() {
   return (
-    <div className="min-h-136 md:min-h-128">
+    <div className="min-h-[34rem] md:min-h-[32rem]">
       <Suspense fallback={<AccountLoading />}>
         <AccountContent />
       </Suspense>
