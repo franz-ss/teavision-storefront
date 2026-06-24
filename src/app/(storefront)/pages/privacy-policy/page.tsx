@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
         <div className="max-w-prose">
           <p className="type-body text-gold-deep">Launch-review policy</p>
           <h1 className="type-heading-02 text-ink mt-3">{policy.title}</h1>
-          <p className="type-body text-ink-soft mt-5">
+          <p className="type-body-sm text-ink-soft mt-5">
             This code-owned route keeps the privacy policy URL available for
             launch review while the final owner/legal wording is approved.
           </p>

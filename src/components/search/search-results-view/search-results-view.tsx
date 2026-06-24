@@ -14,7 +14,6 @@ import type {
 import { ActiveFilterChips } from './active-filter-chips'
 import { ProductResults } from './product-results'
 import { SearchAlert } from './search-alert'
-import { SearchHero } from './search-hero'
 import {
   createActiveFilters,
   createPanelFacets,
@@ -37,107 +36,99 @@ export function SearchResultsView({ result, state }: SearchResultsViewProps) {
   const selectedFilterCount = state.filters.length
 
   return (
-    <>
-      <SearchHero result={result} state={state} />
+    <Section.Root tone="surface" spacing="compact">
+      <Section.Container>
+        {result.status === 'idle' ? (
+          <div className="max-w-2xl">
+            <SearchAlert
+              actionHref="/search"
+              actionLabel="Search again"
+              tone="empty"
+              message="Enter a search term to find matching products."
+            />
+          </div>
+        ) : result.status === 'unavailable' || result.status === 'error' ? (
+          <div className="max-w-2xl">
+            <SearchAlert
+              actionHref={retryHref}
+              actionLabel="Retry search"
+              tone="error"
+              message={
+                result.message ?? 'Search results are unavailable right now.'
+              }
+            />
+          </div>
+        ) : result.products.length === 0 && selectedFilterCount === 0 ? (
+          <div className="max-w-2xl">
+            <SearchAlert
+              actionHref="/search"
+              actionLabel="Search again"
+              tone="empty"
+              message="No products matched this search. Try a different term."
+            />
+          </div>
+        ) : (
+          <div className="grid items-start gap-6 lg:grid-cols-[252px_minmax(0,1fr)] lg:gap-10">
+            <aside className="hidden self-start lg:sticky lg:top-32 lg:block">
+              <SearchFilterPanel
+                clearHref={clearHref}
+                facets={panelFacets}
+                resultCount={result.pagination.totalItems}
+                selectedFilterCount={selectedFilterCount}
+              />
+            </aside>
 
-      <Section.Root tone="surface" spacing="compact">
-        <Section.Container>
-          {result.status === 'idle' ? (
-            <div className="max-w-2xl">
-              <SearchAlert
-                actionHref="/search"
-                actionLabel="Search again"
-                tone="empty"
-                message="Enter a search term to find matching products."
-              />
-            </div>
-          ) : result.status === 'unavailable' || result.status === 'error' ? (
-            <div className="max-w-2xl">
-              <SearchAlert
-                actionHref={retryHref}
-                actionLabel="Retry search"
-                tone="error"
-                message={
-                  result.message ?? 'Search results are unavailable right now.'
-                }
-              />
-            </div>
-          ) : result.products.length === 0 && selectedFilterCount === 0 ? (
-            // Empty state with no active filters: hero + No-matches card only
-            <div className="max-w-2xl">
-              <SearchAlert
-                actionHref="/search"
-                actionLabel="Search again"
-                tone="empty"
-                message="No products matched this search. Try a different term."
-              />
-            </div>
-          ) : (
-            <div className="grid items-start gap-6 lg:grid-cols-[252px_minmax(0,1fr)] lg:gap-10">
-              <aside className="hidden self-start lg:sticky lg:top-32 lg:block">
-                <SearchFilterPanel
-                  clearHref={clearHref}
-                  facets={panelFacets}
-                  resultCount={result.pagination.totalItems}
-                  selectedFilterCount={selectedFilterCount}
-                />
-              </aside>
-
-              <div className="grid gap-6 self-start">
-                <div className="border-hairline grid gap-5 border-b pb-6">
-                  <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-                    <div>
-                      <p className="type-mono-meta text-ink-faint">
-                        {formatResultCount(result)}
-                      </p>
-                    </div>
-                    <Suspense fallback={null}>
-                      <SearchSortSelect currentSort={state.sort} />
-                    </Suspense>
+            <div className="grid gap-6 self-start">
+              <div className="border-hairline grid gap-5 border-b pb-6">
+                <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                  <div>
+                    <p className="type-mono-meta text-ink-faint">
+                      {formatResultCount(result)}
+                    </p>
                   </div>
-
-                  <ActiveFilterChips
-                    activeFilters={activeFilters}
-                    clearHref={clearHref}
-                  />
-
-                  <details className="bg-paper border-hairline rounded-lg border lg:hidden">
-                    <summary className="type-label text-ink focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
-                      <span className="inline-flex items-center gap-2">
-                        <SlidersHorizontal
-                          className="size-4"
-                          aria-hidden="true"
-                        />
-                        Filter results
-                      </span>
-                      {selectedFilterCount > 0 && (
-                        <span className="type-mono-meta text-ink-faint">
-                          {selectedFilterCount} active
-                        </span>
-                      )}
-                    </summary>
-                    <div className="border-hairline border-t p-4">
-                      <SearchFilterPanel
-                        clearHref={clearHref}
-                        facets={panelFacets}
-                        resultCount={result.pagination.totalItems}
-                        selectedFilterCount={selectedFilterCount}
-                      />
-                    </div>
-                  </details>
+                  <Suspense fallback={null}>
+                    <SearchSortSelect currentSort={state.sort} />
+                  </Suspense>
                 </div>
 
-                <ProductResults clearHref={clearHref} result={result} />
-
-                <SearchPagination
-                  pagination={result.pagination}
-                  state={state}
+                <ActiveFilterChips
+                  activeFilters={activeFilters}
+                  clearHref={clearHref}
                 />
+
+                <details className="bg-paper border-hairline rounded-lg border lg:hidden">
+                  <summary className="type-label text-ink focus-visible:ring-ring flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+                    <span className="inline-flex items-center gap-2">
+                      <SlidersHorizontal
+                        className="size-4"
+                        aria-hidden="true"
+                      />
+                      Filter results
+                    </span>
+                    {selectedFilterCount > 0 && (
+                      <span className="type-mono-meta text-ink-faint">
+                        {selectedFilterCount} active
+                      </span>
+                    )}
+                  </summary>
+                  <div className="border-hairline border-t p-4">
+                    <SearchFilterPanel
+                      clearHref={clearHref}
+                      facets={panelFacets}
+                      resultCount={result.pagination.totalItems}
+                      selectedFilterCount={selectedFilterCount}
+                    />
+                  </div>
+                </details>
               </div>
+
+              <ProductResults clearHref={clearHref} result={result} />
+
+              <SearchPagination pagination={result.pagination} state={state} />
             </div>
-          )}
-        </Section.Container>
-      </Section.Root>
-    </>
+          </div>
+        )}
+      </Section.Container>
+    </Section.Root>
   )
 }

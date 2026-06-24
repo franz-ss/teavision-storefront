@@ -1,20 +1,27 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 
-import { SearchResultsView } from '@/components/search'
-import { Eyebrow, Section } from '@/components/ui'
+import { SearchHero } from '@/components/search/search-results-view/search-hero'
 import {
   parseSearchParams,
   type SearchParamsInput,
 } from '@/lib/searchanise/params'
 import { getSearchaniseSearchResults } from '@/lib/searchanise/search'
+import type { SearchRouteState } from '@/lib/searchanise/types'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 
-import { SearchAnalytics } from './_components/analytics'
+import { SearchResults } from './_components/results'
 
 type Props = {
   searchParams: Promise<SearchParamsInput>
 }
+
+const SEARCH_FALLBACK_STATE = {
+  query: '',
+  page: 1,
+  sort: 'relevance',
+  filters: [],
+} satisfies SearchRouteState
 
 export async function generateMetadata({
   searchParams,
@@ -31,45 +38,22 @@ export async function generateMetadata({
   })
 }
 
-async function SearchContent({
-  searchParams,
-}: {
-  searchParams: Props['searchParams']
-}) {
-  const state = parseSearchParams(await searchParams)
-  const result = await getSearchaniseSearchResults(state)
-  const resultCount =
-    result.status === 'success' ? result.pagination.totalItems : 0
-
-  return (
-    <>
-      {result.status === 'success' ? (
-        <SearchAnalytics query={state.query} resultCount={resultCount} />
-      ) : null}
-      <SearchResultsView result={result} state={state} />
-    </>
-  )
-}
-
-function SearchFallback() {
-  return (
-    <Section.Root tone="sunken" spacing="compact">
-      <Section.Container>
-        <div className="py-10" role="status" aria-live="polite">
-          <Eyebrow>Search</Eyebrow>
-          <p className="font-display text-ink mt-3 text-[clamp(2rem,4vw,3.4rem)]">
-            Loading search results…
-          </p>
-        </div>
-      </Section.Container>
-    </Section.Root>
-  )
-}
-
 export default function SearchPage({ searchParams }: Props) {
   return (
-    <Suspense fallback={<SearchFallback />}>
-      <SearchContent searchParams={searchParams} />
+    <Suspense fallback={<SearchHero state={SEARCH_FALLBACK_STATE} />}>
+      {searchParams.then((resolvedSearchParams) => {
+        const state = parseSearchParams(resolvedSearchParams)
+        const resultPromise = getSearchaniseSearchResults(state)
+
+        return (
+          <>
+            <SearchHero state={state} />
+            <Suspense fallback={null}>
+              <SearchResults resultPromise={resultPromise} state={state} />
+            </Suspense>
+          </>
+        )
+      })}
     </Suspense>
   )
 }

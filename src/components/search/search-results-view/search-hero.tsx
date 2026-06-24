@@ -1,23 +1,17 @@
 import { Eyebrow, Section } from '@/components/ui'
-import type {
-  SearchRouteState,
-  SearchaniseSearchResult,
-} from '@/lib/searchanise/types'
+import type { SearchRouteState } from '@/lib/searchanise/types'
 
-import { formatResultCount } from './search-results-helpers'
 import { SearchPageSearchForm } from './search-page-search-form'
 
 export function SearchHero({
-  result,
   state,
+  countLabel,
 }: {
-  result: SearchaniseSearchResult
   state: SearchRouteState
+  countLabel?: string
 }) {
   const hasQuery = state.query.length > 0
   const title = hasQuery ? `Results for "${state.query}"` : 'Search Teavision'
-  const countLabel =
-    result.status === 'success' ? formatResultCount(result) : undefined
 
   return (
     <Section.Root tone="surface" spacing="compact">
@@ -28,7 +22,9 @@ export function SearchHero({
             {title}
           </h1>
           <p className="type-mono-meta text-ink-faint mt-4">
-            {hasQuery ? countLabel : 'Search bulk teas, herbs, and spices.'}
+            {hasQuery
+              ? (countLabel ?? 'Searching products...')
+              : 'Search bulk teas, herbs, and spices.'}
           </p>
           {!hasQuery && <SearchPageSearchForm />}
         </div>
