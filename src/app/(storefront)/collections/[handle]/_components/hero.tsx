@@ -41,8 +41,6 @@ export function Hero({
                   height={bannerImage.height}
                   sizes="(min-width: 1480px) 1480px, 100vw"
                   className="w-full object-cover"
-                  loading="eager"
-                  fetchPriority="high"
                   preload
                 />
               </div>

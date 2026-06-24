@@ -29,8 +29,7 @@ export function HomepageHero() {
         alt=""
         fill
         sizes="100vw"
-        loading="eager"
-        fetchPriority="high"
+        preload
         quality={68}
         className="absolute inset-0 -z-20 object-cover"
       />

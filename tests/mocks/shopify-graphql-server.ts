@@ -36,7 +36,7 @@ const fakeVariantQuantityRule = {
 }
 
 const fakeProductImage = {
-  url: '/images/homepage/bulk-wholesale.jpg',
+  url: '/images/homepage/bulk-wholesale-lcp.avif',
   altText: 'Loose tea in bulk packaging',
   width: 800,
   height: 534,

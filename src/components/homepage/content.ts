@@ -109,10 +109,10 @@ export const HOMEPAGE_HERO = {
     href: '/collections',
   },
   image: {
-    src: '/images/homepage/homepage-hero-tea-harvest.png',
+    src: '/images/homepage/homepage-hero-tea-harvest-lcp.avif',
     alt: '',
-    width: 1920,
-    height: 1080,
+    width: 1440,
+    height: 810,
   },
   trustMarks: {
     src: '/images/homepage/homepage-trust-marks.webp',
