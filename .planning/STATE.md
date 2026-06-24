@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 17-14-PLAN.md
-last_updated: "2026-06-24T05:09:26.473Z"
+stopped_at: "Blocked 17-15: strict performance still FAIL"
+last_updated: "2026-06-24T05:48:04.777Z"
 last_activity: 2026-06-24
 progress:
   total_phases: 3
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 17 — PERF-01 gap-closure plans 17-12 through 17-14 complete; execute 17-15 next
+**Current focus:** Phase 17 — PERF-01 gap-closure plans 17-12 through 17-14 complete; 17-15 is blocked on strict performance evidence or valid dated acceptance
 
 ## Current Position
 
 Phase: 17 (operations-performance-and-final-production-readiness-audit) — EXECUTING
 Plan: 14 of 15 executed
-Status: Ready to execute
+Status: Blocked on PERF-01 strict local performance
 Last activity: 2026-06-24
 
 ## Performance Metrics
@@ -186,6 +186,7 @@ Recent decisions affecting current work:
 - [Phase 17-12]: Next 16 launch-critical image discovery uses rendered `preload` instead of deprecated `priority`, eager loading, or high fetch priority combinations. - ProductCard may still expose a local `priority` API, but it renders to `preload` and is guarded by `launch-image-performance.test.mjs`.
 - [Phase 17-13]: Search route runtime params must resolve inside Suspense under Next 16 Cache Components. - The route uses the documented promise-child pattern so SearchHero can stream before Searchanise results without a root-level `await searchParams` prerender failure.
 - [Phase 17-14]: Account launch geometry intentionally uses literal bracketed Tailwind min-height classes guarded by a scoped checker exception. - The exception is limited to the four account wrapper files so final performance contracts can reject the previous tokenized geometry without weakening repo-wide class validation.
+- [Phase 17-15]: Strict local performance still records seven route FAIL rows after 17-12 through 17-14 remediation, and no pre-existing `docs/launch/performance-acceptance.md` exists. - Plan 17-15 must stay incomplete until strict metrics pass or a valid dated owner/staging/field acceptance artifact is supplied and validated.
 
 ### Roadmap Evolution
 
@@ -203,7 +204,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Execute gap-closure plan 17-15 to resolve `PERF-01` with strict green performance evidence or a valid pre-existing dated owner/staging/field Core Web Vitals acceptance artifact, then rerun final readiness and Phase 17 verification.
+- Replan gap-closure work after the blocked 17-15 attempt, or validate a pre-existing dated owner/staging/field Core Web Vitals acceptance artifact, then rerun final readiness and Phase 17 verification.
 
 ### Blockers/Concerns
 
@@ -214,7 +215,7 @@ Recent decisions affecting current work:
 - Phase 5 remediated the production-readiness gaps found in `CODEBASE_REVIEW.md`. See `.planning/phases/05-codebase-review-remediation/05-VERIFICATION.md` and the `05-*-SUMMARY.md` files for evidence and accepted residual risks.
 - Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
 - v1.3 Customer Account launch gates remain external/admin-dependent: Shopify Customer Accounts setup, Headless/Hydrogen credentials, protected customer data access, callback/logout URLs, HTTPS OAuth testing, real hosted checkout approval, and authoritative B2B/company-location pricing checks.
-- Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14; `PERF-01` remains blocked until plan 17-15 reruns strict final performance/readiness evidence or a valid dated owner/staging/field acceptance artifact exists.
+- Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14; plan 17-15 was attempted but remains incomplete because strict local performance still fails seven route rows and no valid dated owner/staging/field acceptance artifact exists.
 
 ### Quick Tasks Completed
 
@@ -281,10 +282,10 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-24T05:09:26.374Z
-Stopped at: Completed 17-14-PLAN.md
+Last session: 2026-06-24T05:48:04.764Z
+Stopped at: Blocked 17-15: strict performance still FAIL
 Resume file: None
 
 ## Operator Next Steps
 
-- Execute 17-15 to remediate `PERF-01` or validate a pre-existing dated owner/staging/field performance acceptance artifact, then rerun strict performance, final readiness, and Phase 17 verification.
+- Replan `PERF-01` remediation or supply a pre-existing dated owner/staging/field performance acceptance artifact, then rerun 17-15 strict performance, final readiness, and Phase 17 verification. Do not mark Phase 17 verified while unaccepted performance `FAIL` rows remain.

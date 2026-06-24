@@ -58,7 +58,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
-- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (14/15 plans executed; gap-closure plans 17-12 through 17-14 complete; plan 17-15 remains; verification remains gaps_found on PERF-01)
+- [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (14/15 plans executed; 17-15 attempted but blocked; verification remains gaps_found on PERF-01)
 
 ## Progress
 
@@ -215,4 +215,4 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ## Next
 
-Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14, but verification remains `gaps_found` on PERF-01. Execute gap-closure plan 17-15 to remediate strict performance or validate a pre-existing dated owner/staging/field performance acceptance artifact, then rerun final readiness evidence and Phase 17 verification.
+Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14, but verification remains `gaps_found` on PERF-01. Plan 17-15 was attempted and remains blocked because strict local performance still has seven unaccepted `FAIL` route rows and no valid dated owner/staging/field performance acceptance artifact exists.
