@@ -29,6 +29,7 @@ const DEFAULT_FAKE_CUSTOMER_ACCOUNT_PORT = 4518
 export function parseArgs(argv) {
   const args = {
     allowMetricFailures: false,
+    assetWarmup: true,
     baseUrl: process.env.PERFORMANCE_PROBE_BASE_URL ?? DEFAULT_BASE_URL,
     jsonSummary: false,
     startServer: false,
@@ -74,6 +75,11 @@ export function parseArgs(argv) {
 
     if (value === '--allow-metric-failures') {
       args.allowMetricFailures = true
+      continue
+    }
+
+    if (value === '--no-asset-warmup') {
+      args.assetWarmup = false
       continue
     }
 
@@ -217,6 +223,7 @@ export function getProductionLifecycleCommands({
 
 function spawnChild(step, stdio = 'inherit') {
   return spawn(step.command, step.args, {
+    detached: process.platform !== 'win32',
     env: { ...process.env, ...step.env },
     shell: process.platform === 'win32',
     stdio,
@@ -256,26 +263,87 @@ async function waitForUrl(url, label, timeoutMs = 120_000) {
   throw new Error(`${label} did not become ready at ${url}: ${lastError}`)
 }
 
-async function stopChild(child) {
-  if (child.exitCode !== null || child.signalCode !== null) return
+function hasChildExited(child) {
+  return child.exitCode !== null || child.signalCode !== null
+}
 
-  if (process.platform === 'win32') {
-    await new Promise((resolve) => {
-      const killer = spawn(
-        'taskkill',
-        ['/pid', String(child.pid), '/T', '/F'],
-        {
-          stdio: 'ignore',
-        },
-      )
-      killer.on('exit', resolve)
-      killer.on('error', resolve)
-    })
-    return
+function waitForChildExit(
+  child,
+  { clearTimeoutImpl, onTimeout, setTimeoutImpl, timeoutMs },
+) {
+  if (hasChildExited(child)) return Promise.resolve()
+
+  return new Promise((resolve) => {
+    let complete = false
+    const timer = setTimeoutImpl(() => {
+      onTimeout()
+    }, timeoutMs)
+
+    const finish = () => {
+      if (complete) return
+      complete = true
+      clearTimeoutImpl(timer)
+      resolve()
+    }
+
+    child.on('exit', finish)
+    child.on('error', finish)
+  })
+}
+
+function signalChildTree(child, signal, { killProcessImpl, platform }) {
+  if (platform !== 'win32' && child.pid) {
+    try {
+      killProcessImpl(-child.pid, signal)
+      return
+    } catch {
+      // Fall back to direct child signaling when no process group exists.
+    }
   }
 
-  child.kill('SIGTERM')
+  child.kill(signal)
 }
+
+export function createStopChild({
+  clearTimeoutImpl = clearTimeout,
+  killProcessImpl = process.kill,
+  platform = process.platform,
+  setTimeoutImpl = setTimeout,
+  spawnImpl = spawn,
+  timeoutMs = 5000,
+} = {}) {
+  return async function stopChild(child) {
+    if (hasChildExited(child)) return
+
+    const exitPromise = waitForChildExit(child, {
+      clearTimeoutImpl,
+      onTimeout: () =>
+        signalChildTree(child, 'SIGKILL', { killProcessImpl, platform }),
+      setTimeoutImpl,
+      timeoutMs,
+    })
+
+    if (platform === 'win32') {
+      await new Promise((resolve) => {
+        const killer = spawnImpl(
+          'taskkill',
+          ['/pid', String(child.pid), '/T', '/F'],
+          {
+            stdio: 'ignore',
+          },
+        )
+        killer.on('exit', resolve)
+        killer.on('error', resolve)
+      })
+    } else {
+      signalChildTree(child, 'SIGTERM', { killProcessImpl, platform })
+    }
+
+    await exitPromise
+  }
+}
+
+const stopChild = createStopChild()
 
 export async function startProductionLifecycle(baseUrl, options = {}) {
   const commands = getProductionLifecycleCommands({ baseUrl, ...options })
@@ -412,6 +480,10 @@ function detailItems(audit) {
   return Array.isArray(details?.items) ? details.items : []
 }
 
+function numericValue(value) {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
 function stringValue(value) {
   return typeof value === 'string' && value.trim() ? value.trim() : null
 }
@@ -476,6 +548,78 @@ function extractLcpResourceUrl(lhr) {
   return extractUrlFromSnippet(stringValue(node?.snippet))
 }
 
+function collectSubpartItems(value, items = []) {
+  if (Array.isArray(value)) {
+    for (const item of value) collectSubpartItems(item, items)
+    return items
+  }
+
+  const record = asRecord(value)
+  if (!record) return items
+
+  if (typeof record.subpart === 'string') {
+    items.push(record)
+  }
+
+  collectSubpartItems(record.items, items)
+  collectSubpartItems(asRecord(record.subItems)?.items, items)
+
+  return items
+}
+
+function extractLcpBreakdown(lhr) {
+  const items = collectSubpartItems(
+    lhr.audits?.['lcp-breakdown-insight']?.details?.items,
+  )
+  if (items.length === 0) return null
+
+  const breakdown = {
+    elementRenderDelayMs: null,
+    resourceLoadDelayMs: null,
+    resourceLoadDurationMs: null,
+    ttfbMs: null,
+  }
+  const keys = {
+    elementRenderDelay: 'elementRenderDelayMs',
+    resourceLoadDelay: 'resourceLoadDelayMs',
+    resourceLoadDuration: 'resourceLoadDurationMs',
+    timeToFirstByte: 'ttfbMs',
+  }
+
+  for (const item of items) {
+    const key = keys[item.subpart]
+    if (!key) continue
+
+    const value =
+      numericValue(item.duration) ??
+      numericValue(item.value) ??
+      numericValue(item.numericValue)
+    breakdown[key] = value
+  }
+
+  return breakdown
+}
+
+function extractLayoutShiftSources(lhr) {
+  return detailItems(lhr.audits?.['layout-shifts'])
+    .map((item) => {
+      const record = asRecord(item)
+      const node = asRecord(record?.node)
+
+      return {
+        nodeLabel: stringValue(node?.nodeLabel),
+        score: numericValue(record?.score),
+        selector: stringValue(node?.selector),
+      }
+    })
+    .filter(
+      (source) =>
+        source.nodeLabel !== null ||
+        source.selector !== null ||
+        source.score !== null,
+    )
+}
+
 export function calculateStatus(metrics) {
   const missing = []
   const failures = []
@@ -523,24 +667,31 @@ export function calculateStatus(metrics) {
   return { mitigation: 'None', status: 'PASS' }
 }
 
-export function summarizeLhr(route, lhr) {
+export function summarizeLhr(route, lhr, { warmedAssetCount = 0 } = {}) {
   const metrics = {
     a11yScore: categoryScore(lhr, 'accessibility'),
     cls: auditNumericValue(lhr, 'cumulative-layout-shift'),
+    fcpMs: auditNumericValue(lhr, 'first-contentful-paint'),
     lcpMs: auditNumericValue(lhr, 'largest-contentful-paint'),
+    speedIndexMs: auditNumericValue(lhr, 'speed-index'),
     tbtMs: auditNumericValue(lhr, 'total-blocking-time'),
+    totalByteWeight: auditNumericValue(lhr, 'total-byte-weight'),
+    ttfbMs: auditNumericValue(lhr, 'server-response-time'),
   }
   const result = calculateStatus(metrics)
 
   return {
     ...metrics,
     finalUrl: lhr.finalDisplayedUrl ?? '',
+    lcpBreakdown: extractLcpBreakdown(lhr),
     lcpElement: extractLcpElement(lhr),
     lcpResourceUrl: extractLcpResourceUrl(lhr),
+    layoutShiftSources: extractLayoutShiftSources(lhr),
     mitigation: result.mitigation,
     observedUrl: lhr.finalDisplayedUrl ?? '',
     route,
     status: result.status,
+    warmedAssetCount,
   }
 }
 
@@ -558,6 +709,10 @@ function formatCls(value) {
 
 function formatScore(value) {
   return value === null ? 'n/a' : `${value}`
+}
+
+function formatByteWeight(value) {
+  return value === null ? 'n/a' : `${Math.round(value)}`
 }
 
 export function renderMarkdownTable(rows) {
@@ -622,12 +777,19 @@ export function buildJsonSummary(rows) {
     routes: rows.map((row) => ({
       cls: row.cls,
       lcpMs: row.lcpMs,
+      fcpMs: row.fcpMs ?? null,
+      lcpBreakdown: row.lcpBreakdown ?? null,
       lcpElement: row.lcpElement ?? null,
       lcpResourceUrl: row.lcpResourceUrl ?? null,
+      layoutShiftSources: row.layoutShiftSources ?? [],
       observedUrl: row.observedUrl ?? '',
       route: row.route,
+      speedIndexMs: row.speedIndexMs ?? null,
       status: row.status,
       tbtMs: row.tbtMs,
+      totalByteWeight: row.totalByteWeight ?? null,
+      ttfbMs: row.ttfbMs ?? null,
+      warmedAssetCount: row.warmedAssetCount ?? 0,
     })),
     total: rows.length,
     warn: 0,
@@ -743,6 +905,67 @@ export function renderLcpDiagnostics(rows) {
   return lines.join('\n')
 }
 
+function lcpBreakdownEntries(row) {
+  const breakdown = row.lcpBreakdown
+  if (!breakdown) return []
+
+  return [
+    ['server-response', breakdown.ttfbMs],
+    ['image-resource', breakdown.resourceLoadDelayMs],
+    ['image-resource', breakdown.resourceLoadDurationMs],
+    ['render-delay', breakdown.elementRenderDelayMs],
+  ].filter(([, value]) => typeof value === 'number' && Number.isFinite(value))
+}
+
+function derivePrimaryCause(row) {
+  if ((row.cls ?? 0) > THRESHOLDS.cls || row.layoutShiftSources?.length > 0) {
+    return 'layout-shift'
+  }
+
+  if (
+    row.lcpResourceUrl?.includes('/_next/image') ||
+    row.lcpResourceUrl?.includes('/images/')
+  ) {
+    return 'image-resource'
+  }
+
+  const entries = lcpBreakdownEntries(row)
+  if (entries.length > 0) {
+    const [cause] = entries.reduce((largest, current) =>
+      current[1] > largest[1] ? current : largest,
+    )
+    return cause
+  }
+
+  if ((row.ttfbMs ?? 0) > 600) return 'server-response'
+  if (!row.lcpResourceUrl && row.lcpElement) return 'text-render'
+
+  return 'unknown'
+}
+
+export function renderTimingDiagnostics(rows) {
+  const lines = [
+    '| Route | FCP | LCP | TTFB | Speed Index | Bytes | Primary Cause |',
+    '| --- | ---: | ---: | ---: | ---: | ---: | --- |',
+  ]
+
+  for (const row of rows) {
+    lines.push(
+      `| ${escapeMarkdownCell(row.route)} | ${formatDuration(
+        row.fcpMs ?? null,
+      )} | ${formatDuration(row.lcpMs)} | ${formatDuration(
+        row.ttfbMs ?? null,
+      )} | ${formatDuration(
+        row.speedIndexMs ?? null,
+      )} | ${formatByteWeight(row.totalByteWeight ?? null)} | ${derivePrimaryCause(
+        row,
+      )} |`,
+    )
+  }
+
+  return lines.join('\n')
+}
+
 export function renderEvidenceDocument({
   baseUrl,
   generatedAt = new Date().toISOString(),
@@ -761,6 +984,8 @@ For evidence-only local diagnostics that should not block a readiness script, ru
 
 By default, the probe performs one warmup fetch per route before measured Lighthouse runs to reduce first-request build/image-cache noise. Use \`--cold-run\` for a zero-warmup diagnostic.
 
+When warmup runs are enabled, route warmup fetches same-origin \`/_next/image\`, \`/_next/static\`, \`/_next/font\`, and \`/images/\` assets discovered from HTML \`src\`, \`srcset\`, and preload \`href\` attributes. Use \`--no-asset-warmup\` to keep HTML warmup but skip asset warmup for cold image-transform diagnostics.
+
 ## Representative Routes
 
 ${renderRouteList(routes)}
@@ -772,6 +997,10 @@ ${renderMarkdownTable(rows)}
 ## LCP Diagnostics
 
 ${renderLcpDiagnostics(rows)}
+
+## Timing Diagnostics
+
+${renderTimingDiagnostics(rows)}
 
 ## Launch Blocking Status
 
@@ -804,12 +1033,18 @@ function renderLaunchBlockingStatus(rows) {
 }
 
 export async function warmupRoutes({
+  assetWarmup = true,
   baseUrl,
   fetchImpl = globalThis.fetch,
   routes,
   runs,
 }) {
-  if (runs <= 0) return
+  const warmedAssets = new Map(routes.map((route) => [route, new Set()]))
+
+  if (runs <= 0) {
+    return new Map(routes.map((route) => [route, 0]))
+  }
+
   if (typeof fetchImpl !== 'function') {
     throw new Error('fetch is unavailable for performance probe warmup')
   }
@@ -823,8 +1058,98 @@ export async function warmupRoutes({
           `Warmup fetch failed for ${route}: status ${response.status}`,
         )
       }
+
+      if (!assetWarmup) continue
+
+      const html =
+        typeof response.text === 'function' ? await response.text() : ''
+      const assetUrls = discoverWarmupAssetUrls(html, url)
+      const routeAssets = warmedAssets.get(route)
+
+      for (const assetUrl of assetUrls) {
+        routeAssets?.add(assetUrl)
+        const assetResponse = await fetchImpl(assetUrl, { cache: 'no-store' })
+        if (!assetResponse.ok) {
+          throw new Error(
+            `Warmup asset fetch failed for ${route}: ${assetUrl} status ${assetResponse.status}`,
+          )
+        }
+      }
     }
   }
+
+  return new Map(
+    routes.map((route) => [route, warmedAssets.get(route)?.size ?? 0]),
+  )
+}
+
+const WARMUP_ASSET_PREFIXES = [
+  '/_next/image',
+  '/_next/static',
+  '/_next/font',
+  '/images/',
+]
+
+function htmlAttributeValue(value) {
+  return value.replaceAll('&amp;', '&').trim()
+}
+
+function normalizeWarmupAssetUrl(candidate, pageUrl) {
+  if (!candidate) return null
+
+  try {
+    const url = new URL(htmlAttributeValue(candidate), pageUrl)
+    const page = new URL(pageUrl)
+
+    if (url.origin !== page.origin) return null
+    if (
+      !WARMUP_ASSET_PREFIXES.some((prefix) => url.pathname.startsWith(prefix))
+    ) {
+      return null
+    }
+
+    return url.toString()
+  } catch {
+    return null
+  }
+}
+
+function addWarmupCandidate(candidates, candidate, pageUrl) {
+  const url = normalizeWarmupAssetUrl(candidate, pageUrl)
+  if (url) candidates.add(url)
+}
+
+export function discoverWarmupAssetUrls(html, pageUrl) {
+  const candidates = new Set()
+
+  for (const tagMatch of html.matchAll(/<[^>]+>/g)) {
+    const tag = tagMatch[0]
+
+    const srcMatch = tag.match(/\ssrc=["']([^"']+)["']/i)
+    if (srcMatch) {
+      addWarmupCandidate(candidates, srcMatch[1], pageUrl)
+    }
+
+    const srcsetMatch = tag.match(/\ssrcset=["']([^"']+)["']/i)
+    if (srcsetMatch) {
+      for (const candidate of srcsetMatch[1].split(',')) {
+        addWarmupCandidate(
+          candidates,
+          candidate.trim().split(/\s+/)[0],
+          pageUrl,
+        )
+      }
+    }
+
+    const preloadHrefMatch = tag.match(
+      /^<link\b(?=[^>]*\brel=["'][^"']*\bpreload\b[^"']*["'])(?=[^>]*\bhref=["']([^"']+)["'])/i,
+    )
+    if (preloadHrefMatch) {
+      addWarmupCandidate(candidates, preloadHrefMatch[1], pageUrl)
+    }
+  }
+
+  return [...candidates]
 }
 
 export async function runProbe(args) {
@@ -834,7 +1159,11 @@ export async function runProbe(args) {
     const url = targetUrl(args.baseUrl, route)
     console.log(`Running mobile Lighthouse for ${route} (${url})`)
     const lhr = await runLighthouse(url)
-    rows.push(summarizeLhr(route, lhr))
+    rows.push(
+      summarizeLhr(route, lhr, {
+        warmedAssetCount: args.warmedAssetCounts?.get(route) ?? 0,
+      }),
+    )
   }
 
   return rows
@@ -850,13 +1179,14 @@ export async function main(argv = process.argv.slice(2)) {
       lifecycle = await startProductionLifecycle(args.baseUrl)
     }
 
-    await warmupRoutes({
+    const warmedAssetCounts = await warmupRoutes({
+      assetWarmup: args.assetWarmup,
       baseUrl: args.baseUrl,
       routes: args.routes,
       runs: args.warmupRuns,
     })
 
-    const rows = await runProbe(args)
+    const rows = await runProbe({ ...args, warmedAssetCounts })
     const markdown = renderMarkdownTable(rows)
     console.log(markdown)
 

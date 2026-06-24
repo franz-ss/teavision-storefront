@@ -4,6 +4,8 @@ import test from 'node:test'
 import {
   buildJsonSummary,
   calculateStatus,
+  createStopChild,
+  discoverWarmupAssetUrls,
   evaluateReadinessRows,
   getLighthouseCommand,
   getProductionLifecycleCommands,
@@ -19,6 +21,7 @@ test('parseArgs supports defaults and repeated url overrides', () => {
   const defaults = parseArgs([])
   assert.equal(defaults.baseUrl, 'http://127.0.0.1:4173')
   assert.equal(defaults.allowMetricFailures, false)
+  assert.equal(defaults.assetWarmup, true)
   assert.equal(defaults.jsonSummary, false)
   assert.equal(defaults.startServer, false)
   assert.equal(defaults.stdoutOnly, false)
@@ -34,6 +37,7 @@ test('parseArgs supports defaults and repeated url overrides', () => {
     '--allow-metric-failures',
     '--warmup-runs',
     '2',
+    '--no-asset-warmup',
     '--json-summary',
     '--base-url',
     'http://127.0.0.1:4999',
@@ -47,6 +51,7 @@ test('parseArgs supports defaults and repeated url overrides', () => {
   assert.equal(parsed.startServer, true)
   assert.equal(parsed.stdoutOnly, true)
   assert.equal(parsed.warmupRuns, 2)
+  assert.equal(parsed.assetWarmup, false)
   assert.deepEqual(parsed.routes, ['/', '/cart'])
 })
 
@@ -64,7 +69,11 @@ test('warmupRoutes fetches every route for each requested warmup run', async () 
     baseUrl: 'http://127.0.0.1:4173',
     fetchImpl: async (url, options) => {
       calls.push({ options, url })
-      return { ok: true, status: 200 }
+      return {
+        ok: true,
+        status: 200,
+        text: async () => '<main>No assets</main>',
+      }
     },
     routes: ['/', '/cart'],
     runs: 2,
@@ -80,6 +89,88 @@ test('warmupRoutes fetches every route for each requested warmup run', async () 
     ],
   )
   assert.deepEqual(calls[0].options, { cache: 'no-store' })
+})
+
+test('discoverWarmupAssetUrls finds same-origin image, static, font, and preload assets only', () => {
+  const urls = discoverWarmupAssetUrls(
+    `
+      <img src="/_next/image?url=%2Fhero.png&w=828&q=68">
+      <img srcset="/_next/image?url=%2Fsmall.png&w=640&q=68 640w, /images/card.png 960w, https://cdn.example.com/offsite.png 1200w">
+      <script src="/_next/static/chunks/app.js"></script>
+      <link rel="preload" href="/_next/font/local.woff2" as="font">
+      <link rel="preload" href="/ignored.css" as="style">
+      <img src="http://127.0.0.1:4173/images/local.png">
+      <img src="http://example.test/images/off-origin.png">
+    `,
+    'http://127.0.0.1:4173/',
+  )
+
+  assert.deepEqual(urls, [
+    'http://127.0.0.1:4173/_next/image?url=%2Fhero.png&w=828&q=68',
+    'http://127.0.0.1:4173/_next/image?url=%2Fsmall.png&w=640&q=68',
+    'http://127.0.0.1:4173/images/card.png',
+    'http://127.0.0.1:4173/_next/static/chunks/app.js',
+    'http://127.0.0.1:4173/_next/font/local.woff2',
+    'http://127.0.0.1:4173/images/local.png',
+  ])
+})
+
+test('warmupRoutes fetches discovered assets and returns per-route asset counts', async () => {
+  const calls = []
+
+  const counts = await warmupRoutes({
+    baseUrl: 'http://127.0.0.1:4173',
+    fetchImpl: async (url, options) => {
+      calls.push({ options, url })
+      return {
+        ok: true,
+        status: 200,
+        text: async () =>
+          url.endsWith('/cart')
+            ? '<img src="/images/cart.png">'
+            : '<img src="/_next/image?url=%2Fhero.png&w=828&q=68"><link rel="preload" href="/_next/static/app.js">',
+      }
+    },
+    routes: ['/', '/cart'],
+    runs: 1,
+  })
+
+  assert.deepEqual(
+    calls.map((call) => call.url),
+    [
+      'http://127.0.0.1:4173/',
+      'http://127.0.0.1:4173/_next/image?url=%2Fhero.png&w=828&q=68',
+      'http://127.0.0.1:4173/_next/static/app.js',
+      'http://127.0.0.1:4173/cart',
+      'http://127.0.0.1:4173/images/cart.png',
+    ],
+  )
+  assert.deepEqual(Object.fromEntries(counts), { '/': 2, '/cart': 1 })
+})
+
+test('warmupRoutes honors no-asset-warmup diagnostics', async () => {
+  const calls = []
+
+  const counts = await warmupRoutes({
+    assetWarmup: false,
+    baseUrl: 'http://127.0.0.1:4173',
+    fetchImpl: async (url, options) => {
+      calls.push({ options, url })
+      return {
+        ok: true,
+        status: 200,
+        text: async () => '<img src="/_next/image?url=%2Fhero.png&w=828&q=68">',
+      }
+    },
+    routes: ['/'],
+    runs: 1,
+  })
+
+  assert.deepEqual(
+    calls.map((call) => call.url),
+    ['http://127.0.0.1:4173/'],
+  )
+  assert.deepEqual(Object.fromEntries(counts), { '/': 0 })
 })
 
 test('strict readiness fails on FAIL rows unless explicitly allowed', () => {
@@ -119,6 +210,13 @@ test('json summary exposes route-level readiness counts', () => {
       route: '/',
       status: 'PASS',
       tbtMs: 10,
+      fcpMs: 900,
+      lcpBreakdown: null,
+      layoutShiftSources: [],
+      speedIndexMs: 1200,
+      totalByteWeight: 100000,
+      ttfbMs: 80,
+      warmedAssetCount: 0,
     },
     {
       cls: null,
@@ -126,6 +224,13 @@ test('json summary exposes route-level readiness counts', () => {
       route: '/account',
       status: 'WARN',
       tbtMs: 10,
+      fcpMs: null,
+      lcpBreakdown: null,
+      layoutShiftSources: [],
+      speedIndexMs: null,
+      totalByteWeight: null,
+      ttfbMs: null,
+      warmedAssetCount: 0,
     },
     {
       cls: 0,
@@ -133,6 +238,18 @@ test('json summary exposes route-level readiness counts', () => {
       route: '/products/test-standard-tea',
       status: 'FAIL',
       tbtMs: 10,
+      fcpMs: 1100,
+      lcpBreakdown: {
+        elementRenderDelayMs: 100,
+        resourceLoadDelayMs: 200,
+        resourceLoadDurationMs: 300,
+        ttfbMs: 400,
+      },
+      layoutShiftSources: [],
+      speedIndexMs: 1600,
+      totalByteWeight: 125000,
+      ttfbMs: 400,
+      warmedAssetCount: 2,
     },
   ])
 
@@ -150,6 +267,13 @@ test('json summary exposes route-level readiness counts', () => {
         route: '/',
         status: 'PASS',
         tbtMs: 10,
+        fcpMs: 900,
+        lcpBreakdown: null,
+        layoutShiftSources: [],
+        speedIndexMs: 1200,
+        totalByteWeight: 100000,
+        ttfbMs: 80,
+        warmedAssetCount: 0,
       },
       {
         cls: null,
@@ -160,6 +284,13 @@ test('json summary exposes route-level readiness counts', () => {
         route: '/account',
         status: 'WARN',
         tbtMs: 10,
+        fcpMs: null,
+        lcpBreakdown: null,
+        layoutShiftSources: [],
+        speedIndexMs: null,
+        totalByteWeight: null,
+        ttfbMs: null,
+        warmedAssetCount: 0,
       },
       {
         cls: 0,
@@ -170,6 +301,18 @@ test('json summary exposes route-level readiness counts', () => {
         route: '/products/test-standard-tea',
         status: 'FAIL',
         tbtMs: 10,
+        fcpMs: 1100,
+        lcpBreakdown: {
+          elementRenderDelayMs: 100,
+          resourceLoadDelayMs: 200,
+          resourceLoadDurationMs: 300,
+          ttfbMs: 400,
+        },
+        layoutShiftSources: [],
+        speedIndexMs: 1600,
+        totalByteWeight: 125000,
+        ttfbMs: 400,
+        warmedAssetCount: 2,
       },
     ],
     total: 3,
@@ -262,36 +405,91 @@ test('threshold status calculation returns pass, fail, and warn states', () => {
 })
 
 test('summarizeLhr extracts required Lighthouse audits', () => {
-  const row = summarizeLhr('/', {
-    audits: {
-      'cumulative-layout-shift': { numericValue: 0.01 },
-      'largest-contentful-paint': { numericValue: 1800 },
-      'largest-contentful-paint-element': {
-        details: {
-          items: [
-            {
-              node: {
-                nodeLabel: 'Homepage hero image',
-                selector: 'section img',
-                snippet: '<img src="/images/homepage/homepage-hero.png">',
+  const row = summarizeLhr(
+    '/',
+    {
+      audits: {
+        'cumulative-layout-shift': { numericValue: 0.01 },
+        'first-contentful-paint': { numericValue: 900 },
+        'largest-contentful-paint': { numericValue: 1800 },
+        'largest-contentful-paint-element': {
+          details: {
+            items: [
+              {
+                node: {
+                  nodeLabel: 'Homepage hero image',
+                  selector: 'section img',
+                  snippet: '<img src="/images/homepage/homepage-hero.png">',
+                },
+                url: 'http://127.0.0.1:4173/_next/image?url=hero',
               },
-              url: 'http://127.0.0.1:4173/_next/image?url=hero',
-            },
-          ],
+            ],
+          },
         },
+        'lcp-breakdown-insight': {
+          details: {
+            items: [
+              {
+                items: [
+                  { duration: 400, subpart: 'timeToFirstByte' },
+                  { duration: 100, subpart: 'resourceLoadDelay' },
+                  { duration: 200, subpart: 'resourceLoadDuration' },
+                  { duration: 300, subpart: 'elementRenderDelay' },
+                ],
+                type: 'table',
+              },
+            ],
+            type: 'list',
+          },
+        },
+        'layout-shifts': {
+          details: {
+            items: [
+              {
+                node: {
+                  nodeLabel: 'Account bridge',
+                  selector: '.account-shell',
+                },
+                score: 0.128,
+              },
+            ],
+          },
+        },
+        'server-response-time': { numericValue: 120 },
+        'speed-index': { numericValue: 1250 },
+        'total-blocking-time': { numericValue: 50 },
+        'total-byte-weight': { numericValue: 123456 },
       },
-      'total-blocking-time': { numericValue: 50 },
+      categories: {
+        accessibility: { score: 0.97 },
+      },
+      finalDisplayedUrl: 'http://127.0.0.1:4173/',
     },
-    categories: {
-      accessibility: { score: 0.97 },
-    },
-    finalDisplayedUrl: 'http://127.0.0.1:4173/',
-  })
+    { warmedAssetCount: 3 },
+  )
 
   assert.equal(row.route, '/')
   assert.equal(row.lcpMs, 1800)
   assert.equal(row.cls, 0.01)
   assert.equal(row.tbtMs, 50)
+  assert.equal(row.fcpMs, 900)
+  assert.equal(row.speedIndexMs, 1250)
+  assert.equal(row.ttfbMs, 120)
+  assert.equal(row.totalByteWeight, 123456)
+  assert.deepEqual(row.lcpBreakdown, {
+    elementRenderDelayMs: 300,
+    resourceLoadDelayMs: 100,
+    resourceLoadDurationMs: 200,
+    ttfbMs: 400,
+  })
+  assert.deepEqual(row.layoutShiftSources, [
+    {
+      nodeLabel: 'Account bridge',
+      score: 0.128,
+      selector: '.account-shell',
+    },
+  ])
+  assert.equal(row.warmedAssetCount, 3)
   assert.equal(row.a11yScore, 97)
   assert.equal(row.status, 'PASS')
   assert.deepEqual(row.lcpElement, {
@@ -299,10 +497,7 @@ test('summarizeLhr extracts required Lighthouse audits', () => {
     selector: 'section img',
     snippet: '<img src="/images/homepage/homepage-hero.png">',
   })
-  assert.equal(
-    row.lcpResourceUrl,
-    'http://127.0.0.1:4173/_next/image?url=hero',
-  )
+  assert.equal(row.lcpResourceUrl, 'http://127.0.0.1:4173/_next/image?url=hero')
   assert.equal(row.observedUrl, 'http://127.0.0.1:4173/')
 })
 
@@ -389,6 +584,13 @@ test('json summary includes LCP diagnostics and observed URL fields', () => {
       route: '/',
       status: 'PASS',
       tbtMs: 10,
+      fcpMs: 900,
+      lcpBreakdown: null,
+      layoutShiftSources: [],
+      speedIndexMs: 1200,
+      totalByteWeight: 100000,
+      ttfbMs: 80,
+      warmedAssetCount: 2,
     },
   ])
 
@@ -405,7 +607,101 @@ test('json summary includes LCP diagnostics and observed URL fields', () => {
     route: '/',
     status: 'PASS',
     tbtMs: 10,
+    fcpMs: 900,
+    lcpBreakdown: null,
+    layoutShiftSources: [],
+    speedIndexMs: 1200,
+    totalByteWeight: 100000,
+    ttfbMs: 80,
+    warmedAssetCount: 2,
   })
+})
+
+test('evidence document includes timing diagnostics with primary causes', () => {
+  const document = renderEvidenceDocument({
+    baseUrl: 'http://127.0.0.1:4173',
+    generatedAt: '2026-06-23T00:00:00.000Z',
+    routes: ['/'],
+    rows: [
+      {
+        a11yScore: 99,
+        cls: 0.005,
+        fcpMs: 900,
+        lcpBreakdown: {
+          elementRenderDelayMs: 100,
+          resourceLoadDelayMs: 1200,
+          resourceLoadDurationMs: 300,
+          ttfbMs: 200,
+        },
+        lcpElement: null,
+        lcpMs: 2600,
+        lcpResourceUrl:
+          'http://127.0.0.1:4173/_next/image?url=%2Fhero.png&w=828&q=68',
+        layoutShiftSources: [],
+        mitigation: 'LCP 2600ms exceeds 2500ms.',
+        observedUrl: 'http://127.0.0.1:4173/',
+        route: '/',
+        speedIndexMs: 1300,
+        status: 'FAIL',
+        tbtMs: 20,
+        totalByteWeight: 200000,
+        ttfbMs: 200,
+        warmedAssetCount: 2,
+      },
+    ],
+  })
+
+  assert.ok(document.includes('## Timing Diagnostics'))
+  assert.match(
+    document,
+    /\| \/ \| 900ms \| 2600ms \| 200ms \| 1300ms \| 200000 \| image-resource \|/,
+  )
+})
+
+test('non-Windows stopChild waits for exit and escalates after timeout', async () => {
+  const listeners = new Map()
+  const killCalls = []
+  let timeoutCallback = null
+  let clearedTimeout = false
+  const child = {
+    exitCode: null,
+    kill(signal) {
+      killCalls.push(signal)
+      if (signal === 'SIGKILL') {
+        child.signalCode = 'SIGKILL'
+        listeners.get('exit')?.(null, 'SIGKILL')
+      }
+      return true
+    },
+    on(event, listener) {
+      listeners.set(event, listener)
+      return child
+    },
+    pid: 123,
+    signalCode: null,
+  }
+  const stopChild = createStopChild({
+    clearTimeoutImpl: () => {
+      clearedTimeout = true
+    },
+    platform: 'linux',
+    setTimeoutImpl: (callback) => {
+      timeoutCallback = callback
+      return 'timer'
+    },
+    spawnImpl: () => {
+      throw new Error('taskkill should not run on linux')
+    },
+    timeoutMs: 5000,
+  })
+
+  const stopped = stopChild(child)
+  assert.deepEqual(killCalls, ['SIGTERM'])
+  timeoutCallback()
+  await stopped
+
+  assert.deepEqual(killCalls, ['SIGTERM', 'SIGKILL'])
+  assert.equal(clearedTimeout, true)
 })
 
 test('markdown table renders the launch evidence columns', () => {
