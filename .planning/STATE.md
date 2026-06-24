@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 17-11-PLAN.md; Phase 17 remains gaps_found on PERF-01
-last_updated: "2026-06-24T04:18:13.763Z"
-last_activity: 2026-06-24 -- Phase 17 planning complete
+stopped_at: Completed 17-12-PLAN.md
+last_updated: "2026-06-24T04:42:54.570Z"
+last_activity: 2026-06-24
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 24
-  completed_plans: 20
+  completed_plans: 21
   percent: 67
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 17 — PERF-01 gap-closure plans 17-12..17-15 are planned after no-evidence 17-11 execution
+**Current focus:** Phase 17 — PERF-01 gap-closure plan 17-12 complete; execute 17-13..17-15 next
 
 ## Current Position
 
-Phase: 17 (operations-performance-and-final-production-readiness-audit) - GAPS FOUND
-Plan: 11 of 15 executed
+Phase: 17 (operations-performance-and-final-production-readiness-audit) — EXECUTING
+Plan: 12 of 15 executed
 Status: Ready to execute
-Last activity: 2026-06-24 -- Phase 17 planning complete
+Last activity: 2026-06-24
 
 ## Performance Metrics
 
@@ -99,6 +99,7 @@ Last activity: 2026-06-24 -- Phase 17 planning complete
 | Phase 17 P09 | 15 min | 3 tasks | 4 files |
 | Phase 17 P10 | 61 min | 5 tasks | 13 files |
 | Phase 17 P11 | 17 min | 4 tasks | 4 files |
+| Phase 17 P12 | 24 min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -180,6 +181,7 @@ Recent decisions affecting current work:
 - [Phase 17-10]: Performance evidence now includes timing diagnostics, warmed asset counts, and layout-shift diagnostics, but strict local Lighthouse still fails all seven representative routes. - The final audit remains 94/100 and Not launch-ready.
 - [Phase 17-10]: Performance acceptance is explicit-only: a valid dated artifact plus `--performance-acceptance docs/launch/performance-acceptance.md` is required before failed local performance can become non-blocking. - No such artifact exists.
 - [Phase 17-11]: No performance acceptance artifact was created because no dated owner, staging, or field Core Web Vitals acceptance evidence was supplied. - Phase 17 remains gaps_found on PERF-01 with refreshed evidence.
+- [Phase 17-12]: Next 16 launch-critical image discovery uses rendered `preload` instead of deprecated `priority`, eager loading, or high fetch priority combinations. - ProductCard may still expose a local `priority` API, but it renders to `preload` and is guarded by `launch-image-performance.test.mjs`.
 
 ### Roadmap Evolution
 
@@ -275,10 +277,10 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-24T02:42:39.693Z
-Stopped at: Completed 17-11-PLAN.md; Phase 17 remains gaps_found on PERF-01
+Last session: 2026-06-24T04:42:54.320Z
+Stopped at: Completed 17-12-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
 
-- Execute 17-12..17-15 to remediate `PERF-01` or validate a pre-existing dated owner/staging/field performance acceptance artifact, then rerun strict performance, final readiness, and Phase 17 verification.
+- Execute 17-13..17-15 to remediate `PERF-01` or validate a pre-existing dated owner/staging/field performance acceptance artifact, then rerun strict performance, final readiness, and Phase 17 verification.
