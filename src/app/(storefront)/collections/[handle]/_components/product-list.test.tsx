@@ -49,6 +49,13 @@ const product: CollectionProductSummary = {
   variants,
 }
 
+function getImagePreloads(html: string): string[] {
+  return (
+    html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ??
+    []
+  )
+}
+
 describe('ProductList', () => {
   it('uses a CSS grid layout with hairline-2 separators for product rows', () => {
     const html = renderToStaticMarkup(
@@ -75,7 +82,7 @@ describe('ProductList', () => {
     expect(html).not.toContain('divide-y')
   })
 
-  it('marks the first visible product row eager for product-image LCP candidates', () => {
+  it('preloads the first visible product row for product-image LCP candidates', () => {
     const products = Array.from({ length: 4 }, (_, index) => ({
       ...product,
       id: `gid://shopify/Product/product-${index}`,
@@ -91,8 +98,9 @@ describe('ProductList', () => {
 
     const html = renderToStaticMarkup(<ProductList products={products} />)
 
-    expect(html.match(/<img[^>]*loading="eager"/g)).toHaveLength(3)
-    expect(html.match(/<img[^>]*fetchPriority="high"/g)).toHaveLength(3)
+    expect(getImagePreloads(html)).toHaveLength(3)
+    expect(html.match(/<img[^>]*loading="eager"/g) ?? []).toHaveLength(0)
+    expect(html.match(/<img[^>]*fetchPriority="high"/g) ?? []).toHaveLength(0)
     expect(html.match(/<img[^>]*loading="lazy"/g)).toHaveLength(1)
   })
 

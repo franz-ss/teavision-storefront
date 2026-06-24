@@ -14,6 +14,13 @@ import { ProductCard } from './product-card'
   globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true
 
+function getImagePreloads(html: string): string[] {
+  return (
+    html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ??
+    []
+  )
+}
+
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
 }))
@@ -118,21 +125,23 @@ describe('ProductCard', () => {
     expect(html).toContain('Add Tea Masters Sencha Green Tea to cart')
   })
 
-  it('marks priority product imagery eager for above-the-fold LCP candidates', () => {
+  it('preloads priority product imagery for above-the-fold LCP candidates', () => {
     const html = renderToStaticMarkup(
       <ProductCard product={product} priority />,
     )
 
-    expect(html).toContain('loading="eager"')
-    expect(html).toContain('fetchPriority="high"')
+    expect(getImagePreloads(html)).toHaveLength(1)
+    expect(html).not.toContain('loading="eager"')
+    expect(html).not.toContain('fetchPriority="high"')
   })
 
   it('keeps non-priority product imagery lazy', () => {
     const html = renderToStaticMarkup(<ProductCard product={product} />)
 
+    expect(getImagePreloads(html)).toHaveLength(0)
     expect(html).toContain('loading="lazy"')
-    expect(html).toContain('fetchPriority="auto"')
     expect(html).not.toContain('loading="eager"')
+    expect(html).not.toContain('fetchPriority="auto"')
   })
 
   it('shows Quick View trigger for multi-variant products (CQA-02)', () => {
