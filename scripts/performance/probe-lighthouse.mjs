@@ -917,8 +917,18 @@ function lcpBreakdownEntries(row) {
   ].filter(([, value]) => typeof value === 'number' && Number.isFinite(value))
 }
 
+function hasMeaningfulLayoutShift(row) {
+  if ((row.cls ?? 0) > THRESHOLDS.cls) return true
+
+  return (
+    row.layoutShiftSources?.some(
+      (source) => typeof source.score === 'number' && source.score > 0.01,
+    ) ?? false
+  )
+}
+
 function derivePrimaryCause(row) {
-  if ((row.cls ?? 0) > THRESHOLDS.cls || row.layoutShiftSources?.length > 0) {
+  if (hasMeaningfulLayoutShift(row)) {
     return 'layout-shift'
   }
 
@@ -966,6 +976,18 @@ export function renderTimingDiagnostics(rows) {
   return lines.join('\n')
 }
 
+export function renderAssetWarmupDiagnostics(rows) {
+  const lines = ['| Route | Warmed Assets |', '| --- | ---: |']
+
+  for (const row of rows) {
+    lines.push(
+      `| ${escapeMarkdownCell(row.route)} | ${row.warmedAssetCount ?? 0} |`,
+    )
+  }
+
+  return lines.join('\n')
+}
+
 export function renderEvidenceDocument({
   baseUrl,
   generatedAt = new Date().toISOString(),
@@ -1001,6 +1023,10 @@ ${renderLcpDiagnostics(rows)}
 ## Timing Diagnostics
 
 ${renderTimingDiagnostics(rows)}
+
+## Asset Warmup Diagnostics
+
+${renderAssetWarmupDiagnostics(rows)}
 
 ## Launch Blocking Status
 

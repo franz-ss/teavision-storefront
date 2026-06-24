@@ -648,6 +648,32 @@ test('evidence document includes timing diagnostics with primary causes', () => 
         ttfbMs: 200,
         warmedAssetCount: 2,
       },
+      {
+        a11yScore: 99,
+        cls: 0.0001,
+        fcpMs: 900,
+        lcpBreakdown: null,
+        lcpElement: null,
+        lcpMs: 2700,
+        lcpResourceUrl:
+          'http://127.0.0.1:4173/_next/image?url=%2Fproduct.png&w=640&q=68',
+        layoutShiftSources: [
+          {
+            nodeLabel: 'Breadcrumb',
+            score: 0.0001,
+            selector: 'nav span',
+          },
+        ],
+        mitigation: 'LCP 2700ms exceeds 2500ms.',
+        observedUrl: 'http://127.0.0.1:4173/products/test-standard-tea',
+        route: '/products/test-standard-tea',
+        speedIndexMs: 1200,
+        status: 'FAIL',
+        tbtMs: 20,
+        totalByteWeight: 190000,
+        ttfbMs: 200,
+        warmedAssetCount: 1,
+      },
     ],
   })
 
@@ -656,6 +682,12 @@ test('evidence document includes timing diagnostics with primary causes', () => 
     document,
     /\| \/ \| 900ms \| 2600ms \| 200ms \| 1300ms \| 200000 \| image-resource \|/,
   )
+  assert.match(
+    document,
+    /\| \/products\/test-standard-tea \| 900ms \| 2700ms \| 200ms \| 1200ms \| 190000 \| image-resource \|/,
+  )
+  assert.ok(document.includes('## Asset Warmup Diagnostics'))
+  assert.match(document, /\| \/ \| 2 \|/)
 })
 
 test('non-Windows stopChild waits for exit and escalates after timeout', async () => {

@@ -8,8 +8,8 @@ import { cn } from '@/lib/utils'
 import './globals.css'
 
 const spectral = Spectral({
-  weight: ['300', '400', '500', '600'],
-  style: ['normal', 'italic'],
+  weight: ['400', '500'],
+  style: ['normal'],
   subsets: ['latin'],
   variable: '--font-spectral',
   display: 'swap',
@@ -26,12 +26,14 @@ const spaceMono = Space_Mono({
   subsets: ['latin'],
   variable: '--font-space-mono',
   display: 'swap',
+  preload: false,
 })
 
 const caveat = Caveat({
   subsets: ['latin'],
   variable: '--font-caveat',
   display: 'swap',
+  preload: false,
 })
 
 export const metadata: Metadata = withNoindexRobots({
