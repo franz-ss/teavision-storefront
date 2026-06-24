@@ -25,8 +25,19 @@ function fontConfig(source, name) {
 test('root layout keeps launch-critical fonts lightweight', async () => {
   const source = await readFile(sourcePath('src', 'app', 'layout.tsx'), 'utf8')
   const spectral = fontConfig(source, 'spectral')
+  const hankenGrotesk = fontConfig(source, 'hankenGrotesk')
   const spaceMono = fontConfig(source, 'spaceMono')
   const caveat = fontConfig(source, 'caveat')
+
+  for (const [name, config] of [
+    ['spectral', spectral],
+    ['hankenGrotesk', hankenGrotesk],
+    ['spaceMono', spaceMono],
+    ['caveat', caveat],
+  ]) {
+    assert.match(config, /display:\s*'optional'/, `${name} should use optional display`)
+    assert.doesNotMatch(config, /display:\s*'swap'/, `${name} should not use swap display`)
+  }
 
   assert.match(spectral, /weight:\s*\[\s*'400',\s*'500'\s*\]/)
   assert.match(spectral, /style:\s*\[\s*'normal'\s*\]/)

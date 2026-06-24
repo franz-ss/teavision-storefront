@@ -12,27 +12,27 @@ const spectral = Spectral({
   style: ['normal'],
   subsets: ['latin'],
   variable: '--font-spectral',
-  display: 'swap',
+  display: 'optional',
 })
 
 const hankenGrotesk = Hanken_Grotesk({
   subsets: ['latin'],
   variable: '--font-hanken-grotesk',
-  display: 'swap',
+  display: 'optional',
 })
 
 const spaceMono = Space_Mono({
   weight: ['400', '700'],
   subsets: ['latin'],
   variable: '--font-space-mono',
-  display: 'swap',
+  display: 'optional',
   preload: false,
 })
 
 const caveat = Caveat({
   subsets: ['latin'],
   variable: '--font-caveat',
-  display: 'swap',
+  display: 'optional',
   preload: false,
 })
 
