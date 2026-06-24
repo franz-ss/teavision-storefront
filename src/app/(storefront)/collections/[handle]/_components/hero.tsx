@@ -16,10 +16,6 @@ type HeroProps = {
   storyDisclosure?: React.ReactNode
 }
 
-function isLocalLaunchLcpImage(url: string): boolean {
-  return url.startsWith('/images/') && url.endsWith('-lcp.avif')
-}
-
 export function Hero({
   collectionTitle,
   heroDescription,
@@ -46,7 +42,6 @@ export function Hero({
                   sizes="(min-width: 1480px) 1480px, 100vw"
                   className="w-full object-cover"
                   preload
-                  unoptimized={isLocalLaunchLcpImage(bannerImage.url)}
                 />
               </div>
             </Section.Container>
@@ -106,7 +101,6 @@ export function Hero({
             sizes="100vw"
             className="object-cover opacity-35"
             aria-hidden="true"
-            unoptimized={isLocalLaunchLcpImage(heroImage.url)}
           />
         </div>
       ) : null}

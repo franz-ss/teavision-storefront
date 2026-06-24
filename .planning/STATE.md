@@ -4,8 +4,8 @@ milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: Blocked on revised PERF-01 gap plan
 stopped_at: "Plan 17-15 strict performance rerun still has seven route FAIL rows and no performance acceptance artifact exists"
-last_updated: "2026-06-24T09:07:27.573Z"
-last_activity: 2026-06-24 -- Plan 17-15 blocked on PERF-01 after strict readiness rerun
+last_updated: "2026-06-24T09:23:58.959Z"
+last_activity: 2026-06-24 -- Plan 17-15 cleanup removed probe-only image branches; PERF-01 remains blocked
 progress:
   total_phases: 3
   completed_phases: 2
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 Phase: 17 (operations-performance-and-final-production-readiness-audit) — BLOCKED
 Plan: 15 of 15 blocked (revised 17-15)
 Status: Blocked on PERF-01
-Last activity: 2026-06-24 -- Plan 17-15 blocked on PERF-01 after strict readiness rerun
+Last activity: 2026-06-24 -- Plan 17-15 cleanup removed probe-only image branches; PERF-01 remains blocked
 
 ## Performance Metrics
 
@@ -216,7 +216,7 @@ Recent decisions affecting current work:
 - Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
 - v1.3 Customer Account launch gates remain external/admin-dependent: Shopify Customer Accounts setup, Headless/Hydrogen credentials, protected customer data access, callback/logout URLs, HTTPS OAuth testing, real hosted checkout approval, and authoritative B2B/company-location pricing checks.
 - Phase 17 has executed 11 base plans, gap-closure plans 17-12 through 17-14, and revised 17-15 contract repairs; 17-15 remains blocked because strict performance still fails and no valid dated owner/staging/field acceptance artifact exists.
-- Plan 17-15 remains blocked on PERF-01 after gap-closure execution: strict local Lighthouse still records seven FAIL route rows, final readiness is 94/100 with 16/17 automated checks passing, performance is the only failed automated check, and docs/launch/performance-acceptance.md is absent. Latest evidence: docs/launch/performance-evidence.md generated 2026-06-24T09:04:43.405Z and docs/launch/final-production-readiness-report.md generated 2026-06-24T09:05:27.039Z.
+- Plan 17-15 remains blocked on PERF-01 after cleanup execution: strict local Lighthouse still records seven FAIL route rows, final readiness is 94/100 with 16/17 automated checks passing, performance is the only failed automated check, and docs/launch/performance-acceptance.md is absent. Latest evidence: docs/launch/performance-evidence.md generated 2026-06-24T09:23:16.160Z and docs/launch/final-production-readiness-report.md generated 2026-06-24T09:23:58.959Z.
 
 ### Quick Tasks Completed
 
