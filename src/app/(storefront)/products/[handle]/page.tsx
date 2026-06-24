@@ -15,7 +15,7 @@ import { SITE_URL } from '@/lib/seo/site-url'
 import { getTrustooProductRatings } from '@/lib/reviews/trustoo'
 import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
 import { RichText } from '@/components/ui/rich-text'
-import { Badge, Eyebrow, Section, StarRating } from '@/components/ui'
+import { Badge, Eyebrow, Section, Skeleton, StarRating } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 
 import { CustomersAlsoBought } from './_components/customers-also-bought'
@@ -409,34 +409,31 @@ export default function ProductPage({ params, searchParams }: Props) {
           >
             <span className="sr-only">Loading product</span>
             <div className="min-w-0">
-              <div className="bg-paper-2 aspect-[1/1.05] w-full animate-pulse rounded-lg motion-reduce:animate-none" />
+              <Skeleton className="aspect-[1/1.05] w-full rounded-lg" />
               <div className="mt-3 grid grid-cols-4 gap-3">
                 {Array.from({ length: 4 }, (_, index) => (
-                  <div
-                    key={index}
-                    className="bg-paper-2 aspect-square animate-pulse rounded-lg motion-reduce:animate-none"
-                  />
+                  <Skeleton key={index} className="aspect-square rounded-lg" />
                 ))}
               </div>
             </div>
             <div className="flex min-w-0 flex-col gap-4">
-              <div className="bg-paper-2 h-3 w-56 animate-pulse rounded-full motion-reduce:animate-none" />
-              <div className="bg-paper-2 h-15 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-paper-2 h-8 w-44 animate-pulse rounded motion-reduce:animate-none" />
+              <Skeleton className="h-3 w-56 rounded-full" />
+              <Skeleton className="h-15 w-3/4" />
+              <Skeleton className="h-8 w-44" />
               <div className="border-hairline bg-card flex flex-col gap-3 rounded-lg border p-4">
-                <div className="bg-paper-2 h-5 w-24 animate-pulse rounded motion-reduce:animate-none" />
-                <div className="bg-paper-2 h-12 w-full animate-pulse rounded motion-reduce:animate-none" />
-                <div className="bg-paper-2 h-12 w-full animate-pulse rounded motion-reduce:animate-none" />
+                <Skeleton className="h-5 w-24" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
               </div>
               <div className="flex flex-col gap-2">
-                <div className="bg-paper-2 h-4 w-full animate-pulse rounded motion-reduce:animate-none" />
-                <div className="bg-paper-2 h-4 w-11/12 animate-pulse rounded motion-reduce:animate-none" />
-                <div className="bg-paper-2 h-4 w-2/3 animate-pulse rounded motion-reduce:animate-none" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-11/12" />
+                <Skeleton className="h-4 w-2/3" />
               </div>
             </div>
             <div className="border-hairline flex flex-col gap-6 border-t pt-10 lg:col-span-2">
-              <div className="bg-paper-2 h-7 w-32 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-paper-2 h-24 w-full animate-pulse rounded-lg motion-reduce:animate-none" />
+              <Skeleton className="h-7 w-32" />
+              <Skeleton className="h-24 w-full rounded-lg" />
             </div>
           </div>
         }

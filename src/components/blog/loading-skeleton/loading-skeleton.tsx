@@ -1,4 +1,4 @@
-import { Card, Section } from '@/components/ui'
+import { Card, Section, Skeleton } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 type LoadingSkeletonProps = {
@@ -78,20 +78,20 @@ export function BlogLoadingSkeleton({
                       <div className="bg-paper relative aspect-16/10 animate-pulse overflow-hidden rounded-lg motion-reduce:animate-none" />
                       <div className="flex flex-1 flex-col p-5">
                         <div className="mb-3 flex gap-2">
-                          <div className="bg-paper-2 h-3 w-16 animate-pulse rounded motion-reduce:animate-none" />
-                          <div className="bg-paper-2 h-3 w-20 animate-pulse rounded motion-reduce:animate-none" />
+                          <Skeleton className="h-3 w-16" />
+                          <Skeleton className="h-3 w-20" />
                         </div>
                         <div className="grid gap-2">
-                          <div className="bg-paper-2 h-8 animate-pulse rounded motion-reduce:animate-none" />
-                          <div className="bg-paper-2 h-8 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
+                          <Skeleton className="h-8" />
+                          <Skeleton className="h-8 w-4/5" />
                         </div>
                         <div className="mt-4 grid gap-2">
-                          <div className="bg-paper-2 h-4 animate-pulse rounded motion-reduce:animate-none" />
-                          <div className="bg-paper-2 h-4 w-11/12 animate-pulse rounded motion-reduce:animate-none" />
-                          <div className="bg-paper-2 h-4 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
+                          <Skeleton className="h-4" />
+                          <Skeleton className="h-4 w-11/12" />
+                          <Skeleton className="h-4 w-3/4" />
                         </div>
                         <div className="mt-auto pt-5">
-                          <div className="bg-paper-2 h-3 w-40 animate-pulse rounded motion-reduce:animate-none" />
+                          <Skeleton className="h-3 w-40" />
                         </div>
                       </div>
                     </div>
@@ -146,20 +146,20 @@ export function BlogLoadingSkeleton({
                     <div className="bg-paper relative aspect-16/10 animate-pulse overflow-hidden rounded-lg motion-reduce:animate-none" />
                     <div className="flex flex-1 flex-col p-5">
                       <div className="mb-3 flex gap-2">
-                        <div className="bg-paper-2 h-3 w-16 animate-pulse rounded motion-reduce:animate-none" />
-                        <div className="bg-paper-2 h-3 w-18 animate-pulse rounded motion-reduce:animate-none" />
+                        <Skeleton className="h-3 w-16" />
+                        <Skeleton className="h-3 w-18" />
                       </div>
                       <div className="grid gap-2">
-                        <div className="bg-paper-2 h-6 animate-pulse rounded motion-reduce:animate-none" />
-                        <div className="bg-paper-2 h-6 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
+                        <Skeleton className="h-6" />
+                        <Skeleton className="h-6 w-4/5" />
                       </div>
                       <div className="mt-4 grid gap-2">
-                        <div className="bg-paper-2 h-4 animate-pulse rounded motion-reduce:animate-none" />
-                        <div className="bg-paper-2 h-4 w-11/12 animate-pulse rounded motion-reduce:animate-none" />
-                        <div className="bg-paper-2 h-4 w-3/4 animate-pulse rounded motion-reduce:animate-none" />
+                        <Skeleton className="h-4" />
+                        <Skeleton className="h-4 w-11/12" />
+                        <Skeleton className="h-4 w-3/4" />
                       </div>
                       <div className="mt-auto pt-5">
-                        <div className="bg-paper-2 h-3 w-40 animate-pulse rounded motion-reduce:animate-none" />
+                        <Skeleton className="h-3 w-40" />
                       </div>
                     </div>
                   </div>

@@ -23,6 +23,7 @@ import {
   Eyebrow,
   Price,
   QuantityStepper,
+  Skeleton,
   StarRating,
   ToggleButton,
 } from '@/components/ui'
@@ -275,11 +276,11 @@ export function ProductQuickView({
             aria-label="Loading product details"
           >
             <span className="sr-only">Loading product details…</span>
-            <div className="bg-paper-2 aspect-[1/1.05] animate-pulse rounded-lg motion-reduce:animate-none" />
+            <Skeleton className="aspect-square rounded-lg" />
             <div className="grid content-start gap-4">
-              <div className="bg-paper-2 h-3 w-48 animate-pulse rounded-full motion-reduce:animate-none" />
-              <div className="bg-paper-2 h-10 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-paper-2 h-28 animate-pulse rounded-lg motion-reduce:animate-none" />
+              <Skeleton className="h-3 w-48 rounded-full" />
+              <Skeleton className="h-10 w-4/5" />
+              <Skeleton className="h-28 rounded-lg" />
             </div>
           </div>
         ) : productData ? (

@@ -1,4 +1,4 @@
-import { Section } from '@/components/ui'
+import { Section, Skeleton } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 type LoadingSkeletonProps = {
@@ -23,8 +23,8 @@ export function LoadingSkeleton({
       <Section.Root tone="transparent" spacing="none">
         <Section.Container className="pt-6">
           <div className="overflow-hidden" aria-hidden="true">
-            <div
-              className="bg-paper-2 aspect-16/7 w-full animate-pulse motion-reduce:animate-none"
+            <Skeleton
+              className="aspect-16/7 w-full rounded-none"
               data-skeleton="hero"
             />
           </div>
@@ -36,11 +36,11 @@ export function LoadingSkeleton({
             className="flex flex-wrap items-center gap-2 pt-5.5"
             aria-hidden="true"
           >
-            <div className="bg-paper-2 h-3 w-10 animate-pulse rounded motion-reduce:animate-none" />
-            <div className="bg-paper-2 h-3 w-1.5 animate-pulse rounded motion-reduce:animate-none" />
-            <div className="bg-paper-2 h-3 w-20 animate-pulse rounded motion-reduce:animate-none" />
-            <div className="bg-paper-2 h-3 w-1.5 animate-pulse rounded motion-reduce:animate-none" />
-            <div className="bg-paper-2 h-3 w-72 max-w-full animate-pulse rounded motion-reduce:animate-none" />
+            <Skeleton className="h-3 w-10" />
+            <Skeleton className="h-3 w-1.5" />
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-3 w-1.5" />
+            <Skeleton className="h-3 w-72 max-w-full" />
           </div>
         </Section.Container>
       </Section.Root>
@@ -57,8 +57,8 @@ export function LoadingSkeleton({
         <Section.Container>
           <div className="mb-6" aria-hidden="true">
             <div className="mb-4 flex items-center justify-between gap-4">
-              <div className="bg-paper-2 h-3 w-24 animate-pulse rounded motion-reduce:animate-none" />
-              <div className="bg-paper-2 h-10 w-42 animate-pulse rounded motion-reduce:animate-none" />
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-10 w-42" />
             </div>
 
             <div className="bg-paper border-hairline mt-2 h-12 animate-pulse rounded-lg border motion-reduce:animate-none lg:hidden" />
@@ -75,11 +75,7 @@ export function LoadingSkeleton({
                 <div className="bg-brand/20 mt-4 h-10 w-full animate-pulse rounded-full motion-reduce:animate-none" />
               </div>
               {Array.from({ length: sidebarRowCount }, (_, index) => (
-                <div
-                  key={index}
-                  className="bg-paper-2 h-9 animate-pulse rounded motion-reduce:animate-none"
-                  data-skeleton="sidebar"
-                />
+                <Skeleton key={index} className="h-9" data-skeleton="sidebar" />
               ))}
             </div>
             <ul
@@ -93,11 +89,11 @@ export function LoadingSkeleton({
                   className="border-hairline-2"
                   data-skeleton="product"
                 >
-                  <div className="bg-paper-2 aspect-25/28 animate-pulse rounded-lg motion-reduce:animate-none" />
+                  <Skeleton className="aspect-25/28 rounded-lg" />
                   <div className="pt-4">
-                    <div className="bg-paper-2 mb-1 h-3 w-18 animate-pulse rounded motion-reduce:animate-none" />
-                    <div className="bg-paper-2 my-1.5 h-6 w-4/5 animate-pulse rounded motion-reduce:animate-none" />
-                    <div className="bg-paper-2 mt-1.5 h-4 w-20 animate-pulse rounded motion-reduce:animate-none" />
+                    <Skeleton className="mb-1 h-3 w-18" />
+                    <Skeleton className="my-1.5 h-6 w-4/5" />
+                    <Skeleton className="mt-1.5 h-4 w-20" />
                   </div>
                 </li>
               ))}
