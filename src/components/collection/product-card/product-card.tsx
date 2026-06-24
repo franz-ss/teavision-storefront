@@ -51,7 +51,7 @@ export function ProductCard({
   return (
     <article className={cn('group relative flex flex-col', className)}>
       {/* Media block */}
-      <div className="bg-white relative aspect-square overflow-hidden rounded-lg">
+      <div className="relative aspect-square overflow-hidden rounded-lg bg-white">
         <Link
           href={productUrl}
           tabIndex={-1}
@@ -152,7 +152,7 @@ export function ProductCard({
           <Price
             price={product.priceRange.minVariantPrice}
             size="sm"
-            className="font-bold"
+            className="font-sans font-bold"
           />
         </div>
       </div>
