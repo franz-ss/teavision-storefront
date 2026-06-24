@@ -1,5 +1,3 @@
-import { Section } from '@/components/ui'
-
 import { LoginPanel, type LoginReason } from '../_components/login-panel'
 import { getAccountLoginStartHref } from '../_lib/return-path'
 
@@ -26,17 +24,11 @@ export default async function AccountLoginPage({
   const params = await searchParams
 
   return (
-    <Section.Root
-      tone="surface"
-      spacing="compact"
-      className="min-h-136 md:min-h-128"
-    >
-      <Section.Container variant="compact">
-        <LoginPanel
-          loginHref={getAccountLoginStartHref(params.returnTo ?? null)}
-          reason={getLoginReason(params.reason)}
-        />
-      </Section.Container>
-    </Section.Root>
+    <div className="min-h-136 md:min-h-128">
+      <LoginPanel
+        loginHref={getAccountLoginStartHref(params.returnTo ?? null)}
+        reason={getLoginReason(params.reason)}
+      />
+    </div>
   )
 }

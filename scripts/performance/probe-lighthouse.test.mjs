@@ -674,6 +674,31 @@ test('evidence document includes timing diagnostics with primary causes', () => 
         ttfbMs: 200,
         warmedAssetCount: 1,
       },
+      {
+        a11yScore: 95,
+        cls: 0.128,
+        fcpMs: 2400,
+        lcpBreakdown: null,
+        lcpElement: null,
+        lcpMs: 5200,
+        lcpResourceUrl: null,
+        layoutShiftSources: [
+          {
+            nodeLabel: null,
+            score: 0.127675,
+            selector: null,
+          },
+        ],
+        mitigation: 'CLS 0.128 exceeds 0.1.',
+        observedUrl: 'http://127.0.0.1:4173/account/login?returnTo=%2Faccount',
+        route: '/account',
+        speedIndexMs: 2400,
+        status: 'FAIL',
+        tbtMs: 30,
+        totalByteWeight: 180000,
+        ttfbMs: 10,
+        warmedAssetCount: 1,
+      },
     ],
   })
 
@@ -688,6 +713,11 @@ test('evidence document includes timing diagnostics with primary causes', () => 
   )
   assert.ok(document.includes('## Asset Warmup Diagnostics'))
   assert.match(document, /\| \/ \| 2 \|/)
+  assert.ok(document.includes('## Layout Shift Diagnostics'))
+  assert.match(
+    document,
+    /\| \/account \| 0\.128 \| Lighthouse source 1 \(node unavailable\) \| Lighthouse did not expose it \| 0\.128 \|/,
+  )
 })
 
 test('non-Windows stopChild waits for exit and escalates after timeout', async () => {

@@ -988,6 +988,52 @@ export function renderAssetWarmupDiagnostics(rows) {
   return lines.join('\n')
 }
 
+function layoutShiftSourceLabel(source, index) {
+  return (
+    source.selector ??
+    source.nodeLabel ??
+    `Lighthouse source ${index + 1} (node unavailable)`
+  )
+}
+
+function meaningfulLayoutShiftSources(row) {
+  if (!hasMeaningfulLayoutShift(row)) return []
+
+  return (row.layoutShiftSources ?? []).filter((source) => {
+    if ((row.cls ?? 0) > THRESHOLDS.cls) return true
+    return typeof source.score === 'number' && source.score > 0.01
+  })
+}
+
+export function renderLayoutShiftDiagnostics(rows) {
+  const lines = [
+    '| Route | CLS | Source | Node Label | Score |',
+    '| --- | ---: | --- | --- | ---: |',
+  ]
+
+  for (const row of rows) {
+    const sources = meaningfulLayoutShiftSources(row)
+
+    for (const [index, source] of sources.entries()) {
+      lines.push(
+        `| ${escapeMarkdownCell(row.route)} | ${formatCls(
+          row.cls,
+        )} | ${escapeMarkdownCell(
+          layoutShiftSourceLabel(source, index),
+        )} | ${escapeMarkdownCell(
+          source.nodeLabel ?? 'Lighthouse did not expose it',
+        )} | ${formatCls(source.score ?? null)} |`,
+      )
+    }
+  }
+
+  if (lines.length === 2) {
+    return 'No meaningful layout-shift sources were exposed by Lighthouse.'
+  }
+
+  return lines.join('\n')
+}
+
 export function renderEvidenceDocument({
   baseUrl,
   generatedAt = new Date().toISOString(),
@@ -1027,6 +1073,10 @@ ${renderTimingDiagnostics(rows)}
 ## Asset Warmup Diagnostics
 
 ${renderAssetWarmupDiagnostics(rows)}
+
+## Layout Shift Diagnostics
+
+${renderLayoutShiftDiagnostics(rows)}
 
 ## Launch Blocking Status
 
