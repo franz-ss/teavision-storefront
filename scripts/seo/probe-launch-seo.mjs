@@ -31,6 +31,33 @@ const SOURCE_PATHS = {
     'docs/launch/seo-url-parity-register.md',
 }
 
+export const STRUCTURED_DATA_ROUTE_EXPECTATIONS = [
+  {
+    path: '/pages/contact',
+    requiredSchemaTypes: ['LocalBusiness'],
+  },
+  {
+    path: '/pages/faq',
+    requiredSchemaTypes: ['FAQPage'],
+  },
+  {
+    path: '/pages/bulk-wholesale-supply',
+    requiredSchemaTypes: ['Service', 'FAQPage'],
+  },
+  {
+    path: '/pages/private-label-packing',
+    requiredSchemaTypes: ['Service'],
+  },
+  {
+    path: '/pages/tea-bag-manufacturer',
+    requiredSchemaTypes: ['Service'],
+  },
+  {
+    path: '/pages/custom-tea-blends',
+    requiredSchemaTypes: ['Service'],
+  },
+]
+
 function parseArgs(argv) {
   const args = {
     baseUrl: process.env.SEO_PROBE_BASE_URL ?? DEFAULT_BASE_URL,
@@ -1043,7 +1070,61 @@ async function runEnabledMode(baseUrl, productPath) {
     )
   }
 
+  results.push(...(await probeStructuredDataRoutes(baseUrl)))
   results.push(...(await probeProductStructuredData(baseUrl, productPath)))
+
+  return results
+}
+
+async function probeStructuredDataRoutes(baseUrl) {
+  const results = []
+
+  for (const expectation of STRUCTURED_DATA_ROUTE_EXPECTATIONS) {
+    try {
+      const { response, text } = await fetchText(baseUrl, expectation.path)
+
+      if (!response.ok) {
+        for (const schemaType of expectation.requiredSchemaTypes) {
+          results.push(
+            fail(
+              `${schemaType} structured data`,
+              expectation.path,
+              `status ${response.status}`,
+            ),
+          )
+        }
+        continue
+      }
+
+      const values = extractJsonLd(text)
+
+      for (const schemaType of expectation.requiredSchemaTypes) {
+        results.push(
+          findSchemaNodes(values, schemaType).length > 0
+            ? pass(
+                `${schemaType} structured data`,
+                expectation.path,
+                `${schemaType} JSON-LD parsed`,
+              )
+            : fail(
+                `${schemaType} structured data`,
+                expectation.path,
+                `${schemaType} JSON-LD not found`,
+              ),
+        )
+      }
+    } catch (error) {
+      for (const schemaType of expectation.requiredSchemaTypes) {
+        results.push(
+          fail(
+            `${schemaType} structured data`,
+            expectation.path,
+            formatError(error),
+          ),
+        )
+      }
+    }
+  }
 
   return results
 }

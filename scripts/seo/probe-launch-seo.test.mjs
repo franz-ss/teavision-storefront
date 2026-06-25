@@ -115,3 +115,19 @@ test('structured data helpers parse Product schema inside arrays and graph objec
   assert.equal(hasVisibleProductReviewSummary(html), true)
   assert.equal(findSchemaNodes(values, 'Product')[0].name, 'Reviewed Tea')
 })
+
+test('structured data route expectations cover audit-required supported schema types', async () => {
+  const { STRUCTURED_DATA_ROUTE_EXPECTATIONS } =
+    await import('./probe-launch-seo.mjs')
+  const requiredTypes = new Set(
+    STRUCTURED_DATA_ROUTE_EXPECTATIONS.flatMap(
+      (expectation) => expectation.requiredSchemaTypes,
+    ),
+  )
+
+  assert.equal(requiredTypes.has('Service'), true)
+  assert.equal(requiredTypes.has('LocalBusiness'), true)
+  assert.equal(requiredTypes.has('FAQPage'), true)
+  assert.equal(requiredTypes.has('Review'), false)
+  assert.equal(requiredTypes.has('AggregateRating'), false)
+})
