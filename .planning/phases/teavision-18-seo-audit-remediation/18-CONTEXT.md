@@ -8,6 +8,8 @@
 
 Phase 18 resolves the 2026-06-25 staging-site SEO audit findings while preserving the headless Shopify storefront architecture, Next.js 16 Cache Components patterns, and existing owner-gated launch boundaries. It owns URL parity and deterministic redirect remediation, visible page heading hierarchy, collection content placement, metadata and indexation fixes, evidence-backed structured data additions, crawlable server-rendered HTML proof for collection and product pages, and post-remediation Core Web Vitals/Lighthouse evidence.
 
+Document compliance rule: the SEO audit PDF is the scope boundary. Phase 18 must map each implementation and evidence item to a finding or recommendation in `D:/Downloads/SEO Audit - Teavision Staging Site.pdf`. Existing project constraints may narrow unsafe implementation choices, but Phase 18 should not add unrelated SEO strategy, URL taxonomy, schema, or indexation changes.
+
 This phase does not run real Shopify hosted checkout, payment, shipping-rate, tax, order-creation, success-redirect, live Customer Account OAuth, protected customer data, B2B pricing, Search Console submission, DNS cutover, or production host redirect tests without explicit owner/operator approval and evidence. Phase 17 PERF-01 remains blocking unless strict metrics pass or a valid dated owner/staging/field Core Web Vitals acceptance artifact is supplied.
 
 </domain>
@@ -16,34 +18,35 @@ This phase does not run real Shopify hosted checkout, payment, shipping-rate, ta
 ## Implementation Decisions
 
 ### URL Parity and Redirect Ownership
-- **D-01:** Build a full launch URL inventory, not just an audit-focused list. Local planning can use live/current-site and headless crawls, app routes, Shopify/Sanity route helpers, current sitemap output, `next.config.ts` redirects, known legacy nested product URLs, policy/search aliases, repo docs, and any available SEO/operator slug exports.
-- **D-02:** Treat explicit owner/SEO migration exports as authoritative when supplied. Preserve local evidence, but explicit owner/operator exports override inferred local redirect mappings.
-- **D-03:** Treat Search Console indexed URL reports, production host redirect behavior, DNS/Vercel redirect proof, and Shopify-domain cutover proof as owner/operator-gated when they cannot be proven locally.
-- **D-04:** Put only deterministic, confirmed, stable, locally testable redirects directly into the Next app. Inferred, uncertain, host-level, Search Console, DNS/Vercel, and Shopify-domain redirects belong in the migration handoff register.
-- **D-05:** When owner/SEO exports are unavailable, final evidence may mark local deterministic redirect coverage as complete while explicitly listing missing export, Search Console, DNS, Vercel, production host, and Shopify-domain proof as owner/operator-gated residuals.
-- **D-06:** Assume `https://www.teavision.com.au` is the final strongest launch host for evidence and docs. Keep local/staging proof clearly separated from DNS/Vercel/cutover proof.
-- **D-07:** Defer the audit suggestion to simplify the blog listing from `/blogs/teavision-blogs` to `/blog/`. Phase 18 keeps `/blogs/teavision-blogs` canonical, fixes blog tag indexation/sitemap behavior now, and records `/blog/` as a migration/SEO-operator decision.
+- **D-01:** Build a URL parity inventory only to satisfy the audit's stated slug-parity and 301-redirect requirement: products, collections, generic pages, and the main blog listing recommendation. Local planning can use live/current-site and headless crawls, app routes, Shopify/Sanity route helpers, current sitemap output, `next.config.ts` redirects, known legacy nested product URLs, policy/search aliases, repo docs, and any available SEO/operator slug exports.
+- **D-02:** Require two-source confirmation before putting a redirect pair directly into app code: current/live crawl evidence plus one supporting source such as headless route inventory, Shopify/Sanity helper output, sitemap output, existing repo redirect, or explicit owner/SEO export.
+- **D-03:** Treat explicit owner/SEO migration exports as authoritative when supplied. Preserve local evidence, but explicit owner/operator exports override inferred local redirect mappings.
+- **D-04:** Put only deterministic, confirmed, stable, locally testable redirects directly into the Next app. Inferred, uncertain, host-level, DNS/Vercel, alternate-host, and Shopify-domain redirects belong in the migration handoff register.
+- **D-05:** Put unmatched legacy/current URLs in a severity-ranked handoff register with evidence, guessed target when useful, and the owner/SEO action needed. Do not add broad fallback redirects for uncertain mappings.
+- **D-06:** When owner/SEO exports are unavailable, final evidence may mark local deterministic redirect coverage as complete while explicitly listing missing export, DNS, Vercel, production host, alternate-host, and Shopify-domain proof as owner/operator-gated residuals.
+- **D-07:** Assume `https://www.teavision.com.au` is the final strongest launch host for evidence and docs. Keep local/staging proof clearly separated from DNS/Vercel/cutover proof.
+- **D-08:** Treat the `/blog/` simplification as an audit-listed optional recommendation, not as an unrelated enhancement. Phase 18 must either implement `/blog/` with appropriate 301 handling during the migration-stage redirect work, or record an explicit owner/SEO-operator handoff or deferment. Do not mark the audit item closed merely by fixing blog tag indexation.
 
 ### Visible H1 and Collection Content Placement
-- **D-08:** Banner-image collection pages must show a visible collection H1 below the banner artwork. Banner art can remain first, but collection pages need visible breadcrumb, H1, and brief intro before the product grid.
-- **D-09:** Long collection read-more SEO content belongs below the product grid. Above the grid should stay lean: breadcrumb, optional banner/hero image, visible H1, and brief intro.
-- **D-10:** Preserve exactly one page H1. Sanitize or demote imported Shopify rich-content H1/H2 headings to lower levels, generally H3+, inside collection read-more and product description blocks.
-- **D-11:** Product pages must enforce a strict one-visible-H1 rule: the product title is the only visible H1. Product descriptions, related/recommendation content, reviews, and imported snippets must not emit H1. Add representative PDP HTML evidence or tests.
+- **D-09:** Banner-image collection pages must show a visible collection H1 below the banner artwork. Banner art can remain first, but collection pages need visible breadcrumb, H1, and brief intro before the product grid.
+- **D-10:** Long collection read-more SEO content belongs below the product grid. Above the grid should stay lean: breadcrumb, optional banner/hero image, visible H1, and brief intro.
+- **D-11:** Preserve exactly one page H1. Sanitize or demote imported Shopify rich-content H1/H2 headings to lower levels, generally H3+, inside collection read-more and product description blocks.
+- **D-12:** Product pages must enforce a strict one-visible-H1 rule: the product title is the only visible H1. Product descriptions, related/recommendation content, reviews, and imported snippets must not emit H1. Add representative PDP HTML evidence or tests.
 
 ### Metadata, Canonical Host, Robots, and Blog Indexation
-- **D-12:** Remove or override the automatic `| Teavision` title suffix for SEO-target pages only: homepage, collection pages, and service/landing pages. Product pages may keep the brand suffix unless evidence shows title-length problems.
-- **D-13:** Make audit metadata/indexation fixes explicit and tested: root `lang="en-AU"`, account/login surfaces disallowed in `robots.txt`, `/search` remains noindexed, blog tag pages are removed from the sitemap, and tagged blog pages receive noindex behavior.
-- **D-14:** Keep canonical and sitemap URL generation env-driven through `SITE_URL` / `NEXT_PUBLIC_SITE_URL`. Phase 18 evidence and docs should validate against `https://www.teavision.com.au` as the launch target while marking DNS/Vercel redirect proof as operator-gated.
-- **D-15:** Filtered/category collection URLs, such as `/collections/dried-herbs/categories_australian-tea`, may render for UX but should canonicalize to the parent collection and stay out of sitemap unless later SEO evidence proves a filtered URL is intentionally ranking.
+- **D-13:** Remove or override the automatic `| Teavision` title suffix for SEO-target pages only: homepage, collection pages, and service/landing pages. Product pages may keep the brand suffix unless evidence shows title-length problems.
+- **D-14:** Make audit metadata/indexation fixes explicit and tested: root `lang="en-AU"`, account/login surfaces disallowed in `robots.txt`, `/search` remains noindexed, blog tag pages are removed from the sitemap, and tagged blog pages receive noindex behavior.
+- **D-15:** Keep canonical and sitemap URL generation env-driven through `SITE_URL` / `NEXT_PUBLIC_SITE_URL`. Phase 18 evidence and docs should validate against `https://www.teavision.com.au` as the launch target while marking DNS/Vercel redirect proof as operator-gated.
+- **D-16:** Do not introduce filtered/category collection canonical or indexation policy changes unless the URL parity inventory proves they are directly required by the audit's slug-parity, 301-redirect, or blog-tag noindex findings.
 
 ### Structured Data and Crawl/Performance Evidence
-- **D-16:** Add Service, LocalBusiness, FAQ, or Review structured data only where visible page content and trustworthy data already support it. Document gaps instead of inventing schema for audit checklist coverage.
-- **D-17:** For LocalBusiness JSON-LD, evaluate `/pages/contact` first. Emit only approved business details that are visibly present on the same page, except universal site basics such as name, URL, and logo already present in site chrome or global metadata. If the contact page lacks visible support for a field, document the missing evidence in the audit matrix rather than adding unsupported schema.
-- **D-18:** Review structured data is limited to PDP Product aggregate ratings when reliable Trustoo/Shopify-derived rating and review count data exists and is visibly represented. Do not add sitewide Review schema or testimonial-as-review markup without reliable visible source data.
-- **D-19:** Treat the audit's "CSR issue" as a crawlable HTML/static-shell problem unless new evidence proves true client-only rendering. Built production/fake-provider evidence must show representative collection and product responses include meaningful title, intro/description, product/card or buy-section content, metadata, canonical, and JSON-LD in HTML before browser hydration.
-- **D-20:** Broad skeleton shells must not mask crawl-critical collection or product content in first-response HTML. Planners should investigate Suspense/loading boundaries and Cache Components behavior using local Next 16 docs before changing route-level streaming.
-- **D-21:** Rerun CWV/Lighthouse after SEO fixes. Performance passes only if strict route metrics pass or a valid dated owner/staging/field Core Web Vitals acceptance artifact is supplied. Otherwise performance remains blocking and mitigations must be recorded.
-- **D-22:** Produce a final audit-to-evidence matrix mapping each PDF finding to remediation, code/tests/scripts, local proof, owner/operator handoff items, and residual risks. The matrix must include URL inventory/redirect register, H1 checks, metadata/robots/sitemap checks, structured-data validation, crawlable-HTML proof, and performance evidence.
+- **D-17:** Add Service, LocalBusiness, FAQ, or Review structured data only where visible page content and trustworthy data already support it. Document gaps instead of inventing schema for audit checklist coverage.
+- **D-18:** For LocalBusiness JSON-LD, emit only approved business details that are visibly present on the same page, except universal site basics such as name, URL, and logo already present in site chrome or global metadata. `/pages/contact` is a likely candidate to evaluate, but the audit requires LocalBusiness coverage, not a specific page. If no page visibly supports a field, document the missing evidence in the audit matrix rather than adding unsupported schema.
+- **D-19:** Review structured data is limited to PDP Product aggregate ratings when reliable Trustoo/Shopify-derived rating and review count data exists and is visibly represented. Do not add sitewide Review schema or testimonial-as-review markup without reliable visible source data.
+- **D-20:** Treat the audit's "CSR issue" as a crawlable HTML/static-shell problem unless new evidence proves true client-only rendering. Built production/fake-provider evidence must show representative collection and product responses include meaningful title, intro/description, product/card or buy-section content, metadata, canonical, and JSON-LD in HTML before browser hydration.
+- **D-21:** Broad skeleton shells must not mask crawl-critical collection or product content in first-response HTML. Planners should investigate Suspense/loading boundaries and Cache Components behavior using local Next 16 docs before changing route-level streaming.
+- **D-22:** Rerun CWV/Lighthouse after SEO fixes and specifically reconcile the audit-highlighted LCP concern, render-blocking requests, and unused JavaScript diagnostics. Performance passes only if strict route metrics pass or a valid dated owner/staging/field Core Web Vitals acceptance artifact is supplied. Otherwise performance remains blocking and mitigations must be recorded.
+- **D-23:** Produce a final audit-to-evidence matrix mapping each PDF finding to remediation, code/tests/scripts, local proof, owner/operator handoff items, and residual risks. The matrix must include URL inventory/redirect register, H1 checks, metadata/robots/sitemap checks, structured-data validation, crawlable-HTML proof, and performance evidence.
 
 ### the agent's Discretion
 No selected area was delegated to the agent. The planner has implementation discretion only inside the decision boundaries above.
@@ -143,23 +146,25 @@ No selected area was delegated to the agent. The planner has implementation disc
 <specifics>
 ## Specific Ideas
 
+- The SEO audit PDF is the binding scope source for Phase 18. Implementation should remediate the PDF's findings and recommendations exactly, with project safety constraints documented when they prevent unsafe or unsupported markup/proof.
 - The audit PDF explicitly flags collection pages with multiple H1s and a hidden/non-visible main H1 on some main category pages.
 - The audit asks for collection pages to keep only breadcrumb, optional banner image, visible H1, and brief intro before the product grid.
 - The audit flags product pages for multiple H1s coming from content not visibly on the page, including other product, collection, and homepage content paths.
 - The audit suggests removing unwanted brand title suffixes from homepage, collections, and SEO-target service pages, while product pages can usually keep the suffix.
 - The audit requests `lang="en-AU"`, account/login disallows in robots, final strongest host `https://www.teavision.com.au`, and blog tagged pages noindexed to avoid cannibalizing the main blog listing.
+- The audit suggests simplifying the main blog listing URL from `/blogs/teavision-blogs/` to `/blog/`. Phase 18 should either implement it with appropriate 301 handling or record an explicit owner/SEO migration-stage handoff/deferment.
 - The audit reports Organization and Product schema as present, and Service, LocalBusiness, Review, and FAQ schema as missing. Phase 18 should not invent unsupported schema.
-- LocalBusiness schema should start with `/pages/contact`, use a strict same-page visibility rule, and document unsupported fields instead of emitting them.
-- URL parity can close locally against deterministic inventory evidence, but missing owner/SEO exports, Search Console data, DNS/Vercel redirects, production host behavior, and Shopify-domain proof remain owner/operator-gated residuals.
+- LocalBusiness schema should use a strict same-page visibility rule and document unsupported fields instead of emitting them. `/pages/contact` is a likely first candidate, not a requirement from the audit PDF.
+- URL parity can close locally against deterministic inventory evidence, but missing owner/SEO exports, DNS/Vercel redirects, production host behavior, and Shopify-domain proof remain owner/operator-gated residuals. Search Console data may support migration decisions if supplied, but it is not an extra Phase 18 requirement from the PDF.
 - The audit's CSR screenshots show collection/PDP skeleton-like shells during loading; Phase 18 should prove meaningful HTML before hydration rather than merely proving browser-rendered DOM after hydration.
-- The audit's Lighthouse example showed mobile LCP around 3.5s and highlighted render-blocking requests and unused JavaScript; current Phase 17 evidence is stricter and still records seven route-level performance FAIL rows.
+- The audit's Lighthouse example showed mobile LCP around 3.5s and highlighted render-blocking requests and unused JavaScript. Phase 18 evidence should address those document findings while preserving the stricter Phase 17 PERF-01 launch gate.
 
 </specifics>
 
 <deferred>
 ## Deferred Ideas
 
-- `/blog/` canonical simplification and redirect can be revisited as a migration/SEO-operator decision after Phase 18. Phase 18 keeps `/blogs/teavision-blogs` canonical.
+No project-created deferred ideas. The audit-listed `/blog/` simplification must either be implemented with appropriate 301 handling or explicitly recorded as an owner/SEO migration-stage handoff/deferment.
 
 </deferred>
 

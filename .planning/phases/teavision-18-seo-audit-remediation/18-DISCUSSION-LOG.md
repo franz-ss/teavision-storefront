@@ -5,7 +5,9 @@
 
 **Date:** 2026-06-25
 **Phase:** 18-SEO Audit Remediation
-**Areas discussed:** URL parity and redirect ownership, Visible H1 and collection content placement, Metadata, canonical host, robots, and blog indexation, Structured data and crawl/performance evidence, LocalBusiness schema boundary, Redirect inventory closure
+**Areas discussed:** URL parity and redirect ownership, Visible H1 and collection content placement, Metadata, canonical host, robots, and blog indexation, Structured data and crawl/performance evidence, LocalBusiness schema boundary, Redirect inventory closure, Redirect confidence boundary, Crawlable HTML and performance evidence, Document compliance constraint
+
+**Supersession note:** After the follow-up instruction, "please make sure all decisions comply with the document, nothing more, nothing less," `18-CONTEXT.md` was tightened against `D:/Downloads/SEO Audit - Teavision Staging Site.pdf`. Earlier discussion choices remain below as human audit trail, but the final planning source is `18-CONTEXT.md`. The compliance pass removed broader SEO policy drift, downgraded `/pages/contact` from a LocalBusiness requirement to a likely candidate, removed filtered/category canonical policy as a standalone decision, and changed `/blog/` from a freeform deferred idea into an audit-listed item requiring implementation or explicit owner/SEO handoff.
 
 ---
 
@@ -282,10 +284,103 @@
 
 ---
 
+## Redirect Confidence Boundary
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Only proven pairs | Add redirects only when source and destination are confirmed by crawl/export/repo evidence and can be tested locally. Everything inferred goes to a handoff register. | ✓ |
+| Best-effort inferred pairs | Implement likely redirects when the destination is obvious, but label uncertain ones in evidence. | |
+| Broad catch-all safety net | Add pattern redirects for legacy URL families even when individual mappings are incomplete. | |
+
+**User's choice:** Only proven pairs.
+**Notes:** Direct app redirects require proven source/destination pairs with local testability; inferred mappings go to the handoff register.
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Two-source confirmation | Require current/live crawl plus one supporting source such as headless route inventory, Shopify/Sanity helper output, sitemap, repo redirect, or owner export. | ✓ |
+| Single authoritative source | Owner/SEO export alone can lock a pair; otherwise require local crawl evidence. | |
+| Local evidence only | No redirect pair lands unless repo/local crawl evidence proves it, even if an external export suggests it. | |
+
+**User's choice:** Two-source confirmation.
+**Notes:** Explicit owner/SEO exports still override inferred local evidence, but local evidence should be retained.
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Handoff with severity | Put unmatched URLs in a redirect/register document with severity, evidence, guessed target if any, and owner/SEO action needed. | ✓ |
+| No guesses | List unmatched URLs only, with no guessed targets, to avoid biasing the SEO operator. | |
+| Implement soft fallback | Route broad legacy families to parent collections/pages where exact targets are missing. | |
+
+**User's choice:** Handoff with severity.
+**Notes:** Unmatched legacy/current URLs go into a severity-ranked handoff register with evidence, guessed target when useful, and explicit owner/SEO action needed.
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Separate gated proof table | Local app redirects can pass, while DNS/Vercel/Search Console/Shopify-domain proof remains pending or owner-blocked in a separate table. | ✓ |
+| Block the whole redirect plan | Treat redirect remediation as incomplete until production-host proof is supplied. | |
+| Assume Vercel parity | Accept local `next.config.ts` redirect tests as production proof unless evidence contradicts it. | |
+
+**User's choice:** Separate gated proof table.
+**Notes:** Local app redirect proof stays separate from owner/operator production-host proof.
+
+---
+
+## Crawlable HTML and Performance Evidence
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Raw built HTML proof | Production build plus fake-provider/server HTML fetches must show meaningful collection/PDP title, intro/description, products or buy-section content, canonical metadata, and JSON-LD before hydration. | ✓ |
+| Browser DOM proof | Playwright-rendered DOM after hydration is enough if the visible page is correct. | |
+| Mixed proof | Raw HTML for metadata/headings only, browser DOM for product/grid/body content. | |
+
+**User's choice:** Raw built HTML proof.
+**Notes:** CSR/crawlability passes only with raw built HTML proof before hydration.
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Audit as blockers when they hide crawl-critical content | Skeletons are fine only outside title/intro/products/buy-section/metadata/JSON-LD first-response HTML. | ✓ |
+| Allow route shells if final hydrated DOM is complete | Skeletons are acceptable as long as users and crawlers eventually see content. | |
+| Remove all skeletons from PLP/PDP | Avoid any loading skeletons on collection and product pages. | |
+
+**User's choice:** Audit as blockers when they hide crawl-critical content.
+**Notes:** Broad skeleton/Suspense shells are blockers when they hide crawl-critical first-response content.
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Reuse strict Phase 17 gate | Phase 18 reruns evidence and records deltas, but cannot declare CWV closed unless strict route metrics pass or a valid dated acceptance artifact exists. | ✓ |
+| SEO-only pass | Phase 18 can pass if audit-specific routes improve, even while Phase 17 performance remains blocked. | |
+| Document only | Phase 18 does not try to close performance; it only references Phase 17's current status. | |
+
+**User's choice:** Reuse strict Phase 17 gate.
+**Notes:** Phase 18 inherits the strict Phase 17 performance gate while addressing the audit-highlighted LCP/render-blocking/unused-JS concerns.
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Matrix plus raw artifacts | Audit-finding matrix, raw HTML snapshots/assertions, Lighthouse/CWV report, before/after deltas, owner-gated residual table, and links to scripts/tests. | ✓ |
+| Summary doc only | One human-readable evidence summary is enough. | |
+| Automated test output only | Scripts/tests are the source of truth; docs just point to latest command output. | |
+
+**User's choice:** Matrix plus raw artifacts.
+**Notes:** The final SEO evidence pack should include an audit-finding matrix plus raw artifacts and links to scripts/tests.
+
+---
+
+## Document Compliance Constraint
+
+**User's instruction:** "please make sure all decisions comply with the document, nothing more, nothing less"
+
+**Applied to CONTEXT.md:**
+- The SEO audit PDF is now the scope boundary for Phase 18.
+- `/blog/` simplification is treated as an audit-listed item requiring implementation or explicit owner/SEO handoff, not as a general deferred idea.
+- Filtered/category collection canonical policy is no longer a standalone decision unless directly required by the audit's URL parity, 301, or blog-tag findings.
+- LocalBusiness schema uses visible approved details; `/pages/contact` is a likely candidate, not a PDF-mandated page.
+- CWV evidence specifically reconciles the audit-highlighted LCP, render-blocking, and unused-JavaScript findings while preserving the inherited Phase 17 gate.
+
+---
+
 ## the agent's Discretion
 
 No selected area was delegated to the agent.
 
 ## Deferred Ideas
 
-- `/blog/` canonical simplification and redirect can be revisited as a migration/SEO-operator decision after Phase 18.
+No project-created deferred ideas. The audit-listed `/blog/` simplification must either be implemented with appropriate 301 handling or explicitly recorded as an owner/SEO migration-stage handoff/deferment.
