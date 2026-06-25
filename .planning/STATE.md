@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Phase 18 UI-SPEC approved
-last_updated: "2026-06-25T10:09:08.708Z"
-last_activity: 2026-06-25 -- Phase 18 planning complete
+stopped_at: Completed 18-01-PLAN.md
+last_updated: "2026-06-25T10:51:55.349Z"
+last_activity: 2026-06-25
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 24
-  completed_plans: 23
+  total_plans: 29
+  completed_plans: 24
   percent: 50
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 17 — Plan 17-15 remains blocked on PERF-01 after red performance/readiness evidence regeneration
+**Current focus:** Phase 18 — SEO Audit Remediation
 
 ## Current Position
 
-Phase: 17 (operations-performance-and-final-production-readiness-audit) — BLOCKED
-Plan: 15 of 15 blocked (revised 17-15)
+Phase: 18 (SEO Audit Remediation) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-06-25 -- Phase 18 planning complete
+Last activity: 2026-06-25
 
 ## Performance Metrics
 
@@ -102,6 +102,7 @@ Last activity: 2026-06-25 -- Phase 18 planning complete
 | Phase 17 P12 | 24 min | 3 tasks | 13 files |
 | Phase 17 P13 | 15 min | 3 tasks | 10 files |
 | Phase 17 P14 | 10 min | 2 tasks | 8 files |
+| Phase 18 P01 | 16 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -187,6 +188,8 @@ Recent decisions affecting current work:
 - [Phase 17-13]: Search route runtime params must resolve inside Suspense under Next 16 Cache Components. - The route uses the documented promise-child pattern so SearchHero can stream before Searchanise results without a root-level `await searchParams` prerender failure.
 - [Phase 17-14]: Account launch geometry intentionally uses literal bracketed Tailwind min-height classes guarded by a scoped checker exception. - The exception is limited to the four account wrapper files so final performance contracts can reject the previous tokenized geometry without weakening repo-wide class validation.
 - [Phase 17-15]: Plan 17-15 was replanned in place to repair discovered account/image contract drift before final evidence. - It must still stay incomplete unless strict metrics pass or a valid dated owner/staging/field acceptance artifact is supplied and validated.
+- [Phase 18]: Keep app redirects limited to deterministic, app-owned URL migrations that already have two-source confirmation — The audit URL register separates app-owned redirect evidence from owner/operator handoff items so launch does not encode speculative broad redirects.
+- [Phase 18]: Treat DNS, Vercel host aliases, Shopify domain routing, Search Console, and 301 migration exports as owner-gated evidence — The local probe and docs flag those checks without blocking app-owned redirect verification.
 
 ### Roadmap Evolution
 
@@ -284,9 +287,9 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-25T09:46:46.928Z
-Stopped at: Phase 18 UI-SPEC approved
-Resume file: .planning/phases/18-seo-audit-remediation/18-UI-SPEC.md
+Last session: 2026-06-25T10:51:55.337Z
+Stopped at: Completed 18-01-PLAN.md
+Resume file: None
 
 ## Operator Next Steps
 
