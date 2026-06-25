@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 18-01-PLAN.md
-last_updated: "2026-06-25T10:51:55.349Z"
+stopped_at: Completed 18-02-PLAN.md
+last_updated: "2026-06-25T11:06:05.772Z"
 last_activity: 2026-06-25
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 29
-  completed_plans: 24
+  completed_plans: 25
   percent: 50
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 ## Current Position
 
 Phase: 18 (SEO Audit Remediation) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-06-25
 
@@ -103,6 +103,7 @@ Last activity: 2026-06-25
 | Phase 17 P13 | 15 min | 3 tasks | 10 files |
 | Phase 17 P14 | 10 min | 2 tasks | 8 files |
 | Phase 18 P01 | 16 min | 2 tasks | 6 files |
+| Phase 18 P02 | 9 min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -190,6 +191,8 @@ Recent decisions affecting current work:
 - [Phase 17-15]: Plan 17-15 was replanned in place to repair discovered account/image contract drift before final evidence. - It must still stay incomplete unless strict metrics pass or a valid dated owner/staging/field acceptance artifact is supplied and validated.
 - [Phase 18]: Keep app redirects limited to deterministic, app-owned URL migrations that already have two-source confirmation — The audit URL register separates app-owned redirect evidence from owner/operator handoff items so launch does not encode speculative broad redirects.
 - [Phase 18]: Treat DNS, Vercel host aliases, Shopify domain routing, Search Console, and 301 migration exports as owner-gated evidence — The local probe and docs flag those checks without blocking app-owned redirect verification.
+- [Phase 18]: Plan 18-02 keeps strict collection rich-hero content exclusive while moving normal collection story disclosures below the product grid. — Prevents duplicate read-more content and preserves the existing rich-hero opt-in path.
+- [Phase 18]: Plan 18-02 demotes compact Shopify rich-content H1 and H2 headings to compact H3 elements. — Protects collection and PDP one-H1 hierarchy while preserving page/article sanitizer behavior.
 
 ### Roadmap Evolution
 
@@ -287,8 +290,8 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-25T10:51:55.337Z
-Stopped at: Completed 18-01-PLAN.md
+Last session: 2026-06-25T11:05:33.128Z
+Stopped at: Completed 18-02-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
