@@ -80,7 +80,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 4/4 | Complete    | 2026-06-23 |
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 14/15 | In Progress|  |
-| 18. SEO Audit Remediation | v1.4 | 2/5 | In Progress|  |
+| 18. SEO Audit Remediation | v1.4 | 3/5 | In Progress|  |
 
 ## Phase Details
 
