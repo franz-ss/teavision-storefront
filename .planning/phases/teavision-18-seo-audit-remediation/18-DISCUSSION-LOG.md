@@ -5,7 +5,7 @@
 
 **Date:** 2026-06-25
 **Phase:** 18-SEO Audit Remediation
-**Areas discussed:** URL parity and redirect ownership, Visible H1 and collection content placement, Metadata, canonical host, robots, and blog indexation, Structured data and crawl/performance evidence
+**Areas discussed:** URL parity and redirect ownership, Visible H1 and collection content placement, Metadata, canonical host, robots, and blog indexation, Structured data and crawl/performance evidence, LocalBusiness schema boundary, Redirect inventory closure
 
 ---
 
@@ -175,6 +175,110 @@
 
 **User's choice:** Audit-to-evidence matrix
 **Notes:** Final SEO evidence should be consolidated and human-readable.
+
+---
+
+## LocalBusiness Schema Boundary
+
+### Required Evidence
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Visible approved details only | Add it only when approved business name/address/contact/service-area details are already visible on the page or in approved code-owned content; otherwise document the gap. | ✓ |
+| Known business facts are enough | Add schema from stable business details even if some details are not visibly shown on the same page. | |
+| Handoff only | Do not add LocalBusiness schema in code during Phase 18; record it for owner/SEO-operator approval after launch-domain details are confirmed. | |
+| You decide | Planner chooses within the existing no-invented-schema boundary. | |
+
+**User's choice:** Visible approved details only.
+**Notes:** Phase 18 should not invent LocalBusiness schema fields for audit checklist coverage.
+
+### First Candidate Page
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Contact page first | Use `/pages/contact` as the primary candidate because it naturally carries business identity/contact details. | ✓ |
+| Homepage first | Add it beside existing Organization/WebSite schema if the homepage has enough visible approved business details. | |
+| Service pages only | Add LocalBusiness only where service content already supports it, not globally. | |
+| You decide | Planner chooses the page with the strongest visible evidence. | |
+
+**User's choice:** Contact page first.
+**Notes:** The contact page should be evaluated before broader sitewide placement.
+
+### Visibility Rule
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Strict same page | Every LocalBusiness field emitted in JSON-LD must be visibly present on that page, except universal URL/logo/name basics already present in site chrome. | ✓ |
+| Nearby approved site content | Fields may come from other approved site pages if they are stable and canonical. | |
+| Evidence document allowed | Fields can come from an evidence matrix even if not visible on-page yet. | |
+| You decide | Planner applies the safest evidence-backed interpretation. | |
+
+**User's choice:** Strict same page.
+**Notes:** Same-page visibility is the default rule for LocalBusiness fields.
+
+### Missing Visible Fields
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Document, don't add | Do not add that field to schema; record the missing visible evidence in the audit matrix. | ✓ |
+| Add modest visible copy | Add small, factual contact/business details to the page if already approved elsewhere. | |
+| Partial schema is fine | Emit only the visible fields and skip unsupported properties. | |
+| You decide | Planner picks the least risky option. | |
+
+**User's choice:** Document, don't add.
+**Notes:** Unsupported fields should become evidence gaps, not invisible schema.
+
+---
+
+## Redirect Inventory Closure
+
+### Local Inventory Sufficiency
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Local sources plus handoff register | Use live/headless crawls, Shopify/Sanity route helpers, current `next.config.ts`, sitemap, known legacy nested product URLs, and repo docs; owner/SEO exports become handoff items if unavailable. | ✓ |
+| Require owner/SEO exports first | Do not close URL parity until Shopify export, Search Console indexed URLs, or SEO-operator slug list is supplied. | |
+| Audit URLs only | Fix only URLs explicitly mentioned in the SEO audit PDF. | |
+| You decide | Planner chooses based on what evidence exists during implementation. | |
+
+**User's choice:** Local sources plus handoff register.
+**Notes:** Local planning should not block on unavailable exports, but missing exports must stay visible.
+
+### Uncertain Redirect Mappings
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Handoff register only | Only deterministic, confirmed, stable redirects enter app code; uncertain/inferred/host-level redirects stay in the migration handoff register. | ✓ |
+| Temporary app redirects | Add likely mappings in app code with notes so they can be corrected later. | |
+| Owner approval required | Do not implement any new redirects until the owner/SEO operator approves every mapping. | |
+| You decide | Planner applies the lowest-risk redirect policy. | |
+
+**User's choice:** Handoff register only.
+**Notes:** App redirects should stay deterministic and locally testable.
+
+### Conflict Authority
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Owner/SEO export wins | Preserve local evidence, but owner/SEO migration exports override inferred local mapping when explicit. | ✓ |
+| Current live site wins | Mirror whatever `www.teavision.com.au` currently resolves to during the audit window. | |
+| Headless routes win | Prefer the new app's canonical route shape unless the old URL is proven indexed. | |
+| Pause and ask | Treat conflicts as blockers requiring user review before planning continues. | |
+
+**User's choice:** Owner/SEO export wins.
+**Notes:** Explicit migration/export evidence overrides inferred local mapping.
+
+### Missing Owner/SEO Exports
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Closed locally, gated externally | Mark local deterministic redirect coverage complete, and list missing Search Console/export/DNS/host proof as owner/operator-gated residuals. | ✓ |
+| Not closed | Keep URL parity incomplete until owner/SEO exports are supplied. | |
+| Best-effort closed | Mark the area complete without residual risk if local crawl and sitemap checks pass. | |
+| You decide | Planner chooses final evidence language based on implementation findings. | |
+
+**User's choice:** Closed locally, gated externally.
+**Notes:** Local deterministic coverage can complete while external evidence remains explicitly gated.
 
 ---
 
