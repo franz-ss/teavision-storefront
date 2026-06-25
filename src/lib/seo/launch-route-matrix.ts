@@ -62,8 +62,9 @@ function legalPolicyToExpectation(
   }
 }
 
-export const LEGAL_ROUTE_EXPECTATIONS =
-  LEGAL_POLICIES.map(legalPolicyToExpectation)
+export const LEGAL_ROUTE_EXPECTATIONS = LEGAL_POLICIES.map(
+  legalPolicyToExpectation,
+)
 
 export const STATIC_LAUNCH_ROUTE_EXPECTATIONS = [
   {
@@ -148,7 +149,18 @@ export const STATIC_LAUNCH_ROUTE_EXPECTATIONS = [
   },
 ] satisfies readonly LaunchSeoRouteExpectation[]
 
-export const REDIRECT_ROUTE_EXPECTATIONS = getPolicyRedirects().map(
+export const APP_OWNED_REDIRECT_EXPECTATIONS = [
+  {
+    path: '/collections/:handle/products/:productHandle',
+    expectedStatus: 308,
+    canonicalPath: '/products/:productHandle',
+    shouldIndexWhenEnabled: false,
+    shouldAppearInSitemap: false,
+    checks: REDIRECT_CHECKS,
+  },
+] satisfies readonly LaunchSeoRouteExpectation[]
+
+export const POLICY_REDIRECT_ROUTE_EXPECTATIONS = getPolicyRedirects().map(
   (redirect): LaunchSeoRouteExpectation => ({
     path: toLaunchSeoPath(redirect.source),
     expectedStatus: 308,
@@ -158,6 +170,11 @@ export const REDIRECT_ROUTE_EXPECTATIONS = getPolicyRedirects().map(
     checks: REDIRECT_CHECKS,
   }),
 )
+
+export const REDIRECT_ROUTE_EXPECTATIONS = [
+  ...APP_OWNED_REDIRECT_EXPECTATIONS,
+  ...POLICY_REDIRECT_ROUTE_EXPECTATIONS,
+] satisfies readonly LaunchSeoRouteExpectation[]
 
 export function getLaunchSeoRouteExpectations(): LaunchSeoRouteExpectation[] {
   return [

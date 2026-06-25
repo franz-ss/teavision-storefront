@@ -2,7 +2,13 @@ import { existsSync, readFileSync } from 'node:fs'
 import process from 'node:process'
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:3000'
-const VALID_MODES = new Set(['disabled', 'enabled', 'redirects', 'runbook'])
+const VALID_MODES = new Set([
+  'disabled',
+  'enabled',
+  'redirects',
+  'runbook',
+  'url-audit',
+])
 
 const SOURCE_PATHS = {
   evidence: 'docs/launch/seo-route-evidence.md',
@@ -10,6 +16,9 @@ const SOURCE_PATHS = {
   nextConfig: 'next.config.ts',
   policies: 'src/lib/legal/policies.ts',
   runbook: 'docs/launch/analytics-and-indexing-runbook.md',
+  urlParityRegister:
+    process.env.SEO_URL_PARITY_REGISTER_PATH ??
+    'docs/launch/seo-url-parity-register.md',
 }
 
 function parseArgs(argv) {
@@ -79,18 +88,18 @@ function extractStringLiterals(block) {
   return [...block.matchAll(/'([^']+)'/g)].map((match) => match[1])
 }
 
-function parseStaticExpectations(matrixSource) {
+function parseRouteExpectationArray(matrixSource, exportName, kind) {
   const arrayMatch = matrixSource.match(
-    /STATIC_LAUNCH_ROUTE_EXPECTATIONS\s*=\s*\[([\s\S]*?)\]\s*satisfies/,
+    new RegExp(`${exportName}\\s*=\\s*\\[([\\s\\S]*?)\\]\\s*satisfies`),
   )
 
   if (!arrayMatch) {
-    throw new Error('Could not find STATIC_LAUNCH_ROUTE_EXPECTATIONS')
+    throw new Error(`Could not find ${exportName}`)
   }
 
   return [...arrayMatch[1].matchAll(/\{([\s\S]*?)\}/g)].map((match) => {
     const block = match[1]
-    const path = requiredMatch(block, /path:\s*'([^']+)'/, 'static path')
+    const path = requiredMatch(block, /path:\s*'([^']+)'/, `${kind} path`)
     const canonicalPath = requiredMatch(
       block,
       /canonicalPath:\s*'([^']+)'/,
@@ -102,7 +111,7 @@ function parseStaticExpectations(matrixSource) {
       expectedStatus: Number(
         requiredMatch(block, /expectedStatus:\s*(\d+)/, `status for ${path}`),
       ),
-      kind: 'static',
+      kind,
       path,
       shouldAppearInSitemap:
         requiredMatch(
@@ -118,6 +127,14 @@ function parseStaticExpectations(matrixSource) {
         ) === 'true',
     }
   })
+}
+
+function parseStaticExpectations(matrixSource) {
+  return parseRouteExpectationArray(
+    matrixSource,
+    'STATIC_LAUNCH_ROUTE_EXPECTATIONS',
+    'static',
+  )
 }
 
 function parseLegalPolicies(policySource) {
@@ -136,6 +153,11 @@ function materializeExpectations() {
   const matrixSource = readSource(SOURCE_PATHS.launchMatrix)
   const policySource = readSource(SOURCE_PATHS.policies)
   const staticExpectations = parseStaticExpectations(matrixSource)
+  const appOwnedRedirectExpectations = parseRouteExpectationArray(
+    matrixSource,
+    'APP_OWNED_REDIRECT_EXPECTATIONS',
+    'redirect',
+  )
   const legalPolicies = parseLegalPolicies(policySource)
 
   const legalExpectations = legalPolicies.map((policy) => ({
@@ -147,16 +169,19 @@ function materializeExpectations() {
     shouldIndexWhenEnabled: policy.sitemap,
   }))
 
-  const redirectExpectations = legalPolicies.flatMap((policy) =>
-    policy.redirectSources.map((source) => ({
-      canonicalPath: policy.href,
-      expectedStatus: 308,
-      kind: 'redirect',
-      path: source,
-      shouldAppearInSitemap: false,
-      shouldIndexWhenEnabled: false,
-    })),
-  )
+  const redirectExpectations = [
+    ...appOwnedRedirectExpectations,
+    ...legalPolicies.flatMap((policy) =>
+      policy.redirectSources.map((source) => ({
+        canonicalPath: policy.href,
+        expectedStatus: 308,
+        kind: 'redirect',
+        path: source,
+        shouldAppearInSitemap: false,
+        shouldIndexWhenEnabled: false,
+      })),
+    ),
+  ]
 
   return {
     all: [...staticExpectations, ...legalExpectations, ...redirectExpectations],
@@ -234,6 +259,10 @@ function getCanonicalHref(html, baseUrl) {
   }
 }
 
+function isPatternPath(path) {
+  return path.includes(':') || path.includes('*')
+}
+
 function hasNoindexMeta(html) {
   const tags = html.match(/<meta\b[^>]*>/gi) ?? []
 
@@ -244,8 +273,99 @@ function hasNoindexMeta(html) {
   )
 }
 
+function splitMarkdownRow(line) {
+  const trimmed = line.trim()
+
+  if (!trimmed.startsWith('|') || !trimmed.endsWith('|')) return []
+
+  return trimmed
+    .slice(1, -1)
+    .split('|')
+    .map((cell) => cell.trim())
+}
+
+function isSeparatorRow(cells) {
+  return cells.every((cell) => /^:?-{3,}:?$/.test(cell))
+}
+
+function parseRegisterRows(markdown) {
+  const rows = []
+  let headers = []
+
+  for (const line of markdown.split(/\r?\n/)) {
+    const cells = splitMarkdownRow(line)
+
+    if (cells.length === 0) {
+      headers = []
+      continue
+    }
+
+    if (
+      cells.includes('Source URL') &&
+      cells.includes('Target URL') &&
+      cells.includes('Decision')
+    ) {
+      headers = cells
+      continue
+    }
+
+    if (headers.length === 0 || isSeparatorRow(cells)) continue
+    if (cells.length !== headers.length) continue
+
+    rows.push(
+      Object.fromEntries(
+        headers.map((header, index) => [header, cells[index] ?? '']),
+      ),
+    )
+  }
+
+  return rows
+}
+
+function parseNextConfigLiteralRedirects(nextConfigSource) {
+  return [
+    ...nextConfigSource.matchAll(
+      /\{\s*source:\s*'([^']+)'[\s\S]*?destination:\s*'([^']+)'[\s\S]*?permanent:\s*true[\s\S]*?\}/g,
+    ),
+  ].map((match) => ({
+    source: match[1],
+    target: match[2],
+  }))
+}
+
+function normalizeRegisterPath(value) {
+  return value.trim().replace(/^`([^`]+)`$/, '$1')
+}
+
+function getCodedRedirectsForAudit() {
+  const nextConfig = readSource(SOURCE_PATHS.nextConfig)
+  const policySource = readSource(SOURCE_PATHS.policies)
+  const literalRedirects = parseNextConfigLiteralRedirects(nextConfig)
+  const policyRedirects = parseLegalPolicies(policySource).flatMap((policy) =>
+    policy.redirectSources.map((source) => ({
+      source,
+      target: policy.href,
+    })),
+  )
+  const redirects = [...literalRedirects, ...policyRedirects]
+  const seen = new Set()
+
+  return redirects.filter((redirect) => {
+    const key = `${redirect.source}\u0000${redirect.target}`
+
+    if (seen.has(key)) return false
+
+    seen.add(key)
+    return true
+  })
+}
+
 function extractJsonLd(html) {
-  return [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)]
+  return [
+    ...html.matchAll(
+      /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+    ),
+  ]
     .map((match) => match[1].trim())
     .filter(Boolean)
     .map((script) => JSON.parse(script))
@@ -262,7 +382,7 @@ function hasProductJsonLd(values) {
 function hasShopifyCredentials() {
   return Boolean(
     process.env.SHOPIFY_STORE_DOMAIN &&
-      process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+    process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
   )
 }
 
@@ -293,7 +413,11 @@ function runRunbookMode() {
   results.push(
     runbookExists
       ? pass('analytics/indexing runbook exists', SOURCE_PATHS.runbook, 'found')
-      : fail('analytics/indexing runbook exists', SOURCE_PATHS.runbook, 'missing'),
+      : fail(
+          'analytics/indexing runbook exists',
+          SOURCE_PATHS.runbook,
+          'missing',
+        ),
   )
 
   for (const heading of [
@@ -328,17 +452,35 @@ function runRedirectsMode() {
   const nextConfig = readSource(SOURCE_PATHS.nextConfig)
   const matrix = readSource(SOURCE_PATHS.launchMatrix)
   const results = []
-  const redirectPaths = expectations.redirects.map((expectation) => expectation.path)
+  const redirectPaths = expectations.redirects.map(
+    (expectation) => expectation.path,
+  )
 
   results.push(
     nextConfig.includes('getPolicyRedirects')
-      ? pass('Next config policy redirects', SOURCE_PATHS.nextConfig, 'registry helper used')
-      : fail('Next config policy redirects', SOURCE_PATHS.nextConfig, 'registry helper missing'),
+      ? pass(
+          'Next config policy redirects',
+          SOURCE_PATHS.nextConfig,
+          'registry helper used',
+        )
+      : fail(
+          'Next config policy redirects',
+          SOURCE_PATHS.nextConfig,
+          'registry helper missing',
+        ),
   )
   results.push(
     matrix.includes('REDIRECT_ROUTE_EXPECTATIONS')
-      ? pass('route matrix redirect expectations', SOURCE_PATHS.launchMatrix, 'export present')
-      : fail('route matrix redirect expectations', SOURCE_PATHS.launchMatrix, 'export missing'),
+      ? pass(
+          'route matrix redirect expectations',
+          SOURCE_PATHS.launchMatrix,
+          'export present',
+        )
+      : fail(
+          'route matrix redirect expectations',
+          SOURCE_PATHS.launchMatrix,
+          'export missing',
+        ),
   )
 
   for (const path of [
@@ -351,16 +493,181 @@ function runRedirectsMode() {
 
     results.push(
       expectation
-        ? pass('policy redirect expectation', path, `308 -> ${expectation.canonicalPath}`)
+        ? pass(
+            'policy redirect expectation',
+            path,
+            `308 -> ${expectation.canonicalPath}`,
+          )
         : fail('policy redirect expectation', path, 'missing'),
     )
   }
 
   results.push(
     redirectPaths.length > 0
-      ? pass('policy redirect count', 'LEGAL_POLICIES redirectSources', `${redirectPaths.length} redirects`)
-      : fail('policy redirect count', 'LEGAL_POLICIES redirectSources', 'no redirects found'),
+      ? pass(
+          'redirect expectation count',
+          'REDIRECT_ROUTE_EXPECTATIONS',
+          `${redirectPaths.length} redirects`,
+        )
+      : fail(
+          'redirect expectation count',
+          'REDIRECT_ROUTE_EXPECTATIONS',
+          'no redirects found',
+        ),
   )
+
+  for (const expectation of expectations.redirects.filter((candidate) =>
+    isPatternPath(candidate.path),
+  )) {
+    results.push(
+      nextConfig.includes(`source: '${expectation.path}'`)
+        ? pass(
+            'app-owned redirect expectation',
+            expectation.path,
+            `308 -> ${expectation.canonicalPath}`,
+          )
+        : fail(
+            'app-owned redirect expectation',
+            expectation.path,
+            'missing from next.config.ts',
+          ),
+    )
+  }
+
+  return results
+}
+
+function runUrlAuditMode() {
+  const results = []
+
+  if (!existsSync(SOURCE_PATHS.urlParityRegister)) {
+    return [
+      fail(
+        'URL parity register exists',
+        SOURCE_PATHS.urlParityRegister,
+        'missing',
+      ),
+    ]
+  }
+
+  const register = readSource(SOURCE_PATHS.urlParityRegister)
+  const registerRows = parseRegisterRows(register)
+  const appOwnedRows = registerRows.filter(
+    (row) => row.Decision === 'app-owned redirect',
+  )
+  const ownerExportPath = process.env.SEO_URL_MIGRATION_EXPORT?.trim() ?? ''
+
+  results.push(
+    pass('URL parity register exists', SOURCE_PATHS.urlParityRegister, 'found'),
+  )
+  results.push(
+    register.includes('Two-source confirmation')
+      ? pass(
+          'Two-source confirmation rule',
+          SOURCE_PATHS.urlParityRegister,
+          'present',
+        )
+      : fail(
+          'Two-source confirmation rule',
+          SOURCE_PATHS.urlParityRegister,
+          'missing',
+        ),
+  )
+  results.push(
+    appOwnedRows.length > 0
+      ? pass(
+          'app-owned register rows',
+          SOURCE_PATHS.urlParityRegister,
+          `${appOwnedRows.length} rows`,
+        )
+      : fail(
+          'app-owned register rows',
+          SOURCE_PATHS.urlParityRegister,
+          'none found',
+        ),
+  )
+  results.push(
+    register.includes('## Owner/operator handoff')
+      ? pass(
+          'Owner/operator handoff table',
+          SOURCE_PATHS.urlParityRegister,
+          'present',
+        )
+      : fail(
+          'Owner/operator handoff table',
+          SOURCE_PATHS.urlParityRegister,
+          'missing',
+        ),
+  )
+  results.push(
+    ownerExportPath
+      ? existsSync(ownerExportPath)
+        ? pass('optional owner migration export', ownerExportPath, 'found')
+        : warn(
+            'optional owner migration export',
+            ownerExportPath,
+            'path set but file is missing',
+          )
+      : warn(
+          'optional owner migration export',
+          'SEO_URL_MIGRATION_EXPORT',
+          'missing optional owner export',
+        ),
+  )
+
+  for (const row of appOwnedRows) {
+    const source = row['Source URL'] ?? ''
+    const target = row['Target URL'] ?? ''
+    const evidence1 = row['Evidence source 1'] ?? ''
+    const evidence2 = row['Evidence source 2'] ?? ''
+    const missing = []
+
+    if (!source) missing.push('Source URL')
+    if (!target) missing.push('Target URL')
+    if (!evidence1) missing.push('Evidence source 1')
+    if (!evidence2) missing.push('Evidence source 2')
+
+    results.push(
+      missing.length === 0
+        ? pass(
+            'app-owned redirect evidence',
+            source,
+            `${target}; two-source confirmation present`,
+          )
+        : fail(
+            'app-owned redirect evidence',
+            source || 'unknown source',
+            `missing ${missing.join(', ')}`,
+          ),
+    )
+  }
+
+  const appOwnedRegisterKeys = new Set(
+    appOwnedRows.map(
+      (row) =>
+        `${normalizeRegisterPath(row['Source URL'] ?? '')}\u0000${normalizeRegisterPath(
+          row['Target URL'] ?? '',
+        )}`,
+    ),
+  )
+
+  for (const redirect of getCodedRedirectsForAudit()) {
+    const key = `${redirect.source}\u0000${redirect.target}`
+
+    results.push(
+      appOwnedRegisterKeys.has(key)
+        ? pass(
+            'coded redirect register row',
+            redirect.source,
+            `registered -> ${redirect.target}`,
+          )
+        : fail(
+            'coded redirect register row',
+            redirect.source,
+            `missing register row for ${redirect.target}`,
+          ),
+    )
+  }
 
   return results
 }
@@ -379,25 +686,53 @@ async function runDisabledMode(baseUrl) {
 
   results.push(
     robotsResponse.ok
-      ? pass('disabled robots fetch', '/robots.txt', `status ${robotsResponse.status}`)
-      : fail('disabled robots fetch', '/robots.txt', `status ${robotsResponse.status}`),
+      ? pass(
+          'disabled robots fetch',
+          '/robots.txt',
+          `status ${robotsResponse.status}`,
+        )
+      : fail(
+          'disabled robots fetch',
+          '/robots.txt',
+          `status ${robotsResponse.status}`,
+        ),
   )
   results.push(
     !/^\s*Sitemap:/im.test(robotsText)
-      ? pass('disabled robots sitemap omission', '/robots.txt', 'no Sitemap line')
-      : fail('disabled robots sitemap omission', '/robots.txt', 'Sitemap line present'),
+      ? pass(
+          'disabled robots sitemap omission',
+          '/robots.txt',
+          'no Sitemap line',
+        )
+      : fail(
+          'disabled robots sitemap omission',
+          '/robots.txt',
+          'Sitemap line present',
+        ),
   )
 
   const sitemapLocs = getLocPaths(sitemapText)
   results.push(
     sitemapResponse.ok || sitemapResponse.status === 404
-      ? pass('disabled sitemap fetch', '/sitemap.xml', `status ${sitemapResponse.status}`)
-      : fail('disabled sitemap fetch', '/sitemap.xml', `status ${sitemapResponse.status}`),
+      ? pass(
+          'disabled sitemap fetch',
+          '/sitemap.xml',
+          `status ${sitemapResponse.status}`,
+        )
+      : fail(
+          'disabled sitemap fetch',
+          '/sitemap.xml',
+          `status ${sitemapResponse.status}`,
+        ),
   )
   results.push(
     sitemapLocs.length === 0
       ? pass('disabled sitemap URL count', '/sitemap.xml', '0 URLs')
-      : fail('disabled sitemap URL count', '/sitemap.xml', `${sitemapLocs.length} URLs found`),
+      : fail(
+          'disabled sitemap URL count',
+          '/sitemap.xml',
+          `${sitemapLocs.length} URLs found`,
+        ),
   )
 
   for (const expectation of expectations.legal.slice(0, 2)) {
@@ -405,7 +740,11 @@ async function runDisabledMode(baseUrl) {
     const ok = response.ok && hasNoindexMeta(text)
     results.push(
       ok
-        ? pass('disabled route noindex metadata', expectation.path, 'noindex present')
+        ? pass(
+            'disabled route noindex metadata',
+            expectation.path,
+            'noindex present',
+          )
         : fail(
             'disabled route noindex metadata',
             expectation.path,
@@ -435,18 +774,42 @@ async function runEnabledMode(baseUrl, productPath) {
 
   results.push(
     robotsResponse.ok
-      ? pass('enabled robots fetch', '/robots.txt', `status ${robotsResponse.status}`)
-      : fail('enabled robots fetch', '/robots.txt', `status ${robotsResponse.status}`),
+      ? pass(
+          'enabled robots fetch',
+          '/robots.txt',
+          `status ${robotsResponse.status}`,
+        )
+      : fail(
+          'enabled robots fetch',
+          '/robots.txt',
+          `status ${robotsResponse.status}`,
+        ),
   )
   results.push(
     /^\s*Sitemap:/im.test(robotsText)
-      ? pass('enabled robots sitemap line', '/robots.txt', 'Sitemap line present')
-      : fail('enabled robots sitemap line', '/robots.txt', 'Sitemap line missing'),
+      ? pass(
+          'enabled robots sitemap line',
+          '/robots.txt',
+          'Sitemap line present',
+        )
+      : fail(
+          'enabled robots sitemap line',
+          '/robots.txt',
+          'Sitemap line missing',
+        ),
   )
   results.push(
     sitemapResponse.ok
-      ? pass('enabled sitemap fetch', '/sitemap.xml', `status ${sitemapResponse.status}`)
-      : fail('enabled sitemap fetch', '/sitemap.xml', `status ${sitemapResponse.status}`),
+      ? pass(
+          'enabled sitemap fetch',
+          '/sitemap.xml',
+          `status ${sitemapResponse.status}`,
+        )
+      : fail(
+          'enabled sitemap fetch',
+          '/sitemap.xml',
+          `status ${sitemapResponse.status}`,
+        ),
   )
 
   for (const expectation of sitemapExpectations) {
@@ -458,6 +821,17 @@ async function runEnabledMode(baseUrl, productPath) {
   }
 
   for (const expectation of expectations.redirects) {
+    if (isPatternPath(expectation.path)) {
+      results.push(
+        warn(
+          'redirect live check',
+          expectation.path,
+          'skipped pattern redirect; source-mode probe covers this rule',
+        ),
+      )
+      continue
+    }
+
     const { response } = await fetchText(baseUrl, expectation.path, {
       redirect: 'manual',
     })
@@ -469,21 +843,28 @@ async function runEnabledMode(baseUrl, productPath) {
 
     results.push(
       ok
-        ? pass('policy redirect live check', expectation.path, `${response.status} -> ${locationPath}`)
-        : fail('policy redirect live check', expectation.path, `${response.status} -> ${locationPath || 'no location'}`),
+        ? pass(
+            'policy redirect live check',
+            expectation.path,
+            `${response.status} -> ${locationPath}`,
+          )
+        : fail(
+            'policy redirect live check',
+            expectation.path,
+            `${response.status} -> ${locationPath || 'no location'}`,
+          ),
     )
   }
 
-  for (const expectation of [...expectations.static, ...expectations.legal].filter(
-    (candidate) => candidate.shouldIndexWhenEnabled,
-  )) {
+  for (const expectation of [
+    ...expectations.static,
+    ...expectations.legal,
+  ].filter((candidate) => candidate.shouldIndexWhenEnabled)) {
     const { response, text } = await fetchText(baseUrl, expectation.path)
     const canonicalPath = getCanonicalHref(text, baseUrl)
     const hasNoindex = hasNoindexMeta(text)
     const ok =
-      response.ok &&
-      canonicalPath === expectation.canonicalPath &&
-      !hasNoindex
+      response.ok && canonicalPath === expectation.canonicalPath && !hasNoindex
 
     results.push(
       ok
@@ -516,7 +897,9 @@ async function probeProductStructuredData(baseUrl, productPath) {
     )
   }
 
-  const path = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`
+  const path = normalizedPath.startsWith('/')
+    ? normalizedPath
+    : `/${normalizedPath}`
 
   try {
     const { response, text } = await fetchText(baseUrl, path)
@@ -561,11 +944,13 @@ try {
   const results =
     args.mode === 'runbook'
       ? runRunbookMode()
-      : args.mode === 'redirects'
-        ? runRedirectsMode()
-        : args.mode === 'disabled'
-          ? await runDisabledMode(baseUrl)
-          : await runEnabledMode(baseUrl, args.productPath)
+      : args.mode === 'url-audit'
+        ? runUrlAuditMode()
+        : args.mode === 'redirects'
+          ? runRedirectsMode()
+          : args.mode === 'disabled'
+            ? await runDisabledMode(baseUrl)
+            : await runEnabledMode(baseUrl, args.productPath)
 
   printResults(results)
 

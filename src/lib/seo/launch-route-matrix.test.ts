@@ -3,7 +3,9 @@ import { describe, expect, test } from 'vitest'
 import { LEGAL_POLICIES, getPolicyRedirects } from '@/lib/legal/policies'
 
 import {
+  APP_OWNED_REDIRECT_EXPECTATIONS,
   LEGAL_ROUTE_EXPECTATIONS,
+  POLICY_REDIRECT_ROUTE_EXPECTATIONS,
   REDIRECT_ROUTE_EXPECTATIONS,
   STATIC_LAUNCH_ROUTE_EXPECTATIONS,
   getLaunchSeoRouteExpectations,
@@ -82,10 +84,12 @@ describe('launch SEO route matrix', () => {
   test('represents every policy redirect source', () => {
     const expectedRedirects = getPolicyRedirects()
 
-    expect(REDIRECT_ROUTE_EXPECTATIONS).toHaveLength(expectedRedirects.length)
+    expect(POLICY_REDIRECT_ROUTE_EXPECTATIONS).toHaveLength(
+      expectedRedirects.length,
+    )
 
     for (const redirect of expectedRedirects) {
-      expect(REDIRECT_ROUTE_EXPECTATIONS).toContainEqual({
+      expect(POLICY_REDIRECT_ROUTE_EXPECTATIONS).toContainEqual({
         path: redirect.source,
         expectedStatus: 308,
         canonicalPath: redirect.destination,
@@ -94,6 +98,23 @@ describe('launch SEO route matrix', () => {
         checks: ['status', 'redirect', 'canonical'],
       })
     }
+  })
+
+  test('represents the app-owned nested collection product redirect', () => {
+    expect(APP_OWNED_REDIRECT_EXPECTATIONS).toEqual([
+      {
+        path: '/collections/:handle/products/:productHandle',
+        expectedStatus: 308,
+        canonicalPath: '/products/:productHandle',
+        shouldIndexWhenEnabled: false,
+        shouldAppearInSitemap: false,
+        checks: ['status', 'redirect', 'canonical'],
+      },
+    ])
+
+    expect(REDIRECT_ROUTE_EXPECTATIONS).toContainEqual(
+      APP_OWNED_REDIRECT_EXPECTATIONS[0],
+    )
   })
 
   test('includes required legacy policy redirect aliases', () => {
