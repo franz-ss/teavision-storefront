@@ -20,7 +20,7 @@ The scope boundary is the external audit PDF at `D:/Downloads/SEO Audit - Teavis
 
 ## Sources Read
 
-- `.planning/phases/teavision-18-seo-audit-remediation/18-CONTEXT.md`
+- `.planning/phases/18-seo-audit-remediation/18-CONTEXT.md`
 - `.planning/ROADMAP.md`
 - `.planning/REQUIREMENTS.md`
 - `.planning/STATE.md`

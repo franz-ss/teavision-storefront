@@ -5,10 +5,10 @@
 
 ## Source Inputs
 
-- `.planning/phases/teavision-18-seo-audit-remediation/18-CONTEXT.md`
-- `.planning/phases/teavision-18-seo-audit-remediation/18-RESEARCH.md`
-- `.planning/phases/teavision-18-seo-audit-remediation/18-UI-SPEC.md`
-- `.planning/phases/teavision-18-seo-audit-remediation/18-VALIDATION.md`
+- `.planning/phases/18-seo-audit-remediation/18-CONTEXT.md`
+- `.planning/phases/18-seo-audit-remediation/18-RESEARCH.md`
+- `.planning/phases/18-seo-audit-remediation/18-UI-SPEC.md`
+- `.planning/phases/18-seo-audit-remediation/18-VALIDATION.md`
 - `AGENTS.md`
 - `docs/conventions.md`
 - Current SEO, collection, product, blog, schema, launch, and performance source files.

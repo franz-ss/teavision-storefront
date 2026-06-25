@@ -286,7 +286,7 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 Last session: 2026-06-25T09:46:46.928Z
 Stopped at: Phase 18 UI-SPEC approved
-Resume file: .planning/phases/teavision-18-seo-audit-remediation/18-UI-SPEC.md
+Resume file: .planning/phases/18-seo-audit-remediation/18-UI-SPEC.md
 
 ## Operator Next Steps
 
