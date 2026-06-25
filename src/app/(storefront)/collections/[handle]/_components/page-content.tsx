@@ -256,14 +256,6 @@ export async function PageContent({ params, searchParams }: PageProps) {
           heroDescription={heroDescription}
           heroImage={heroImage}
           bannerImage={bannerImage}
-          storyDisclosure={
-            hasRichDescription ? (
-              <StoryDisclosure
-                title={`Read more about ${collection.title}`}
-                html={sanitizedRichDescriptionHtml}
-              />
-            ) : null
-          }
         />
       )}
 
@@ -306,6 +298,17 @@ export async function PageContent({ params, searchParams }: PageProps) {
           </div>
         </Section.Container>
       </Section.Root>
+
+      {hasRichDescription && !richHero ? (
+        <Section.Root tone="transparent" spacing="compact" className="mt-10">
+          <Section.Container>
+            <StoryDisclosure
+              title={`Read more about ${collection.title}`}
+              html={sanitizedRichDescriptionHtml}
+            />
+          </Section.Container>
+        </Section.Root>
+      ) : null}
     </>
   )
 }

@@ -1,4 +1,3 @@
-import type React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -13,7 +12,6 @@ type HeroProps = {
   heroDescription: string
   heroImage: HeroImage | null
   bannerImage: HeroImage | null
-  storyDisclosure?: React.ReactNode
 }
 
 export function Hero({
@@ -21,15 +19,11 @@ export function Hero({
   heroDescription,
   heroImage,
   bannerImage,
-  storyDisclosure,
 }: HeroProps) {
-  // Banner mode (owner option C): banner art first, mono breadcrumbs below it,
-  // no visible title — the artwork carries it; sr-only h1 keeps a11y/SEO.
+  // Banner mode (owner option C): banner art first, then crawlable hierarchy.
   if (bannerImage) {
     return (
       <>
-        <h1 className="sr-only">{collectionTitle}</h1>
-
         {bannerImage.width && bannerImage.height ? (
           <Section.Root tone="transparent" spacing="none">
             <Section.Container className="pt-6">
@@ -72,14 +66,20 @@ export function Hero({
                 {collectionTitle}
               </span>
             </nav>
+
+            <div className="mt-5 max-w-[58ch]">
+              <h1 className="type-display text-ink max-w-[16ch] text-balance">
+                {collectionTitle}
+              </h1>
+
+              {heroDescription && (
+                <p className="type-body text-ink-soft mt-4 max-w-[58ch]">
+                  {heroDescription}
+                </p>
+              )}
+            </div>
           </Section.Container>
         </Section.Root>
-
-        {storyDisclosure && (
-          <Section.Root tone="transparent" spacing="compact">
-            <Section.Container>{storyDisclosure}</Section.Container>
-          </Section.Root>
-        )}
       </>
     )
   }

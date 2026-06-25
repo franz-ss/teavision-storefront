@@ -13,8 +13,7 @@ import { PageContent } from './page-content'
 
 const shopifyMocks = vi.hoisted(() => ({
   getCollection: vi.fn<() => Promise<Collection | null>>(),
-  getCollectionProductsPage:
-    vi.fn<() => Promise<CollectionProductsResult>>(),
+  getCollectionProductsPage: vi.fn<() => Promise<CollectionProductsResult>>(),
   getCollectionPageIndex: vi.fn<() => Promise<CollectionPageIndex>>(),
   getCollectionSummaries: vi.fn<() => Promise<CollectionSummary[]>>(),
   getCollectionTagCounts: vi.fn<() => Promise<Record<string, number>>>(),
@@ -381,14 +380,16 @@ describe('PageContent category page mapping', () => {
         }),
         searchParams: Promise.resolve({ page: '2' }),
       }),
-    ).rejects.toThrow(/^redirect:\/collections\/dried-herbs\/categories_australian-tea$/)
+    ).rejects.toThrow(
+      /^redirect:\/collections\/dried-herbs\/categories_australian-tea$/,
+    )
   })
 
   it('resolves a category whose products sit beyond page 1 via the index tag counts', async () => {
     // No page-1 product carries the tag, but the full-index tag counts do —
     // the route must resolve instead of 404ing.
     shopifyMocks.getCollectionTagCounts.mockResolvedValue({
-      'categories_Most_Popular': 1,
+      categories_Most_Popular: 1,
     })
     shopifyMocks.getCollectionPageIndex.mockResolvedValue(
       pageIndexFixture({
@@ -465,5 +466,43 @@ describe('PageContent collection rich hero rendering', () => {
 
     expect(html).not.toContain('data-testid="collection-rich-hero"')
     expect(html).toContain('Wholesale collection')
+  })
+
+  it('renders banner H1 visibly and places read-more story after product grid', async () => {
+    shopifyMocks.getCollection.mockResolvedValue(
+      collectionFixture({
+        handle: 'wholesale-bulk-tea',
+        title: 'Wholesale Bulk Tea',
+        description:
+          'Browse loose leaf teas for cafes, retailers, and foodservice teams.',
+        descriptionHtml: `
+          <img src="https://cdn.shopify.com/s/files/1/0786/8339/files/Wholesale-Bulk-Tea_1440x640.jpg" alt="Wholesale Bulk Tea">
+          <h2>Wholesale Bulk Tea</h2>
+          <p>Browse loose leaf teas for cafes, retailers, and foodservice teams.</p>
+          <ul><li>Black tea</li><li>Green tea</li><li>Herbal tea</li></ul>
+        `,
+      }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: false },
+      products: [productFixture()],
+    })
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 1, totalPages: 1 }),
+    )
+
+    const element = await PageContent({
+      params: Promise.resolve({ handle: 'wholesale-bulk-tea' }),
+      searchParams: Promise.resolve({}),
+    })
+    const html = renderToStaticMarkup(element)
+
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
+    expect(html).not.toContain('<h1 class="sr-only"')
+    expect(html.indexOf('id="product-grid"')).toBeGreaterThan(-1)
+    expect(html.indexOf('id="product-grid"')).toBeLessThan(
+      html.indexOf('Read more about Wholesale Bulk Tea'),
+    )
   })
 })
