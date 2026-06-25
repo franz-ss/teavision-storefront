@@ -1,5 +1,8 @@
+import { readFileSync } from 'node:fs'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { generateListingMetadata } from '@/app/(storefront)/blogs/[blog]/_lib/metadata'
 import { getSanityImageUrl, sanityFetch } from '@/lib/sanity/client'
 import type {
   SanityBlogListingResult,
@@ -7,9 +10,12 @@ import type {
   SanityDefaultBlogListingResult,
   SanityImageWithAlt,
 } from '@/lib/sanity/types'
-import { generateListingMetadata } from '@/app/(storefront)/blogs/[blog]/_lib/metadata'
 
-import { getDefaultBlogListing } from './operations'
+import {
+  DEFAULT_BLOG_HANDLE,
+  getBlogPath,
+  getDefaultBlogListing,
+} from './operations'
 
 vi.mock('next/cache', () => ({
   cacheLife: vi.fn(),
@@ -208,5 +214,18 @@ describe('generateListingMetadata', () => {
     expect(metadata.alternates?.canonical).toBe(
       '/blogs/teavision-blogs/tagged/green-tea',
     )
+  })
+})
+
+describe('blog listing URL handoff', () => {
+  it('keeps the default listing path while documenting the /blog owner handoff', () => {
+    const remediation = readFileSync(
+      'docs/launch/seo-audit-remediation.md',
+      'utf8',
+    )
+
+    expect(getBlogPath(DEFAULT_BLOG_HANDLE)).toBe('/blogs/teavision-blogs')
+    expect(remediation).toContain('### Blog Listing URL')
+    expect(remediation).toContain('owner/SEO handoff')
   })
 })

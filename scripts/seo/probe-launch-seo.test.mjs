@@ -27,6 +27,8 @@ test('url-audit mode validates the URL parity register with warnings only for op
   assert.equal(result.status, 0, result.stderr)
   assert.match(result.stdout, /Two-source confirmation/)
   assert.match(result.stdout, /app-owned register rows/)
+  assert.match(result.stdout, /Blog Listing URL audit item/)
+  assert.match(result.stdout, /owner\/SEO handoff/)
   assert.match(result.stdout, /WARN/)
   assert.match(result.stdout, /missing optional owner export/)
   assert.doesNotMatch(result.stdout, /FAIL/)

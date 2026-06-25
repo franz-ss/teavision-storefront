@@ -16,3 +16,11 @@ host. Local app probes can verify deterministic redirects and route parity, but
 DNS, Vercel, alternate-host, Shopify-domain, and Search Console proof remains
 owner-gated until the production cutover environment and owner access are
 available.
+
+## Metadata, Canonical, Robots, Sitemap, And Blog Indexation
+
+### Blog Listing URL
+
+| Audit item                                                                | Decision          | Owner/action/date                                                                                                                      | Local evidence                                                                                                                                                                             |
+| ------------------------------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Simplify the main blog listing from `/blogs/teavision-blogs/` to `/blog/` | owner/SEO handoff | SEO owner to decide whether `/blog/` should become the canonical listing during migration-stage redirect planning; recorded 2026-06-25 | The app keeps the current Sanity blog listing at `/blogs/teavision-blogs` with no article URL changes; `node scripts/seo/probe-launch-seo.mjs --mode url-audit` reports this handoff item. |

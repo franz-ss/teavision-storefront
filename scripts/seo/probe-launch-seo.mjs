@@ -19,6 +19,7 @@ const VALID_MODES = new Set([
 ])
 
 const SOURCE_PATHS = {
+  auditRemediation: 'docs/launch/seo-audit-remediation.md',
   evidence: 'docs/launch/seo-route-evidence.md',
   launchMatrix: 'src/lib/seo/launch-route-matrix.ts',
   nextConfig: 'next.config.ts',
@@ -578,9 +579,15 @@ function runUrlAuditMode() {
   }
 
   const register = readSource(SOURCE_PATHS.urlParityRegister)
+  const remediation = existsSync(SOURCE_PATHS.auditRemediation)
+    ? readSource(SOURCE_PATHS.auditRemediation)
+    : ''
   const registerRows = parseRegisterRows(register)
   const appOwnedRows = registerRows.filter(
     (row) => row.Decision === 'app-owned redirect',
+  )
+  const blogListingRow = registerRows.find(
+    (row) => normalizeRegisterPath(row['Source URL'] ?? '') === '/blog/',
   )
   const ownerExportPath = process.env.SEO_URL_MIGRATION_EXPORT?.trim() ?? ''
 
@@ -624,6 +631,29 @@ function runUrlAuditMode() {
           'Owner/operator handoff table',
           SOURCE_PATHS.urlParityRegister,
           'missing',
+        ),
+  )
+  results.push(
+    blogListingRow
+      ? pass(
+          'Blog Listing URL audit item',
+          '/blog/',
+          `${blogListingRow.Decision}; ${blogListingRow.Status}`,
+        )
+      : fail('Blog Listing URL audit item', '/blog/', 'missing register row'),
+  )
+  results.push(
+    remediation.includes('### Blog Listing URL') &&
+      remediation.includes('owner/SEO handoff')
+      ? pass(
+          'Blog Listing URL handoff evidence',
+          SOURCE_PATHS.auditRemediation,
+          'owner/SEO handoff recorded',
+        )
+      : fail(
+          'Blog Listing URL handoff evidence',
+          SOURCE_PATHS.auditRemediation,
+          'missing Blog Listing URL owner/SEO handoff row',
         ),
   )
   results.push(
