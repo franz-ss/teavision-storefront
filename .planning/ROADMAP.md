@@ -6,7 +6,7 @@
 - ✅ **v1.1 Blog Performance** — Phase 12 (shipped 2026-06-12) — see `milestones/v1.1-ROADMAP.md`
 - ✅ **v1.2 SEO-Safe PLP Pagination Parity** — Phase 13 (shipped 2026-06-12) — see `milestones/v1.2-ROADMAP.md`
 - ✅ **v1.3 Shopify Customer Accounts** — Phase 14 (shipped 2026-06-22) — see `milestones/v1.3-ROADMAP.md`
-- ◆ **v1.4 Production Readiness 100/100** — Phases 15–17 (active)
+- ◆ **v1.4 Production Readiness 100/100** — Phases 15–18 (active)
 
 ## Phases
 
@@ -59,6 +59,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
 - [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (14/15 plans executed; 17-15 replanned and ready for execution; verification remains gaps_found on PERF-01 until the revised gap plan passes)
+- [ ] **Phase 18: SEO Audit Remediation** — resolve the staging-site SEO audit findings across URL parity, headings/content structure, metadata, robots/sitemap/indexation, schema, crawlable HTML, and Core Web Vitals evidence. (5/5 plans ready to execute)
 
 ## Progress
 
@@ -79,6 +80,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 4/4 | Complete    | 2026-06-23 |
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 14/15 | In Progress|  |
+| 18. SEO Audit Remediation | v1.4 | 0/5 | Ready to execute | |
 
 ## Phase Details
 
@@ -213,6 +215,47 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - Owner-gated Shopify hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, and Search Console proof must remain `approved`, `pending`, or `owner-blocked`; automated code readiness must not fabricate those approvals.
 - Public health/readiness and observability outputs must never expose secrets, tokens, customer PII, raw provider payloads, cart IDs, order IDs, checkout URLs, or submitted message bodies.
 
+### Phase 18: SEO Audit Remediation
+
+**Goal:** Resolve the 2026-06-25 staging-site SEO audit findings while preserving the headless Shopify architecture, Next.js 16 Cache Components patterns, and existing owner-gated launch boundaries.
+
+**Requirements:** SEO-AUDIT-01 URL parity and redirect coverage; SEO-AUDIT-02 visible, singular page H1 structure; SEO-AUDIT-03 collection read-more content placement; SEO-AUDIT-04 title, meta, canonical, language, robots, sitemap, and blog indexation correctness; SEO-AUDIT-05 structured-data coverage; SEO-AUDIT-06 crawlable server-rendered HTML for collection/product pages; SEO-AUDIT-07 Core Web Vitals/LCP evidence reconciliation.
+
+**Depends on:** Phase 17 performance/readiness evidence; final production domain decision (`https://www.teavision.com.au`); SEO audit PDF at `D:\Downloads\SEO Audit - Teavision Staging Site.pdf`; Shopify migration slug inventory and redirect ownership decisions.
+
+**Success Criteria:**
+1. Live/current-site and headless route inventories confirm which product, collection, page, and blog slugs are unchanged and which require permanent redirects.
+2. Collection and product pages render exactly one visible H1 in the crawlable HTML, and migrated rich content cannot introduce extra H1/H2 headings above the intended hierarchy.
+3. Collection pages keep only breadcrumb, optional banner image, visible H1, and brief intro before the product grid; long/read-more content is moved below the grid.
+4. SEO-targeted page titles no longer inherit an unwanted global brand suffix, `lang` is `en-AU`, canonical/sitemap URLs use the final strongest URL, robots disallow account/login surfaces, and blog tagged pages are noindexed and omitted from the sitemap.
+5. Structured data is present and validated for the appropriate page types: existing Product/Organization markup is preserved, service/local business/FAQ/review markup is added only where supported by visible content and reliable data.
+6. Built production/fake-provider evidence shows collection and product pages expose meaningful HTML before hydration; broad loading skeletons no longer mask crawl-critical title, intro, product, or metadata content.
+7. Core Web Vitals evidence is rerun after remediation, with LCP/render-blocking/unused-JS findings either passing or reconciled against Phase 17 PERF-01 acceptance rules.
+
+**Notes for planning:**
+- Read the local Next.js 16 docs for metadata, streaming, and Cache Components before changing Suspense or route-level rendering behavior.
+- Treat the audit's "CSR issue" as a crawlable-HTML/static-shell problem unless new evidence proves truly client-only rendering.
+- Do not run real Shopify hosted checkout, payment, shipping-rate, tax, order-creation, or success-redirect tests as part of this SEO phase without explicit owner approval.
+- Coordinate final host redirects, Search Console, and migration-stage 301s as owner/SEO-operator handoff items when they cannot be proven locally.
+
+**Plans:**
+
+**Wave 1**
+- [ ] `18-01` - SEO audit inventory, URL parity map, and redirect decision register.
+- [ ] `18-02` - Collection and product heading/content hierarchy remediation.
+
+**Wave 2** *(blocked on Wave 1 findings)*
+- [ ] `18-03` - Metadata, canonical, robots, sitemap, language, domain, and blog indexation remediation.
+- [ ] `18-04` - Structured-data audit, fill, and validation.
+
+**Wave 3** *(blocked on Waves 1-2 completion)*
+- [ ] `18-05` - Crawlable HTML, Core Web Vitals, and final SEO evidence pack.
+
+**Cross-cutting constraints:**
+- Keep storefront data flowing through Shopify/Sanity operation helpers; do not add stub SEO data when credentials or content are missing.
+- Keep route components server-first and push client code to interactive leaves only.
+- Redirect and final-domain evidence must distinguish local code behavior from production DNS/Vercel/Shopify/Search Console configuration.
+
 ## Next
 
-Phase 17 has executed 11 base plans and gap-closure plans 17-12 through 17-14, but verification remains `gaps_found` on PERF-01. Plan 17-15 has been replanned in place to repair account/image contract drift, serve launch-critical local AVIFs directly, and regenerate strict performance, final readiness, and Phase 17 verification evidence. Execute next with `$gsd-execute-phase 17 --gaps-only`.
+Phase 17 remains blocked on PERF-01 until revised `17-15` passes or valid dated performance acceptance is supplied. Phase 18 planning is complete with five executable plans; execute it with `$gsd-execute-phase 18` after the Phase 17/PERF-01 sequencing decision is resolved.
