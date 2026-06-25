@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: executing
-stopped_at: Completed 18-03-PLAN.md
-last_updated: "2026-06-25T11:30:38.065Z"
+stopped_at: Completed 18-04-PLAN.md
+last_updated: "2026-06-25T11:51:47.205Z"
 last_activity: 2026-06-25
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 29
-  completed_plans: 26
+  completed_plans: 27
   percent: 50
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 ## Current Position
 
 Phase: 18 (SEO Audit Remediation) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-06-25
 
@@ -105,6 +105,7 @@ Last activity: 2026-06-25
 | Phase 18 P01 | 16 min | 2 tasks | 6 files |
 | Phase 18 P02 | 9 min | 2 tasks | 8 files |
 | Phase 18 P03 | 16 min | 2 tasks | 23 files |
+| Phase 18 P04 | 14 min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -197,6 +198,9 @@ Recent decisions affecting current work:
 - [Phase 18]: Phase 18-03: /blog remains owner/SEO handoff; no /blog app route or redirect was added because the register did not mark it app-owned. — Plan 18-01 separated app-owned redirects from owner/operator handoffs, and the /blog row remained in the handoff table.
 - [Phase 18]: Phase 18-03: Audit-target home, collection, collection index, and route-owned service/landing titles use title.absolute; product pages keep root suffix behavior. — D-13 targets unwanted global suffixes on SEO pages while explicitly allowing product pages to keep the brand suffix unless new title-length evidence is added.
 - [Phase 18]: Phase 18-03: Robots account/login disallows are enforced in both disabled and enabled indexing modes while /search stays non-indexable through the route matrix. — D-14 requires account/login surfaces to be disallowed and search/tag indexation behavior to stay explicit under the launch gate.
+- [Phase 18]: Phase 18-04: Contact LocalBusiness schema is limited to visible contact details plus universal site basics. — Prevents unsupported hidden schema claims while satisfying audit LocalBusiness coverage; hours, geo, price, review, and rating fields remain omitted until visible evidence exists.
+- [Phase 18]: Phase 18-04: PDP aggregateRating and visible rating row share a finite rating plus positive reviewCount gate. — Keeps Product rating schema aligned with reliable customer-visible review data and avoids hidden claims when Trustoo or Shopify review counts are absent or zero.
+- [Phase 18]: Phase 18-04: Service and FAQ schema coverage is verified through route expectations rather than new hidden schema fields. — Existing route-local Service and FAQPage JSON-LD is backed by visible page data; unsupported Review and aggregateRating coverage remains documented as a residual gap.
 
 ### Roadmap Evolution
 
@@ -294,8 +298,8 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-25T11:30:06.606Z
-Stopped at: Completed 18-03-PLAN.md
+Last session: 2026-06-25T11:51:47.193Z
+Stopped at: Completed 18-04-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
