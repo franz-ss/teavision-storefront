@@ -41,6 +41,19 @@ type FakeCustomerAccountServer = {
   url: string
 }
 
+const FETCH_BLOCKED_PORTS = new Set([
+  1, 7, 9, 11, 13, 15, 17, 19, 20, 21, 22, 23, 25, 37, 42, 43, 53, 69, 77, 79,
+  87, 95, 101, 102, 103, 104, 109, 110, 111, 113, 115, 117, 119, 123, 135,
+  137, 139, 143, 161, 179, 389, 427, 465, 512, 513, 514, 515, 526, 530, 531,
+  532, 540, 548, 554, 556, 563, 587, 601, 636, 989, 990, 993, 995, 1719,
+  1720, 1723, 2049, 3659, 4045, 4190, 5060, 5061, 6000, 6566, 6665, 6666,
+  6667, 6668, 6669, 6697, 10080,
+])
+
+function isFetchBlockedPort(port: number): boolean {
+  return FETCH_BLOCKED_PORTS.has(port)
+}
+
 function readRequestBody(request: NodeJS.ReadableStream): Promise<string> {
   return new Promise((resolve, reject) => {
     let body = ''
@@ -269,12 +282,15 @@ function hasUnsupportedFields(
   return Object.keys(value).some((key) => !supportedFields.has(key))
 }
 
-export async function createFakeCustomerAccountApiServer({
-  initialProfile = makeCustomerAccountProfile(),
-  invalidTokenCode = 'invalid-code',
-  omitViewerSections = [],
-  port = 0,
-}: FakeCustomerAccountServerOptions = {}): Promise<FakeCustomerAccountServer> {
+export async function createFakeCustomerAccountApiServer(
+  options: FakeCustomerAccountServerOptions = {},
+): Promise<FakeCustomerAccountServer> {
+  const {
+    initialProfile = makeCustomerAccountProfile(),
+    invalidTokenCode = 'invalid-code',
+    omitViewerSections = [],
+    port = 0,
+  } = options
   let profile = initialProfile
   const requests: GraphqlRequest[] = []
   let tokens: FakeTokenRecord = {
@@ -590,6 +606,11 @@ export async function createFakeCustomerAccountApiServer({
   const address = server.address()
   if (typeof address === 'string' || address === null) {
     throw new Error('Unable to start fake Customer Account API server')
+  }
+
+  if (isFetchBlockedPort(address.port)) {
+    await closeServer(server)
+    return createFakeCustomerAccountApiServer({ ...options, port: 0 })
   }
 
   return {

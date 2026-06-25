@@ -67,4 +67,20 @@ describe('Customer Account API test infrastructure smoke test', () => {
       'avery@example.test',
     )
   })
+
+  test('avoids fetch-blocked ports when starting the fake server', async () => {
+    const server = await createFakeCustomerAccountApiServer({ port: 6000 })
+
+    try {
+      expect(server.url).not.toBe('http://127.0.0.1:6000')
+
+      const response = await fetch(
+        `${server.url}/.well-known/openid-configuration`,
+      )
+
+      expect(response.ok).toBe(true)
+    } finally {
+      await server.close()
+    }
+  })
 })
