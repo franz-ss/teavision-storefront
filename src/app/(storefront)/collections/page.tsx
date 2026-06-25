@@ -12,14 +12,16 @@ import { SITE_URL } from '@/lib/seo/site-url'
 
 import { CollectionCardImage } from './_components/collection-card-image'
 
+const COLLECTIONS_TITLE = 'Wholesale Tea Collections | Teavision'
+const COLLECTIONS_DESCRIPTION =
+  'Browse Teavision wholesale tea, herbs, spices, tea bags, superfood powders, wellness blends, and Australian native ingredient collections.'
+
 export const metadata: Metadata = withNoindexRobots({
-  title: 'Wholesale Tea Collections | Teavision',
-  description:
-    'Browse Teavision wholesale tea, herbs, spices, tea bags, superfood powders, wellness blends, and Australian native ingredient collections.',
+  title: { absolute: COLLECTIONS_TITLE },
+  description: COLLECTIONS_DESCRIPTION,
   openGraph: {
-    title: 'Wholesale Tea Collections | Teavision',
-    description:
-      'Browse Teavision wholesale tea, herbs, spices, tea bags, superfood powders, wellness blends, and Australian native ingredient collections.',
+    title: COLLECTIONS_TITLE,
+    description: COLLECTIONS_DESCRIPTION,
     url: '/collections',
   },
   alternates: { canonical: '/collections' },

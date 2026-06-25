@@ -19,7 +19,7 @@ const PAGE_DESCRIPTION =
   "Australia's #1 private label tea partner. Custom blends, tea bag manufacturing, extract powders, and full packaging under your brand. Low MOQs, export-ready docs."
 
 export const metadata: Metadata = withNoindexRobots({
-  title: PAGE_TITLE,
+  title: { absolute: PAGE_TITLE },
   description: PAGE_DESCRIPTION,
   openGraph: {
     title: PAGE_TITLE,

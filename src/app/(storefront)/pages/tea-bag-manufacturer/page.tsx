@@ -20,7 +20,7 @@ const PAGE_DESCRIPTION =
   'Custom tea bags and blends for global brands. Over 10 million tea bags produced annually with private label packaging and international shipping from Australia. MOQ from 8,000 bags.'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: PAGE_TITLE,
+  title: { absolute: PAGE_TITLE },
   description: PAGE_DESCRIPTION,
   openGraph: {
     title: PAGE_TITLE,

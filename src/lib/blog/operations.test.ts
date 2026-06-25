@@ -2,10 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { getSanityImageUrl, sanityFetch } from '@/lib/sanity/client'
 import type {
+  SanityBlogListingResult,
   SanityBlogPostSummary,
   SanityDefaultBlogListingResult,
   SanityImageWithAlt,
 } from '@/lib/sanity/types'
+import { generateListingMetadata } from '@/app/(storefront)/blogs/[blog]/_lib/metadata'
 
 import { getDefaultBlogListing } from './operations'
 
@@ -17,6 +19,10 @@ vi.mock('next/cache', () => ({
 vi.mock('@/lib/sanity/client', () => ({
   getSanityImageUrl: vi.fn(),
   sanityFetch: vi.fn(),
+}))
+
+vi.mock('@/lib/seo/noindex', () => ({
+  withNoindexRobots: vi.fn((metadata) => metadata),
 }))
 
 function makeImage(id: string, lqip: string | null): SanityImageWithAlt {
@@ -156,6 +162,51 @@ describe('getDefaultBlogListing', () => {
       2,
       expect.any(String),
       expect.objectContaining({ offset: 6, limit: 12 }),
+    )
+  })
+})
+
+describe('generateListingMetadata', () => {
+  beforeEach(() => {
+    vi.mocked(sanityFetch).mockReset()
+    vi.mocked(getSanityImageUrl).mockReset()
+    vi.mocked(getSanityImageUrl).mockReturnValue(
+      'https://cdn.sanity.io/generated.jpg',
+    )
+  })
+
+  it('noindexes tagged blog listings while allowing crawlers to follow links', async () => {
+    const result: SanityBlogListingResult = {
+      articles: [makePost('article')],
+      blog: {
+        _id: 'blog',
+        description: 'Tea journal',
+        featuredPosts: [],
+        heroImage: null,
+        seo: {
+          canonicalPath: null,
+          metaDescription: 'Tea journal metadata',
+          metaTitle: 'Tea Journal',
+          noIndex: false,
+          ogImage: null,
+        },
+        slug: 'teavision-blogs',
+        title: 'Tea Journal',
+      },
+    }
+    vi.mocked(sanityFetch).mockResolvedValue(result)
+
+    const metadata = await generateListingMetadata({
+      params: Promise.resolve({
+        blog: 'teavision-blogs',
+        tag: 'green-tea',
+      }),
+      searchParams: Promise.resolve({}),
+    })
+
+    expect(metadata.robots).toEqual({ index: false, follow: true })
+    expect(metadata.alternates?.canonical).toBe(
+      '/blogs/teavision-blogs/tagged/green-tea',
     )
   })
 })

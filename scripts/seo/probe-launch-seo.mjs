@@ -2,6 +2,14 @@ import { existsSync, readFileSync } from 'node:fs'
 import process from 'node:process'
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:3000'
+const REQUIRED_ROBOTS_DISALLOWS = [
+  '/api/',
+  '/account',
+  '/account/',
+  '/account/login',
+  '/account/callback',
+  '/account/logout',
+]
 const VALID_MODES = new Set([
   'disabled',
   'enabled',
@@ -257,6 +265,25 @@ function getCanonicalHref(html, baseUrl) {
   } catch {
     return null
   }
+}
+
+function getHtmlLang(html) {
+  return html.match(/<html\b[^>]*\blang=["']([^"']+)["']/i)?.[1] ?? null
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function getMissingRobotsDisallows(robotsText) {
+  return REQUIRED_ROBOTS_DISALLOWS.filter((path) => {
+    const pattern = new RegExp(
+      `^\\s*Disallow:\\s*${escapeRegExp(path)}\\s*$`,
+      'im',
+    )
+
+    return !pattern.test(robotsText)
+  })
 }
 
 function isPatternPath(path) {
@@ -711,6 +738,21 @@ async function runDisabledMode(baseUrl) {
         ),
   )
 
+  const missingDisallows = getMissingRobotsDisallows(robotsText)
+  results.push(
+    missingDisallows.length === 0
+      ? pass(
+          'disabled robots account disallows',
+          '/robots.txt',
+          REQUIRED_ROBOTS_DISALLOWS.join(', '),
+        )
+      : fail(
+          'disabled robots account disallows',
+          '/robots.txt',
+          `missing ${missingDisallows.join(', ')}`,
+        ),
+  )
+
   const sitemapLocs = getLocPaths(sitemapText)
   results.push(
     sitemapResponse.ok || sitemapResponse.status === 404
@@ -798,6 +840,20 @@ async function runEnabledMode(baseUrl, productPath) {
           'Sitemap line missing',
         ),
   )
+  const missingDisallows = getMissingRobotsDisallows(robotsText)
+  results.push(
+    missingDisallows.length === 0
+      ? pass(
+          'enabled robots account disallows',
+          '/robots.txt',
+          REQUIRED_ROBOTS_DISALLOWS.join(', '),
+        )
+      : fail(
+          'enabled robots account disallows',
+          '/robots.txt',
+          `missing ${missingDisallows.join(', ')}`,
+        ),
+  )
   results.push(
     sitemapResponse.ok
       ? pass(
@@ -809,6 +865,34 @@ async function runEnabledMode(baseUrl, productPath) {
           'enabled sitemap fetch',
           '/sitemap.xml',
           `status ${sitemapResponse.status}`,
+        ),
+  )
+  results.push(
+    sitemapLocs.some((path) => /\/blogs\/[^/]+\/tagged\//.test(path))
+      ? fail(
+          'enabled sitemap tagged blog exclusion',
+          '/sitemap.xml',
+          'tagged blog URL found',
+        )
+      : pass(
+          'enabled sitemap tagged blog exclusion',
+          '/sitemap.xml',
+          'no tagged blog URLs',
+        ),
+  )
+
+  const { response: homeResponse, text: homeText } = await fetchText(
+    baseUrl,
+    '/',
+  )
+  const htmlLang = getHtmlLang(homeText)
+  results.push(
+    homeResponse.ok && htmlLang === 'en-AU'
+      ? pass('root html language', '/', htmlLang)
+      : fail(
+          'root html language',
+          '/',
+          `status ${homeResponse.status}; lang ${htmlLang ?? 'missing'}`,
         ),
   )
 

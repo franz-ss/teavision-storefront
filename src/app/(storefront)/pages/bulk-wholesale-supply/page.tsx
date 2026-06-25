@@ -17,7 +17,7 @@ import { WhyChooseSection } from './_components/why-choose-section'
 import { PAGE_DESCRIPTION, PAGE_PATH, PAGE_TITLE } from './_lib/data'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: PAGE_TITLE,
+  title: { absolute: PAGE_TITLE },
   description: PAGE_DESCRIPTION,
   openGraph: {
     title: PAGE_TITLE,

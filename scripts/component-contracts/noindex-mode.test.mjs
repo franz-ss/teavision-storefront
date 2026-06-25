@@ -36,7 +36,18 @@ test('metadata, robots, and sitemap routes use shared noindex controls', () => {
     /if\s*\(\s*isNoindexModeEnabled\(\)\s*\)\s*{\s*return\s*\[\]\s*}/s,
   )
   assert.doesNotMatch(robots, /disallow:\s*['"]\/['"]/)
-  assert.match(robots, /disallow:\s*\[['"]\/api\/['"]\]/)
+  assert.match(robots, /disallow:\s*DISALLOWED_PATHS/)
+
+  for (const path of [
+    '/api/',
+    '/account',
+    '/account/',
+    '/account/login',
+    '/account/callback',
+    '/account/logout',
+  ]) {
+    assert.match(robots, new RegExp(path.replaceAll('/', '\\/')))
+  }
 })
 
 test('final readiness flips enabled SEO through launch-indexing lifecycle', () => {

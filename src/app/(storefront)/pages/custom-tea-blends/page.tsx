@@ -10,7 +10,7 @@ import { withNoindexRobots } from '@/lib/seo/noindex'
 import { PageContent } from './_components/page-content'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: CUSTOM_TEA_BLEND_META_TITLE,
+  title: { absolute: CUSTOM_TEA_BLEND_META_TITLE },
   description: CUSTOM_TEA_BLEND_DESCRIPTION,
   openGraph: {
     title: 'Custom Tea Blending | Teavision',

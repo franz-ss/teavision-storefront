@@ -5,8 +5,6 @@ import {
   getArticlePath,
   getBlog,
   getBlogPath,
-  getTagPath,
-  getUniqueArticleTags,
   isLocalCanonicalPath,
 } from '@/lib/blog/operations'
 import { getLaunchSeoRouteExpectations } from '@/lib/seo/launch-route-matrix'
@@ -93,22 +91,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }))
 
-  const tagUrls: MetadataRoute.Sitemap =
-    blog && !blog.seo.noIndex
-      ? getUniqueArticleTags(indexedArticles).map((tag) => ({
-          url: `${SITE_URL}${getTagPath(DEFAULT_BLOG_HANDLE, tag)}`,
-          lastModified: latestArticleDate,
-          changeFrequency: 'monthly',
-          priority: 0.4,
-        }))
-      : []
-
   return [
     ...STATIC_PAGES,
     ...blogUrls,
     ...productUrls,
     ...collectionUrls,
     ...articleUrls,
-    ...tagUrls,
   ]
 }

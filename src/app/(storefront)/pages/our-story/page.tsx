@@ -9,7 +9,7 @@ const DESCRIPTION =
   'Born in Melbourne, Teavision was founded by Lucas and Belinda in 2014 to make a meaningful difference through quality teas, herbs, and healthy living.'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: 'Our Story',
+  title: { absolute: 'Our Story' },
   description: DESCRIPTION,
   openGraph: {
     title: 'Our Story',

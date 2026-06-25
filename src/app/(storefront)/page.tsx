@@ -27,14 +27,16 @@ import {
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 
+const HOME_TITLE = 'Teavision | Teas Australia: Online Wholesale Store'
+const HOME_DESCRIPTION =
+  'Looking to Buy Tea Online at Wholesale Prices? Our award-winning Australian tea company provide Organic, Natural & Healthy ingredients. Visit our site today!'
+
 export const metadata: Metadata = withNoindexRobots({
-  title: 'Teavision | Teas Australia: Online Wholesale Store',
-  description:
-    'Looking to Buy Tea Online at Wholesale Prices? Our award-winning Australian tea company provide Organic, Natural & Healthy ingredients. Visit our site today!',
+  title: { absolute: HOME_TITLE },
+  description: HOME_DESCRIPTION,
   openGraph: {
-    title: 'Teavision | Teas Australia: Online Wholesale Store',
-    description:
-      'Looking to Buy Tea Online at Wholesale Prices? Our award-winning Australian tea company provide Organic, Natural & Healthy ingredients. Visit our site today!',
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     url: '/',
   },
   alternates: { canonical: '/' },

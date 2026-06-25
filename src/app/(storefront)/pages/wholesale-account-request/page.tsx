@@ -13,7 +13,7 @@ import { withNoindexRobots } from '@/lib/seo/noindex'
 import { WholesaleAccountForm } from './_components/form'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: WHOLESALE_ACCOUNT_META_TITLE,
+  title: { absolute: WHOLESALE_ACCOUNT_META_TITLE },
   description: WHOLESALE_ACCOUNT_DESCRIPTION,
   openGraph: {
     title: WHOLESALE_ACCOUNT_META_TITLE,
@@ -63,8 +63,8 @@ export default function Page() {
             {WHOLESALE_ACCOUNT_PAGE_TITLE}
           </h1>
           <p className="type-lede text-paper/85 mt-6 max-w-[52ch]">
-            This form is for customers purchasing in bulk 100kg+ orders. Tell
-            us what you need and when you plan to start, and the Teavision team
+            This form is for customers purchasing in bulk 100kg+ orders. Tell us
+            what you need and when you plan to start, and the Teavision team
             will review your account request.
           </p>
         </Section.Container>

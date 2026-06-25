@@ -31,7 +31,7 @@ export async function generateMetadata({
   )
 
   return withNoindexRobots({
-    title,
+    title: { absolute: title },
     description,
     openGraph: {
       title,

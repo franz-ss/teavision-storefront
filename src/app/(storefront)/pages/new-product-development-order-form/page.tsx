@@ -12,7 +12,7 @@ import { withNoindexRobots } from '@/lib/seo/noindex'
 import { NpdOrderForm } from './_components/npd-order-form'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: NPD_ORDER_META_TITLE,
+  title: { absolute: NPD_ORDER_META_TITLE },
   description: NPD_ORDER_DESCRIPTION,
   openGraph: {
     title: 'New Product Development Order Form | Teavision',
@@ -33,8 +33,8 @@ export default function Page() {
             {NPD_ORDER_PAGE_TITLE}
           </h1>
           <p className="type-lede text-paper/85 mt-6 max-w-[54ch]">
-            Tell us about your blend idea and packaging preferences.
-            We&rsquo;ll confirm details and next steps.
+            Tell us about your blend idea and packaging preferences. We&rsquo;ll
+            confirm details and next steps.
           </p>
         </Section.Container>
       </Section.Root>

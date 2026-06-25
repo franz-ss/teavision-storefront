@@ -42,7 +42,8 @@ export async function generateListingMetadata({
           query: null,
           page: currentPage,
         })
-  const noIndex = blogData.seo.noIndex || Boolean(q?.trim())
+  const noIndex =
+    blogData.seo.noIndex || Boolean(activeTag) || Boolean(q?.trim())
 
   return withNoindexRobots({
     title,

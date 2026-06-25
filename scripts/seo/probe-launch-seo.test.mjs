@@ -55,3 +55,23 @@ test('url-audit mode fails when a coded redirect lacks a register row', () => {
     rmSync(directory, { recursive: true, force: true })
   }
 })
+
+test('live SEO modes include Phase 18 language, robots, and tag sitemap checks', () => {
+  const source = readFileSync(SCRIPT_PATH, 'utf8')
+
+  for (const path of [
+    '/api/',
+    '/account',
+    '/account/',
+    '/account/login',
+    '/account/callback',
+    '/account/logout',
+  ]) {
+    assert.match(source, new RegExp(`'${path.replaceAll('/', '\\/')}'`))
+  }
+
+  assert.match(source, /root html language/)
+  assert.match(source, /enabled robots account disallows/)
+  assert.match(source, /disabled robots account disallows/)
+  assert.match(source, /enabled sitemap tagged blog exclusion/)
+})
