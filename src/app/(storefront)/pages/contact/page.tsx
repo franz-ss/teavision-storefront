@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import { withNoindexRobots } from '@/lib/seo/noindex'
 
+import { JsonLd } from './_components/json-ld'
 import { PageContent } from './_components/page-content'
 
 export const metadata: Metadata = withNoindexRobots({
@@ -18,5 +19,10 @@ export const metadata: Metadata = withNoindexRobots({
 })
 
 export default function Page() {
-  return <PageContent />
+  return (
+    <>
+      <JsonLd />
+      <PageContent />
+    </>
+  )
 }
