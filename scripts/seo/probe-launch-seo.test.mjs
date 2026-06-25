@@ -77,3 +77,41 @@ test('live SEO modes include Phase 18 language, robots, and tag sitemap checks',
   assert.match(source, /disabled robots account disallows/)
   assert.match(source, /enabled sitemap tagged blog exclusion/)
 })
+
+test('structured data helpers parse Product schema inside arrays and graph objects', async () => {
+  const {
+    extractJsonLd,
+    findSchemaNodes,
+    hasProductAggregateRating,
+    hasProductJsonLd,
+    hasVisibleProductReviewSummary,
+  } = await import('./probe-launch-seo.mjs')
+  const html = `
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            { "@type": "BreadcrumbList" },
+            {
+              "@type": "Product",
+              "name": "Reviewed Tea",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": 4.7,
+                "reviewCount": 12
+              }
+            }
+          ]
+        }
+      ]
+    </script>
+    <div>4.7 · 12 reviews</div>
+  `
+  const values = extractJsonLd(html)
+
+  assert.equal(hasProductJsonLd(values), true)
+  assert.equal(hasProductAggregateRating(values), true)
+  assert.equal(hasVisibleProductReviewSummary(html), true)
+  assert.equal(findSchemaNodes(values, 'Product')[0].name, 'Reviewed Tea')
+})

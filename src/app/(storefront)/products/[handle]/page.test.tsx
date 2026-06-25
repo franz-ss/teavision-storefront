@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { getTrustooProductRatings } from '@/lib/reviews/trustoo'
 import { getProduct } from '@/lib/shopify/operations/product'
+import type { Product } from '@/lib/shopify/types'
 import { makeProduct } from '@/tests/fixtures/shopify/product'
 
 import { ProductContent } from './page'
@@ -59,6 +60,41 @@ vi.mock('./_components/view-analytics', () => ({
   ProductViewAnalytics: () => null,
 }))
 
+type JsonLdNode = Record<string, unknown>
+
+function collectJsonLdNodes(value: unknown): JsonLdNode[] {
+  if (Array.isArray(value)) return value.flatMap(collectJsonLdNodes)
+  if (typeof value !== 'object' || value === null) return []
+
+  const node = value as JsonLdNode
+  const graph = collectJsonLdNodes(node['@graph'])
+
+  return [node, ...graph]
+}
+
+function readJsonLdNodes(html: string): JsonLdNode[] {
+  return [
+    ...html.matchAll(
+      /<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/g,
+    ),
+  ].flatMap((match) => collectJsonLdNodes(JSON.parse(match[1] ?? 'null')))
+}
+
+function findJsonLdNode(html: string, schemaType: string) {
+  return readJsonLdNodes(html).find((node) => node['@type'] === schemaType)
+}
+
+async function renderProductContent(product: Product) {
+  vi.mocked(getProduct).mockResolvedValue(product)
+
+  const element = await ProductContent({
+    params: Promise.resolve({ handle: product.handle }),
+    searchParams: Promise.resolve({}),
+  })
+
+  return renderToStaticMarkup(element as ReactNode)
+}
+
 describe('ProductContent heading hierarchy', () => {
   beforeEach(() => {
     vi.mocked(getTrustooProductRatings).mockResolvedValue({})
@@ -90,5 +126,71 @@ describe('ProductContent heading hierarchy', () => {
     )
     expect(html).not.toContain('<h1>Imported product title</h1>')
     expect(html).not.toContain('<h2>Imported section</h2>')
+  })
+})
+
+describe('ProductContent aggregateRating JSON-LD', () => {
+  beforeEach(() => {
+    vi.mocked(getTrustooProductRatings).mockResolvedValue({})
+  })
+
+  it('emits aggregateRating when the same rating and review count are visible', async () => {
+    vi.mocked(getTrustooProductRatings).mockResolvedValue({
+      'reviewed-tea': { rating: 4.7, reviewCount: 12 },
+    })
+
+    const html = await renderProductContent(
+      makeProduct({
+        handle: 'reviewed-tea',
+        title: 'Reviewed Tea',
+        rating: undefined,
+        reviewCount: undefined,
+      }),
+    )
+    const productJsonLd = findJsonLdNode(html, 'Product')
+
+    expect(html).toContain('4.7')
+    expect(html).toContain('12 reviews')
+    expect(productJsonLd).toMatchObject({
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: 4.7,
+        reviewCount: 12,
+      },
+    })
+  })
+
+  it('omits aggregateRating when reviewCount is missing', async () => {
+    const html = await renderProductContent(
+      makeProduct({
+        handle: 'missing-review-count',
+        title: 'Missing Review Count',
+        rating: undefined,
+        reviewCount: undefined,
+      }),
+    )
+    const productJsonLd = findJsonLdNode(html, 'Product')
+
+    expect(html).not.toMatch(/\d+(?:\.\d+)? · \d[\d,]* reviews?/)
+    expect(productJsonLd).not.toHaveProperty('aggregateRating')
+  })
+
+  it('omits aggregateRating when reviewCount is zero', async () => {
+    vi.mocked(getTrustooProductRatings).mockResolvedValue({
+      'zero-review-count': { rating: 4.2, reviewCount: 0 },
+    })
+
+    const html = await renderProductContent(
+      makeProduct({
+        handle: 'zero-review-count',
+        title: 'Zero Review Count',
+        rating: undefined,
+        reviewCount: undefined,
+      }),
+    )
+    const productJsonLd = findJsonLdNode(html, 'Product')
+
+    expect(html).not.toContain('0 reviews')
+    expect(productJsonLd).not.toHaveProperty('aggregateRating')
   })
 })

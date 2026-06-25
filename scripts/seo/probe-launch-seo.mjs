@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import process from 'node:process'
+import { pathToFileURL } from 'node:url'
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:3000'
 const REQUIRED_ROBOTS_DISALLOWS = [
@@ -388,7 +389,7 @@ function getCodedRedirectsForAudit() {
   })
 }
 
-function extractJsonLd(html) {
+export function extractJsonLd(html) {
   return [
     ...html.matchAll(
       /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
@@ -399,12 +400,59 @@ function extractJsonLd(html) {
     .map((script) => JSON.parse(script))
 }
 
-function hasProductJsonLd(values) {
-  return values.some((value) => {
-    if (Array.isArray(value)) return hasProductJsonLd(value)
+function schemaTypeMatches(value, schemaType) {
+  const type = value?.['@type']
 
-    return value && typeof value === 'object' && value['@type'] === 'Product'
-  })
+  return (
+    type === schemaType || (Array.isArray(type) && type.includes(schemaType))
+  )
+}
+
+export function findSchemaNodes(values, schemaType) {
+  const nodes = []
+
+  function visit(value) {
+    if (Array.isArray(value)) {
+      for (const item of value) visit(item)
+      return
+    }
+
+    if (!value || typeof value !== 'object') return
+
+    if (schemaTypeMatches(value, schemaType)) {
+      nodes.push(value)
+    }
+
+    visit(value['@graph'])
+  }
+
+  visit(values)
+
+  return nodes
+}
+
+export function hasProductJsonLd(values) {
+  return findSchemaNodes(values, 'Product').length > 0
+}
+
+function isAggregateRating(value) {
+  return Boolean(
+    value &&
+    typeof value === 'object' &&
+    schemaTypeMatches(value, 'AggregateRating'),
+  )
+}
+
+export function hasProductAggregateRating(values) {
+  return findSchemaNodes(values, 'Product').some((product) =>
+    isAggregateRating(product.aggregateRating),
+  )
+}
+
+export function hasVisibleProductReviewSummary(html) {
+  const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
+
+  return /\b\d+(?:\.\d+)?\s*·\s*\d[\d,]*\s+reviews?\b/i.test(text)
 }
 
 function hasShopifyCredentials() {
@@ -995,7 +1043,7 @@ async function runEnabledMode(baseUrl, productPath) {
     )
   }
 
-  results.push(await probeProductStructuredData(baseUrl, productPath))
+  results.push(...(await probeProductStructuredData(baseUrl, productPath)))
 
   return results
 }
@@ -1004,11 +1052,13 @@ async function probeProductStructuredData(baseUrl, productPath) {
   const normalizedPath = productPath.trim()
 
   if (!normalizedPath) {
-    return warn(
-      'product structured data',
-      'SEO_PROBE_PRODUCT_PATH',
-      'skipped; set a product path to check rendered Product JSON-LD',
-    )
+    return [
+      warn(
+        'product structured data',
+        'SEO_PROBE_PRODUCT_PATH',
+        'skipped; set a product path to check rendered Product JSON-LD',
+      ),
+    ]
   }
 
   const path = normalizedPath.startsWith('/')
@@ -1019,28 +1069,66 @@ async function probeProductStructuredData(baseUrl, productPath) {
     const { response, text } = await fetchText(baseUrl, path)
 
     if (!response.ok && !hasShopifyCredentials()) {
-      return warn(
-        'product structured data',
-        path,
-        `skipped; status ${response.status} and Shopify credentials are absent`,
-      )
+      return [
+        warn(
+          'product structured data',
+          path,
+          `skipped; status ${response.status} and Shopify credentials are absent`,
+        ),
+      ]
     }
 
     const values = extractJsonLd(text)
+    const hasProduct = hasProductJsonLd(values)
+    const hasAggregateRating = hasProductAggregateRating(values)
+    const hasVisibleReviews = hasVisibleProductReviewSummary(text)
+    const results = [
+      hasProduct
+        ? pass('product structured data', path, 'Product JSON-LD parsed')
+        : fail('product structured data', path, 'Product JSON-LD not found'),
+    ]
 
-    return hasProductJsonLd(values)
-      ? pass('product structured data', path, 'Product JSON-LD parsed')
-      : fail('product structured data', path, 'Product JSON-LD not found')
+    if (!hasProduct) return results
+
+    results.push(
+      hasVisibleReviews && hasAggregateRating
+        ? pass(
+            'product aggregateRating structured data',
+            path,
+            'AggregateRating JSON-LD matches visible review summary',
+          )
+        : hasVisibleReviews
+          ? fail(
+              'product aggregateRating structured data',
+              path,
+              'visible review summary exists but Product aggregateRating is missing',
+            )
+          : hasAggregateRating
+            ? fail(
+                'product aggregateRating structured data',
+                path,
+                'Product aggregateRating present without visible review summary',
+              )
+            : warn(
+                'product aggregateRating structured data',
+                path,
+                'skipped; no reliable visible review data detected',
+              ),
+    )
+
+    return results
   } catch (error) {
     if (!hasShopifyCredentials()) {
-      return warn(
-        'product structured data',
-        path,
-        `skipped; Shopify credentials are absent (${formatError(error)})`,
-      )
+      return [
+        warn(
+          'product structured data',
+          path,
+          `skipped; Shopify credentials are absent (${formatError(error)})`,
+        ),
+      ]
     }
 
-    return fail('product structured data', path, formatError(error))
+    return [fail('product structured data', path, formatError(error))]
   }
 }
 
@@ -1052,8 +1140,8 @@ function hasFailures(results) {
   return results.some((result) => result.status === 'FAIL')
 }
 
-try {
-  const args = parseArgs(process.argv.slice(2))
+export async function main(argv = process.argv.slice(2)) {
+  const args = parseArgs(argv)
   const baseUrl = parseBaseUrl(args.baseUrl)
   const results =
     args.mode === 'runbook'
@@ -1071,7 +1159,20 @@ try {
   if (hasFailures(results)) {
     process.exitCode = 1
   }
-} catch (error) {
-  console.error(formatError(error))
-  process.exitCode = 1
+}
+
+function isDirectExecution() {
+  return (
+    Boolean(process.argv[1]) &&
+    import.meta.url === pathToFileURL(process.argv[1]).href
+  )
+}
+
+if (isDirectExecution()) {
+  try {
+    await main()
+  } catch (error) {
+    console.error(formatError(error))
+    process.exitCode = 1
+  }
 }

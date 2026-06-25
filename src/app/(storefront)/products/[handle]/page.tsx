@@ -55,6 +55,25 @@ function getMetaSegments(tags: string[], optionName?: string): string[] {
     .slice(0, 3)
 }
 
+function getVisibleProductReviewSummary(summary: {
+  rating?: number
+  reviewCount?: number
+}): { rating: number; reviewCount: number } | null {
+  const { rating, reviewCount } = summary
+
+  if (
+    typeof rating === 'number' &&
+    Number.isFinite(rating) &&
+    typeof reviewCount === 'number' &&
+    Number.isFinite(reviewCount) &&
+    reviewCount > 0
+  ) {
+    return { rating, reviewCount }
+  }
+
+  return null
+}
+
 type Props = {
   params: Promise<{ handle: string }>
   searchParams: Promise<{ variant?: string | string[] }>
@@ -116,6 +135,8 @@ export async function ProductContent({
     rating: product.rating,
     reviewCount: product.reviewCount,
   }
+  const visibleProductReviewSummary =
+    getVisibleProductReviewSummary(productReviewSummary)
   const visibleTags = product.tags
     .map(formatTag)
     .filter((tag): tag is string => tag !== null)
@@ -161,6 +182,13 @@ export async function ProductContent({
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
     },
+    ...(visibleProductReviewSummary && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: visibleProductReviewSummary.rating,
+        reviewCount: visibleProductReviewSummary.reviewCount,
+      },
+    }),
   }
 
   const breadcrumbJsonLd = {
@@ -278,18 +306,19 @@ export async function ProductContent({
             <h1 className="font-display text-ink text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.04] font-medium">
               {product.title}
             </h1>
-            {productReviewSummary.rating !== undefined ? (
+            {visibleProductReviewSummary ? (
               <div className="flex flex-wrap items-center gap-2.5">
-                <StarRating rating={productReviewSummary.rating} size="md" />
-                {productReviewSummary.reviewCount !== undefined ? (
-                  <span className="type-mono-meta text-ink-faint">
-                    {productReviewSummary.rating.toFixed(1)} ·{' '}
-                    {productReviewSummary.reviewCount.toLocaleString()}{' '}
-                    {productReviewSummary.reviewCount === 1
-                      ? 'review'
-                      : 'reviews'}
-                  </span>
-                ) : null}
+                <StarRating
+                  rating={visibleProductReviewSummary.rating}
+                  size="md"
+                />
+                <span className="type-mono-meta text-ink-faint">
+                  {visibleProductReviewSummary.rating.toFixed(1)} ·{' '}
+                  {visibleProductReviewSummary.reviewCount.toLocaleString()}{' '}
+                  {visibleProductReviewSummary.reviewCount === 1
+                    ? 'review'
+                    : 'reviews'}
+                </span>
               </div>
             ) : null}
           </div>
