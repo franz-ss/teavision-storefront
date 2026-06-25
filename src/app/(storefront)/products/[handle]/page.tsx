@@ -93,7 +93,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 }
 
-async function ProductContent({
+export async function ProductContent({
   params,
   searchParams,
 }: {

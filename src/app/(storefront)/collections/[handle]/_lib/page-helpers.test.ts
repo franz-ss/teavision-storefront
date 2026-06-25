@@ -65,6 +65,19 @@ describe('parseCollectionRichHero', () => {
   })
 })
 
+describe('normalizeHtml', () => {
+  it('demotes imported collection H1 and H2 headings to H3', () => {
+    const html = pageHelpers.normalizeHtml(
+      '<h1>Imported title</h1><h2>Imported section</h2><p>Body copy</p>',
+    )
+
+    expect(html).toContain('<h3>Imported title</h3>')
+    expect(html).toContain('<h3>Imported section</h3>')
+    expect(html).not.toContain('<h1')
+    expect(html).not.toContain('<h2')
+  })
+})
+
 describe('parsePageParam', () => {
   it('returns 1 for undefined', () => {
     expect(pageHelpers.parsePageParam(undefined)).toBe(1)
@@ -310,11 +323,11 @@ describe('price filter exclusion', () => {
     const priceInput = JSON.stringify({ price: { min: 0, max: 100 } })
     const tagInput = JSON.stringify({ tag: 'organic' })
 
-    expect(pageHelpers.parseSelectedFilterParams([priceInput, tagInput])).toEqual(
-      {
-        selectedFilters: [tagInput],
-        productFilters: [{ tag: 'organic' }],
-      },
-    )
+    expect(
+      pageHelpers.parseSelectedFilterParams([priceInput, tagInput]),
+    ).toEqual({
+      selectedFilters: [tagInput],
+      productFilters: [{ tag: 'organic' }],
+    })
   })
 })

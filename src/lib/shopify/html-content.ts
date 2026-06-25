@@ -189,6 +189,15 @@ const SHOPIFY_HTML_TABLE_REGION_CLASS_NAMES: Record<
     'focus-visible:ring-ring my-6 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
 }
 
+const SHOPIFY_HTML_HEADING_TRANSFORMS: Record<
+  ShopifyHtmlVariant,
+  Partial<Record<HeadingTag, HeadingTag>>
+> = {
+  article: { h1: 'h2' },
+  compact: { h1: 'h3', h2: 'h3' },
+  page: { h1: 'h2' },
+}
+
 const SHOPIFY_HTML_LINK_CLASS_NAME =
   'text-brand hover:text-brand-deep focus-visible:ring-ring rounded underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
 
@@ -283,8 +292,8 @@ function buildAllowedClasses(): NonNullable<
 
 function buildHeadingTransforms(
   classMap: ShopifyHtmlClassMap,
+  headingMap: Partial<Record<HeadingTag, HeadingTag>>,
 ): NonNullable<sanitizeHtml.IOptions['transformTags']> {
-  const headingMap: Partial<Record<HeadingTag, HeadingTag>> = { h1: 'h2' }
   const transforms: NonNullable<sanitizeHtml.IOptions['transformTags']> = {
     a: transformExternalLink,
     img: (tagName, attributes) =>
@@ -323,7 +332,10 @@ function buildShopifyHtmlOptions(
     allowedTags: SHOPIFY_HTML_ALLOWED_TAGS,
     allowProtocolRelative: false,
     disallowedTagsMode: 'discard',
-    transformTags: buildHeadingTransforms(classMap),
+    transformTags: buildHeadingTransforms(
+      classMap,
+      SHOPIFY_HTML_HEADING_TRANSFORMS[variant],
+    ),
   }
 }
 
