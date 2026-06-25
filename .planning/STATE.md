@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
-status: executing
-stopped_at: Completed 18-04-PLAN.md
-last_updated: "2026-06-25T11:51:47.205Z"
+status: verifying
+stopped_at: Completed 18-05-PLAN.md
+last_updated: "2026-06-25T12:21:09.329Z"
 last_activity: 2026-06-25
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 29
-  completed_plans: 27
-  percent: 50
+  completed_plans: 28
+  percent: 75
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 
 ## Current Position
 
-Phase: 18 (SEO Audit Remediation) — EXECUTING
+Phase: 18 (SEO Audit Remediation) — VERIFYING
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-06-25
 
 ## Performance Metrics
@@ -106,6 +106,7 @@ Last activity: 2026-06-25
 | Phase 18 P02 | 9 min | 2 tasks | 8 files |
 | Phase 18 P03 | 16 min | 2 tasks | 23 files |
 | Phase 18 P04 | 14 min | 3 tasks | 8 files |
+| Phase 18 P05 | 30 min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -201,6 +202,9 @@ Recent decisions affecting current work:
 - [Phase 18]: Phase 18-04: Contact LocalBusiness schema is limited to visible contact details plus universal site basics. — Prevents unsupported hidden schema claims while satisfying audit LocalBusiness coverage; hours, geo, price, review, and rating fields remain omitted until visible evidence exists.
 - [Phase 18]: Phase 18-04: PDP aggregateRating and visible rating row share a finite rating plus positive reviewCount gate. — Keeps Product rating schema aligned with reliable customer-visible review data and avoids hidden claims when Trustoo or Shopify review counts are absent or zero.
 - [Phase 18]: Phase 18-04: Service and FAQ schema coverage is verified through route expectations rather than new hidden schema fields. — Existing route-local Service and FAQPage JSON-LD is backed by visible page data; unsupported Review and aggregateRating coverage remains documented as a residual gap.
+- [Phase 18]: Crawlable HTML proof uses raw fake-provider production HTML with Accept-Encoding identity for /collections/all and /products/test-standard-tea. — Provides repeatable SEO-AUDIT-06 evidence without claiming live Shopify or Search Console proof.
+- [Phase 18]: Strict local Lighthouse/readiness failures stay blocking because no dated owner, staging, or field Core Web Vitals acceptance artifact was supplied. — Preserves Phase 17 PERF-01 semantics and avoids silently accepting failed local metrics.
+- [Phase 18]: Final SEO audit matrix separates automated remediation proof from owner/operator-gated production proof. — Keeps DNS, Shopify admin, checkout, Search Console, and performance acceptance evidence distinct from local app code evidence.
 
 ### Roadmap Evolution
 
@@ -298,10 +302,11 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 ## Session Continuity
 
-Last session: 2026-06-25T11:51:47.193Z
-Stopped at: Completed 18-04-PLAN.md
+Last session: 2026-06-25T12:21:09.317Z
+Stopped at: Completed 18-05-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
 
+- Verify Phase 18 SEO evidence using `.planning/phases/18-seo-audit-remediation/18-05-SUMMARY.md` and `docs/launch/seo-audit-remediation.md`; keep owner/operator proof gates pending until dated external evidence exists.
 - Execute revised `17-15` with `$gsd-execute-phase 17 --gaps-only`, or supply a pre-existing dated owner/staging/field performance acceptance artifact before rerunning final readiness and Phase 17 verification. Do not mark Phase 17 verified while unaccepted performance `FAIL` rows remain.
