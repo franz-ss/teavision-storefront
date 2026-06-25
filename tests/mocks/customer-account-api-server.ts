@@ -54,6 +54,23 @@ function isFetchBlockedPort(port: number): boolean {
   return FETCH_BLOCKED_PORTS.has(port)
 }
 
+function listenServer(server: Server, port: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const handleError = (error: Error) => {
+      server.off('listening', handleListening)
+      reject(error)
+    }
+    const handleListening = () => {
+      server.off('error', handleError)
+      resolve()
+    }
+
+    server.once('error', handleError)
+    server.once('listening', handleListening)
+    server.listen(port, '127.0.0.1')
+  })
+}
+
 function readRequestBody(request: NodeJS.ReadableStream): Promise<string> {
   return new Promise((resolve, reject) => {
     let body = ''
@@ -599,9 +616,7 @@ export async function createFakeCustomerAccountApiServer(
     writeJson(response, 404, { message: 'Not found' })
   })
 
-  await new Promise<void>((resolve) => {
-    server.listen(port, '127.0.0.1', resolve)
-  })
+  await listenServer(server, isFetchBlockedPort(port) ? 0 : port)
 
   const address = server.address()
   if (typeof address === 'string' || address === null) {

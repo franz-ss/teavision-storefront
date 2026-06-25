@@ -124,6 +124,22 @@ export const STATIC_LAUNCH_ROUTE_EXPECTATIONS = [
     checks: INDEXABLE_PAGE_CHECKS,
   },
   {
+    path: '/pages/custom-tea-blends',
+    expectedStatus: 200,
+    canonicalPath: '/pages/custom-tea-blends',
+    shouldIndexWhenEnabled: true,
+    shouldAppearInSitemap: true,
+    checks: INDEXABLE_PAGE_CHECKS,
+  },
+  {
+    path: '/pages/faq',
+    expectedStatus: 200,
+    canonicalPath: '/pages/faq',
+    shouldIndexWhenEnabled: true,
+    shouldAppearInSitemap: true,
+    checks: INDEXABLE_PAGE_CHECKS,
+  },
+  {
     path: '/pages/private-label-packing',
     expectedStatus: 200,
     canonicalPath: '/pages/private-label-packing',

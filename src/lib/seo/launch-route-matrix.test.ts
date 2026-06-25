@@ -21,6 +21,8 @@ const REQUIRED_LEGAL_PATHS = [
 
 const REQUIRED_STATIC_PATHS = [
   '/pages/bulk-wholesale-supply',
+  '/pages/custom-tea-blends',
+  '/pages/faq',
   '/pages/private-label-packing',
   '/pages/tea-bag-manufacturer',
   '/pages/new-product-development-order-form',

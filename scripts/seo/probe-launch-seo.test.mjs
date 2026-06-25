@@ -116,6 +116,15 @@ test('structured data helpers parse Product schema inside arrays and graph objec
   assert.equal(findSchemaNodes(values, 'Product')[0].name, 'Reviewed Tea')
 })
 
+test('enabled mode defaults to a representative product path for Product JSON-LD checks', async () => {
+  const { DEFAULT_PRODUCT_PATH, parseArgs } = await import(
+    './probe-launch-seo.mjs'
+  )
+
+  assert.equal(parseArgs(['--mode', 'enabled']).productPath, DEFAULT_PRODUCT_PATH)
+  assert.equal(DEFAULT_PRODUCT_PATH, '/products/test-standard-tea')
+})
+
 test('structured data route expectations cover audit-required supported schema types', async () => {
   const { STRUCTURED_DATA_ROUTE_EXPECTATIONS } =
     await import('./probe-launch-seo.mjs')

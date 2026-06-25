@@ -3,6 +3,7 @@ import process from 'node:process'
 import { pathToFileURL } from 'node:url'
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:3000'
+export const DEFAULT_PRODUCT_PATH = '/products/test-standard-tea'
 const REQUIRED_ROBOTS_DISALLOWS = [
   '/api/',
   '/account',
@@ -58,11 +59,12 @@ export const STRUCTURED_DATA_ROUTE_EXPECTATIONS = [
   },
 ]
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   const args = {
     baseUrl: process.env.SEO_PROBE_BASE_URL ?? DEFAULT_BASE_URL,
     mode: 'enabled',
-    productPath: process.env.SEO_PROBE_PRODUCT_PATH ?? '',
+    productPath:
+      process.env.SEO_PROBE_PRODUCT_PATH?.trim() || DEFAULT_PRODUCT_PATH,
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -1134,10 +1136,10 @@ async function probeProductStructuredData(baseUrl, productPath) {
 
   if (!normalizedPath) {
     return [
-      warn(
+      fail(
         'product structured data',
         'SEO_PROBE_PRODUCT_PATH',
-        'skipped; set a product path to check rendered Product JSON-LD',
+        'missing required product path for enabled SEO verification',
       ),
     ]
   }

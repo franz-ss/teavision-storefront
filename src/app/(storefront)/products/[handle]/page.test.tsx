@@ -193,4 +193,24 @@ describe('ProductContent aggregateRating JSON-LD', () => {
     expect(html).not.toContain('0 reviews')
     expect(productJsonLd).not.toHaveProperty('aggregateRating')
   })
+
+  it('omits aggregateRating when review values are outside supported ranges', async () => {
+    vi.mocked(getTrustooProductRatings).mockResolvedValue({
+      'invalid-review-values': { rating: 6, reviewCount: 12.5 },
+    })
+
+    const html = await renderProductContent(
+      makeProduct({
+        handle: 'invalid-review-values',
+        title: 'Invalid Review Values',
+        rating: undefined,
+        reviewCount: undefined,
+      }),
+    )
+    const productJsonLd = findJsonLdNode(html, 'Product')
+
+    expect(html).not.toContain('6.0')
+    expect(html).not.toContain('12.5 reviews')
+    expect(productJsonLd).not.toHaveProperty('aggregateRating')
+  })
 })

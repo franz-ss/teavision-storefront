@@ -1,3 +1,5 @@
+import { createServer } from 'node:http'
+
 import { afterAll, describe, expect, test } from 'vitest'
 
 import { createFakeCustomerAccountApiServer } from '@/tests/mocks/customer-account-api-server'
@@ -83,4 +85,35 @@ describe('Customer Account API test infrastructure smoke test', () => {
       await server.close()
     }
   })
+
+  test('rejects when an explicit non-blocked port is occupied', async () => {
+    const occupiedServer = createServer()
+
+    await new Promise<void>((resolve) => {
+      occupiedServer.listen(0, '127.0.0.1', resolve)
+    })
+
+    const address = occupiedServer.address()
+
+    try {
+      if (typeof address === 'string' || address === null) {
+        throw new Error('Unable to allocate occupied test port')
+      }
+
+      await expect(
+        createFakeCustomerAccountApiServer({ port: address.port }),
+      ).rejects.toMatchObject({ code: 'EADDRINUSE' })
+    } finally {
+      await new Promise<void>((resolve, reject) => {
+        occupiedServer.close((error) => {
+          if (error) {
+            reject(error)
+            return
+          }
+
+          resolve()
+        })
+      })
+    }
+  }, 1000)
 })

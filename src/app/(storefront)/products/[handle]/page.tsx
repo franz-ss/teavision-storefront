@@ -64,8 +64,10 @@ function getVisibleProductReviewSummary(summary: {
   if (
     typeof rating === 'number' &&
     Number.isFinite(rating) &&
+    rating > 0 &&
+    rating <= 5 &&
     typeof reviewCount === 'number' &&
-    Number.isFinite(reviewCount) &&
+    Number.isInteger(reviewCount) &&
     reviewCount > 0
   ) {
     return { rating, reviewCount }
