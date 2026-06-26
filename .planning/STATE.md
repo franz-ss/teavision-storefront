@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: in_progress
-stopped_at: Completed 18-06 gap closure; Phase 17 PERF-01 remains pending
-last_updated: "2026-06-26T00:33:53.866Z"
+stopped_at: Blocked 17-15 strict performance gate after direct AVIF remediation
+last_updated: "2026-06-26T09:09:05.117+08:00"
 last_activity: 2026-06-26
 progress:
   total_phases: 4
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 17 PERF-01 remains pending after Phase 18 gap closure
+**Current focus:** Phase 17 PERF-01 remains blocked after 17-15 direct AVIF remediation
 
 ## Current Position
 
 Phase: 17 (Operations, Performance, and Final Production-Readiness Audit)
 Plan: 15 of 15
-Status: Pending strict performance pass or dated owner/staging/field acceptance; Phase 18 gap closure complete
+Status: Blocked on strict performance pass or dated owner/staging/field acceptance
 Last activity: 2026-06-26
 
 ## Performance Metrics
@@ -237,7 +237,7 @@ Recent decisions affecting current work:
 - Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
 - v1.3 Customer Account launch gates remain external/admin-dependent: Shopify Customer Accounts setup, Headless/Hydrogen credentials, protected customer data access, callback/logout URLs, HTTPS OAuth testing, real hosted checkout approval, and authoritative B2B/company-location pricing checks.
 - Phase 17 has executed 11 base plans, gap-closure plans 17-12 through 17-14, and revised 17-15 contract repairs; 17-15 remains blocked because strict performance still fails and no valid dated owner/staging/field acceptance artifact exists.
-- Plan 17-15 remains blocked on PERF-01 after cleanup execution: strict local Lighthouse still records seven FAIL route rows, final readiness is 94/100 with 16/17 automated checks passing, performance is the only failed automated check, and docs/launch/performance-acceptance.md is absent. Latest evidence: docs/launch/performance-evidence.md generated 2026-06-24T09:23:16.160Z and docs/launch/final-production-readiness-report.md generated 2026-06-24T09:23:58.959Z.
+- Plan 17-15 remains blocked on PERF-01 after direct local AVIF remediation: strict local Lighthouse still records seven FAIL route rows, final readiness is 94/100 with 16/17 automated checks passing, performance is the only failed automated check, and docs/launch/performance-acceptance.md is absent. Latest evidence: docs/launch/performance-evidence.md generated 2026-06-26T01:07:31.761Z and docs/launch/final-production-readiness-report.md generated 2026-06-26T01:08:08.855Z.
 
 ### Quick Tasks Completed
 
@@ -311,4 +311,4 @@ Resume file: None
 ## Operator Next Steps
 
 - Phase 18 SEO evidence and UAT structured-data gap closure are complete; use `.planning/phases/18-seo-audit-remediation/18-06-SUMMARY.md`, `.planning/phases/18-seo-audit-remediation/18-VERIFICATION.md`, and `docs/launch/seo-audit-remediation.md` for proof. Keep owner/operator proof gates pending until dated external evidence exists.
-- Execute revised `17-15` with `$gsd-execute-phase 17 --gaps-only`, or supply a pre-existing dated owner/staging/field performance acceptance artifact before rerunning final readiness and Phase 17 verification. Do not mark Phase 17 verified while unaccepted performance `FAIL` rows remain.
+- Plan 17-15 direct AVIF remediation is committed, but strict local performance still fails. Supply a pre-existing dated owner/staging/field performance acceptance artifact, or replan deeper PERF-01 remediation before rerunning final readiness and Phase 17 verification. Do not mark Phase 17 verified while unaccepted performance `FAIL` rows remain.
