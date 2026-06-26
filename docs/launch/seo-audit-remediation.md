@@ -58,6 +58,12 @@ available.
 | `/pages/custom-tea-blends`     | `src/lib/contact/custom-tea-blend.ts` feeds visible custom-blend page title, description, and form context.                                                     | `Service`                             | `node scripts/seo/probe-launch-seo.mjs --mode enabled` checks `Service structured data`.                                                                                                                                                                                                | Existing coverage verified.               | No review or rating schema is emitted.                                                                                            |
 | `/products/<handle>`           | PDP Product schema uses Shopify product data; aggregate rating is gated on the same finite rating and positive review count rendered in the visible rating row. | `Product`, optional `AggregateRating` | `SEO_PROBE_PRODUCT_PATH=/products/<handle> node scripts/seo/probe-launch-seo.mjs --mode enabled` checks Product and reports aggregateRating as PASS when visible review data exists, WARN when reliable visible review data is absent, and FAIL if schema and visible evidence diverge. | Conditional coverage added in Plan 18-04. | Sitewide Review schema and testimonial-as-review markup remain unsupported without reliable provider-backed visible review data.  |
 
+Product structured-data probes are data-source-aware:
+
+- Fake-provider production evidence may use the default `/products/test-standard-tea` path because that fixture exists in `tests/fixtures/shopify/product.ts`.
+- Real Shopify-backed dev, staging, or production probes must pass `--product-path /products/<known-existing-handle>` or set `SEO_PROBE_PRODUCT_PATH=/products/<known-existing-handle>`.
+- A `WARN` for the default fixture path on a real-data server is operator guidance, not Product schema proof; rerun with a real product path or the fake-provider production lifecycle before treating Product JSON-LD coverage as verified.
+
 ## Crawlable HTML Evidence
 
 `scripts/seo/probe-crawlable-html.mjs` fetches representative built
