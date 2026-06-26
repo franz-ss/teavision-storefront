@@ -8,11 +8,11 @@ import { WholesaleHero } from './_components/wholesale-hero'
 import { WholesaleInclusions } from './_components/wholesale-inclusions'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: { absolute: 'Wholesale Supply | Teavision' },
+  title: { absolute: 'Wholesale Supply' },
   description:
     'Buy bulk tea, herbs and spices direct from Teavision for cafes, restaurants, and retailers across Australia.',
   openGraph: {
-    title: 'Wholesale Supply | Teavision',
+    title: 'Wholesale Supply',
     description:
       'Buy bulk tea, herbs and spices direct from Teavision for cafes, restaurants, and retailers.',
     url: '/pages/wholesale',

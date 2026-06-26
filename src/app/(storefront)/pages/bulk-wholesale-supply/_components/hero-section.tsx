@@ -16,9 +16,9 @@ export function HeroSection() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
           <div>
             <Eyebrow>Bulk Imports • Containers • Volume Discounts</Eyebrow>
-            <h2 className="type-heading-01 text-ink mt-4 max-w-[20ch] text-balance">
+            <h1 className="type-heading-01 text-ink mt-4 max-w-[20ch] text-balance">
               Large-Scale Tea Imports to Australia - Delivered to Your Warehouse
-            </h2>
+            </h1>
             <p className="type-lede text-ink-soft mt-4 max-w-[52ch]">
               Import premium teas, herbs and botanicals at scale with Teavision.
               We source across 10+ countries, manage container freight to

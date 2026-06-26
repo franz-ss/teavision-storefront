@@ -18,7 +18,7 @@ describe('site URL config', () => {
     const { getSiteUrl } = await loadSiteUrlModule()
 
     expect(getSiteUrl('/collections')).toBe(
-      'https://teavision.com.au/collections',
+      'https://www.teavision.com.au/collections',
     )
   })
 
@@ -41,6 +41,18 @@ describe('site URL config', () => {
     expect(SITE_URL).toBe('https://example.com')
     expect(getSiteUrl('/products/sencha')).toBe(
       'https://example.com/products/sencha',
+    )
+  })
+
+  test('normalizes the Teavision apex host to the strongest www URL', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.stubEnv('SITE_URL', 'https://teavision.com.au/path?q=1')
+
+    const { SITE_URL, getSiteUrl } = await loadSiteUrlModule()
+
+    expect(SITE_URL).toBe('https://www.teavision.com.au')
+    expect(getSiteUrl('/products/sencha')).toBe(
+      'https://www.teavision.com.au/products/sencha',
     )
   })
 })

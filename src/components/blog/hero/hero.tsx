@@ -15,6 +15,7 @@ type HeroImage = {
 type HeroProps = {
   defaultQuery?: string
   description?: string
+  headingLevel?: 'h1' | 'p'
   image?: HeroImage | null
   preload?: boolean
   rssHref?: string
@@ -31,6 +32,7 @@ const HERO_IMAGE = {
 export function Hero({
   defaultQuery = '',
   description = DEFAULT_LISTING_DESCRIPTION,
+  headingLevel: Heading = 'h1',
   image,
   preload = true,
   rssHref,
@@ -64,9 +66,9 @@ export function Hero({
         <Eyebrow tone="gold" className="mb-4">
           Tea Journal
         </Eyebrow>
-        <h1 className="font-display text-paper max-w-[16ch] text-[clamp(2rem,4vw,3.4rem)] leading-[1.04] tracking-[-0.01em] wrap-break-word">
+        <Heading className="font-display text-paper max-w-[16ch] text-[clamp(2rem,4vw,3.4rem)] leading-[1.04] tracking-[-0.01em] wrap-break-word">
           {title}
-        </h1>
+        </Heading>
         <p className="type-lede text-paper/85 mt-5 max-w-2xl wrap-break-word">
           {description}
         </p>

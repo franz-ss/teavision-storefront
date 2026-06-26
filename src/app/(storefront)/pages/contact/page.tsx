@@ -6,11 +6,11 @@ import { JsonLd } from './_components/json-ld'
 import { PageContent } from './_components/page-content'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: { absolute: 'Contact | Teavision' },
+  title: { absolute: 'Contact' },
   description:
     'Contact Teavision for wholesale tea, custom blending, private label, samples, and supply enquiries across Australia.',
   openGraph: {
-    title: 'Contact | Teavision',
+    title: 'Contact',
     description:
       'Contact Teavision for wholesale tea, custom blending, private label, samples, and supply enquiries.',
     url: '/pages/contact',

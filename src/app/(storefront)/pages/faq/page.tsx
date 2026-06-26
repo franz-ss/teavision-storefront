@@ -14,7 +14,7 @@ import {
 } from './_lib/data'
 
 export const metadata: Metadata = withNoindexRobots({
-  title: FAQ_PAGE_TITLE,
+  title: { absolute: FAQ_PAGE_TITLE },
   description: FAQ_PAGE_DESCRIPTION,
   openGraph: {
     title: FAQ_PAGE_TITLE,

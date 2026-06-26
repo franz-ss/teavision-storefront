@@ -1,5 +1,5 @@
 export const FAQ_PAGE_PATH = '/pages/faq'
-export const FAQ_PAGE_TITLE = 'Wholesale Tea Supplier FAQ | Teavision'
+export const FAQ_PAGE_TITLE = 'Wholesale Tea Supplier FAQ'
 export const FAQ_PAGE_DESCRIPTION =
   "As Australia's trusted wholesale tea supplier, we answer the most common questions about buying wholesale tea, herbs, and functional powders with Teavision — from bulk ordering to supply options."
 
