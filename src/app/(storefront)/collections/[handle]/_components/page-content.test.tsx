@@ -500,6 +500,12 @@ describe('PageContent collection rich hero rendering', () => {
     expect(html.match(/<h1\b/g)).toHaveLength(1)
     expect(html).not.toContain('<h1 class="sr-only"')
     expect(html).not.toContain('type-display')
+    expect(html).toContain(
+      '<h1 aria-current="page" class="text-gold-deep">Wholesale Bulk Tea</h1>',
+    )
+    expect(html).not.toContain(
+      '<span aria-current="page" class="text-gold-deep">Wholesale Bulk Tea</span>',
+    )
     expect(html).not.toContain(
       '<p class="type-body text-ink-soft mt-4 max-w-[58ch]">Hero summary should not render',
     )

@@ -62,14 +62,10 @@ export function Hero({
                 Collections
               </Link>
               <span aria-hidden="true">/</span>
-              <span aria-current="page" className="text-gold-deep">
+              <h1 aria-current="page" className="text-gold-deep">
                 {collectionTitle}
-              </span>
+              </h1>
             </nav>
-
-            <h1 className="text-ink mt-3 text-sm leading-5 font-semibold">
-              {collectionTitle}
-            </h1>
           </Section.Container>
         </Section.Root>
       </>
