@@ -33,3 +33,15 @@ The enabled launch SEO probe was run against a plain dev server whose Shopify da
 ## Suggested Fix Direction
 
 Clarify and harden the probe contract so the default fake fixture product path is only used with the fake-provider lifecycle, or require an explicit `--product-path`/`SEO_PROBE_PRODUCT_PATH` when probing a real/dev Shopify-backed server. The failure message should distinguish "product route is not found for this data source" from "product page exists but Product JSON-LD is missing."
+
+## Resolution
+
+Status: resolved
+Resolved: 2026-06-26T00:33:00Z
+Plan: `.planning/phases/18-seo-audit-remediation/18-06-PLAN.md`
+Summary: `.planning/phases/18-seo-audit-remediation/18-06-SUMMARY.md`
+
+- `scripts/seo/probe-launch-seo.mjs` now tracks whether the product path came from the default fixture, CLI, or `SEO_PROBE_PRODUCT_PATH`.
+- Missing default `/products/test-standard-tea` on a non-fixture data source now returns WARN with `--product-path/SEO_PROBE_PRODUCT_PATH` guidance.
+- Explicit missing product paths still return FAIL, and existing product pages without Product JSON-LD still return FAIL.
+- Verification passed with `node --test scripts/seo/probe-launch-seo.test.mjs`, enabled probe against `http://127.0.0.1:3000`, crawlable fake-provider HTML proof, and Prettier doc checks.

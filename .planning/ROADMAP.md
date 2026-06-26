@@ -59,7 +59,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - [x] **Phase 15: Security, Dependency, and Runtime Header Hardening** — remove known security launch blockers, add tested production headers/CSP, fix account OAuth-start behavior, and make abuse controls explicit. (5/5 plans complete) (completed 2026-06-22)
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
 - [ ] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (14/15 plans executed; 17-15 replanned and ready for execution; verification remains gaps_found on PERF-01 until the revised gap plan passes)
-- [x] **Phase 18: SEO Audit Remediation** — resolve the staging-site SEO audit findings across URL parity, headings/content structure, metadata, robots/sitemap/indexation, schema, crawlable HTML, and Core Web Vitals evidence. (5/5 plans complete) (completed 2026-06-25)
+- [x] **Phase 18: SEO Audit Remediation** — resolve the staging-site SEO audit findings across URL parity, headings/content structure, metadata, robots/sitemap/indexation, schema, crawlable HTML, and Core Web Vitals evidence. (6/6 plans complete) (completed 2026-06-26)
 
 ## Progress
 
@@ -80,7 +80,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 15. Security, Dependency, and Runtime Header Hardening | v1.4 | 5/5 | Complete   | 2026-06-22 |
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage | v1.4 | 4/4 | Complete    | 2026-06-23 |
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4 | 14/15 | In Progress|  |
-| 18. SEO Audit Remediation | v1.4 | 5/5 | Complete    | 2026-06-25 |
+| 18. SEO Audit Remediation | v1.4 | 6/6 | Complete   | 2026-06-26 |
 
 ## Phase Details
 
@@ -241,15 +241,18 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 **Plans:**
 
 **Wave 1**
-- [ ] `18-01` - SEO audit inventory, URL parity map, and redirect decision register.
-- [ ] `18-02` - Collection and product heading/content hierarchy remediation.
+- [x] `18-01` - SEO audit inventory, URL parity map, and redirect decision register.
+- [x] `18-02` - Collection and product heading/content hierarchy remediation.
 
 **Wave 2** *(blocked on Wave 1 findings)*
-- [ ] `18-03` - Metadata, canonical, robots, sitemap, language, domain, and blog indexation remediation.
-- [ ] `18-04` - Structured-data audit, fill, and validation.
+- [x] `18-03` - Metadata, canonical, robots, sitemap, language, domain, and blog indexation remediation.
+- [x] `18-04` - Structured-data audit, fill, and validation.
 
 **Wave 3** *(blocked on Waves 1-2 completion)*
-- [ ] `18-05` - Crawlable HTML, Core Web Vitals, and final SEO evidence pack.
+- [x] `18-05` - Crawlable HTML, Core Web Vitals, and final SEO evidence pack.
+
+**Wave 4** *(UAT gap closure)*
+- [x] `18-06` - Product JSON-LD probe path semantics for fake-provider and real-Shopify data sources.
 
 **Cross-cutting constraints:**
 - Keep storefront data flowing through Shopify/Sanity operation helpers; do not add stub SEO data when credentials or content are missing.
@@ -258,4 +261,4 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ## Next
 
-Phase 17 remains blocked on PERF-01 until revised `17-15` passes or valid dated performance acceptance is supplied. Phase 18 planning is complete with five executable plans; execute it with `$gsd-execute-phase 18` after the Phase 17/PERF-01 sequencing decision is resolved.
+Phase 18 SEO audit remediation is complete with six executed plans and resolved UAT structured-data gap closure. Phase 17 remains blocked on PERF-01 until revised `17-15` passes or valid dated performance acceptance is supplied.

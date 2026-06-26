@@ -1,17 +1,17 @@
 ---
 phase: 18-seo-audit-remediation
-verified: 2026-06-25T12:58:03Z
+verified: 2026-06-26T00:33:00Z
 status: passed
-score: "34/34 must-haves verified"
+score: "37/37 must-haves verified"
 overrides_applied: 0
 ---
 
 # Phase 18: SEO Audit Remediation Verification Report
 
 **Phase Goal:** Resolve the 2026-06-25 staging-site SEO audit findings while preserving the headless Shopify architecture, Next.js 16 Cache Components patterns, and existing owner-gated launch boundaries.
-**Verified:** 2026-06-25T12:58:03Z
+**Verified:** 2026-06-26T00:33:00Z
 **Status:** passed
-**Re-verification:** No - initial verification
+**Re-verification:** Yes - after Plan 18-06 UAT gap closure
 
 ## Goal Achievement
 
@@ -25,11 +25,11 @@ Initial mode was used: no prior `*-VERIFICATION.md` existed. `gsd-sdk query road
 | 2 | Collection and product pages render exactly one visible H1 in crawlable HTML, and imported rich content cannot add H1/H2 conflicts. | VERIFIED | `hero.tsx` renders visible `<h1>` in both banner/non-banner branches; `html-content.ts` demotes compact H1/H2 to H3; PDP and collection tests assert one-H1 and demotion behavior. |
 | 3 | Collection pages keep breadcrumb/banner/H1/brief intro before the grid and move long read-more content below the product grid. | VERIFIED | `page-content.tsx` renders `ProductList` before `StoryDisclosure`; test asserts `id="product-grid"` appears before `Read more about Wholesale Bulk Tea`. |
 | 4 | Titles, `lang`, canonical/sitemap host behavior, robots account/login disallows, and blog tag noindex/sitemap exclusion match Phase 18 decisions. | VERIFIED | `layout.tsx` uses `lang="en-AU"`; audit-target pages use `title.absolute`; `robots.ts` disallows account/login/callback/logout; `sitemap.ts` excludes tagged blog URLs; blog metadata noindexes `Boolean(activeTag)`. |
-| 5 | Structured data is present and validated only where visible content and reliable data support it. | VERIFIED | Contact `JsonLd` emits `LocalBusiness`/`PostalAddress` from visible constants; PDP `aggregateRating` is gated on finite rating and positive review count and the same visible row; SEO probe parses arrays and `@graph` for Product, LocalBusiness, Service, and FAQPage. Unsupported Review/rating schema is intentionally absent and documented. |
+| 5 | Structured data is present and validated only where visible content and reliable data support it. | VERIFIED | Contact `JsonLd` emits `LocalBusiness`/`PostalAddress` from visible constants; PDP `aggregateRating` is gated on finite rating and positive review count and the same visible row; SEO probe parses arrays and `@graph` for Product, LocalBusiness, Service, and FAQPage. Plan 18-06 makes Product JSON-LD path checks data-source-aware: default fixture absence warns with explicit product-path guidance, while explicit missing product routes and existing products without Product JSON-LD still fail. Unsupported Review/rating schema is intentionally absent and documented. |
 | 6 | Built fake-provider production evidence shows collection/PDP pages expose meaningful HTML before hydration. | VERIFIED | `probe-crawlable-html.mjs` fetches with `Accept-Encoding: identity`, defaults to `/collections/all` and `/products/test-standard-tea`, checks one H1, canonical, product/grid content, JSON-LD, and skeleton-only failure. Probe tests passed. |
 | 7 | Core Web Vitals evidence is rerun/reconciled honestly against Phase 17 PERF-01 rules. | VERIFIED | `docs/launch/performance-evidence.md` was regenerated on 2026-06-25, includes `## LCP Diagnostics`, records seven strict local FAIL rows, and states launch-blocking status. `docs/launch/final-production-readiness-report.md` records 94/100 and says no dated owner/staging/field acceptance artifact was supplied. This is a correct Phase 18 evidence reconciliation, not a Phase 18 implementation failure. |
 
-**Score:** 34/34 must-haves verified.
+**Score:** 37/37 must-haves verified.
 
 ### Deferred Items
 
@@ -44,7 +44,7 @@ No Phase 18 gaps were deferred to later milestone phases. `gsd-sdk query roadmap
 | `docs/launch/seo-url-parity-register.md` | URL inventory, redirect decisions, handoffs | VERIFIED | Exists, 15109 bytes; contains two-source rule, app-owned redirect rows, `/blog/` handoff, launch host handoff. |
 | `next.config.ts` | Only safe deterministic redirects | VERIFIED | Redirects include nested collection-product redirect plus policy redirects only; the `/:path*` match is in `headers()`, not `redirects()`. |
 | `src/lib/seo/launch-route-matrix.ts` | Typed redirect expectations | VERIFIED | Exports `REDIRECT_ROUTE_EXPECTATIONS`; probe materializes expectations. |
-| `scripts/seo/probe-launch-seo.mjs` | URL, metadata, sitemap, structured-data probes | VERIFIED | Implements `url-audit`, live SEO checks, JSON-LD traversal, and Blog Listing URL handoff validation. |
+| `scripts/seo/probe-launch-seo.mjs` | URL, metadata, sitemap, structured-data probes | VERIFIED | Implements `url-audit`, live SEO checks, JSON-LD traversal, Blog Listing URL handoff validation, and Product path source tracking for default/env/CLI structured-data checks. |
 | `src/app/(storefront)/collections/[handle]/_components/hero.tsx` | Visible collection H1 | VERIFIED | Visible `<h1>` appears in banner and non-banner branches; no hidden-only banner H1 pattern found. |
 | `src/app/(storefront)/collections/[handle]/_components/page-content.tsx` | Product grid before story content | VERIFIED | `ProductList` renders before `StoryDisclosure`; dynamic data comes from Shopify operations. |
 | `src/lib/shopify/html-content.ts` | Rich content heading demotion | VERIFIED | `compact` heading transforms map H1/H2 to H3. |
@@ -53,9 +53,10 @@ No Phase 18 gaps were deferred to later milestone phases. `gsd-sdk query roadmap
 | `src/app/(storefront)/pages/contact/_components/json-ld.tsx` | LocalBusiness schema | VERIFIED | Emits BreadcrumbList, WebPage, LocalBusiness, PostalAddress from visible contact constants; unsupported fields absent. |
 | `src/app/(storefront)/products/[handle]/page.tsx` | Product JSON-LD and aggregateRating gate | VERIFIED | Uses `getProduct`, `sanitizeShopifyCompactHtml`, `getTrustooProductRatings`; Product schema and visible rating share the same finite-rating/positive-count gate. |
 | `scripts/seo/probe-crawlable-html.mjs` | Raw HTML crawlability probe | VERIFIED | Defaults and checks implemented; help command passed; tests cover skeleton-only failure. |
-| `docs/launch/seo-audit-remediation.md` | Final audit-to-evidence matrix | VERIFIED | Contains `## Audit-To-Evidence Matrix`, all `SEO-AUDIT-*` IDs, structured-data coverage, crawlability, performance, and owner/operator residuals. |
+| `docs/launch/seo-audit-remediation.md` | Final audit-to-evidence matrix | VERIFIED | Contains `## Audit-To-Evidence Matrix`, all `SEO-AUDIT-*` IDs, structured-data coverage, crawlability, performance, owner/operator residuals, and Product path instructions for fake-provider versus real-Shopify probes. |
 | `docs/launch/performance-evidence.md` | Strict local Lighthouse evidence | VERIFIED | Generated timestamp and LCP diagnostics present; strict local failures are not hidden. |
-| `docs/launch/final-production-readiness-report.md` | Final readiness evidence | VERIFIED | Records score 94/100, performance FAIL, no acceptance artifact, and pending owner-gated rows. |
+| `docs/launch/final-production-readiness-report.md` | Final readiness evidence | VERIFIED | Records score 94/100, performance FAIL, no acceptance artifact, pending owner-gated rows, and that default fixture warnings are not live Shopify Product JSON-LD proof. |
+| `.planning/phases/18-seo-audit-remediation/18-06-SUMMARY.md` | Gap closure execution summary | VERIFIED | Documents three task commits, Product path semantics, verification commands, and no deviations. |
 
 ### Key Link Verification
 
@@ -69,6 +70,7 @@ No Phase 18 gaps were deferred to later milestone phases. `gsd-sdk query roadmap
 | `src/app/robots.ts` | `probe-launch-seo.mjs` | Enabled/disabled robots checks | VERIFIED | Probe tests cover account disallows, root language, and tag sitemap exclusion. |
 | `pages/contact/_lib/page-data.ts` | `pages/contact/_components/json-ld.tsx` | Visible contact fields populate LocalBusiness | VERIFIED | JSON-LD imports `ADDRESS`, `EMAIL`, `PHONE`; unsupported hidden fields absent. |
 | `src/lib/reviews/trustoo.ts` | `products/[handle]/page.tsx` | Rating/review count gate aggregateRating | VERIFIED | PDP calls `getTrustooProductRatings`; aggregateRating appears only with finite rating and integer positive review count. |
+| `tests/fixtures/shopify/product.ts` | `probe-launch-seo.mjs` | Default fake-provider fixture product path | VERIFIED | `test-standard-tea` remains the fake-provider fixture handle; Plan 18-06 preserves that default for fake-provider lifecycle evidence while requiring explicit paths for real Shopify-backed probes. |
 | `probe-lighthouse.mjs` | `performance-evidence.md` | `renderEvidenceDocument` | VERIFIED | Script exports `renderEvidenceDocument` and writes `docs/launch/performance-evidence.md`; evidence doc records strict FAIL rows. |
 | `probe-crawlable-html.mjs` | `seo-audit-remediation.md` | Crawlable HTML proof rows | VERIFIED | Matrix includes crawlable collection/PDP proof commands and residual risk rows. |
 
@@ -87,7 +89,10 @@ No Phase 18 gaps were deferred to later milestone phases. `gsd-sdk query roadmap
 
 | Behavior | Command | Result | Status |
 |---|---|---|---|
-| SEO probe, crawlable HTML probe, and noindex contracts | `node --test scripts/seo/probe-launch-seo.test.mjs scripts/seo/probe-crawlable-html.test.mjs scripts/component-contracts/noindex-mode.test.mjs` | 16 tests passed | PASS |
+| Product structured-data probe path semantics | `node --test scripts/seo/probe-launch-seo.test.mjs` | 10 tests passed, covering Product JSON-LD pass, missing Product JSON-LD fail, default fixture missing WARN, and explicit missing path FAIL | PASS |
+| Enabled SEO probe against non-fixture dev server | `node scripts/seo/probe-launch-seo.mjs --mode enabled --base-url http://127.0.0.1:3000` | Exit 0; default `/products/test-standard-tea` returned WARN with `--product-path/SEO_PROBE_PRODUCT_PATH` guidance | PASS |
+| Fake-provider crawlable Product JSON-LD proof | `node scripts/seo/probe-crawlable-html.mjs --start-server --base-url http://127.0.0.1:4173` | Production build passed; `/products/test-standard-tea` raw HTML included Product JSON-LD | PASS |
+| SEO probe, crawlable HTML probe, and noindex contracts | `node --test scripts/seo/probe-launch-seo.test.mjs scripts/seo/probe-crawlable-html.test.mjs scripts/component-contracts/noindex-mode.test.mjs` | Prior verification passed 16 tests; Plan 18-06 reran the focused Product probe suite above | PASS |
 | Collection/PDP/contact/blog/route-matrix unit coverage | `pnpm test:unit -- "src/app/(storefront)/collections/[handle]/_components/page-content.test.tsx" "src/lib/shopify/html-content.test.ts" "src/app/(storefront)/products/[handle]/page.test.tsx" "src/app/(storefront)/pages/contact/_components/json-ld.test.tsx" "src/lib/blog/operations.test.ts" "src/lib/seo/launch-route-matrix.test.ts"` | 6 files, 33 tests passed | PASS |
 | URL audit register-to-code parity | `node scripts/seo/probe-launch-seo.mjs --mode url-audit` | PASS rows for register, handoff, app-owned evidence, and coded redirects; expected WARN for optional `SEO_URL_MIGRATION_EXPORT` | PASS |
 | Crawlable HTML probe entrypoint | `node scripts/seo/probe-crawlable-html.mjs --help` | Help lists default collection/PDP routes and start-server/base-url options | PASS |
@@ -103,7 +108,7 @@ The plan frontmatter lists `SEO-AUDIT-01` through `SEO-AUDIT-07`. These IDs are 
 | SEO-AUDIT-02 | 18-02, 18-05 | Visible, singular page H1 structure | SATISFIED | Hero/PDP source and tests; crawlable HTML probe test coverage. |
 | SEO-AUDIT-03 | 18-02, 18-05 | Collection read-more content placement | SATISFIED | `ProductList` before `StoryDisclosure`; unit assertion covers DOM order. |
 | SEO-AUDIT-04 | 18-03, 18-05 | Title, meta, canonical, language, robots, sitemap, blog indexation | SATISFIED | `en-AU`, `title.absolute`, account robots disallows, tag noindex/sitemap exclusion, `/blog/` handoff. |
-| SEO-AUDIT-05 | 18-04, 18-05 | Structured-data coverage | SATISFIED | Contact LocalBusiness, Product JSON-LD, conditional aggregateRating, Service/FAQ probe coverage, unsupported schema documented. |
+| SEO-AUDIT-05 | 18-04, 18-05, 18-06 | Structured-data coverage | SATISFIED | Contact LocalBusiness, Product JSON-LD, conditional aggregateRating, Service/FAQ probe coverage, unsupported schema documented, and Product probe path semantics hardened for fake-provider versus real-Shopify data sources. |
 | SEO-AUDIT-06 | 18-02, 18-05 | Crawlable server-rendered collection/product HTML | SATISFIED | Server components fetch provider data; raw HTML probe and tests check pre-hydration content. |
 | SEO-AUDIT-07 | 18-05 | Core Web Vitals/LCP evidence reconciliation | SATISFIED | Strict local evidence regenerated and failure retained; no acceptance artifact supplied; final readiness remains 94/100. |
 | SEO-01 | `.planning/REQUIREMENTS.md` Phase 16 | Launch indexing can be flipped safely | INFORMED BY PHASE 18 | Phase 18 extends SEO launch evidence but this release-level requirement is already marked complete in Phase 16. |
@@ -128,9 +133,9 @@ None for Phase 18 implementation verification. External production host redirect
 
 ### Gaps Summary
 
-No Phase 18 implementation gaps were found. The phase goal is achieved: local SEO audit remediations are implemented and probed, unsupported/external claims are kept in handoff rows, and current strict performance/readiness failure remains honestly blocking under Phase 17 PERF-01 rather than being hidden by Phase 18.
+No Phase 18 implementation gaps remain. The UAT structured-data gap was resolved by Plan 18-06: the default fake fixture path now warns when missing on a non-fixture server, explicit selected product paths still fail when missing, and existing product pages without Product JSON-LD still fail. The phase goal is achieved: local SEO audit remediations are implemented and probed, unsupported/external claims are kept in handoff rows, and current strict performance/readiness failure remains honestly blocking under Phase 17 PERF-01 rather than being hidden by Phase 18.
 
 ---
 
-_Verified: 2026-06-25T12:58:03Z_
+_Verified: 2026-06-26T00:33:00Z_
 _Verifier: the agent (gsd-verifier)_

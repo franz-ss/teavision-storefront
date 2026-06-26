@@ -1,9 +1,9 @@
 ---
-status: diagnosed
+status: resolved
 phase: 18-seo-audit-remediation
-source: [18-01-SUMMARY.md, 18-02-SUMMARY.md, 18-03-SUMMARY.md, 18-04-SUMMARY.md, 18-05-SUMMARY.md]
+source: [18-01-SUMMARY.md, 18-02-SUMMARY.md, 18-03-SUMMARY.md, 18-04-SUMMARY.md, 18-05-SUMMARY.md, 18-06-SUMMARY.md]
 started: 2026-06-25T13:42:14Z
-updated: 2026-06-26T00:15:50Z
+updated: 2026-06-26T00:33:00Z
 ---
 
 ## Current Test
@@ -26,9 +26,10 @@ result: pass
 
 ### 4. Structured Data Coverage
 expected: The contact page emits LocalBusiness JSON-LD only from visible phone, email, and address content; product aggregateRating appears only when the visible PDP rating and positive review count are present; and the launch SEO probe validates supported Service, FAQPage, LocalBusiness, and Product schema coverage without inventing unsupported fields.
-result: issue
+result: pass
 reported: "enabled probe reports product structured data | /products/test-standard-tea | FAIL | Product JSON-LD not found"
 severity: major
+resolved: "Plan 18-06 makes the default fake fixture path data-source-aware: missing `/products/test-standard-tea` on a real-data dev server now returns WARN with `--product-path/SEO_PROBE_PRODUCT_PATH` guidance, while explicit missing product paths and existing products without Product JSON-LD still fail."
 
 ### 5. Raw Crawlable HTML Probe
 expected: The raw HTML crawlability probe starts or uses the production-like app, fetches representative collection and PDP routes before hydration, and passes only when the HTML includes crawl-critical content such as one H1, canonical metadata, meaningful content, and JSON-LD instead of skeleton-only output.
@@ -41,8 +42,8 @@ result: pass
 ## Summary
 
 total: 6
-passed: 5
-issues: 1
+passed: 6
+issues: 0
 pending: 0
 skipped: 0
 blocked: 0
@@ -50,8 +51,9 @@ blocked: 0
 ## Gaps
 
 - truth: "The contact page emits LocalBusiness JSON-LD only from visible phone, email, and address content; product aggregateRating appears only when the visible PDP rating and positive review count are present; and the launch SEO probe validates supported Service, FAQPage, LocalBusiness, and Product schema coverage without inventing unsupported fields."
-  status: failed
+  status: resolved
   reason: "User reported: enabled probe reports product structured data | /products/test-standard-tea | FAIL | Product JSON-LD not found"
+  resolution: "Plan 18-06 added product path source tracking, warning semantics for the default fake fixture path on non-fixture data sources, explicit-path hard failures, focused regression tests, and operator docs."
   severity: major
   test: 4
   root_cause: "The enabled launch SEO probe was run against a plain dev server whose Shopify data source did not contain the fake fixture handle /products/test-standard-tea. The route rendered Product not found with no JSON-LD, while the fake-provider production lifecycle emits Product JSON-LD for that fixture path."
