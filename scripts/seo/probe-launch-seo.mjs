@@ -63,8 +63,14 @@ export function parseArgs(argv) {
   const args = {
     baseUrl: process.env.SEO_PROBE_BASE_URL ?? DEFAULT_BASE_URL,
     mode: 'enabled',
-    productPath:
-      process.env.SEO_PROBE_PRODUCT_PATH?.trim() || DEFAULT_PRODUCT_PATH,
+    productPath: DEFAULT_PRODUCT_PATH,
+    productPathSource: 'default',
+  }
+  const envProductPath = process.env.SEO_PROBE_PRODUCT_PATH?.trim()
+
+  if (envProductPath) {
+    args.productPath = envProductPath
+    args.productPathSource = 'env'
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -94,12 +100,14 @@ export function parseArgs(argv) {
 
     if (value === '--product-path') {
       args.productPath = argv[index + 1] ?? args.productPath
+      args.productPathSource = 'cli'
       index += 1
       continue
     }
 
     if (value.startsWith('--product-path=')) {
       args.productPath = value.slice('--product-path='.length)
+      args.productPathSource = 'cli'
       continue
     }
 
@@ -905,7 +913,7 @@ async function runDisabledMode(baseUrl) {
   return results
 }
 
-async function runEnabledMode(baseUrl, productPath) {
+async function runEnabledMode(baseUrl, productPath, productPathSource) {
   const expectations = materializeExpectations()
   const results = []
   const sitemapExpectations = expectations.all.filter(
@@ -1073,7 +1081,13 @@ async function runEnabledMode(baseUrl, productPath) {
   }
 
   results.push(...(await probeStructuredDataRoutes(baseUrl)))
-  results.push(...(await probeProductStructuredData(baseUrl, productPath)))
+  results.push(
+    ...(await probeProductStructuredData(
+      baseUrl,
+      productPath,
+      productPathSource,
+    )),
+  )
 
   return results
 }
@@ -1131,7 +1145,19 @@ async function probeStructuredDataRoutes(baseUrl) {
   return results
 }
 
-async function probeProductStructuredData(baseUrl, productPath) {
+function isProductNotFoundResponse(response, html) {
+  return response.status === 404 || /\bProduct not found\b/i.test(html)
+}
+
+function isDefaultFixtureProductPath(path, productPathSource) {
+  return productPathSource === 'default' && path === DEFAULT_PRODUCT_PATH
+}
+
+export async function probeProductStructuredData(
+  baseUrl,
+  productPath,
+  productPathSource = 'default',
+) {
   const normalizedPath = productPath.trim()
 
   if (!normalizedPath) {
@@ -1150,6 +1176,18 @@ async function probeProductStructuredData(baseUrl, productPath) {
 
   try {
     const { response, text } = await fetchText(baseUrl, path)
+
+    if (isProductNotFoundResponse(response, text)) {
+      const detail = isDefaultFixtureProductPath(path, productPathSource)
+        ? 'default fixture product route not found for this data source; run the fake-provider production lifecycle or pass --product-path/SEO_PROBE_PRODUCT_PATH for a product that exists'
+        : 'product route not found for selected data source; pass --product-path or SEO_PROBE_PRODUCT_PATH for a product that exists'
+
+      return [
+        isDefaultFixtureProductPath(path, productPathSource)
+          ? warn('product structured data', path, detail)
+          : fail('product structured data', path, detail),
+      ]
+    }
 
     if (!response.ok && !hasShopifyCredentials()) {
       return [
@@ -1235,7 +1273,11 @@ export async function main(argv = process.argv.slice(2)) {
           ? runRedirectsMode()
           : args.mode === 'disabled'
             ? await runDisabledMode(baseUrl)
-            : await runEnabledMode(baseUrl, args.productPath)
+            : await runEnabledMode(
+                baseUrl,
+                args.productPath,
+                args.productPathSource,
+              )
 
   printResults(results)
 
