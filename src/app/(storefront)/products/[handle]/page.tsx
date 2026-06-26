@@ -82,12 +82,6 @@ type Props = {
   searchParams: Promise<{ variant?: string | string[] }>
 }
 
-function hasVariantSearchParam(value?: string | string[]) {
-  return Array.isArray(value)
-    ? value.some((item) => item.trim().length > 0)
-    : Boolean(value?.trim())
-}
-
 export async function generateStaticParams(): Promise<
   Array<{ handle: string }>
 > {
@@ -446,19 +440,8 @@ export async function ProductContent({
 export default function ProductPage({ params, searchParams }: Props) {
   return (
     <div className="max-w-wide px-gutter mx-auto w-full">
-      <Suspense
-        fallback={
-          <ProductContent params={params} searchParams={Promise.resolve({})} />
-        }
-      >
-        {searchParams.then((resolvedSearchParams) =>
-          hasVariantSearchParam(resolvedSearchParams.variant) ? (
-            <ProductContent
-              params={params}
-              searchParams={Promise.resolve(resolvedSearchParams)}
-            />
-          ) : null,
-        )}
+      <Suspense fallback={null}>
+        <ProductContent params={params} searchParams={searchParams} />
       </Suspense>
     </div>
   )

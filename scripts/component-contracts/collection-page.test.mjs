@@ -33,6 +33,27 @@ test('collection page fallback is real content, not a visible loading shell', as
   assert.doesNotMatch(source, /getCollectionHandleSamples/)
 })
 
+test('base collection page resolves to content after search params settle', async () => {
+  const source = await readFile(
+    sourcePath(
+      'src',
+      'app',
+      '(storefront)',
+      'collections',
+      '[handle]',
+      'page.tsx',
+    ),
+    'utf8',
+  )
+
+  assert.doesNotMatch(source, /searchParams\.then[\s\S]*:\s*null/)
+  assert.match(
+    source,
+    /<PageContent\s+params=\{params\}\s+searchParams=\{searchParams\}\s*\/>/,
+  )
+  assert.equal(source.match(/<PageContent\b/g)?.length, 1)
+})
+
 test('product page fallback is real content, not a broad skeleton shell', async () => {
   const source = await readFile(
     sourcePath(
@@ -49,6 +70,27 @@ test('product page fallback is real content, not a broad skeleton shell', async 
   assert.doesNotMatch(source, /Loading product/)
   assert.doesNotMatch(source, /<Skeleton\b/)
   assert.doesNotMatch(source, /getProductHandleSamples/)
+})
+
+test('base product page resolves to content after search params settle', async () => {
+  const source = await readFile(
+    sourcePath(
+      'src',
+      'app',
+      '(storefront)',
+      'products',
+      '[handle]',
+      'page.tsx',
+    ),
+    'utf8',
+  )
+
+  assert.doesNotMatch(source, /searchParams\.then[\s\S]*:\s*null/)
+  assert.match(
+    source,
+    /<ProductContent\s+params=\{params\}\s+searchParams=\{searchParams\}\s*\/>/,
+  )
+  assert.equal(source.match(/<ProductContent\b/g)?.length, 1)
 })
 
 test('collection product listing keeps deliberate spacing below the hero', async () => {

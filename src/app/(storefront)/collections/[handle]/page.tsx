@@ -13,21 +13,7 @@ import {
   getPath,
   truncateMetaDescription,
 } from './_lib/page-helpers'
-import type { PageProps, SearchParams } from './_lib/page-types'
-
-function hasSearchParamValue(value?: string | string[]) {
-  return Array.isArray(value)
-    ? value.some((item) => item.trim().length > 0)
-    : Boolean(value?.trim())
-}
-
-function hasCollectionSearchParams(searchParams: SearchParams) {
-  return (
-    hasSearchParamValue(searchParams.filter) ||
-    hasSearchParamValue(searchParams.page) ||
-    hasSearchParamValue(searchParams.sort)
-  )
-}
+import type { PageProps } from './_lib/page-types'
 
 export async function generateStaticParams(): Promise<
   Array<{ handle: string }>
@@ -78,19 +64,8 @@ export async function generateMetadata({
 
 export default function Page({ params, searchParams }: PageProps) {
   return (
-    <Suspense
-      fallback={
-        <PageContent params={params} searchParams={Promise.resolve({})} />
-      }
-    >
-      {searchParams.then((resolvedSearchParams) =>
-        hasCollectionSearchParams(resolvedSearchParams) ? (
-          <PageContent
-            params={params}
-            searchParams={Promise.resolve(resolvedSearchParams)}
-          />
-        ) : null,
-      )}
+    <Suspense fallback={null}>
+      <PageContent params={params} searchParams={searchParams} />
     </Suspense>
   )
 }
