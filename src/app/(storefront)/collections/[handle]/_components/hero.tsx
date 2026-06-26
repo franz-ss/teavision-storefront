@@ -62,7 +62,10 @@ export function Hero({
                 Collections
               </Link>
               <span aria-hidden="true">/</span>
-              <h1 aria-current="page" className="text-gold-deep">
+              <h1
+                aria-current="page"
+                className="type-mono-meta text-gold-deep m-0 inline"
+              >
                 {collectionTitle}
               </h1>
             </nav>

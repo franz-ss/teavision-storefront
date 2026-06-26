@@ -501,7 +501,7 @@ describe('PageContent collection rich hero rendering', () => {
     expect(html).not.toContain('<h1 class="sr-only"')
     expect(html).not.toContain('type-display')
     expect(html).toContain(
-      '<h1 aria-current="page" class="text-gold-deep">Wholesale Bulk Tea</h1>',
+      '<h1 aria-current="page" class="type-mono-meta text-gold-deep m-0 inline">Wholesale Bulk Tea</h1>',
     )
     expect(html).not.toContain(
       '<span aria-current="page" class="text-gold-deep">Wholesale Bulk Tea</span>',
