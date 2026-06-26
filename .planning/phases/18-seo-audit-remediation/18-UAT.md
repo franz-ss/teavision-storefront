@@ -1,9 +1,9 @@
 ---
-status: complete
+status: diagnosed
 phase: 18-seo-audit-remediation
 source: [18-01-SUMMARY.md, 18-02-SUMMARY.md, 18-03-SUMMARY.md, 18-04-SUMMARY.md, 18-05-SUMMARY.md]
 started: 2026-06-25T13:42:14Z
-updated: 2026-06-26T00:12:40Z
+updated: 2026-06-26T00:15:50Z
 ---
 
 ## Current Test
@@ -54,5 +54,15 @@ blocked: 0
   reason: "User reported: enabled probe reports product structured data | /products/test-standard-tea | FAIL | Product JSON-LD not found"
   severity: major
   test: 4
-  artifacts: []
-  missing: []
+  root_cause: "The enabled launch SEO probe was run against a plain dev server whose Shopify data source did not contain the fake fixture handle /products/test-standard-tea. The route rendered Product not found with no JSON-LD, while the fake-provider production lifecycle emits Product JSON-LD for that fixture path."
+  artifacts:
+    - path: "scripts/seo/probe-launch-seo.mjs"
+      issue: "Defaults product structured-data validation to /products/test-standard-tea and treats missing Product JSON-LD as a failure whenever Shopify credentials are present, even if the server is not using fake fixture data."
+    - path: "src/app/(storefront)/products/[handle]/page.tsx"
+      issue: "Product JSON-LD is emitted only after getProduct(handle) succeeds; missing product data correctly renders the not-found path with no Product schema."
+    - path: "tests/fixtures/shopify/product.ts"
+      issue: "Defines the fake test-standard-tea handle used by fake-provider production evidence."
+  missing:
+    - "Clarify and harden the probe contract so /products/test-standard-tea is only the default for fake-provider lifecycle runs, or require an explicit --product-path/SEO_PROBE_PRODUCT_PATH when probing a real Shopify-backed dev server."
+    - "Make the enabled probe error distinguish a missing product route for the selected data source from a real Product JSON-LD omission on an existing product page."
+  debug_session: ".planning/debug/product-json-ld-probe-path.md"
