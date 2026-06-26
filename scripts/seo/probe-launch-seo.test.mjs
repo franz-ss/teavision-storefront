@@ -19,6 +19,28 @@ function runProbe(args, env = {}) {
   })
 }
 
+async function probeProductHtml({
+  html,
+  path = '/products/known-tea',
+  source = 'cli',
+  status = 200,
+}) {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async () =>
+    new Response(html, {
+      headers: { 'content-type': 'text/html' },
+      status,
+    })
+
+  try {
+    const { probeProductStructuredData } = await import('./probe-launch-seo.mjs')
+
+    return probeProductStructuredData(new URL('http://example.test'), path, source)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+}
+
 test('url-audit mode validates the URL parity register with warnings only for optional owner exports', () => {
   const result = runProbe(['--mode', 'url-audit'], {
     SEO_URL_MIGRATION_EXPORT: '',
@@ -114,6 +136,53 @@ test('structured data helpers parse Product schema inside arrays and graph objec
   assert.equal(hasProductAggregateRating(values), true)
   assert.equal(hasVisibleProductReviewSummary(html), true)
   assert.equal(findSchemaNodes(values, 'Product')[0].name, 'Reviewed Tea')
+})
+
+test('Product structured data probe passes when Product JSON-LD exists', async () => {
+  const results = await probeProductHtml({
+    html: `
+      <h1>Known Tea</h1>
+      <script type="application/ld+json">
+        { "@context": "https://schema.org", "@type": "Product", "name": "Known Tea" }
+      </script>
+    `,
+  })
+
+  assert.equal(results[0].status, 'PASS')
+  assert.equal(results[0].detail, 'Product JSON-LD parsed')
+})
+
+test('Product structured data probe fails when an existing product lacks Product JSON-LD', async () => {
+  const results = await probeProductHtml({
+    html: '<main><h1>Known Tea</h1><button>Add to Cart</button></main>',
+  })
+
+  assert.equal(results[0].status, 'FAIL')
+  assert.equal(results[0].detail, 'Product JSON-LD not found')
+})
+
+test('Product structured data probe warns when the default fixture product is missing', async () => {
+  const results = await probeProductHtml({
+    html: '<main><h1>Product not found</h1></main>',
+    path: '/products/test-standard-tea',
+    source: 'default',
+    status: 404,
+  })
+
+  assert.equal(results[0].status, 'WARN')
+  assert.match(results[0].detail, /--product-path\/SEO_PROBE_PRODUCT_PATH/)
+})
+
+test('Product structured data probe fails when an explicit product path is missing', async () => {
+  const results = await probeProductHtml({
+    html: '<main><h1>Product not found</h1></main>',
+    path: '/products/missing-tea',
+    source: 'cli',
+    status: 404,
+  })
+
+  assert.equal(results[0].status, 'FAIL')
+  assert.match(results[0].detail, /product route not found for selected data source/)
 })
 
 test('enabled mode defaults to a representative product path for Product JSON-LD checks', async () => {
