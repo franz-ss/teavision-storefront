@@ -300,7 +300,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
       </Section.Root>
 
       {hasRichDescription && !richHero ? (
-        <Section.Root tone="transparent" spacing="compact" className="mt-10">
+        <Section.Root tone="transparent" spacing="compact">
           <Section.Container>
             <StoryDisclosure
               title={`Read more about ${collection.title}`}
