@@ -835,13 +835,13 @@ function renderRemediationNotes(rows) {
   const privacyRow = rows.find((row) => row.route === '/pages/privacy-policy')
 
   return [
-    `- Home hero image uses the launch AVIF with Next 16 \`preload\`, \`sizes="100vw"\`, stable fill dimensions, and normal optimized Image delivery; ${renderRouteMetricSummary(
+    `- Home hero image uses the precompressed launch AVIF with Next 16 \`preload\`, \`sizes="100vw"\`, stable fill dimensions, and direct \`unoptimized\` local delivery; ${renderRouteMetricSummary(
       homeRow,
     )}`,
-    `- PDP gallery preloads only the first gallery image and keeps normal optimized Image delivery without eager loading or high fetch priority; ${renderRouteMetricSummary(
+    `- PDP gallery preloads only the first gallery image and serves local launch AVIF media directly with \`unoptimized\` while preserving normal optimization for remote Shopify media; ${renderRouteMetricSummary(
       productRow,
     )}`,
-    `- Collection listing keeps the local \`ProductCard\` priority API but renders first-visible cards as Next 16 \`preload={priority}\` using normal optimized Image delivery; ${renderRouteMetricSummary(
+    `- Collection listing keeps the local \`ProductCard\` priority API but renders first-visible cards as Next 16 \`preload={priority}\` and serves fake-provider local launch AVIF media directly with \`unoptimized\`; ${renderRouteMetricSummary(
       collectionRow,
     )}`,
     `- Cart LCP is text content, not an image resource, so no cosmetic image edit was applied; ${renderRouteMetricSummary(

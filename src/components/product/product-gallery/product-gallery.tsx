@@ -14,6 +14,10 @@ type ProductGalleryProps = {
   title: string
 }
 
+function isLocalLaunchLcpImage(url: string) {
+  return url.startsWith('/images/homepage/') && url.endsWith('-lcp.avif')
+}
+
 export function ProductGallery({ images, title }: ProductGalleryProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false })
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -62,6 +66,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   width={image.width}
                   height={image.height}
                   preload={i === 0}
+                  unoptimized={isLocalLaunchLcpImage(image.url)}
                   quality={68}
                   sizes="(min-width: 1280px) 38rem, (min-width: 1024px) calc(50vw - 3.5rem), calc(100vw - 2rem)"
                   className="size-full object-cover"

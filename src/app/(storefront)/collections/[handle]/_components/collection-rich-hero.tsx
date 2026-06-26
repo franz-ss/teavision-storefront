@@ -9,6 +9,10 @@ type CollectionRichHeroProps = {
   richHero: CollectionRichHeroData
 }
 
+function isLocalLaunchLcpImage(url: string) {
+  return url.startsWith('/images/') && url.endsWith('-lcp.avif')
+}
+
 export function CollectionRichHero({ richHero }: CollectionRichHeroProps) {
   return (
     <Section.Root
@@ -37,6 +41,7 @@ export function CollectionRichHero({ richHero }: CollectionRichHeroProps) {
               sizes="(min-width: 1180px) 1120px, calc(100vw - 32px)"
               className="h-auto max-h-90 w-full object-cover"
               preload
+              unoptimized={isLocalLaunchLcpImage(richHero.image.url)}
             />
           </div>
 

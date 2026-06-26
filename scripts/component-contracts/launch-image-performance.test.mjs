@@ -60,12 +60,6 @@ test('launch image components avoid deprecated priority and invalid preload comb
     const blocks = imageBlocks(source)
 
     assert.ok(blocks.length > 0, `${relativePath} should contain Image usage`)
-    assert.doesNotMatch(
-      source,
-      /isLocalLaunchLcpImage|unoptimized/,
-      `${relativePath} should not branch around normal Image optimization for local launch assets`,
-    )
-
     for (const block of blocks) {
       assert.doesNotMatch(
         block,
@@ -86,14 +80,18 @@ test('launch image components avoid deprecated priority and invalid preload comb
   ])
 
   assert.match(homeHero, /\bpreload\b/)
+  assert.match(homeHero, /\bunoptimized\b/)
   assert.match(productGallery, /\bpreload\b/)
-  assert.match(productCard, /preload=\{priority\}/)
-  assert.doesNotMatch(productGallery, /isLocalLaunchLcpImage/)
-  assert.doesNotMatch(productCard, /isLocalLaunchLcpImage/)
-  assert.doesNotMatch(
-    productCard,
-    /loading=\{priority \? 'eager' : 'lazy'\}/,
+  assert.match(
+    productGallery,
+    /\bunoptimized=\{isLocalLaunchLcpImage\(image\.url\)\}/,
   )
+  assert.match(productCard, /preload=\{priority\}/)
+  assert.match(
+    productCard,
+    /\bunoptimized=\{isLocalLaunchLcpImage\(featuredImage\.url\)\}/,
+  )
+  assert.doesNotMatch(productCard, /loading=\{priority \? 'eager' : 'lazy'\}/)
   assert.doesNotMatch(
     productCard,
     /fetchPriority=\{priority \? 'high' : 'auto'\}/,

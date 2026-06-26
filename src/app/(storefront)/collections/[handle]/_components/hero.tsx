@@ -14,6 +14,10 @@ type HeroProps = {
   bannerImage: HeroImage | null
 }
 
+function isLocalLaunchLcpImage(url: string) {
+  return url.startsWith('/images/') && url.endsWith('-lcp.avif')
+}
+
 export function Hero({
   collectionTitle,
   heroDescription,
@@ -36,6 +40,7 @@ export function Hero({
                   sizes="(min-width: 1480px) 1480px, 100vw"
                   className="w-full object-cover"
                   preload
+                  unoptimized={isLocalLaunchLcpImage(bannerImage.url)}
                 />
               </div>
             </Section.Container>
@@ -99,6 +104,8 @@ export function Hero({
             alt=""
             fill
             sizes="100vw"
+            preload
+            unoptimized={isLocalLaunchLcpImage(heroImage.url)}
             className="object-cover opacity-35"
             aria-hidden="true"
           />

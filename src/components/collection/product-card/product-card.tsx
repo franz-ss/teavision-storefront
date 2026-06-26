@@ -33,6 +33,10 @@ type ProductCardProps = {
   className?: string
 }
 
+function isLocalLaunchLcpImage(url: string) {
+  return url.startsWith('/images/homepage/') && url.endsWith('-lcp.avif')
+}
+
 export function ProductCard({
   product,
   priority = false,
@@ -65,6 +69,7 @@ export function ProductCard({
               alt={featuredImage.altText ?? product.title}
               fill
               preload={priority}
+              unoptimized={isLocalLaunchLcpImage(featuredImage.url)}
               sizes="(min-width: 1280px) 340px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 50vw"
               className="object-contain transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />

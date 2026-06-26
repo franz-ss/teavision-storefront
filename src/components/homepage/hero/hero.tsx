@@ -30,6 +30,7 @@ export function HomepageHero() {
         fill
         sizes="100vw"
         preload
+        unoptimized
         className="absolute inset-0 -z-20 object-cover"
       />
       <div aria-hidden="true" className="hero-scrim absolute inset-0 -z-10" />
