@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { getCollection } from '@/lib/shopify/operations/collection'
@@ -52,5 +53,9 @@ export async function generateMetadata({
 }
 
 export default function Page({ params, searchParams }: PageProps) {
-  return <PageContent params={params} searchParams={searchParams} />
+  return (
+    <Suspense fallback={null}>
+      <PageContent params={params} searchParams={searchParams} />
+    </Suspense>
+  )
 }

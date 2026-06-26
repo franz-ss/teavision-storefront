@@ -1,7 +1,11 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
 import { withNoindexRobots } from '@/lib/seo/noindex'
-import { getCollection } from '@/lib/shopify/operations/collection'
+import {
+  getCollection,
+  getCollections,
+} from '@/lib/shopify/operations/collection'
 
 import { PageContent } from './_components/page-content'
 import {
@@ -9,7 +13,29 @@ import {
   getPath,
   truncateMetaDescription,
 } from './_lib/page-helpers'
-import type { PageProps } from './_lib/page-types'
+import type { PageProps, SearchParams } from './_lib/page-types'
+
+function hasSearchParamValue(value?: string | string[]) {
+  return Array.isArray(value)
+    ? value.some((item) => item.trim().length > 0)
+    : Boolean(value?.trim())
+}
+
+function hasCollectionSearchParams(searchParams: SearchParams) {
+  return (
+    hasSearchParamValue(searchParams.filter) ||
+    hasSearchParamValue(searchParams.page) ||
+    hasSearchParamValue(searchParams.sort)
+  )
+}
+
+export async function generateStaticParams(): Promise<
+  Array<{ handle: string }>
+> {
+  const handles = await getCollections()
+
+  return handles.map((handle) => ({ handle }))
+}
 
 export async function generateMetadata({
   params,
@@ -51,5 +77,20 @@ export async function generateMetadata({
 }
 
 export default function Page({ params, searchParams }: PageProps) {
-  return <PageContent params={params} searchParams={searchParams} />
+  return (
+    <Suspense
+      fallback={
+        <PageContent params={params} searchParams={Promise.resolve({})} />
+      }
+    >
+      {searchParams.then((resolvedSearchParams) =>
+        hasCollectionSearchParams(resolvedSearchParams) ? (
+          <PageContent
+            params={params}
+            searchParams={Promise.resolve(resolvedSearchParams)}
+          />
+        ) : null,
+      )}
+    </Suspense>
+  )
 }

@@ -70,12 +70,14 @@ export function Toolbar({
           )}
         </summary>
         <div className="p-4">
-          <FilterPanel
-            filters={filters}
-            selectedFilters={selectedFilters}
-            resultCount={productCount}
-            clearHref={clearHref}
-          />
+          <Suspense fallback={null}>
+            <FilterPanel
+              filters={filters}
+              selectedFilters={selectedFilters}
+              resultCount={productCount}
+              clearHref={clearHref}
+            />
+          </Suspense>
         </div>
       </details>
     </div>

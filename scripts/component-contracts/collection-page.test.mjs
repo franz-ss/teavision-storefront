@@ -14,14 +14,41 @@ function sourcePath(...segments) {
   return path.join(repoRoot, ...segments)
 }
 
-test('collection page renders server content without a visible loading fallback', async () => {
+test('collection page fallback is real content, not a visible loading shell', async () => {
   const source = await readFile(
-    sourcePath('src', 'app', '(storefront)', 'collections', '[handle]', 'page.tsx'),
+    sourcePath(
+      'src',
+      'app',
+      '(storefront)',
+      'collections',
+      '[handle]',
+      'page.tsx',
+    ),
     'utf8',
   )
 
   assert.doesNotMatch(source, /Loading collection/)
-  assert.doesNotMatch(source, /fallback=\{/)
+  assert.doesNotMatch(source, /LoadingSkeleton/)
+  assert.doesNotMatch(source, /staticShell/)
+  assert.doesNotMatch(source, /getCollectionHandleSamples/)
+})
+
+test('product page fallback is real content, not a broad skeleton shell', async () => {
+  const source = await readFile(
+    sourcePath(
+      'src',
+      'app',
+      '(storefront)',
+      'products',
+      '[handle]',
+      'page.tsx',
+    ),
+    'utf8',
+  )
+
+  assert.doesNotMatch(source, /Loading product/)
+  assert.doesNotMatch(source, /<Skeleton\b/)
+  assert.doesNotMatch(source, /getProductHandleSamples/)
 })
 
 test('collection product listing keeps deliberate spacing below the hero', async () => {

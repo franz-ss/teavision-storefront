@@ -7,6 +7,7 @@ import {
   evaluateRouteHtml,
   findSchemaNodes,
   parseArgs,
+  runProbe,
 } from './probe-crawlable-html.mjs'
 
 const collectionHtml = `
@@ -106,6 +107,100 @@ test('skeleton-only collection HTML fails crawl-critical content checks', () => 
 
   assert.equal(skeletonRow?.status, 'FAIL')
   assert.equal(contentRow?.status, 'FAIL')
+})
+
+test('streamed collection HTML fails when skeleton arrives before crawl-critical content', async () => {
+  const originalFetch = globalThis.fetch
+  const encoder = new TextEncoder()
+  globalThis.fetch = async () =>
+    new Response(
+      new ReadableStream({
+        start(controller) {
+          controller.enqueue(
+            encoder.encode(`
+              <!doctype html>
+              <html lang="en-AU">
+                <head>
+                  <link rel="canonical" href="https://www.teavision.com.au/collections/wholesale-bulk-tea">
+                </head>
+                <body>
+                  <div role="status" aria-live="polite">
+                    <span>Loading collection</span>
+                  </div>
+            `),
+          )
+          controller.enqueue(
+            encoder.encode(`
+                  <h1>Wholesale Tea</h1>
+                  <ul id="product-grid">
+                    <li><a href="/products/organic-masala-chai">Organic Masala Chai</a></li>
+                  </ul>
+                  <script type="application/ld+json">
+                    { "@context": "https://schema.org", "@type": "CollectionPage", "name": "Wholesale Tea" }
+                  </script>
+                </body>
+              </html>
+            `),
+          )
+          controller.close()
+        },
+      }),
+      { status: 200 },
+    )
+
+  try {
+    const rows = await runProbe({
+      baseUrl: 'https://teavision-storefront.vercel.app',
+      collectionRoute: '/collections/wholesale-bulk-tea',
+      collectionTitle: 'Wholesale Tea',
+      productRoute: '/products/organic-masala-chai',
+      productTitle: 'Organic Masala Chai',
+    })
+    const streamRow = rows.find(
+      (row) =>
+        row.route === '/collections/wholesale-bulk-tea' &&
+        row.check === 'content before skeleton',
+    )
+
+    assert.equal(streamRow?.status, 'FAIL')
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('streamed PDP HTML fails when skeleton arrives before crawl-critical content', () => {
+  const chunks = [
+    `
+      <!doctype html>
+      <html lang="en-AU">
+        <head>
+          <link rel="canonical" href="https://www.teavision.com.au/products/organic-masala-chai">
+        </head>
+        <body>
+          <div role="status" aria-live="polite">
+            <span>Loading product</span>
+          </div>
+    `,
+    `
+          <h1>Organic Spicy Masala Chai</h1>
+          <button>Add to Cart</button>
+          <script type="application/ld+json">
+            { "@context": "https://schema.org", "@type": "Product", "name": "Organic Spicy Masala Chai" }
+          </script>
+        </body>
+      </html>
+    `,
+  ]
+  const rows = evaluateRouteHtml({
+    chunks,
+    expectedTitle: 'Organic Spicy Masala Chai',
+    html: chunks.join(''),
+    kind: 'product',
+    route: '/products/organic-masala-chai',
+  })
+  const streamRow = rows.find((row) => row.check === 'content before skeleton')
+
+  assert.equal(streamRow?.status, 'FAIL')
 })
 
 test('JSON-LD traversal finds schema nodes inside @graph objects', () => {

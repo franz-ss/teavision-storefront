@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 
 import { FilterPanel } from '@/components/collection'
@@ -29,12 +30,14 @@ export function Sidebar({
   return (
     <aside className="hidden lg:sticky lg:top-32 lg:grid lg:gap-5 lg:self-start">
       {/* Filter panel */}
-      <FilterPanel
-        filters={visibleFilters}
-        selectedFilters={activeSelectedFilters}
-        resultCount={productsLength}
-        clearHref={clearFiltersHref}
-      />
+      <Suspense fallback={null}>
+        <FilterPanel
+          filters={visibleFilters}
+          selectedFilters={activeSelectedFilters}
+          resultCount={productsLength}
+          clearHref={clearFiltersHref}
+        />
+      </Suspense>
 
       {/* Related collections */}
       {sidebarCollections.length > 0 && (

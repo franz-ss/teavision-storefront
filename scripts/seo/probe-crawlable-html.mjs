@@ -145,6 +145,120 @@ function countH1(html) {
   return (html.match(/<h1\b/gi) ?? []).length
 }
 
+const SKELETON_MARKER_PATTERN =
+  /Loading (product|collection)|\bskeleton\b|animate-pulse/i
+
+function patternIndex(html, pattern) {
+  const match = html.match(pattern)
+  return match?.index ?? -1
+}
+
+function firstPatternIndex(html, patterns) {
+  const indexes = patterns
+    .map((pattern) => patternIndex(html, pattern))
+    .filter((index) => index >= 0)
+
+  return indexes.length > 0 ? Math.min(...indexes) : -1
+}
+
+function hasSkeletonMarker(html) {
+  return SKELETON_MARKER_PATTERN.test(html)
+}
+
+function findTitleIndex(html, expectedTitle) {
+  return html.toLowerCase().indexOf(expectedTitle.toLowerCase())
+}
+
+function findCollectionContentReadyIndex(html, expectedTitle) {
+  const titleIndex = findTitleIndex(html, expectedTitle)
+  const productContentIndex = firstPatternIndex(html, [
+    /\bid=["']product-grid["']/i,
+    /href=["']\/products\//i,
+    /Add to cart/i,
+  ])
+
+  if (titleIndex < 0 || productContentIndex < 0) return -1
+
+  return Math.max(titleIndex, productContentIndex)
+}
+
+function findProductContentReadyIndex(html, expectedTitle) {
+  const titleIndex = findTitleIndex(html, expectedTitle)
+  const buyContentIndex = firstPatternIndex(html, [
+    /Add to Cart/i,
+    /Bulk savings/i,
+    /selected pack/i,
+    /Freight-insured and tracked/i,
+  ])
+
+  if (titleIndex < 0 || buyContentIndex < 0) return -1
+
+  return Math.max(titleIndex, buyContentIndex)
+}
+
+function findContentReadyIndex({ expectedTitle, html, kind }) {
+  return kind === 'collection'
+    ? findCollectionContentReadyIndex(html, expectedTitle)
+    : findProductContentReadyIndex(html, expectedTitle)
+}
+
+function firstChunkWhere(chunks, predicate) {
+  let cumulativeHtml = ''
+
+  for (const [index, chunk] of chunks.entries()) {
+    cumulativeHtml += chunk
+    if (predicate(cumulativeHtml)) return index + 1
+  }
+
+  return null
+}
+
+function evaluateContentBeforeSkeleton({ chunks, expectedTitle, html, kind }) {
+  const safeChunks = chunks.length > 0 ? chunks : [html]
+  const contentReadyIndex = findContentReadyIndex({
+    expectedTitle,
+    html,
+    kind,
+  })
+  const skeletonIndex = patternIndex(html, SKELETON_MARKER_PATTERN)
+  const contentChunk = firstChunkWhere(
+    safeChunks,
+    (cumulativeHtml) =>
+      findContentReadyIndex({
+        expectedTitle,
+        html: cumulativeHtml,
+        kind,
+      }) >= 0,
+  )
+  const skeletonChunk = firstChunkWhere(safeChunks, hasSkeletonMarker)
+
+  if (contentReadyIndex < 0) {
+    return check(
+      'content before skeleton',
+      false,
+      skeletonChunk
+        ? `crawl-critical content missing before skeleton chunk ${skeletonChunk}`
+        : 'crawl-critical content missing',
+    )
+  }
+
+  if (skeletonIndex >= 0 && skeletonIndex < contentReadyIndex) {
+    return check(
+      'content before skeleton',
+      false,
+      `skeleton marker appears before crawl-critical content (skeleton chunk ${skeletonChunk ?? 'unknown'}, content chunk ${contentChunk ?? 'unknown'})`,
+    )
+  }
+
+  return check(
+    'content before skeleton',
+    true,
+    skeletonChunk
+      ? `crawl-critical content appears before skeleton chunk ${skeletonChunk}`
+      : `crawl-critical content appears in chunk ${contentChunk ?? 'unknown'} with no skeleton marker`,
+  )
+}
+
 function hasCanonicalLink(html) {
   const links = html.match(/<link\b[^>]*>/gi) ?? []
 
@@ -247,12 +361,16 @@ function hasProductContent(html, expectedTitle) {
 function hasSkeletonOnlyShell(html, hasMeaningfulContent) {
   if (hasMeaningfulContent) return false
 
-  return /Loading (product|collection)|\bloading\b|\bskeleton\b|animate-pulse|role=["']status["']|aria-live=["']polite["']/i.test(
-    html,
-  )
+  return hasSkeletonMarker(html)
 }
 
-export function evaluateRouteHtml({ expectedTitle, html, kind, route }) {
+export function evaluateRouteHtml({
+  chunks = [],
+  expectedTitle,
+  html,
+  kind,
+  route,
+}) {
   const h1Count = countH1(html)
   const hasMeaningfulContent =
     kind === 'collection'
@@ -276,6 +394,7 @@ export function evaluateRouteHtml({ expectedTitle, html, kind, route }) {
         ? 'meaningful route content found'
         : 'route content is missing or only loading/skeleton text',
     ),
+    evaluateContentBeforeSkeleton({ chunks, expectedTitle, html, kind }),
   ]
 
   if (kind === 'collection') {
@@ -340,6 +459,28 @@ function renderMarkdownTable(rows) {
   return lines.join('\n')
 }
 
+async function readResponseHtml(response) {
+  if (!response.body || typeof response.body.getReader !== 'function') {
+    const html = await response.text()
+    return { chunks: [html], html }
+  }
+
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  const chunks = []
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    chunks.push(decoder.decode(value, { stream: true }))
+  }
+
+  const tail = decoder.decode()
+  if (tail) chunks.push(tail)
+
+  return { chunks, html: chunks.join('') }
+}
+
 async function fetchHtml(baseUrl, route) {
   const response = await fetch(targetUrl(baseUrl, route), {
     headers: {
@@ -347,10 +488,11 @@ async function fetchHtml(baseUrl, route) {
       'Accept-Encoding': 'identity',
     },
   })
-  const html = await response.text()
+  const { chunks, html } = await readResponseHtml(response)
 
   if (!response.ok) {
     return {
+      chunks,
       html,
       rows: [
         {
@@ -363,7 +505,7 @@ async function fetchHtml(baseUrl, route) {
     }
   }
 
-  return { html, rows: [] }
+  return { chunks, html, rows: [] }
 }
 
 export async function runProbe(args) {
@@ -382,15 +524,16 @@ export async function runProbe(args) {
   const rows = []
 
   for (const target of targets) {
-    const { html, rows: fetchRows } = await fetchHtml(
-      args.baseUrl,
-      target.route,
-    )
+    const {
+      chunks,
+      html,
+      rows: fetchRows,
+    } = await fetchHtml(args.baseUrl, target.route)
     rows.push(...fetchRows)
 
     if (fetchRows.some((row) => row.status === 'FAIL')) continue
 
-    rows.push(evaluateRouteHtml({ ...target, html }))
+    rows.push(evaluateRouteHtml({ ...target, chunks, html }))
   }
 
   return rows.flat()
