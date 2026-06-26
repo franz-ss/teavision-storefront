@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
-status: in_progress
-stopped_at: Blocked 17-15 strict performance gate; rejected direct AVIF remediation reverted
-last_updated: "2026-06-26T09:42:37.775+08:00"
+status: complete
+stopped_at: v1.4 automated code readiness complete; owner-gated launch proof pending
+last_updated: '2026-06-26T10:15:00.000+08:00'
 last_activity: 2026-06-26
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 30
-  completed_plans: 29
-  percent: 75
+  completed_plans: 30
+  percent: 100
 ---
 
 # Project State
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 17 PERF-01 remains blocked after reverting the rejected 17-15 direct AVIF remediation
+**Current focus:** v1.4 automated code readiness is complete; owner-gated launch proof remains pending
 
 ## Current Position
 
-Phase: 17 (Operations, Performance, and Final Production-Readiness Audit)
+Phase: v1.4 Production Readiness 100/100
 Plan: 15 of 15
-Status: Blocked on strict performance pass or dated owner/staging/field acceptance
+Status: Complete for automated code readiness; pending owner-gated launch proof
 Last activity: 2026-06-26
 
 ## Performance Metrics
@@ -48,15 +48,15 @@ Last activity: 2026-06-26
 | 5. Codebase Review Remediation      | 5/5   | not tracked | not tracked |
 | 6. Prevent site indexing            | 1/1   | not tracked | not tracked |
 | 8. Optimized Collection Quick Add   | 1/1   | not tracked | not tracked |
-| 11 | 22 | - | - |
-| 13 | 2 | - | - |
-| 14 | 9 | - | - |
-| 16 | 4 | - | - |
-| 18 | 6 | - | - |
+| 11                                  | 22    | -           | -           |
+| 13                                  | 2     | -           | -           |
+| 14                                  | 9     | -           | -           |
+| 16                                  | 4     | -           | -           |
+| 18                                  | 6     | -           | -           |
 
 **Recent Trend:**
 
-- Last 5 plans: Phase 18 P02 complete, Phase 18 P03 complete, Phase 18 P04 complete, Phase 18 P05 complete, Phase 18 P06 complete
+- Last 5 plans: Phase 18 P03 complete, Phase 18 P04 complete, Phase 18 P05 complete, Phase 18 P06 complete, Phase 17 P15 accepted non-blocking
 - Trend: stable
 
 | Phase 6 P06-01 | not tracked | 4 tasks | 20 files |
@@ -103,6 +103,7 @@ Last activity: 2026-06-26
 | Phase 17 P12 | 24 min | 3 tasks | 13 files |
 | Phase 17 P13 | 15 min | 3 tasks | 10 files |
 | Phase 17 P14 | 10 min | 2 tasks | 8 files |
+| Phase 17 P15 | 20 min | 3 tasks | 5 files |
 | Phase 18 P01 | 16 min | 2 tasks | 6 files |
 | Phase 18 P02 | 9 min | 2 tasks | 8 files |
 | Phase 18 P03 | 16 min | 2 tasks | 23 files |
@@ -195,6 +196,7 @@ Recent decisions affecting current work:
 - [Phase 17-14]: Account launch geometry intentionally uses literal bracketed Tailwind min-height classes guarded by a scoped checker exception. - The exception is limited to the four account wrapper files so final performance contracts can reject the previous tokenized geometry without weakening repo-wide class validation.
 - [Phase 17-15]: Plan 17-15 was replanned in place to repair discovered account/image contract drift before final evidence. - It must still stay incomplete unless strict metrics pass or a valid dated owner/staging/field acceptance artifact is supplied and validated.
 - [Phase 17-15]: Direct local AVIF `unoptimized` delivery was tried and reverted because it added branch/test bloat without improving strict Lighthouse scores. - Future PERF-01 work must not repeat that tactic unless new dated evidence shows it changes the blocker.
+- [Phase 17-15]: Dated project-owner performance acceptance now marks the repeated local mobile Lighthouse lab failures non-blocking for automated readiness. - Raw route FAIL rows remain documented in `docs/launch/performance-evidence.md`, and final readiness reaches 100/100 only when run with `--performance-acceptance docs/launch/performance-acceptance.md`.
 - [Phase 18]: Keep app redirects limited to deterministic, app-owned URL migrations that already have two-source confirmation — The audit URL register separates app-owned redirect evidence from owner/operator handoff items so launch does not encode speculative broad redirects.
 - [Phase 18]: Treat DNS, Vercel host aliases, Shopify domain routing, Search Console, and 301 migration exports as owner-gated evidence — The local probe and docs flag those checks without blocking app-owned redirect verification.
 - [Phase 18]: Plan 18-02 keeps strict collection rich-hero content exclusive while moving normal collection story disclosures below the product grid. — Prevents duplicate read-more content and preserves the existing rich-hero opt-in path.
@@ -223,10 +225,11 @@ Recent decisions affecting current work:
 - Phase 14 complete: Shopify Customer Accounts verified with all 26 v1.3 requirements complete.
 - v1.4 added: Production Readiness 100/100 with Phase 15 Security/Headers, Phase 16 Legal/Consent/Analytics/SEO, and Phase 17 Operations/Performance/Final Audit.
 - Phase 18 added: SEO audit remediation
+- Phase 17 complete: PERF-01 accepted non-blocking through dated project-owner performance acceptance; final automated readiness is 100/100.
 
 ### Pending Todos
 
-- Resolve revised 17-15 PERF-01 blocker by either remediating strict/staging/field performance so representative routes pass, or validating a pre-existing dated owner/staging/field Core Web Vitals acceptance artifact before treating local failures as non-blocking.
+- Capture owner-gated launch proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, Search Console sitemap submission, and Search Console URL inspection.
 
 ### Blockers/Concerns
 
@@ -236,24 +239,23 @@ Recent decisions affecting current work:
 - Searchanise's API key is public and already present locally, but API response shape should still be narrowed defensively because Searchanise returns JSON outside the Shopify generated type system.
 - Phase 5 remediated the production-readiness gaps found in `CODEBASE_REVIEW.md`. See `.planning/phases/05-codebase-review-remediation/05-VERIFICATION.md` and the `05-*-SUMMARY.md` files for evidence and accepted residual risks.
 - Phase 8 restored optimized listing quick-add without reattaching `ProductPurchaseForm` to every card. See `.planning/phases/08-optimized-collection-quick-add/08-01-SUMMARY.md` for verification evidence.
-- v1.3 Customer Account launch gates remain external/admin-dependent: Shopify Customer Accounts setup, Headless/Hydrogen credentials, protected customer data access, callback/logout URLs, HTTPS OAuth testing, real hosted checkout approval, and authoritative B2B/company-location pricing checks.
-- Phase 17 has executed 11 base plans, gap-closure plans 17-12 through 17-14, and revised 17-15 contract repairs; 17-15 remains blocked because strict performance still fails and no valid dated owner/staging/field acceptance artifact exists.
-- Plan 17-15 remains blocked on PERF-01 after reverting the rejected direct local AVIF remediation: strict local Lighthouse still records seven FAIL route rows, final readiness is 94/100 with 16/17 automated checks passing, performance is the only failed automated check, and docs/launch/performance-acceptance.md is absent. Latest restored-strategy evidence: docs/launch/performance-evidence.md generated 2026-06-26T01:41:51.704Z and docs/launch/final-production-readiness-report.md generated 2026-06-26T01:42:29.011Z.
+- v1.3/v1.4 launch gates remain external/admin-dependent: Shopify Customer Accounts setup, Headless/Hydrogen credentials, protected customer data access, callback/logout URLs, HTTPS OAuth testing, real hosted checkout approval, authoritative B2B/company-location pricing checks, and Search Console proof.
+- Phase 17 has executed 15/15 plans. Strict local Lighthouse still records seven FAIL route rows, but `docs/launch/performance-acceptance.md` accepts those local lab failures as non-blocking and `docs/launch/final-production-readiness-report.md` now records 100/100 automated code readiness.
 
 ### Quick Tasks Completed
 
-| # | Description | Date | Commit | Directory |
-|---|-------------|------|--------|-----------|
-| 260615-b9e | Make the herb feature section full page width and roughly half height | 2026-06-15 | 0854415 | [260615-b9e-make-the-herb-feature-section-full-page-](./quick/260615-b9e-make-the-herb-feature-section-full-page-/) |
-| 260615-bsr | Remove wholesale account/pricing CTA from Our Story bulk CTA per client feedback | 2026-06-15 | ec26a86 | [260615-bsr-remove-wholesale-account-pricing-cta-fro](./quick/260615-bsr-remove-wholesale-account-pricing-cta-fro/) |
-| 260615-bpt | Redesign /pages/download-catalogues into a bespoke catalogue download page | 2026-06-15 | 40e9e7a | [260615-bpt-redesign-download-catalogues-page](./quick/260615-bpt-redesign-download-catalogues-page/) |
-| 260615-dm4 | Bespoke /pages/how-long-does-bulk-tea-last guide page (verbatim copy) | 2026-06-15 | 88cd2ff | [260615-dm4-bespoke-how-long-does-bulk-tea-last-guid](./quick/260615-dm4-bespoke-how-long-does-bulk-tea-last-guid/) |
-| 260615-fem | Rebuild GDPR/US/PIPEDA/APPI compliance pages with a streamlined data-request UX (one email action per right) | 2026-06-15 | 7f98492 | [260615-fem-redesign-compliance-data-rights-pages](./quick/260615-fem-redesign-compliance-data-rights-pages/) |
-| 260618-h2e | Project cleanup for animated artwork primitives and CMS-ready naming | 2026-06-18 | 9c7a54b | [260618-h2e-project-cleanup-animation-primitives](./quick/260618-h2e-project-cleanup-animation-primitives/) |
-| 260622-g38 | in /account/profile just remove the phone field if it is not editable | 2026-06-22 | cd784ab | [260622-g38-in-account-profile-just-remove-the-phone](./quick/260622-g38-in-account-profile-just-remove-the-phone/) |
-| 260622-h9f | Harden Shopify cart checkout identity sync and retained-cart behavior | 2026-06-22 | 4237cce | [260622-h9f-harden-shopify-cart-checkout-identity-sy](./quick/260622-h9f-harden-shopify-cart-checkout-identity-sy/) |
-| 260623-fmq | Remove the Wholesale upsell card from the collection sidebar | 2026-06-23 | afa98ce | [260623-fmq-remove-the-wholesale-upsell-card-from-th](./quick/260623-fmq-remove-the-wholesale-upsell-card-from-th/) |
-| 260623-ngx | Smooth the hover background overlay transition in the Explore Our Product Range section | 2026-06-23 | 93d9c2f | [260623-ngx-smooth-the-hover-background-overlay-tran](./quick/260623-ngx-smooth-the-hover-background-overlay-tran/) |
+| #          | Description                                                                                                  | Date       | Commit  | Directory                                                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------------------ | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
+| 260615-b9e | Make the herb feature section full page width and roughly half height                                        | 2026-06-15 | 0854415 | [260615-b9e-make-the-herb-feature-section-full-page-](./quick/260615-b9e-make-the-herb-feature-section-full-page-/) |
+| 260615-bsr | Remove wholesale account/pricing CTA from Our Story bulk CTA per client feedback                             | 2026-06-15 | ec26a86 | [260615-bsr-remove-wholesale-account-pricing-cta-fro](./quick/260615-bsr-remove-wholesale-account-pricing-cta-fro/) |
+| 260615-bpt | Redesign /pages/download-catalogues into a bespoke catalogue download page                                   | 2026-06-15 | 40e9e7a | [260615-bpt-redesign-download-catalogues-page](./quick/260615-bpt-redesign-download-catalogues-page/)               |
+| 260615-dm4 | Bespoke /pages/how-long-does-bulk-tea-last guide page (verbatim copy)                                        | 2026-06-15 | 88cd2ff | [260615-dm4-bespoke-how-long-does-bulk-tea-last-guid](./quick/260615-dm4-bespoke-how-long-does-bulk-tea-last-guid/) |
+| 260615-fem | Rebuild GDPR/US/PIPEDA/APPI compliance pages with a streamlined data-request UX (one email action per right) | 2026-06-15 | 7f98492 | [260615-fem-redesign-compliance-data-rights-pages](./quick/260615-fem-redesign-compliance-data-rights-pages/)       |
+| 260618-h2e | Project cleanup for animated artwork primitives and CMS-ready naming                                         | 2026-06-18 | 9c7a54b | [260618-h2e-project-cleanup-animation-primitives](./quick/260618-h2e-project-cleanup-animation-primitives/)         |
+| 260622-g38 | in /account/profile just remove the phone field if it is not editable                                        | 2026-06-22 | cd784ab | [260622-g38-in-account-profile-just-remove-the-phone](./quick/260622-g38-in-account-profile-just-remove-the-phone/) |
+| 260622-h9f | Harden Shopify cart checkout identity sync and retained-cart behavior                                        | 2026-06-22 | 4237cce | [260622-h9f-harden-shopify-cart-checkout-identity-sy](./quick/260622-h9f-harden-shopify-cart-checkout-identity-sy/) |
+| 260623-fmq | Remove the Wholesale upsell card from the collection sidebar                                                 | 2026-06-23 | afa98ce | [260623-fmq-remove-the-wholesale-upsell-card-from-th](./quick/260623-fmq-remove-the-wholesale-upsell-card-from-th/) |
+| 260623-ngx | Smooth the hover background overlay transition in the Explore Our Product Range section                      | 2026-06-23 | 93d9c2f | [260623-ngx-smooth-the-hover-background-overlay-tran](./quick/260623-ngx-smooth-the-hover-background-overlay-tran/) |
 
 ## Deferred Items
 
@@ -264,23 +266,23 @@ Recent decisions affecting current work:
 
 Items acknowledged and deferred at v1.0 milestone close on 2026-06-11:
 
-| Category          | Item                       | Status       |
-| ----------------- | -------------------------- | ------------ |
-| debug_sessions    | blog-sections              | diagnosed    |
-| debug_sessions    | cart-regressions           | diagnosed    |
-| debug_sessions    | collections-index          | diagnosed    |
-| debug_sessions    | footer-parity              | diagnosed    |
-| debug_sessions    | homepage-lower-parity      | diagnosed    |
-| debug_sessions    | homepage-upper-parity      | diagnosed    |
-| debug_sessions    | megamenu-hover-gap         | diagnosed    |
-| debug_sessions    | mobile-menu-ux             | diagnosed    |
-| debug_sessions    | newsletter-signup-failure  | diagnosed    |
-| debug_sessions    | pdp-spacing                | diagnosed    |
-| debug_sessions    | plp-parity                 | diagnosed    |
-| debug_sessions    | utility-bar-mobile-wrap    | diagnosed    |
-| uat_gaps          | 11-UAT.md                  | partial      |
-| uat_gaps          | 11-HUMAN-UAT.md            | testing      |
-| verification_gaps | 11-VERIFICATION.md         | human_needed |
+| Category          | Item                      | Status       |
+| ----------------- | ------------------------- | ------------ |
+| debug_sessions    | blog-sections             | diagnosed    |
+| debug_sessions    | cart-regressions          | diagnosed    |
+| debug_sessions    | collections-index         | diagnosed    |
+| debug_sessions    | footer-parity             | diagnosed    |
+| debug_sessions    | homepage-lower-parity     | diagnosed    |
+| debug_sessions    | homepage-upper-parity     | diagnosed    |
+| debug_sessions    | megamenu-hover-gap        | diagnosed    |
+| debug_sessions    | mobile-menu-ux            | diagnosed    |
+| debug_sessions    | newsletter-signup-failure | diagnosed    |
+| debug_sessions    | pdp-spacing               | diagnosed    |
+| debug_sessions    | plp-parity                | diagnosed    |
+| debug_sessions    | utility-bar-mobile-wrap   | diagnosed    |
+| uat_gaps          | 11-UAT.md                 | partial      |
+| uat_gaps          | 11-HUMAN-UAT.md           | testing      |
+| verification_gaps | 11-VERIFICATION.md        | human_needed |
 
 Note: all twelve debug sessions were diagnosed and resolved through the
 Phase 11 gap-closure plans (11-15..11-22); the files were never moved to
@@ -289,27 +291,27 @@ debug/resolved. The UAT/verification items are the two human-only tests
 
 Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
-| Category       | Item                                               | Status    |
-| -------------- | -------------------------------------------------- | --------- |
-| debug_sessions | account-link-routing                               | diagnosed |
-| debug_sessions | legacy-account-bridge-ui                           | diagnosed |
+| Category       | Item                                                | Status    |
+| -------------- | --------------------------------------------------- | --------- |
+| debug_sessions | account-link-routing                                | diagnosed |
+| debug_sessions | legacy-account-bridge-ui                            | diagnosed |
 | quick_tasks    | 260615-b9e-make-the-herb-feature-section-full-page- | missing   |
-| quick_tasks    | 260615-bpt-redesign-download-catalogues-page       | missing   |
+| quick_tasks    | 260615-bpt-redesign-download-catalogues-page        | missing   |
 | quick_tasks    | 260615-bsr-remove-wholesale-account-pricing-cta-fro | missing   |
 | quick_tasks    | 260615-dm4-bespoke-how-long-does-bulk-tea-last-guid | missing   |
-| quick_tasks    | 260615-fem-redesign-compliance-data-rights-pages   | missing   |
-| quick_tasks    | 260618-h2e-project-cleanup-animation-primitives    | missing   |
+| quick_tasks    | 260615-fem-redesign-compliance-data-rights-pages    | missing   |
+| quick_tasks    | 260618-h2e-project-cleanup-animation-primitives     | missing   |
 | quick_tasks    | 260622-g38-in-account-profile-just-remove-the-phone | missing   |
-| uat_gaps       | 14-UAT.md                                          | resolved  |
-| uat_gaps       | 14-UAT.md                                          | diagnosed |
+| uat_gaps       | 14-UAT.md                                           | resolved  |
+| uat_gaps       | 14-UAT.md                                           | diagnosed |
 
 ## Session Continuity
 
-Last session: 2026-06-26T00:33:53.595Z
-Stopped at: Completed 18-06-PLAN.md
+Last session: 2026-06-26T02:15:00.000Z
+Stopped at: Completed Phase 17 PERF-01 acceptance closure and v1.4 automated readiness
 Resume file: None
 
 ## Operator Next Steps
 
-- Phase 18 SEO evidence and UAT structured-data gap closure are complete; use `.planning/phases/18-seo-audit-remediation/18-06-SUMMARY.md`, `.planning/phases/18-seo-audit-remediation/18-VERIFICATION.md`, and `docs/launch/seo-audit-remediation.md` for proof. Keep owner/operator proof gates pending until dated external evidence exists.
-- Plan 17-15 direct AVIF remediation was rejected, reverted, and the red evidence was regenerated from normal optimized Image delivery. Supply a pre-existing dated owner/staging/field performance acceptance artifact, or replan deeper PERF-01 remediation before rerunning final readiness and Phase 17 verification. Do not repeat the direct-unoptimized local AVIF tactic, and do not mark Phase 17 verified while unaccepted performance `FAIL` rows remain.
+- Phase 17 and Phase 18 are complete for automated code readiness. Use `.planning/phases/17-operations-performance-and-final-production-readiness-audit/17-15-SUMMARY.md`, `.planning/phases/17-operations-performance-and-final-production-readiness-audit/17-VERIFICATION.md`, `.planning/phases/18-seo-audit-remediation/18-06-SUMMARY.md`, and `docs/launch/final-production-readiness-report.md` for proof.
+- Next GSD lifecycle step: complete the v1.4 milestone or capture owner-gated external launch proof. Keep Shopify/admin/Search Console proof gates pending until dated external evidence exists.
