@@ -67,17 +67,9 @@ export function Hero({
               </span>
             </nav>
 
-            <div className="mt-5 max-w-[58ch]">
-              <h1 className="type-display text-ink max-w-[16ch] text-balance">
-                {collectionTitle}
-              </h1>
-
-              {heroDescription && (
-                <p className="type-body text-ink-soft mt-4 max-w-[58ch]">
-                  {heroDescription}
-                </p>
-              )}
-            </div>
+            <h1 className="text-ink mt-3 text-sm leading-5 font-semibold">
+              {collectionTitle}
+            </h1>
           </Section.Container>
         </Section.Root>
       </>

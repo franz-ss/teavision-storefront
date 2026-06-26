@@ -473,8 +473,7 @@ describe('PageContent collection rich hero rendering', () => {
       collectionFixture({
         handle: 'wholesale-bulk-tea',
         title: 'Wholesale Bulk Tea',
-        description:
-          'Browse loose leaf teas for cafes, retailers, and foodservice teams.',
+        description: 'Hero summary should not render in banner mode.',
         descriptionHtml: `
           <img src="https://cdn.shopify.com/s/files/1/0786/8339/files/Wholesale-Bulk-Tea_1440x640.jpg" alt="Wholesale Bulk Tea">
           <h2>Wholesale Bulk Tea</h2>
@@ -500,6 +499,10 @@ describe('PageContent collection rich hero rendering', () => {
 
     expect(html.match(/<h1\b/g)).toHaveLength(1)
     expect(html).not.toContain('<h1 class="sr-only"')
+    expect(html).not.toContain('type-display')
+    expect(html).not.toContain(
+      '<p class="type-body text-ink-soft mt-4 max-w-[58ch]">Hero summary should not render',
+    )
     expect(html.indexOf('id="product-grid"')).toBeGreaterThan(-1)
     expect(html.indexOf('id="product-grid"')).toBeLessThan(
       html.indexOf('Read more about Wholesale Bulk Tea'),
