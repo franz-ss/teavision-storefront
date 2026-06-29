@@ -6,11 +6,8 @@ import { shopifyFetch } from '@/lib/shopify/client'
 import { getProduct } from './product'
 
 vi.mock('next/cache', () => ({
-  // Pass-through mock: unstable_cache(fn, keyParts, opts) => fn
-  // The wrapped fn is called directly so unit tests exercise the underlying logic.
-  unstable_cache: vi.fn(
-    <TArgs extends unknown[], TReturn>(fn: (...args: TArgs) => Promise<TReturn>) => fn,
-  ),
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
 }))
 
 vi.mock('@/lib/shopify/client', () => ({

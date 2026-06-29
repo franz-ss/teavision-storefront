@@ -1,5 +1,5 @@
 import type { SanityImageSource } from '@sanity/image-url'
-import { unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 
 import {
   blogArticleQuery,
@@ -384,66 +384,62 @@ export function getFeaturedArticles(
   return featured
 }
 
-export const getBlog = unstable_cache(
-  async (handle: string): Promise<BlogIndex | null> => {
-    const normalizedHandle = normalizeBlogHandle(handle)
+export async function getBlog(handle: string): Promise<BlogIndex | null> {
+  'use cache'
+  const normalizedHandle = normalizeBlogHandle(handle)
+  cacheTag('blog', `blog-${normalizedHandle}`)
+  cacheLife('hours')
 
-    const data = await sanityFetch<SanityBlogListingResult>(
-      blogListingQuery,
-      { blogHandle: normalizedHandle },
-    )
+  const data = await sanityFetch<SanityBlogListingResult>(
+    blogListingQuery,
+    { blogHandle: normalizedHandle },
+  )
 
-    if (!data.blog) return null
+  if (!data.blog) return null
 
-    const articles = data.articles.map((a) =>
-      reshapeArticleSummary(a, IMAGE_OPTIONS_CARD),
-    )
-    const featuredArticles = getFeaturedArticles(
-      articles,
-      (data.blog.featuredPosts ?? []).map((a) =>
-        reshapeArticleSummary(a, IMAGE_OPTIONS_FEATURED_CARD),
-      ),
-    )
-    const description = data.blog.description?.trim() ?? ''
+  const articles = data.articles.map((a) =>
+    reshapeArticleSummary(a, IMAGE_OPTIONS_CARD),
+  )
+  const featuredArticles = getFeaturedArticles(
+    articles,
+    (data.blog.featuredPosts ?? []).map((a) =>
+      reshapeArticleSummary(a, IMAGE_OPTIONS_FEATURED_CARD),
+    ),
+  )
+  const description = data.blog.description?.trim() ?? ''
 
-    return {
-      id: data.blog._id,
-      handle: data.blog.slug ?? normalizedHandle,
-      title: data.blog.title?.trim() || 'Tea Journal',
-      description,
-      heroImage: reshapeImage(data.blog.heroImage, IMAGE_OPTIONS_HERO),
-      seo: reshapeSeo(data.blog.seo, description),
-      articles,
-      featuredArticles,
-    }
-  },
-  ['blog'],
-  {
-    tags: ['blog'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
+  return {
+    id: data.blog._id,
+    handle: data.blog.slug ?? normalizedHandle,
+    title: data.blog.title?.trim() || 'Tea Journal',
+    description,
+    heroImage: reshapeImage(data.blog.heroImage, IMAGE_OPTIONS_HERO),
+    seo: reshapeSeo(data.blog.seo, description),
+    articles,
+    featuredArticles,
+  }
+}
 
-export const getArticle = unstable_cache(
-  async (
-    blogHandle: string,
-    articleHandle: string,
-  ): Promise<BlogArticle | null> => {
-    const normalizedHandle = normalizeBlogHandle(blogHandle)
+export async function getArticle(
+  blogHandle: string,
+  articleHandle: string,
+): Promise<BlogArticle | null> {
+  'use cache'
+  const normalizedHandle = normalizeBlogHandle(blogHandle)
+  cacheTag(
+    'blog',
+    `blog-${normalizedHandle}`,
+    `article-${normalizedHandle}-${articleHandle}`,
+  )
+  cacheLife('hours')
 
-    const data = await sanityFetch<SanityBlogPostResult>(
-      blogArticleQuery,
-      { articleHandle, blogHandle: normalizedHandle },
-    )
+  const data = await sanityFetch<SanityBlogPostResult>(
+    blogArticleQuery,
+    { articleHandle, blogHandle: normalizedHandle },
+  )
 
-    return data.article ? reshapeArticle(data.article) : null
-  },
-  ['blog-article'],
-  {
-    tags: ['blog'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
+  return data.article ? reshapeArticle(data.article) : null
+}
 
 /**
  * Light fetch for the unfiltered default /blogs/[handle] listing.
@@ -452,106 +448,99 @@ export const getArticle = unstable_cache(
  *
  * Use getBlog() for tag/search paths where full article list is required for in-memory filtering.
  */
-export const getDefaultBlogListing = unstable_cache(
-  async (
-    handle: string,
-    page: number,
-  ): Promise<DefaultBlogListing | null> => {
-    const normalizedHandle = normalizeBlogHandle(handle)
-    const requestedPage = Math.max(1, page)
-    const offset = (requestedPage - 1) * ARTICLES_PER_PAGE
-    const limit = offset + ARTICLES_PER_PAGE
+export async function getDefaultBlogListing(
+  handle: string,
+  page: number,
+): Promise<DefaultBlogListing | null> {
+  'use cache'
+  const normalizedHandle = normalizeBlogHandle(handle)
+  cacheTag('blog', `blog-${normalizedHandle}`)
+  cacheLife('hours')
 
-    const data = await sanityFetch<SanityDefaultBlogListingResult>(
+  const requestedPage = Math.max(1, page)
+  const offset = (requestedPage - 1) * ARTICLES_PER_PAGE
+  const limit = offset + ARTICLES_PER_PAGE
+
+  const data = await sanityFetch<SanityDefaultBlogListingResult>(
+    defaultBlogListingQuery,
+    {
+      blogHandle: normalizedHandle,
+      offset,
+      limit,
+    },
+  )
+
+  if (!data.blog) return null
+
+  const rawFeatured = (data.blog.featuredPosts ?? []) as SanityBlogPostSummary[]
+  const featuredArticles = rawFeatured
+    .slice(0, 2)
+    .map((a) => reshapeArticleSummary(a, IMAGE_OPTIONS_FEATURED_CARD))
+
+  const totalArticles = data.totalCount
+  const totalPages = Math.max(1, Math.ceil(totalArticles / ARTICLES_PER_PAGE))
+  const currentPage = Math.min(requestedPage, totalPages)
+
+  // An out-of-range page lands past the article window — refetch the clamped
+  // last page so the grid shows content instead of rendering empty (matches
+  // the filtered path, which clamps before slicing).
+  let rawArticles = data.articles as SanityBlogPostSummary[]
+  if (currentPage !== requestedPage) {
+    const clampedOffset = (currentPage - 1) * ARTICLES_PER_PAGE
+    const clamped = await sanityFetch<SanityDefaultBlogListingResult>(
       defaultBlogListingQuery,
       {
         blogHandle: normalizedHandle,
-        offset,
-        limit,
+        offset: clampedOffset,
+        limit: clampedOffset + ARTICLES_PER_PAGE,
       },
     )
+    rawArticles = (clamped.articles ?? []) as SanityBlogPostSummary[]
+  }
 
-    if (!data.blog) return null
+  const pageArticles = rawArticles.map((a) =>
+    reshapeArticleSummary(a, IMAGE_OPTIONS_CARD),
+  )
+  const description = data.blog.description?.trim() ?? ''
 
-    const rawFeatured = (data.blog.featuredPosts ?? []) as SanityBlogPostSummary[]
-    const featuredArticles = rawFeatured
-      .slice(0, 2)
-      .map((a) => reshapeArticleSummary(a, IMAGE_OPTIONS_FEATURED_CARD))
+  // Derive all unique tags from the lightweight allTagArrays subquery
+  const allTags = uniqueLabels(
+    (data.allTagArrays ?? []).flatMap((entry) => [
+      ...(entry.categories ?? []).filter((v): v is string => Boolean(v)),
+      ...(entry.tags ?? []).filter((v): v is string => Boolean(v)),
+    ]),
+  ).sort((a, b) => a.localeCompare(b, 'en-AU', { sensitivity: 'base' }))
 
-    const totalArticles = data.totalCount
-    const totalPages = Math.max(1, Math.ceil(totalArticles / ARTICLES_PER_PAGE))
-    const currentPage = Math.min(requestedPage, totalPages)
+  return {
+    id: data.blog._id,
+    handle: data.blog.slug ?? normalizedHandle,
+    title: data.blog.title?.trim() || 'Tea Journal',
+    description,
+    heroImage: reshapeImage(data.blog.heroImage, IMAGE_OPTIONS_HERO),
+    seo: reshapeSeo(data.blog.seo, description),
+    featuredArticles,
+    paginated: {
+      articles: pageArticles,
+      currentPage,
+      totalPages,
+      totalArticles,
+    },
+    allTags,
+  }
+}
 
-    // An out-of-range page lands past the article window — refetch the clamped
-    // last page so the grid shows content instead of rendering empty (matches
-    // the filtered path, which clamps before slicing).
-    let rawArticles = data.articles as SanityBlogPostSummary[]
-    if (currentPage !== requestedPage) {
-      const clampedOffset = (currentPage - 1) * ARTICLES_PER_PAGE
-      const clamped = await sanityFetch<SanityDefaultBlogListingResult>(
-        defaultBlogListingQuery,
-        {
-          blogHandle: normalizedHandle,
-          offset: clampedOffset,
-          limit: clampedOffset + ARTICLES_PER_PAGE,
-        },
-      )
-      rawArticles = (clamped.articles ?? []) as SanityBlogPostSummary[]
-    }
+export async function getHomepageArticles(
+  blogHandle = DEFAULT_BLOG_HANDLE,
+): Promise<BlogArticleSummary[]> {
+  'use cache'
+  const normalizedHandle = normalizeBlogHandle(blogHandle)
+  cacheTag('blog', `blog-${normalizedHandle}`)
+  cacheLife('hours')
 
-    const pageArticles = rawArticles.map((a) =>
-      reshapeArticleSummary(a, IMAGE_OPTIONS_CARD),
-    )
-    const description = data.blog.description?.trim() ?? ''
+  const articles = await sanityFetch<SanityBlogPostSummary[]>(
+    homepageBlogPostsQuery,
+    { blogHandle: normalizedHandle },
+  )
 
-    // Derive all unique tags from the lightweight allTagArrays subquery
-    const allTags = uniqueLabels(
-      (data.allTagArrays ?? []).flatMap((entry) => [
-        ...(entry.categories ?? []).filter((v): v is string => Boolean(v)),
-        ...(entry.tags ?? []).filter((v): v is string => Boolean(v)),
-      ]),
-    ).sort((a, b) => a.localeCompare(b, 'en-AU', { sensitivity: 'base' }))
-
-    return {
-      id: data.blog._id,
-      handle: data.blog.slug ?? normalizedHandle,
-      title: data.blog.title?.trim() || 'Tea Journal',
-      description,
-      heroImage: reshapeImage(data.blog.heroImage, IMAGE_OPTIONS_HERO),
-      seo: reshapeSeo(data.blog.seo, description),
-      featuredArticles,
-      paginated: {
-        articles: pageArticles,
-        currentPage,
-        totalPages,
-        totalArticles,
-      },
-      allTags,
-    }
-  },
-  ['default-blog-listing'],
-  {
-    tags: ['blog'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
-
-export const getHomepageArticles = unstable_cache(
-  async (
-    blogHandle = DEFAULT_BLOG_HANDLE,
-  ): Promise<BlogArticleSummary[]> => {
-    const normalizedHandle = normalizeBlogHandle(blogHandle)
-
-    const articles = await sanityFetch<SanityBlogPostSummary[]>(
-      homepageBlogPostsQuery,
-      { blogHandle: normalizedHandle },
-    )
-
-    return articles.map((a) => reshapeArticleSummary(a))
-  },
-  ['homepage-articles'],
-  {
-    tags: ['blog'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
+  return articles.map((a) => reshapeArticleSummary(a))
+}

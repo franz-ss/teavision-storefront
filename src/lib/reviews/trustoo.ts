@@ -1,4 +1,4 @@
-import { unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 
 import { trustooShopDomain } from '@/lib/env/public'
 import { logEvent } from '@/lib/observability/logger'
@@ -54,69 +54,70 @@ function toProductReviewSummary(row: TrustooRatingRow): ProductReviewSummary {
   }
 }
 
-export const getTrustooProductRatings = unstable_cache(
-  async (
-    handles: string[],
-  ): Promise<Record<string, ProductReviewSummary>> => {
-    const shop = trustooShopDomain
-    const uniqueHandles = Array.from(new Set(handles.filter(Boolean)))
+export async function getTrustooProductRatings(
+  handles: string[],
+): Promise<Record<string, ProductReviewSummary>> {
+  'use cache'
+  cacheTag('trustoo-reviews')
 
-    if (!shop || uniqueHandles.length === 0) {
-      return {}
-    }
+  const shop = trustooShopDomain
+  const uniqueHandles = Array.from(new Set(handles.filter(Boolean)))
 
-    const searchParams = new URLSearchParams({
-      shop,
-      product_handle: uniqueHandles.join(','),
-    })
+  if (!shop || uniqueHandles.length === 0) {
+    cacheLife('minutes')
+    return {}
+  }
 
-    try {
-      const response = await fetch(
-        `${TRUSTOO_PRODUCT_RATINGS_URL}?${searchParams.toString()}`,
-        { cache: 'no-store' },
-      )
+  const searchParams = new URLSearchParams({
+    shop,
+    product_handle: uniqueHandles.join(','),
+  })
 
-      if (!response.ok) {
-        logEvent('warn', 'trustoo_failed', {
-          status: response.status,
-          handleCount: uniqueHandles.length,
-          reason: 'request-failed',
-        })
-        return {}
-      }
+  try {
+    const response = await fetch(
+      `${TRUSTOO_PRODUCT_RATINGS_URL}?${searchParams.toString()}`,
+      { cache: 'no-store' },
+    )
 
-      const json = (await response.json()) as TrustooRatingsResponse
-      if (json.code !== 0 || !Array.isArray(json.data)) {
-        logEvent('warn', 'trustoo_failed', {
-          handleCount: uniqueHandles.length,
-          reason: 'unusable-response',
-        })
-        return {}
-      }
-
-      return json.data.reduce<Record<string, ProductReviewSummary>>(
-        (ratings, row, index) => {
-          if (!isTrustooRatingRow(row)) return ratings
-
-          const handle = uniqueHandles[index]
-          if (!handle) return ratings
-
-          ratings[handle] = toProductReviewSummary(row)
-          return ratings
-        },
-        {},
-      )
-    } catch {
+    if (!response.ok) {
+      cacheLife('minutes')
       logEvent('warn', 'trustoo_failed', {
+        status: response.status,
         handleCount: uniqueHandles.length,
-        reason: 'request-threw',
+        reason: 'request-failed',
       })
       return {}
     }
-  },
-  ['trustoo-ratings'],
-  {
-    tags: ['trustoo-reviews'],
-    revalidate: 3600, // cacheLife('hours') for successful responses; 'minutes' for degraded was previously used but hours is acceptable
-  },
-)
+
+    const json = (await response.json()) as TrustooRatingsResponse
+    if (json.code !== 0 || !Array.isArray(json.data)) {
+      cacheLife('minutes')
+      logEvent('warn', 'trustoo_failed', {
+        handleCount: uniqueHandles.length,
+        reason: 'unusable-response',
+      })
+      return {}
+    }
+
+    cacheLife('hours')
+    return json.data.reduce<Record<string, ProductReviewSummary>>(
+      (ratings, row, index) => {
+        if (!isTrustooRatingRow(row)) return ratings
+
+        const handle = uniqueHandles[index]
+        if (!handle) return ratings
+
+        ratings[handle] = toProductReviewSummary(row)
+        return ratings
+      },
+      {},
+    )
+  } catch {
+    cacheLife('minutes')
+    logEvent('warn', 'trustoo_failed', {
+      handleCount: uniqueHandles.length,
+      reason: 'request-threw',
+    })
+    return {}
+  }
+}

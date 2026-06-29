@@ -1,4 +1,4 @@
-import { unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 
 import { logEvent } from '@/lib/observability/logger'
 import { hashIdentifier } from '@/lib/observability/redact'
@@ -583,108 +583,96 @@ async function fetchProductSummaryPages(
   return products
 }
 
-export const getProduct = unstable_cache(
-  async (
-    handle: string,
-    // cacheVersion is intentionally part of the cache key (passed by callers to
-    // bust stale product data on schema changes) — unstable_cache uses all args
-    // as part of the cache entry key, so no explicit usage inside the body is needed.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    cacheVersion = 'default',
-  ): Promise<Product | null> => {
-    const data = await shopifyFetch({
-      query: GetProductDocument,
-      variables: {
-        handle,
-        variantFirst: SHOPIFY_PAGE_SIZE,
-        variantAfter: null,
-      },
-    })
+export async function getProduct(
+  handle: string,
+  cacheVersion = 'default',
+): Promise<Product | null> {
+  'use cache'
+  cacheTag('product', `product-${handle}`, `product-${handle}-${cacheVersion}`)
 
-    if (!data.product) {
-      return null
-    }
-
-    const variants = await getProductVariantNodes(handle, data.product.variants)
-    const legacyInventoryByVariantId = await getLegacyProductInventory(
+  const data = await shopifyFetch({
+    query: GetProductDocument,
+    variables: {
       handle,
-      variants,
-    )
-    const product = reshapeProduct(
-      data.product,
-      variants,
-      legacyInventoryByVariantId,
-    )
+      variantFirst: SHOPIFY_PAGE_SIZE,
+      variantAfter: null,
+    },
+  })
 
-    if (hasBulkPricingTiers(product)) {
-      return product
-    }
+  if (!data.product) {
+    cacheLife('minutes')
+    return null
+  }
 
-    const legacyBulkPricing = await getLegacyHulkBulkPricingTiers(
-      data.product,
-      variants,
-    )
+  const variants = await getProductVariantNodes(handle, data.product.variants)
+  const legacyInventoryByVariantId = await getLegacyProductInventory(
+    handle,
+    variants,
+  )
+  const product = reshapeProduct(
+    data.product,
+    variants,
+    legacyInventoryByVariantId,
+  )
 
-    if (legacyBulkPricing.degraded) {
-      return product
-    }
+  if (hasBulkPricingTiers(product)) {
+    cacheLife('hours')
+    return product
+  }
 
-    if (legacyBulkPricing.tiers.length === 0) return product
+  const legacyBulkPricing = await getLegacyHulkBulkPricingTiers(
+    data.product,
+    variants,
+  )
 
-    return {
-      ...product,
-      bulkPricingTiers: legacyBulkPricing.tiers,
-    }
-  },
-  ['product'],
-  {
-    tags: ['product'],
-    revalidate: 3600, // cacheLife('hours'); degraded/not-found paths previously used 'minutes' but correctness is preserved at hours
-  },
-)
+  if (legacyBulkPricing.degraded) {
+    cacheLife('minutes')
+    return product
+  }
 
-export const getProducts = unstable_cache(
-  async (first = 24): Promise<ProductSummary[]> => {
-    return fetchProductSummaryPages(first)
-  },
-  ['products'],
-  {
-    tags: ['product'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
+  cacheLife('hours')
 
-export const getAllProducts = unstable_cache(
-  async (): Promise<ProductSummary[]> => {
-    return fetchProductSummaryPages()
-  },
-  ['all-products'],
-  {
-    tags: ['product'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
+  if (legacyBulkPricing.tiers.length === 0) return product
 
-export const getProductRecommendations = unstable_cache(
-  async (
-    productId: string,
-    intent: 'RELATED' | 'COMPLEMENTARY' = 'RELATED',
-  ): Promise<ProductSummary[]> => {
-    const recommendationIntent =
-      intent === 'RELATED'
-        ? ProductRecommendationIntent.Related
-        : ProductRecommendationIntent.Complementary
+  return {
+    ...product,
+    bulkPricingTiers: legacyBulkPricing.tiers,
+  }
+}
 
-    const data = await shopifyFetch({
-      query: GetProductRecommendationsDocument,
-      variables: { productId, intent: recommendationIntent },
-    })
+export async function getProducts(first = 24): Promise<ProductSummary[]> {
+  'use cache'
+  cacheTag('product')
+  cacheLife('hours')
 
-    return (data.productRecommendations ?? []).map(reshapeProductSummary)
-  },
-  ['product-recommendations'],
-  {
-    tags: ['product'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
+  return fetchProductSummaryPages(first)
+}
+
+export async function getAllProducts(): Promise<ProductSummary[]> {
+  'use cache'
+  cacheTag('product')
+  cacheLife('hours')
+
+  return fetchProductSummaryPages()
+}
+
+export async function getProductRecommendations(
+  productId: string,
+  intent: 'RELATED' | 'COMPLEMENTARY' = 'RELATED',
+): Promise<ProductSummary[]> {
+  'use cache'
+  cacheTag('product', `product-recommendations-${productId}`)
+  cacheLife('hours')
+
+  const recommendationIntent =
+    intent === 'RELATED'
+      ? ProductRecommendationIntent.Related
+      : ProductRecommendationIntent.Complementary
+
+  const data = await shopifyFetch({
+    query: GetProductRecommendationsDocument,
+    variables: { productId, intent: recommendationIntent },
+  })
+
+  return (data.productRecommendations ?? []).map(reshapeProductSummary)
+}

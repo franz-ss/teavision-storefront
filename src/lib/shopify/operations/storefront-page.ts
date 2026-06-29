@@ -1,4 +1,4 @@
-import { unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 
 import { shopifyFetch } from '@/lib/shopify/client'
 import {
@@ -68,49 +68,41 @@ export function getPageHandleFromSlug(slug: string | string[]): string {
   return Array.isArray(slug) ? (slug[0] ?? '') : slug
 }
 
-export const getPage = unstable_cache(
-  async (handle: string): Promise<ShopifyPage | null> => {
+export async function getPage(handle: string): Promise<ShopifyPage | null> {
+  'use cache'
+  cacheTag('page', `page-${handle}`)
+  cacheLife('hours')
+
+  const data = await shopifyFetch({
+    query: GetPageDocument,
+    variables: { handle },
+  })
+
+  return data.page ? reshapePage(data.page) : null
+}
+
+export async function getPages(): Promise<ShopifyPageSummary[]> {
+  'use cache'
+  cacheTag('pages')
+  cacheLife('hours')
+
+  const pages: ShopifyPageSummary[] = []
+  let after: string | null | undefined
+  let hasNextPage = true
+
+  while (hasNextPage) {
     const data = await shopifyFetch({
-      query: GetPageDocument,
-      variables: { handle },
+      query: GetPagesDocument,
+      variables: {
+        first: SHOPIFY_PAGE_SIZE,
+        after,
+      },
     })
 
-    return data.page ? reshapePage(data.page) : null
-  },
-  ['page'],
-  {
-    tags: ['page'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
+    pages.push(...data.pages.edges.map((edge) => reshapePageSummary(edge.node)))
+    hasNextPage = data.pages.pageInfo.hasNextPage
+    after = data.pages.pageInfo.endCursor
+  }
 
-export const getPages = unstable_cache(
-  async (): Promise<ShopifyPageSummary[]> => {
-    const pages: ShopifyPageSummary[] = []
-    let after: string | null | undefined
-    let hasNextPage = true
-
-    while (hasNextPage) {
-      const data = await shopifyFetch({
-        query: GetPagesDocument,
-        variables: {
-          first: SHOPIFY_PAGE_SIZE,
-          after,
-        },
-      })
-
-      pages.push(
-        ...data.pages.edges.map((edge) => reshapePageSummary(edge.node)),
-      )
-      hasNextPage = data.pages.pageInfo.hasNextPage
-      after = data.pages.pageInfo.endCursor
-    }
-
-    return pages
-  },
-  ['pages'],
-  {
-    tags: ['pages'],
-    revalidate: 3600, // cacheLife('hours')
-  },
-)
+  return pages
+}
