@@ -158,6 +158,16 @@ None - no external service configuration required.
   `tests/e2e/h1-correctness.spec.ts` passes (one raw `<h1>`, no retained homepage H1).
 - No code or `next.config.ts` change was made in this plan.
 
+## Self-Check: PASSED
+
+- FOUND: tests/e2e/h1-correctness.spec.ts
+- FOUND: .planning/phases/19-h1-correctness-re-remediation/19-01-REMEDIATION-RECOMMENDATION.md
+- FOUND: .planning/phases/19-h1-correctness-re-remediation/19-01-SUMMARY.md
+- FOUND commit: 51d5f925 (Task 1 test)
+- FOUND commit: d65848bc (recommendation doc)
+- FOUND commit: d0751662 (Approach A sign-off)
+- FOUND commit: 5b6bd891 (SUMMARY)
+
 ---
 *Phase: 19-h1-correctness-re-remediation*
 *Completed: 2026-06-29*
