@@ -222,3 +222,34 @@ Plan 19-02 will:
    (`docs/launch/performance-evidence.md`) after the change.
 4. Confirm `tests/e2e/h1-correctness.spec.ts` passes post-fix (one raw `<h1>`,
    no retained homepage H1).
+
+---
+
+## Decision Superseded — Approach A Rescinded (2026-06-29)
+
+**Status:** FINAL. Supersedes the "Approved — Approach A" record above.
+
+After Approach A was implemented in a prior session (commit `9267da5f`: disable
+`cacheComponents` + migrate the 5 modules), the owner reconsidered and directed
+that **`cacheComponents` must stay enabled**. Approach A was reverted (commit
+`efed85b3`) — `cacheComponents: true` and all 5 `'use cache'` modules restored.
+
+**Final resolution (see `docs/launch/seo-audit-pages-2-9-response.md`):**
+
+- **SEO-H1-02** (banner/main-category collections show no displayed H1) — FIXED
+  in code: banner collections now render a visible page-level `<h1>` + intro,
+  with the breadcrumb crumb demoted to `<span aria-current="page">` (commit
+  `e1c4204c`). This is the audit's actual priority (pages 2–5).
+- **SEO-H1-01** (multiple H1s in the accumulated soft-nav DOM) — RESOLVED via the
+  **accept + document** route (neither A, B, nor C). Verified research (Google's
+  own docs) confirms Googlebot renders each URL statelessly and never assembles
+  the accumulated multi-route DOM, and that multiple H1s are not a ranking/
+  indexing issue regardless. The invariant that matters for search — exactly one
+  visible `<h1>` per standalone route load — is enforced by the retargeted
+  `tests/e2e/h1-correctness.spec.ts` and the collection SSR test.
+- `cacheComponents` remains enabled; no caching architecture change shipped.
+
+**Why A/B were not pursued:** A removes the streaming/SPA feature to fix a
+condition Google never sees; B (hard navigation) is a partial, regression-prone
+fix with real SPA/UX cost. Both are disproportionate to a soft-nav DOM artifact
+invisible to crawlers. See the response doc for the cited evidence.

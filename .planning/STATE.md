@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Production Readiness 100/100
 status: complete
-stopped_at: v1.4 automated code readiness complete; owner-gated launch proof pending
-last_updated: '2026-06-26T10:15:00.000+08:00'
-last_activity: 2026-06-26
+stopped_at: Phase 19 H1 correctness resolved via audit pages 2-9 compliance (owner-directed cacheComponents kept enabled); owner-gated launch proof pending
+last_updated: "2026-06-29"
+last_activity: 2026-06-29 -- Phase 19 resolved (audit pages 2-9 compliance)
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 30
-  completed_plans: 30
-  percent: 100
+  total_phases: 5
+  completed_phases: 5
+  total_plans: 34
+  completed_plans: 33
+  percent: 97
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** v1.4 automated code readiness is complete; owner-gated launch proof remains pending
+**Current focus:** Phase 19 complete — SEO audit pages 2-9 complied. Pending: owner-gated launch proof and the blog `/blog/` migration redirect.
 
 ## Current Position
 
-Phase: v1.4 Production Readiness 100/100
-Plan: 15 of 15
-Status: Complete for automated code readiness; pending owner-gated launch proof
-Last activity: 2026-06-26
+Phase: 19 (h1-correctness-re-remediation) — COMPLETE (2026-06-29)
+Plan: 3 of 4 executed (19-02 abandoned — Approach A reverted)
+Status: H1 defects resolved (SEO-H1-02 visible banner H1; SEO-H1-01 accept+document, cacheComponents kept). Audit pages 2-9 complied. See docs/launch/seo-audit-pages-2-9-response.md.
+Last activity: 2026-06-29 -- Phase 19 resolved (audit pages 2-9 compliance)
 
 ## Performance Metrics
 
@@ -210,6 +210,8 @@ Recent decisions affecting current work:
 - [Phase 18]: Crawlable HTML proof uses raw fake-provider production HTML with Accept-Encoding identity for /collections/all and /products/test-standard-tea. — Provides repeatable SEO-AUDIT-06 evidence without claiming live Shopify or Search Console proof.
 - [Phase 18]: Strict local Lighthouse/readiness failures stay blocking because no dated owner, staging, or field Core Web Vitals acceptance artifact was supplied. — Preserves Phase 17 PERF-01 semantics and avoids silently accepting failed local metrics.
 - [Phase 18]: Final SEO audit matrix separates automated remediation proof from owner/operator-gated production proof. — Keeps DNS, Shopify admin, checkout, Search Console, and performance acceptance evidence distinct from local app code evidence.
+- [Phase 19]: Owner directed that `cacheComponents` stays enabled — Approach A (disable cacheComponents) was implemented then reverted (efed85b3). SEO-H1-01 (multiple H1s while browsing) resolved via accept+document: Googlebot renders each URL statelessly and never assembles the soft-nav accumulation, and multiple H1s are not a Google ranking/indexing issue (cited research). The enforced invariant is one visible H1 per standalone route load.
+- [Phase 19]: SEO-H1-02 fixed by displaying a visible page-level H1 + intro on banner collections (reverses the Phase 18 "compact banner heading" D-08); the breadcrumb crumb is demoted to a non-H1 span. Audit pages 2-9 brought into compliance (brand-suffix removal on indexed service pages; read-more-below-grid and lang=en-AU already in place; blog /blog/ slug deferred to migration). See docs/launch/seo-audit-pages-2-9-response.md.
 
 ### Roadmap Evolution
 
