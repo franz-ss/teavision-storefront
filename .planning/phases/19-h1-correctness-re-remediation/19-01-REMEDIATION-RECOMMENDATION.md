@@ -203,3 +203,22 @@ Reply with one of:
 - `approved: C` — document only, await upstream opt-out (not recommended)
 
 Plan 19-02 will implement the approved approach.
+
+---
+
+## Decision: Approved — Approach A
+
+**Date:** 2026-06-29
+**Decision:** The owner/developer signed off on **Approach A**.
+
+Plan 19-02 will:
+1. Disable `cacheComponents` in `next.config.ts`.
+2. Migrate the 5 `'use cache'` modules — `src/lib/blog/operations.ts`,
+   `src/lib/reviews/trustoo.ts`, `src/lib/shopify/operations/collection.ts`,
+   `src/lib/shopify/operations/product.ts`, `src/lib/shopify/operations/storefront-page.ts`
+   (17 cached functions, 41 `cacheLife`/`cacheTag` call sites) — to `unstable_cache` +
+   route-segment `revalidate` per `caching-without-cache-components.md`.
+3. Re-prove crawlable-HTML (`scripts/seo/probe-crawlable-html.mjs`) and CWV evidence
+   (`docs/launch/performance-evidence.md`) after the change.
+4. Confirm `tests/e2e/h1-correctness.spec.ts` passes post-fix (one raw `<h1>`,
+   no retained homepage H1).
