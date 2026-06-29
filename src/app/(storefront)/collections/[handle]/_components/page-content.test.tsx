@@ -468,12 +468,12 @@ describe('PageContent collection rich hero rendering', () => {
     expect(html).toContain('Wholesale collection')
   })
 
-  it('renders a visible banner H1 with intro and places read-more story after product grid', async () => {
+  it('renders banner H1 visibly and places read-more story after product grid', async () => {
     shopifyMocks.getCollection.mockResolvedValue(
       collectionFixture({
         handle: 'wholesale-bulk-tea',
         title: 'Wholesale Bulk Tea',
-        description: 'Premium quality tea, supplied in bulk for your business.',
+        description: 'Hero summary should not render in banner mode.',
         descriptionHtml: `
           <img src="https://cdn.shopify.com/s/files/1/0786/8339/files/Wholesale-Bulk-Tea_1440x640.jpg" alt="Wholesale Bulk Tea">
           <h2>Wholesale Bulk Tea</h2>
@@ -497,19 +497,17 @@ describe('PageContent collection rich hero rendering', () => {
     })
     const html = renderToStaticMarkup(element)
 
-    // Exactly one <h1>, and it is the VISIBLE display heading (SEO-H1-02) — not the crumb.
     expect(html.match(/<h1\b/g)).toHaveLength(1)
-    expect(html).toMatch(
-      /<h1 class="font-display[^"]*text-brand-deep[^"]*">Wholesale Bulk Tea<\/h1>/,
-    )
-    // The breadcrumb current page is now a non-H1 span.
+    expect(html).not.toContain('<h1 class="sr-only"')
+    expect(html).not.toContain('type-display')
     expect(html).toContain(
+      '<h1 aria-current="page" class="type-mono-meta text-gold-deep m-0 inline">Wholesale Bulk Tea</h1>',
+    )
+    expect(html).not.toContain(
       '<span aria-current="page" class="text-gold-deep">Wholesale Bulk Tea</span>',
     )
-    expect(html).not.toContain('<h1 aria-current="page"')
-    // The brief intro now renders in banner mode (audit p5: Banner → H1 → Intro → Breadcrumb).
-    expect(html).toContain(
-      'Premium quality tea, supplied in bulk for your business.',
+    expect(html).not.toContain(
+      '<p class="type-body text-ink-soft mt-4 max-w-[58ch]">Hero summary should not render',
     )
     expect(html.indexOf('id="product-grid"')).toBeGreaterThan(-1)
     expect(html.indexOf('id="product-grid"')).toBeLessThan(

@@ -20,8 +20,7 @@ export function Hero({
   heroImage,
   bannerImage,
 }: HeroProps) {
-  // Banner mode: banner art, then a visible page-level H1 + brief intro, then
-  // the breadcrumb (audit SEO-H1-02 — the H1 must be displayed, not a crumb).
+  // Banner mode (owner option C): banner art first, then crawlable hierarchy.
   if (bannerImage) {
     return (
       <>
@@ -45,26 +44,9 @@ export function Hero({
 
         <Section.Root tone="transparent" spacing="none">
           <Section.Container>
-            <div className="max-w-[52ch] pt-6">
-              <h1
-                className={cn(
-                  'font-display text-brand-deep text-balance',
-                  'text-[clamp(2.2rem,5vw,3.9rem)] leading-[1.08] font-black',
-                )}
-              >
-                {collectionTitle}
-              </h1>
-
-              {heroDescription && (
-                <p className="text-ink mt-4 text-[1.04rem] leading-[1.6]">
-                  {heroDescription}
-                </p>
-              )}
-            </div>
-
             <nav
               aria-label="Breadcrumb"
-              className="type-mono-meta text-ink-faint mt-6 flex flex-wrap items-center gap-2"
+              className="type-mono-meta text-ink-faint flex flex-wrap items-center gap-2 pt-5.5"
             >
               <Link
                 href="/"
@@ -80,9 +62,12 @@ export function Hero({
                 Collections
               </Link>
               <span aria-hidden="true">/</span>
-              <span aria-current="page" className="text-gold-deep">
+              <h1
+                aria-current="page"
+                className="type-mono-meta text-gold-deep m-0 inline"
+              >
                 {collectionTitle}
-              </span>
+              </h1>
             </nav>
           </Section.Container>
         </Section.Root>
