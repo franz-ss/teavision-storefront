@@ -60,6 +60,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
 - [x] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (15/15 plans complete) (completed 2026-06-26; PERF-01 accepted non-blocking via dated performance acceptance)
 - [x] **Phase 18: SEO Audit Remediation** — resolve the staging-site SEO audit findings across URL parity, headings/content structure, metadata, robots/sitemap/indexation, schema, crawlable HTML, and Core Web Vitals evidence. (6/6 plans complete) (completed 2026-06-26)
+- [ ] **Phase 19: H1 Correctness Re-Remediation** — fix the two genuinely-open H1 defects from the 2026-06-29 audit re-analysis: per-visit-changing/multiple H1s in the accumulated live DOM (Cache Components Activity retention) and the non-visible 11px breadcrumb-styled collection H1 in banner mode. (planned: 4 plans in 3 waves)
 
 ## Progress
 
@@ -81,6 +82,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 16. Legal, Consent, Analytics, and SEO Launch Coverage            | v1.4      | 4/4            | Complete   | 2026-06-23 |
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4      | 15/15          | Complete   | 2026-06-26 |
 | 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete   | 2026-06-26 |
+| 19. H1 Correctness Re-Remediation                                | v1.4      | 0/4            | Planning   | —          |
 
 ## Phase Details
 
@@ -290,6 +292,51 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - Keep route components server-first and push client code to interactive leaves only.
 - Redirect and final-domain evidence must distinguish local code behavior from production DNS/Vercel/Shopify/Search Console configuration.
 
+### Phase 19: H1 Correctness Re-Remediation
+
+**Goal:** Eliminate the two genuinely-open H1-correctness defects surfaced by the 2026-06-29 re-analysis of the staging SEO audit while preserving Phase 18 outcomes: (1) multiple / per-visit-changing H1s in the accumulated live browser DOM on collection and product pages, caused by Next.js 16 Cache Components keeping previously-visited routes mounted in hidden `<Activity>` boundaries; and (2) the non-visible 11px breadcrumb-styled collection H1 in banner mode. Restore a single, visible, deterministic H1 per page in the real browser DOM without regressing Phase 18's crawlable-HTML, metadata, indexation, or streaming evidence.
+
+**Requirements:** SEO-H1-01 exactly one H1 in the accumulated live DOM after multi-route client navigation (proven by a raw-DOM regression test, not single-route HTML only); SEO-H1-02 every collection page — including banner-image/main-category collections — renders a single visible page-level H1 (not an 11px breadcrumb crumb), at heading prominence consistent with the green-band and rich-hero variants; SEO-H1-03 the remediation re-proves Phase 18 outcomes (crawlable server HTML, one-visible-H1 single-route guarantees, metadata/canonical/robots/sitemap, structured data) via existing probes/tests.
+
+**Depends on:** Phase 18 SEO Audit Remediation (closed); 2026-06-29 audit re-analysis `docs/launch/seo-audit-staging-analysis.md`; Next.js 16.2.9 Cache Components / Activity (preserving UI state) and streaming docs under `node_modules/next/dist/docs/`; final production host decision `https://www.teavision.com.au`.
+
+**Success Criteria:**
+
+1. The Activity-DOM root cause is reproduced with a concrete probe (DevTools and/or Playwright) showing >1 `<h1>` in the accumulated DOM after `Home → ProductA → ProductB` client navigation, and the chosen remediation reduces it to exactly one visible H1.
+2. A committed in-browser (Playwright or equivalent) regression test navigates multiple SEO-critical routes and asserts raw `locator('h1').count() === 1` (NOT a11y-filtered `getByRole('heading')`, which falsely passes on hidden `<Activity>` nodes), and demonstrably fails on the pre-fix build.
+3. Banner-image collection pages render one visible page-level H1 below the banner; the breadcrumb current-page element is reverted to a non-H1 element; the existing collection page-content test is updated to assert the visible H1 and the single-H1 invariant.
+4. The item #1 remediation approach is explicitly chosen with cost/risk rationale among: (A) disable `cacheComponents` and migrate the 5 `'use cache'` modules (41 `cacheLife`/`cacheTag` calls) to `unstable_cache` / route `revalidate`; (B) force hard navigation for SEO-critical product/collection links, keeping Cache Components; (C) document an upstream-opt-out wait with interim risk. Any caching/streaming change is re-validated against Phase 18 crawlable-HTML and CWV evidence.
+5. The two stale closeout docs (`.planning/forensics/seo-audit-recheck-20260626.md`, `docs/launch/seo-team-recheck-report.md`) are corrected to state that single-route HTML was clean but the multi-route accumulated DOM was the actual H1 defect.
+6. Design sign-off is captured for the banner-mode visible-H1 treatment before implementation (honoring the project preview-designs-first rule), since it reverses the deliberate Phase 18 "compact banner heading" decision.
+
+**Notes for planning:**
+
+- Read the local Next.js 16 docs for Cache Components, Activity / preserving UI state, and streaming before changing route retention or Suspense behavior.
+- Reproduce before remediating: the defect only appears in the accumulated multi-route DOM, never in single-route HTML — the Phase 18 single-route probe method cannot reproduce it. Treat reproduction + a failing regression test as the first deliverable.
+- Item #2 is a small single-component visual change but reverses a shipped design decision; gate it behind a design preview and update the locking test in the same change.
+- Do not regress Phase 18's one-visible-H1 single-route guarantees, metadata, canonical, robots, sitemap, or structured-data evidence.
+
+**Plans:** 4 plans in 3 waves _(planner finalized)_
+
+**Wave 1**
+
+- [ ] `19-01-PLAN.md` - Reproduce + decide: failing multi-route raw-DOM H1 regression test, Activity-DOM root-cause confirmation, and remediation option A/B/C evaluation with a recommendation (decision checkpoint).
+
+**Wave 2** _(blocked on 19-01 decision)_
+
+- [ ] `19-02-PLAN.md` - Implement the chosen item #1 remediation; make the regression test pass; re-validate Phase 18 crawlable-HTML and CWV evidence.
+- [ ] `19-03-PLAN.md` - Banner-mode visible H1 (item #2): hero.tsx visible H1 below banner, breadcrumb reverted to non-H1 span, page-content test updated, design preview/sign-off captured first.
+
+**Wave 3** _(blocked on Wave 2)_
+
+- [ ] `19-04-PLAN.md` - Correct the two stale closeout docs and write the final H1-correctness evidence note.
+
+**Cross-cutting constraints:**
+
+- Keep storefront routes server-first; push client behavior to interactive leaves only.
+- Preserve the warm/botanical design system; make H1s visible without introducing cool grays or hidden text.
+- Evidence must distinguish local code behavior from production DNS/Vercel/host configuration.
+
 ## Next
 
-v1.4 automated code readiness is complete: Phase 17 now has 15/15 plans, PERF-01 is accepted non-blocking by dated performance acceptance, and Phase 18 SEO audit remediation is complete. Owner-gated Shopify/admin/Search Console proof remains pending outside the automated score.
+Phase 19 (H1 Correctness Re-Remediation) is planned with 4 plans across 3 waves to fix the two genuinely-open H1 defects from the 2026-06-29 audit re-analysis (`docs/launch/seo-audit-staging-analysis.md`): the Cache Components Activity-DOM multiple/changing-H1 leak and the non-visible banner-mode collection H1. Run `/gsd:execute-phase 19` (start with Wave 1 `19-01`). v1.4 automated code readiness remains complete (Phase 17 15/15, PERF-01 accepted non-blocking, Phase 18 SEO audit remediation complete); owner-gated Shopify/admin/Search Console proof remains pending outside the automated score.
