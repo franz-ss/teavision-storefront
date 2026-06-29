@@ -7,7 +7,7 @@ const DESCRIPTION =
   'Download Teavision wholesale catalogues: loose leaf tea, tea bags, herbs & spices, blends, beverages, and the full ACO organic ingredients list. Pack sizes, MOQs, and lead times.'
 
 export const metadata: Metadata = {
-  title: HERO.title,
+  title: { absolute: HERO.title },
   description: DESCRIPTION,
   openGraph: {
     title: HERO.title,
