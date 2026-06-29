@@ -56,8 +56,13 @@ test('only one raw <h1> remains in the accumulated DOM after soft-navigating Hom
   await page.click('a[href="/products/test-standard-tea"]')
   await page.waitForURL('**/products/test-standard-tea')
 
-  // Wait for the visible product page content to confirm the soft-nav has settled.
-  await expect(page.getByText('Test Standard Tea')).toBeVisible()
+  // Wait for the product page h1 to confirm the soft-nav has settled and the
+  // server-rendered content is in the DOM. Using locator('h1') rather than
+  // getByText so this wait is consistent with the assertions below — it
+  // verifies the h1 is present before we count it. With cacheComponents: false,
+  // there is no Activity-cached static shell, so the h1 arrives with the
+  // server-streamed RSC payload; toBeVisible() blocks until it appears.
+  await expect(page.locator('h1')).toBeVisible()
 
   // ── Load-bearing assertions on the RAW DOM ──────────────────────────────────
   // MUST use locator('h1'). Do NOT use getByRole('heading') — see file header.

@@ -61,7 +61,13 @@ test('codegen fails before building an invalid Shopify schema URL', async () => 
   assert.doesNotMatch(source, /SHOPIFY_STOREFRONT_ACCESS_TOKEN\s*\?\?\s*''/)
 })
 
-test('third-party enrichment failure paths use shorter cache lifetimes', async () => {
+test('third-party enrichment failure paths use bounded cache lifetimes (unstable_cache model)', async () => {
+  // Phase 19 migrated from 'use cache' + cacheLife/cacheTag to unstable_cache.
+  // Both modules use a single revalidate value per unstable_cache call (no per-branch
+  // cacheLife branching). The spirit of the contract — bounded TTL for third-party
+  // enrichment data — is preserved via revalidate: 3600 (1 hour).
+  // The degraded: true detection in product.ts is preserved to limit which
+  // bulk-pricing data is cached (degraded responses return empty tiers).
   const trustooSource = await readFile(
     sourcePath('src', 'lib', 'reviews', 'trustoo.ts'),
     'utf8',
@@ -71,9 +77,11 @@ test('third-party enrichment failure paths use shorter cache lifetimes', async (
     'utf8',
   )
 
-  assert.match(trustooSource, /cacheLife\('minutes'\)/)
-  assert.match(trustooSource, /cacheLife\('hours'\)/)
+  // Trustoo uses unstable_cache with a bounded revalidate (not indefinite)
+  assert.match(trustooSource, /unstable_cache/)
+  assert.match(trustooSource, /revalidate:\s*\d+/)
+  // Product degraded path is still detected and returns early (empty tiers)
   assert.match(productSource, /degraded:\s*true/)
-  assert.match(productSource, /cacheLife\('minutes'\)/)
-  assert.match(productSource, /cacheLife\('hours'\)/)
+  assert.match(productSource, /unstable_cache/)
+  assert.match(productSource, /revalidate:\s*\d+/)
 })

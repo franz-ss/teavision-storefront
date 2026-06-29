@@ -1,4 +1,4 @@
-import { cacheLife, cacheTag } from 'next/cache'
+import { unstable_cache } from 'next/cache'
 
 import { shopifyFetch } from '@/lib/shopify/client'
 import {
@@ -297,75 +297,124 @@ async function fetchCollectionSummaries(
   return collections
 }
 
-export async function getCollection(
-  handle: string,
-): Promise<Collection | null> {
-  'use cache'
-  cacheTag('collection', `collection-${handle}`)
-  cacheLife('hours')
-
-  const data = await shopifyFetch({
-    query: GetCollectionDocument,
-    variables: { handle },
-  })
-
-  return data.collection ? reshapeCollection(data.collection) : null
-}
-
-export async function getCollections(
-  first = SHOPIFY_PAGE_SIZE,
-): Promise<string[]> {
-  'use cache'
-  cacheTag('collections')
-  cacheLife('days')
-
-  const handles: string[] = []
-  let after: string | null | undefined
-  let hasNextPage = true
-
-  while (hasNextPage) {
+export const getCollection = unstable_cache(
+  async (handle: string): Promise<Collection | null> => {
     const data = await shopifyFetch({
-      query: GetCollectionsDocument,
-      variables: { first, after },
+      query: GetCollectionDocument,
+      variables: { handle },
     })
 
-    handles.push(...data.collections.edges.map((edge) => edge.node.handle))
-    hasNextPage = data.collections.pageInfo.hasNextPage
-    after = data.collections.pageInfo.endCursor
-  }
+    return data.collection ? reshapeCollection(data.collection) : null
+  },
+  ['collection'],
+  {
+    tags: ['collection'],
+    revalidate: 3600, // cacheLife('hours')
+  },
+)
 
-  return handles
-}
+export const getCollections = unstable_cache(
+  async (first = SHOPIFY_PAGE_SIZE): Promise<string[]> => {
+    const handles: string[] = []
+    let after: string | null | undefined
+    let hasNextPage = true
 
-export async function getCollectionSummaries(
-  first = SHOPIFY_PAGE_SIZE,
-): Promise<CollectionSummary[]> {
-  'use cache'
-  cacheTag('collections')
-  cacheLife('days')
+    while (hasNextPage) {
+      const data = await shopifyFetch({
+        query: GetCollectionsDocument,
+        variables: { first, after },
+      })
 
-  return fetchCollectionSummaries(first)
-}
+      handles.push(...data.collections.edges.map((edge) => edge.node.handle))
+      hasNextPage = data.collections.pageInfo.hasNextPage
+      after = data.collections.pageInfo.endCursor
+    }
 
-export async function getCollectionMenuSummaries(
-  handle: string,
-): Promise<CollectionSummary[]> {
-  'use cache'
-  cacheTag('collections', `collection-menu-${handle}`)
-  cacheLife('days')
+    return handles
+  },
+  ['collections'],
+  {
+    tags: ['collections'],
+    revalidate: 86400, // cacheLife('days')
+  },
+)
 
-  const data = await shopifyFetch({
-    query: GetCollectionMenuDocument,
-    variables: { handle },
-  })
+export const getCollectionSummaries = unstable_cache(
+  async (first = SHOPIFY_PAGE_SIZE): Promise<CollectionSummary[]> => {
+    return fetchCollectionSummaries(first)
+  },
+  ['collection-summaries'],
+  {
+    tags: ['collections'],
+    revalidate: 86400, // cacheLife('days')
+  },
+)
 
-  if (!data.menu) return []
+export const getCollectionMenuSummaries = unstable_cache(
+  async (handle: string): Promise<CollectionSummary[]> => {
+    const data = await shopifyFetch({
+      query: GetCollectionMenuDocument,
+      variables: { handle },
+    })
 
-  const collections: CollectionSummary[] = []
-  collectCollectionMenuSummaries(data.menu.items, collections)
+    if (!data.menu) return []
 
-  return uniqueCollectionsByHandle(collections)
-}
+    const collections: CollectionSummary[] = []
+    collectCollectionMenuSummaries(data.menu.items, collections)
+
+    return uniqueCollectionsByHandle(collections)
+  },
+  ['collection-menu-summaries'],
+  {
+    tags: ['collections'],
+    revalidate: 86400, // cacheLife('days')
+  },
+)
+
+export const getCollectionProductsWithFilters = unstable_cache(
+  async (
+    handle: string,
+    first = COLLECTION_PRODUCT_PAGE_SIZE,
+    sortKey = ProductCollectionSortKeys.CollectionDefault,
+    reverse = false,
+    filters: ProductFilter[] = [],
+    after?: string | null,
+  ): Promise<CollectionProductsResult> => {
+    const data = await shopifyFetch({
+      query: GetCollectionProductsDocument,
+      variables: { handle, first, after, sortKey, reverse, filters },
+    })
+
+    if (!data.collection) {
+      return {
+        products: [],
+        filters: [],
+        pageInfo: { hasNextPage: false, endCursor: null },
+      }
+    }
+
+    const products = data.collection.products.edges.map((edge) =>
+      reshapeCollectionProductSummary(edge.node),
+    )
+    const productFilters = data.collection.products.filters.map(
+      reshapeCollectionProductFilter,
+    )
+
+    return {
+      products,
+      filters: productFilters,
+      pageInfo: {
+        hasNextPage: data.collection.products.pageInfo.hasNextPage,
+        endCursor: data.collection.products.pageInfo.endCursor ?? null,
+      },
+    }
+  },
+  ['collection-products-with-filters'],
+  {
+    tags: ['collection'],
+    revalidate: 3600, // cacheLife('hours')
+  },
+)
 
 export async function getCollectionProducts(
   handle: string,
@@ -381,48 +430,6 @@ export async function getCollectionProducts(
   )
 
   return result.products
-}
-
-export async function getCollectionProductsWithFilters(
-  handle: string,
-  first = COLLECTION_PRODUCT_PAGE_SIZE,
-  sortKey = ProductCollectionSortKeys.CollectionDefault,
-  reverse = false,
-  filters: ProductFilter[] = [],
-  after?: string | null,
-): Promise<CollectionProductsResult> {
-  'use cache'
-  cacheTag('collection', `collection-${handle}`)
-  cacheLife('hours')
-
-  const data = await shopifyFetch({
-    query: GetCollectionProductsDocument,
-    variables: { handle, first, after, sortKey, reverse, filters },
-  })
-
-  if (!data.collection) {
-    return {
-      products: [],
-      filters: [],
-      pageInfo: { hasNextPage: false, endCursor: null },
-    }
-  }
-
-  const products = data.collection.products.edges.map((edge) =>
-    reshapeCollectionProductSummary(edge.node),
-  )
-  const productFilters = data.collection.products.filters.map(
-    reshapeCollectionProductFilter,
-  )
-
-  return {
-    products,
-    filters: productFilters,
-    pageInfo: {
-      hasNextPage: data.collection.products.pageInfo.hasNextPage,
-      endCursor: data.collection.products.pageInfo.endCursor ?? null,
-    },
-  }
 }
 
 type CollectionCursorIndexEntry = {
@@ -443,45 +450,48 @@ type CollectionCursorIndexEntry = {
  * and cursor resolution come from one snapshot and cannot diverge mid-render.
  * Cached with the same policy as product fetches (D-11).
  */
-async function fetchCollectionCursorIndex(
-  handle: string,
-  sortKey: ProductCollectionSortKeys,
-  reverse: boolean,
-  filters: ProductFilter[],
-): Promise<CollectionCursorIndexEntry[]> {
-  'use cache'
-  cacheTag('collection', `collection-${handle}`)
-  cacheLife('hours')
+const fetchCollectionCursorIndex = unstable_cache(
+  async (
+    handle: string,
+    sortKey: ProductCollectionSortKeys,
+    reverse: boolean,
+    filters: ProductFilter[],
+  ): Promise<CollectionCursorIndexEntry[]> => {
+    const entries: CollectionCursorIndexEntry[] = []
+    let after: string | null | undefined
+    let hasNextPage = true
 
-  const entries: CollectionCursorIndexEntry[] = []
-  let after: string | null | undefined
-  let hasNextPage = true
+    while (hasNextPage) {
+      const data: GetCollectionCursorIndexQuery = await shopifyFetch({
+        query: GetCollectionCursorIndexDocument,
+        variables: {
+          handle,
+          first: SHOPIFY_PAGE_SIZE,
+          after,
+          sortKey,
+          reverse,
+          filters,
+        },
+      })
 
-  while (hasNextPage) {
-    const data: GetCollectionCursorIndexQuery = await shopifyFetch({
-      query: GetCollectionCursorIndexDocument,
-      variables: {
-        handle,
-        first: SHOPIFY_PAGE_SIZE,
-        after,
-        sortKey,
-        reverse,
-        filters,
-      },
-    })
+      if (!data.collection) break
 
-    if (!data.collection) break
+      const edges = data.collection.products.edges
+      entries.push(
+        ...edges.map((edge) => ({ cursor: edge.cursor, tags: edge.node.tags })),
+      )
+      hasNextPage = data.collection.products.pageInfo.hasNextPage
+      after = data.collection.products.pageInfo.endCursor
+    }
 
-    const edges = data.collection.products.edges
-    entries.push(
-      ...edges.map((edge) => ({ cursor: edge.cursor, tags: edge.node.tags })),
-    )
-    hasNextPage = data.collection.products.pageInfo.hasNextPage
-    after = data.collection.products.pageInfo.endCursor
-  }
-
-  return entries
-}
+    return entries
+  },
+  ['collection-cursor-index'],
+  {
+    tags: ['collection'],
+    revalidate: 3600, // cacheLife('hours')
+  },
+)
 
 /**
  * Returns total product count, true total pages, and the `after` cursor

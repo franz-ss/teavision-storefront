@@ -6,7 +6,7 @@ import { securityHeaders } from './src/lib/security/headers'
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['detonate-trickster-venus.ngrok-free.dev'],
-  cacheComponents: true,
+  cacheComponents: false,
   env: {
     // Build-time copyright year — avoids per-request new Date() in components,
     // which breaks Next 16 prerendering. Refreshes on every build/deploy.
