@@ -60,7 +60,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - [x] **Phase 16: Legal, Consent, Analytics, and SEO Launch Coverage** — close legal/policy route gaps, consent-aware analytics instrumentation, and launch indexing/SEO verification. (4/4 plans complete) (completed 2026-06-23)
 - [x] **Phase 17: Operations, Performance, and Final Production-Readiness Audit** — add health/observability/runbook coverage, remediate performance/UX/e2e gaps, and produce the final 100/100 audit evidence. (15/15 plans complete) (completed 2026-06-26; PERF-01 accepted non-blocking via dated performance acceptance)
 - [x] **Phase 18: SEO Audit Remediation** — resolve the staging-site SEO audit findings across URL parity, headings/content structure, metadata, robots/sitemap/indexation, schema, crawlable HTML, and Core Web Vitals evidence. (6/6 plans complete) (completed 2026-06-26)
-- [x] **Phase 19: H1 Correctness Re-Remediation** — resolved 2026-06-29 via an owner-directed path change: SEO-H1-02 fixed (visible banner-collection H1) and SEO-H1-01 resolved via accept+document (cacheComponents kept enabled; the soft-nav accumulation is invisible to Google). Full audit pages 2-9 compliance shipped. See the Phase 19 detail § Resolution.
+- [x] **Phase 19: H1 Correctness Re-Remediation** — resolved 2026-06-29 via an owner-directed path change: SEO-H1-02 addressed (banner-collection H1 kept compact — the breadcrumb crumb — per D-08; a visible-heading trial was reverted) and SEO-H1-01 resolved via accept+document (cacheComponents kept enabled; the soft-nav accumulation is invisible to Google). Full audit pages 2-9 compliance shipped. See the Phase 19 detail § Resolution.
 
 ## Progress
 
@@ -325,13 +325,13 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 **Wave 2** _(blocked on 19-01 decision)_
 
 - [x] ~~`19-02-PLAN.md`~~ - **ABANDONED.** Approach A (disable cacheComponents) was implemented in a prior session (`9267da5f`) then **reverted** (`efed85b3`) at owner direction; SEO-H1-01 resolved via accept+document instead.
-- [x] `19-03-PLAN.md` - Banner-mode visible H1 (item #2): `hero.tsx` visible H1 + intro below the banner, breadcrumb crumb demoted to `<span aria-current="page">`, page-content test updated, design preview signed off (`e1c4204c`).
+- [x] ~~`19-03-PLAN.md`~~ - Banner-mode visible H1 (item #2) was implemented (`e1c4204c`) then **reverted** (`48193d0d`): owner upheld D-08, so the banner H1 stays compact (the breadcrumb crumb). The page-content test re-locks the crumb-as-H1.
 
 **Wave 3** _(blocked on Wave 2)_
 
 - [x] `19-04-PLAN.md` - Stale closeout docs reconciled and an authoritative, cited audit response written: `docs/launch/seo-audit-pages-2-9-response.md` (`92bf4187`).
 
-**Resolution (2026-06-29):** Mid-execution the owner directed that `cacheComponents` stay enabled, so the planned Approach A (19-02) was reverted. SEO-H1-01 was re-scoped from "exactly one H1 in the accumulated soft-nav DOM" to the search-relevant invariant — exactly one visible H1 per **standalone** route load (what Googlebot actually indexes) — and the soft-nav accumulation was documented (with cited Google docs) as a condition Google never assembles. SEO-H1-02 was fixed via the visible banner H1 (`e1c4204c`). The broader audit pages 2-9 were also brought into compliance: brand-suffix removal on indexed service pages (`363f7256`); read-more-below-grid and `lang=en-AU` were already in place; the blog `/blog/` slug is deferred to migration (per the auditor). cacheComponents remains enabled.
+**Resolution (2026-06-29):** Mid-execution the owner directed that `cacheComponents` stay enabled, so the planned Approach A (19-02) was reverted. SEO-H1-01 was re-scoped from "exactly one H1 in the accumulated soft-nav DOM" to the search-relevant invariant — exactly one visible H1 per **standalone** route load (what Googlebot actually indexes) — and the soft-nav accumulation was documented (with cited Google docs) as a condition Google never assembles. SEO-H1-02 was addressed by keeping the banner H1 compact (the breadcrumb crumb, D-08): a visible-heading trial (`e1c4204c`) was reverted (`48193d0d`). The broader audit pages 2-9 were also brought into compliance: brand-suffix removal on indexed service pages (`363f7256`); read-more-below-grid and `lang=en-AU` were already in place; the blog `/blog/` slug is deferred to migration (per the auditor). cacheComponents remains enabled.
 
 **Cross-cutting constraints:**
 
@@ -341,4 +341,4 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ## Next
 
-Phase 19 (H1 Correctness Re-Remediation) is **complete (2026-06-29)**. The two open H1 defects from the 2026-06-29 audit re-analysis (`docs/launch/seo-audit-staging-analysis.md`) are resolved: SEO-H1-02 via a visible banner-collection H1, and SEO-H1-01 via accept+document (cacheComponents kept enabled; the soft-nav accumulation is invisible to Google — see `docs/launch/seo-audit-pages-2-9-response.md`). Full audit pages 2-9 compliance shipped. v1.4 automated code readiness remains complete (Phase 17 15/15, PERF-01 accepted non-blocking, Phase 18 SEO audit remediation complete); owner-gated Shopify/admin/Search Console proof and the blog `/blog/` migration redirect remain pending outside the automated score.
+Phase 19 (H1 Correctness Re-Remediation) is **complete (2026-06-29)**. The two open H1 defects from the 2026-06-29 audit re-analysis (`docs/launch/seo-audit-staging-analysis.md`) are resolved: SEO-H1-02 via a compact banner-collection H1 (the breadcrumb crumb; a larger heading was trialled and reverted per D-08), and SEO-H1-01 via accept+document (cacheComponents kept enabled; the soft-nav accumulation is invisible to Google — see `docs/launch/seo-audit-pages-2-9-response.md`). Full audit pages 2-9 compliance shipped. v1.4 automated code readiness remains complete (Phase 17 15/15, PERF-01 accepted non-blocking, Phase 18 SEO audit remediation complete); owner-gated Shopify/admin/Search Console proof and the blog `/blog/` migration redirect remain pending outside the automated score.

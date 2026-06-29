@@ -28,7 +28,7 @@ key-files:
   modified: []
 
 key-decisions:
-  - "SUPERSEDED 2026-06-29: Approach A was approved then RESCINDED — cacheComponents stays enabled; A reverted (commit efed85b3). Final path: SEO-H1-02 fixed via visible H1; SEO-H1-01 accept+document. See body banner + docs/launch/seo-audit-pages-2-9-response.md"
+  - "SUPERSEDED 2026-06-29: Approach A was approved then RESCINDED — cacheComponents stays enabled; A reverted (commit efed85b3). Final path: SEO-H1-02 kept compact (crumb-as-H1 per D-08; visible-H1 trial reverted in 48193d0d); SEO-H1-01 accept+document. See body banner + docs/launch/seo-audit-pages-2-9-response.md"
   - "Regression test uses raw locator('h1') exclusively; getByRole('heading') falsely passes on Activity-hidden nodes"
   - "Soft-nav chain Home → /collections → /collections/all → /products/test-standard-tea (last three hops are in-page link clicks)"
 
@@ -50,8 +50,9 @@ completed: 2026-06-29
 > ⚠ **SUPERSEDED (2026-06-29).** Approach A (disable `cacheComponents`) was approved
 > here and implemented in a prior session (`9267da5f`), then **reverted** (`efed85b3`)
 > when the owner decided `cacheComponents` must stay enabled. The phase was completed
-> via a different path: **SEO-H1-02** fixed by displaying a visible H1 on banner
-> collections (`e1c4204c`); **SEO-H1-01** resolved via **accept + document** (Googlebot
+> via a different path: **SEO-H1-02** — the banner H1 stays compact (the
+> breadcrumb crumb, D-08; a visible-H1 trial in `e1c4204c` was reverted in
+> `48193d0d`); **SEO-H1-01** resolved via **accept + document** (Googlebot
 > never sees the soft-nav accumulation; multiple H1s aren't a Google ranking issue).
 > The "Approach A approved" statements below are retained as the historical decision
 > record only. Authoritative outcome: `docs/launch/seo-audit-pages-2-9-response.md`

@@ -16,7 +16,7 @@ current status, and the supporting evidence.
 
 | # | Audit item (page) | Status |
 |---|-------------------|--------|
-| 1 | Display the H1 on banner / main-category collection pages (p2, p5) | ✅ **Fixed** |
+| 1 | Display the H1 on banner / main-category collection pages (p2, p5) | ⚠ **H1 present, kept compact (the crumb) by design** — see §1 |
 | 2 | "Read more" content below the product grid (p4) | ✅ Already in place |
 | 3 | Multiple H1s while browsing — collection & product pages (p2–3, p6) | ✅ **Resolved** (see evidence; not visible to Google) |
 | 4 | Remove brand suffix from SEO-targeted page titles, keep on products (p8–9) | ✅ **Fixed** / already in place |
@@ -26,25 +26,31 @@ current status, and the supporting evidence.
 
 ---
 
-## 1. Visible H1 on banner / main-category collection pages — Fixed
+## 1. H1 on banner / main-category collection pages — present, kept compact by design
 
 **Requested (p2, p5):** "the main H1 text isn't being displayed … resolve this by
 displaying the H1." Before the product grid, show a Banner Image (optional), an
-H1 text, a brief intro, and the breadcrumb — like the other collection pages.
+H1 text, a brief intro, and the breadcrumb.
 
-**Done.** Banner-image collection pages now render, in order: banner image → a
-visible page-level `<h1>` (same prominence as the green-band and rich-hero
-collections) → brief intro → breadcrumb. The breadcrumb's current-page item,
-which was previously the page's `<h1>`, is now a non-heading `<span aria-current="page">`.
+**Status — the page has a single, real `<h1>`, kept compact by design.** On
+banner-image collection pages the `<h1>` is the breadcrumb current-page item
+(the collection title, `text-gold-deep`). It is genuine, user-visible text — not
+hidden, not black-hat — and it is the only `<h1>` on the page.
+
+We trialled a separate large heading + intro paragraph below the banner and
+**reverted it** (owner design decision D-08): the banner image already displays
+the collection title and key messaging prominently, so an oversized heading plus
+a paragraph reads as redundant and unbalances the layout. The compact crumb-H1
+keeps the page clean while still giving each route exactly one real, indexable,
+user-visible H1.
 
 - Implementation: `src/app/(storefront)/collections/[handle]/_components/hero.tsx`
-- Locked by an SSR test asserting exactly one visible `<h1>` per page:
-  `src/app/(storefront)/collections/[handle]/_components/page-content.test.tsx`
+  (banner mode); `…/_components/page-content.test.tsx` locks the single `<h1>`.
 
-This was previously a deliberate "compact heading" design (the H1 lived in the
-breadcrumb). Per your request, it is now a displayed heading. Note: the previous
-crumb-H1 was still real, user-visible text — not hidden/black-hat — but a
-displayed heading is the better, clearer treatment and is what is now shipped.
+If the SEO team specifically wants a larger, separate page heading on banner
+collections, that is a design change the owner can opt into — flag it and we will
+size it tastefully. (The green-band and rich-hero collection variants already
+render a large visible H1.)
 
 ## 2. "Read more" content below the product grid — Already in place
 

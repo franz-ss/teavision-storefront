@@ -236,10 +236,11 @@ that **`cacheComponents` must stay enabled**. Approach A was reverted (commit
 
 **Final resolution (see `docs/launch/seo-audit-pages-2-9-response.md`):**
 
-- **SEO-H1-02** (banner/main-category collections show no displayed H1) — FIXED
-  in code: banner collections now render a visible page-level `<h1>` + intro,
-  with the breadcrumb crumb demoted to `<span aria-current="page">` (commit
-  `e1c4204c`). This is the audit's actual priority (pages 2–5).
+- **SEO-H1-02** (banner/main-category collections) — the page keeps a single,
+  real, user-visible `<h1>` as the breadcrumb crumb (D-08 upheld). A larger
+  visible heading + intro was trialled (`e1c4204c`) then reverted (`48193d0d`):
+  the banner image already carries the title, and the big heading unbalanced the
+  layout.
 - **SEO-H1-01** (multiple H1s in the accumulated soft-nav DOM) — RESOLVED via the
   **accept + document** route (neither A, B, nor C). Verified research (Google's
   own docs) confirms Googlebot renders each URL statelessly and never assembles

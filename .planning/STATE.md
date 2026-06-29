@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 
 Phase: 19 (h1-correctness-re-remediation) — COMPLETE (2026-06-29)
 Plan: 3 of 4 executed (19-02 abandoned — Approach A reverted)
-Status: H1 defects resolved (SEO-H1-02 visible banner H1; SEO-H1-01 accept+document, cacheComponents kept). Audit pages 2-9 complied. See docs/launch/seo-audit-pages-2-9-response.md.
+Status: H1 defects resolved (SEO-H1-02: banner H1 kept compact as the breadcrumb crumb per D-08 — visible-heading trial reverted; SEO-H1-01 accept+document, cacheComponents kept). Audit pages 2-9 complied. See docs/launch/seo-audit-pages-2-9-response.md.
 Last activity: 2026-06-29 -- Phase 19 resolved (audit pages 2-9 compliance)
 
 ## Performance Metrics
@@ -211,7 +211,7 @@ Recent decisions affecting current work:
 - [Phase 18]: Strict local Lighthouse/readiness failures stay blocking because no dated owner, staging, or field Core Web Vitals acceptance artifact was supplied. — Preserves Phase 17 PERF-01 semantics and avoids silently accepting failed local metrics.
 - [Phase 18]: Final SEO audit matrix separates automated remediation proof from owner/operator-gated production proof. — Keeps DNS, Shopify admin, checkout, Search Console, and performance acceptance evidence distinct from local app code evidence.
 - [Phase 19]: Owner directed that `cacheComponents` stays enabled — Approach A (disable cacheComponents) was implemented then reverted (efed85b3). SEO-H1-01 (multiple H1s while browsing) resolved via accept+document: Googlebot renders each URL statelessly and never assembles the soft-nav accumulation, and multiple H1s are not a Google ranking/indexing issue (cited research). The enforced invariant is one visible H1 per standalone route load.
-- [Phase 19]: SEO-H1-02 fixed by displaying a visible page-level H1 + intro on banner collections (reverses the Phase 18 "compact banner heading" D-08); the breadcrumb crumb is demoted to a non-H1 span. Audit pages 2-9 brought into compliance (brand-suffix removal on indexed service pages; read-more-below-grid and lang=en-AU already in place; blog /blog/ slug deferred to migration). See docs/launch/seo-audit-pages-2-9-response.md.
+- [Phase 19]: SEO-H1-02 — banner-collection H1 kept COMPACT as the breadcrumb crumb (D-08 upheld). A larger visible H1 + intro was trialled (e1c4204c) then reverted (48193d0d) because the banner image already carries the title and the big heading unbalanced the layout; the crumb remains a real visible H1 (one per route). Audit pages 2-9 brought into compliance (brand-suffix removal on indexed service pages; read-more-below-grid and lang=en-AU already in place; blog /blog/ slug deferred to migration). See docs/launch/seo-audit-pages-2-9-response.md.
 
 ### Roadmap Evolution
 
