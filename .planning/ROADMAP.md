@@ -6,7 +6,8 @@
 - ✅ **v1.1 Blog Performance** — Phase 12 (shipped 2026-06-12) — see `milestones/v1.1-ROADMAP.md`
 - ✅ **v1.2 SEO-Safe PLP Pagination Parity** — Phase 13 (shipped 2026-06-12) — see `milestones/v1.2-ROADMAP.md`
 - ✅ **v1.3 Shopify Customer Accounts** — Phase 14 (shipped 2026-06-22) — see `milestones/v1.3-ROADMAP.md`
-- ✅ **v1.4 Production Readiness 100/100** — Phases 15–18 (automated code readiness complete 2026-06-26; owner-gated launch proof pending)
+- ✅ **v1.4 Production Readiness 100/100** — Phases 15–19 (automated code readiness complete 2026-06-26; owner-gated launch proof pending)
+- 🔵 **v1.5 Performance & PageSpeed 100** — Phase 20 (in planning, started 2026-06-30) — pursue a genuine Google PageSpeed Insights 100/100 across all four categories on real measurements, superseding the PERF-01 non-blocking acceptance
 
 ## Phases
 
@@ -62,6 +63,10 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - [x] **Phase 18: SEO Audit Remediation** — resolve the staging-site SEO audit findings across URL parity, headings/content structure, metadata, robots/sitemap/indexation, schema, crawlable HTML, and Core Web Vitals evidence. (6/6 plans complete) (completed 2026-06-26)
 - [x] **Phase 19: H1 Correctness Re-Remediation** — resolved 2026-06-29 via an owner-directed path change: SEO-H1-02 addressed (banner-collection H1 kept compact — the breadcrumb crumb — per D-08; a visible-heading trial was reverted) and SEO-H1-01 resolved via accept+document (cacheComponents kept enabled; the soft-nav accumulation is invisible to Google). Full audit pages 2-9 compliance shipped. See the Phase 19 detail § Resolution.
 
+### 🔵 v1.5 Performance & PageSpeed 100
+
+- [ ] **Phase 20: PageSpeed 100/100 Perfection** — establish a trustworthy real-PSI measurement baseline on a public preview deployment, root-cause the accepted-but-unresolved LCP gap, then systematically remediate Core Web Vitals, JS/CSS/image/font/caching/network/third-party bottlenecks, and complete Accessibility/Best-Practices/SEO to 100 — targeting a genuine Google PageSpeed Insights 100/100 across all four categories where physically achievable, with honest documentation and best-alternative recommendations where it is not. _(in planning)_
+
 ## Progress
 
 | Phase                                                             | Milestone | Plans Complete | Status     | Completed  |
@@ -83,6 +88,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4      | 15/15          | Complete   | 2026-06-26 |
 | 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete   | 2026-06-26 |
 | 19. H1 Correctness Re-Remediation                                | v1.4      | 3/4            | Complete   | 2026-06-29 |
+| 20. PageSpeed 100/100 Perfection                                 | v1.5      | 0/?            | Planning   | —          |
 
 ## Phase Details
 
@@ -339,6 +345,51 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - Preserve the warm/botanical design system; make H1s visible without introducing cool grays or hidden text.
 - Evidence must distinguish local code behavior from production DNS/Vercel/host configuration.
 
+### Phase 20: PageSpeed 100/100 Perfection
+
+**Goal:** Achieve the highest attainable Google PageSpeed Insights / Lighthouse scores — targeting a genuine **100 across Performance, Accessibility, Best Practices, and SEO** on the representative routes — by first establishing a trustworthy **real-PSI measurement baseline** on a public preview deployment, **root-causing** the accepted-but-unresolved Phase 17 LCP gap, then systematically remediating Core Web Vitals (LCP, INP, CLS) and JS/CSS/image/font/caching/network/third-party bottlenecks, while honestly documenting and recommending the best alternative wherever a perfect score is constrained by platform, browser, third-party, or field-data realities.
+
+**Requirements:** PSI-01, PSI-02, PSI-03, PSI-04, PSI-05, PSI-06, PSI-07, PSI-08, PSI-09, PSI-10, PSI-11, PSI-12, PSI-13, PSI-14, PSI-15
+
+**Depends on:** Phase 17 performance evidence/harness (`scripts/performance/probe-lighthouse.mjs`, `docs/launch/performance-evidence.md`, `docs/launch/performance-acceptance.md`); Phase 18 crawlable-HTML and Phase 19 single-H1/SEO evidence (must not regress); a public, fetchable, noindexed preview deployment (Vercel preview or equivalent) reachable by Google PSI; local Next.js 16 docs for image/font/script/streaming/Cache Components; owner-gated launch boundaries (no real Shopify checkout/OAuth tests; preview stays noindex).
+
+**Success Criteria:**
+
+1. A public, fetchable, **noindexed** preview deployment exists and **real Google PageSpeed Insights** (mobile + desktop) results are captured as committed evidence for every representative route, alongside the existing local Lighthouse harness, with the local harness reconciled against real PSI.
+2. The Phase 17 local-lab LCP/FCP discrepancy is **reproduced and root-caused per route** (true LCP element/resource and the genuine bottleneck — lab artifact vs. real defect — identified) before remediation begins.
+3. **Core Web Vitals** are "good" on real PSI/reconciled lab across the representative routes: LCP ≤ 2.5 s, CLS ≤ 0.1 (including `/account`, currently 0.128), and INP ≤ 200 ms / minimal TBT.
+4. **Resource bottlenecks** are remediated and evidenced: unused/duplicate/render-blocking JavaScript reduced; render-blocking/unused CSS reduced; images use correct format/sizes/dimensions/preload with no oversized media; fonts are non-render-blocking with zero font-driven CLS; static assets carry long-lived cache headers with compression and fast TTFB.
+5. **Third-party scripts** (Searchanise, Trustoo, analytics, Shopify) are consent-gated/lazy/deferred/facade-loaded off the critical path, AND the "production tags live" performance ceiling is **measured and documented** as an explicit limitation with the best-achievable alternative.
+6. **Accessibility, Best Practices, and SEO** each score **100** on the representative routes (closing the current 95–97 accessibility gap) without regressing the warm/botanical design system or Phase 18/19 SEO/crawlability evidence.
+7. A **prioritized (impact × effort) remediation roadmap** and a **final evidence pack** document the achieved scores per route/category/device, explicitly state where a perfect 100 is and is not realistically achievable and the best alternative, and **supersede or update** the PERF-01 non-blocking acceptance with the real result (genuine pass or honest documented ceiling — no fabricated pass).
+
+**Notes for planning:**
+
+- **Reproduce and measure before remediating.** Phase 17 exhausted the obvious image/LCP work and still failed local lab; the FCP (~1.2 s) → text-LCP (~3.9 s) gap on text-LCP routes is the fingerprint of local-lab measurement noise. Treat a real-PSI baseline + root cause as the first deliverable; do not start another image-compression round against an unverified number.
+- The preview deployment must be **publicly fetchable by Google** (no Vercel/password auth wall) yet **noindex** so it never gets indexed or competes with the live legacy site.
+- Read the local Next.js 16 docs for `Image`, `next/font`, `Script`, streaming, and Cache Components before changing render/streaming behavior — this fork differs from training data. Font preloads in this fork emit as HTTP `Link` headers, not `<head>` tags.
+- Any Cache Components/streaming change must be re-validated against Phase 18 crawlable-HTML and Phase 19 single-visible-H1 evidence. `cacheComponents` stays enabled (Phase 19 owner decision) unless a diagnosed, owner-approved exception is recorded.
+- A perfect Performance 100 with production third-party tags live is likely unattainable; quantify and document that ceiling rather than hiding it. Accessibility/Best-Practices/SEO 100 are realistic.
+- Do not run real Shopify hosted checkout, payment, shipping, tax, order, success-redirect, or live Customer Account OAuth tests as part of this phase without explicit owner approval.
+
+**Plans:** 5 plans
+
+Plans:
+- [ ] 20-01-PLAN.md — Measurement + root-cause spike: public noindexed preview, scripted real PSI (probe-psi.mjs), extend summarizeLhr (all category scores + a11y enumeration), root-cause LCP gap + /account CLS, reconcile lab<->PSI (GATE)
+- [ ] 20-02-PLAN.md — Image/font/CWV config wins: AVIF formats, preconnect cdn.shopify.com, hero dims + LQIP, collection preload 3->1, PDP cap, minimumCacheTTL, remove Caveat font; warm PSI re-baseline
+- [ ] 20-03-PLAN.md — JS/third-party/caching hardening: DSN-gate client Sentry, JS-byte budget + experimental-analyze, tags-live harness mode + ceiling, consent-gate PDP inline scripts, inlineCss A/B, font Link-header warmup
+- [ ] 20-04-PLAN.md — A11y/BP/SEO to 100 + /account CLS: OKLCH ink-faint/gold-deep nudges (WCAG-verified), restrict text-gold, hero scrim (owner approval), heading-order h3->h2 + sr-only h2, SEO 100 on indexable build, BP 100 tags-off + ceiling
+- [ ] 20-05-PLAN.md — Final evidence pack + supersede PERF-01: consolidated psi-evidence.md with impact x effort roadmap + honest waivers, update performance-acceptance.md + readiness report, mark PSI requirements complete, prune oversized /public PNGs
+
+**Cross-cutting constraints:**
+
+- Keep storefront routes server-first; push client behavior to interactive leaves only; no `any`, no default component exports, Tailwind token classes with `cn()`, warm/botanical palette (no cool grays).
+- Do not regress Phase 18 crawlable-HTML, Phase 19 single-visible-H1, or metadata/canonical/robots/sitemap/structured-data evidence to win a performance metric.
+- Evidence must distinguish real PSI / preview-deployment behavior from local-lab numbers and from owner-gated production DNS/host/Search Console configuration.
+- The preview deployment stays noindexed; owner-gated Shopify/admin/Search Console proof remains pending and is never fabricated.
+
 ## Next
+
+**v1.5 Performance & PageSpeed 100 has started.** Phase 20 (PageSpeed 100/100 Perfection) is **in planning (started 2026-06-30)** — pursuing a genuine Google PageSpeed Insights 100/100 across all four categories on real measurements, beginning with a real-PSI baseline on a public noindexed preview deployment and root-cause of the Phase 17 LCP gap, then systematic CWV/resource/third-party remediation, with honest documentation of any physically unachievable ceilings. This supersedes the PERF-01 non-blocking acceptance with a real result.
 
 Phase 19 (H1 Correctness Re-Remediation) is **complete (2026-06-29)**. The two open H1 defects from the 2026-06-29 audit re-analysis (`docs/launch/seo-audit-staging-analysis.md`) are resolved: SEO-H1-02 via a compact banner-collection H1 (the breadcrumb crumb; a larger heading was trialled and reverted per D-08), and SEO-H1-01 via accept+document (cacheComponents kept enabled; the soft-nav accumulation is invisible to Google — see `docs/launch/seo-audit-pages-2-9-response.md`). Full audit pages 2-9 compliance shipped. v1.4 automated code readiness remains complete (Phase 17 15/15, PERF-01 accepted non-blocking, Phase 18 SEO audit remediation complete); owner-gated Shopify/admin/Search Console proof and the blog `/blog/` migration redirect remain pending outside the automated score.
