@@ -54,6 +54,15 @@ test('home and fake Shopify LCP routes use the launch AVIF sources', async () =>
   assert.match(fakeShopify, /bulk-wholesale-lcp\.avif/)
 })
 
+// The homepage hero is the one launch-critical LCP image where `preload` and
+// `fetchPriority="high"` are intentionally combined: Next.js emits a
+// `<link rel="preload" as="image" fetchpriority="high">` (and the same
+// fetchpriority on the rendered <img>), which is what the real-PSI "LCP
+// request discovery" audit requires (20-PSI-EVIDENCE.md). Every other
+// launch-critical Image usage keeps the existing guard against combining the
+// two.
+const HERO_PATH = 'src/components/homepage/hero/hero.tsx'
+
 test('launch image components avoid deprecated priority and invalid preload combinations', async () => {
   for (const relativePath of sourceFiles) {
     const source = await readSource(relativePath)
@@ -72,12 +81,32 @@ test('launch image components avoid deprecated priority and invalid preload comb
         /\bpriority\s*=/,
         `${relativePath} should not use deprecated Image priority`,
       )
+      const combinesPreloadAndFetchPriority =
+        block.includes('preload') && block.includes('fetchPriority="high"')
+      if (relativePath === HERO_PATH) {
+        continue
+      }
       assert.ok(
-        !(block.includes('preload') && block.includes('fetchPriority="high"')),
+        !combinesPreloadAndFetchPriority,
         `${relativePath} should not combine preload with high fetchPriority`,
       )
     }
   }
+
+  const heroSource = await readSource(HERO_PATH)
+  const heroBlocks = imageBlocks(heroSource)
+  const heroLcpBlock = heroBlocks.find((block) => block.includes('fill'))
+  assert.ok(heroLcpBlock, `${HERO_PATH} should contain the fill hero Image`)
+  assert.match(
+    heroLcpBlock,
+    /\bpreload\b/,
+    `${HERO_PATH} LCP image should keep preload`,
+  )
+  assert.match(
+    heroLcpBlock,
+    /fetchPriority="high"/,
+    `${HERO_PATH} LCP image should carry fetchPriority="high" so the preload link emits fetchpriority=high`,
+  )
 
   const [homeHero, productGallery, productCard] = await Promise.all([
     readSource('src/components/homepage/hero/hero.tsx'),
