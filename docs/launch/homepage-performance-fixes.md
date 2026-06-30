@@ -100,7 +100,7 @@ The following automated guards were run after all code changes and passed:
 - `pnpm build`
 - `node --test scripts/component-contracts/*.test.mjs` (all component-contract tests,
   including the updated `launch-image-performance.test.mjs`)
-- `node scripts/seo/probe-crawlable-html.mjs` (Phase 18 crawlable-HTML guard)
+- `node scripts/seo/probe-crawlable-html.mjs --start-server` (Phase 18 crawlable-HTML guard)
 - `pnpm exec playwright test tests/e2e/h1-correctness.spec.ts` (Phase 19 single-visible-H1 guard)
 
 Cumulative Layout Shift on `/` is expected to remain 0 (no layout-affecting changes were
