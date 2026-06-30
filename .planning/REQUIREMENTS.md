@@ -136,30 +136,30 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QA-02        | Phase 17 | Complete |
 | QA-03        | Phase 17 | Complete |
 
-**v1.5 (Performance & PageSpeed 100):**
+**v1.5 (Performance & PageSpeed 100):** Phase 20 was replanned 2026-06-30 to a **lean scope** (owner directive D-16) covering only the homepage `/` PSI screenshot findings. The lean plan (`20-01`) addresses PSI-03/05/06/07/08; the rest are **Deferred** (preserved in `deferred/20-02..05-PLAN.md`).
 
-| Requirement | Phase    | Status   |
-| ----------- | -------- | -------- |
-| PSI-01      | Phase 20 | Planning |
-| PSI-02      | Phase 20 | Planning |
-| PSI-03      | Phase 20 | Planning |
-| PSI-04      | Phase 20 | Planning |
-| PSI-05      | Phase 20 | Planning |
-| PSI-06      | Phase 20 | Planning |
-| PSI-07      | Phase 20 | Planning |
-| PSI-08      | Phase 20 | Planning |
-| PSI-09      | Phase 20 | Planning |
-| PSI-10      | Phase 20 | Planning |
-| PSI-11      | Phase 20 | Planning |
-| PSI-12      | Phase 20 | Planning |
-| PSI-13      | Phase 20 | Planning |
-| PSI-14      | Phase 20 | Planning |
-| PSI-15      | Phase 20 | Planning |
+| Requirement | Phase    | Status              |
+| ----------- | -------- | ------------------- |
+| PSI-03      | Phase 20 | Planning (lean)     |
+| PSI-05      | Phase 20 | Planning (lean)     |
+| PSI-06      | Phase 20 | Planning (lean)     |
+| PSI-07      | Phase 20 | Planning (lean)     |
+| PSI-08      | Phase 20 | Planning (lean)     |
+| PSI-01      | Phase 20 | Deferred (post-lean) |
+| PSI-02      | Phase 20 | Deferred (post-lean) |
+| PSI-04      | Phase 20 | Deferred (post-lean) |
+| PSI-09      | Phase 20 | Deferred (post-lean) |
+| PSI-10      | Phase 20 | Deferred (post-lean) |
+| PSI-11      | Phase 20 | Deferred (post-lean) |
+| PSI-12      | Phase 20 | Deferred (post-lean) |
+| PSI-13      | Phase 20 | Deferred (post-lean) |
+| PSI-14      | Phase 20 | Deferred (post-lean) |
+| PSI-15      | Phase 20 | Deferred (post-lean) |
 
 **Coverage:**
 
 - v1.4 requirements: 22 total — mapped to phases: 22 — unmapped: 0
-- v1.5 requirements: 15 total — mapped to Phase 20: 15 — unmapped: 0
+- v1.5 requirements: 15 total — lean Phase 20 (`20-01`): 5 (PSI-03/05/06/07/08); deferred: 10; unmapped: 0
 
 ---
 

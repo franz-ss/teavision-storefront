@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Performance & PageSpeed 100
 status: planned
-stopped_at: Phase 20 (PageSpeed 100/100 Perfection) PLANNED — 5 plans in 5 waves, verified by gsd-plan-checker (0 blockers); real-PSI / baseline folded in; ready to execute
+stopped_at: Phase 20 REPLANNED to lean scope (owner directive D-16) — 1 plan (20-01) resolving the homepage / PSI screenshot findings; broad 5-wave plan deferred; ready to execute
 last_updated: "2026-06-30"
-last_activity: 2026-06-30 -- Phase 20 planned (research → 5 plans → verification loop passed); ready to execute
+last_activity: 2026-06-30 -- Phase 20 replanned lean (4 homepage / fixes); broad plan moved to deferred/
 progress:
   total_phases: 1
   completed_phases: 0
-  total_plans: 5
+  total_plans: 1
   completed_plans: 0
   percent: 0
 ---
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-06-22)
 
 ## Current Position
 
-Phase: 20 (pagespeed-100-perfection) — PLANNED, ready to execute (2026-06-30)
-Plan: 5 plans in 5 waves (20-01..20-05), verified by gsd-plan-checker (iteration 2, 0 blockers). Artifacts: 20-CONTEXT, 20-RESEARCH (+real-PSI addendum), 20-PSI-EVIDENCE, 20-VALIDATION, 20-01..05 PLANs.
-Status: Ready to execute via `/gsd-execute-phase 20`. Wave 1 (20-01) opens with a blocking checkpoint (confirm preview URL / route slugs / Sentry-DSN). Real-PSI `/` baseline confirmed the homepage LCP is a genuine defect (2,040ms resource-load-delay = missing fetchpriority=high + 540ms render-blocking CSS + ~142KB Sentry chunk), NOT lab noise — 20-02 adds the hero fetchPriority=high fix.
-Decisions locked: real-PSI-first on a public noindexed Vercel preview (D-01); reproduce/root-cause before remediating (D-03); defer third-parties + document tags-live ceiling (D-05); target genuine 100 where achievable, document limits + best alternative where not (D-04); cacheComponents stays enabled, don't regress Phase 18/19 SEO (D-09); fetchPriority="high" is permitted for the LCP image and is distinct from the banned deprecated `priority` (D-10 refined / D-15).
-Last activity: 2026-06-30 -- Phase 20 planned + verified; ready to execute
+Phase: 20 (pagespeed-100-perfection) — PLANNED (LEAN), ready to execute (2026-06-30)
+Plan: 1 lean plan (20-01) per owner directive D-16 — resolves exactly the homepage / PSI screenshot findings: (1) hero fetchPriority="high", (2) AVIF output, (3) lazy-load the ~142KB client Sentry SDK, (4) measured experimental.inlineCss. The broad 5-wave plan (20-02..05) is DEFERRED in deferred/ (recoverable from commit e0e42881). Artifacts: 20-CONTEXT (+D-16), 20-PSI-EVIDENCE, 20-RESEARCH (reference), 20-VALIDATION (lean), 20-01-PLAN.
+Status: Ready to execute via `/gsd-execute-phase 20`. Only checkpoint = the inlineCss go/no-go, gated on a real-PSI re-measure of /. Lean reqs: PSI-03/05/06/07/08; deferred: PSI-01/02/04/09/10/11/12/13/14/15.
+Decisions locked: lean scope = screenshot fixes only, no additional improvements, architecture-preserving, no regressions (D-16); fetchPriority="high" permitted for the LCP image, distinct from the banned deprecated `priority` (D-10 refined / D-15); cacheComponents stays enabled, don't regress Phase 18/19 (D-09).
+Last activity: 2026-06-30 -- Phase 20 replanned lean; ready to execute
 
 ## Performance Metrics
 
