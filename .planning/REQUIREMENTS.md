@@ -1,7 +1,9 @@
-# Requirements: Teavision Headless Storefront v1.4
+# Requirements: Teavision Headless Storefront v1.4–v1.5
 
-**Defined:** 2026-06-22
+**Defined:** 2026-06-22 (v1.4) · 2026-06-30 (v1.5)
 **Core Value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
+
+> v1.4 (Production Readiness 100/100) requirements are complete. v1.5 (Performance & PageSpeed 100) requirements (PSI-01..PSI-15) are defined below and map to Phase 20.
 
 ## v1 Requirements
 
@@ -43,6 +45,40 @@ Requirements for v1.4 Production Readiness 100/100. Each maps to roadmap phases.
 - [x] **QA-01**: Local production e2e is unblocked and passes without relying on an already-running dev server.
 - [x] **QA-02**: Final readiness audit script/report proves build, lint, typecheck, unit, integration, Storybook, e2e, dependency audit, headers, policy routes, SEO, performance, and browser smoke checks.
 - [x] **QA-03**: Shopify hosted checkout, payment, shipping, tax, order creation, success redirect, Customer Account OAuth, protected customer data, and B2B pricing checks have owner-approved test evidence or explicit owner-blocked status.
+
+## v1.5 Requirements — Performance & PageSpeed 100
+
+Requirements for v1.5. Each maps to Phase 20. The goal is a genuine Google PageSpeed Insights / Lighthouse 100 across all four categories on the representative routes where physically achievable, with honest documentation of any constrained ceilings.
+
+### Measurement & Diagnosis
+
+- [ ] **PSI-01**: A public, fetchable, **noindexed** preview deployment exists, and real Google PageSpeed Insights (mobile + desktop) results are captured as committed evidence for each representative route alongside the local Lighthouse harness; the local harness is reconciled against real PSI so it is a trustworthy inner-loop signal.
+- [ ] **PSI-02**: The Phase 17 local-lab LCP/FCP discrepancy is reproduced and root-caused per route — true LCP element/resource and the genuine bottleneck (lab artifact vs. real defect) documented — before remediation begins.
+
+### Core Web Vitals
+
+- [ ] **PSI-03**: Largest Contentful Paint is "good" (≤ 2.5 s) on real PSI / reconciled lab across the representative routes.
+- [ ] **PSI-04**: Cumulative Layout Shift is ≤ 0.1 on all representative routes, including `/account` (currently 0.128).
+- [ ] **PSI-05**: Interaction to Next Paint is "good" (≤ 200 ms) and lab Total Blocking Time stays minimal; main-thread/JS work is bounded.
+
+### Resource Optimization
+
+- [ ] **PSI-06**: Unused/duplicate JavaScript is minimized, bundles are code-split, non-critical JS is deferred, and no render-blocking scripts remain in the critical path (justified by bundle-analysis evidence).
+- [ ] **PSI-07**: Render-blocking and unused CSS is minimized; critical CSS is optimized/inlined where it helps.
+- [ ] **PSI-08**: Images use correct format (AVIF/WebP), responsive `sizes`, explicit dimensions (no CLS), correct LCP `preload` discipline, and lazy/eager loading; no oversized/oversampled media.
+- [ ] **PSI-09**: Fonts load non-render-blocking with critical-font preload, correct `font-display`, subsetting, and zero font-driven CLS.
+- [ ] **PSI-10**: Static/immutable assets carry long-lived cache headers, responses are compressed (brotli/gzip), TTFB/server response is fast, and the critical-path request count is minimized — measured on the preview deployment.
+- [ ] **PSI-11**: Searchanise, Trustoo, analytics, and Shopify scripts are consent-gated / lazy / deferred / facade-loaded off the critical path; the "production tags live" performance ceiling is measured and documented as an explicit limitation with the best-achievable alternative.
+
+### Category Completeness
+
+- [ ] **PSI-12**: Lighthouse Accessibility scores 100 on the representative routes (closing the current 95–97 gap) without regressing the warm/botanical design system.
+- [ ] **PSI-13**: Lighthouse Best Practices scores 100 (HTTPS, no console errors, no deprecated APIs, correct image aspect ratios, valid source maps / CSP behavior).
+- [ ] **PSI-14**: Lighthouse SEO category scores 100 on the representative routes, confirmed without regressing Phase 16/18/19 SEO work.
+
+### Roadmap & Honesty
+
+- [ ] **PSI-15**: A prioritized (impact × effort) remediation roadmap and a final evidence pack document achieved scores per route/category/device, explicitly state where a perfect 100 is and is not realistically achievable and the best alternative, and supersede/update the PERF-01 non-blocking acceptance with the real result (no fabricated pass).
 
 ## v2 Requirements
 
@@ -100,13 +136,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QA-02        | Phase 17 | Complete |
 | QA-03        | Phase 17 | Complete |
 
+**v1.5 (Performance & PageSpeed 100):**
+
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| PSI-01      | Phase 20 | Planning |
+| PSI-02      | Phase 20 | Planning |
+| PSI-03      | Phase 20 | Planning |
+| PSI-04      | Phase 20 | Planning |
+| PSI-05      | Phase 20 | Planning |
+| PSI-06      | Phase 20 | Planning |
+| PSI-07      | Phase 20 | Planning |
+| PSI-08      | Phase 20 | Planning |
+| PSI-09      | Phase 20 | Planning |
+| PSI-10      | Phase 20 | Planning |
+| PSI-11      | Phase 20 | Planning |
+| PSI-12      | Phase 20 | Planning |
+| PSI-13      | Phase 20 | Planning |
+| PSI-14      | Phase 20 | Planning |
+| PSI-15      | Phase 20 | Planning |
+
 **Coverage:**
 
-- v1 requirements: 22 total
-- Mapped to phases: 22
-- Unmapped: 0
+- v1.4 requirements: 22 total — mapped to phases: 22 — unmapped: 0
+- v1.5 requirements: 15 total — mapped to Phase 20: 15 — unmapped: 0
 
 ---
 
-_Requirements defined: 2026-06-22_
-_Last updated: 2026-06-26 after Phase 17 performance acceptance and final readiness closure_
+_Requirements defined: 2026-06-22 (v1.4), 2026-06-30 (v1.5)_
+_Last updated: 2026-06-30 — added v1.5 Performance & PageSpeed 100 requirements (PSI-01..PSI-15) mapped to Phase 20_

@@ -26,7 +26,11 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 **Current launch gates:** Automated code readiness is `100/100` after dated PERF-01 performance acceptance. Production launch still needs owner-gated Shopify/admin/Search Console proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, sitemap submission, and URL inspection.
 
-## Current Milestone: v1.4 Production Readiness 100/100
+## Current Milestone: v1.5 Performance & PageSpeed 100
+
+**Started:** 2026-06-30 (Phase 20 in planning). **Goal:** pursue a genuine Google PageSpeed Insights / Lighthouse 100/100 across Performance, Accessibility, Best Practices, and SEO on the representative routes — measured on a public noindexed preview deployment (real PSI, not just local lab) — by root-causing the Phase 17 LCP gap, then systematically remediating Core Web Vitals, JS/CSS/image/font/caching/network/third-party bottlenecks, and completing Accessibility/Best-Practices/SEO to 100. Where a perfect score is constrained by platform/browser/third-party/field-data realities, document the limitation and recommend the best alternative. This supersedes the v1.4 PERF-01 non-blocking acceptance with a real result. Requirements: PSI-01..PSI-15 (see `.planning/REQUIREMENTS.md`).
+
+## Prior Milestone: v1.4 Production Readiness 100/100
 
 **Goal:** Close every launch-blocking QA, security, compliance, performance, analytics, reliability, and operational gap found in the production-readiness audit so the storefront can earn a 100/100 readiness score.
 

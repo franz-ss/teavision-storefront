@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: Production Readiness 100/100
-status: complete
-stopped_at: Phase 19 H1 correctness resolved via audit pages 2-9 compliance (owner-directed cacheComponents kept enabled); owner-gated launch proof pending
-last_updated: "2026-06-29"
-last_activity: 2026-06-29 -- Phase 19 resolved (audit pages 2-9 compliance)
+milestone: v1.5
+milestone_name: Performance & PageSpeed 100
+status: planned
+stopped_at: Phase 20 (PageSpeed 100/100 Perfection) PLANNED — 5 plans in 5 waves, verified by gsd-plan-checker (0 blockers); real-PSI / baseline folded in; ready to execute
+last_updated: "2026-06-30"
+last_activity: 2026-06-30 -- Phase 20 planned (research → 5 plans → verification loop passed); ready to execute
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 34
-  completed_plans: 33
-  percent: 97
+  total_phases: 1
+  completed_phases: 0
+  total_plans: 5
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -21,14 +21,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 19 complete — SEO audit pages 2-9 complied. Pending: owner-gated launch proof and the blog `/blog/` migration redirect.
+**Current focus:** v1.5 Performance & PageSpeed 100 — Phase 20 planning. Pursue a genuine Google PageSpeed Insights 100/100 across all four categories on real measurements (public noindexed preview deployment), root-cause the Phase 17 LCP gap, then systematic CWV/resource/third-party remediation. Supersedes the PERF-01 non-blocking acceptance.
 
 ## Current Position
 
-Phase: 19 (h1-correctness-re-remediation) — COMPLETE (2026-06-29)
-Plan: 3 of 4 executed (19-02 abandoned — Approach A reverted)
-Status: H1 defects resolved (SEO-H1-02: banner H1 kept compact as the breadcrumb crumb per D-08 — visible-heading trial reverted; SEO-H1-01 accept+document, cacheComponents kept). Audit pages 2-9 complied. See docs/launch/seo-audit-pages-2-9-response.md.
-Last activity: 2026-06-29 -- Phase 19 resolved (audit pages 2-9 compliance)
+Phase: 20 (pagespeed-100-perfection) — PLANNED, ready to execute (2026-06-30)
+Plan: 5 plans in 5 waves (20-01..20-05), verified by gsd-plan-checker (iteration 2, 0 blockers). Artifacts: 20-CONTEXT, 20-RESEARCH (+real-PSI addendum), 20-PSI-EVIDENCE, 20-VALIDATION, 20-01..05 PLANs.
+Status: Ready to execute via `/gsd-execute-phase 20`. Wave 1 (20-01) opens with a blocking checkpoint (confirm preview URL / route slugs / Sentry-DSN). Real-PSI `/` baseline confirmed the homepage LCP is a genuine defect (2,040ms resource-load-delay = missing fetchpriority=high + 540ms render-blocking CSS + ~142KB Sentry chunk), NOT lab noise — 20-02 adds the hero fetchPriority=high fix.
+Decisions locked: real-PSI-first on a public noindexed Vercel preview (D-01); reproduce/root-cause before remediating (D-03); defer third-parties + document tags-live ceiling (D-05); target genuine 100 where achievable, document limits + best alternative where not (D-04); cacheComponents stays enabled, don't regress Phase 18/19 SEO (D-09); fetchPriority="high" is permitted for the LCP image and is distinct from the banned deprecated `priority` (D-10 refined / D-15).
+Last activity: 2026-06-30 -- Phase 20 planned + verified; ready to execute
 
 ## Performance Metrics
 
