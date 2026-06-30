@@ -26,7 +26,12 @@ const spaceMono = Space_Mono({
   subsets: ['latin'],
   variable: '--font-space-mono',
   display: 'optional',
-  preload: false,
+  // Critical above-the-fold chrome (header utility bar, footer, mega panels,
+  // cart badge) — MUST be preloaded. Without it, `optional` misses its window
+  // on first paint and locks the fallback monospace in until a manual refresh.
+  // preload: false here was the original bug. (next/font emits this preload as
+  // an HTTP Link response header, not a <head> tag.)
+  preload: true,
 })
 
 const caveat = Caveat({
