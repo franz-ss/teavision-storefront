@@ -65,7 +65,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 
 ### 🔵 v1.5 Performance & PageSpeed 100
 
-- [ ] **Phase 20: PageSpeed 100/100 Perfection** — establish a trustworthy real-PSI measurement baseline on a public preview deployment, root-cause the accepted-but-unresolved LCP gap, then systematically remediate Core Web Vitals, JS/CSS/image/font/caching/network/third-party bottlenecks, and complete Accessibility/Best-Practices/SEO to 100 — targeting a genuine Google PageSpeed Insights 100/100 across all four categories where physically achievable, with honest documentation and best-alternative recommendations where it is not. _(replanned 2026-06-30 to lean scope — 1 plan resolving the homepage `/` PSI screenshot findings; broad plan deferred per D-16)_
+- [x] **Phase 20: PageSpeed 100/100 Perfection** — establish a trustworthy real-PSI measurement baseline on a public preview deployment, root-cause the accepted-but-unresolved LCP gap, then systematically remediate Core Web Vitals, JS/CSS/image/font/caching/network/third-party bottlenecks, and complete Accessibility/Best-Practices/SEO to 100 — targeting a genuine Google PageSpeed Insights 100/100 across all four categories where physically achievable, with honest documentation and best-alternative recommendations where it is not. _(replanned 2026-06-30 to lean scope — 1 plan resolving the homepage `/` PSI screenshot findings; broad plan deferred per D-16)_ (completed 2026-07-01)
 
 ## Progress
 
@@ -88,7 +88,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4      | 15/15          | Complete   | 2026-06-26 |
 | 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete   | 2026-06-26 |
 | 19. H1 Correctness Re-Remediation                                | v1.4      | 3/4            | Complete   | 2026-06-29 |
-| 20. PageSpeed 100/100 Perfection (lean)                          | v1.5      | 0/1            | Planned    | —          |
+| 20. PageSpeed 100/100 Perfection (lean)                          | v1.5      | 1/1 | Complete   | 2026-07-01 |
 
 ## Phase Details
 
@@ -372,7 +372,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 - A perfect Performance 100 with production third-party tags live is likely unattainable; quantify and document that ceiling rather than hiding it. Accessibility/Best-Practices/SEO 100 are realistic.
 - Do not run real Shopify hosted checkout, payment, shipping, tax, order, success-redirect, or live Customer Account OAuth tests as part of this phase without explicit owner approval.
 
-**Plans:** 1 lean plan _(replanned 2026-06-30 per owner directive — narrowed to the homepage `/` PSI screenshot fixes; see D-16. The broad 5-wave plan is deferred in `deferred/20-02..05-PLAN.md`, recoverable from commit e0e42881.)_
+**Plans:** 1/1 plans complete
 
 - [ ] `20-01` — **Lean homepage `/` Performance fixes** (resolves exactly the PSI screenshot findings, `20-PSI-EVIDENCE.md`): (1) hero `fetchPriority="high"` (kills the 2,040 ms resource-load-delay), (2) AVIF output (`images.formats`), (3) lazy-load the ~142 KiB client Sentry SDK (clears unused + legacy JS), (4) `experimental.inlineCss` only if measured-beneficial (the 540 ms render-blocking CSS), plus a regression sweep + before/after evidence note. _(checkpoint: the inlineCss go/no-go is gated on a real-PSI re-measure)_
 

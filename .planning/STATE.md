@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Performance & PageSpeed 100
-status: planned
-stopped_at: Phase 20 REPLANNED to lean scope (owner directive D-16) — 1 plan (20-01) resolving the homepage / PSI screenshot findings; broad 5-wave plan deferred; ready to execute
-last_updated: "2026-06-30"
-last_activity: 2026-06-30 -- Phase 20 replanned lean (4 homepage / fixes); broad plan moved to deferred/
+status: executing
+stopped_at: Completed Phase 17 PERF-01 acceptance closure and v1.4 automated readiness
+last_updated: "2026-06-30T23:32:34.205Z"
+last_activity: 2026-06-30 -- Phase 20 execution started
 progress:
-  total_phases: 1
-  completed_phases: 0
-  total_plans: 1
-  completed_plans: 0
-  percent: 0
+  total_phases: 6
+  completed_phases: 4
+  total_plans: 35
+  completed_plans: 31
+  percent: 67
 ---
 
 # Project State
@@ -21,15 +21,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-22)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** v1.5 Performance & PageSpeed 100 — Phase 20 planning. Pursue a genuine Google PageSpeed Insights 100/100 across all four categories on real measurements (public noindexed preview deployment), root-cause the Phase 17 LCP gap, then systematic CWV/resource/third-party remediation. Supersedes the PERF-01 non-blocking acceptance.
+**Current focus:** Phase 20 — pagespeed-100-perfection
 
 ## Current Position
 
-Phase: 20 (pagespeed-100-perfection) — PLANNED (LEAN), ready to execute (2026-06-30)
-Plan: 1 lean plan (20-01) per owner directive D-16 — resolves exactly the homepage / PSI screenshot findings: (1) hero fetchPriority="high", (2) AVIF output, (3) lazy-load the ~142KB client Sentry SDK, (4) measured experimental.inlineCss. The broad 5-wave plan (20-02..05) is DEFERRED in deferred/ (recoverable from commit e0e42881). Artifacts: 20-CONTEXT (+D-16), 20-PSI-EVIDENCE, 20-RESEARCH (reference), 20-VALIDATION (lean), 20-01-PLAN.
-Status: Ready to execute via `/gsd-execute-phase 20`. Only checkpoint = the inlineCss go/no-go, gated on a real-PSI re-measure of /. Lean reqs: PSI-03/05/06/07/08; deferred: PSI-01/02/04/09/10/11/12/13/14/15.
+Phase: 20 (pagespeed-100-perfection) — EXECUTING
+Plan: 1 of 1
+Status: Executing Phase 20
 Decisions locked: lean scope = screenshot fixes only, no additional improvements, architecture-preserving, no regressions (D-16); fetchPriority="high" permitted for the LCP image, distinct from the banned deprecated `priority` (D-10 refined / D-15); cacheComponents stays enabled, don't regress Phase 18/19 (D-09).
-Last activity: 2026-06-30 -- Phase 20 replanned lean; ready to execute
+Last activity: 2026-06-30 -- Phase 20 execution started
 
 ## Performance Metrics
 
