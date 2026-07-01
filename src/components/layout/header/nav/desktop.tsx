@@ -13,10 +13,10 @@ import {
   SHOP_SECTIONS,
   type MenuKey,
   type ShopKey,
-} from './mega-nav-data'
-import { DESKTOP_MENU_ITEM_CLASS, NAV_TRIGGER_CLASS } from './mega-nav-styles'
-import { ServicesMegaPanel } from './services-mega-panel'
-import { ShopMegaPanel } from './shop-mega-panel'
+} from './data'
+import { DESKTOP_MENU_ITEM_CLASS, NAV_TRIGGER_CLASS } from './styles'
+import { ServicesMegaPanel } from './services/panel'
+import { ShopMegaPanel } from './shop/panel'
 import { useOutsideClose } from './use-outside-close'
 
 /** Grace period in ms before the mega panel closes after cursor leaves the trigger or panel. */

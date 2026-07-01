@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import type { ProductSummary } from '@/lib/shopify/types'
 
-import { SearchForm } from './search-form'
+import { SearchForm } from './form'
 
 const suggestions: ProductSummary[] = [
   {

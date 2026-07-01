@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
-import { CartBadge } from './cart-badge'
+import { CartBadge } from './badge'
 
 const meta: Meta<typeof CartBadge> = {
   title: 'Layout/Header/Cart Badge',

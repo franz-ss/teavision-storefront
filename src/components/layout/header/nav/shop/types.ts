@@ -1,4 +1,4 @@
-import type { ShopKey, ShopSection } from './mega-nav-data'
+import type { ShopKey, ShopSection } from '../data'
 
 export type ShopMenuProps = {
   activeShop: ShopSection

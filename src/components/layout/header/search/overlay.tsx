@@ -5,8 +5,8 @@ import { useEffect, useRef, Suspense } from 'react'
 
 import { Eyebrow, IconButton } from '@/components/ui'
 
-import { Search as SearchWithAutocomplete } from './search'
-import { SearchForm } from './search-form'
+import { Search as SearchWithAutocomplete } from './view'
+import { SearchForm } from './form'
 
 const POPULAR_SUGGESTIONS = [
   'Earl Grey',

@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 
-import { SearchAutocomplete } from './search-autocomplete'
+import { SearchAutocomplete } from './autocomplete'
 
 export function Search({ onNavigate }: { onNavigate?: () => void }) {
   const searchParams = useSearchParams()

@@ -13,7 +13,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import type { ProductSummary } from '@/lib/shopify/types'
 
-import { SearchAutocomplete } from './search-autocomplete'
+import { SearchAutocomplete } from './autocomplete'
 
 ;(
   globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }

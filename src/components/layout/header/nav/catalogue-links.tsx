@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
-import { CATALOGUE_LINKS } from './mega-nav-data'
-import { PANEL_LINK_CLASS } from './mega-nav-styles'
+import { CATALOGUE_LINKS } from './data'
+import { PANEL_LINK_CLASS } from './styles'
 
 export function CatalogueLinks({ onClose }: { onClose: () => void }) {
   return (

@@ -1,6 +1,6 @@
-import { CatalogueLinks } from './catalogue-links'
-import { ServicesLinks } from './services-links'
-import type { ServicesMenuProps } from './services-menu-types'
+import { CatalogueLinks } from '../catalogue-links'
+import { ServicesLinks } from './links'
+import type { ServicesMenuProps } from './types'
 
 export function MobileServicesPanel({ onClose, open }: ServicesMenuProps) {
   return (

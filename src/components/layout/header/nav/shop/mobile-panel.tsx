@@ -3,9 +3,9 @@ import { ArrowRight } from 'lucide-react'
 
 import { ToggleButton } from '@/components/ui'
 
-import { SHOP_SECTIONS } from './mega-nav-data'
-import { PANEL_LINK_CLASS } from './mega-nav-styles'
-import type { ShopMenuProps } from './shop-menu-types'
+import { SHOP_SECTIONS } from '../data'
+import { PANEL_LINK_CLASS } from '../styles'
+import type { ShopMenuProps } from './types'
 
 export function MobileShopPanel({
   activeShop,

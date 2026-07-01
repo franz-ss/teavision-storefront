@@ -4,10 +4,10 @@ import { Search } from 'lucide-react'
 import { IconButton, TextInput } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
-import { SUGGESTIONS_LISTBOX_ID } from './search-constants'
-import { SearchSuggestions } from './search-suggestions'
-import type { SearchFormProps } from './search-types'
-export type { SearchSuggestionsStatus } from './search-types'
+import { SUGGESTIONS_LISTBOX_ID } from './constants'
+import { SearchSuggestions } from './suggestions'
+import type { SearchFormProps } from './types'
+export type { SearchSuggestionsStatus } from './types'
 
 export function SearchForm({
   activeSuggestionIndex = -1,

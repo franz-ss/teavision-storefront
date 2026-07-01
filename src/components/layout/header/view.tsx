@@ -15,19 +15,19 @@ import { Suspense, useCallback, useState } from 'react'
 
 import { IconButton } from '@/components/ui'
 
-import { CartCount } from './cart-count'
-import { MegaNav } from './mega-nav'
+import { CartCount } from './cart/count'
+import { MegaNav } from './nav/desktop'
 
 // Interaction-gated islands: kept out of the shared header bundle so their JS
 // (mobile nav tree, search overlay + autocomplete) loads on open instead of on
 // every route's first paint. Both already render null until opened, so a gated
 // mount with ssr:false is behavior-identical to the previous always-mounted form.
 const MobileMegaNav = dynamic(
-  () => import('./mobile-mega-nav').then((m) => m.MobileMegaNav),
+  () => import('./nav/mobile').then((m) => m.MobileMegaNav),
   { ssr: false },
 )
 const SearchOverlay = dynamic(
-  () => import('./search-overlay').then((m) => m.SearchOverlay),
+  () => import('./search/overlay').then((m) => m.SearchOverlay),
   { ssr: false },
 )
 

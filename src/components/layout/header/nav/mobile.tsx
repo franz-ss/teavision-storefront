@@ -12,9 +12,9 @@ import {
   SHOP_SECTIONS,
   type MenuKey,
   type ShopKey,
-} from './mega-nav-data'
-import { MobileServicesPanel } from './mobile-services-panel'
-import { MobileShopPanel } from './mobile-shop-panel'
+} from './data'
+import { MobileServicesPanel } from './services/mobile-panel'
+import { MobileShopPanel } from './shop/mobile-panel'
 
 type MobileMegaNavProps = {
   open: boolean

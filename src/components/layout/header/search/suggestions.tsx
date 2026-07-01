@@ -10,8 +10,8 @@ import { cn } from '@/lib/utils'
 import {
   SUGGESTIONS_LISTBOX_ID,
   SUGGESTIONS_PANEL_ID,
-} from './search-constants'
-import type { SearchSuggestionsStatus } from './search-types'
+} from './constants'
+import type { SearchSuggestionsStatus } from './types'
 
 function getSizedImageUrl(url: string, width: number): string {
   return `${url}${url.includes('?') ? '&' : '?'}width=${width}`

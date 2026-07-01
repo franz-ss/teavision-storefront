@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import type { ProductSummary } from '@/lib/shopify/types'
 
-import { SearchAutocomplete } from './search-autocomplete'
+import { SearchAutocomplete } from './autocomplete'
 
 const suggestions: ProductSummary[] = [
   {

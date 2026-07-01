@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { getCartAction } from '@/lib/cart/actions'
 import { CART_CHANGED_EVENT } from '@/lib/cart/events'
 
-import { CartBadge } from './cart-badge'
+import { CartBadge } from './badge'
 
 export function CartCount() {
   const [count, setCount] = useState(0)

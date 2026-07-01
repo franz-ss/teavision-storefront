@@ -13,8 +13,8 @@ import {
 
 import type { ProductSummary } from '@/lib/shopify/types'
 
-import { SearchForm } from './search-form'
-import type { SearchSuggestionsStatus } from './search-types'
+import { SearchForm } from './form'
+import type { SearchSuggestionsStatus } from './types'
 
 const SUGGESTION_DEBOUNCE_MS = 180
 const MIN_SUGGESTION_QUERY_LENGTH = 2

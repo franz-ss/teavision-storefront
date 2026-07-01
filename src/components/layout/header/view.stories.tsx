@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
 
-import { Header } from './header'
+import { Header } from './view'
 
 const meta: Meta<typeof Header> = {
   title: 'Layout/Header/Header',

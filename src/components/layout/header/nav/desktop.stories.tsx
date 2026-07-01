@@ -2,13 +2,13 @@ import type { ReactNode } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { userEvent } from 'storybook/test'
 
-import { MegaNav } from './mega-nav'
-import { SHOP_SECTIONS, type ShopKey } from './mega-nav-data'
-import { MobileMegaNav } from './mobile-mega-nav'
-import { MobileServicesPanel } from './mobile-services-panel'
-import { MobileShopPanel } from './mobile-shop-panel'
-import { ServicesMegaPanel } from './services-mega-panel'
-import { ShopMegaPanel } from './shop-mega-panel'
+import { MegaNav } from './desktop'
+import { SHOP_SECTIONS, type ShopKey } from './data'
+import { MobileMegaNav } from './mobile'
+import { MobileServicesPanel } from './services/mobile-panel'
+import { MobileShopPanel } from './shop/mobile-panel'
+import { ServicesMegaPanel } from './services/panel'
+import { ShopMegaPanel } from './shop/panel'
 
 const activeShop = SHOP_SECTIONS[2] ?? SHOP_SECTIONS[0]!
 

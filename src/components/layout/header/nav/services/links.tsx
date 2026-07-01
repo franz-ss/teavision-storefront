@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
-import { SERVICES_LINKS } from './mega-nav-data'
-import { PANEL_LINK_CLASS } from './mega-nav-styles'
+import { SERVICES_LINKS } from '../data'
+import { PANEL_LINK_CLASS } from '../styles'
 
 export function ServicesLinks({ onClose }: { onClose: () => void }) {
   return (
