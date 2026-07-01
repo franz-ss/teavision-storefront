@@ -44,6 +44,11 @@ describe('security headers', () => {
     expect(securityHeaders.map((header) => header.key)).not.toContain(
       'Content-Security-Policy',
     )
+    // upgrade-insecure-requests is ignored in report-only mode (browsers log a
+    // console error), so it must stay out while the policy is report-only.
+    expect(buildContentSecurityPolicy({})).not.toContain(
+      'upgrade-insecure-requests',
+    )
   })
 
   test('builds the approved content security policy directives', () => {
@@ -62,7 +67,6 @@ describe('security headers', () => {
         "frame-src 'self' https://maps.google.com",
         "media-src 'self'",
         "manifest-src 'self'",
-        'upgrade-insecure-requests',
       ].join('; '),
     )
   })

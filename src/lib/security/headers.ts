@@ -102,7 +102,10 @@ export function buildContentSecurityPolicy(
     "frame-src 'self' https://maps.google.com",
     "media-src 'self'",
     "manifest-src 'self'",
-    'upgrade-insecure-requests',
+    // 'upgrade-insecure-requests' is intentionally omitted: it is ignored in a
+    // report-only policy (browsers log a console error) and the site is served
+    // entirely over HTTPS. Re-add it only if the CSP is promoted to an enforcing
+    // Content-Security-Policy header.
   ].join('; ')
 }
 
