@@ -19,8 +19,6 @@ import { ServicesMegaPanel } from './services-mega-panel'
 import { ShopMegaPanel } from './shop-mega-panel'
 import { useOutsideClose } from './use-outside-close'
 
-export { MobileMegaNav } from './mobile-mega-nav'
-
 /** Grace period in ms before the mega panel closes after cursor leaves the trigger or panel. */
 const CLOSE_GRACE_MS = 200
 

@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
@@ -15,8 +16,20 @@ import { Suspense, useCallback, useState } from 'react'
 import { IconButton } from '@/components/ui'
 
 import { CartCount } from './cart-count'
-import { MegaNav, MobileMegaNav } from './mega-nav'
-import { SearchOverlay } from './search-overlay'
+import { MegaNav } from './mega-nav'
+
+// Interaction-gated islands: kept out of the shared header bundle so their JS
+// (mobile nav tree, search overlay + autocomplete) loads on open instead of on
+// every route's first paint. Both already render null until opened, so a gated
+// mount with ssr:false is behavior-identical to the previous always-mounted form.
+const MobileMegaNav = dynamic(
+  () => import('./mobile-mega-nav').then((m) => m.MobileMegaNav),
+  { ssr: false },
+)
+const SearchOverlay = dynamic(
+  () => import('./search-overlay').then((m) => m.SearchOverlay),
+  { ssr: false },
+)
 
 export function Header() {
   const [searchOpen, setSearchOpen] = useState(false)
@@ -150,12 +163,14 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile nav */}
-        <MobileMegaNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+        {/* Mobile nav — lazy: only mounts (and loads its chunk) once opened */}
+        {mobileOpen && (
+          <MobileMegaNav open onClose={() => setMobileOpen(false)} />
+        )}
       </header>
 
-      {/* Search overlay — portal outside header to avoid stacking context issues */}
-      <SearchOverlay open={searchOpen} onClose={closeSearch} />
+      {/* Search overlay — lazy: portal outside header; loads its chunk on open */}
+      {searchOpen && <SearchOverlay open onClose={closeSearch} />}
     </>
   )
 }
