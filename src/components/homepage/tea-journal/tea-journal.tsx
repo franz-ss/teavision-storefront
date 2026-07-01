@@ -55,7 +55,7 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
         </div>
 
         <ul className="mt-8 grid min-w-0 gap-8 md:mt-10 md:grid-cols-3 md:gap-5.5">
-          {articles.slice(0, 3).map((article, index) => (
+          {articles.slice(0, 3).map((article) => (
             <li key={article.id} className="min-w-0 overflow-hidden">
               <Link
                 href={getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}
@@ -68,7 +68,6 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
                       src={article.featuredImage.url}
                       alt={article.featuredImage.altText ?? article.title}
                       fill
-                      preload={index === 0}
                       sizes="(min-width: 1024px) 31vw, (min-width: 768px) 48vw, 100vw"
                       className="object-cover transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)] group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     />
