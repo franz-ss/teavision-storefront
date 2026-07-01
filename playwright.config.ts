@@ -49,6 +49,8 @@ export default defineConfig({
         SHOPIFY_STOREFRONT_TEST_URL: FAKE_SHOPIFY_URL,
         SHOPIFY_STORE_DOMAIN: 'fake-shopify.test',
         SHOPIFY_STOREFRONT_ACCESS_TOKEN: 'test-token',
+        NEXT_PUBLIC_SEARCHANISE_ENABLED: 'false',
+        NEXT_PUBLIC_SEARCHANISE_API_KEY: '',
       },
     },
   ],
