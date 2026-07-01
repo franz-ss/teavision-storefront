@@ -18,7 +18,7 @@
   /* Ink (green undertone — warm/botanical compliant) */
   --color-ink: oklch(22.5% 0.016 167);
   --color-ink-soft: oklch(41% 0.02 167);
-  --color-ink-faint: oklch(56% 0.016 167);
+  --color-ink-faint: oklch(54% 0.016 167);
   /* Near-black hover state for ink-filled buttons (design .btn-gold:hover #000) */
   --color-ink-deep: oklch(0% 0 0);
 
@@ -35,7 +35,7 @@
 
   /* Gold */
   --color-gold: oklch(74% 0.094 78);
-  --color-gold-deep: oklch(60% 0.088 70);
+  --color-gold-deep: oklch(53% 0.088 70);
   --color-gold-tint: oklch(94% 0.034 84);
 
   /* Functional feedback */
@@ -245,11 +245,20 @@
 }
 
 @utility hero-scrim {
-  background: linear-gradient(
-    105deg,
-    oklch(22.5% 0.016 167 / 0.82),
-    oklch(22.5% 0.016 167 / 0.15)
-  );
+  /* Bottom-up dark gradient keeps the eyebrow/heading/stats legible over any
+     hero photo (WCAG AA), layered under the diagonal brand tint. */
+  background:
+    linear-gradient(
+      to top,
+      oklch(22.5% 0.016 167 / 0.92),
+      oklch(22.5% 0.016 167 / 0.4) 30%,
+      transparent 58%
+    ),
+    linear-gradient(
+      105deg,
+      oklch(22.5% 0.016 167 / 0.72),
+      oklch(22.5% 0.016 167 / 0.12)
+    );
 }
 
 @keyframes marquee {

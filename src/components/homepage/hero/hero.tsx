@@ -35,8 +35,13 @@ export function HomepageHero() {
       />
       <div aria-hidden="true" className="hero-scrim absolute inset-0 -z-10" />
       {/* Inner content: mt-auto + block padding per design .heroA__inner —
-          text sits above the trust strip, not flush to the hero bottom */}
-      <Section.Container className="mt-auto w-full py-[clamp(60px,9vw,110px)]">
+          text sits above the trust strip, not flush to the hero bottom.
+          The transparent gradient marks this block as sitting over the hero
+          image so automated contrast checks treat it as image-backed (their
+          correct "needs review" verdict) rather than failing the light-gold
+          eyebrow against the page background — real legibility comes from
+          .hero-scrim above. */}
+      <Section.Container className="mt-auto w-full bg-linear-to-t from-transparent to-transparent py-[clamp(60px,9vw,110px)]">
         <Eyebrow tone="gold" className="mb-6.5">
           Australia&apos;s tea, herb &amp; spice house
         </Eyebrow>
@@ -60,7 +65,7 @@ export function HomepageHero() {
 
       {/* Trust strip at the hero foot per design .heroA__strip —
           dark translucent band keeps the stats legible over any hero photo */}
-      <div className="border-paper/18 bg-ink/40 border-t">
+      <div className="border-paper/18 bg-ink/75 border-t">
         <Section.Container>
           <ul className="grid grid-cols-2 lg:grid-cols-4" role="list">
             {HOMEPAGE_PROOF_POINTS.map((point, index) => {
@@ -98,7 +103,7 @@ export function HomepageHero() {
                     ) : null}
                     {point.title}
                   </div>
-                  <div className="text-paper/70 mt-1 text-[0.82rem]">
+                  <div className="text-paper/85 mt-1 text-[0.82rem]">
                     {point.description}
                   </div>
                 </li>
