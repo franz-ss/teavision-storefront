@@ -1,5 +1,63 @@
 # Milestones
 
+## v1.5 Performance & PageSpeed 100 (Shipped: 2026-07-01)
+
+**Delivered:** The four homepage `/` Google PageSpeed Insights screenshot findings, fixed and verified end-to-end with real owner-run PSI — a lean, architecture-preserving subset of the original PageSpeed-100 ambition per owner directive D-16.
+
+**Phases completed:** 1 phase (20), 1 plan (lean; 5 broad-scope plans deferred)
+**Timeline:** 2026-06-30 → 2026-07-01, ~22 commits
+**Git range:** `docs(20): create phase plan` → `docs(20): mark phase complete`
+
+**Key accomplishments:**
+
+- Hero LCP image `fetchPriority="high"` (eliminated the 2,040ms resource-load-delay), verified against Next.js 16 runtime source — the permitted LCP prop, distinct from the banned deprecated `priority` (D-15).
+- AVIF image delivery (`images.formats`), confirmed `Content-Type: image/avif` served in production.
+- Lazy-loaded the client Sentry SDK (dynamic import gated on DSN), removing ~142KB from every cold route load; real-PSI unused JS 88→25 KiB, legacy 14 KiB cleared.
+- `experimental.inlineCss` decided by measurement (enabled → all metrics regressed → reverted); 540ms render-blocking CSS accepted as a documented tradeoff.
+- Follow-ups during owner-run PSI verification took `/` to Accessibility 100 and Best Practices 100 (a11y contrast + CSP console-error fixes); below-fold Tea Journal preload removed.
+- No regression of Phase 18 crawlable-HTML or Phase 19 single-visible-H1 guards (integration 98/100, flows 100/100).
+
+**Real owner-run PSI on `/` (2026-07-01):** Performance 95–97, LCP 3.4s→3.0s (residual = Lantern lab artifact), Speed Index 5.1s→1.9s, TBT 90ms→30ms, CLS 0, Accessibility 100, Best Practices 100.
+
+**Stats:** 27 files changed (+2,398/−55 LOC). Full regression sweep green (lint, typecheck, build, 39 component-contract tests, Phase 18 crawlable-HTML probe, Phase 19 single-H1 e2e).
+
+**Known gaps at close** (audit status: tech_debt — see `milestones/v1.5-MILESTONE-AUDIT.md`):
+
+- 10 of 15 defined PSI requirements deferred per D-16 (PSI-01/02/04/09/10/11/12/13/14/15) — plans preserved in `deferred/`, carried forward to a future performance milestone.
+- Render-blocking CSS on `/` (~540ms) unresolved by design (measured inlineCss tradeoff).
+- Multi-route real-PSI preview harness, `/account` CLS, font/caching/third-party tuning, and multi-route A11y/BP/SEO 100 remain deferred.
+
+Known deferred items at close: 5 open artifacts, all v1.3/v1.4-era carryovers (see STATE.md Deferred Items).
+
+---
+
+## v1.4 Production Readiness 100/100 (Shipped: 2026-06-26; H1 re-remediation 2026-06-29)
+
+**Delivered:** Closed every launch-blocking QA, security, compliance, performance, analytics, reliability, and operational gap from the production-readiness audit to earn a 100/100 automated code-readiness score — plus SEO-audit remediation and a final H1-correctness re-remediation. _(Retroactively archived at v1.5 close.)_
+
+**Phases completed:** 5 phases (15, 16, 17, 18, 19), 34 plans
+**Timeline:** 2026-06-22 → 2026-06-29, ~229 commits
+**Git range:** `docs(phase-15): normalize phase directory` → `docs(19): correct records`
+
+**Key accomplishments:**
+
+- Security/dependency/header hardening with a staged report-only CSP (explicit Next/Shopify/Sanity/Searchanise/Trustoo/analytics allowlists), no `x-powered-by` leakage, and OAuth-start prefetch/origin hardening (Phase 15).
+- Legal/policy route foundation, consent foundation + preferences, consent-aware typed ecommerce analytics, and a launch SEO route matrix (Phase 16).
+- Operations: safe public health/readiness endpoint, Sentry observability with redacted/hashed logging, fake-provider production e2e behind a Playwright-only gate, and a repeatable final readiness audit reaching 100/100 with dated PERF-01 acceptance (Phase 17).
+- SEO audit remediation: URL parity/redirect register, one-visible-H1 collection/product hierarchy, metadata/canonical/robots/sitemap/`lang=en-AU`/blog-indexation, structured-data fill, and repeatable crawlable-HTML proof (Phase 18).
+- H1 correctness re-remediation: one visible H1 per standalone route; soft-nav Activity-DOM accumulation documented (cited) as invisible to Google; banner H1 kept compact per D-08 (Phase 19).
+
+**Stats:** 373 files changed (+40,533/−11,083 LOC across the 5-phase range, incl. heavy planning/docs churn).
+
+**Known gaps at close** (audit status: gaps_found — see `milestones/v1.4-MILESTONE-AUDIT.md`; accepted as documentation/verification debt):
+
+- Missing `15-VERIFICATION.md` — SEC-01..05 verification-orphaned (implementation evidence present in `15-RUNTIME-SECURITY-EVIDENCE.md` and plan summaries).
+- Security-header probe does not cover later legal routes / `/api/health`; `18-VERIFICATION.md` retains pre-acceptance 94/100 wording; CSP remains report-only.
+- Strict local Lighthouse FAIL rows remain, accepted non-blocking via dated acceptance (superseded for `/` by v1.5's real PSI).
+- Owner-gated hosted checkout / payment / OAuth / protected data / B2B pricing / Search Console proof remains pending.
+
+---
+
 ## v1.3 Shopify Customer Accounts (Shipped: 2026-06-22)
 
 **Delivered:** Modern Shopify Customer Account authentication and account self-service for the headless storefront, including protected account pages, address/profile management, order history, cart buyer identity sync, legacy account bridges, and launch-readiness documentation.

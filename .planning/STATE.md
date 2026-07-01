@@ -3,25 +3,25 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Performance & PageSpeed 100
 status: milestone_complete
-stopped_at: Milestone complete (Phase 20 was final phase)
-last_updated: 2026-07-01T02:43:39.597Z
-last_activity: 2026-06-30 -- Phase 20 execution started
+stopped_at: v1.4 + v1.5 archived and tagged (retroactive v1.4 close alongside v1.5)
+last_updated: 2026-07-01T11:00:00.000Z
+last_activity: 2026-07-01 -- v1.4 + v1.5 milestones archived, tagged, and requirements reset
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 6
   total_plans: 35
-  completed_plans: 32
-  percent: 67
+  completed_plans: 35
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-22)
+See: .planning/PROJECT.md (updated 2026-07-01)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Milestone complete
+**Current focus:** Planning next milestone (v1.5 shipped; v1.4 retroactively archived). REQUIREMENTS.md removed — start with `/gsd-new-milestone`.
 
 ## Current Position
 
@@ -309,13 +309,27 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 | uat_gaps       | 14-UAT.md                                           | resolved  |
 | uat_gaps       | 14-UAT.md                                           | diagnosed |
 
+Items acknowledged and deferred at the combined v1.4 + v1.5 milestone close on 2026-07-01:
+
+| Category       | Item                     | Status                  |
+| -------------- | ------------------------ | ----------------------- |
+| debug_sessions | account-link-routing     | diagnosed               |
+| debug_sessions | legacy-account-bridge-ui | diagnosed               |
+| debug_sessions | product-json-ld-probe-path | unknown (Phase 18-era) |
+| uat_gaps       | 15-UAT.md                | testing (2 pending)     |
+| uat_gaps       | 18-UAT.md                | resolved (0 pending)    |
+
+Note: all five are v1.3/v1.4-era carryovers surfaced by the pre-close open-artifact audit — the two account debug sessions were already deferred at v1.3 close and resolved via Phase 14 gap plans; `product-json-ld-probe-path` and `15-UAT.md`/`18-UAT.md` belong to already-shipped v1.4 work (impl evidence present). No v1.5 items are open. Acknowledged and deferred, not blocking milestone close.
+
 ## Session Continuity
 
-Last session: 2026-06-26T02:15:00.000Z
-Stopped at: Completed Phase 17 PERF-01 acceptance closure and v1.4 automated readiness
+Last session: 2026-07-01T11:00:00.000Z
+Stopped at: v1.4 + v1.5 milestones archived and tagged; REQUIREMENTS.md removed (fresh for next milestone)
 Resume file: None
 
 ## Operator Next Steps
 
-- Phase 17 and Phase 18 are complete for automated code readiness. Use `.planning/phases/17-operations-performance-and-final-production-readiness-audit/17-15-SUMMARY.md`, `.planning/phases/17-operations-performance-and-final-production-readiness-audit/17-VERIFICATION.md`, `.planning/phases/18-seo-audit-remediation/18-06-SUMMARY.md`, and `docs/launch/final-production-readiness-report.md` for proof.
-- Next GSD lifecycle step: complete the v1.4 milestone or capture owner-gated external launch proof. Keep Shopify/admin/Search Console proof gates pending until dated external evidence exists.
+- v1.4 (Phases 15–19) and v1.5 (Phase 20) are archived under `.planning/milestones/` with ROADMAP, REQUIREMENTS, and AUDIT files each. Tags `v1.4` and `v1.5` created.
+- `.planning/REQUIREMENTS.md` was removed at close — the next milestone starts fresh. Begin with `/gsd-new-milestone`.
+- Likely v1.6 candidates: capture owner-gated external launch proof (hosted checkout/payment/OAuth/protected data/B2B pricing/Search Console); OR the broad PageSpeed 100/100 (10 deferred v1.5 PSI requirements, plans in `.planning/phases/20-pagespeed-100-perfection/deferred/`).
+- Keep Shopify/admin/Search Console proof gates pending until dated external evidence exists.

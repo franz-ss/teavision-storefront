@@ -4,7 +4,7 @@
 
 Teavision is a headless Shopify storefront built with Next.js 16 App Router and React 19. It sells wholesale tea, herbs, spices, and related products to Australian retail, cafe, foodservice, and direct customers.
 
-v1.0 shipped the migration of Shopify-theme storefront behavior into the Next storefront — product discovery, product detail with bulk savings, cart, checkout handoff, owned Searchanise search, trust signals — plus a complete visual redesign of every surface on the new warm-paper/green/gold design system. v1.1 followed with Tea Journal (blog) loading and image-rendering performance work. v1.2 restored production-style numbered collection pagination for launch parity. v1.3 added modern Shopify Customer Account authentication and account self-service, with protected account pages, address/profile management, order history, cart buyer identity sync, legacy account bridges, and launch-readiness documentation.
+v1.0 shipped the migration of Shopify-theme storefront behavior into the Next storefront — product discovery, product detail with bulk savings, cart, checkout handoff, owned Searchanise search, trust signals — plus a complete visual redesign of every surface on the new warm-paper/green/gold design system. v1.1 followed with Tea Journal (blog) loading and image-rendering performance work. v1.2 restored production-style numbered collection pagination for launch parity. v1.3 added modern Shopify Customer Account authentication and account self-service, with protected account pages, address/profile management, order history, cart buyer identity sync, legacy account bridges, and launch-readiness documentation. v1.4 hardened the storefront to a 100/100 automated production-readiness score — security/headers/CSP, legal/consent/analytics, operations/observability/e2e, SEO-audit remediation, and H1 correctness. v1.5 fixed the homepage `/` PageSpeed findings (hero LCP fetchPriority, AVIF, lazy Sentry SDK), verified with real owner-run PSI: Performance 95–97, Accessibility 100, Best Practices 100.
 
 ## Core Value
 
@@ -12,7 +12,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ## Current State
 
-**Shipped through:** v1.4 automated code readiness (Phases 15-18, completed 2026-06-26).
+**Shipped through:** v1.5 Performance & PageSpeed 100 (Phase 20, shipped 2026-07-01, lean scope). v1.4 Production Readiness (Phases 15–19) reached 100/100 automated code readiness on 2026-06-26 (H1 re-remediation 2026-06-29).
 
 **Customer-account capability now available:**
 
@@ -24,11 +24,11 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - Legacy account bridge routes and owned header/footer account links.
 - Launch-readiness documentation for Shopify admin setup, protected customer data, HTTPS OAuth testing, real checkout approval gates, reorder parity, and B2B/customer-pricing parity.
 
-**Current launch gates:** Automated code readiness is `100/100` after dated PERF-01 performance acceptance. Production launch still needs owner-gated Shopify/admin/Search Console proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, sitemap submission, and URL inspection.
+**Current launch gates:** Automated code readiness is `100/100` after dated PERF-01 performance acceptance; v1.5 superseded that acceptance for `/` with a real owner-run PSI result (Performance 95–97). Production launch still needs owner-gated Shopify/admin/Search Console proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, sitemap submission, and URL inspection.
 
-## Current Milestone: v1.5 Performance & PageSpeed 100
+## Shipped Milestone: v1.5 Performance & PageSpeed 100
 
-**Started:** 2026-06-30 (Phase 20 in planning). **Goal:** pursue a genuine Google PageSpeed Insights / Lighthouse 100/100 across Performance, Accessibility, Best Practices, and SEO on the representative routes — measured on a public noindexed preview deployment (real PSI, not just local lab) — by root-causing the Phase 17 LCP gap, then systematically remediating Core Web Vitals, JS/CSS/image/font/caching/network/third-party bottlenecks, and completing Accessibility/Best-Practices/SEO to 100. Where a perfect score is constrained by platform/browser/third-party/field-data realities, document the limitation and recommend the best alternative. This supersedes the v1.4 PERF-01 non-blocking acceptance with a real result. Requirements: PSI-01..PSI-15 (see `.planning/REQUIREMENTS.md`).
+**Shipped:** 2026-07-01 (lean scope, owner directive D-16). Phase 20 resolved the four homepage `/` PSI screenshot findings — hero LCP `fetchPriority="high"`, AVIF image delivery, a lazy-loaded client Sentry SDK, and a measured `experimental.inlineCss` decision — verified end-to-end with real owner-run PSI (Performance 95–97, LCP 3.0s, Speed Index 1.9s, TBT 30ms, CLS 0, Accessibility 100, Best Practices 100), with no regression of the Phase 18/19 SEO/H1 guards. The broad "100/100 across all four categories on every representative route" ambition (10 of 15 PSI requirements) was **deliberately deferred**; plans preserved in `.planning/phases/20-pagespeed-100-perfection/deferred/`. See `milestones/v1.5-ROADMAP.md`.
 
 ## Prior Milestone: v1.4 Production Readiness 100/100
 
@@ -66,10 +66,13 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - ✓ Shopify Customer Account API OAuth/session foundation, protected account dashboard, profile/address self-service, order history/detail, cart buyer identity sync, legacy account bridges, launch-readiness documentation, and UAT gap closure — Validated in Phase 14 — v1.3
 - ✓ Production readiness hardening across security, legal/consent/analytics/SEO, operations, observability, local production e2e, final readiness audit, and dated PERF-01 local lab acceptance — Validated in Phases 15-17 — v1.4
 - ✓ SEO audit remediation across URL parity, H1/content hierarchy, metadata/indexation, structured data, crawlable HTML proof, and honest Core Web Vitals evidence reconciliation — Validated in Phase 18 — v1.4
+- ✓ H1 correctness re-remediation — one visible H1 per standalone route load; soft-nav Activity-DOM accumulation documented (cited) as invisible to Google; banner-collection H1 kept compact per D-08 — Validated in Phase 19 — v1.4
+- ✓ Homepage `/` PageSpeed remediation — hero LCP `fetchPriority="high"`, AVIF delivery, lazy client Sentry SDK, measured inlineCss decision; real owner-run PSI Performance 95–97, Accessibility 100, Best Practices 100, CLS 0 (PSI-03/05/06/07/08) — Validated in Phase 20 — v1.5
 
 ### Active
 
 - [ ] Capture owner-gated external launch proof: real Customer Account OAuth, protected customer data scopes, hosted checkout/payment/shipping/tax/order/success redirect tests, authoritative B2B/company-location pricing checks, and Search Console submission/URL inspection.
+- [ ] Broad PageSpeed 100/100 (deferred from v1.5 per D-16): the 10 deferred PSI requirements — multi-route real-PSI preview harness, `/account` CLS, font/caching/third-party tuning, multi-route Accessibility/Best-Practices/SEO 100, and the full evidence pack. Plans preserved in `.planning/phases/20-pagespeed-100-perfection/deferred/`.
 - [ ] Close inherited human-only launch checks where still relevant: collection empty-state behavior, human visual/newsletter UAT, and blog performance debt.
 
 ### Out of Scope
@@ -82,7 +85,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ## Context
 
-Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/-15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Shipped v1.2 on 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Shipped v1.3 on 2026-06-22: Phase 14 Shopify Customer Accounts (9 plans, 31 tasks, 26/26 requirements) covering Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, launch-readiness docs, and UAT gap closure. v1.4 completed automated code readiness on 2026-06-26 with final readiness at `100/100`; PERF-01 closed through dated project-owner acceptance of repeated local Lighthouse lab failures as non-blocking while raw metric FAIL rows remain documented. Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL and Customer Account API, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
+Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/-15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Shipped v1.2 on 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Shipped v1.3 on 2026-06-22: Phase 14 Shopify Customer Accounts (9 plans, 31 tasks, 26/26 requirements) covering Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, launch-readiness docs, and UAT gap closure. v1.4 completed automated code readiness on 2026-06-26 with final readiness at `100/100`; PERF-01 closed through dated project-owner acceptance of repeated local Lighthouse lab failures as non-blocking while raw metric FAIL rows remain documented. v1.5 (Phase 20, 2026-07-01) shipped a lean homepage `/` PageSpeed pass — hero LCP fetchPriority, AVIF, lazy Sentry SDK — confirmed by real owner-run PSI (Performance 95–97, Accessibility 100, Best Practices 100, CLS 0); 10 of 15 PSI requirements were deliberately deferred (D-16). Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL and Customer Account API, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
 
 The site remains noindexed pending launch sign-off (Phase 6 controls; flip `DISABLE_INDEXING` at launch and add the new landing pages to the sitemap). The owner actively authors new landing surfaces directly in the codebase (bulk-wholesale-supply, private-label-packing, tea-bag-manufacturer, NPD order form, supply-chain protection band).
 
@@ -116,6 +119,10 @@ The codebase map in `.planning/codebase/` predates the redesign and has known dr
 | Block checkout when signed-in buyer identity sync fails                                                      | Avoids silently continuing as guest when customer identity should be attached before Shopify checkout                                                               | Good       |
 | Bridge legacy account routes instead of recreating password forms                                            | Modern Shopify Customer Accounts are OAuth-hosted; bridge pages preserve intent without rebuilding classic account flows                                            | Good       |
 | Treat real Customer Account OAuth and hosted checkout as launch gates                                        | Shopify admin setup, protected data scopes, and store-owner approval are required before live OAuth/checkout/payment/order testing                                  | Pending    |
+| Close PERF-01 via dated project-owner acceptance of local Lighthouse lab failures                            | Strict local mobile Lighthouse kept failing all representative routes after exhaustive image/font/shell work; the gap was a lab artifact, so acceptance unblocked readiness while raw FAIL rows stayed documented | ✓ Good (superseded for `/` by v1.5 real PSI) |
+| Keep `cacheComponents` enabled; resolve SEO-H1-01 as one-visible-H1-per-standalone-route (D-09)              | Disabling Cache Components (Approach A) was implemented then reverted; Googlebot renders each URL statelessly and never assembles the soft-nav accumulation, so multiple H1s in the live browser DOM are not an indexing issue | ✓ Good     |
+| Narrow v1.5 to a lean homepage `/` PageSpeed pass (D-16)                                                      | Screenshot-driven, architecture-preserving fixes with real-PSI proof beat a broad multi-category sweep against unverified local-lab numbers; the broad scope is deferred with plans preserved                    | ✓ Good     |
+| Use `fetchPriority="high"` for the LCP hero image, distinct from the banned deprecated `priority` (D-15)      | `fetchPriority` is the supported Next.js 16 prop that makes the preload `<link>` carry `fetchpriority=high`; verified against runtime source, and it does not throw the preload+priority runtime error                | ✓ Good     |
 
 ## Evolution
 
@@ -138,4 +145,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-06-26 after v1.4 automated readiness closure_
+_Last updated: 2026-07-01 after v1.5 milestone (with v1.4 retroactively archived)_
