@@ -57,9 +57,8 @@ export function OrganicHerbs() {
                 href="/collections/herbs-and-spices"
                 variant="brand"
                 size="lg"
-                aria-label="Learn more about our herbs and spices"
               >
-                Learn More
+                Explore Our Herbs &amp; Spices
               </Button>
             </div>
           </div>
