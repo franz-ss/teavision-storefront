@@ -1,13 +1,14 @@
 ---
 phase: 20-pagespeed-100-perfection
 verified: 2026-07-01T00:00:00Z
-status: human_needed
-score: 5/5 must-haves verified (code-level); 1 owner-gated re-measurement outstanding
+status: verified
+score: 5/5 must-haves verified (code-level); post-deploy PSI re-measurement COMPLETED 2026-07-01 (owner-run)
 overrides_applied: 0
 human_verification:
   - test: "Re-run real Google PageSpeed Insights on `/` against the deployed preview (https://teavision-storefront.vercel.app/) after this phase's commits are live"
     expected: "LCP drops materially from the 3.4s / 2,040ms-resource-load-delay baseline (target trend: toward ~1.5s per 20-PSI-EVIDENCE.md diagnosis); the 'LCP request discovery' audit's fetchpriority=high check passes; the Sentry-chunk unused/legacy-JS flags clear; Speed Index improves; Performance score trends into the mid-90s. CLS stays 0."
     why_human: "PSI is an external, network-dependent, real-browser measurement service — it cannot be simulated by static grep/build checks, and the plan's own Task 4 checkpoint and 20-VALIDATION.md's 'Manual-Only / Owner-Gated Verifications' table both designate this as an owner-run step. It was explicitly skipped for Task 4's inlineCss decision (owner instructed to proceed on engineering judgment) and has not been performed since. SUMMARY.md documents this honestly as a pending open item, not a fabricated pass."
+    resolved: "COMPLETED 2026-07-01 (owner-run PSI, warm). Real post-deploy PSI on `/`: Performance 97 (mid-90s target met), LCP 2.4-3.0s (green in warm runs, down from 3.4s), Speed Index improved, CLS 0, all three code fixes confirmed live in deployed HTML (fetchpriority=high, image/avif served, Sentry chunk gated). The ~1.5s LCP target was determined to be a Lantern simulate-throttling artifact (hero paints in ~150ms); the phase's realistic pass bar (mid-90s Performance) is met. Follow-up shipped: below-fold preload removal (perf(20) e0ba5ec0) + inlineCss measured-and-rejected. See 20-HUMAN-UAT.md (Test 1 resolved) and docs/launch/homepage-performance-fixes.md. Additionally, a11y contrast + CSP console-error findings surfaced during this verification were fixed and confirmed live (Accessibility 100, Best Practices 100)."
 ---
 
 # Phase 20: PageSpeed 100/100 Perfection — Verification Report
@@ -15,7 +16,7 @@ human_verification:
 **Phase Goal (LEAN SCOPE, per owner directive D-16 / 2026-06-30):** Resolve exactly the four homepage `/` PSI screenshot findings from `20-PSI-EVIDENCE.md` — (1) hero LCP `fetchPriority="high"`, (2) AVIF image delivery, (3) lazy-loaded client Sentry SDK (unused/legacy JS), (4) a measured `experimental.inlineCss` decision for render-blocking CSS — lean, minimal, architecture-preserving, no regressions. Requirement IDs in scope: **PSI-03, PSI-05, PSI-06, PSI-07, PSI-08**. All other v1.5 requirement IDs (PSI-01/02/04/09/10/11/12/13/14/15) are explicitly deferred per D-16 and are NOT evaluated here.
 
 **Verified:** 2026-07-01
-**Status:** human_needed
+**Status:** verified (post-deploy PSI re-measurement completed 2026-07-01 — see frontmatter `resolved`)
 **Re-verification:** No — initial verification
 
 ## Scope Note — Why This Report Does Not Use ROADMAP.md's Literal Success Criteria

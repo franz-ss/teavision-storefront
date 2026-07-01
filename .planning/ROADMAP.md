@@ -88,7 +88,7 @@ Full phase details: `milestones/v1.3-ROADMAP.md` · Audit: `milestones/v1.3-MILE
 | 17. Operations, Performance, and Final Production-Readiness Audit | v1.4      | 15/15          | Complete   | 2026-06-26 |
 | 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete   | 2026-06-26 |
 | 19. H1 Correctness Re-Remediation                                | v1.4      | 3/4            | Complete   | 2026-06-29 |
-| 20. PageSpeed 100/100 Perfection (lean)                          | v1.5      | 1/1 | Complete   | 2026-07-01 |
+| 20. PageSpeed 100/100 Perfection (lean)                          | v1.5      | 1/1 | Complete    | 2026-07-01 |
 
 ## Phase Details
 
