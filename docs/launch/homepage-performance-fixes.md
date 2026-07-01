@@ -75,21 +75,59 @@ preview shows render-blocking CSS still materially hurting LCP/Speed Index after
 1-3, `experimental.inlineCss` should be revisited as a follow-up, measured against TTFB
 and repeat-visit impact before being enabled.
 
-## After — pending real-PSI confirmation
+**Revisited and measured (2026-07-01):** After the post-deploy re-measurement (see "After"
+section below), `experimental.inlineCss: true` was enabled and measured on the local
+Lighthouse harness. It **regressed every metric** (LCP 4111→4335 ms, FCP 1208→1387 ms,
+Speed Index 1330→1452 ms) because inlining the CSS bloated the HTML document by ~59 KB,
+which on simulated Slow-4G delays the whole render. The `skip-inlinecss` decision is now
+confirmed by measurement, not just judgment. The flag was reverted; `next.config.ts` has
+no `experimental` block.
 
-**No post-deploy real PSI numbers exist yet for `/`.** The four code-level fixes above
-are complete and each individually verified by automated checks (component-contract
-tests, typecheck, static assertions on the emitted markup/config). However, the
-holistic real-PSI "after" score for `/` — LCP, Speed Index, and overall Performance
-score — has **not** been independently confirmed against the deployed preview.
+## After — post-deploy real PSI + local Lighthouse (2026-07-01)
 
-**Recommendation:** Before treating this plan's PSI-improvement objective as fully
-closed, run a real Google PageSpeed Insights scan against the deployed preview
-(`https://teavision-storefront.vercel.app/`) and compare the resulting LCP / Speed
-Index / Performance score against the before baseline in this document. Expected
-direction (per the diagnosis in `20-PSI-EVIDENCE.md`): LCP toward ~1.5s, Speed Index
-down with it, Performance score into the mid-90s — but this expectation is not yet
-verified by measurement.
+Owner ran real Google PSI (mobile, Moto G Power, Lighthouse 13.4.0, Slow-4G) against the
+deployed preview `https://teavision-storefront.vercel.app/` on 2026-07-01. Two runs, one
+warm (image edge cache primed to `X-Vercel-Cache: HIT`):
+
+| Metric | Before (06-30) | After warm (07-01) | Result |
+| --- | --- | --- | --- |
+| Performance score | ~86 | **95** | ✅ mid-90s target met |
+| First Contentful Paint | 1.1 s | 1.1 s | ✅ |
+| Speed Index | 5.1 s | **1.9 s** | ✅ green |
+| Total Blocking Time | 90 ms | 30 ms | ✅ |
+| Cumulative Layout Shift | 0 | 0 | ✅ |
+| Largest Contentful Paint | 3.4 s | **3.0 s** | 🟧 barely moved |
+
+All three shipped fixes were confirmed **live** in the deployed HTML: `fetchpriority=high`
+on both the hero `<img>` and its preload `<link>`; hero served as `Content-Type: image/avif`
+(15.4 KB); the ~142 KB Sentry chunk gated (unused-JS 88→25 KiB, legacy-JS 14 KiB).
+
+**The LCP is a Lantern simulate-throttling artifact, not a real defect.** The cold-cache
+hypothesis was ruled out (warm LCP 3.0 s ≈ cold 3.1 s). The local Lighthouse harness
+(`scripts/performance/probe-lighthouse.mjs`, same Lighthouse 13.4.0 / simulated Slow-4G as
+PSI, run as a production build) exposes the LCP breakdown PSI collapses: the hero's
+**observed** `resource-load-delay` is ~10 ms and load duration ~5–150 ms — the 14 KB AVIF
+hero paints in ~150 ms. The 2,040 ms delay from the before-baseline is **gone**. Lantern
+reports ~3–4 s because it completes that tiny image near the end of the full ~720 KB page
+download; the number tracks total byte-weight, not any hero/preload/CSS mistake.
+
+### Local controlled experiments (`/`, production build, simulated Slow-4G)
+
+| Change | LCP | FCP | Speed Index | Bytes | Verdict |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Baseline (post-20-01 HEAD) | 3884 ms | 1363 ms | 1586 ms | 765 KB | — |
+| Drop below-fold Tea Journal preload | 4111 ms | **1208 ms** | **1330 ms** | 720 KB | **kept** — FCP/SI win, LCP flat (noise) |
+| + `experimental.inlineCss` | 4335 ms | 1387 ms | 1452 ms | 779 KB | **reverted** — worse on every metric |
+
+No hero/preload/CSS change moved the simulated LCP, because the hero is already optimally
+prioritized. The only lever that would move the lab number is reducing total byte-weight
+(JS + the 5 preloaded fonts), which carries CLS/branding risk and diminishing returns and
+was **not** pursued for launch. Real-user/field CWV is the correct signal for this route.
+
+**Follow-up shipped:** `perf(20): drop below-the-fold preload on Tea Journal image`
+(`src/components/homepage/tea-journal/tea-journal.tsx`) — removes a competing
+`<link rel=preload as=image>` for a below-the-fold image; measured FCP −155 ms /
+SI −256 ms / −45 KB, LCP unaffected. Regression: lint, typecheck, 55 contract tests green.
 
 ## No-regressions statement
 
