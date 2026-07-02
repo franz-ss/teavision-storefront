@@ -1,13 +1,15 @@
 import { AnimatedElement, Eyebrow, Section } from '@/components/ui'
 import type { NewsletterSignupActionResult } from '@/lib/contact/types'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
 import { HomepageNewsletterForm } from './newsletter-form'
 
-type HomepageNewsletterProps = {
+export type HomepageNewsletterProps = {
+  intro: HomepageContent['newsletter']['intro']
   action: (formData: FormData) => Promise<NewsletterSignupActionResult>
 }
 
-export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
+export function HomepageNewsletter({ action, intro }: HomepageNewsletterProps) {
   return (
     <Section.Root tone="inverse" className="overflow-hidden">
       <Section.Container>
@@ -26,18 +28,15 @@ export function HomepageNewsletter({ action }: HomepageNewsletterProps) {
           </div>
 
           <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow tone="gold" className="mb-4 justify-center">
-              Monthly newsletter
-            </Eyebrow>
-            <h2 className="type-heading-01 text-paper">
-              Explore the World of Tea with Monthly Newsletters
-            </h2>
-            <p className="type-lede text-paper/75 mt-4">
-              Stay informed with monthly updates on loose leaf tea, bulk tea
-              bags, herbs, and spices. From market insights to brewing tips, we
-              share the latest news and trends from trusted tea suppliers in
-              Australia and beyond.
-            </p>
+            {intro.eyebrow && (
+              <Eyebrow tone="gold" className="mb-4 justify-center">
+                {intro.eyebrow}
+              </Eyebrow>
+            )}
+            <h2 className="type-heading-01 text-paper">{intro.title}</h2>
+            {intro.copy && (
+              <p className="type-lede text-paper/75 mt-4">{intro.copy}</p>
+            )}
             <div className="flex justify-center">
               <HomepageNewsletterForm action={action} />
             </div>

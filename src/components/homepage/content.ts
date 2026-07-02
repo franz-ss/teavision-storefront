@@ -313,7 +313,19 @@ export const PRODUCT_RANGE_FIXTURE = [
   },
 ] satisfies HomepageContent['productRange']['cards']
 
-export const SERVICE_CARDS = [
+export const NEWSLETTER_INTRO_FIXTURE = {
+  eyebrow: 'Monthly newsletter',
+  title: 'Explore the World of Tea with Monthly Newsletters',
+  copy: 'Stay informed with monthly updates on loose leaf tea, bulk tea bags, herbs, and spices. From market insights to brewing tips, we share the latest news and trends from trusted tea suppliers in Australia and beyond.',
+} satisfies HomepageContent['newsletter']['intro']
+
+export const PRIVATE_LABEL_INTRO_FIXTURE = {
+  eyebrow: 'Private label & custom solutions',
+  title: 'Private Label & Custom Tea Solutions',
+  copy: 'We partner with you to develop custom blends, manufacture tea bags, and deliver fully packaged private label tea products.',
+} satisfies HomepageContent['privateLabel']['intro']
+
+export const PRIVATE_LABEL_CARDS_FIXTURE = [
   {
     title: 'Custom Tea Blends',
     href: '/pages/custom-tea-blends',
@@ -350,14 +362,30 @@ export const SERVICE_CARDS = [
     action: 'Explore',
     body: 'Launch your own branded tea range with our end-to-end private label service — from blend development through to shelf-ready packaging.',
   },
-] satisfies ImageCard[]
+] satisfies HomepageContent['privateLabel']['cards']
 
-export const HERBS_IMAGE = {
-  src: '/images/homepage/organic-herbs-and-spices.png',
-  alt: 'Organic herbs and spices',
-  width: 1500,
-  height: 1000,
-} satisfies ImageAsset
+export const ORGANIC_HERBS_FIXTURE = {
+  intro: {
+    eyebrow: null,
+    title: 'Wild Grown & Certified Organic Herbs',
+    copy: "We supply only the freshest wild grown herbs and certified organic spices, sourced directly from trusted farmers and plantations. As one of Australia's leading bulk herb and spice suppliers, we ensure quality, sustainability, and reliability to meet the diverse needs of cafes, retailers, and wellness brands.",
+  },
+  image: {
+    src: '/images/homepage/organic-herbs-and-spices.png',
+    alt: 'Organic herbs and spices',
+    width: 1500,
+    height: 1000,
+  },
+  checklist: [
+    'Import and Freight Insurance on all ingredients',
+    'Highest quality standards from our company and partners',
+    'Quality-focused, consistent, efficient, reliable and cost-effective',
+  ],
+  cta: {
+    children: 'Explore Our Herbs & Spices',
+    href: '/collections/herbs-and-spices',
+  },
+} satisfies HomepageContent['organicHerbs']
 
 export const CATALOGUE_IMAGE = {
   src: '/images/navigation/teavision-catalogues.png',

@@ -1,25 +1,23 @@
 import Image from 'next/image'
 import { Check } from 'lucide-react'
 
-import { Button, Section } from '@/components/ui'
+import { Button, Eyebrow, Section } from '@/components/ui'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
-import { HERBS_IMAGE } from '../content'
+export type OrganicHerbsProps = HomepageContent['organicHerbs']
 
-// Original-site copy — single-line checklist items
-const HERB_CHECKLIST = [
-  'Import and Freight Insurance on all ingredients',
-  'Highest quality standards from our company and partners',
-  'Quality-focused, consistent, efficient, reliable and cost-effective',
-]
-
-export function OrganicHerbs() {
+export function OrganicHerbs({
+  checklist,
+  cta,
+  image,
+  intro,
+}: OrganicHerbsProps) {
   return (
     <Section.Root tone="sunken" spacing="none" className="overflow-hidden">
       <div className="relative isolate min-h-110 overflow-hidden md:min-h-120 lg:min-h-130">
         <Image
-          src={HERBS_IMAGE.src}
-          alt=""
-          aria-hidden="true"
+          src={image.src}
+          alt={image.alt}
           fill
           sizes="100vw"
           className="absolute inset-0 -z-20 object-cover object-right"
@@ -31,18 +29,15 @@ export function OrganicHerbs() {
         />
         <Section.Container className="flex min-h-110 items-center py-10 md:min-h-120 md:py-12 lg:min-h-130 lg:py-14">
           <div className="max-w-xl">
-            <h2 className="type-heading-02">
-              Wild Grown &amp; Certified Organic Herbs
-            </h2>
-            <p className="type-lede text-ink-soft mt-4">
-              We supply only the freshest wild grown herbs and certified organic
-              spices, sourced directly from trusted farmers and plantations. As
-              one of Australia&apos;s leading bulk herb and spice suppliers, we
-              ensure quality, sustainability, and reliability to meet the
-              diverse needs of cafes, retailers, and wellness brands.
-            </p>
+            {intro.eyebrow && (
+              <Eyebrow className="mb-4">{intro.eyebrow}</Eyebrow>
+            )}
+            <h2 className="type-heading-02">{intro.title}</h2>
+            {intro.copy && (
+              <p className="type-lede text-ink-soft mt-4">{intro.copy}</p>
+            )}
             <ul className="mt-6 flex flex-col gap-3">
-              {HERB_CHECKLIST.map((item) => (
+              {checklist.map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <Check
                     className="text-brand mt-0.5 size-4 shrink-0"
@@ -53,12 +48,8 @@ export function OrganicHerbs() {
               ))}
             </ul>
             <div className="mt-7">
-              <Button
-                href="/collections/herbs-and-spices"
-                variant="brand"
-                size="lg"
-              >
-                Explore Our Herbs &amp; Spices
+              <Button href={cta.href} variant="brand" size="lg">
+                {cta.children}
               </Button>
             </div>
           </div>

@@ -18,6 +18,10 @@ import { ContactSection } from '@/components/contact'
 import {
   ctaCatalogueData,
   HOMEPAGE_HERO_FIXTURE,
+  NEWSLETTER_INTRO_FIXTURE,
+  ORGANIC_HERBS_FIXTURE,
+  PRIVATE_LABEL_CARDS_FIXTURE,
+  PRIVATE_LABEL_INTRO_FIXTURE,
   organizationJsonLd,
   PRODUCT_RANGE_FIXTURE,
   PRODUCT_RANGE_INTRO_FIXTURE,
@@ -65,9 +69,15 @@ export default function HomePage() {
           cards={PRODUCT_RANGE_FIXTURE}
           intro={PRODUCT_RANGE_INTRO_FIXTURE}
         />
-        <HomepageNewsletter action={sendNewsletterSignupAction} />
-        <PrivateLabel />
-        <OrganicHerbs />
+        <HomepageNewsletter
+          action={sendNewsletterSignupAction}
+          intro={NEWSLETTER_INTRO_FIXTURE}
+        />
+        <PrivateLabel
+          cards={PRIVATE_LABEL_CARDS_FIXTURE}
+          intro={PRIVATE_LABEL_INTRO_FIXTURE}
+        />
+        <OrganicHerbs {...ORGANIC_HERBS_FIXTURE} />
         <SupplyChain />
         <CertificationCoverage />
         <SupplyChainProtection />

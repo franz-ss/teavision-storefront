@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
+import { ORGANIC_HERBS_FIXTURE } from '../content'
 import { OrganicHerbs } from './organic-herbs'
 
 const meta: Meta<typeof OrganicHerbs> = {
@@ -9,6 +10,7 @@ const meta: Meta<typeof OrganicHerbs> = {
     layout: 'fullscreen',
   },
   tags: ['autodocs'],
+  args: ORGANIC_HERBS_FIXTURE,
 }
 export default meta
 

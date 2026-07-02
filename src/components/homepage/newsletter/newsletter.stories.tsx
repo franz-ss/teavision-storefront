@@ -1,11 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, userEvent, within } from 'storybook/test'
 
+import type { NewsletterSignupActionResult } from '@/lib/contact/types'
+
+import { NEWSLETTER_INTRO_FIXTURE } from '../content'
 import { HomepageNewsletter } from './newsletter'
 
-const noopAction = async () => ({ success: true })
+const noopAction = async (): Promise<NewsletterSignupActionResult> => ({
+  success: true,
+})
 
-const errorAction = async () => ({
+const errorAction = async (): Promise<NewsletterSignupActionResult> => ({
   success: false,
   error: 'Please enter a valid email address.',
 })
@@ -20,6 +25,7 @@ const meta: Meta<typeof HomepageNewsletter> = {
   tags: ['autodocs'],
   args: {
     action: noopAction,
+    intro: NEWSLETTER_INTRO_FIXTURE,
   },
 }
 export default meta

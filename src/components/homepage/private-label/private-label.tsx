@@ -3,30 +3,30 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
 import { Eyebrow, Section } from '@/components/ui'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
-import { SERVICE_CARDS } from '../content'
+export type PrivateLabelProps = HomepageContent['privateLabel']
 
-export function PrivateLabel() {
+export function PrivateLabel({ cards, intro }: PrivateLabelProps) {
   return (
     <Section.Root tone="surface">
       <Section.Container>
         {/* Split section head */}
         <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <Eyebrow className="mb-4">
-              Private label &amp; custom solutions
-            </Eyebrow>
-            <h2 className="type-heading-01">
-              Private Label &amp; Custom Tea Solutions
-            </h2>
+            {intro.eyebrow && (
+              <Eyebrow className="mb-4">{intro.eyebrow}</Eyebrow>
+            )}
+            <h2 className="type-heading-01">{intro.title}</h2>
           </div>
-          <p className="text-ink-soft max-w-[34ch] lg:text-right">
-            We partner with you to develop custom blends, manufacture tea bags,
-            and deliver fully packaged private label tea products.
-          </p>
+          {intro.copy && (
+            <p className="text-ink-soft max-w-[34ch] lg:text-right">
+              {intro.copy}
+            </p>
+          )}
         </div>
         <ul className="grid gap-4.5 md:grid-cols-3">
-          {SERVICE_CARDS.map((card, index) => (
+          {cards.map((card, index) => (
             <li
               key={card.title}
               className="bg-card border-hairline-2 hover:shadow-3 flex flex-col rounded-lg border p-7.5 transition-[translate,box-shadow] duration-350 hover:-translate-y-1 motion-reduce:hover:translate-y-0"
