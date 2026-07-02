@@ -88,6 +88,10 @@ Full phase details: `milestones/v1.5-ROADMAP.md` · Audit: `milestones/v1.5-MILE
 **Requirements:** CMS-01, CMS-02, CMS-03
 **Plans:** 1
 
+Plans:
+
+- [ ] 21-01 — Homepage singleton schema and seed script
+
 Success criteria:
 
 - `../teavision-cms` exposes one homepage singleton with fields for the current homepage sections in their current order.
@@ -147,10 +151,10 @@ Success criteria:
 | 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete    | 2026-06-26 |
 | 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
-| 21. Sanity Homepage Model and Seed                                | v1.6      | 0/1            | Not Started | —          |
+| 21. Sanity Homepage Model and Seed                                | v1.6      | 0/1            | Planned     | —          |
 | 22. Storefront Data and Rendering                                 | v1.6      | 0/1            | Not Started | —          |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next
 
-Start Phase 21 with a lean implementation plan. The first implementation slice should only add the sibling Studio singleton, current-section fields, and a seed path; storefront rendering, preview, and release evidence remain in later phases.
+Execute Phase 21. The implementation slice should only add the sibling Studio singleton, current-section fields, and a seed path; storefront rendering, preview, and release evidence remain in later phases.
