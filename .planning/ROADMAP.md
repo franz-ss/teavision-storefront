@@ -106,6 +106,10 @@ Success criteria:
 **Requirements:** DATA-01, DATA-02, RENDER-01, RENDER-02, QUALITY-01
 **Plans:** 1
 
+Plans:
+
+- [ ] 22-01-PLAN.md — Typed Sanity homepage data boundary, existing-section rendering, and metadata cutover
+
 Success criteria:
 
 - `/` renders seeded Sanity content through a typed server-side storefront data boundary.
