@@ -1,10 +1,11 @@
 ---
 phase: 22
 slug: storefront-data-and-rendering
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-07-02
+reviewed_at: 2026-07-02T14:50:50.9475255+08:00
 ---
 
 # Phase 22 — UI Design Contract
@@ -43,7 +44,7 @@ Declared values (must be multiples of 4):
 | 2xl | 48px | Compact section vertical padding on tablet/desktop |
 | 3xl | 64px | Page-level section rhythm minimum |
 
-Exceptions: keep existing approved homepage geometry and rhythm tokens exactly for parity: `px-gutter`, `py-section`, `max-w-base`, `max-w-wide`, `max-w-prose`, hero `min-h-[min(92vh,860px)]`, organic-herbs `min-h-110/md:min-h-120/lg:min-h-130`, card aspect ratios, 44px minimum icon/button touch targets, and pre-existing fractional Tailwind values already present in homepage components such as `gap-4.5`, `py-5.5`, `mb-6.5`, `px-6.5`, and `p-7.5`. Phase 22 may preserve these classes while prop-enabling content, but must not add new ad hoc spacing values.
+Exceptions: keep existing approved homepage geometry and rhythm tokens exactly for parity: `px-gutter`, `py-section`, `max-w-base`, `max-w-wide`, `max-w-prose`, hero `min-h-[min(92vh,860px)]`, organic-herbs `min-h-110/md:min-h-120/lg:min-h-130`, card aspect ratios, and 44px minimum icon/button touch targets. Any touched homepage spacing that previously sat between scale steps must be remapped to the nearest approved value: compact gaps to 16px, narrow vertical padding and margins to 24px, and broad inner padding to 32px. Phase 22 must not add or preserve ad hoc fractional spacing values in newly edited class lists.
 
 ---
 
@@ -52,11 +53,11 @@ Exceptions: keep existing approved homepage geometry and rhythm tokens exactly f
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | `type-body` — 16px | 400 | 1.6 |
-| Label | `type-label` — 15.04px | 600 | 20px |
+| Label | `type-label` — 15.04px | 500 | 20px |
 | Heading | `type-heading-01` — clamp(32px, 4vw, 54.4px) | 500 | 1.04 |
 | Display | `type-display` — clamp(41.6px, 6.4vw, 86.4px) | 500 | 0.98 |
 
-Typography contract: do not add new type utilities or heading scales in Phase 22. Route content must keep one visible `h1` in `HomepageHero`; section titles remain `h2`; card/article/FAQ titles remain `h3` or lower as currently implemented. Preserve existing `type-*` utilities and existing letter-spacing values; do not introduce additional fluid type, tracking, or font weights.
+Typography contract: Phase 22 uses only two font weights: 400 for body/copy and 500 for labels, headings, display text, and CTA text. Do not add new type utilities or heading scales in Phase 22. Route content must keep one visible `h1` in `HomepageHero`; section titles remain `h2`; card/article/FAQ titles remain `h3` or lower as currently implemented. Preserve existing `type-*` utilities and existing letter-spacing values; do not introduce additional fluid type, tracking, or font weights.
 
 ---
 
@@ -66,12 +67,21 @@ Typography contract: do not add new type utilities or heading scales in Phase 22
 |------|-------|-------|
 | Dominant (60%) | `bg-paper` / `--color-paper: oklch(97.4% 0.008 92)` | Homepage wrapper, default section surfaces, body background |
 | Secondary (30%) | `bg-paper-2`, `bg-card`, `bg-ink` | Sunken bands, cards, inverse newsletter/supply-chain bands, hero trust strip |
-| Accent (10%) | `text-brand`, `bg-brand`, `text-gold`, `bg-gold-tint` | Primary CTA fills, CTA hover states, focus rings, hero/section eyebrows, checklist icons, FAQ open icon, link-arrow hovers |
+| Action accent (10%) | `text-brand`, `bg-brand`, `ring-ring` | Primary CTA fills, CTA hover states, form focus rings, actionable text links, card/CTA arrow hover and focus states |
+| Decorative highlight | `text-gold`, `bg-gold-tint` | Section eyebrows, proof-point icons, checklist icons, FAQ open icon, small highlight chips, and non-interactive visual emphasis only |
 | Destructive | `text-danger`, `bg-danger-tint`, `border-danger` | Form error messages only |
 
-Accent reserved for: hero CTA, catalogue/contact/newsletter CTA states, section eyebrow highlights, link-arrow hover/focus states, proof-point icons, organic checklist icons, FAQ plus icon open state, form focus rings, and success/error feedback surfaces. Do not apply accent color to all body links or broad backgrounds.
+Brand accent is reserved for interactive affordances: hero CTA, catalogue/contact/newsletter CTA states, body links only when they are explicit actions, link-arrow hover/focus states, and form focus rings. Gold is decorative only: section eyebrow highlights, proof-point icons, organic checklist icons, FAQ plus icon open state, and small success/highlight surfaces. Do not use gold for CTAs, links, focus rings, or broad backgrounds; do not apply accent color to all body links.
 
 Color contract: keep the warm/botanical palette. No cool gray additions. Authored Sanity images must sit inside the existing scrim/gradient treatments so text contrast remains at least as legible as the v1.5 homepage baseline.
+
+---
+
+## Visual Hierarchy
+
+Primary homepage focal point: the Sanity-authored hero LCP image fills the first viewport with the hero title, supporting copy, and primary CTA layered above it inside the existing scrim treatment. The first scan path is hero title, then primary CTA, then trust strip and proof points; product-range cards are the next visual priority after the fold.
+
+Carousel controls must remain perceivable and named: icon-only previous/next buttons use accessible labels `Previous testimonial` and `Next testimonial`; dot controls use `Go to testimonial {n}` with the current dot exposed via `aria-current` or equivalent selected state.
 
 ---
 
@@ -94,7 +104,7 @@ CTA and form labels to preserve:
 | Private-label cards | Existing action labels remain CMS-driven seeded `Explore`. |
 | Organic herbs | CTA remains CMS-driven seeded `Explore Our Herbs & Spices`. |
 | Newsletter | Email placeholder `Enter your email`; submit label `Subscribe`; pending label `Subscribing…`; success `Thanks for signing up.`; error `Unable to send your signup right now. Please try again shortly.` |
-| Contact | Field labels `Name`, `Number`, `Email`, `Message`; submit label `Submit`; pending label `Sending…`; success `Thanks. The Teavision team will review your enquiry shortly.`; default error `Unable to send your message right now. Please try again shortly.` |
+| Contact | Field labels `Name`, `Number`, `Email`, `Message`; submit label `Send Enquiry`; pending label `Sending…`; success `Thanks. The Teavision team will review your enquiry shortly.`; default error `Unable to send your message right now. Please try again shortly.` |
 | Tea Journal | CMS controls intro, blog handle, max posts, and link label; seeded link label remains `View all`; article cards remain live blog data. |
 | Catalogue CTA | CMS must drive primary and secondary CTA copy; do not keep a hardcoded secondary action when CMS provides one. |
 
@@ -163,11 +173,11 @@ Rendering rules:
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: FLAG — non-blocking recommendation to replace single-word seeded CTA labels in a later copy pass
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved
