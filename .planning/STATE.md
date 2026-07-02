@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Sanity CMS Homepage Integration
 status: planning
-stopped_at: Phase 22 context gathered
-last_updated: "2026-07-02T04:54:14.777Z"
+stopped_at: Phase 22 UI-SPEC approved
+last_updated: "2026-07-02T06:53:06.594Z"
 last_activity: 2026-07-02 -- Phase 21 complete
 progress:
   total_phases: 3
@@ -324,9 +324,9 @@ Note: all five are v1.3/v1.4-era carryovers surfaced by the pre-close open-artif
 
 ## Session Continuity
 
-Last session: 2026-07-02T04:54:14.764Z
-Stopped at: Phase 22 context gathered
-Resume file: .planning/phases/22-storefront-data-and-rendering/22-CONTEXT.md
+Last session: 2026-07-02T06:53:06.581Z
+Stopped at: Phase 22 UI-SPEC approved
+Resume file: .planning/phases/22-storefront-data-and-rendering/22-UI-SPEC.md
 
 ## Operator Next Steps
 
