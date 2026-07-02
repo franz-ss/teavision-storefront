@@ -115,7 +115,7 @@ Plans:
 - [x] 22-02-PLAN.md — Hero, proof points, and product range CMS prop rendering
 
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 22-03-PLAN.md — Newsletter, private-label, and organic-herbs CMS prop rendering
+- [x] 22-03-PLAN.md — Newsletter, private-label, and organic-herbs CMS prop rendering
 
 **Wave 4** *(blocked on Wave 3 completion)*
 - [ ] 22-04-PLAN.md — Supply-chain and certification CMS prop rendering
@@ -183,7 +183,7 @@ Success criteria:
 | 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
-| 22. Storefront Data and Rendering                                 | v1.6      | 2/8            | In Progress | —          |
+| 22. Storefront Data and Rendering                                 | v1.6      | 3/8            | In Progress | —          |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next
