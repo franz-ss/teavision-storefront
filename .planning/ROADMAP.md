@@ -121,7 +121,7 @@ Plans:
 - [x] 22-04-PLAN.md — Supply-chain and certification CMS prop rendering
 
 **Wave 5** *(blocked on Wave 4 completion)*
-- [ ] 22-05-PLAN.md — Testimonials and Tea Journal CMS configuration rendering
+- [x] 22-05-PLAN.md — Testimonials and Tea Journal CMS configuration rendering
 
 **Wave 6** *(blocked on Wave 5 completion)*
 - [ ] 22-06-PLAN.md — Contact, catalogue CTA, and FAQ CMS prop rendering
@@ -183,7 +183,7 @@ Success criteria:
 | 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
-| 22. Storefront Data and Rendering                                 | v1.6      | 4/8            | In Progress | —          |
+| 22. Storefront Data and Rendering                                 | v1.6      | 5/8            | In Progress | —          |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next
