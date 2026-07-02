@@ -1,35 +1,33 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.5
-milestone_name: Performance & PageSpeed 100
-status: milestone_complete
-stopped_at: v1.4 + v1.5 archived and tagged (retroactive v1.4 close alongside v1.5)
-last_updated: 2026-07-01T11:00:00.000Z
-last_activity: 2026-07-01 -- v1.4 + v1.5 milestones archived, tagged, and requirements reset
+milestone: v1.6
+milestone_name: Sanity CMS Homepage Integration
+status: planning
+last_updated: '2026-07-02T02:11:20.157Z'
+last_activity: 2026-07-02
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 35
-  completed_plans: 35
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-01)
+See: .planning/PROJECT.md (updated 2026-07-02)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Planning next milestone (v1.5 shipped; v1.4 retroactively archived). REQUIREMENTS.md removed — start with `/gsd-new-milestone`.
+**Current focus:** Defining requirements for v1.6 Sanity CMS Homepage Integration.
 
 ## Current Position
 
-Phase: 20
-Plan: Not started
-Status: Milestone complete
-Decisions locked: lean scope = screenshot fixes only, no additional improvements, architecture-preserving, no regressions (D-16); fetchPriority="high" permitted for the LCP image, distinct from the banned deprecated `priority` (D-10 refined / D-15); cacheComponents stays enabled, don't regress Phase 18/19 (D-09).
-Last activity: 2026-07-01
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-07-02 — Milestone v1.6 started
 
 ## Performance Metrics
 
@@ -54,7 +52,7 @@ Last activity: 2026-07-01
 | 14                                  | 9     | -           | -           |
 | 16                                  | 4     | -           | -           |
 | 18                                  | 6     | -           | -           |
-| 20 | 1 | - | - |
+| 20                                  | 1     | -           | -           |
 
 **Recent Trend:**
 
@@ -311,13 +309,13 @@ Items acknowledged and deferred at v1.3 milestone close on 2026-06-22:
 
 Items acknowledged and deferred at the combined v1.4 + v1.5 milestone close on 2026-07-01:
 
-| Category       | Item                     | Status                  |
-| -------------- | ------------------------ | ----------------------- |
-| debug_sessions | account-link-routing     | diagnosed               |
-| debug_sessions | legacy-account-bridge-ui | diagnosed               |
+| Category       | Item                       | Status                 |
+| -------------- | -------------------------- | ---------------------- |
+| debug_sessions | account-link-routing       | diagnosed              |
+| debug_sessions | legacy-account-bridge-ui   | diagnosed              |
 | debug_sessions | product-json-ld-probe-path | unknown (Phase 18-era) |
-| uat_gaps       | 15-UAT.md                | testing (2 pending)     |
-| uat_gaps       | 18-UAT.md                | resolved (0 pending)    |
+| uat_gaps       | 15-UAT.md                  | testing (2 pending)    |
+| uat_gaps       | 18-UAT.md                  | resolved (0 pending)   |
 
 Note: all five are v1.3/v1.4-era carryovers surfaced by the pre-close open-artifact audit — the two account debug sessions were already deferred at v1.3 close and resolved via Phase 14 gap plans; `product-json-ld-probe-path` and `15-UAT.md`/`18-UAT.md` belong to already-shipped v1.4 work (impl evidence present). No v1.5 items are open. Acknowledged and deferred, not blocking milestone close.
 
