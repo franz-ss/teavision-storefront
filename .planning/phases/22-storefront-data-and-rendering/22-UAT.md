@@ -1,9 +1,9 @@
 ---
-status: complete
+status: diagnosed
 phase: 22-storefront-data-and-rendering
 source: [22-01-SUMMARY.md, 22-02-SUMMARY.md, 22-03-SUMMARY.md, 22-04-SUMMARY.md, 22-05-SUMMARY.md, 22-06-SUMMARY.md, 22-07-SUMMARY.md]
 started: 2026-07-02T23:14:54Z
-updated: 2026-07-02T23:47:24Z
+updated: 2026-07-02T23:50:33Z
 ---
 
 ## Current Test
@@ -62,5 +62,14 @@ blocked: 0
   reason: "User reported: the main section is blank at first, should load server side, this will affect SEO"
   severity: major
   test: 1
-  artifacts: []
-  missing: []
+  root_cause: "The homepage route wraps the entire visible CMS body in `<Suspense fallback={null}>` and calls `connection()` inside `HomePageContent()`, so Next streams an initially blank dynamic hole even though `getHomepage()` is already a cached `use cache` data boundary."
+  artifacts:
+    - path: "src/app/(storefront)/page.tsx"
+      issue: "Primary homepage body is deferred behind `connection()` and a null Suspense fallback."
+    - path: "src/lib/sanity/home-page.ts"
+      issue: "`getHomepage()` already uses `use cache`, `cacheTag('homePage', 'sanity-homepage')`, and `cacheLife('hours')`, so the route does not need to force the cached homepage body into request-time streaming."
+  missing:
+    - "Render the primary homepage CMS body as cached server HTML without a route-wide null Suspense fallback."
+    - "Remove `connection()` from the homepage content path unless a separate request-time-only marker is truly required."
+    - "Add a route regression test proving the default `/` route output includes the CMS H1/section content in server-rendered HTML."
+  debug_session: ".planning/debug/homepage-main-section-streamed-empty.md"
