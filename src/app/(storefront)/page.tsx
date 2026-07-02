@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { connection } from 'next/server'
+import { Suspense } from 'react'
 
 import {
   CertificationCoverage,
@@ -16,45 +18,42 @@ import {
 } from '@/components/homepage'
 import { ContactSection } from '@/components/contact'
 import {
-  CATALOGUE_CTA_FIXTURE,
-  CERTIFICATION_COVERAGE_FIXTURE,
-  CONTACT_SECTION_FIXTURE,
-  FAQ_FIXTURE,
-  HOMEPAGE_HERO_FIXTURE,
-  NEWSLETTER_INTRO_FIXTURE,
-  ORGANIC_HERBS_FIXTURE,
-  PRIVATE_LABEL_CARDS_FIXTURE,
-  PRIVATE_LABEL_INTRO_FIXTURE,
-  organizationJsonLd,
-  PRODUCT_RANGE_FIXTURE,
-  PRODUCT_RANGE_INTRO_FIXTURE,
-  SUPPLY_CHAIN_FIXTURE,
-  SUPPLY_CHAIN_PROTECTION_FIXTURE,
-  TEA_JOURNAL_FIXTURE,
-  TESTIMONIALS_FIXTURE,
-  websiteJsonLd,
-} from '@/components/homepage/content'
-import {
   sendNewsletterSignupAction,
   submitContactFormAction,
 } from '@/lib/contact/actions'
+import { getHomepage } from '@/lib/sanity/home-page'
+import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/homepage-json-ld'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 
-const HOME_TITLE = 'Teavision | Teas Australia: Online Wholesale Store'
-const HOME_DESCRIPTION =
-  'Looking to Buy Tea Online at Wholesale Prices? Our award-winning Australian tea company provide Organic, Natural & Healthy ingredients. Visit our site today!'
+export async function generateMetadata(): Promise<Metadata> {
+  await connection()
+  const homepage = await getHomepage()
+  const { seo } = homepage
 
-export const metadata: Metadata = withNoindexRobots({
-  title: { absolute: HOME_TITLE },
-  description: HOME_DESCRIPTION,
-  openGraph: {
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
-    url: '/',
-  },
-  alternates: { canonical: '/' },
-})
+  return withNoindexRobots({
+    title: { absolute: seo.title },
+    description: seo.description,
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url: seo.canonicalPath,
+      type: 'website',
+      images: seo.ogImage
+        ? [
+            {
+              url: seo.ogImage.src,
+              alt: seo.ogImage.alt,
+              width: seo.ogImage.width,
+              height: seo.ogImage.height,
+            },
+          ]
+        : undefined,
+    },
+    alternates: { canonical: seo.canonicalPath },
+    robots: seo.noIndex ? { index: false, follow: false } : undefined,
+  })
+}
 
 export default function HomePage() {
   return (
@@ -70,33 +69,41 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: serializeInlineJson(websiteJsonLd) }}
       />
 
-      <div className="bg-paper">
-        <HomepageHero hero={HOMEPAGE_HERO_FIXTURE} />
-        <ProductRange
-          cards={PRODUCT_RANGE_FIXTURE}
-          intro={PRODUCT_RANGE_INTRO_FIXTURE}
-        />
-        <HomepageNewsletter
-          action={sendNewsletterSignupAction}
-          intro={NEWSLETTER_INTRO_FIXTURE}
-        />
-        <PrivateLabel
-          cards={PRIVATE_LABEL_CARDS_FIXTURE}
-          intro={PRIVATE_LABEL_INTRO_FIXTURE}
-        />
-        <OrganicHerbs {...ORGANIC_HERBS_FIXTURE} />
-        <SupplyChain {...SUPPLY_CHAIN_FIXTURE} />
-        <CertificationCoverage {...CERTIFICATION_COVERAGE_FIXTURE} />
-        <SupplyChainProtection {...SUPPLY_CHAIN_PROTECTION_FIXTURE} />
-        <Testimonials {...TESTIMONIALS_FIXTURE} />
-        <TeaJournal {...TEA_JOURNAL_FIXTURE} />
-        <ContactSection
-          action={submitContactFormAction}
-          {...CONTACT_SECTION_FIXTURE}
-        />
-        <Cta {...CATALOGUE_CTA_FIXTURE} />
-        <Faq {...FAQ_FIXTURE} />
-      </div>
+      <Suspense fallback={null}>
+        <HomePageContent />
+      </Suspense>
     </>
+  )
+}
+
+export async function HomePageContent() {
+  await connection()
+  const homepage = await getHomepage()
+
+  return (
+    <div className="bg-paper">
+      <HomepageHero hero={homepage.hero} />
+      <ProductRange
+        cards={homepage.productRange.cards}
+        intro={homepage.productRange.intro}
+      />
+      <HomepageNewsletter
+        action={sendNewsletterSignupAction}
+        intro={homepage.newsletter.intro}
+      />
+      <PrivateLabel
+        cards={homepage.privateLabel.cards}
+        intro={homepage.privateLabel.intro}
+      />
+      <OrganicHerbs {...homepage.organicHerbs} />
+      <SupplyChain {...homepage.supplyChain} />
+      <CertificationCoverage {...homepage.certificationCoverage} />
+      <SupplyChainProtection {...homepage.supplyChainProtection} />
+      <Testimonials {...homepage.testimonials} />
+      <TeaJournal {...homepage.teaJournal} />
+      <ContactSection action={submitContactFormAction} {...homepage.contact} />
+      <Cta {...homepage.catalogueCta} />
+      <Faq {...homepage.faq} />
+    </div>
   )
 }
