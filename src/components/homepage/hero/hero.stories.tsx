@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
 
+import { HOMEPAGE_HERO_FIXTURE } from '../content'
 import { HomepageHero } from './hero'
 
 const meta: Meta<typeof HomepageHero> = {
@@ -13,7 +14,9 @@ export default meta
 type Story = StoryObj<typeof HomepageHero>
 
 export const Default: Story = {
-  args: {},
+  args: {
+    hero: HOMEPAGE_HERO_FIXTURE,
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 

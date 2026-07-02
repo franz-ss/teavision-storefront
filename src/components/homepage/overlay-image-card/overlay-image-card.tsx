@@ -2,12 +2,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
+import type { HomepageImageCard } from '@/lib/sanity/home-page'
 import { cn } from '@/lib/utils'
 
-import type { ImageCard } from '../content'
-
-type OverlayImageCardProps = {
-  card: ImageCard
+export type OverlayImageCardProps = {
+  card: HomepageImageCard
   className?: string
 }
 
@@ -30,11 +29,11 @@ export function OverlayImageCard({ card, className }: OverlayImageCardProps) {
       {/* Bottom gradient scrim deepens on hover via opacity so it fades smoothly. */}
       <div
         aria-hidden="true"
-        className="from-ink/85 via-ink/15 absolute inset-0 bg-linear-to-t via-65% to-ink/15"
+        className="from-ink/85 via-ink/15 to-ink/15 absolute inset-0 bg-linear-to-t via-65%"
       />
       <div
         aria-hidden="true"
-        className="from-ink/92 via-ink/35 absolute inset-0 bg-linear-to-t via-70% to-ink/35 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 motion-reduce:transition-none"
+        className="from-ink/92 via-ink/35 to-ink/35 absolute inset-0 bg-linear-to-t via-70% opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 motion-reduce:transition-none"
       />
       {card.badge && (
         <Image
@@ -55,7 +54,7 @@ export function OverlayImageCard({ card, className }: OverlayImageCardProps) {
           aria-hidden="true"
           className="text-paper mt-3.5 inline-flex translate-y-1.5 items-center gap-1.75 font-mono text-[11px] tracking-[0.08em] uppercase opacity-0 transition-[opacity,translate] duration-300 group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:transition-none max-lg:translate-y-0 max-lg:opacity-100"
         >
-          Shop now <ArrowRight className="size-3.5" aria-hidden="true" />
+          {card.action} <ArrowRight className="size-3.5" aria-hidden="true" />
         </span>
       </div>
     </Link>

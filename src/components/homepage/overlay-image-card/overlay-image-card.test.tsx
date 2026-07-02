@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 
-import { PRODUCT_RANGE } from '../content'
+import { PRODUCT_RANGE_FIXTURE } from '../content'
 import { OverlayImageCard } from './overlay-image-card'
 
 type ImageProps = ComponentProps<'img'> & {
@@ -19,7 +19,7 @@ vi.mock('next/image', () => ({
 describe('OverlayImageCard', () => {
   it('fades the hover scrim instead of swapping gradient backgrounds', () => {
     const html = renderToStaticMarkup(
-      <OverlayImageCard card={PRODUCT_RANGE[0]} />,
+      <OverlayImageCard card={PRODUCT_RANGE_FIXTURE[0]} />,
     )
 
     expect(html).toContain('transition-opacity')

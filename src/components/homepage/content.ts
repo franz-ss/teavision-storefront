@@ -1,4 +1,5 @@
 import { SITE_URL } from '@/lib/seo/site-url'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
 import type { CtaProps } from './catalogues'
 
@@ -7,6 +8,7 @@ export type ImageAsset = {
   alt: string
   width: number
   height: number
+  lqip?: string | null
 }
 
 export type ProofPoint = {
@@ -101,32 +103,11 @@ export const websiteJsonLd = {
   },
 }
 
-export const HOMEPAGE_HERO = {
-  title: "Australia's #1 tea company",
-  copy: "Discover a world of tea mastery in every cup. Handpicked from the finest leaves, our loose leaf teas, bulk tea bags, and organic herbs deliver rich flavor and freshness. Trusted by Australia's leading cafes, retailers, and wellness brands.",
-  cta: {
-    children: 'Explore Our Teas',
-    href: '/collections',
-  },
-  image: {
-    src: '/images/homepage/homepage-hero-tea-harvest-lcp.avif',
-    alt: '',
-    width: 1440,
-    height: 810,
-  },
-  trustMarks: {
-    src: '/images/homepage/homepage-trust-marks.webp',
-    alt: 'Teavision certification and trust marks',
-    width: 1126,
-    height: 226,
-  },
-} satisfies HomepageHeroContent
-
-export const HOMEPAGE_PROOF_POINTS = [
+export const HOMEPAGE_PROOF_POINTS_FIXTURE = [
   {
     image: {
       src: '/images/australian-flag.svg',
-      alt: '',
+      alt: 'Australian flag',
       width: 1280,
       height: 640,
     },
@@ -148,7 +129,36 @@ export const HOMEPAGE_PROOF_POINTS = [
     title: '15+',
     description: 'Awards',
   },
-] satisfies ProofPoint[]
+] satisfies HomepageContent['hero']['proofPoints']
+
+export const HOMEPAGE_HERO_FIXTURE = {
+  eyebrow: "Australia's tea, herb & spice house",
+  title: "Australia's #1 tea company",
+  copy: "Discover a world of tea mastery in every cup. Handpicked from the finest leaves, our loose leaf teas, bulk tea bags, and organic herbs deliver rich flavor and freshness. Trusted by Australia's leading cafes, retailers, and wellness brands.",
+  cta: {
+    children: 'Explore Our Teas',
+    href: '/collections',
+  },
+  image: {
+    src: '/images/homepage/homepage-hero-tea-harvest-lcp.avif',
+    alt: 'Tea harvest landscape',
+    width: 1440,
+    height: 810,
+  },
+  trustMarks: {
+    src: '/images/homepage/homepage-trust-marks.webp',
+    alt: 'Teavision certification and trust marks',
+    width: 1126,
+    height: 226,
+  },
+  proofPoints: HOMEPAGE_PROOF_POINTS_FIXTURE,
+} satisfies HomepageContent['hero']
+
+export const PRODUCT_RANGE_INTRO_FIXTURE = {
+  eyebrow: 'Explore the range',
+  title: 'Explore Our Product Range',
+  copy: 'We offer wholesale products online direct to consumers and businesses, with volume pricing available across eligible bulk quantities.',
+} satisfies HomepageContent['productRange']['intro']
 
 export const PROOF_POINTS = [
   {
@@ -173,7 +183,7 @@ export const PROOF_POINTS = [
   },
 ] satisfies ProofPoint[]
 
-export const PRODUCT_RANGE = [
+export const PRODUCT_RANGE_FIXTURE = [
   {
     title: 'Wholesale Bulk Tea',
     href: '/collections/wholesale-bulk-tea',
@@ -301,7 +311,7 @@ export const PRODUCT_RANGE = [
     },
     action: 'Shop Now',
   },
-] satisfies ImageCard[]
+] satisfies HomepageContent['productRange']['cards']
 
 export const SERVICE_CARDS = [
   {

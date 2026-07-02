@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
-import { PRODUCT_RANGE } from '../content'
+import { PRODUCT_RANGE_FIXTURE } from '../content'
 import { OverlayImageCard } from './overlay-image-card'
 
 const meta: Meta<typeof OverlayImageCard> = {
@@ -8,7 +8,7 @@ const meta: Meta<typeof OverlayImageCard> = {
   component: OverlayImageCard,
   tags: ['autodocs'],
   args: {
-    card: PRODUCT_RANGE[0],
+    card: PRODUCT_RANGE_FIXTURE[0],
   },
 }
 export default meta

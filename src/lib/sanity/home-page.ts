@@ -47,7 +47,7 @@ export type HomepageImage = {
   alt: string
   width: number
   height: number
-  lqip: string | null
+  lqip?: string | null
 }
 
 export type HomepageLink = {

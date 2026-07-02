@@ -11,9 +11,10 @@ import {
 } from 'lucide-react'
 
 import { Section } from '@/components/ui'
+import type { HomepageProofPoint } from '@/lib/sanity/home-page'
 import { cn } from '@/lib/utils'
 
-import { PROOF_POINTS, type ProofPoint } from '../content'
+import { PROOF_POINTS } from '../content'
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Award,
@@ -26,7 +27,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 }
 
 export type ProofPointsProps = {
-  points?: ProofPoint[]
+  points?: HomepageProofPoint[]
 }
 
 export function ProofPoints({ points = PROOF_POINTS }: ProofPointsProps) {

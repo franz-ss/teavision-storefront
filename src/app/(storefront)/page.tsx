@@ -17,7 +17,10 @@ import {
 import { ContactSection } from '@/components/contact'
 import {
   ctaCatalogueData,
+  HOMEPAGE_HERO_FIXTURE,
   organizationJsonLd,
+  PRODUCT_RANGE_FIXTURE,
+  PRODUCT_RANGE_INTRO_FIXTURE,
   websiteJsonLd,
 } from '@/components/homepage/content'
 import {
@@ -57,8 +60,11 @@ export default function HomePage() {
       />
 
       <div className="bg-paper">
-        <HomepageHero />
-        <ProductRange />
+        <HomepageHero hero={HOMEPAGE_HERO_FIXTURE} />
+        <ProductRange
+          cards={PRODUCT_RANGE_FIXTURE}
+          intro={PRODUCT_RANGE_INTRO_FIXTURE}
+        />
         <HomepageNewsletter action={sendNewsletterSignupAction} />
         <PrivateLabel />
         <OrganicHerbs />

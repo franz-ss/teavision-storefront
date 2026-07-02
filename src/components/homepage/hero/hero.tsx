@@ -8,8 +8,7 @@ import {
 } from 'lucide-react'
 
 import { Button, Eyebrow, Section } from '@/components/ui'
-
-import { HOMEPAGE_HERO, HOMEPAGE_PROOF_POINTS } from '../content'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
 const STRIP_ICON_MAP: Record<string, LucideIcon> = {
   FlaskConical,
@@ -17,7 +16,11 @@ const STRIP_ICON_MAP: Record<string, LucideIcon> = {
   Truck,
 }
 
-export function HomepageHero() {
+export type HomepageHeroProps = {
+  hero: HomepageContent['hero']
+}
+
+export function HomepageHero({ hero }: HomepageHeroProps) {
   return (
     <Section.Root
       tone="transparent"
@@ -25,8 +28,8 @@ export function HomepageHero() {
       className="relative isolate flex min-h-[min(92vh,860px)] flex-col overflow-hidden"
     >
       <Image
-        src={HOMEPAGE_HERO.image.src}
-        alt=""
+        src={hero.image.src}
+        alt={hero.image.alt}
         fill
         sizes="100vw"
         preload
@@ -43,17 +46,13 @@ export function HomepageHero() {
           .hero-scrim above. */}
       <Section.Container className="mt-auto w-full bg-linear-to-t from-transparent to-transparent py-[clamp(60px,9vw,110px)]">
         <Eyebrow tone="gold" className="mb-6.5">
-          Australia&apos;s tea, herb &amp; spice house
+          {hero.eyebrow}
         </Eyebrow>
-        <h1 className="type-display text-paper max-w-[16ch]">
-          {HOMEPAGE_HERO.title}
-        </h1>
-        <p className="type-lede text-paper/90 mt-6 max-w-[48ch]">
-          {HOMEPAGE_HERO.copy}
-        </p>
+        <h1 className="type-display text-paper max-w-[16ch]">{hero.title}</h1>
+        <p className="type-lede text-paper/90 mt-6 max-w-[48ch]">{hero.copy}</p>
         <div className="mt-8.5 flex flex-wrap gap-3">
-          <Button href={HOMEPAGE_HERO.cta.href} variant="inverse" size="lg">
-            {HOMEPAGE_HERO.cta.children}
+          <Button href={hero.cta.href} variant="inverse" size="lg">
+            {hero.cta.children}
             <ArrowRight
               aria-hidden="true"
               className="size-4.5"
@@ -68,12 +67,12 @@ export function HomepageHero() {
       <div className="border-paper/18 bg-ink/75 border-t">
         <Section.Container>
           <ul className="grid grid-cols-2 lg:grid-cols-4" role="list">
-            {HOMEPAGE_PROOF_POINTS.map((point, index) => {
+            {hero.proofPoints.map((point, index) => {
               const IconComponent = point.icon
                 ? STRIP_ICON_MAP[point.icon]
                 : undefined
               const isLastInRow2 = index % 2 === 1
-              const isLastOverall = index === HOMEPAGE_PROOF_POINTS.length - 1
+              const isLastOverall = index === hero.proofPoints.length - 1
               return (
                 <li
                   key={point.title}
