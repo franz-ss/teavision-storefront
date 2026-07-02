@@ -16,6 +16,7 @@ import {
 } from '@/components/homepage'
 import { ContactSection } from '@/components/contact'
 import {
+  CERTIFICATION_COVERAGE_FIXTURE,
   ctaCatalogueData,
   HOMEPAGE_HERO_FIXTURE,
   NEWSLETTER_INTRO_FIXTURE,
@@ -25,6 +26,8 @@ import {
   organizationJsonLd,
   PRODUCT_RANGE_FIXTURE,
   PRODUCT_RANGE_INTRO_FIXTURE,
+  SUPPLY_CHAIN_FIXTURE,
+  SUPPLY_CHAIN_PROTECTION_FIXTURE,
   websiteJsonLd,
 } from '@/components/homepage/content'
 import {
@@ -78,9 +81,9 @@ export default function HomePage() {
           intro={PRIVATE_LABEL_INTRO_FIXTURE}
         />
         <OrganicHerbs {...ORGANIC_HERBS_FIXTURE} />
-        <SupplyChain />
-        <CertificationCoverage />
-        <SupplyChainProtection />
+        <SupplyChain {...SUPPLY_CHAIN_FIXTURE} />
+        <CertificationCoverage {...CERTIFICATION_COVERAGE_FIXTURE} />
+        <SupplyChainProtection {...SUPPLY_CHAIN_PROTECTION_FIXTURE} />
         <Testimonials />
         <TeaJournal />
         <ContactSection action={submitContactFormAction} />

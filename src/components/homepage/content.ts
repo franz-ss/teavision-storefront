@@ -394,50 +394,81 @@ export const CATALOGUE_IMAGE = {
   height: 400,
 } satisfies ImageAsset
 
-export const SUPPLY_CHAIN_IMAGES = [
-  {
-    src: '/images/supply-chain/supply-chain-mark-1.png',
-    alt: 'Supply chain quality mark',
-    width: 400,
-    height: 258,
+export const SUPPLY_CHAIN_FIXTURE = {
+  intro: {
+    eyebrow: 'For business',
+    title: 'Let the experts help grow your business',
+    copy: "Here at Teavision, we take pride in everything we do and we're always on a mission to source the best ingredients at the lowest prices. Our team of certified tea masters and herbalists are dedicated to helping your business grow and achieve it's goals.",
   },
-  {
-    src: '/images/supply-chain/supply-chain-mark-2.png',
-    alt: 'Supply chain quality mark',
-    width: 400,
-    height: 259,
+  cta: {
+    children: 'Contact the team',
+    href: '/pages/contact',
   },
-  {
-    src: '/images/supply-chain/supply-chain-mark-3.png',
-    alt: 'Supply chain quality mark',
-    width: 400,
-    height: 258,
+} satisfies HomepageContent['supplyChain']
+
+export const CERTIFICATION_COVERAGE_FIXTURE = {
+  items: [
+    { label: 'ACO Certified Organic', iconKey: 'Shield' },
+    { label: 'USDA Organic', iconKey: 'Leaf' },
+    { label: 'HACCP Food Safety', iconKey: 'FlaskConical' },
+    { label: 'Golden Leaf Awards', iconKey: 'Medal' },
+    { label: 'Australian Made', iconKey: 'Flag' },
+    { label: 'Freight Insured', iconKey: 'Truck' },
+  ],
+} satisfies HomepageContent['certificationCoverage']
+
+export const SUPPLY_CHAIN_PROTECTION_FIXTURE = {
+  intro: {
+    eyebrow: null,
+    title:
+      "You're protected at all times throughout our entire supply chain journey",
+    copy: 'We seek long-term partnerships with customers and suppliers, built on shared values and common goals for mutual benefit.',
   },
-  {
-    src: '/images/supply-chain/supply-chain-mark-4.png',
-    alt: 'Supply chain quality mark',
-    width: 400,
-    height: 258,
-  },
-  {
-    src: '/images/supply-chain/supply-chain-mark-5.png',
-    alt: 'Supply chain quality mark',
-    width: 400,
-    height: 258,
-  },
-  {
-    src: '/images/supply-chain/supply-chain-australian-organic-mark.png',
-    alt: 'Australian organic certification mark',
-    width: 400,
-    height: 258,
-  },
-  {
-    src: '/images/supply-chain/supply-chain-mark-7.png',
-    alt: 'Supply chain quality mark',
-    width: 400,
-    height: 258,
-  },
-] satisfies ImageAsset[]
+  marks: [
+    {
+      src: '/images/certifications/halal.png',
+      alt: 'Halal certification mark',
+      width: 633,
+      height: 408,
+    },
+    {
+      src: '/images/certifications/haccp.png',
+      alt: 'HACCP certified mark',
+      width: 630,
+      height: 408,
+    },
+    {
+      src: '/images/certifications/fda.png',
+      alt: 'FDA registration mark',
+      width: 633,
+      height: 408,
+    },
+    {
+      src: '/images/certifications/kosher.png',
+      alt: 'Kosher certification mark',
+      width: 636,
+      height: 408,
+    },
+    {
+      src: '/images/certifications/usda-organic.png',
+      alt: 'USDA Organic certification mark',
+      width: 630,
+      height: 408,
+    },
+    {
+      src: '/images/certifications/australian-organic.png',
+      alt: 'Australian Organic certification mark',
+      width: 1270,
+      height: 818,
+    },
+    {
+      src: '/images/certifications/organic-eu.png',
+      alt: 'European organic certification mark',
+      width: 633,
+      height: 408,
+    },
+  ],
+} satisfies HomepageContent['supplyChainProtection']
 
 export const TESTIMONIALS = [
   {

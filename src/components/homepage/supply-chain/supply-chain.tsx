@@ -1,6 +1,17 @@
 import { AnimatedElement, Button, Eyebrow, Section } from '@/components/ui'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
-export function SupplyChain() {
+import { SUPPLY_CHAIN_FIXTURE } from '../content'
+
+export type SupplyChainProps = {
+  cta?: HomepageContent['supplyChain']['cta']
+  intro?: HomepageContent['supplyChain']['intro']
+}
+
+export function SupplyChain({
+  cta = SUPPLY_CHAIN_FIXTURE.cta,
+  intro = SUPPLY_CHAIN_FIXTURE.intro,
+}: SupplyChainProps = {}) {
   return (
     <Section.Root tone="inverse" className="overflow-hidden">
       <Section.Container>
@@ -19,23 +30,18 @@ export function SupplyChain() {
           </div>
 
           <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow tone="gold" className="mb-4 justify-center">
-              For business
-            </Eyebrow>
-            <h2 className="type-heading-01 text-paper">
-              Let the experts help <em className="text-gold italic">grow</em>{' '}
-              your business
-            </h2>
-            <p className="type-lede text-paper/75 mt-4">
-              Here at Teavision, we take pride in everything we do and
-              we&apos;re always on a mission to source the best ingredients at
-              the lowest prices. Our team of certified tea masters and
-              herbalists are dedicated to helping your business grow and achieve
-              it&apos;s goals.
-            </p>
+            {intro.eyebrow && (
+              <Eyebrow tone="gold" className="mb-4 justify-center">
+                {intro.eyebrow}
+              </Eyebrow>
+            )}
+            <h2 className="type-heading-01 text-paper">{intro.title}</h2>
+            {intro.copy && (
+              <p className="type-lede text-paper/75 mt-4">{intro.copy}</p>
+            )}
             <div className="mt-7 flex justify-center">
-              <Button href="/pages/contact" variant="inverse" size="cta">
-                Contact the team
+              <Button href={cta.href} variant="inverse" size="cta">
+                {cta.children}
               </Button>
             </div>
           </div>
