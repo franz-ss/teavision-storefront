@@ -90,7 +90,7 @@ Full phase details: `milestones/v1.5-ROADMAP.md` · Audit: `milestones/v1.5-MILE
 
 Plans:
 
-- [ ] 21-01 — Homepage singleton schema and seed script
+- [x] 21-01 — Homepage singleton schema and seed script
 
 Success criteria:
 
@@ -151,10 +151,10 @@ Success criteria:
 | 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete    | 2026-06-26 |
 | 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
-| 21. Sanity Homepage Model and Seed                                | v1.6      | 0/1            | Planned     | —          |
+| 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
 | 22. Storefront Data and Rendering                                 | v1.6      | 0/1            | Not Started | —          |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next
 
-Execute Phase 21. The implementation slice should only add the sibling Studio singleton, current-section fields, and a seed path; storefront rendering, preview, and release evidence remain in later phases.
+Plan Phase 22. The next implementation slice should fetch typed Sanity homepage content and render it through the existing storefront while preserving SEO, PageSpeed, forms, Shopify commerce authority, and homepage visual parity.

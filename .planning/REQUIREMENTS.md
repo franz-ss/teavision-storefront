@@ -8,9 +8,9 @@
 
 ### CMS Model
 
-- [ ] **CMS-01**: Editor can manage one Sanity homepage singleton in the sibling `teavision-cms` Studio.
-- [ ] **CMS-02**: Editor can update the existing homepage sections in their current order, with optional section enable/disable controls only where needed.
-- [ ] **CMS-03**: Editor can seed the homepage singleton from the current code-owned homepage content.
+- [x] **CMS-01**: Editor can manage one Sanity homepage singleton in the sibling `teavision-cms` Studio.
+- [x] **CMS-02**: Editor can update the existing homepage sections in their current order, with optional section enable/disable controls only where needed.
+- [x] **CMS-03**: Editor can seed the homepage singleton from the current code-owned homepage content.
 
 ### Storefront Data
 
@@ -65,9 +65,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status  |
 | ----------- | ----- | ------- |
-| CMS-01      | 21    | Pending |
-| CMS-02      | 21    | Pending |
-| CMS-03      | 21    | Pending |
+| CMS-01      | 21    | Complete |
+| CMS-02      | 21    | Complete |
+| CMS-03      | 21    | Complete |
 | DATA-01     | 22    | Pending |
 | DATA-02     | 22    | Pending |
 | DATA-03     | 23    | Pending |
