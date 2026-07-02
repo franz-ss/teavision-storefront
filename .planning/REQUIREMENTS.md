@@ -1,0 +1,91 @@
+# Requirements: Teavision Headless Storefront
+
+**Defined:** 2026-07-02
+**Milestone:** v1.6 Sanity CMS Homepage Integration
+**Core Value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
+
+## v1 Requirements
+
+### CMS Model
+
+- [ ] **CMS-01**: Editor can manage one Sanity homepage singleton in the sibling `teavision-cms` Studio.
+- [ ] **CMS-02**: Editor can update the existing homepage sections in their current order, with optional section enable/disable controls only where needed.
+- [ ] **CMS-03**: Editor can seed the homepage singleton from the current code-owned homepage content.
+
+### Storefront Data
+
+- [ ] **DATA-01**: Visitor sees homepage content fetched from Sanity through a typed server-side storefront data boundary.
+- [ ] **DATA-02**: Visitor sees the current homepage content if the Sanity singleton has been seeded, without Sanity becoming the source of truth for Shopify catalog, price, cart, checkout, or discount data.
+- [ ] **DATA-03**: Publisher can update homepage content and invalidate the existing homepage cache tags through the signed Sanity webhook.
+
+### Rendering
+
+- [ ] **RENDER-01**: Visitor sees the existing homepage section design, order, forms, and links preserved while content is supplied by Sanity.
+- [ ] **RENDER-02**: Visitor sees Sanity images rendered with stable dimensions, alt text, crop/hotspot support, and the existing homepage hero LCP discipline.
+
+### Preview
+
+- [ ] **PREVIEW-01**: Editor can securely preview draft homepage content at `/` through Next Draft Mode.
+- [ ] **PREVIEW-02**: Published visitors never receive draft content, preview overlays, or stega/source-map text.
+
+### SEO And Performance
+
+- [ ] **QUALITY-01**: Visitor and crawler see homepage metadata, canonical/indexation behavior, JSON-LD, and one-H1 behavior preserved from the v1.5 baseline.
+- [ ] **QUALITY-02**: Release verifier can prove homepage SEO and PageSpeed scores are unchanged or improved before rollout.
+- [ ] **QUALITY-03**: Release verifier can block or roll back rollout if any measured SEO or PageSpeed score regresses.
+
+## v2 Requirements
+
+Deferred to a later milestone unless explicitly promoted.
+
+### Editor Experience
+
+- **EDIT-01**: Editor can use Sanity Presentation Tool / Visual Editing for click-to-edit homepage authoring.
+- **EDIT-02**: Editor can reorder homepage sections through Sanity.
+- **EDIT-03**: Editor can create arbitrary new homepage section types through a page-builder model.
+
+### Performance
+
+- **PERF-01**: Release verifier can run the broad multi-route PageSpeed 100/100 program deferred from v1.5.
+
+## Out of Scope
+
+| Feature                                                            | Reason                                                                     |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| New embedded Studio inside the storefront                          | The sibling `teavision-cms` project already owns Studio authoring.         |
+| CMS-owned Shopify product, price, cart, checkout, or discount data | Shopify remains authoritative for commerce data.                           |
+| Arbitrary page builder or section reordering                       | Current milestone is intentionally lean and maps to the existing homepage. |
+| Sanity Live Content / `defineLive` rollout                         | It changes the cache model and is not required for this migration.         |
+| Permanent hidden static fallback after cutover                     | It would mask CMS failures and create content drift.                       |
+| Real Shopify hosted checkout/payment/order tests                   | Still owner-gated and unrelated to homepage CMS authoring.                 |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status  |
+| ----------- | ----- | ------- |
+| CMS-01      | TBD   | Pending |
+| CMS-02      | TBD   | Pending |
+| CMS-03      | TBD   | Pending |
+| DATA-01     | TBD   | Pending |
+| DATA-02     | TBD   | Pending |
+| DATA-03     | TBD   | Pending |
+| RENDER-01   | TBD   | Pending |
+| RENDER-02   | TBD   | Pending |
+| PREVIEW-01  | TBD   | Pending |
+| PREVIEW-02  | TBD   | Pending |
+| QUALITY-01  | TBD   | Pending |
+| QUALITY-02  | TBD   | Pending |
+| QUALITY-03  | TBD   | Pending |
+
+**Coverage:**
+
+- v1 requirements: 13 total
+- Mapped to phases: 0
+- Unmapped: 13
+
+---
+
+_Requirements defined: 2026-07-02_
+_Last updated: 2026-07-02 after initial definition_
