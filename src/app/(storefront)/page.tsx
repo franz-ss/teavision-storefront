@@ -28,6 +28,8 @@ import {
   PRODUCT_RANGE_INTRO_FIXTURE,
   SUPPLY_CHAIN_FIXTURE,
   SUPPLY_CHAIN_PROTECTION_FIXTURE,
+  TEA_JOURNAL_FIXTURE,
+  TESTIMONIALS_FIXTURE,
   websiteJsonLd,
 } from '@/components/homepage/content'
 import {
@@ -84,8 +86,8 @@ export default function HomePage() {
         <SupplyChain {...SUPPLY_CHAIN_FIXTURE} />
         <CertificationCoverage {...CERTIFICATION_COVERAGE_FIXTURE} />
         <SupplyChainProtection {...SUPPLY_CHAIN_PROTECTION_FIXTURE} />
-        <Testimonials />
-        <TeaJournal />
+        <Testimonials {...TESTIMONIALS_FIXTURE} />
+        <TeaJournal {...TEA_JOURNAL_FIXTURE} />
         <ContactSection action={submitContactFormAction} />
         <Cta {...ctaCatalogueData} />
         <Faq />

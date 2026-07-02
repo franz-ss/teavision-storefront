@@ -15,6 +15,7 @@ import {
   DEFAULT_BLOG_HANDLE,
   getBlogPath,
   getDefaultBlogListing,
+  getHomepageArticles,
 } from './operations'
 
 vi.mock('next/cache', () => ({
@@ -169,6 +170,55 @@ describe('getDefaultBlogListing', () => {
       expect.any(String),
       expect.objectContaining({ offset: 6, limit: 12 }),
     )
+  })
+})
+
+describe('getHomepageArticles', () => {
+  beforeEach(() => {
+    vi.mocked(sanityFetch).mockReset()
+    vi.mocked(getSanityImageUrl).mockReset()
+    vi.mocked(getSanityImageUrl).mockImplementation((_source, options = {}) => {
+      const width = options.width ? `w=${options.width}` : null
+      const quality = options.quality ? `q=${options.quality}` : null
+      const fit = options.fit ? `fit=${options.fit}` : null
+
+      return ['https://cdn.sanity.io/generated.jpg', width, quality, fit]
+        .filter((part): part is string => Boolean(part))
+        .join('?')
+    })
+  })
+
+  it('uses a configurable max post count while preserving the default of 3', async () => {
+    vi.mocked(sanityFetch)
+      .mockResolvedValueOnce([makePost('first'), makePost('second')])
+      .mockResolvedValueOnce([makePost('default')])
+
+    const twoArticles = await getHomepageArticles(DEFAULT_BLOG_HANDLE, 2)
+    const defaultArticles = await getHomepageArticles()
+
+    expect(twoArticles).toHaveLength(2)
+    expect(defaultArticles).toHaveLength(1)
+    expect(vi.mocked(sanityFetch)).toHaveBeenNthCalledWith(
+      1,
+      expect.any(String),
+      { blogHandle: DEFAULT_BLOG_HANDLE, limit: 2 },
+    )
+    expect(vi.mocked(sanityFetch)).toHaveBeenNthCalledWith(
+      2,
+      expect.any(String),
+      { blogHandle: DEFAULT_BLOG_HANDLE, limit: 3 },
+    )
+  })
+
+  it('normalizes legacy handles and clamps the homepage article limit', async () => {
+    vi.mocked(sanityFetch).mockResolvedValueOnce([makePost('clamped')])
+
+    await getHomepageArticles('journal', 99)
+
+    expect(vi.mocked(sanityFetch)).toHaveBeenCalledWith(expect.any(String), {
+      blogHandle: DEFAULT_BLOG_HANDLE,
+      limit: 3,
+    })
   })
 })
 

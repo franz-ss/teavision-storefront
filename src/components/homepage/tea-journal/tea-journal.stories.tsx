@@ -1,11 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
+import { TEA_JOURNAL_FIXTURE } from '../content'
 import { TeaJournalSection } from './tea-journal'
 
 const meta: Meta<typeof TeaJournalSection> = {
   title: 'Homepage/TeaJournal',
   component: TeaJournalSection,
   tags: ['autodocs'],
+  args: {
+    config: TEA_JOURNAL_FIXTURE,
+  },
 }
 export default meta
 
@@ -79,12 +83,14 @@ const articles = [
 export const Default: Story = {
   args: {
     articles,
+    config: TEA_JOURNAL_FIXTURE,
   },
 }
 
 export const SingleArticle: Story = {
   args: {
     articles: articles.slice(0, 1),
+    config: TEA_JOURNAL_FIXTURE,
   },
 }
 
@@ -99,6 +105,7 @@ export const MoreThanThreeArticles: Story = {
         title: 'Extra Article Hidden by Homepage Slice',
       },
     ],
+    config: TEA_JOURNAL_FIXTURE,
   },
 }
 
@@ -114,6 +121,7 @@ export const LongContent: Story = {
       },
       ...articles.slice(1),
     ],
+    config: TEA_JOURNAL_FIXTURE,
   },
 }
 
@@ -129,6 +137,7 @@ export const LongUnbrokenContentMobile: Story = {
       },
       ...articles.slice(1),
     ],
+    config: TEA_JOURNAL_FIXTURE,
   },
   parameters: {
     viewport: {
@@ -148,5 +157,6 @@ export const AllImagesMissing: Story = {
       ...article,
       featuredImage: null,
     })),
+    config: TEA_JOURNAL_FIXTURE,
   },
 }

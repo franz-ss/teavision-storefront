@@ -4,48 +4,57 @@ import { ArrowRight } from 'lucide-react'
 
 import { Eyebrow, Section } from '@/components/ui'
 import {
-  DEFAULT_BLOG_HANDLE,
   formatArticleDate,
   getArticlePath,
   getBlogPath,
   getHomepageArticles,
   type BlogArticleSummary,
 } from '@/lib/blog/operations'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
-type TeaJournalSectionProps = {
+export type TeaJournalProps = HomepageContent['teaJournal']
+
+export type TeaJournalSectionProps = {
   articles: BlogArticleSummary[]
+  config: TeaJournalProps
 }
 
-export async function TeaJournal() {
-  const articles = await getHomepageArticles(DEFAULT_BLOG_HANDLE)
+export async function TeaJournal(config: TeaJournalProps) {
+  const articles = await getHomepageArticles(config.blogHandle, config.maxPosts)
 
   if (articles.length === 0) return null
 
-  return <TeaJournalSection articles={articles} />
+  return <TeaJournalSection articles={articles} config={config} />
 }
 
-export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
+export function TeaJournalSection({
+  articles,
+  config,
+}: TeaJournalSectionProps) {
+  const visibleArticles = articles.slice(0, config.maxPosts)
+
   return (
     <Section.Root tone="surface">
       <Section.Container>
         {/* Header per design .range__head: items-end, h2 + View-all link-arrow, 40px below */}
         <div className="flex flex-wrap items-end justify-between gap-7.5">
           <div>
-            <Eyebrow>Insights &amp; stories</Eyebrow>
-            <h2 className="type-heading-01 text-ink mt-4">Tea Journal</h2>
-            <p className="type-lede text-ink-soft mt-4 max-w-[62ch]">
-              Stay updated with insights, guides, and stories from the world of
-              tea and spices. From the health benefits of herbal teas to
-              sourcing bulk herbs and spices, our Tea Journal is here to inspire
-              and educate.
-            </p>
+            {config.intro.eyebrow && <Eyebrow>{config.intro.eyebrow}</Eyebrow>}
+            <h2 className="type-heading-01 text-ink mt-4">
+              {config.intro.title}
+            </h2>
+            {config.intro.copy && (
+              <p className="type-lede text-ink-soft mt-4 max-w-[62ch]">
+                {config.intro.copy}
+              </p>
+            )}
           </div>
 
           <Link
-            href={getBlogPath(DEFAULT_BLOG_HANDLE)}
+            href={getBlogPath(config.blogHandle)}
             className="focus-visible:ring-ring border-hairline text-ink hover:border-brand hover:text-brand inline-flex items-center gap-2 border-b-[1.5px] pb-0.75 text-[0.92rem] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none [&_svg]:transition-transform hover:[&_svg]:translate-x-1"
           >
-            View all
+            {config.linkLabel}
             <ArrowRight
               className="size-3.75"
               aria-hidden="true"
@@ -55,10 +64,10 @@ export function TeaJournalSection({ articles }: TeaJournalSectionProps) {
         </div>
 
         <ul className="mt-8 grid min-w-0 gap-8 md:mt-10 md:grid-cols-3 md:gap-5.5">
-          {articles.slice(0, 3).map((article) => (
+          {visibleArticles.map((article) => (
             <li key={article.id} className="min-w-0 overflow-hidden">
               <Link
-                href={getArticlePath(DEFAULT_BLOG_HANDLE, article.handle)}
+                href={getArticlePath(config.blogHandle, article.handle)}
                 className="group focus-visible:ring-ring flex min-w-0 flex-col overflow-hidden rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:h-full"
               >
                 {/* Standard 3:2 ratio — scales with column width instead of a fixed 220px */}

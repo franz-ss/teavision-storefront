@@ -1,26 +1,33 @@
 import Image from 'next/image'
 
-import { Section } from '@/components/ui'
+import { Eyebrow, Section } from '@/components/ui'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
-import { TESTIMONIALS } from '../content'
+import { TESTIMONIALS_FIXTURE } from '../content'
 import { TestimonialsSlider } from './testimonials-slider'
 
-export function Testimonials() {
+export type TestimonialsProps = {
+  intro?: HomepageContent['testimonials']['intro']
+  items?: HomepageContent['testimonials']['items']
+}
+
+export function Testimonials({
+  intro = TESTIMONIALS_FIXTURE.intro,
+  items = TESTIMONIALS_FIXTURE.items,
+}: TestimonialsProps = {}) {
   return (
     <Section.Root tone="surface">
       <Section.Container>
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="type-heading-01 text-ink">Teavision Testimonials</h2>
-          <p className="text-ink-soft mt-4">
-            We&apos;re proud to be the trusted tea supplier for Australia&apos;s
-            biggest and most loved brands. Our clients value our ability to
-            source fresh, organic ingredients and provide flexible solutions for
-            bulk tea bags, loose tea in bulk, and custom blends.
-          </p>
+          {intro.eyebrow && (
+            <Eyebrow className="mb-4 justify-center">{intro.eyebrow}</Eyebrow>
+          )}
+          <h2 className="type-heading-01 text-ink">{intro.title}</h2>
+          {intro.copy && <p className="text-ink-soft mt-4">{intro.copy}</p>}
         </div>
 
-        <TestimonialsSlider slideCount={TESTIMONIALS.length}>
-          {TESTIMONIALS.map((testimonial) => (
+        <TestimonialsSlider slideCount={items.length}>
+          {items.map((testimonial) => (
             <div
               key={testimonial.name}
               className="min-w-0 shrink-0 grow-0 basis-full pl-4"
@@ -28,7 +35,7 @@ export function Testimonials() {
               aria-roledescription="slide"
               aria-label={`${testimonial.name} testimonial`}
             >
-              <article className="border-hairline-2 bg-card mx-auto max-w-5xl rounded-lg border p-5 shadow-1 sm:p-6 md:p-8">
+              <article className="border-hairline-2 bg-card shadow-1 mx-auto max-w-5xl rounded-lg border p-5 sm:p-6 md:p-8">
                 <div className="grid gap-6 md:grid-cols-[9rem_1fr] md:gap-9">
                   <div className="flex items-center justify-between gap-4 md:flex-col md:items-start md:justify-start">
                     <Image
@@ -46,7 +53,7 @@ export function Testimonials() {
 
                   <blockquote>
                     <div
-                      className="text-gold mb-4 font-display text-6xl leading-none opacity-60"
+                      className="text-gold font-display mb-4 text-6xl leading-none opacity-60"
                       aria-hidden="true"
                     >
                       &ldquo;

@@ -250,7 +250,7 @@ export const homepageBlogPostsQuery = groq`
     defined(slug.current) &&
     blog->slug.current == $blogHandle &&
     publishedAt <= now()
-  ] | order(publishedAt desc)[0...3]{
+  ] | order(publishedAt desc)[0...$limit]{
     ${sanityBlogPostSummaryFields}
   }
 `

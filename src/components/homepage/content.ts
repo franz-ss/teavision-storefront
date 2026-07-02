@@ -470,60 +470,78 @@ export const SUPPLY_CHAIN_PROTECTION_FIXTURE = {
   ],
 } satisfies HomepageContent['supplyChainProtection']
 
-export const TESTIMONIALS = [
-  {
-    logo: {
-      src: '/images/testimonials/mood-tea-logo.png',
-      alt: 'MOOD Tea logo',
-      width: 325,
-      height: 400,
-    },
-    name: 'Ashley McGrath',
-    role: 'GM Social Enterprise',
-    brand: 'MOOD Tea',
-    quote:
-      "Teavision has been an exceptional partner to MOOD Tea from day one. Their team consistently delivers outstanding service and support, always responsive, proactive, and genuinely invested in our success. As a purpose-led brand, it's crucial we work with suppliers who share our values and commitment to quality, and Teavision has never let us down. Their reliable supply and streamlined process have saved us both time and cost, allowing us to focus on growing our impact. Thanks to their support, we've been able to channel more resources into our social mission, supporting youth mental health programs. We truly see Teavision not just as a supplier, but as a contributor to the positive impact we're creating. We're grateful for their partnership.",
+export const TESTIMONIALS_FIXTURE = {
+  intro: {
+    eyebrow: null,
+    title: 'Teavision Testimonials',
+    copy: "We're proud to be the trusted tea supplier for Australia's biggest and most loved brands. Our clients value our ability to source fresh, organic ingredients and provide flexible solutions for bulk tea bags, loose tea in bulk, and custom blends.",
   },
-  {
-    logo: {
-      src: '/images/testimonials/st-ali-logo.png',
-      alt: 'St. Ali logo',
-      width: 325,
-      height: 400,
+  items: [
+    {
+      logo: {
+        src: '/images/testimonials/mood-tea-logo.png',
+        alt: 'MOOD Tea logo',
+        width: 325,
+        height: 400,
+      },
+      name: 'Ashley McGrath',
+      role: 'GM Social Enterprise',
+      brand: 'MOOD Tea',
+      quote:
+        "Teavision has been an exceptional partner to MOOD Tea from day one. Their team consistently delivers outstanding service and support, always responsive, proactive, and genuinely invested in our success. As a purpose-led brand, it's crucial we work with suppliers who share our values and commitment to quality, and Teavision has never let us down. Their reliable supply and streamlined process have saved us both time and cost, allowing us to focus on growing our impact. Thanks to their support, we've been able to channel more resources into our social mission, supporting youth mental health programs. We truly see Teavision not just as a supplier, but as a contributor to the positive impact we're creating. We're grateful for their partnership.",
     },
-    name: 'Lucy Ward',
-    role: '',
-    brand: 'St. Ali',
-    quote:
-      'Tea Vision has been an outstanding supplier and trusted partner in bringing our products to life. Over our long-standing relationship across multiple product lines, they have consistently delivered excellent service and reliable, prompt shipments. Their professionalism, attention to detail, and responsiveness have made our collaboration seamless and productive. We highly recommend Tea Vision to any business seeking a dependable supplier who truly understands the value of partnership.',
-  },
-  {
-    logo: {
-      src: '/images/testimonials/buy-organics-online-logo.png',
-      alt: 'Buy Organics Online logo',
-      width: 325,
-      height: 400,
+    {
+      logo: {
+        src: '/images/testimonials/st-ali-logo.png',
+        alt: 'St. Ali logo',
+        width: 325,
+        height: 400,
+      },
+      name: 'Lucy Ward',
+      role: '',
+      brand: 'St. Ali',
+      quote:
+        'Tea Vision has been an outstanding supplier and trusted partner in bringing our products to life. Over our long-standing relationship across multiple product lines, they have consistently delivered excellent service and reliable, prompt shipments. Their professionalism, attention to detail, and responsiveness have made our collaboration seamless and productive. We highly recommend Tea Vision to any business seeking a dependable supplier who truly understands the value of partnership.',
     },
-    name: 'Owner',
-    role: '',
-    brand: 'Buy Organics Online',
-    quote:
-      "We've been working with Teavision since early 2025, and their support has been invaluable in navigating the complexities of sourcing quality products. Having them close by gives us confidence, reduces risk, and opens the door to their extensive network for new product opportunities. Their professionalism and commitment make the process seamless and worry-free. I highly recommend their services — Lucas, in particular, has been fantastic to work with.",
-  },
-  {
-    logo: {
-      src: '/images/testimonials/remedy-drinks-logo.png',
-      alt: 'Remedy Drinks logo',
-      width: 325,
-      height: 400,
+    {
+      logo: {
+        src: '/images/testimonials/buy-organics-online-logo.png',
+        alt: 'Buy Organics Online logo',
+        width: 325,
+        height: 400,
+      },
+      name: 'Owner',
+      role: '',
+      brand: 'Buy Organics Online',
+      quote:
+        "We've been working with Teavision since early 2025, and their support has been invaluable in navigating the complexities of sourcing quality products. Having them close by gives us confidence, reduces risk, and opens the door to their extensive network for new product opportunities. Their professionalism and commitment make the process seamless and worry-free. I highly recommend their services — Lucas, in particular, has been fantastic to work with.",
     },
-    name: 'Julia Blair',
-    role: 'Global Head of Manufacturing',
-    brand: 'Remedy Drinks',
-    quote:
-      "Brewing Better Together with Teavision. As Australia's leading “better-for-you” beverage manufacturer, here at Remedy Drinks we consider quality, consistency, and trusted partnerships to be at the heart of everything we do. Our long-standing relationship with Teavision has been vital in supporting our growth and upholding the high standards our consumers expect. Teavision reliably provides us with high-quality ingredients which are key to our product range. Their exceptional service and support is always responsive, proactive, and collaborative, making them a true partner in our success. Thanks to their efficient sourcing strategies and deep understanding of our supply chain, we've achieved significant cost savings without compromising quality. Their consistent, on-time, and in-full deliveries ensure uninterrupted production and guarantee our amazing drinks reach consumers exactly as intended. Teavision has made a powerful and positive impact on Remedy Drinks, helping us scale sustainably, control costs, and strengthen our supply chain. We value this partnership and look forward to many more years of successful collaboration.",
+    {
+      logo: {
+        src: '/images/testimonials/remedy-drinks-logo.png',
+        alt: 'Remedy Drinks logo',
+        width: 325,
+        height: 400,
+      },
+      name: 'Julia Blair',
+      role: 'Global Head of Manufacturing',
+      brand: 'Remedy Drinks',
+      quote:
+        "Brewing Better Together with Teavision. As Australia's leading “better-for-you” beverage manufacturer, here at Remedy Drinks we consider quality, consistency, and trusted partnerships to be at the heart of everything we do. Our long-standing relationship with Teavision has been vital in supporting our growth and upholding the high standards our consumers expect. Teavision reliably provides us with high-quality ingredients which are key to our product range. Their exceptional service and support is always responsive, proactive, and collaborative, making them a true partner in our success. Thanks to their efficient sourcing strategies and deep understanding of our supply chain, we've achieved significant cost savings without compromising quality. Their consistent, on-time, and in-full deliveries ensure uninterrupted production and guarantee our amazing drinks reach consumers exactly as intended. Teavision has made a powerful and positive impact on Remedy Drinks, helping us scale sustainably, control costs, and strengthen our supply chain. We value this partnership and look forward to many more years of successful collaboration.",
+    },
+  ],
+} satisfies HomepageContent['testimonials']
+
+export const TEA_JOURNAL_FIXTURE = {
+  intro: {
+    eyebrow: 'Insights & stories',
+    title: 'Tea Journal',
+    copy: 'Stay updated with insights, guides, and stories from the world of tea and spices. From the health benefits of herbal teas to sourcing bulk herbs and spices, our Tea Journal is here to inspire and educate.',
   },
-] satisfies Testimonial[]
+  blogHandle: 'teavision-blogs',
+  linkLabel: 'View all',
+  maxPosts: 3,
+} satisfies HomepageContent['teaJournal']
 
 export const FAQS = [
   {

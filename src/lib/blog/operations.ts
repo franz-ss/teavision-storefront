@@ -7,10 +7,7 @@ import {
   defaultBlogListingQuery,
   homepageBlogPostsQuery,
 } from '@/lib/sanity/queries/blog'
-import {
-  getSanityImageUrl,
-  sanityFetch,
-} from '@/lib/sanity/client'
+import { getSanityImageUrl, sanityFetch } from '@/lib/sanity/client'
 import type { SanityImageUrlOptions } from '@/lib/sanity/client'
 import type {
   SanityBlogPost,
@@ -112,9 +109,21 @@ export type DefaultBlogListing = {
 
 // Bounded Sanity image URL options by use case.
 // Quality is constrained to the values allowed in next.config.ts (68 or 75).
-const IMAGE_OPTIONS_HERO: SanityImageUrlOptions = { width: 1920, quality: 75, fit: 'max' }
-const IMAGE_OPTIONS_FEATURED_CARD: SanityImageUrlOptions = { width: 900, quality: 75, fit: 'max' }
-const IMAGE_OPTIONS_CARD: SanityImageUrlOptions = { width: 640, quality: 68, fit: 'max' }
+const IMAGE_OPTIONS_HERO: SanityImageUrlOptions = {
+  width: 1920,
+  quality: 75,
+  fit: 'max',
+}
+const IMAGE_OPTIONS_FEATURED_CARD: SanityImageUrlOptions = {
+  width: 900,
+  quality: 75,
+  fit: 'max',
+}
+const IMAGE_OPTIONS_CARD: SanityImageUrlOptions = {
+  width: 640,
+  quality: 68,
+  fit: 'max',
+}
 
 function isNonEmpty(value: string | null | undefined): value is string {
   return Boolean(value?.trim())
@@ -390,10 +399,9 @@ export async function getBlog(handle: string): Promise<BlogIndex | null> {
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
-  const data = await sanityFetch<SanityBlogListingResult>(
-    blogListingQuery,
-    { blogHandle: normalizedHandle },
-  )
+  const data = await sanityFetch<SanityBlogListingResult>(blogListingQuery, {
+    blogHandle: normalizedHandle,
+  })
 
   if (!data.blog) return null
 
@@ -433,10 +441,10 @@ export async function getArticle(
   )
   cacheLife('hours')
 
-  const data = await sanityFetch<SanityBlogPostResult>(
-    blogArticleQuery,
-    { articleHandle, blogHandle: normalizedHandle },
-  )
+  const data = await sanityFetch<SanityBlogPostResult>(blogArticleQuery, {
+    articleHandle,
+    blogHandle: normalizedHandle,
+  })
 
   return data.article ? reshapeArticle(data.article) : null
 }
@@ -531,16 +539,24 @@ export async function getDefaultBlogListing(
 
 export async function getHomepageArticles(
   blogHandle = DEFAULT_BLOG_HANDLE,
+  maxPosts = 3,
 ): Promise<BlogArticleSummary[]> {
   'use cache'
   const normalizedHandle = normalizeBlogHandle(blogHandle)
+  const limit = normalizeHomepageArticleLimit(maxPosts)
   cacheTag('blog', `blog-${normalizedHandle}`)
   cacheLife('hours')
 
   const articles = await sanityFetch<SanityBlogPostSummary[]>(
     homepageBlogPostsQuery,
-    { blogHandle: normalizedHandle },
+    { blogHandle: normalizedHandle, limit },
   )
 
   return articles.map((a) => reshapeArticleSummary(a))
+}
+
+function normalizeHomepageArticleLimit(maxPosts: number): number {
+  if (!Number.isFinite(maxPosts)) return 3
+
+  return Math.min(Math.max(1, Math.trunc(maxPosts)), 3)
 }
