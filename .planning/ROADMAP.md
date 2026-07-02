@@ -8,6 +8,7 @@
 - ✅ **v1.3 Shopify Customer Accounts** — Phase 14 (shipped 2026-06-22) — see `milestones/v1.3-ROADMAP.md`
 - ✅ **v1.4 Production Readiness 100/100** — Phases 15–19 (shipped 2026-06-26; H1 re-remediation 2026-06-29) — see `milestones/v1.4-ROADMAP.md`
 - ✅ **v1.5 Performance & PageSpeed 100** — Phase 20 (shipped 2026-07-01, lean scope) — see `milestones/v1.5-ROADMAP.md`
+- 🚧 **v1.6 Sanity CMS Homepage Integration** — Phases 21–23 (active)
 
 ## Phases
 
@@ -77,35 +78,79 @@ Full phase details: `milestones/v1.5-ROADMAP.md` · Audit: `milestones/v1.5-MILE
 
 </details>
 
+<details open>
+<summary>🚧 v1.6 Sanity CMS Homepage Integration (Phases 21–23) — ACTIVE</summary>
+
+### Phase 21: Sanity Homepage Model and Seed
+
+**Goal:** Add the minimal homepage singleton in the sibling `teavision-cms` Studio and seed it from the current code-owned homepage.
+
+**Requirements:** CMS-01, CMS-02, CMS-03
+**Plans:** 1
+
+Success criteria:
+
+- `../teavision-cms` exposes one homepage singleton with fields for the current homepage sections in their current order.
+- Section enable/disable fields are added only where the current scope needs them.
+- A seed path creates or updates the homepage singleton from the current homepage content.
+- The touched CMS schema and seed path pass the sibling project's relevant checks.
+
+### Phase 22: Storefront Data and Rendering
+
+**Goal:** Fetch typed Sanity homepage content and render it through the existing storefront homepage with visual, SEO, and commerce parity.
+
+**Requirements:** DATA-01, DATA-02, RENDER-01, RENDER-02, QUALITY-01
+**Plans:** 1
+
+Success criteria:
+
+- `/` renders seeded Sanity content through a typed server-side storefront data boundary.
+- Existing homepage section order, design, forms, links, and Shopify commerce authority are preserved.
+- Sanity images render with stable dimensions, alt text, crop/hotspot support, and existing hero LCP discipline.
+- Homepage metadata, canonical/indexation behavior, JSON-LD, and one-H1 behavior match the v1.5 baseline.
+
+### Phase 23: Preview, Revalidation, and No-Regression Release
+
+**Goal:** Add secure Draft Mode preview, homepage cache revalidation, and rollout evidence that blocks any SEO or PageSpeed regression.
+
+**Requirements:** DATA-03, PREVIEW-01, PREVIEW-02, QUALITY-02, QUALITY-03
+**Plans:** 1
+
+Success criteria:
+
+- The signed Sanity webhook invalidates homepage cache tags without regressing existing blog revalidation.
+- Editors can preview draft homepage content at `/` through secure Next Draft Mode.
+- Published visitors never receive draft content, preview overlays, or stega/source-map text.
+- Release evidence proves homepage SEO and PageSpeed scores are unchanged or improved; any measured drop blocks rollout or triggers rollback.
+
+</details>
+
 ## Progress
 
-| Phase                                                             | Milestone | Plans Complete | Status     | Completed  |
-| ----------------------------------------------------------------- | --------- | -------------- | ---------- | ---------- |
-| 1. Bulk Savings PDP and Cart Parity                               | v1.0      | 1/1            | Complete   | 2026-05-26 |
-| 2. Searchanise API Search Results                                 | v1.0      | 1/1            | Complete   | 2026-05-27 |
-| 4. Footer 1:1 Parity                                              | v1.0      | 1/1            | Complete   | 2026-05-29 |
-| 5. Codebase Review Remediation                                    | v1.0      | 5/5            | Complete   | 2026-06-02 |
-| 6. Prevent site indexing                                          | v1.0      | 1/1            | Complete   | 2026-06-03 |
-| 8. Optimized Collection Quick Add                                 | v1.0      | 1/1            | Complete   | 2026-06-03 |
-| 9. Collection Product Card Improvements                           | v1.0      | —              | Superseded | 2026-06-11 |
-| 10. Cart/Checkout Critical Flow Tests                             | v1.0      | 4/4            | Complete   | —          |
-| 11. Full Visual Redesign                                          | v1.0      | 22/22          | Complete   | 2026-06-11 |
-| 12. Optimize blog loading                                         | v1.1      | 4/4            | Complete   | 2026-06-12 |
-| 13. Production-parity collection pagination                       | v1.2      | 2/2            | Complete   | 2026-06-12 |
-| 14. Shopify Customer Accounts                                     | v1.3      | 9/9            | Complete   | 2026-06-22 |
-| 15. Security, Dependency, and Runtime Header Hardening            | v1.4      | 5/5            | Complete   | 2026-06-22 |
-| 16. Legal, Consent, Analytics, and SEO Launch Coverage            | v1.4      | 4/4            | Complete   | 2026-06-23 |
-| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4      | 15/15          | Complete   | 2026-06-26 |
-| 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete   | 2026-06-26 |
-| 19. H1 Correctness Re-Remediation                                | v1.4      | 4/4            | Complete   | 2026-06-29 |
-| 20. PageSpeed 100/100 Perfection (lean)                          | v1.5      | 1/1            | Complete   | 2026-07-01 |
+| Phase                                                             | Milestone | Plans Complete | Status      | Completed  |
+| ----------------------------------------------------------------- | --------- | -------------- | ----------- | ---------- |
+| 1. Bulk Savings PDP and Cart Parity                               | v1.0      | 1/1            | Complete    | 2026-05-26 |
+| 2. Searchanise API Search Results                                 | v1.0      | 1/1            | Complete    | 2026-05-27 |
+| 4. Footer 1:1 Parity                                              | v1.0      | 1/1            | Complete    | 2026-05-29 |
+| 5. Codebase Review Remediation                                    | v1.0      | 5/5            | Complete    | 2026-06-02 |
+| 6. Prevent site indexing                                          | v1.0      | 1/1            | Complete    | 2026-06-03 |
+| 8. Optimized Collection Quick Add                                 | v1.0      | 1/1            | Complete    | 2026-06-03 |
+| 9. Collection Product Card Improvements                           | v1.0      | —              | Superseded  | 2026-06-11 |
+| 10. Cart/Checkout Critical Flow Tests                             | v1.0      | 4/4            | Complete    | —          |
+| 11. Full Visual Redesign                                          | v1.0      | 22/22          | Complete    | 2026-06-11 |
+| 12. Optimize blog loading                                         | v1.1      | 4/4            | Complete    | 2026-06-12 |
+| 13. Production-parity collection pagination                       | v1.2      | 2/2            | Complete    | 2026-06-12 |
+| 14. Shopify Customer Accounts                                     | v1.3      | 9/9            | Complete    | 2026-06-22 |
+| 15. Security, Dependency, and Runtime Header Hardening            | v1.4      | 5/5            | Complete    | 2026-06-22 |
+| 16. Legal, Consent, Analytics, and SEO Launch Coverage            | v1.4      | 4/4            | Complete    | 2026-06-23 |
+| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4      | 15/15          | Complete    | 2026-06-26 |
+| 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete    | 2026-06-26 |
+| 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
+| 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
+| 21. Sanity Homepage Model and Seed                                | v1.6      | 0/1            | Not Started | —          |
+| 22. Storefront Data and Rendering                                 | v1.6      | 0/1            | Not Started | —          |
+| 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next
 
-**All defined milestones through v1.5 are shipped.** Full phase details and per-milestone audits are archived under `milestones/`.
-
-Start the next milestone with `/gsd-new-milestone`. The most likely candidates for a v1.6:
-
-- **Owner-gated launch proof** — capture real Customer Account OAuth, protected customer data scopes, hosted checkout/payment/shipping/tax/order/success-redirect tests, authoritative B2B/company-location pricing checks, and Search Console submission/URL inspection. These are the remaining external gates before public launch.
-- **Broad PageSpeed 100/100** — the 10 deferred v1.5 PSI requirements (multi-route real-PSI preview harness, `/account` CLS, font/caching/third-party tuning, multi-route Accessibility/Best-Practices/SEO 100, full evidence pack). Plans preserved in `.planning/phases/20-pagespeed-100-perfection/deferred/`.
-- **Post-launch growth** — inherited human-only launch checks (collection empty-state, human visual/newsletter UAT, blog performance debt), CSP enforcement (currently report-only), and durable rate-limit store.
+Start Phase 21 with a lean implementation plan. The first implementation slice should only add the sibling Studio singleton, current-section fields, and a seed path; storefront rendering, preview, and release evidence remain in later phases.

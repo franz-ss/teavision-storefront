@@ -65,27 +65,27 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status  |
 | ----------- | ----- | ------- |
-| CMS-01      | TBD   | Pending |
-| CMS-02      | TBD   | Pending |
-| CMS-03      | TBD   | Pending |
-| DATA-01     | TBD   | Pending |
-| DATA-02     | TBD   | Pending |
-| DATA-03     | TBD   | Pending |
-| RENDER-01   | TBD   | Pending |
-| RENDER-02   | TBD   | Pending |
-| PREVIEW-01  | TBD   | Pending |
-| PREVIEW-02  | TBD   | Pending |
-| QUALITY-01  | TBD   | Pending |
-| QUALITY-02  | TBD   | Pending |
-| QUALITY-03  | TBD   | Pending |
+| CMS-01      | 21    | Pending |
+| CMS-02      | 21    | Pending |
+| CMS-03      | 21    | Pending |
+| DATA-01     | 22    | Pending |
+| DATA-02     | 22    | Pending |
+| DATA-03     | 23    | Pending |
+| RENDER-01   | 22    | Pending |
+| RENDER-02   | 22    | Pending |
+| PREVIEW-01  | 23    | Pending |
+| PREVIEW-02  | 23    | Pending |
+| QUALITY-01  | 22    | Pending |
+| QUALITY-02  | 23    | Pending |
+| QUALITY-03  | 23    | Pending |
 
 **Coverage:**
 
 - v1 requirements: 13 total
-- Mapped to phases: 0
-- Unmapped: 13
+- Mapped to phases: 13
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-07-02_
-_Last updated: 2026-07-02 after initial definition_
+_Last updated: 2026-07-02 after roadmap creation_

@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Sanity CMS Homepage Integration
 status: planning
-last_updated: '2026-07-02T02:11:20.157Z'
+last_updated: '2026-07-02T02:37:11.651Z'
 last_activity: 2026-07-02
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
-  total_plans: 0
+  total_plans: 3
   completed_plans: 0
   percent: 0
 ---
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-02)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Defining requirements for v1.6 Sanity CMS Homepage Integration.
+**Current focus:** Ready to plan Phase 21: Sanity Homepage Model and Seed.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 21
 Plan: —
-Status: Defining requirements
-Last activity: 2026-07-02 — Milestone v1.6 started
+Status: Roadmap ready
+Last activity: 2026-07-02 — Milestone v1.6 roadmap created
 
 ## Performance Metrics
 
@@ -228,10 +228,12 @@ Recent decisions affecting current work:
 - v1.4 added: Production Readiness 100/100 with Phase 15 Security/Headers, Phase 16 Legal/Consent/Analytics/SEO, and Phase 17 Operations/Performance/Final Audit.
 - Phase 18 added: SEO audit remediation
 - Phase 17 complete: PERF-01 accepted non-blocking through dated project-owner performance acceptance; final automated readiness is 100/100.
+- v1.6 added: Sanity CMS Homepage Integration with Phase 21 model/seed, Phase 22 storefront rendering, and Phase 23 preview/revalidation/no-regression release.
 
 ### Pending Todos
 
 - Capture owner-gated launch proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, Search Console sitemap submission, and Search Console URL inspection.
+- Plan Phase 21: Sanity Homepage Model and Seed.
 
 ### Blockers/Concerns
 
