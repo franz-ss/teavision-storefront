@@ -1,92 +1,106 @@
 ---
 phase: 22
 slug: storefront-data-and-rendering
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: approved
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-07-02
+revised: 2026-07-02
+plan_set: [22-01, 22-02, 22-03, 22-04, 22-05, 22-06, 22-07, 22-08]
 ---
 
 # Phase 22 - Validation Strategy
 
-> Per-phase validation contract for feedback sampling during execution.
-
----
+Per-phase validation contract for feedback sampling during execution.
 
 ## Test Infrastructure
 
 | Property | Value |
 | --- | --- |
-| **Framework** | Vitest, Storybook Vitest, TypeScript, ESLint, Next build |
-| **Config file** | `vitest.config.mts`, `vitest.storybook.config.mts`, `eslint.config.mjs`, `next.config.ts` |
-| **Quick run command** | `pnpm test:unit -- src/lib/sanity/home-page.test.ts` |
-| **Full suite command** | `pnpm lint && pnpm typecheck && pnpm test:stories && pnpm build` |
-| **Estimated runtime** | ~180 seconds |
-
----
+| Framework | Vitest, Storybook Vitest, TypeScript, ESLint, Next build |
+| Config file | `vitest.config.mts`, `vitest.storybook.config.mts`, `eslint.config.mjs`, `next.config.ts` |
+| Quick run command | `pnpm test:unit -- src/lib/sanity/home-page.test.ts` |
+| Full suite command | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts "src/app/(storefront)/page.test.tsx" src/lib/blog/operations.test.ts && pnpm test:stories && pnpm lint && pnpm typecheck && pnpm build` |
+| Max feedback latency | 180 seconds target |
 
 ## Sampling Rate
 
-- **After every task commit:** Run the task-specific quick command listed in the
-  verification map.
-- **After every plan wave:** Run `pnpm lint && pnpm typecheck && pnpm test:stories && pnpm build`.
-- **Before `$gsd-verify-work`:** Full suite must be green unless the summary
-  documents an explicit owner-approved external blocker.
-- **Max feedback latency:** 180 seconds.
-
----
+- After every task commit: run the task-specific command listed in the verification map.
+- After every plan wave: run the plan-level verification block from that `PLAN.md`.
+- Before `$gsd-verify-work`: run the full suite command above.
+- Human browser parity is required in Plan 22-08 after automated guards pass.
 
 ## Per-Task Verification Map
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 22-01-01 | 01 | 1 | DATA-01, DATA-02, RENDER-02, QUALITY-01 | T-22-01 / T-22-02 / T-22-03 | Missing/invalid Sanity `homePage` and required SEO/image fields fail loudly without runtime fallback. | unit | `pnpm test:unit -- src/lib/sanity/home-page.test.ts` | Missing until plan execution | pending |
-| 22-01-02 | 01 | 1 | RENDER-01, RENDER-02 | T-22-04 / T-22-05 | Existing sections render explicit CMS fixture props while client leaves and code-owned motifs stay isolated. | stories | `pnpm test:stories` | Existing stories, updates pending | pending |
-| 22-01-03 | 01 | 1 | DATA-01, RENDER-01, QUALITY-01 | T-22-01 / T-22-06 | `/` and `generateMetadata()` use the typed homepage boundary, preserve JSON-LD/forms, and do not keep static SEO fallbacks. | unit/type/build | `pnpm typecheck && pnpm build` | Existing route, updates pending | pending |
-| 22-01-04 | 01 | 1 | DATA-02, RENDER-01 | T-22-07 | Tea Journal settings come from CMS while article data remains owned by existing blog operations. | unit | `pnpm test:unit -- src/lib/blog/operations.test.ts src/lib/sanity/home-page.test.ts` | Existing blog tests, homepage tests pending | pending |
-| 22-01-05 | 01 | 1 | DATA-01, DATA-02, RENDER-01, RENDER-02, QUALITY-01 | T-22-08 | Final route compiles under Next 16 Cache Components and obeys lint, type, story, and build contracts. | full suite | `pnpm lint && pnpm typecheck && pnpm test:stories && pnpm build` | Existing infra | pending |
+| 22-01-01 | 22-01 | 1 | DATA-01, RENDER-02, QUALITY-01 | T-22-01/T-22-03/T-22-04 | Tests require missing/invalid `homePage`, SEO, canonical, links, and images to fail loudly; section cardinality stays a seeded fixture/shape assertion per D-03. | unit | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts` | Created by task | pending |
+| 22-01-02 | 22-01 | 1 | DATA-01, DATA-02, RENDER-02, QUALITY-01 | T-22-01..T-22-04 | Typed cached operation excludes commerce authority, normalizes Sanity images, and does not reject solely for section item counts. | unit/lint | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts && pnpm lint -- --quiet` | Created by task | pending |
+| 22-02-01 | 22-02 | 2 | RENDER-01, RENDER-02 | T-22-05/T-22-06 | Hero/proof points use required CMS props while preserving one-H1 and hero LCP props. | stories/lint | `pnpm test:stories -- --project chromium --testNamePattern "HomepageHero|Proof" && pnpm lint -- --quiet` | Existing files | pending |
+| 22-02-02 | 22-02 | 2 | RENDER-01, RENDER-02 | T-22-06/T-22-07 | Product-range cards preserve geometry, focus, hover, and responsive image behavior. | unit/stories/lint | `pnpm test:unit -- src/components/homepage/overlay-image-card/overlay-image-card.test.tsx && pnpm test:stories -- --project chromium --testNamePattern "ProductRange|Overlay" && pnpm lint -- --quiet` | Existing files | pending |
+| 22-03-01 | 22-03 | 3 | DATA-02, RENDER-01, RENDER-02 | T-22-08/T-22-10 | Newsletter, private label, and organic herbs keep Server Component wrappers, action handoff, and validated image geometry. | stories/lint | `pnpm test:stories -- --project chromium --testNamePattern "Newsletter|PrivateLabel|OrganicHerbs" && pnpm lint -- --quiet` | Existing files | pending |
+| 22-04-01 | 22-04 | 4 | DATA-02, RENDER-01, RENDER-02 | T-22-11/T-22-13 | Motifs and icon maps remain code-owned while certification images use validated CMS data. | stories/lint | `pnpm test:stories -- --project chromium --testNamePattern "SupplyChain|Certification" && pnpm lint -- --quiet` | Existing files | pending |
+| 22-05-01 | 22-05 | 5 | DATA-02, RENDER-01 | T-22-14/T-22-16 | Testimonials keep the carousel client leaf and Tea Journal config comes from CMS while live article data remains in blog operations. | unit/stories/lint | `pnpm test:unit -- src/lib/blog/operations.test.ts && pnpm test:stories -- --project chromium --testNamePattern "Testimonials|TeaJournal" && pnpm lint -- --quiet` | Existing files | pending |
+| 22-06-01 | 22-06 | 6 | DATA-02, RENDER-01 | T-22-17/T-22-19 | Contact action, catalogue motifs, and FAQ behavior remain code-owned/existing while copy comes from CMS. | stories/lint | `pnpm test:stories -- --project chromium --testNamePattern "ContactSection|Catalogues|Faq" && pnpm lint -- --quiet` | Existing files | pending |
+| 22-07-01 | 22-07 | 7 | DATA-01, RENDER-01, QUALITY-01 | T-22-20/T-22-22 | Route tests assert exact 13-section order, one H1, JSON-LD, CMS content, and no static SEO fallback. | unit | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx"` | Created by task | pending |
+| 22-07-02 | 22-07 | 7 | DATA-01, DATA-02, RENDER-01, RENDER-02, QUALITY-01 | T-22-20..T-22-23 | `/` and `generateMetadata()` use `getHomepage()`, preserve actions, fixed section order, JSON-LD, and noindex handling. | unit/lint/type/build | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx" src/lib/sanity/home-page.test.ts src/lib/blog/operations.test.ts && pnpm lint && pnpm typecheck && pnpm build` | Existing route, new test | pending |
+| 22-08-01 | 22-08 | 8 | RENDER-01, RENDER-02, QUALITY-01 | T-22-24/T-22-26 | Final automated gates prove route, Sanity, stories, lint, types, and build are green without running real Shopify checkout/payment/order tests. | full suite | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts "src/app/(storefront)/page.test.tsx" src/lib/blog/operations.test.ts && pnpm test:stories && pnpm lint && pnpm typecheck && pnpm build` | Existing infra | pending |
+| 22-08-02 | 22-08 | 8 | RENDER-01, RENDER-02, QUALITY-01 | T-22-25 | Human confirms `/` visual parity and exact visible section order in browser. | human-check | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx"` | Browser review | pending |
 
----
+## Exact Section-Order Contract
+
+Automated route tests in Plan 22-07 and the human parity check in Plan 22-08 must verify this exact order:
+
+1. `HomepageHero`
+2. `ProductRange`
+3. `HomepageNewsletter`
+4. `PrivateLabel`
+5. `OrganicHerbs`
+6. `SupplyChain`
+7. `CertificationCoverage`
+8. `SupplyChainProtection`
+9. `Testimonials`
+10. `TeaJournal`
+11. `ContactSection`
+12. `Cta`
+13. `Faq`
 
 ## Wave 0 Requirements
 
-- [ ] `src/lib/sanity/home-page.test.ts` - fail-loud validation, image normalization, SEO mapping, and count coverage for DATA-01, DATA-02, RENDER-02, QUALITY-01.
-- [ ] Updated homepage stories - explicit fixture props for prop-enabled sections.
-- [ ] No new test framework installation; existing Vitest and Storybook coverage are sufficient.
-
----
+- `src/lib/sanity/queries/home-page.test.ts` and `src/lib/sanity/home-page.test.ts` are created first in Plan 22-01 Task 1.
+- Count/cardinality checks for 11 product cards, 3 private-label cards, 4 proof points, 6 certification coverage items, and 7 supply-chain protection marks are seeded fixture/shape assertions only; runtime validation must not reject solely for section item counts per D-03.
+- `src/app/(storefront)/page.test.tsx` is created before route cutover in Plan 22-07 Task 1.
+- Existing Storybook stories are updated in their component plans before route cutover.
+- No new test framework installation is planned.
 
 ## Manual-Only Verifications
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 | --- | --- | --- | --- |
-| Visual homepage parity against seeded content | RENDER-01, RENDER-02 | Automated tests can prove structure and props, but final visual parity needs a browser review of the composed route. | Run `pnpm dev`, open `/`, compare section order, hero LCP image, cards, forms, testimonials, Tea Journal, contact, CTA, and FAQ against the v1.5 homepage baseline. |
-| Formal SEO/PageSpeed no-regression evidence | QUALITY-01 | Phase 22 preserves behavior, but milestone release proof is explicitly Phase 23 scope. | Record that Phase 22 build succeeds and defer formal PageSpeed/no-regression gate to Phase 23. |
-
----
+| Visual homepage parity against seeded content | RENDER-01, RENDER-02, QUALITY-01 | Automated tests cover structure, props, metadata, and stories; browser review catches composed layout and image-framing regressions. | Execute Plan 22-08: run `pnpm dev`, open `/`, and compare hero LCP image, cards, forms, testimonials, Tea Journal, contact, CTA, FAQ, mobile/desktop layout, focus states, and exact section order against the Phase 20 homepage baseline and Phase 21 seeded content. |
+| Formal preview/revalidation/release SEO and PageSpeed evidence | QUALITY-01 | Phase 22 preserves route behavior; DATA-03, PREVIEW-01, PREVIEW-02, QUALITY-02, and QUALITY-03 are mapped to Phase 23. | Record Phase 22 build and parity results; Phase 23 owns the release proof gate. |
 
 ## Threat Model
 
 | Threat | Risk | Mitigation |
 | --- | --- | --- |
-| T-22-01 Hidden static fallback masks CMS failure | Editors think Sanity controls `/` while stale hardcoded content renders. | Route and operation must throw on missing/invalid singleton; `content.ts` may only feed fixtures/stories. |
-| T-22-02 Invalid SEO weakens launch controls | CMS noIndex or canonical behavior bypasses global launch noindex. | Generate metadata from required CMS fields and always pass through `withNoindexRobots()`. |
-| T-22-03 Missing image dimensions cause layout shift | Sanity image renders without reserved geometry. | Require asset URL or ID plus dimensions before returning UI image data. |
-| T-22-04 Client-boundary creep | Parent homepage sections become client components. | Keep sections server-rendered and isolate interactivity in existing client leaves. |
-| T-22-05 Decorative assets become editor-owned accidentally | Motif animation and layout assets drift from approved design. | Keep newsletter, supply-chain, and catalogue motifs code-owned. |
-| T-22-06 Shopify commerce authority is diluted | CMS fields start controlling product, price, cart, checkout, or discount truth. | Limit CMS to homepage authored content and Tea Journal display settings. |
-| T-22-07 Blog ownership regression | Homepage CMS replaces live blog article data. | CMS controls Tea Journal intro/config only; `getHomepageArticles()` remains the article source. |
-| T-22-08 Cache and metadata mismatch | Page and metadata fetch different content or break Cache Components rules. | Use the same cached homepage operation from page and `generateMetadata()`. |
-
----
+| T-22-01 Hidden fallback masks CMS failure | Editors think Sanity controls `/` while stale hardcoded content renders. | `getHomepage()` throws on missing/invalid singleton and render-critical fields; route tests assert no static homepage import. |
+| T-22-02 Invalid SEO weakens launch controls | CMS noIndex/canonical bypasses launch noindex. | Route metadata maps CMS SEO and always passes through `withNoindexRobots()`. |
+| T-22-03 Missing image dimensions cause layout shift | Sanity image renders without reserved geometry. | Data boundary requires image URL/asset plus dimensions before render. |
+| T-22-04 Unsafe CMS href creates spoofing risk | Editor-authored links point to unsupported schemes. | Storefront validation mirrors CMS allowlist: `/`, `https://`, `mailto:`, `tel:`. |
+| T-22-05/T-22-15/T-22-17 Client-boundary creep | Parent homepage sections become client components. | Story/lint review keeps client directives in existing leaves only. |
+| T-22-07 Commerce authority drift | CMS starts controlling product, price, cart, checkout, or discount truth. | Homepage content model excludes commerce authority; Shopify operations and Server Actions remain authoritative. |
+| T-22-14 Blog ownership regression | CMS replaces live Tea Journal article data. | CMS controls intro/config only; `getHomepageArticles()` remains article source. |
+| T-22-20/T-22-21 Cache and metadata mismatch | Page and metadata fetch different content or weaken Cache Components/noindex rules. | Page and `generateMetadata()` use the same cached `getHomepage()` operation and pass metadata through `withNoindexRobots()`. |
+| T-22-24 Final evidence drift | Final gate output is incomplete or not recorded. | Plan 22-08 records automated command outputs and human parity result in `22-08-SUMMARY.md`. |
 
 ## Validation Sign-Off
 
-- [ ] All planned tasks have automated verification or explicit manual-only rationale.
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify.
-- [ ] Wave 0 covers all missing test references.
-- [ ] No watch-mode flags.
-- [ ] Feedback latency < 180 seconds.
-- [ ] `nyquist_compliant: true` set in frontmatter after the final plan is created and validated.
+- [x] All planned tasks have automated verification or explicit manual-only rationale.
+- [x] Sampling continuity: no three consecutive tasks lack automated verification.
+- [x] Wave 0 creates missing test references before implementation.
+- [x] No watch-mode flags.
+- [x] Feedback latency target documented.
+- [x] `nyquist_compliant: true` set in frontmatter for the revised eight-plan set.
 
-**Approval:** pending
+**Approval:** planner-approved for execution. Human approval remains intentionally pending only for the Plan 22-08 `/` visual parity checkpoint because it requires browser inspection after implementation.

@@ -104,11 +104,38 @@ Success criteria:
 **Goal:** Fetch typed Sanity homepage content and render it through the existing storefront homepage with visual, SEO, and commerce parity.
 
 **Requirements:** DATA-01, DATA-02, RENDER-01, RENDER-02, QUALITY-01
-**Plans:** 1
+**Plans:** 8 plans
 
 Plans:
 
-- [ ] 22-01-PLAN.md — Typed Sanity homepage data boundary, existing-section rendering, and metadata cutover
+**Wave 1**
+- [ ] 22-01-PLAN.md — Typed Sanity homepage data boundary and fail-loud validation
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 22-02-PLAN.md — Hero, proof points, and product range CMS prop rendering
+
+**Wave 3** *(blocked on Wave 2 completion)*
+- [ ] 22-03-PLAN.md — Newsletter, private-label, and organic-herbs CMS prop rendering
+
+**Wave 4** *(blocked on Wave 3 completion)*
+- [ ] 22-04-PLAN.md — Supply-chain and certification CMS prop rendering
+
+**Wave 5** *(blocked on Wave 4 completion)*
+- [ ] 22-05-PLAN.md — Testimonials and Tea Journal CMS configuration rendering
+
+**Wave 6** *(blocked on Wave 5 completion)*
+- [ ] 22-06-PLAN.md — Contact, catalogue CTA, and FAQ CMS prop rendering
+
+**Wave 7** *(blocked on Wave 6 completion)*
+- [ ] 22-07-PLAN.md — Homepage route, metadata, JSON-LD, and section-order cutover
+
+**Wave 8** *(blocked on Wave 7 completion)*
+- [ ] 22-08-PLAN.md — Final automated guards and manual `/` visual parity checkpoint
+
+Cross-cutting constraints:
+- Missing or invalid Sanity `homePage` content fails loudly; no runtime static fallback.
+- Existing homepage section order, form actions, decorative motifs, Shopify commerce authority, and one-H1 behavior are preserved.
+- Sanity-authored images keep stable dimensions, alt text, crop/hotspot support, and hero LCP discipline.
 
 Success criteria:
 
@@ -156,7 +183,7 @@ Success criteria:
 | 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
-| 22. Storefront Data and Rendering                                 | v1.6      | 0/1            | Not Started | —          |
+| 22. Storefront Data and Rendering                                 | v1.6      | 0/8            | Not Started | —          |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next
