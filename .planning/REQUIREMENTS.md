@@ -20,7 +20,7 @@
 
 ### Rendering
 
-- [ ] **RENDER-01**: Visitor sees the existing homepage section design, order, forms, and links preserved while content is supplied by Sanity.
+- [x] **RENDER-01**: Visitor sees the existing homepage section design, order, forms, and links preserved while content is supplied by Sanity.
 - [x] **RENDER-02**: Visitor sees Sanity images rendered with stable dimensions, alt text, crop/hotspot support, and the existing homepage hero LCP discipline.
 
 ### Preview
@@ -71,7 +71,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-01     | 22    | Complete |
 | DATA-02     | 22    | Complete |
 | DATA-03     | 23    | Pending |
-| RENDER-01   | 22    | Pending |
+| RENDER-01   | 22    | Complete |
 | RENDER-02   | 22    | Complete |
 | PREVIEW-01  | 23    | Pending |
 | PREVIEW-02  | 23    | Pending |
