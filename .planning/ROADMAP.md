@@ -109,7 +109,7 @@ Success criteria:
 Plans:
 
 **Wave 1**
-- [ ] 22-01-PLAN.md — Typed Sanity homepage data boundary and fail-loud validation
+- [x] 22-01-PLAN.md — Typed Sanity homepage data boundary and fail-loud validation
 
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 22-02-PLAN.md — Hero, proof points, and product range CMS prop rendering
@@ -183,7 +183,7 @@ Success criteria:
 | 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
-| 22. Storefront Data and Rendering                                 | v1.6      | 0/8            | Not Started | —          |
+| 22. Storefront Data and Rendering                                 | v1.6      | 1/8            | In Progress | —          |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next

@@ -14,14 +14,14 @@
 
 ### Storefront Data
 
-- [ ] **DATA-01**: Visitor sees homepage content fetched from Sanity through a typed server-side storefront data boundary.
-- [ ] **DATA-02**: Visitor sees the current homepage content if the Sanity singleton has been seeded, without Sanity becoming the source of truth for Shopify catalog, price, cart, checkout, or discount data.
+- [x] **DATA-01**: Visitor sees homepage content fetched from Sanity through a typed server-side storefront data boundary.
+- [x] **DATA-02**: Visitor sees the current homepage content if the Sanity singleton has been seeded, without Sanity becoming the source of truth for Shopify catalog, price, cart, checkout, or discount data.
 - [ ] **DATA-03**: Publisher can update homepage content and invalidate the existing homepage cache tags through the signed Sanity webhook.
 
 ### Rendering
 
 - [ ] **RENDER-01**: Visitor sees the existing homepage section design, order, forms, and links preserved while content is supplied by Sanity.
-- [ ] **RENDER-02**: Visitor sees Sanity images rendered with stable dimensions, alt text, crop/hotspot support, and the existing homepage hero LCP discipline.
+- [x] **RENDER-02**: Visitor sees Sanity images rendered with stable dimensions, alt text, crop/hotspot support, and the existing homepage hero LCP discipline.
 
 ### Preview
 
@@ -30,7 +30,7 @@
 
 ### SEO And Performance
 
-- [ ] **QUALITY-01**: Visitor and crawler see homepage metadata, canonical/indexation behavior, JSON-LD, and one-H1 behavior preserved from the v1.5 baseline.
+- [x] **QUALITY-01**: Visitor and crawler see homepage metadata, canonical/indexation behavior, JSON-LD, and one-H1 behavior preserved from the v1.5 baseline.
 - [ ] **QUALITY-02**: Release verifier can prove homepage SEO and PageSpeed scores are unchanged or improved before rollout.
 - [ ] **QUALITY-03**: Release verifier can block or roll back rollout if any measured SEO or PageSpeed score regresses.
 
@@ -68,14 +68,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CMS-01      | 21    | Complete |
 | CMS-02      | 21    | Complete |
 | CMS-03      | 21    | Complete |
-| DATA-01     | 22    | Pending |
-| DATA-02     | 22    | Pending |
+| DATA-01     | 22    | Complete |
+| DATA-02     | 22    | Complete |
 | DATA-03     | 23    | Pending |
 | RENDER-01   | 22    | Pending |
-| RENDER-02   | 22    | Pending |
+| RENDER-02   | 22    | Complete |
 | PREVIEW-01  | 23    | Pending |
 | PREVIEW-02  | 23    | Pending |
-| QUALITY-01  | 22    | Pending |
+| QUALITY-01  | 22    | Complete |
 | QUALITY-02  | 23    | Pending |
 | QUALITY-03  | 23    | Pending |
 
