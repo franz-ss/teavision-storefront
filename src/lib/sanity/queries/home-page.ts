@@ -1,0 +1,167 @@
+import { groq } from 'next-sanity'
+
+import { sanityImageWithAltFields, sanitySeoFields } from './blog'
+
+const homeLinkFields = groq`
+  label,
+  href
+`
+
+const homeSectionFields = groq`
+  eyebrow,
+  title,
+  copy
+`
+
+const homeImageCardFields = groq`
+  title,
+  href,
+  image{
+    ${sanityImageWithAltFields}
+  },
+  action,
+  badge{
+    ${sanityImageWithAltFields}
+  },
+  body
+`
+
+export const homePageQuery = groq`
+  *[_type == "homePage" && slug.current == "/"][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    hero{
+      eyebrow,
+      title,
+      copy,
+      cta{
+        ${homeLinkFields}
+      },
+      image{
+        ${sanityImageWithAltFields}
+      },
+      trustMarks{
+        ${sanityImageWithAltFields}
+      },
+      proofPoints[]{
+        iconKey,
+        image{
+          ${sanityImageWithAltFields}
+        },
+        title,
+        description
+      }
+    },
+    productRange{
+      intro{
+        ${homeSectionFields}
+      },
+      cards[]{
+        ${homeImageCardFields}
+      }
+    },
+    newsletter{
+      intro{
+        ${homeSectionFields}
+      }
+    },
+    privateLabel{
+      intro{
+        ${homeSectionFields}
+      },
+      cards[]{
+        ${homeImageCardFields}
+      }
+    },
+    organicHerbs{
+      intro{
+        ${homeSectionFields}
+      },
+      image{
+        ${sanityImageWithAltFields}
+      },
+      checklist,
+      cta{
+        ${homeLinkFields}
+      }
+    },
+    supplyChain{
+      intro{
+        ${homeSectionFields}
+      },
+      cta{
+        ${homeLinkFields}
+      }
+    },
+    certificationCoverage{
+      items[]{
+        label,
+        iconKey
+      }
+    },
+    supplyChainProtection{
+      intro{
+        ${homeSectionFields}
+      },
+      marks[]{
+        ${sanityImageWithAltFields}
+      }
+    },
+    testimonials{
+      intro{
+        ${homeSectionFields}
+      },
+      items[]{
+        logo{
+          ${sanityImageWithAltFields}
+        },
+        name,
+        role,
+        brand,
+        quote
+      }
+    },
+    teaJournal{
+      intro{
+        ${homeSectionFields}
+      },
+      blogHandle,
+      linkLabel,
+      maxPosts
+    },
+    contact{
+      intro{
+        ${homeSectionFields}
+      },
+      methods[]{
+        label,
+        value,
+        href
+      }
+    },
+    catalogueCta{
+      intro{
+        ${homeSectionFields}
+      },
+      cta{
+        ${homeLinkFields}
+      },
+      secondaryCta{
+        ${homeLinkFields}
+      }
+    },
+    faq{
+      intro{
+        ${homeSectionFields}
+      },
+      items[]{
+        question,
+        answer
+      }
+    },
+    seo{
+      ${sanitySeoFields}
+    }
+  }
+`

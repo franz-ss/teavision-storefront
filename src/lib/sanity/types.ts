@@ -155,3 +155,123 @@ export type SanityDefaultBlogListingResult = {
 export type SanityBlogPostResult = {
   article: SanityBlogPost | null
 }
+
+export type SanityHomeLink = {
+  label: string | null
+  href: string | null
+}
+
+export type SanityHomeSection = {
+  eyebrow: string | null
+  title: string | null
+  copy: string | null
+}
+
+export type SanityHomeProofPoint = {
+  iconKey: string | null
+  image: SanityImageWithAlt | null
+  title: string | null
+  description: string | null
+}
+
+export type SanityHomeHero = {
+  eyebrow: string | null
+  title: string | null
+  copy: string | null
+  cta: SanityHomeLink | null
+  image: SanityImageWithAlt | null
+  trustMarks: SanityImageWithAlt | null
+  proofPoints: SanityHomeProofPoint[] | null
+}
+
+export type SanityHomeImageCard = {
+  title: string | null
+  href: string | null
+  image: SanityImageWithAlt | null
+  action: string | null
+  badge: SanityImageWithAlt | null
+  body: string | null
+}
+
+export type SanityHomeCertificationItem = {
+  label: string | null
+  iconKey: string | null
+}
+
+export type SanityHomeTestimonial = {
+  logo: SanityImageWithAlt | null
+  name: string | null
+  role: string | null
+  brand: string | null
+  quote: string | null
+}
+
+export type SanityHomeContactMethod = {
+  label: string | null
+  value: string | null
+  href: string | null
+}
+
+export type SanityHomeFaqItem = {
+  question: string | null
+  answer: string | null
+}
+
+export type SanityHomePageResult = {
+  _id: string
+  title: string | null
+  slug: string | null
+  hero: SanityHomeHero | null
+  productRange: {
+    intro: SanityHomeSection | null
+    cards: SanityHomeImageCard[] | null
+  } | null
+  newsletter: {
+    intro: SanityHomeSection | null
+  } | null
+  privateLabel: {
+    intro: SanityHomeSection | null
+    cards: SanityHomeImageCard[] | null
+  } | null
+  organicHerbs: {
+    intro: SanityHomeSection | null
+    image: SanityImageWithAlt | null
+    checklist: (string | null)[] | null
+    cta: SanityHomeLink | null
+  } | null
+  supplyChain: {
+    intro: SanityHomeSection | null
+    cta: SanityHomeLink | null
+  } | null
+  certificationCoverage: {
+    items: SanityHomeCertificationItem[] | null
+  } | null
+  supplyChainProtection: {
+    intro: SanityHomeSection | null
+    marks: SanityImageWithAlt[] | null
+  } | null
+  testimonials: {
+    intro: SanityHomeSection | null
+    items: SanityHomeTestimonial[] | null
+  } | null
+  teaJournal: {
+    intro: SanityHomeSection | null
+    blogHandle: string | null
+    linkLabel: string | null
+    maxPosts: number | null
+  } | null
+  contact: {
+    intro: SanityHomeSection | null
+    methods: SanityHomeContactMethod[] | null
+  } | null
+  catalogueCta: {
+    intro: SanityHomeSection | null
+    cta: SanityHomeLink | null
+    secondaryCta: SanityHomeLink | null
+  } | null
+  faq: {
+    intro: SanityHomeSection | null
+    items: SanityHomeFaqItem[] | null
+  } | null
+  seo: SanitySeo | null
+}

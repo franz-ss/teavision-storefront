@@ -14,6 +14,8 @@ vi.mock('next/cache', () => ({
   cacheTag: vi.fn(),
 }))
 
+vi.mock('server-only', () => ({}))
+
 vi.mock('@/lib/sanity/client', () => ({
   getSanityImageUrl: vi.fn(),
   sanityFetch: vi.fn(),
@@ -116,7 +118,10 @@ function makeHomepage(): SanityHomePageResult {
     },
     organicHerbs: {
       checklist: ['Freight insurance', 'Quality standards', 'Reliable supply'],
-      cta: makeLink('Explore Our Herbs & Spices', '/collections/herbs-and-spices'),
+      cta: makeLink(
+        'Explore Our Herbs & Spices',
+        '/collections/herbs-and-spices',
+      ),
       image: makeImage('organic-herbs'),
       intro: makeSection('Organic herbs'),
     },
@@ -132,7 +137,9 @@ function makeHomepage(): SanityHomePageResult {
     },
     supplyChainProtection: {
       intro: makeSection('Supply chain protection'),
-      marks: Array.from({ length: 7 }, (_, index) => makeImage(`mark-${index}`)),
+      marks: Array.from({ length: 7 }, (_, index) =>
+        makeImage(`mark-${index}`),
+      ),
     },
     testimonials: {
       intro: makeSection('Testimonials'),
@@ -207,8 +214,10 @@ describe('getHomepage', () => {
 
   it('rejects missing required SEO fields and non-root canonical paths', async () => {
     const missingTitle = makeHomepage()
+    const missingTitleSeo = missingTitle.seo
+    if (!missingTitleSeo) throw new Error('Fixture SEO is required')
     missingTitle.seo = {
-      ...missingTitle.seo,
+      ...missingTitleSeo,
       metaTitle: null,
     }
     vi.mocked(sanityFetch).mockResolvedValueOnce(missingTitle)
@@ -216,8 +225,10 @@ describe('getHomepage', () => {
     await expect(getHomepage()).rejects.toThrow(/seo\.metaTitle/i)
 
     const wrongCanonical = makeHomepage()
+    const wrongCanonicalSeo = wrongCanonical.seo
+    if (!wrongCanonicalSeo) throw new Error('Fixture SEO is required')
     wrongCanonical.seo = {
-      ...wrongCanonical.seo,
+      ...wrongCanonicalSeo,
       canonicalPath: '/home',
     }
     vi.mocked(sanityFetch).mockResolvedValueOnce(wrongCanonical)
@@ -227,8 +238,14 @@ describe('getHomepage', () => {
 
   it('rejects unsafe CMS-authored hrefs', async () => {
     const result = makeHomepage()
-    result.productRange.cards[0] = {
-      ...result.productRange.cards[0],
+    const productRange = result.productRange
+    const cards = productRange?.cards
+    const firstCard = cards?.[0]
+    if (!productRange || !cards || !firstCard) {
+      throw new Error('Fixture product range card is required')
+    }
+    cards[0] = {
+      ...firstCard,
       href: 'javascript:alert(1)',
     }
     vi.mocked(sanityFetch).mockResolvedValue(result)
@@ -238,8 +255,10 @@ describe('getHomepage', () => {
 
   it('rejects required authored images without dimensions', async () => {
     const result = makeHomepage()
+    const hero = result.hero
+    if (!hero) throw new Error('Fixture hero is required')
     result.hero = {
-      ...result.hero,
+      ...hero,
       image: makeImageWithoutDimensions(),
     }
     vi.mocked(sanityFetch).mockResolvedValue(result)
