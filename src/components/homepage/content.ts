@@ -1,8 +1,6 @@
 import { SITE_URL } from '@/lib/seo/site-url'
 import type { HomepageContent } from '@/lib/sanity/home-page'
 
-import type { CtaProps } from './catalogues'
-
 export type ImageAsset = {
   src: string
   alt: string
@@ -58,10 +56,8 @@ export type CertificationCard = {
   details: string[]
 }
 
-export const ctaCatalogueData: CtaProps = {
-  tone: 'brand',
+export const CATALOGUE_CTA_FIXTURE = {
   intro: {
-    variant: 'compact',
     eyebrow: 'Wholesale catalogues',
     title: 'Explore Tea and Herb Catalogues',
     copy: 'Browse our catalogues to explore hundreds of options in black tea, green tea, herbal blends, and bulk spices. Each listing includes quality details to guide your wholesale orders.',
@@ -69,10 +65,12 @@ export const ctaCatalogueData: CtaProps = {
   cta: {
     children: 'Download Catalogue',
     href: '/pages/download-catalogues',
-    variant: 'inverseSecondary',
-    size: 'cta',
   },
-}
+  secondaryCta: {
+    children: 'Browse online',
+    href: '/collections',
+  },
+} satisfies HomepageContent['catalogueCta']
 
 export const organizationJsonLd = {
   '@context': 'https://schema.org',
@@ -543,28 +541,55 @@ export const TEA_JOURNAL_FIXTURE = {
   maxPosts: 3,
 } satisfies HomepageContent['teaJournal']
 
-export const FAQS = [
-  {
-    question: 'What types of tea do you offer?',
-    answer:
-      "We offer a huge range of traditional and premium teas and botanical herbs along with custom tea blends. Reach out to our sales team if you're interested in developing your own blend.",
+export const CONTACT_SECTION_FIXTURE = {
+  intro: {
+    eyebrow: 'Let the experts grow your business',
+    title: 'Speak with our ingredients experts.',
+    copy: 'Our tea masters, naturopaths and supply-chain specialists are on hand to source the right ingredients at the right price for your business.',
   },
-  {
-    question: 'What are the terms for wholesale purchases?',
-    answer:
-      'We are pleased to offer wholesale pricing direct on our website, with volume discounts available across eligible bulk quantities. Please contact our sales team if you need guidance on large repeat orders.',
+  methods: [
+    {
+      label: 'Call us',
+      value: '1300 729 617',
+      href: 'tel:1300729617',
+    },
+    {
+      label: 'Email',
+      value: 'info@teavision.com.au',
+      href: 'mailto:info@teavision.com.au',
+    },
+  ],
+} satisfies HomepageContent['contact']
+
+export const FAQ_FIXTURE = {
+  intro: {
+    eyebrow: 'Questions',
+    title: 'Frequently asked questions',
+    copy: 'You may have questions about sourcing wholesale tea, tea bags, and bulk spices. Below are answers to some of the most common queries from our partners.',
   },
-  {
-    question: 'How do I place an order for retail purchases?',
-    answer:
-      'You can place retail orders directly through our website by adding products to your cart and proceeding to checkout. We accept all major credit cards and PayPal.',
-  },
-  {
-    question: 'Do you provide custom tea blending services?',
-    answer:
-      "Yes, we offer custom tea blending services for both retail and wholesale customers. Contact our team to discuss your specific requirements and we'll create a unique blend just for you.",
-  },
-] satisfies FaqItem[]
+  items: [
+    {
+      question: 'What types of tea do you offer?',
+      answer:
+        "We offer a huge range of traditional and premium teas and botanical herbs along with custom tea blends. Reach out to our sales team if you're interested in developing your own blend.",
+    },
+    {
+      question: 'What are the terms for wholesale purchases?',
+      answer:
+        'We are pleased to offer wholesale pricing direct on our website, with volume discounts available across eligible bulk quantities. Please contact our sales team if you need guidance on large repeat orders.',
+    },
+    {
+      question: 'How do I place an order for retail purchases?',
+      answer:
+        'You can place retail orders directly through our website by adding products to your cart and proceeding to checkout. We accept all major credit cards and PayPal.',
+    },
+    {
+      question: 'Do you provide custom tea blending services?',
+      answer:
+        "Yes, we offer custom tea blending services for both retail and wholesale customers. Contact our team to discuss your specific requirements and we'll create a unique blend just for you.",
+    },
+  ],
+} satisfies HomepageContent['faq']
 
 export const CERTIFICATION_COVERAGE: CertificationCard[] = [
   {

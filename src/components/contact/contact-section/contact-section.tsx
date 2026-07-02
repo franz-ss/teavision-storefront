@@ -2,45 +2,58 @@ import { Mail, Phone } from 'lucide-react'
 
 import { Eyebrow, Section } from '@/components/ui'
 import type { ContactActionResult } from '@/lib/contact/types'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
 import { ContactSectionForm } from '../contact-section-form'
 
 type ContactSectionProps = {
   action: (formData: FormData) => Promise<ContactActionResult>
+  intro?: HomepageContent['contact']['intro']
+  methods?: HomepageContent['contact']['methods']
 }
 
-const CONTACT_METHODS = [
+function getContactMethodIcon(href: string) {
+  return href.startsWith('tel:') ? Phone : Mail
+}
+
+const DEFAULT_CONTACT_INTRO = {
+  eyebrow: 'Let the experts grow your business',
+  title: 'Speak with our ingredients experts.',
+  copy: 'Our tea masters, naturopaths and supply-chain specialists are on hand to source the right ingredients at the right price for your business.',
+} satisfies HomepageContent['contact']['intro']
+
+const DEFAULT_CONTACT_METHODS = [
   {
     label: 'Call us',
     value: '1300 729 617',
     href: 'tel:1300729617',
-    icon: Phone,
   },
   {
     label: 'Email',
     value: 'info@teavision.com.au',
     href: 'mailto:info@teavision.com.au',
-    icon: Mail,
   },
-] as const
+] satisfies HomepageContent['contact']['methods']
 
-export function ContactSection({ action }: ContactSectionProps) {
+export function ContactSection({
+  action,
+  intro = DEFAULT_CONTACT_INTRO,
+  methods = DEFAULT_CONTACT_METHODS,
+}: ContactSectionProps) {
   return (
     <Section.Root id="need-help" tone="inverse">
       <Section.Container className="grid gap-10 lg:grid-cols-2 lg:items-start">
         <div>
-          <Eyebrow tone="gold">Let the experts grow your business</Eyebrow>
-          <h2 className="type-heading-01 text-paper mt-4">
-            Speak with our ingredients experts.
-          </h2>
-          <p className="type-lede text-paper/80 mt-4 max-w-[42ch]">
-            Our tea masters, naturopaths and supply-chain specialists are on
-            hand to source the right ingredients at the right price for your
-            business.
-          </p>
+          {intro.eyebrow && <Eyebrow tone="gold">{intro.eyebrow}</Eyebrow>}
+          <h2 className="type-heading-01 text-paper mt-4">{intro.title}</h2>
+          {intro.copy && (
+            <p className="type-lede text-paper/80 mt-4 max-w-[42ch]">
+              {intro.copy}
+            </p>
+          )}
           <div className="mt-9 flex flex-col gap-5">
-            {CONTACT_METHODS.map((method) => {
-              const Icon = method.icon
+            {methods.map((method) => {
+              const Icon = getContactMethodIcon(method.href)
 
               return (
                 <a

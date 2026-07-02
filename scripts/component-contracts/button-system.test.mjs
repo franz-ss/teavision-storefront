@@ -113,15 +113,18 @@ test('homepage CTAs use approved brand and inverse button variants', async () =>
     sourcePath('src', 'components', 'homepage', 'content.ts'),
     'utf8',
   )
+  const catalogueCtaSource = await readFile(
+    sourcePath('src', 'components', 'homepage', 'catalogues', 'cta.tsx'),
+    'utf8',
+  )
 
   // Hero primary CTA: inverse (paper/ink on dark hero background)
   assert.match(heroSource, /variant="inverse"/)
   assert.doesNotMatch(heroSource, /Open a wholesale account/)
   assert.doesNotMatch(heroSource, /wholesale-account-request/)
-  assert.match(
-    homepageContentSource,
-    /ctaCatalogueData[\s\S]*variant: 'inverseSecondary'/,
-  )
+  assert.match(homepageContentSource, /CATALOGUE_CTA_FIXTURE/)
+  assert.match(catalogueCtaSource, /variant="inverse"/)
+  assert.match(catalogueCtaSource, /variant="inverseSecondary"/)
 })
 
 test('Button inverse stories render on the dark Storybook background', async () => {

@@ -1,44 +1,61 @@
 import { Plus } from 'lucide-react'
 
 import { Eyebrow, Section, type SectionRootProps } from '@/components/ui'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 import { cn } from '@/lib/utils'
 
-import { FAQS, type FaqItem } from '../content'
+import { FAQ_FIXTURE, type FaqItem } from '../content'
 
 type FaqProps = Pick<SectionRootProps, 'className' | 'spacing' | 'tone'> & {
-  items?: FaqItem[]
+  intro?: HomepageContent['faq']['intro']
+  items?: HomepageContent['faq']['items'] | FaqItem[]
   eyebrow?: string | null
   title?: string
   description?: string | null
 }
 
-const DEFAULT_DESCRIPTION =
-  'You may have questions about sourcing wholesale tea, tea bags, and bulk spices. Below are answers to some of the most common queries from our partners.'
-
 export function Faq({
   className,
-  description = DEFAULT_DESCRIPTION,
-  eyebrow = 'Questions',
-  items = FAQS,
+  description,
+  eyebrow,
+  intro,
+  items = FAQ_FIXTURE.items,
   spacing,
-  title = 'Frequently asked questions',
+  title,
   tone = 'sunken',
 }: FaqProps) {
+  const resolvedEyebrow =
+    eyebrow !== undefined
+      ? eyebrow
+      : (intro?.eyebrow ?? FAQ_FIXTURE.intro.eyebrow)
+  const resolvedTitle = title ?? intro?.title ?? FAQ_FIXTURE.intro.title
+  const resolvedDescription =
+    description !== undefined
+      ? description
+      : (intro?.copy ?? FAQ_FIXTURE.intro.copy)
+
   return (
     <Section.Root tone={tone} spacing={spacing} className={className}>
       <Section.Container variant="base">
         {/* Design constrains FAQ content to 880px (55rem) */}
         <div className="mx-auto max-w-220 text-center">
-          {eyebrow ? (
+          {resolvedEyebrow ? (
             <Eyebrow rule={false} className="justify-center">
-              {eyebrow}
+              {resolvedEyebrow}
             </Eyebrow>
           ) : null}
-          <h2 className={cn('type-heading-01 text-ink', eyebrow && 'mt-4')}>
-            {title}
+          <h2
+            className={cn(
+              'type-heading-01 text-ink',
+              resolvedEyebrow && 'mt-4',
+            )}
+          >
+            {resolvedTitle}
           </h2>
-          {description ? (
-            <p className="type-lede text-ink-soft mt-4">{description}</p>
+          {resolvedDescription ? (
+            <p className="type-lede text-ink-soft mt-4">
+              {resolvedDescription}
+            </p>
           ) : null}
         </div>
 

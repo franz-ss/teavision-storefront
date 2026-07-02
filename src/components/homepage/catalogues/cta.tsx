@@ -1,20 +1,20 @@
 import {
   AnimatedElement,
   Button,
-  ButtonProps,
   Eyebrow,
   Section,
-  type SectionIntroProps,
   type SectionRootProps,
 } from '@/components/ui'
+import type { HomepageContent } from '@/lib/sanity/home-page'
 
 export interface CtaProps {
   tone?: SectionRootProps['tone']
-  intro: SectionIntroProps
-  cta: ButtonProps
+  intro: HomepageContent['catalogueCta']['intro']
+  cta: HomepageContent['catalogueCta']['cta']
+  secondaryCta?: HomepageContent['catalogueCta']['secondaryCta']
 }
 
-export function Cta({ tone, intro, cta }: CtaProps) {
+export function Cta({ tone, intro, cta, secondaryCta }: CtaProps) {
   return (
     <Section.Root tone={tone ?? 'brand'} className="overflow-hidden">
       <Section.Container>
@@ -45,14 +45,18 @@ export function Cta({ tone, intro, cta }: CtaProps) {
 
             {cta ? (
               <div className="mt-7 flex flex-wrap justify-center gap-3">
-                <Button {...cta} variant="inverse" size="cta" />
-                <Button
-                  href="/collections"
-                  variant="inverseSecondary"
-                  size="cta"
-                >
-                  Browse online
+                <Button href={cta.href} variant="inverse" size="cta">
+                  {cta.children}
                 </Button>
+                {secondaryCta ? (
+                  <Button
+                    href={secondaryCta.href}
+                    variant="inverseSecondary"
+                    size="cta"
+                  >
+                    {secondaryCta.children}
+                  </Button>
+                ) : null}
               </div>
             ) : null}
           </div>

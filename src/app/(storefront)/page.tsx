@@ -16,8 +16,10 @@ import {
 } from '@/components/homepage'
 import { ContactSection } from '@/components/contact'
 import {
+  CATALOGUE_CTA_FIXTURE,
   CERTIFICATION_COVERAGE_FIXTURE,
-  ctaCatalogueData,
+  CONTACT_SECTION_FIXTURE,
+  FAQ_FIXTURE,
   HOMEPAGE_HERO_FIXTURE,
   NEWSLETTER_INTRO_FIXTURE,
   ORGANIC_HERBS_FIXTURE,
@@ -88,9 +90,12 @@ export default function HomePage() {
         <SupplyChainProtection {...SUPPLY_CHAIN_PROTECTION_FIXTURE} />
         <Testimonials {...TESTIMONIALS_FIXTURE} />
         <TeaJournal {...TEA_JOURNAL_FIXTURE} />
-        <ContactSection action={submitContactFormAction} />
-        <Cta {...ctaCatalogueData} />
-        <Faq />
+        <ContactSection
+          action={submitContactFormAction}
+          {...CONTACT_SECTION_FIXTURE}
+        />
+        <Cta {...CATALOGUE_CTA_FIXTURE} />
+        <Faq {...FAQ_FIXTURE} />
       </div>
     </>
   )
