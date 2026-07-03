@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Sanity CMS Homepage Integration
-status: ready_to_plan
-stopped_at: Phase 22 complete (9/9) — ready to discuss Phase 23
-last_updated: 2026-07-03T00:31:02.992Z
+status: planning
+stopped_at: Phase 23 context gathered
+last_updated: "2026-07-03T01:18:22.594Z"
 last_activity: 2026-07-03
 progress:
   total_phases: 3
@@ -335,9 +335,9 @@ Note: all five are v1.3/v1.4-era carryovers surfaced by the pre-close open-artif
 
 ## Session Continuity
 
-Last session: 2026-07-03T00:20:47.360Z
-Stopped at: Completed 22-08-PLAN.md
-Resume file: None
+Last session: 2026-07-03T01:18:22.582Z
+Stopped at: Phase 23 context gathered
+Resume file: .planning/phases/teavision-23-preview-revalidation-and-no-regression-release/23-CONTEXT.md
 
 ## Operator Next Steps
 
