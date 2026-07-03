@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
 
 import { ContactSection } from '@/components/contact'
 import {
@@ -19,7 +20,7 @@ import {
   sendNewsletterSignupAction,
   submitContactFormAction,
 } from '@/lib/contact/actions'
-import { getHomepage } from '@/lib/sanity/home-page'
+import { getDraftHomepage, getHomepage } from '@/lib/sanity/home-page'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/homepage-json-ld'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
@@ -53,7 +54,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const homepage = await getHomepage()
+  const { isEnabled } = await draftMode()
+  const homepage = isEnabled ? await getDraftHomepage() : await getHomepage()
 
   return (
     <>
