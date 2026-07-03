@@ -11,6 +11,8 @@ import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/homepage-json-ld'
 import * as pageModule from './page'
 
 const routeMocks = vi.hoisted(() => ({
+  draftMode: vi.fn(),
+  getDraftHomepage: vi.fn(),
   getHomepage: vi.fn(),
   sendNewsletterSignupAction: vi.fn(),
   submitContactFormAction: vi.fn(),
@@ -20,7 +22,12 @@ const routeMocks = vi.hoisted(() => ({
 vi.mock('server-only', () => ({}))
 
 vi.mock('@/lib/sanity/home-page', () => ({
+  getDraftHomepage: routeMocks.getDraftHomepage,
   getHomepage: routeMocks.getHomepage,
+}))
+
+vi.mock('next/headers', () => ({
+  draftMode: routeMocks.draftMode,
 }))
 
 vi.mock('@/lib/contact/actions', () => ({
@@ -293,10 +300,13 @@ function getGenerateMetadata() {
 describe('HomePage route cutover', () => {
   beforeEach(() => {
     routeMocks.getHomepage.mockReset()
+    routeMocks.getDraftHomepage.mockReset()
+    routeMocks.draftMode.mockReset()
     routeMocks.sendNewsletterSignupAction.mockReset()
     routeMocks.submitContactFormAction.mockReset()
     routeMocks.withNoindexRobots.mockReset()
     routeMocks.withNoindexRobots.mockImplementation((metadata) => metadata)
+    routeMocks.draftMode.mockResolvedValue({ isEnabled: false })
   })
 
   it('renders CMS content from getHomepage in the exact fixed section order', async () => {
@@ -367,6 +377,62 @@ describe('HomePage route cutover', () => {
       robots: { follow: false, index: false },
       title: { absolute: 'CMS Noindex Title' },
     })
+    expect(routeMocks.getDraftHomepage).not.toHaveBeenCalled()
+    expect(routeMocks.draftMode).not.toHaveBeenCalled()
+  })
+
+  it('renders draft homepage body content in Draft Mode without changing published metadata', async () => {
+    const publishedHomepage = homepageFixture()
+    const draftHomepage = homepageFixture({
+      hero: {
+        ...publishedHomepage.hero,
+        copy: 'Draft-only hero copy',
+        title: 'Draft-only Hero Title',
+      },
+      productRange: {
+        ...publishedHomepage.productRange,
+        intro: intro('Draft-only Product Range'),
+      },
+      seo: {
+        ...publishedHomepage.seo,
+        description: 'Draft-only meta description',
+        title: 'Draft-only Meta Title',
+      },
+    })
+    routeMocks.draftMode.mockResolvedValue({ isEnabled: true })
+    routeMocks.getHomepage.mockResolvedValue(publishedHomepage)
+    routeMocks.getDraftHomepage.mockResolvedValue(draftHomepage)
+
+    const element = await pageModule.default()
+    const html = renderToStaticMarkup(element as ReactNode)
+    const generateMetadata = getGenerateMetadata()
+    const metadata = await generateMetadata?.()
+
+    expect(routeMocks.getDraftHomepage).toHaveBeenCalledTimes(1)
+    expect(routeMocks.getHomepage).toHaveBeenCalledTimes(1)
+    expect(html).toContain('Draft-only Hero Title')
+    expect(html).toContain('Draft-only Product Range')
+    expect(html).not.toContain('CMS Hero Title')
+    expect(routeMocks.withNoindexRobots).toHaveBeenCalledWith(
+      expect.objectContaining({
+        description: 'CMS meta description',
+        title: { absolute: 'CMS Meta Title' },
+      }),
+    )
+    expect(metadata).toMatchObject({
+      description: 'CMS meta description',
+      title: { absolute: 'CMS Meta Title' },
+    })
+  })
+
+  it('keeps published HTML free of draft, stega, and source-map marker text', async () => {
+    const html = await renderHomePage()
+
+    expect(html).not.toContain('Draft-only')
+    expect(html).not.toContain('data-sanity')
+    expect(html).not.toContain('stega')
+    expect(html).not.toContain('source-map')
+    expect(html).not.toContain('sourceMappingURL')
   })
 
   it('keeps static homepage fixture content and blank streamed shells out of the live route source', async () => {
