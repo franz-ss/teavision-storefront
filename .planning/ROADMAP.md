@@ -152,6 +152,17 @@ Success criteria:
 **Requirements:** DATA-03, PREVIEW-01, PREVIEW-02, QUALITY-02, QUALITY-03
 **Plans:** 1
 
+Plans:
+
+**Wave 1**
+- [ ] 23-01-PLAN.md - Secure preview, homepage revalidation, and no-regression release gate
+
+Cross-cutting constraints:
+
+- Draft Mode is a secret URL for `/` only; no Studio wiring, preview UI, Visual Editing, stega markers, or source maps.
+- Draft body rendering is token-backed and isolated from published metadata, JSON-LD, sitemap, robots, and cache tags.
+- Real public-preview PSI category drops from the v1.5 homepage baseline block rollout or trigger rollback.
+
 Success criteria:
 
 - The signed Sanity webhook invalidates homepage cache tags without regressing existing blog revalidation.
@@ -185,8 +196,8 @@ Success criteria:
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
 | 22. Storefront Data and Rendering                                 | v1.6      | 9/9 | Complete    | 2026-07-03 |
-| 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
+| 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Planned     | —          |
 
 ## Next
 
-Plan Phase 23. The next implementation slice should add secure Draft Mode preview, signed Sanity homepage cache revalidation, and release evidence proving no SEO or PageSpeed regression before rollout.
+Execute Phase 23 plan 23-01: secure Draft Mode preview, signed Sanity homepage cache revalidation, and release evidence proving no SEO or PageSpeed regression before rollout.
