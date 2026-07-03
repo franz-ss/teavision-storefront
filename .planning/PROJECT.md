@@ -12,7 +12,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ## Current State
 
-**Shipped through:** v1.5 Performance & PageSpeed 100 (Phase 20, shipped 2026-07-01, lean scope). v1.4 Production Readiness (Phases 15–19) reached 100/100 automated code readiness on 2026-06-26 (H1 re-remediation 2026-06-29).
+**Shipped through:** v1.5 Performance & PageSpeed 100 (Phase 20, shipped 2026-07-01, lean scope). v1.4 Production Readiness (Phases 15–19) reached 100/100 automated code readiness on 2026-06-26 (H1 re-remediation 2026-06-29). v1.6 Phases 21-22 are complete: the sibling Sanity Studio owns the homepage singleton model/seed path, and the storefront `/` now renders typed Sanity homepage content through the existing homepage with visual, SEO, image, and commerce parity.
 
 **Customer-account capability now available:**
 
@@ -34,7 +34,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 - Homepage content schemas in `../teavision-cms`, using folder context instead of redundant `homepage-*` file names.
 - Typed Sanity homepage query and fetch path in the Next storefront, using existing Sanity helpers and Next.js 16 cache/tag conventions.
-- Front page rendering through existing homepage components with stable static fallbacks during migration and preview.
+- Front page rendering through existing homepage components with fail-loud behavior for missing or invalid homepage content.
 - Sanity image handling, metadata/SEO mapping, preview/draft support, webhook revalidation, and deployment wiring.
 - Release gate that blocks rollout if SEO or PageSpeed scores regress from the current v1.5 baseline.
 
@@ -80,14 +80,14 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - ✓ SEO audit remediation across URL parity, H1/content hierarchy, metadata/indexation, structured data, crawlable HTML proof, and honest Core Web Vitals evidence reconciliation — Validated in Phase 18 — v1.4
 - ✓ H1 correctness re-remediation — one visible H1 per standalone route load; soft-nav Activity-DOM accumulation documented (cited) as invisible to Google; banner-collection H1 kept compact per D-08 — Validated in Phase 19 — v1.4
 - ✓ Homepage `/` PageSpeed remediation — hero LCP `fetchPriority="high"`, AVIF delivery, lazy client Sentry SDK, measured inlineCss decision; real owner-run PSI Performance 95–97, Accessibility 100, Best Practices 100, CLS 0 (PSI-03/05/06/07/08) — Validated in Phase 20 — v1.5
+- ✓ Sanity homepage singleton schema and seed path in sibling `teavision-cms` — Validated in Phase 21 — v1.6
+- ✓ Typed Sanity homepage data boundary and storefront `/` rendering through existing homepage sections with visual, SEO, image, form, and Shopify commerce parity — Validated in Phase 22 — v1.6
 
 ### Active
 
-- [ ] Sanity-authored front page content model exists in the sibling `teavision-cms` project.
-- [ ] The Next storefront fetches, caches, previews, and revalidates front page Sanity content without weakening existing Shopify/storefront data boundaries.
-- [ ] The front page renders CMS content through existing homepage sections with static fallback behavior until production content is ready.
-- [ ] Homepage metadata, canonical/indexation behavior, structured data, and image priority/format discipline remain equivalent to the v1.5 baseline.
-- [ ] Release verification proves no SEO or PageSpeed score regression before rollout.
+- [ ] Publisher can update homepage content and invalidate the existing homepage cache tags through the signed Sanity webhook.
+- [ ] Editor can securely preview draft homepage content at `/` through Next Draft Mode, without exposing draft/stega/source-map text to published visitors.
+- [ ] Release verification proves no homepage SEO or PageSpeed score regression before rollout and blocks or rolls back any measured regression.
 
 ### Deferred / Carryover
 
@@ -149,6 +149,8 @@ The codebase map in `.planning/codebase/` predates the redesign and has known dr
 | Narrow v1.5 to a lean homepage `/` PageSpeed pass (D-16)                                                     | Screenshot-driven, architecture-preserving fixes with real-PSI proof beat a broad multi-category sweep against unverified local-lab numbers; the broad scope is deferred with plans preserved                                  | ✓ Good                                       |
 | Use `fetchPriority="high"` for the LCP hero image, distinct from the banned deprecated `priority` (D-15)     | `fetchPriority` is the supported Next.js 16 prop that makes the preload `<link>` carry `fetchpriority=high`; verified against runtime source, and it does not throw the preload+priority runtime error                         | ✓ Good                                       |
 | Treat no SEO/PageSpeed regression as a v1.6 release blocker                                                  | Homepage CMS flexibility is not allowed to cost search or performance gains earned in v1.4/v1.5                                                                                                                                | — Pending                                    |
+| Fail loudly when the Sanity homepage singleton or render-critical fields are missing                         | A hidden runtime static fallback would mask CMS failures and create content drift after cutover                                                                                                                                | ✓ Good                                       |
+| Defer Draft Mode preview, signed webhook revalidation, and release SEO/PageSpeed proof to Phase 23           | Phase 22 proved the typed published-content rendering path; preview/revalidation/release gates are separate rollout concerns                                                                                                   | Pending                                      |
 
 ## Evolution
 
@@ -171,4 +173,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-02 after starting v1.6 milestone_
+_Last updated: 2026-07-03 after completing Phase 22_

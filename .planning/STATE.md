@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Sanity CMS Homepage Integration
-status: executing
-stopped_at: Completed 22-08-PLAN.md
-last_updated: "2026-07-03T00:20:47.372Z"
+status: ready_to_plan
+stopped_at: Phase 22 complete (9/9) — ready to discuss Phase 23
+last_updated: 2026-07-03T00:31:02.992Z
 last_activity: 2026-07-03
 progress:
   total_phases: 3
@@ -18,23 +18,23 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-02)
+See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 22 — storefront-data-and-rendering
+**Current focus:** Phase 23 — preview, revalidation, and no regression release
 
 ## Current Position
 
-Phase: 22 (storefront-data-and-rendering) — EXECUTING
-Plan: 9 of 9
-Status: All plans complete — ready for phase verification
+Phase: 23
+Plan: Not started
+Status: Ready to plan
 Last activity: 2026-07-03
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 53
+- Total plans completed: 62
 - Average duration: not tracked
 - Total execution time: not tracked
 
@@ -54,6 +54,7 @@ Last activity: 2026-07-03
 | 16                                  | 4     | -           | -           |
 | 18                                  | 6     | -           | -           |
 | 20                                  | 1     | -           | -           |
+| 22 | 9 | - | - |
 
 **Recent Trend:**
 
@@ -244,7 +245,7 @@ Recent decisions affecting current work:
 ### Pending Todos
 
 - Capture owner-gated launch proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, Search Console sitemap submission, and Search Console URL inspection.
-- Plan Phase 21: Sanity Homepage Model and Seed.
+- Plan Phase 23: Preview, Revalidation, and No-Regression Release.
 
 ### Blockers/Concerns
 
@@ -340,7 +341,6 @@ Resume file: None
 
 ## Operator Next Steps
 
-- v1.4 (Phases 15–19) and v1.5 (Phase 20) are archived under `.planning/milestones/` with ROADMAP, REQUIREMENTS, and AUDIT files each. Tags `v1.4` and `v1.5` created.
-- `.planning/REQUIREMENTS.md` was removed at close — the next milestone starts fresh. Begin with `/gsd-new-milestone`.
-- Likely v1.6 candidates: capture owner-gated external launch proof (hosted checkout/payment/OAuth/protected data/B2B pricing/Search Console); OR the broad PageSpeed 100/100 (10 deferred v1.5 PSI requirements, plans in `.planning/phases/20-pagespeed-100-perfection/deferred/`).
+- Phase 22 is complete with typed Sanity homepage rendering, final automated guard evidence, and approved homepage visual parity.
+- Continue v1.6 with Phase 23: secure Draft Mode preview, signed homepage cache revalidation, and no-regression SEO/PageSpeed release evidence.
 - Keep Shopify/admin/Search Console proof gates pending until dated external evidence exists.

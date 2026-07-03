@@ -184,9 +184,9 @@ Success criteria:
 | 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
-| 22. Storefront Data and Rendering                                 | v1.6      | 9/9 | Complete   | 2026-07-03 |
+| 22. Storefront Data and Rendering                                 | v1.6      | 9/9 | Complete    | 2026-07-03 |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next
 
-Plan Phase 22. The next implementation slice should fetch typed Sanity homepage content and render it through the existing storefront while preserving SEO, PageSpeed, forms, Shopify commerce authority, and homepage visual parity.
+Plan Phase 23. The next implementation slice should add secure Draft Mode preview, signed Sanity homepage cache revalidation, and release evidence proving no SEO or PageSpeed regression before rollout.
