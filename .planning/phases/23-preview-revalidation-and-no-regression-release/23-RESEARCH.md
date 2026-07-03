@@ -30,7 +30,7 @@ content path is intentionally out of scope for the locked Phase 23 decisions.
 
 ## Inputs Read
 
-- `.planning/phases/teavision-23-preview-revalidation-and-no-regression-release/23-CONTEXT.md`
+- `.planning/phases/23-preview-revalidation-and-no-regression-release/23-CONTEXT.md`
 - `.planning/ROADMAP.md`
 - `.planning/REQUIREMENTS.md`
 - `.planning/STATE.md`

@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Sanity CMS Homepage Integration
-status: executing
-stopped_at: Phase 23 planned
-last_updated: "2026-07-03T02:39:32.802Z"
-last_activity: 2026-07-03 -- Phase 23 planning complete
+status: owner-gated
+stopped_at: Phase 23 rollout gate pending public-preview evidence
+last_updated: "2026-07-03T03:15:00.000Z"
+last_activity: 2026-07-03 -- Phase 23 implementation complete; rollout blocked awaiting public-preview PSI and Sanity publish proof
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 11
+  completed_plans: 11
   percent: 67
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 ## Current Position
 
 Phase: 23
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-07-03 -- Phase 23 planning complete
+Plan: 23-01
+Status: Implementation complete; rollout owner-gated
+Last activity: 2026-07-03 -- Phase 23 automated verification passed; release gate remains blocked awaiting public-preview PSI and Sanity publish proof
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Last activity: 2026-07-03 -- Phase 23 planning complete
 | 18                                  | 6     | -           | -           |
 | 20                                  | 1     | -           | -           |
 | 22 | 9 | - | - |
+| 23 | 1 | - | - |
 
 **Recent Trend:**
 
@@ -245,7 +246,7 @@ Recent decisions affecting current work:
 ### Pending Todos
 
 - Capture owner-gated launch proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, Search Console sitemap submission, and Search Console URL inspection.
-- Execute Phase 23 plan 23-01: Secure preview, homepage revalidation, and no-regression release gate.
+- Phase 23 plan 23-01 implemented secure Draft Mode preview, signed homepage webhook revalidation, and a blocked-by-default release gate. Rollout remains owner-gated pending public-preview PSI and Sanity publish smoke-test proof.
 
 ### Blockers/Concerns
 
@@ -336,11 +337,11 @@ Note: all five are v1.3/v1.4-era carryovers surfaced by the pre-close open-artif
 ## Session Continuity
 
 Last session: 2026-07-03T01:18:22.582Z
-Stopped at: Phase 23 context gathered
-Resume file: .planning/phases/teavision-23-preview-revalidation-and-no-regression-release/23-CONTEXT.md
+Stopped at: Phase 23 rollout gate pending public-preview evidence
+Resume file: .planning/phases/23-preview-revalidation-and-no-regression-release/23-01-SUMMARY.md
 
 ## Operator Next Steps
 
 - Phase 22 is complete with typed Sanity homepage rendering, final automated guard evidence, and approved homepage visual parity.
-- Continue v1.6 with Phase 23: secure Draft Mode preview, signed homepage cache revalidation, and no-regression SEO/PageSpeed release evidence.
+- Add current public-preview PSI category scores and signed Sanity `homePage` publish smoke-test proof to `docs/launch/phase-23-homepage-release-gate.md`; keep rollout blocked if any category regresses from v1.5 or evidence is missing.
 - Keep Shopify/admin/Search Console proof gates pending until dated external evidence exists.

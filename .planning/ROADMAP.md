@@ -155,7 +155,7 @@ Success criteria:
 Plans:
 
 **Wave 1**
-- [ ] 23-01-PLAN.md - Secure preview, homepage revalidation, and no-regression release gate
+- [x] 23-01-PLAN.md - Secure preview, homepage revalidation, and no-regression release gate (implementation complete; rollout owner-gated)
 
 Cross-cutting constraints:
 
@@ -196,8 +196,8 @@ Success criteria:
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
 | 22. Storefront Data and Rendering                                 | v1.6      | 9/9 | Complete    | 2026-07-03 |
-| 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Planned     | —          |
+| 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 1/1            | Owner-gated | —          |
 
 ## Next
 
-Execute Phase 23 plan 23-01: secure Draft Mode preview, signed Sanity homepage cache revalidation, and release evidence proving no SEO or PageSpeed regression before rollout.
+Record current public-preview PSI category scores and a signed Sanity `homePage` publish smoke test in `docs/launch/phase-23-homepage-release-gate.md`; keep Phase 23 rollout blocked until that evidence passes the v1.5 no-regression gate.
