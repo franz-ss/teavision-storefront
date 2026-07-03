@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
-import { connection } from 'next/server'
-import { Suspense } from 'react'
 
+import { ContactSection } from '@/components/contact'
 import {
   CertificationCoverage,
   Cta,
@@ -16,7 +15,6 @@ import {
   TeaJournal,
   Testimonials,
 } from '@/components/homepage'
-import { ContactSection } from '@/components/contact'
 import {
   sendNewsletterSignupAction,
   submitContactFormAction,
@@ -27,7 +25,6 @@ import { withNoindexRobots } from '@/lib/seo/noindex'
 import { serializeInlineJson } from '@/lib/seo/serialize-inline-json'
 
 export async function generateMetadata(): Promise<Metadata> {
-  await connection()
   const homepage = await getHomepage()
   const { seo } = homepage
 
@@ -55,7 +52,9 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const homepage = await getHomepage()
+
   return (
     <>
       <script
@@ -69,41 +68,30 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: serializeInlineJson(websiteJsonLd) }}
       />
 
-      <Suspense fallback={null}>
-        <HomePageContent />
-      </Suspense>
+      <div className="bg-paper">
+        <HomepageHero hero={homepage.hero} />
+        <ProductRange
+          cards={homepage.productRange.cards}
+          intro={homepage.productRange.intro}
+        />
+        <HomepageNewsletter
+          action={sendNewsletterSignupAction}
+          intro={homepage.newsletter.intro}
+        />
+        <PrivateLabel
+          cards={homepage.privateLabel.cards}
+          intro={homepage.privateLabel.intro}
+        />
+        <OrganicHerbs {...homepage.organicHerbs} />
+        <SupplyChain {...homepage.supplyChain} />
+        <CertificationCoverage {...homepage.certificationCoverage} />
+        <SupplyChainProtection {...homepage.supplyChainProtection} />
+        <Testimonials {...homepage.testimonials} />
+        <TeaJournal {...homepage.teaJournal} />
+        <ContactSection action={submitContactFormAction} {...homepage.contact} />
+        <Cta {...homepage.catalogueCta} />
+        <Faq {...homepage.faq} />
+      </div>
     </>
-  )
-}
-
-export async function HomePageContent() {
-  await connection()
-  const homepage = await getHomepage()
-
-  return (
-    <div className="bg-paper">
-      <HomepageHero hero={homepage.hero} />
-      <ProductRange
-        cards={homepage.productRange.cards}
-        intro={homepage.productRange.intro}
-      />
-      <HomepageNewsletter
-        action={sendNewsletterSignupAction}
-        intro={homepage.newsletter.intro}
-      />
-      <PrivateLabel
-        cards={homepage.privateLabel.cards}
-        intro={homepage.privateLabel.intro}
-      />
-      <OrganicHerbs {...homepage.organicHerbs} />
-      <SupplyChain {...homepage.supplyChain} />
-      <CertificationCoverage {...homepage.certificationCoverage} />
-      <SupplyChainProtection {...homepage.supplyChainProtection} />
-      <Testimonials {...homepage.testimonials} />
-      <TeaJournal {...homepage.teaJournal} />
-      <ContactSection action={submitContactFormAction} {...homepage.contact} />
-      <Cta {...homepage.catalogueCta} />
-      <Faq {...homepage.faq} />
-    </div>
   )
 }
