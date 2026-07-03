@@ -131,6 +131,8 @@ describe('observability logger', () => {
       'shopify_webhook_rejected',
       'sanity_webhook_received',
       'sanity_webhook_rejected',
+      'draft_preview_enabled',
+      'draft_preview_rejected',
     ]
 
     try {

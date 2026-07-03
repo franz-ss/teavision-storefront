@@ -1,4 +1,5 @@
 import { revalidateTag } from 'next/cache'
+import { NextRequest } from 'next/server'
 import { parseBody } from 'next-sanity/webhook'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
@@ -34,8 +35,8 @@ vi.mock('@/lib/sanity/env', () => ({
   getSanityRevalidateSecret: getSanityRevalidateSecretMock,
 }))
 
-function webhookRequest(): Request {
-  return new Request('https://teavision.test/api/webhooks/sanity', {
+function webhookRequest(): NextRequest {
+  return new NextRequest('https://teavision.test/api/webhooks/sanity', {
     method: 'POST',
   })
 }
