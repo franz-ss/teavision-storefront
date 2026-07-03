@@ -23,6 +23,14 @@ export function getSanityReadToken(): string | undefined {
   return optionalEnv('SANITY_API_READ_TOKEN')
 }
 
+export function getSanityDraftReadToken(): string {
+  return requiredEnv('SANITY_API_READ_TOKEN')
+}
+
 export function getSanityRevalidateSecret(): string {
   return requiredEnv('SANITY_REVALIDATE_SECRET')
+}
+
+export function getSanityPreviewSecret(): string {
+  return requiredEnv('SANITY_PREVIEW_SECRET')
 }

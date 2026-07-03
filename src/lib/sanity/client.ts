@@ -6,7 +6,11 @@ import {
 } from '@sanity/image-url'
 import { createClient } from 'next-sanity'
 
-import { getSanityConfig, getSanityReadToken } from './env'
+import {
+  getSanityConfig,
+  getSanityDraftReadToken,
+  getSanityReadToken,
+} from './env'
 
 export function getSanityClient() {
   const config = getSanityConfig()
@@ -21,11 +25,30 @@ export function getSanityClient() {
   })
 }
 
+export function getSanityDraftClient() {
+  const config = getSanityConfig()
+
+  return createClient({
+    ...config,
+    token: getSanityDraftReadToken(),
+    useCdn: false,
+    perspective: 'drafts',
+    stega: false,
+  })
+}
+
 export async function sanityFetch<T>(
   query: string,
   params: Record<string, string | number | boolean | null> = {},
 ): Promise<T> {
   return getSanityClient().fetch<T>(query, params)
+}
+
+export async function sanityDraftFetch<T>(
+  query: string,
+  params: Record<string, string | number | boolean | null> = {},
+): Promise<T> {
+  return getSanityDraftClient().fetch<T>(query, params)
 }
 
 export type SanityImageUrlOptions = {

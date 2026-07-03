@@ -3,7 +3,11 @@ import 'server-only'
 import type { SanityImageSource } from '@sanity/image-url'
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { getSanityImageUrl, sanityFetch } from '@/lib/sanity/client'
+import {
+  getSanityImageUrl,
+  sanityDraftFetch,
+  sanityFetch,
+} from '@/lib/sanity/client'
 import type { SanityImageUrlOptions } from '@/lib/sanity/client'
 import { homePageQuery } from '@/lib/sanity/queries/home-page'
 import type {
@@ -564,6 +568,14 @@ export async function getHomepage(): Promise<HomepageContent> {
 
   const data = await sanityFetch<SanityHomePageResult | null>(homePageQuery)
   if (!data) fail('homePage', 'singleton document is missing')
+
+  return reshapeHomepage(data)
+}
+
+export async function getDraftHomepage(): Promise<HomepageContent> {
+  const data =
+    await sanityDraftFetch<SanityHomePageResult | null>(homePageQuery)
+  if (!data) fail('homePage', 'singleton draft document is missing')
 
   return reshapeHomepage(data)
 }
