@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
+import { logEvent } from '@/lib/observability/logger'
 import { getSanityPreviewSecret } from '@/lib/sanity/env'
 import { getDraftHomepage } from '@/lib/sanity/home-page'
 
@@ -57,6 +58,24 @@ describe('draft enable route', () => {
     expect(getDraftHomepage).not.toHaveBeenCalled()
   })
 
+  test('returns 500 for a too-short configured preview secret', async () => {
+    getPreviewSecretMock.mockReturnValueOnce('too-short-secret')
+
+    const response = await GET(draftRequest('?secret=anything&slug=/'))
+    const payload = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(payload).toEqual({ error: 'Preview secret not configured' })
+    expect(draftModeMock).not.toHaveBeenCalled()
+    expect(getDraftHomepage).not.toHaveBeenCalled()
+    expect(logEvent).toHaveBeenCalledWith('error', 'draft_preview_rejected', {
+      reason: 'short-secret',
+    })
+    expect(JSON.stringify(vi.mocked(logEvent).mock.calls)).not.toContain(
+      'too-short-secret',
+    )
+  })
+
   test('returns 401 for an invalid preview secret', async () => {
     const response = await GET(draftRequest('?secret=wrong-secret&slug=/'))
     const payload = await response.json()
@@ -65,6 +84,24 @@ describe('draft enable route', () => {
     expect(payload).toEqual({ error: 'Invalid preview secret' })
     expect(draftModeMock).not.toHaveBeenCalled()
     expect(getDraftHomepage).not.toHaveBeenCalled()
+  })
+
+  test('logs only metadata for invalid preview secret attempts', async () => {
+    const response = await GET(
+      draftRequest('?secret=caller-secret-value&slug=/'),
+    )
+
+    expect(response.status).toBe(401)
+    expect(logEvent).toHaveBeenCalledWith('warn', 'draft_preview_rejected', {
+      reason: 'invalid-secret',
+      slugAllowed: true,
+    })
+    expect(JSON.stringify(vi.mocked(logEvent).mock.calls)).not.toContain(
+      'caller-secret-value',
+    )
+    expect(JSON.stringify(vi.mocked(logEvent).mock.calls)).not.toContain(
+      VALID_SECRET,
+    )
   })
 
   test.each([

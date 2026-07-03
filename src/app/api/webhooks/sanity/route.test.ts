@@ -120,6 +120,36 @@ describe('Sanity webhook route', () => {
     )
   })
 
+  test('ignores unsupported signed payloads without revalidating tags', async () => {
+    parseBodyMock.mockResolvedValueOnce({
+      body: {
+        _type: 'author',
+        secret: 'raw-body-secret',
+        slug: { current: 'tea-author' },
+      },
+      isValidSignature: true,
+    })
+
+    const response = await POST(webhookRequest())
+
+    await expect(response.json()).resolves.toEqual({ revalidated: false })
+    expect(response.status).toBe(200)
+    expect(revalidateTag).not.toHaveBeenCalled()
+    expect(logEvent).toHaveBeenCalledWith(
+      'info',
+      'sanity_webhook_received',
+      expect.objectContaining({
+        documentType: 'author',
+        hasArticleSlug: false,
+        hasBlogSlug: false,
+        status: 'ignored',
+      }),
+    )
+    expect(JSON.stringify(vi.mocked(logEvent).mock.calls)).not.toContain(
+      'raw-body-secret',
+    )
+  })
+
   test('rejects invalid signatures without revalidating tags', async () => {
     parseBodyMock.mockResolvedValueOnce({
       body: { _type: 'homePage' },
