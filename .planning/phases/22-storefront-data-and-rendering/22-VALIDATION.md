@@ -5,8 +5,8 @@ status: approved
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-07-02
-revised: 2026-07-02
-plan_set: [22-01, 22-02, 22-03, 22-04, 22-05, 22-06, 22-07, 22-08]
+revised: 2026-07-03
+plan_set: [22-01, 22-02, 22-03, 22-04, 22-05, 22-06, 22-07, 22-08, 22-GAP-01]
 ---
 
 # Phase 22 - Validation Strategy
@@ -34,18 +34,21 @@ Per-phase validation contract for feedback sampling during execution.
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 22-01-01 | 22-01 | 1 | DATA-01, RENDER-02, QUALITY-01 | T-22-01/T-22-03/T-22-04 | Tests require missing/invalid `homePage`, SEO, canonical, links, and images to fail loudly; section cardinality stays a seeded fixture/shape assertion per D-03. | unit | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts` | Created by task | pending |
-| 22-01-02 | 22-01 | 1 | DATA-01, DATA-02, RENDER-02, QUALITY-01 | T-22-01..T-22-04 | Typed cached operation excludes commerce authority, normalizes Sanity images, and does not reject solely for section item counts. | unit/lint | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts && pnpm lint -- --quiet` | Created by task | pending |
-| 22-02-01 | 22-02 | 2 | RENDER-01, RENDER-02 | T-22-05/T-22-06 | Hero/proof points use required CMS props while preserving one-H1 and hero LCP props. | stories/lint | `pnpm test:stories -- --project chromium --testNamePattern "HomepageHero|Proof" && pnpm lint -- --quiet` | Existing files | pending |
-| 22-02-02 | 22-02 | 2 | RENDER-01, RENDER-02 | T-22-06/T-22-07 | Product-range cards preserve geometry, focus, hover, and responsive image behavior. | unit/stories/lint | `pnpm test:unit -- src/components/homepage/overlay-image-card/overlay-image-card.test.tsx && pnpm test:stories -- --project chromium --testNamePattern "ProductRange|Overlay" && pnpm lint -- --quiet` | Existing files | pending |
-| 22-03-01 | 22-03 | 3 | DATA-02, RENDER-01, RENDER-02 | T-22-08/T-22-10 | Newsletter, private label, and organic herbs keep Server Component wrappers, action handoff, and validated image geometry. | stories/lint | `pnpm test:stories -- --project chromium --testNamePattern "Newsletter|PrivateLabel|OrganicHerbs" && pnpm lint -- --quiet` | Existing files | pending |
-| 22-04-01 | 22-04 | 4 | DATA-02, RENDER-01, RENDER-02 | T-22-11/T-22-13 | Motifs and icon maps remain code-owned while certification images use validated CMS data. | stories/lint | `pnpm test:stories -- --project chromium --testNamePattern "SupplyChain|Certification" && pnpm lint -- --quiet` | Existing files | pending |
-| 22-05-01 | 22-05 | 5 | DATA-02, RENDER-01 | T-22-14/T-22-16 | Testimonials keep the carousel client leaf and Tea Journal config comes from CMS while live article data remains in blog operations. | unit/stories/lint | `pnpm test:unit -- src/lib/blog/operations.test.ts && pnpm test:stories -- --project chromium --testNamePattern "Testimonials|TeaJournal" && pnpm lint -- --quiet` | Existing files | pending |
-| 22-06-01 | 22-06 | 6 | DATA-02, RENDER-01 | T-22-17/T-22-19 | Contact action, catalogue motifs, and FAQ behavior remain code-owned/existing while copy comes from CMS. | stories/lint | `pnpm test:stories -- --project chromium --testNamePattern "ContactSection|Catalogues|Faq" && pnpm lint -- --quiet` | Existing files | pending |
-| 22-07-01 | 22-07 | 7 | DATA-01, RENDER-01, QUALITY-01 | T-22-20/T-22-22 | Route tests assert exact 13-section order, one H1, JSON-LD, CMS content, and no static SEO fallback. | unit | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx"` | Created by task | pending |
-| 22-07-02 | 22-07 | 7 | DATA-01, DATA-02, RENDER-01, RENDER-02, QUALITY-01 | T-22-20..T-22-23 | `/` and `generateMetadata()` use `getHomepage()`, preserve actions, fixed section order, JSON-LD, and noindex handling. | unit/lint/type/build | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx" src/lib/sanity/home-page.test.ts src/lib/blog/operations.test.ts && pnpm lint && pnpm typecheck && pnpm build` | Existing route, new test | pending |
-| 22-08-01 | 22-08 | 8 | RENDER-01, RENDER-02, QUALITY-01 | T-22-24/T-22-26 | Final automated gates prove route, Sanity, stories, lint, types, and build are green without running real Shopify checkout/payment/order tests. | full suite | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts "src/app/(storefront)/page.test.tsx" src/lib/blog/operations.test.ts && pnpm test:stories && pnpm lint && pnpm typecheck && pnpm build` | Existing infra | pending |
-| 22-08-02 | 22-08 | 8 | RENDER-01, RENDER-02, QUALITY-01 | T-22-25 | Human confirms `/` visual parity and exact visible section order in browser. | human-check | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx"` | Browser review | pending |
+| 22-01-01 | 22-01 | 1 | DATA-01, RENDER-02, QUALITY-01 | T-22-01/T-22-03/T-22-04 | Tests require missing/invalid `homePage`, SEO, canonical, links, and images to fail loudly; section cardinality stays a seeded fixture/shape assertion per D-03. | unit | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts` | Created by task | green |
+| 22-01-02 | 22-01 | 1 | DATA-01, DATA-02, RENDER-02, QUALITY-01 | T-22-01..T-22-04 | Typed cached operation excludes commerce authority, normalizes Sanity images, and does not reject solely for section item counts. | unit/lint | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts && pnpm lint --quiet` | Created by task | green |
+| 22-02-01 | 22-02 | 2 | RENDER-01, RENDER-02 | T-22-05/T-22-06 | Hero/proof points use required CMS props while preserving one-H1 and hero LCP props. | stories/lint | `pnpm test:stories -- --project storybook --testNamePattern "HomepageHero|Proof" && pnpm lint --quiet` | Existing files | green |
+| 22-02-02 | 22-02 | 2 | RENDER-01, RENDER-02 | T-22-06/T-22-07 | Product-range cards preserve geometry, focus, hover, and responsive image behavior. | unit/stories/lint | `pnpm test:unit -- src/components/homepage/overlay-image-card/overlay-image-card.test.tsx && pnpm test:stories -- --project storybook --testNamePattern "ProductRange|Overlay" && pnpm lint --quiet` | Existing files | green |
+| 22-03-01 | 22-03 | 3 | DATA-02, RENDER-01, RENDER-02 | T-22-08/T-22-10 | Newsletter, private label, and organic herbs keep Server Component wrappers, action handoff, and validated image geometry. | stories/lint | `pnpm test:stories -- --project storybook --testNamePattern "Newsletter|PrivateLabel|OrganicHerbs" && pnpm lint --quiet` | Existing files | green |
+| 22-04-01 | 22-04 | 4 | DATA-02, RENDER-01, RENDER-02 | T-22-11/T-22-13 | Motifs and icon maps remain code-owned while certification images use validated CMS data. | stories/lint | `pnpm test:stories -- --project storybook --testNamePattern "SupplyChain|Certification" && pnpm lint --quiet` | Existing files | green |
+| 22-05-01 | 22-05 | 5 | DATA-02, RENDER-01 | T-22-14/T-22-16 | Testimonials keep the carousel client leaf and Tea Journal config comes from CMS while live article data remains in blog operations. | unit/stories/lint | `pnpm test:unit -- src/lib/blog/operations.test.ts && pnpm test:stories -- --project storybook --testNamePattern "Testimonials|TeaJournal" && pnpm lint --quiet` | Existing files | green |
+| 22-06-01 | 22-06 | 6 | DATA-02, RENDER-01 | T-22-17/T-22-19 | Contact action, catalogue motifs, and FAQ behavior remain code-owned/existing while copy comes from CMS. | stories/lint | `pnpm test:stories -- --project storybook --testNamePattern "ContactSection|Catalogues|Faq" && pnpm lint --quiet` | Existing files | green |
+| 22-07-01 | 22-07 | 7 | DATA-01, RENDER-01, QUALITY-01 | T-22-20/T-22-22 | Route tests assert exact 13-section order, one H1, JSON-LD, CMS content, and no static SEO fallback. | unit | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx"` | Created by task | green |
+| 22-07-02 | 22-07 | 7 | DATA-01, DATA-02, RENDER-01, RENDER-02, QUALITY-01 | T-22-20..T-22-23 | `/` and `generateMetadata()` use `getHomepage()`, preserve actions, fixed section order, JSON-LD, and noindex handling. | unit/lint/type/build | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx" src/lib/sanity/home-page.test.ts src/lib/blog/operations.test.ts && pnpm lint && pnpm typecheck && pnpm build` | Existing route, new test | green |
+| 22-08-01 | 22-08 | 8 | RENDER-01, RENDER-02, QUALITY-01 | T-22-24/T-22-26 | Final automated gates prove route, Sanity, stories, lint, types, and build are green without running real Shopify checkout/payment/order tests. | full suite | `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts "src/app/(storefront)/page.test.tsx" src/lib/blog/operations.test.ts && pnpm test:stories && pnpm lint && pnpm typecheck && pnpm build` | Existing infra | green |
+| 22-08-02 | 22-08 | 8 | RENDER-01, RENDER-02, QUALITY-01 | T-22-25 | Human confirms `/` visual parity and exact visible section order in browser. | human-check | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx"` | Browser review | manual-approved |
+| 22-GAP-01-01 | 22-GAP-01 | gap | DATA-01, RENDER-01, RENDER-02, QUALITY-01 | T-22-20/T-22-24/T-22-26 | Regression test renders the default route export and proves CMS section content, one H1, JSON-LD, action handoffs, and source guards are present in initial HTML. | unit | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx"` | Existing route test | green |
+| 22-GAP-01-02 | 22-GAP-01 | gap | DATA-01, RENDER-01, RENDER-02, QUALITY-01 | T-22-20/T-22-24/T-22-26 | Route renders cached CMS homepage content directly without `connection()`, `next/server`, `<Suspense>`, or `fallback={null}` returning to the live homepage. | unit/lint/type/build | `pnpm test:unit -- "src/app/(storefront)/page.test.tsx" src/lib/sanity/home-page.test.ts src/lib/blog/operations.test.ts && pnpm lint && pnpm typecheck && pnpm build` | Existing route and test | green |
+| 22-GAP-01-03 | 22-GAP-01 | gap | QUALITY-01 | T-22-24/T-22-26 | Build evidence proves `/` is static with one-hour revalidation after the initial-HTML fix, without real Shopify hosted checkout/payment/order tests. | build | `pnpm build` | Existing infra | green |
 
 ## Exact Section-Order Contract
 
@@ -77,7 +80,7 @@ Automated route tests in Plan 22-07 and the human parity check in Plan 22-08 mus
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 | --- | --- | --- | --- |
-| Visual homepage parity against seeded content | RENDER-01, RENDER-02, QUALITY-01 | Automated tests cover structure, props, metadata, and stories; browser review catches composed layout and image-framing regressions. | Execute Plan 22-08: run `pnpm dev`, open `/`, and compare hero LCP image, cards, forms, testimonials, Tea Journal, contact, CTA, FAQ, mobile/desktop layout, focus states, and exact section order against the Phase 20 homepage baseline and Phase 21 seeded content. |
+| Visual homepage parity against seeded content | RENDER-01, RENDER-02, QUALITY-01 | Automated tests cover structure, props, metadata, and stories; browser review catches composed layout and image-framing regressions. | Completed in Plan 22-08: user approved `/` visual parity on 2026-07-03 after checking hero LCP image, cards, forms, testimonials, Tea Journal, contact, CTA, FAQ, mobile/desktop layout, focus states, and exact section order against the Phase 20 homepage baseline and Phase 21 seeded content. |
 | Formal preview/revalidation/release SEO and PageSpeed evidence | QUALITY-01 | Phase 22 preserves route behavior; DATA-03, PREVIEW-01, PREVIEW-02, QUALITY-02, and QUALITY-03 are mapped to Phase 23. | Record Phase 22 build and parity results; Phase 23 owns the release proof gate. |
 
 ## Threat Model
@@ -101,6 +104,30 @@ Automated route tests in Plan 22-07 and the human parity check in Plan 22-08 mus
 - [x] Wave 0 creates missing test references before implementation.
 - [x] No watch-mode flags.
 - [x] Feedback latency target documented.
-- [x] `nyquist_compliant: true` set in frontmatter for the revised eight-plan set.
+- [x] `nyquist_compliant: true` set in frontmatter for the revised plan set.
 
-**Approval:** planner-approved for execution. Human approval remains intentionally pending only for the Plan 22-08 `/` visual parity checkpoint because it requires browser inspection after implementation.
+**Approval:** planner-approved for execution; audit-approved on 2026-07-03. Human `/` visual parity approval was recorded in `22-08-SUMMARY.md` and `22-UAT.md`.
+
+## Validation Audit 2026-07-03
+
+| Metric | Count |
+|--------|-------|
+| Automated coverage gaps found | 0 |
+| Test files generated | 0 |
+| Escalated manual-only gaps | 0 |
+| Validation map rows updated or added | 15 |
+
+Audit notes:
+
+- `22-GAP-01` closed the diagnosed homepage initial server HTML gap with route-regression coverage in `src/app/(storefront)/page.test.tsx`.
+- Existing Storybook commands were corrected to use the configured `storybook` Vitest project.
+- Existing quiet lint commands were corrected to `pnpm lint --quiet`; `pnpm lint -- --quiet` treats `--quiet` as an ESLint file pattern in this repo.
+- No new tests were required because all Phase 22 requirements already have automated coverage or explicit manual-only rationale.
+
+Audit verification rerun:
+
+- `pnpm test:unit -- src/lib/sanity/queries/home-page.test.ts src/lib/sanity/home-page.test.ts "src/app/(storefront)/page.test.tsx" src/lib/blog/operations.test.ts` - passed, 69 files / 297 tests.
+- `pnpm test:stories` - passed, 106 files / 363 tests. Existing Next image warnings were non-fatal.
+- `pnpm lint` - passed, including Tailwind class checks.
+- `pnpm typecheck` - passed.
+- `pnpm build` - passed; `/` remains static with 1h revalidation and 1d expiry.
