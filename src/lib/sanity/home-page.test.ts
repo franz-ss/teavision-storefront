@@ -1,13 +1,18 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { getSanityImageUrl, sanityFetch } from '@/lib/sanity/client'
+import { getSanityImageUrl, sanityDraftFetch, sanityFetch } from '@/lib/sanity/client'
+import {
+  getSanityDraftReadToken,
+  getSanityPreviewSecret,
+} from '@/lib/sanity/env'
+import { homePageQuery } from '@/lib/sanity/queries/home-page'
 import type {
   SanityHomePageResult,
   SanityImageWithAlt,
 } from '@/lib/sanity/types'
 
-import { getHomepage } from './home-page'
+import { getDraftHomepage, getHomepage } from './home-page'
 
 vi.mock('next/cache', () => ({
   cacheLife: vi.fn(),
@@ -18,6 +23,7 @@ vi.mock('server-only', () => ({}))
 
 vi.mock('@/lib/sanity/client', () => ({
   getSanityImageUrl: vi.fn(),
+  sanityDraftFetch: vi.fn(),
   sanityFetch: vi.fn(),
 }))
 
@@ -190,9 +196,14 @@ function makeHomepage(): SanityHomePageResult {
 }
 
 describe('getHomepage', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
   beforeEach(() => {
     vi.mocked(cacheLife).mockReset()
     vi.mocked(cacheTag).mockReset()
+    vi.mocked(sanityDraftFetch).mockReset()
     vi.mocked(sanityFetch).mockReset()
     vi.mocked(getSanityImageUrl).mockReset()
     vi.mocked(getSanityImageUrl).mockImplementation((_source, options = {}) => {
@@ -308,5 +319,46 @@ describe('getHomepage', () => {
       }),
       { fit: 'max', quality: 75, width: 640 },
     )
+  })
+
+  it('requires dedicated draft preview environment values', () => {
+    vi.stubEnv('SANITY_API_READ_TOKEN', '  draft-read-token  ')
+    vi.stubEnv('SANITY_PREVIEW_SECRET', '  preview-secret  ')
+
+    expect(getSanityDraftReadToken()).toBe('draft-read-token')
+    expect(getSanityPreviewSecret()).toBe('preview-secret')
+
+    vi.stubEnv('SANITY_API_READ_TOKEN', ' ')
+    vi.stubEnv('SANITY_PREVIEW_SECRET', ' ')
+
+    expect(() => getSanityDraftReadToken()).toThrow(
+      /SANITY_API_READ_TOKEN/,
+    )
+    expect(() => getSanityPreviewSecret()).toThrow(
+      /SANITY_PREVIEW_SECRET/,
+    )
+  })
+
+  it('normalizes draft homepage content without using published cache tags', async () => {
+    vi.mocked(sanityDraftFetch).mockResolvedValue(makeHomepage())
+
+    const homepage = await getDraftHomepage()
+
+    expect(sanityDraftFetch).toHaveBeenCalledWith(homePageQuery)
+    expect(cacheTag).not.toHaveBeenCalled()
+    expect(cacheLife).not.toHaveBeenCalled()
+    expect(homepage.title).toBe('Homepage')
+    expect(homepage.hero.title).toBe("Australia's #1 tea company")
+    expect(homepage.seo.canonicalPath).toBe('/')
+  })
+
+  it('rejects missing draft homepage content without falling back to published content', async () => {
+    vi.mocked(sanityDraftFetch).mockResolvedValue(null)
+
+    await expect(getDraftHomepage()).rejects.toThrow(/homePage/i)
+
+    expect(sanityFetch).not.toHaveBeenCalled()
+    expect(cacheTag).not.toHaveBeenCalled()
+    expect(cacheLife).not.toHaveBeenCalled()
   })
 })
