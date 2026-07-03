@@ -8,11 +8,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { HomepageContent } from '@/lib/sanity/home-page'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/homepage-json-ld'
 
-import { HomePageContent } from './page'
 import * as pageModule from './page'
 
 const routeMocks = vi.hoisted(() => ({
-  connection: vi.fn(),
   getHomepage: vi.fn(),
   sendNewsletterSignupAction: vi.fn(),
   submitContactFormAction: vi.fn(),
@@ -20,10 +18,6 @@ const routeMocks = vi.hoisted(() => ({
 }))
 
 vi.mock('server-only', () => ({}))
-
-vi.mock('next/server', () => ({
-  connection: routeMocks.connection,
-}))
 
 vi.mock('@/lib/sanity/home-page', () => ({
   getHomepage: routeMocks.getHomepage,
@@ -286,13 +280,9 @@ function readSectionOrder(html: string): string[] {
 async function renderHomePage(homepage = homepageFixture()) {
   routeMocks.getHomepage.mockResolvedValue(homepage)
 
-  const element = await HomePageContent()
+  const element = await pageModule.default()
 
   return renderToStaticMarkup(element as ReactNode)
-}
-
-function renderHomePageShell() {
-  return renderToStaticMarkup(pageModule.default() as ReactNode)
 }
 
 function getGenerateMetadata() {
@@ -302,12 +292,10 @@ function getGenerateMetadata() {
 
 describe('HomePage route cutover', () => {
   beforeEach(() => {
-    routeMocks.connection.mockReset()
     routeMocks.getHomepage.mockReset()
     routeMocks.sendNewsletterSignupAction.mockReset()
     routeMocks.submitContactFormAction.mockReset()
     routeMocks.withNoindexRobots.mockReset()
-    routeMocks.connection.mockResolvedValue(undefined)
     routeMocks.withNoindexRobots.mockImplementation((metadata) => metadata)
   })
 
@@ -324,12 +312,11 @@ describe('HomePage route cutover', () => {
     expect(html).toContain('contact-action')
   })
 
-  it('keeps the homepage H1 singular and emits code-owned JSON-LD', async () => {
-    const contentHtml = await renderHomePage()
-    const shellHtml = renderHomePageShell()
-    const jsonLdNodes = readJsonLdNodes(shellHtml)
+  it('keeps the homepage H1 singular and emits code-owned JSON-LD in the default route output', async () => {
+    const html = await renderHomePage()
+    const jsonLdNodes = readJsonLdNodes(html)
 
-    expect(contentHtml.match(/<h1\b/g)).toHaveLength(1)
+    expect(html.match(/<h1\b/g)).toHaveLength(1)
     expect(jsonLdNodes).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -382,7 +369,7 @@ describe('HomePage route cutover', () => {
     })
   })
 
-  it('keeps static homepage fixture content out of the live route source', async () => {
+  it('keeps static homepage fixture content and blank streamed shells out of the live route source', async () => {
     const source = await readFile(
       new URL('./page.tsx', import.meta.url),
       'utf8',
@@ -392,5 +379,9 @@ describe('HomePage route cutover', () => {
     expect(source).not.toContain('HOME_TITLE')
     expect(source).not.toContain('HOME_DESCRIPTION')
     expect(source).not.toContain('HOMEPAGE_HERO_FIXTURE')
+    expect(source).not.toContain("from 'next/server'")
+    expect(source).not.toContain('connection()')
+    expect(source).not.toContain('fallback={null}')
+    expect(source).not.toContain('<Suspense')
   })
 })
