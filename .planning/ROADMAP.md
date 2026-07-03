@@ -130,7 +130,7 @@ Plans:
 - [x] 22-07-PLAN.md — Homepage route, metadata, JSON-LD, and section-order cutover
 
 **Wave 8** *(blocked on Wave 7 completion)*
-- [ ] 22-08-PLAN.md — Final automated guards and manual `/` visual parity checkpoint
+- [x] 22-08-PLAN.md — Final automated guards and manual `/` visual parity checkpoint
 - [x] 22-GAP-01-PLAN.md — Homepage initial server HTML gap closure
 
 Cross-cutting constraints:
@@ -184,7 +184,7 @@ Success criteria:
 | 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
 | 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
-| 22. Storefront Data and Rendering                                 | v1.6      | 8/9 | In Progress|  |
+| 22. Storefront Data and Rendering                                 | v1.6      | 9/9 | Complete   | 2026-07-03 |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 0/1            | Not Started | —          |
 
 ## Next
