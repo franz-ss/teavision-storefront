@@ -24,6 +24,10 @@ function readSlug(value: unknown): string | null {
   return typeof current === 'string' && current ? current : null
 }
 
+function readSlugValue(value: unknown): string | null {
+  return readString(value) ?? readSlug(value)
+}
+
 function readString(value: unknown): string | null {
   return typeof value === 'string' && value ? value : null
 }
@@ -79,25 +83,39 @@ export async function POST(request: NextRequest): Promise<Response> {
 
   const body = parsedBody.body
   const documentType = readString(body._type)
-  const blogSlug = readString(body.blogSlug) ?? readSlug(body.blog)
-  const articleSlug = readString(body.articleSlug) ?? readSlug(body.slug)
+  const slug = readSlugValue(body.slug)
+  const blogSlug =
+    readString(body.blogSlug) ??
+    readSlug(body.blog) ??
+    (documentType === 'blog' ? slug : null)
+  const articleSlug =
+    readString(body.articleSlug) ??
+    (documentType === 'blogPost' ? slug : null)
+  let status: 'accepted' | 'ignored' = 'accepted'
 
-  revalidateTag('blog', { expire: 0 })
+  if (documentType === 'homePage') {
+    revalidateTag('homePage', { expire: 0 })
+    revalidateTag('sanity-homepage', { expire: 0 })
+  } else if (documentType === 'blog' || documentType === 'blogPost') {
+    revalidateTag('blog', { expire: 0 })
 
-  if (blogSlug) {
-    revalidateTag(`blog-${blogSlug}`, { expire: 0 })
-  }
+    if (blogSlug) {
+      revalidateTag(`blog-${blogSlug}`, { expire: 0 })
+    }
 
-  if (documentType === 'blogPost' && blogSlug && articleSlug) {
-    revalidateTag(`article-${blogSlug}-${articleSlug}`, { expire: 0 })
+    if (documentType === 'blogPost' && blogSlug && articleSlug) {
+      revalidateTag(`article-${blogSlug}-${articleSlug}`, { expire: 0 })
+    }
+  } else {
+    status = 'ignored'
   }
 
   logEvent('info', 'sanity_webhook_received', {
     documentType,
     hasArticleSlug: Boolean(articleSlug),
     hasBlogSlug: Boolean(blogSlug),
-    status: 'accepted',
+    status,
   })
 
-  return Response.json({ revalidated: true }, { status: 200 })
+  return Response.json({ revalidated: status === 'accepted' }, { status: 200 })
 }

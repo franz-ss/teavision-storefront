@@ -3,7 +3,6 @@ import { parseBody } from 'next-sanity/webhook'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { logEvent } from '@/lib/observability/logger'
-import { getSanityRevalidateSecret } from '@/lib/sanity/env'
 
 import { POST } from './route'
 
