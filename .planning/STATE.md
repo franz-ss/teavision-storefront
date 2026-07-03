@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Sanity CMS Homepage Integration
 status: executing
-stopped_at: Completed 22-07-PLAN.md
-last_updated: "2026-07-02T10:11:22.194Z"
-last_activity: 2026-07-02
+stopped_at: Completed 22-GAP-01-PLAN.md
+last_updated: "2026-07-03T00:06:47.793Z"
+last_activity: 2026-07-03
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 9
-  completed_plans: 8
-  percent: 89
+  total_plans: 10
+  completed_plans: 9
+  percent: 90
 ---
 
 # Project State
@@ -26,15 +26,15 @@ See: .planning/PROJECT.md (updated 2026-07-02)
 ## Current Position
 
 Phase: 22 (storefront-data-and-rendering) — EXECUTING
-Plan: 8 of 8
-Status: Ready to execute
-Last activity: 2026-07-02
+Plan: 8 of 9
+Status: Gap closure complete — ready to execute 22-08 final guards
+Last activity: 2026-07-03
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 52
+- Total plans completed: 53
 - Average duration: not tracked
 - Total execution time: not tracked
 
@@ -118,6 +118,7 @@ Last activity: 2026-07-02
 | Phase 22 P05 | 10 min | 1 tasks | 9 files |
 | Phase 22 P06 | 15m | 1 tasks | 9 files |
 | Phase 22 P07 | 23m | 2 tasks | 3 files |
+| Phase 22 PGAP-01 | 10 min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -218,6 +219,7 @@ Recent decisions affecting current work:
 - [Phase 18]: Crawlable HTML proof uses raw fake-provider production HTML with Accept-Encoding identity for /collections/all and /products/test-standard-tea. — Provides repeatable SEO-AUDIT-06 evidence without claiming live Shopify or Search Console proof.
 - [Phase 18]: Strict local Lighthouse/readiness failures stay blocking because no dated owner, staging, or field Core Web Vitals acceptance artifact was supplied. — Preserves Phase 17 PERF-01 semantics and avoids silently accepting failed local metrics.
 - [Phase 18]: Final SEO audit matrix separates automated remediation proof from owner/operator-gated production proof. — Keeps DNS, Shopify admin, checkout, Search Console, and performance acceptance evidence distinct from local app code evidence.
+- [Phase 22-GAP-01]: Homepage render-critical CMS content now renders in the default `/` route output without `connection()` or a null Suspense shell. — `getHomepage()` is cached and should contribute visible initial HTML; request-time streaming is reserved for genuinely per-request data.
 - [Phase 19]: Owner directed that `cacheComponents` stays enabled — Approach A (disable cacheComponents) was implemented then reverted (efed85b3). SEO-H1-01 (multiple H1s while browsing) resolved via accept+document: Googlebot renders each URL statelessly and never assembles the soft-nav accumulation, and multiple H1s are not a Google ranking/indexing issue (cited research). The enforced invariant is one visible H1 per standalone route load.
 - [Phase 19]: SEO-H1-02 — banner-collection H1 kept COMPACT as the breadcrumb crumb (D-08 upheld). A larger visible H1 + intro was trialled (e1c4204c) then reverted (48193d0d) because the banner image already carries the title and the big heading unbalanced the layout; the crumb remains a real visible H1 (one per route). Audit pages 2-9 brought into compliance (brand-suffix removal on indexed service pages; read-more-below-grid and lang=en-AU already in place; blog /blog/ slug deferred to migration). See docs/launch/seo-audit-pages-2-9-response.md.
 
@@ -331,8 +333,8 @@ Note: all five are v1.3/v1.4-era carryovers surfaced by the pre-close open-artif
 
 ## Session Continuity
 
-Last session: 2026-07-02T10:11:22.069Z
-Stopped at: Completed 22-07-PLAN.md
+Last session: 2026-07-03T00:06:47.782Z
+Stopped at: Completed 22-GAP-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
