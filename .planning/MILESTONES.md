@@ -1,5 +1,32 @@
 # Milestones
 
+## v1.6 Sanity CMS Homepage Integration (Shipped: 2026-07-06)
+
+**Delivered:** A CMS-authored homepage through the sibling Sanity Studio, rendered by the existing Next storefront with visual, SEO, initial HTML, preview, webhook revalidation, and PageSpeed no-regression proof preserved.
+
+**Phases completed:** 3 phases, 11 plans, 25 tasks
+**Audit:** passed (13/13 requirements, 7/7 integration checks, 6/6 flows) — see `milestones/v1.6-MILESTONE-AUDIT.md`
+
+**Key accomplishments:**
+
+- Sanity homepage singleton and dry-run seed tooling now exist in the sibling CMS without changing the storefront.
+- Cached Sanity homepage operation with strict SEO, link, image, and render-critical field validation.
+- Hero, proof points, product range, and overlay cards now render typed homepage content passed in from the route boundary.
+- Newsletter, private-label, and organic-herbs sections now render typed CMS content props while preserving their existing behavior and visual contracts.
+- Supply-chain, certification coverage, and certification mark sections now render typed Sanity content while preserving code-owned motifs, icons, and grid behavior.
+- Testimonials and Tea Journal now consume typed homepage CMS configuration while live blog article data stays in the blog operation layer.
+- Contact, catalogue CTA, and FAQ now accept typed homepage CMS content while preserving their code-owned form, motif, and interaction boundaries.
+- The storefront `/` route now renders from typed Sanity homepage content, while metadata, JSON-LD, actions, and section order remain controlled by code.
+- Final route, data, Storybook, lint, typecheck, build, and human visual parity guards passed for the CMS-backed storefront homepage.
+- The storefront `/` route now includes the CMS-backed homepage body in the initial server-rendered output while preserving metadata, JSON-LD, action handoffs, and section order.
+- Homepage Draft Mode preview, signed Sanity publish revalidation, and a blocked-by-default no-regression release gate now protect the CMS-backed homepage rollout.
+
+**Known deferred items at close:** 5 open artifacts acknowledged for bookkeeping (4 debug artifacts, 1 resolved Phase 22 UAT artifact with 0 pending scenarios; see `STATE.md` Deferred Items).
+
+**What's next:** Start the next milestone with `$gsd-new-milestone`.
+
+---
+
 ## v1.5 Performance & PageSpeed 100 (Shipped: 2026-07-01)
 
 **Delivered:** The four homepage `/` Google PageSpeed Insights screenshot findings, fixed and verified end-to-end with real owner-run PSI — a lean, architecture-preserving subset of the original PageSpeed-100 ambition per owner directive D-16.

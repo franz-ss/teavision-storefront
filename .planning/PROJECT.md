@@ -4,7 +4,7 @@
 
 Teavision is a headless Shopify storefront built with Next.js 16 App Router and React 19. It sells wholesale tea, herbs, spices, and related products to Australian retail, cafe, foodservice, and direct customers.
 
-v1.0 shipped the migration of Shopify-theme storefront behavior into the Next storefront — product discovery, product detail with bulk savings, cart, checkout handoff, owned Searchanise search, trust signals — plus a complete visual redesign of every surface on the new warm-paper/green/gold design system. v1.1 followed with Tea Journal (blog) loading and image-rendering performance work. v1.2 restored production-style numbered collection pagination for launch parity. v1.3 added modern Shopify Customer Account authentication and account self-service, with protected account pages, address/profile management, order history, cart buyer identity sync, legacy account bridges, and launch-readiness documentation. v1.4 hardened the storefront to a 100/100 automated production-readiness score — security/headers/CSP, legal/consent/analytics, operations/observability/e2e, SEO-audit remediation, and H1 correctness. v1.5 fixed the homepage `/` PageSpeed findings (hero LCP fetchPriority, AVIF, lazy Sentry SDK), verified with real owner-run PSI: Performance 95–97, Accessibility 100, Best Practices 100.
+v1.0 shipped the migration of Shopify-theme storefront behavior into the Next storefront — product discovery, product detail with bulk savings, cart, checkout handoff, owned Searchanise search, trust signals — plus a complete visual redesign of every surface on the new warm-paper/green/gold design system. v1.1 followed with Tea Journal (blog) loading and image-rendering performance work. v1.2 restored production-style numbered collection pagination for launch parity. v1.3 added modern Shopify Customer Account authentication and account self-service, with protected account pages, address/profile management, order history, cart buyer identity sync, legacy account bridges, and launch-readiness documentation. v1.4 hardened the storefront to a 100/100 automated production-readiness score — security/headers/CSP, legal/consent/analytics, operations/observability/e2e, SEO-audit remediation, and H1 correctness. v1.5 fixed the homepage `/` PageSpeed findings (hero LCP fetchPriority, AVIF, lazy Sentry SDK), verified with real owner-run PSI: Performance 95–97, Accessibility 100, Best Practices 100. v1.6 made the homepage CMS-authored through the sibling Sanity Studio while preserving storefront rendering, SEO, initial HTML, preview, webhook revalidation, and PageSpeed no-regression evidence.
 
 ## Core Value
 
@@ -12,7 +12,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ## Current State
 
-**Shipped through:** v1.5 Performance & PageSpeed 100 (Phase 20, shipped 2026-07-01, lean scope). v1.4 Production Readiness (Phases 15–19) reached 100/100 automated code readiness on 2026-06-26 (H1 re-remediation 2026-06-29). v1.6 Phases 21-22 are complete: the sibling Sanity Studio owns the homepage singleton model/seed path, and the storefront `/` now renders typed Sanity homepage content through the existing homepage with visual, SEO, image, and commerce parity.
+**Shipped through:** v1.6 Sanity CMS Homepage Integration (Phases 21–23, shipped 2026-07-06). The sibling Sanity Studio owns the homepage singleton model/seed path; the storefront `/` renders typed Sanity homepage content through the existing homepage with visual, SEO, image, form, initial server HTML, and Shopify commerce parity; deployed Draft Mode, signed `homePage` webhook revalidation, Sanity publish smoke tests, crawler indexability, and PageSpeed no-regression evidence all passed.
 
 **Customer-account capability now available:**
 
@@ -24,11 +24,11 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - Legacy account bridge routes and owned header/footer account links.
 - Launch-readiness documentation for Shopify admin setup, protected customer data, HTTPS OAuth testing, real checkout approval gates, reorder parity, and B2B/customer-pricing parity.
 
-**Current launch gates:** Automated code readiness is `100/100` after dated PERF-01 performance acceptance; v1.5 superseded that acceptance for `/` with a real owner-run PSI result (Performance 95–97). Production launch still needs owner-gated Shopify/admin/Search Console proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, sitemap submission, and URL inspection.
+**Current launch gates:** Automated code readiness is `100/100` after dated PERF-01 performance acceptance; v1.5 superseded that acceptance for `/` with a real owner-run PSI result (Performance 95–97), and v1.6 refreshed the indexable homepage candidate with mobile 95/100/100/100 and desktop 97/100/100/100. Production launch still needs owner-gated Shopify/admin/Search Console proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, sitemap submission, and URL inspection.
 
-## Current Milestone: v1.6 Sanity CMS Homepage Integration
+## Shipped Milestone: v1.6 Sanity CMS Homepage Integration
 
-**Goal:** Make the front page CMS-authored through the sibling `teavision-cms` Studio while preserving the current storefront experience and enforcing strict no SEO/PageSpeed regression.
+**Shipped:** 2026-07-06. The front page is now CMS-authored through the sibling `teavision-cms` Studio while preserving the current storefront experience and enforcing strict no SEO/PageSpeed regression.
 
 **Target features:**
 
@@ -36,7 +36,7 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - Typed Sanity homepage query and fetch path in the Next storefront, using existing Sanity helpers and Next.js 16 cache/tag conventions.
 - Front page rendering through existing homepage components with fail-loud behavior for missing or invalid homepage content.
 - Sanity image handling, metadata/SEO mapping, preview/draft support, webhook revalidation, and deployment wiring.
-- Release gate that blocks rollout if SEO or PageSpeed scores regress from the current v1.5 baseline.
+- Release gate that blocks rollout if SEO or PageSpeed scores regress from the current v1.5 baseline; deployed proof passed with fresh indexable PageSpeed evidence.
 
 ## Shipped Milestone: v1.5 Performance & PageSpeed 100
 
@@ -82,12 +82,11 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - ✓ Homepage `/` PageSpeed remediation — hero LCP `fetchPriority="high"`, AVIF delivery, lazy client Sentry SDK, measured inlineCss decision; real owner-run PSI Performance 95–97, Accessibility 100, Best Practices 100, CLS 0 (PSI-03/05/06/07/08) — Validated in Phase 20 — v1.5
 - ✓ Sanity homepage singleton schema and seed path in sibling `teavision-cms` — Validated in Phase 21 — v1.6
 - ✓ Typed Sanity homepage data boundary and storefront `/` rendering through existing homepage sections with visual, SEO, image, form, and Shopify commerce parity — Validated in Phase 22 — v1.6
+- ✓ Deployed homepage Draft Mode preview, signed `homePage` webhook revalidation, Sanity publish smoke, crawler indexability, and no-regression PageSpeed release gate — Validated in Phase 23 — v1.6
 
 ### Active
 
-- [ ] Publisher can update homepage content and invalidate the existing homepage cache tags through the signed Sanity webhook.
-- [ ] Editor can securely preview draft homepage content at `/` through Next Draft Mode, without exposing draft/stega/source-map text to published visitors.
-- [ ] Release verification proves no homepage SEO or PageSpeed score regression before rollout and blocks or rolls back any measured regression.
+- [ ] Next milestone requirements to be defined with `$gsd-new-milestone`.
 
 ### Deferred / Carryover
 
@@ -107,16 +106,16 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 Shipped v1.0 on 2026-06-11: 9 phases, 35 plans, 476 commits over ~6.5 weeks (+132k/-15k LOC TypeScript/TSX). Shipped v1.1 on 2026-06-12: Phase 12 blog performance (4 plans). Shipped v1.2 on 2026-06-12: numbered `?page=N` collection pagination with canonical/crawler parity and gap-closed scroll-to-grid anchoring. Shipped v1.3 on 2026-06-22: Phase 14 Shopify Customer Accounts (9 plans, 31 tasks, 26/26 requirements) covering Customer Account API OAuth/session, protected account pages, address/profile/order self-service, cart buyer identity sync, migration bridges, launch-readiness docs, and UAT gap closure. v1.4 completed automated code readiness on 2026-06-26 with final readiness at `100/100`; PERF-01 closed through dated project-owner acceptance of repeated local Lighthouse lab failures as non-blocking while raw metric FAIL rows remain documented. v1.5 (Phase 20, 2026-07-01) shipped a lean homepage `/` PageSpeed pass — hero LCP fetchPriority, AVIF, lazy Sentry SDK — confirmed by real owner-run PSI (Performance 95–97, Accessibility 100, Best Practices 100, CLS 0); 10 of 15 PSI requirements were deliberately deferred (D-16). Tech stack: Next.js 16 App Router (Cache Components), React 19, Tailwind 4 (OKLCH design tokens), Shopify Storefront GraphQL and Customer Account API, Sanity (blog), Searchanise (search/recommendations), Storybook 10 + vitest + Playwright.
 
-The site remains noindexed pending launch sign-off (Phase 6 controls; flip `DISABLE_INDEXING` at launch and add the new landing pages to the sitemap). The owner actively authors new landing surfaces directly in the codebase (bulk-wholesale-supply, private-label-packing, tea-bag-manufacturer, NPD order form, supply-chain protection band).
+The indexable homepage production candidate passed v1.6 no-regression proof after `DISABLE_INDEXING=false` was deployed for the Vercel target. Broader launch sign-off still needs owner/admin proof for Shopify checkout, Customer Accounts, B2B pricing, and Search Console. The owner actively authors new landing surfaces directly in the codebase (bulk-wholesale-supply, private-label-packing, tea-bag-manufacturer, NPD order form, supply-chain protection band).
 
-v1.6 starts with an existing sibling Sanity Studio at `../teavision-cms`; homepage schema work belongs there rather than scaffolding a new Studio inside the storefront. Existing storefront Sanity usage covers the blog, and v1.6 extends that boundary to the front page without making Sanity authoritative for Shopify product, collection, cart, checkout, or price data.
+v1.6 completed with the existing sibling Sanity Studio at `../teavision-cms`; homepage schema work stayed there rather than scaffolding a new Studio inside the storefront. Existing storefront Sanity usage covers the blog, and v1.6 extends that boundary to the front page without making Sanity authoritative for Shopify product, collection, cart, checkout, or price data.
 
 The codebase map in `.planning/codebase/` predates the redesign and has known drift (~241 structural elements); re-run `/gsd:map-codebase` before heavy planning.
 
 ## Constraints
 
 - **Tech stack**: Next.js 16 App Router, React 19, Tailwind 4, Shopify Storefront API - match existing architecture and local Next docs.
-- **Release quality**: The Sanity homepage integration must not reduce SEO or PageSpeed scores; any measured regression blocks rollout until fixed or rolled back.
+- **Release quality**: Future Sanity homepage changes must not reduce SEO or PageSpeed scores; any measured regression blocks rollout until fixed or rolled back.
 - **CMS boundary**: Extend the sibling `teavision-cms` Studio for authoring and keep storefront code in `src/`; do not create a second Studio in the Next app.
 - **Naming**: Do not repeat parent directory context in filenames; files inside homepage folders should be named `hero.ts`, `cta.ts`, `faq.ts`, etc., not `homepage-hero.ts`.
 - **Data source**: Actual discount application must come from Shopify cart/checkout data - avoid client-only price promises.
@@ -148,9 +147,10 @@ The codebase map in `.planning/codebase/` predates the redesign and has known dr
 | Keep `cacheComponents` enabled; resolve SEO-H1-01 as one-visible-H1-per-standalone-route (D-09)              | Disabling Cache Components (Approach A) was implemented then reverted; Googlebot renders each URL statelessly and never assembles the soft-nav accumulation, so multiple H1s in the live browser DOM are not an indexing issue | ✓ Good                                       |
 | Narrow v1.5 to a lean homepage `/` PageSpeed pass (D-16)                                                     | Screenshot-driven, architecture-preserving fixes with real-PSI proof beat a broad multi-category sweep against unverified local-lab numbers; the broad scope is deferred with plans preserved                                  | ✓ Good                                       |
 | Use `fetchPriority="high"` for the LCP hero image, distinct from the banned deprecated `priority` (D-15)     | `fetchPriority` is the supported Next.js 16 prop that makes the preload `<link>` carry `fetchpriority=high`; verified against runtime source, and it does not throw the preload+priority runtime error                         | ✓ Good                                       |
-| Treat no SEO/PageSpeed regression as a v1.6 release blocker                                                  | Homepage CMS flexibility is not allowed to cost search or performance gains earned in v1.4/v1.5                                                                                                                                | — Pending                                    |
+| Treat no SEO/PageSpeed regression as a v1.6 release blocker                                                  | Homepage CMS flexibility is not allowed to cost search or performance gains earned in v1.4/v1.5                                                                                                                                | ✓ Good                                       |
 | Fail loudly when the Sanity homepage singleton or render-critical fields are missing                         | A hidden runtime static fallback would mask CMS failures and create content drift after cutover                                                                                                                                | ✓ Good                                       |
-| Keep Phase 23 rollout owner-gated after implementation                                                     | Draft Mode preview, signed `homePage` webhook revalidation, and local regression evidence are implemented; public-preview PSI scores and Sanity publish smoke-test proof still control rollout approval                       | Pending external evidence                   |
+| Keep Phase 23 rollout owner-gated after implementation                                                     | Draft Mode preview, signed `homePage` webhook revalidation, and local regression evidence were implemented first; public-preview PSI scores and Sanity publish smoke-test proof then controlled rollout approval              | ✓ Good                                       |
+| Render CMS homepage content in the initial server HTML                                                       | The default `/` response should expose render-critical homepage body content without a null Suspense shell or request-time `connection()` dependency                                                                           | ✓ Good                                       |
 
 ## Evolution
 
@@ -173,4 +173,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-03 after completing Phase 22_
+_Last updated: 2026-07-06 after completing v1.6 milestone_

@@ -241,12 +241,52 @@ The four homepage `/` PSI screenshot findings, fixed and proven with real owner-
 - Sessions: 2026-06-30 → 2026-07-01, ~22 commits, 27 files (+2,398/−55 LOC).
 - Notable: one lean plan + a background integration-checker subagent (~81k tokens) carried the entire milestone audit; v1.4 was archived retroactively in the same close.
 
+## Milestone: v1.6 — Sanity CMS Homepage Integration
+
+**Shipped:** 2026-07-06
+**Phases:** 3 (21-23) | **Plans:** 11
+
+### What Was Built
+
+The storefront homepage is now CMS-authored through the sibling `teavision-cms` Studio while preserving the existing Next storefront experience. Phase 21 added the Sanity `homePage` singleton and seed tooling. Phase 22 added the typed, cached storefront homepage data boundary and migrated every homepage section to typed CMS props while preserving visual, SEO, image, form, section-order, and Shopify commerce contracts. Phase 23 added secure Draft Mode preview, signed `homePage` webhook revalidation, Sanity publish smoke proof, crawler indexability proof, and a blocked-by-default no-regression release gate.
+
+### What Worked
+
+- Keeping Sanity authoritative only for homepage content, while Shopify stayed authoritative for commerce, kept the integration boundary crisp.
+- The plan sequence worked as a genuine vertical slice: model/seed first, then section rendering, then route cutover, then preview/revalidation/release proof.
+- The `22-GAP-01` initial-HTML closure caught an important SEO/crawlability issue before milestone close instead of letting the CMS homepage hide behind a streaming shell.
+- Owner-gated deployed proof in Phase 23 prevented local-only confidence from becoming a launch claim; Draft Mode, webhook revalidation, Sanity publish, crawler HTML, and PageSpeed were all proven on the deployed candidate.
+
+### What Was Inefficient
+
+- Phase 22 required many small section-by-section plans because the homepage had grown into a broad code-owned surface; useful for safety, but costly in orchestration overhead.
+- The first no-regression PSI pass was blocked by noindex/indexability configuration, so release-gate evidence needed a deploy/env correction before final measurement.
+- Open-artifact audits still surface older debug files and one resolved UAT file as closeout noise; the project needs a cleanup pass for historical artifacts that are already explained in `STATE.md`.
+
+### Patterns Established
+
+- Homepage CMS data enters through one typed server boundary and section props, not through client-side fetching or broad page-builder ownership.
+- Render-critical homepage CMS content belongs in the initial server HTML; request-time streaming is reserved for genuinely per-request data.
+- Sanity preview is secret-url Draft Mode for `/` only in this milestone: no Presentation Tool, stega markers, source maps, Visual Editing, or Studio wiring until a future editor-experience milestone.
+- Signed Sanity webhook revalidation and PageSpeed no-regression evidence are now release gates for homepage CMS changes.
+
+### Key Lessons
+
+- A lean CMS migration can stay safe if every authored field maps to an existing rendered contract and the system fails loudly when render-critical content is missing.
+- Initial HTML checks matter for Server Component/Cached Component pages; a visually correct streamed page can still be wrong for crawlers and release gates.
+- Deployed evidence needs the same indexing/cache environment as launch, or performance and crawler tests will measure configuration state instead of product behavior.
+
+### Cost Observations
+
+- Sessions: 2026-07-02 → 2026-07-06, 3 phases, 11 plans, ~67 commits.
+- Notable: most execution cost went into safe breadth rather than algorithmic complexity: one homepage, many sections, many invariants to preserve.
+
 ## Cross-Milestone Trends
 
-| Metric | v1.0 | v1.1 | v1.2 | v1.3 | v1.4 | v1.5 |
-| --- | --- | --- | --- | --- | --- | --- |
-| Phases / plans | 9 / 35 | 1 / 4 | 1 / 2 | 1 / 9 | 5 / 34 | 1 / 1 (lean) |
-| Duration | ~6.5 weeks | ~2 days | 1 day | 4 days elapsed | ~7 days | ~2 days |
-| Commits | 476 | ~25 | ~10 | 26 | ~229 | ~22 |
-| UAT fix rounds | 3 | 0 (2 pre-UAT gap-closure rounds) | 1 human UAT gap + 1 audit gap | 1 UAT gap-closure wave | PERF-01: 12 waves of remediation/reconciliation | 1 owner-run PSI verification |
-| Known gaps at close | 2 requirement-level (CQA-05, CARD-01-superseded) + tech-debt list | 0 blockers; 3 tech-debt items (W2/W4/W5) | 0 blockers; non-blocking tech debt in audit | 0 blockers; launch gates and stale validation table tracked | audit gaps_found (missing 15-VERIFICATION.md, accepted doc-debt); owner-gated launch proof pending | tech_debt: 10/15 PSI reqs deferred (D-16); render-blocking CSS accepted |
+| Metric | v1.0 | v1.1 | v1.2 | v1.3 | v1.4 | v1.5 | v1.6 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Phases / plans | 9 / 35 | 1 / 4 | 1 / 2 | 1 / 9 | 5 / 34 | 1 / 1 (lean) | 3 / 11 |
+| Duration | ~6.5 weeks | ~2 days | 1 day | 4 days elapsed | ~7 days | ~2 days | ~5 days |
+| Commits | 476 | ~25 | ~10 | 26 | ~229 | ~22 | ~67 |
+| UAT fix rounds | 3 | 0 (2 pre-UAT gap-closure rounds) | 1 human UAT gap + 1 audit gap | 1 UAT gap-closure wave | PERF-01: 12 waves of remediation/reconciliation | 1 owner-run PSI verification | 1 initial-HTML gap + deployed release-gate proof |
+| Known gaps at close | 2 requirement-level (CQA-05, CARD-01-superseded) + tech-debt list | 0 blockers; 3 tech-debt items (W2/W4/W5) | 0 blockers; non-blocking tech debt in audit | 0 blockers; launch gates and stale validation table tracked | audit gaps_found (missing 15-VERIFICATION.md, accepted doc-debt); owner-gated launch proof pending | tech_debt: 10/15 PSI reqs deferred (D-16); render-blocking CSS accepted | 0 blockers; 5 open artifacts acknowledged as bookkeeping |

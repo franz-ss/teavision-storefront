@@ -2,33 +2,33 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Sanity CMS Homepage Integration
-status: owner-gated
-stopped_at: Phase 23 rollout gate pending public-preview evidence
-last_updated: "2026-07-03T03:15:00.000Z"
-last_activity: 2026-07-03 -- Phase 23 implementation complete; rollout blocked awaiting public-preview PSI and Sanity publish proof
+status: Awaiting next milestone
+stopped_at: v1.6 ready for milestone close after Phase 23 release-gate evidence passed
+last_updated: "2026-07-06T00:31:55.890Z"
+last_activity: 2026-07-06 — Milestone v1.6 completed and archived
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 11
   completed_plans: 11
-  percent: 67
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-03)
+See: .planning/PROJECT.md (updated 2026-07-06)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Phase 23 — preview, revalidation, and no regression release
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 23
-Plan: 23-01
-Status: Implementation complete; rollout owner-gated
-Last activity: 2026-07-03 -- Phase 23 automated verification passed; release gate remains blocked awaiting public-preview PSI and Sanity publish proof
+Phase: Milestone v1.6 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-07-06 — Milestone v1.6 completed and archived
 
 ## Performance Metrics
 
@@ -59,7 +59,7 @@ Last activity: 2026-07-03 -- Phase 23 automated verification passed; release gat
 
 **Recent Trend:**
 
-- Last 5 plans: Phase 18 P03 complete, Phase 18 P04 complete, Phase 18 P05 complete, Phase 18 P06 complete, Phase 17 P15 accepted non-blocking
+- Last 5 plans: Phase 22 P06 complete, Phase 22 P07 complete, Phase 22 PGAP-01 complete, Phase 22 P08 complete, Phase 23 P01 complete
 - Trend: stable
 
 | Phase 6 P06-01 | not tracked | 4 tasks | 20 files |
@@ -242,11 +242,12 @@ Recent decisions affecting current work:
 - Phase 18 added: SEO audit remediation
 - Phase 17 complete: PERF-01 accepted non-blocking through dated project-owner performance acceptance; final automated readiness is 100/100.
 - v1.6 added: Sanity CMS Homepage Integration with Phase 21 model/seed, Phase 22 storefront rendering, and Phase 23 preview/revalidation/no-regression release.
+- v1.6 complete: deployed Draft Mode, manually signed `homePage` webhook revalidation, Sanity publish revalidation, crawler indexability, and PageSpeed no-regression evidence passed; milestone archived on 2026-07-06.
 
 ### Pending Todos
 
 - Capture owner-gated launch proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, Search Console sitemap submission, and Search Console URL inspection.
-- Phase 23 plan 23-01 implemented secure Draft Mode preview, signed homepage webhook revalidation, and a blocked-by-default release gate. Rollout remains owner-gated pending public-preview PSI and Sanity publish smoke-test proof.
+- Start the next milestone with `$gsd-new-milestone`.
 
 ### Blockers/Concerns
 
@@ -334,14 +335,24 @@ Items acknowledged and deferred at the combined v1.4 + v1.5 milestone close on 2
 
 Note: all five are v1.3/v1.4-era carryovers surfaced by the pre-close open-artifact audit — the two account debug sessions were already deferred at v1.3 close and resolved via Phase 14 gap plans; `product-json-ld-probe-path` and `15-UAT.md`/`18-UAT.md` belong to already-shipped v1.4 work (impl evidence present). No v1.5 items are open. Acknowledged and deferred, not blocking milestone close.
 
+Items acknowledged and deferred at v1.6 milestone close on 2026-07-06:
+
+| Category       | Item                                 | Status    |
+| -------------- | ------------------------------------ | --------- |
+| debug_sessions | account-link-routing                 | diagnosed |
+| debug_sessions | homepage-main-section-streamed-empty | unknown   |
+| debug_sessions | legacy-account-bridge-ui             | diagnosed |
+| debug_sessions | product-json-ld-probe-path           | unknown   |
+| uat_gaps       | 22-UAT.md                            | resolved  |
+
+Note: the open-artifact audit reported four debug artifact files and one resolved Phase 22 UAT artifact with 0 pending scenarios. Acknowledged and deferred for bookkeeping; the v1.6 milestone audit passed with no blockers.
+
 ## Session Continuity
 
 Last session: 2026-07-03T01:18:22.582Z
-Stopped at: Phase 23 rollout gate pending public-preview evidence
-Resume file: .planning/phases/23-preview-revalidation-and-no-regression-release/23-01-SUMMARY.md
+Stopped at: v1.6 ready for milestone close after Phase 23 release-gate evidence passed
+Resume file: .planning/milestones/v1.6-phases/23-preview-revalidation-and-no-regression-release/23-01-SUMMARY.md
 
 ## Operator Next Steps
 
-- Phase 22 is complete with typed Sanity homepage rendering, final automated guard evidence, and approved homepage visual parity.
-- Add current public-preview PSI category scores and signed Sanity `homePage` publish smoke-test proof to `docs/launch/phase-23-homepage-release-gate.md`; keep rollout blocked if any category regresses from v1.5 or evidence is missing.
-- Keep Shopify/admin/Search Console proof gates pending until dated external evidence exists.
+- Start the next milestone with `$gsd-new-milestone`.
