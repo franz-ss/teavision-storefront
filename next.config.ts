@@ -19,6 +19,18 @@ const nextConfig: NextConfig = {
         destination: '/products/:productHandle',
         permanent: true,
       },
+      // Legacy blog handle → canonical. The listing routes only statically
+      // generate the canonical handle, so redirect the alias before it 404s.
+      {
+        source: '/blogs/journal',
+        destination: '/blogs/teavision-blogs',
+        permanent: true,
+      },
+      {
+        source: '/blogs/journal/:path*',
+        destination: '/blogs/teavision-blogs/:path*',
+        permanent: true,
+      },
       ...getPolicyRedirects(),
     ]
   },
