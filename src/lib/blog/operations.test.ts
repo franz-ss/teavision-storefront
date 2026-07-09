@@ -14,8 +14,10 @@ import type {
 import {
   DEFAULT_BLOG_HANDLE,
   getBlogPath,
+  getBlogSearchListing,
   getDefaultBlogListing,
   getHomepageArticles,
+  getTagListing,
 } from './operations'
 
 vi.mock('next/cache', () => ({
@@ -252,18 +254,121 @@ describe('generateListingMetadata', () => {
     }
     vi.mocked(sanityFetch).mockResolvedValue(result)
 
-    const metadata = await generateListingMetadata({
-      params: Promise.resolve({
-        blog: 'teavision-blogs',
-        tag: 'green-tea',
-      }),
-      searchParams: Promise.resolve({}),
-    })
+    const metadata = await generateListingMetadata({ tag: 'green-tea' })
 
     expect(metadata.robots).toEqual({ index: false, follow: true })
     expect(metadata.alternates?.canonical).toBe(
       '/blogs/teavision-blogs/tagged/green-tea',
     )
+  })
+
+  it('builds a path-based canonical for deeper default pages', async () => {
+    const result: SanityBlogListingResult = {
+      articles: [makePost('article')],
+      blog: {
+        _id: 'blog',
+        description: 'Tea journal',
+        featuredPosts: [],
+        heroImage: null,
+        seo: {
+          canonicalPath: null,
+          metaDescription: 'Tea journal metadata',
+          metaTitle: 'Tea Journal',
+          noIndex: false,
+          ogImage: null,
+        },
+        slug: 'teavision-blogs',
+        title: 'Tea Journal',
+      },
+    }
+    vi.mocked(sanityFetch).mockResolvedValue(result)
+
+    const metadata = await generateListingMetadata({ page: 3 })
+
+    expect(metadata.robots).toBeUndefined()
+    expect(metadata.alternates?.canonical).toBe('/blogs/teavision-blogs/page/3')
+  })
+})
+
+describe('getTagListing', () => {
+  beforeEach(() => {
+    vi.mocked(sanityFetch).mockReset()
+    vi.mocked(getSanityImageUrl).mockReturnValue(
+      'https://cdn.sanity.io/generated.jpg',
+    )
+  })
+
+  it('returns the tag-filtered, paginated articles', async () => {
+    const result: SanityBlogListingResult = {
+      articles: [makePost('a1')],
+      blog: {
+        _id: 'blog',
+        description: 'Tea journal',
+        featuredPosts: [],
+        heroImage: null,
+        seo: null,
+        slug: 'teavision-blogs',
+        title: 'Tea Journal',
+      },
+    }
+    vi.mocked(sanityFetch).mockResolvedValue(result)
+
+    const listing = await getTagListing('teavision-blogs', 'green-tea', 1)
+
+    expect(listing?.activeTag).toBe('Green Tea')
+    expect(listing?.paginated.articles.map((article) => article.id)).toEqual([
+      'a1',
+    ])
+  })
+
+  it('returns null for an unknown tag', async () => {
+    const result: SanityBlogListingResult = {
+      articles: [makePost('a1')],
+      blog: {
+        _id: 'blog',
+        description: 'Tea journal',
+        featuredPosts: [],
+        heroImage: null,
+        seo: null,
+        slug: 'teavision-blogs',
+        title: 'Tea Journal',
+      },
+    }
+    vi.mocked(sanityFetch).mockResolvedValue(result)
+
+    expect(await getTagListing('teavision-blogs', 'no-such-tag', 1)).toBeNull()
+  })
+})
+
+describe('getBlogSearchListing', () => {
+  beforeEach(() => {
+    vi.mocked(sanityFetch).mockReset()
+    vi.mocked(getSanityImageUrl).mockReturnValue(
+      'https://cdn.sanity.io/generated.jpg',
+    )
+  })
+
+  it('returns query matches collapsed onto a single page', async () => {
+    const result: SanityBlogListingResult = {
+      articles: [makePost('match'), makePost('other')],
+      blog: {
+        _id: 'blog',
+        description: 'Tea journal',
+        featuredPosts: [],
+        heroImage: null,
+        seo: null,
+        slug: 'teavision-blogs',
+        title: 'Tea Journal',
+      },
+    }
+    vi.mocked(sanityFetch).mockResolvedValue(result)
+
+    const listing = await getBlogSearchListing('teavision-blogs', 'match')
+
+    expect(listing?.paginated.totalPages).toBe(1)
+    expect(listing?.paginated.articles.map((article) => article.id)).toEqual([
+      'match',
+    ])
   })
 })
 

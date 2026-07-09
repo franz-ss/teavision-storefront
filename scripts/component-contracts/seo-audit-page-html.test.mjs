@@ -49,18 +49,18 @@ test('SEO-audit target page titles do not carry the automatic brand suffix', asy
   }
 })
 
-test('blog listing fallback cannot add a second H1 beside the real blog title', async () => {
+test('blog listing renders its hero directly without a duplicate H1 fallback', async () => {
   const listingPageSource = await readSource(
     'src',
     'app',
     '(storefront)',
     'blogs',
     '[blog]',
-    '_components',
-    'listing-page.tsx',
+    'page.tsx',
   )
 
-  assert.match(listingPageSource, /fallback=\{<Hero[^}]*headingLevel="p"/s)
+  assert.match(listingPageSource, /<HeroSlot\s*\/>/)
+  assert.doesNotMatch(listingPageSource, /fallback=\{<Hero\b/)
 })
 
 test('bulk wholesale supply page exposes its hero title as the visible H1', async () => {

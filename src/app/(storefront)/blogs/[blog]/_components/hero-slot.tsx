@@ -1,26 +1,23 @@
 import {
+  DEFAULT_BLOG_HANDLE,
   getBlog,
   getBlogPath,
-  getTagPath,
-  normalizeBlogHandle,
 } from '@/lib/blog/operations'
 import { Hero } from '@/components/blog/hero'
 
-import type { ListingProps } from '../_lib/types'
-
-export async function HeroSlot({ params, searchParams }: ListingProps) {
-  const [{ blog, tag }, { q }] = await Promise.all([params, searchParams])
-  const normalizedBlog = normalizeBlogHandle(blog)
-  const blogPath = getBlogPath(normalizedBlog)
-  const blogData = await getBlog(normalizedBlog)
+// Static hero for every blog listing surface. It reads no runtime data — only
+// cached getBlog() — so it renders in the prerendered shell. The search box
+// posts to the dedicated blog search route.
+export async function HeroSlot() {
+  const blogPath = getBlogPath(DEFAULT_BLOG_HANDLE)
+  const blogData = await getBlog(DEFAULT_BLOG_HANDLE)
 
   return (
     <Hero
-      defaultQuery={q ?? ''}
       description={blogData?.description || undefined}
       image={blogData?.heroImage}
       rssHref={`${blogPath}/atom`}
-      searchAction={tag ? getTagPath(normalizedBlog, tag) : blogPath}
+      searchAction={`${blogPath}/search`}
       title={blogData?.title}
     />
   )

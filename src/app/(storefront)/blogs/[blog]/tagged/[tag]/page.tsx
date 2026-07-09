@@ -1,17 +1,52 @@
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
-import { ListingPage } from '../../_components/listing-page'
+import {
+  DEFAULT_BLOG_HANDLE,
+  getBlog,
+  getTagListing,
+  getUniqueArticleTags,
+  slugifyTag,
+} from '@/lib/blog/operations'
+
+import { HeroSlot } from '../../_components/hero-slot'
+import { ListingResults } from '../../_components/listing-results'
 import { generateListingMetadata } from '../../_lib/metadata'
 
 type Props = {
   params: Promise<{ blog: string; tag: string }>
-  searchParams: Promise<{ page?: string; q?: string }>
 }
 
-export function generateMetadata(props: Props): Promise<Metadata> {
-  return generateListingMetadata(props)
+export async function generateStaticParams() {
+  const blogData = await getBlog(DEFAULT_BLOG_HANDLE)
+  const tags = getUniqueArticleTags(blogData?.articles ?? [])
+
+  return tags.map((tag) => ({
+    blog: DEFAULT_BLOG_HANDLE,
+    tag: slugifyTag(tag),
+  }))
 }
 
-export default function TaggedBlogPage(props: Props) {
-  return <ListingPage {...props} />
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { tag } = await params
+  return generateListingMetadata({ tag, page: 1 })
+}
+
+export default async function TaggedBlogPage({ params }: Props) {
+  const { blog, tag } = await params
+  const listing = await getTagListing(blog, tag, 1)
+  if (!listing) notFound()
+
+  return (
+    <>
+      <HeroSlot />
+      <ListingResults
+        activeTag={listing.activeTag}
+        heading={`${listing.activeTag} Articles`}
+        paginated={listing.paginated}
+        query={null}
+        tags={listing.tags}
+      />
+    </>
+  )
 }

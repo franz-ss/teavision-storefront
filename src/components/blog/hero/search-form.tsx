@@ -3,14 +3,10 @@ import { Search } from 'lucide-react'
 import { Button } from '@/components/ui'
 
 type SearchFormProps = {
-  defaultQuery?: string
   searchAction?: string
 }
 
-export function SearchForm({
-  defaultQuery = '',
-  searchAction,
-}: SearchFormProps) {
+export function SearchForm({ searchAction }: SearchFormProps) {
   return (
     <form
       action={searchAction}
@@ -26,7 +22,6 @@ export function SearchForm({
         name="q"
         type="search"
         autoComplete="off"
-        defaultValue={defaultQuery}
         placeholder="Search tea topics…"
         className="type-body border-hairline bg-card text-ink placeholder:text-ink-faint focus-visible:border-brand focus-visible:ring-ring min-h-12 flex-1 rounded-md border px-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
       />

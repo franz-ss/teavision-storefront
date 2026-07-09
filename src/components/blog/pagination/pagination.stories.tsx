@@ -23,12 +23,11 @@ export const Default: Story = {
   },
 }
 
-export const MiddlePageWithSearch: Story = {
+export const MiddlePageTagged: Story = {
   args: {
     activeTag: 'Japanese Tea',
     blogHandle: 'teavision-blogs',
     currentPage: 5,
-    query: 'matcha',
     totalPages: 10,
   },
 }

@@ -21,14 +21,6 @@ export const Default: Story = {
   },
 }
 
-export const WithSearchQuery: Story = {
-  args: {
-    defaultQuery: 'matcha',
-    rssHref: '/blogs/teavision-blogs/atom',
-    searchAction: '/blogs/teavision-blogs/tagged/japanese-tea',
-  },
-}
-
 export const WithoutRss: Story = {
   args: {
     searchAction: '/blogs/teavision-blogs',

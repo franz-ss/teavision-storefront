@@ -8,7 +8,6 @@ type PaginationProps = {
   activeTag: string | null
   blogHandle: string
   currentPage: number
-  query?: string | null
   totalPages: number
 }
 
@@ -16,7 +15,6 @@ export function Pagination({
   activeTag,
   blogHandle,
   currentPage,
-  query,
   totalPages,
 }: PaginationProps) {
   if (totalPages <= 1) return null
@@ -34,7 +32,6 @@ export function Pagination({
               activeTag,
               blogHandle,
               page: item,
-              query,
             })}
             aria-current={item === currentPage ? 'page' : undefined}
             className={cn(

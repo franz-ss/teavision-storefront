@@ -537,6 +537,74 @@ export async function getDefaultBlogListing(
   }
 }
 
+export type TagListingResult = {
+  activeTag: string
+  tags: string[]
+  paginated: PaginatedArticles
+}
+
+/**
+ * Tag-filtered listing for /blogs/[blog]/tagged/[tag]. Filters the cached blog
+ * articles in memory and paginates. Returns null when the blog or tag is unknown
+ * so the route can render notFound().
+ */
+export async function getTagListing(
+  handle: string,
+  tagSlug: string,
+  page: number,
+): Promise<TagListingResult | null> {
+  const blogData = await getBlog(handle)
+  if (!blogData) return null
+
+  const tags = getUniqueArticleTags(blogData.articles)
+  const activeTag = findTagBySlug(tags, tagSlug)
+  if (!activeTag) return null
+
+  const filteredArticles = filterArticles({
+    articles: blogData.articles,
+    activeTag,
+    query: null,
+  })
+  const paginated = paginateArticles({ articles: filteredArticles, page })
+
+  return { activeTag, tags, paginated }
+}
+
+export type SearchListingResult = {
+  tags: string[]
+  paginated: PaginatedArticles
+}
+
+/**
+ * Query-filtered listing for the dedicated /blogs/[blog]/search route. Matches
+ * are shown on a single page (the journal is small), so no path-based pagination
+ * is needed and the query never leaks into pagination URLs.
+ */
+export async function getBlogSearchListing(
+  handle: string,
+  query: string,
+): Promise<SearchListingResult | null> {
+  const blogData = await getBlog(handle)
+  if (!blogData) return null
+
+  const tags = getUniqueArticleTags(blogData.articles)
+  const matches = filterArticles({
+    articles: blogData.articles,
+    activeTag: null,
+    query,
+  })
+
+  return {
+    tags,
+    paginated: {
+      articles: matches,
+      currentPage: 1,
+      totalPages: 1,
+      totalArticles: matches.length,
+    },
+  }
+}
+
 export async function getHomepageArticles(
   blogHandle = DEFAULT_BLOG_HANDLE,
   maxPosts = 3,

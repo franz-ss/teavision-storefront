@@ -32,17 +32,14 @@ export function getPaginationHref({
   activeTag,
   blogHandle,
   page,
-  query,
 }: {
   activeTag: string | null
   blogHandle: string
   page: number
-  query?: string | null
 }) {
   return getListingHref({
     activeTag,
     blogHandle,
     page,
-    query,
   })
 }

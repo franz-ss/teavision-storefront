@@ -63,7 +63,6 @@ export function ArticleResults({
           activeTag={activeTag}
           blogHandle={blogHandle}
           currentPage={paginated.currentPage}
-          query={query}
           totalPages={paginated.totalPages}
         />
       </Section.Container>

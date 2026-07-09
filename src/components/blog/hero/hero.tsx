@@ -13,7 +13,6 @@ type HeroImage = {
 }
 
 type HeroProps = {
-  defaultQuery?: string
   description?: string
   headingLevel?: 'h1' | 'p'
   image?: HeroImage | null
@@ -30,7 +29,6 @@ const HERO_IMAGE = {
 }
 
 export function Hero({
-  defaultQuery = '',
   description = DEFAULT_LISTING_DESCRIPTION,
   headingLevel: Heading = 'h1',
   image,
@@ -73,7 +71,7 @@ export function Hero({
           {description}
         </p>
 
-        <SearchForm defaultQuery={defaultQuery} searchAction={searchAction} />
+        <SearchForm searchAction={searchAction} />
         {rssHref ? <RssLink href={rssHref} /> : null}
       </Section.Container>
     </Section.Root>
