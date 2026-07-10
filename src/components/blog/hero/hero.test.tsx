@@ -74,4 +74,14 @@ describe('Hero', () => {
       preload: true,
     })
   })
+
+  it('uses deliberate readable measures without aggressive balancing', () => {
+    const markup = renderToStaticMarkup(<Hero />)
+
+    expect(markup).not.toContain('text-balance')
+    expect(markup).not.toContain('whitespace-nowrap')
+    expect(markup).toContain('max-w-[24ch]')
+    expect(markup).toContain('text-pretty')
+    expect(markup).toContain('max-w-[68ch]')
+  })
 })

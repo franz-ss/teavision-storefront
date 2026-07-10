@@ -14,11 +14,9 @@ export async function HeroSlot() {
 
   return (
     <Hero
-      description={blogData?.description || undefined}
       image={blogData?.heroImage}
       rssHref={`${blogPath}/atom`}
       searchAction={`${blogPath}/search`}
-      title={blogData?.title}
     />
   )
 }

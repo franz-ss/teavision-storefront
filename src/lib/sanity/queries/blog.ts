@@ -141,14 +141,44 @@ export const sanityBlogPostSummaryLightFields = groq`
   }
 `
 
+const configuredFeaturedPostFilter = groq`
+  *[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]->[
+    _type == "blogPost" &&
+    defined(slug.current) &&
+    publishedAt <= now()
+  ]
+`
+
+const productionFeaturedPostFilter = groq`
+  *[
+    _type == "blogPost" &&
+    defined(slug.current) &&
+    blog->slug.current == $blogHandle &&
+    publishedAt <= now() &&
+    slug.current in [
+      "private-label-tea-in-australia-a-complete-guide-for-new-brands",
+      "best-herbal-tea"
+    ]
+  ] | order(publishedAt desc)
+`
+
+const featuredPostIds = groq`
+  select(
+    count(${configuredFeaturedPostFilter}) > 0 =>
+      coalesce(*[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref, []),
+    ${productionFeaturedPostFilter}._id
+  )
+`
+
 /**
  * Default listing query for the unfiltered /blogs/[handle] route.
  * Fetches blog metadata, featured posts, and the first page of latest non-featured articles.
  * Does NOT fetch bodyText — saves Sanity GROQ work for the common unfiltered case.
  * Provides totalCount of non-featured articles so pagination UI can be rendered correctly.
  *
- * The articles list excludes IDs that appear in the blog's featuredPosts references,
- * so the component receives a non-duplicated first-page result ready for display.
+ * Configured featured references take precedence. When none resolve to a published
+ * post, preserve the two articles featured by the production Shopify storefront.
+ * The articles list excludes the selected IDs so pagination remains non-duplicated.
  */
 export const defaultBlogListingQuery = groq`
   {
@@ -163,16 +193,21 @@ export const defaultBlogListingQuery = groq`
       seo{
         ${sanitySeoFields}
       },
-      featuredPosts[]->{
-        ${sanityBlogPostSummaryLightFields}
-      }[defined(slug) && publishedAt <= now()]
+      "featuredPosts": select(
+        count(${configuredFeaturedPostFilter}) > 0 => featuredPosts[]->{
+          ${sanityBlogPostSummaryLightFields}
+        }[defined(slug) && publishedAt <= now()],
+        ${productionFeaturedPostFilter}{
+          ${sanityBlogPostSummaryLightFields}
+        }
+      )
     },
     "articles": *[
       _type == "blogPost" &&
       defined(slug.current) &&
       blog->slug.current == $blogHandle &&
       publishedAt <= now() &&
-      !(_id in coalesce(*[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref, []))
+      !(_id in ${featuredPostIds})
     ] | order(publishedAt desc)[$offset...$limit]{
       ${sanityBlogPostSummaryLightFields}
     },
@@ -181,7 +216,7 @@ export const defaultBlogListingQuery = groq`
       defined(slug.current) &&
       blog->slug.current == $blogHandle &&
       publishedAt <= now() &&
-      !(_id in coalesce(*[_type == "blog" && slug.current == $blogHandle][0].featuredPosts[]._ref, []))
+      !(_id in ${featuredPostIds})
     ]),
     "allTagArrays": *[
       _type == "blogPost" &&

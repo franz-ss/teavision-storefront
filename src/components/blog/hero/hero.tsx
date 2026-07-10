@@ -58,16 +58,16 @@ export function Hero({
         className="absolute inset-0 -z-20 object-cover opacity-35"
       />
       <Section.Container
-        variant="compact"
+        variant="base"
         className="relative flex flex-col items-center justify-center py-16 text-center md:py-24"
       >
         <Eyebrow tone="gold" className="mb-4">
           Tea Journal
         </Eyebrow>
-        <Heading className="font-display text-paper max-w-[16ch] text-[clamp(2rem,4vw,3.4rem)] leading-[1.04] tracking-[-0.01em] wrap-break-word">
+        <Heading className="font-display text-paper max-w-[24ch] text-[clamp(2rem,4vw,3.4rem)] leading-[1.04] tracking-[-0.01em] text-pretty wrap-break-word">
           {title}
         </Heading>
-        <p className="type-lede text-paper/85 mt-5 max-w-2xl wrap-break-word">
+        <p className="type-lede text-paper/85 mt-5 max-w-[68ch] wrap-break-word">
           {description}
         </p>
 

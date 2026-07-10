@@ -34,4 +34,14 @@ describe('defaultBlogListingQuery', () => {
       '}[defined(slug) && publishedAt <= now()]',
     )
   })
+
+  it('falls back to the articles featured by the production storefront', () => {
+    expect(defaultBlogListingQuery).toContain('count(')
+    expect(defaultBlogListingQuery).toContain('> 0 => featuredPosts[]->{')
+    expect(defaultBlogListingQuery).toContain(
+      'private-label-tea-in-australia-a-complete-guide-for-new-brands',
+    )
+    expect(defaultBlogListingQuery).toContain('best-herbal-tea')
+    expect(defaultBlogListingQuery).toMatch(/!\(_id in\s+select\(/)
+  })
 })
