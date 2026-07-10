@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { StoryDisclosure, Toolbar } from '@/components/collection'
 import { Section } from '@/components/ui'
 import { SITE_URL } from '@/lib/seo/site-url'
-import { sanitizeShopifyCompactHtml } from '@/lib/shopify/html-content'
+import { sanitizeShopifyCollectionStoryHtml } from '@/lib/shopify/html-content'
 import {
   COLLECTION_PRODUCT_PAGE_SIZE,
   getCollection,
@@ -217,8 +217,6 @@ export async function PageContent({ params, searchParams }: PageProps) {
   const collectionUrl = `${SITE_URL}${collectionPath}`
   const heroDescription = cleanHeroDescription(collection.description)
   const richDescriptionHtml = normalizeHtml(collection.descriptionHtml)
-  const sanitizedRichDescriptionHtml =
-    sanitizeShopifyCompactHtml(richDescriptionHtml)
   const hasRichDescription = shouldRenderRichDescription(
     collection.descriptionHtml,
     collection.description,
@@ -304,7 +302,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
           <Section.Container>
             <StoryDisclosure
               title={`Read more about ${collection.title}`}
-              html={sanitizedRichDescriptionHtml}
+              html={sanitizeShopifyCollectionStoryHtml(richDescriptionHtml)}
             />
           </Section.Container>
         </Section.Root>

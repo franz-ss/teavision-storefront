@@ -19,7 +19,24 @@ const shopifyMocks = vi.hoisted(() => ({
   getCollectionTagCounts: vi.fn<() => Promise<Record<string, number>>>(),
 }))
 
+const htmlContentMocks = vi.hoisted(() => ({
+  sanitizeShopifyCollectionStoryHtml: vi.fn(),
+}))
+
 vi.mock('server-only', () => ({}))
+
+vi.mock('@/lib/shopify/html-content', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/shopify/html-content')>()
+  htmlContentMocks.sanitizeShopifyCollectionStoryHtml.mockImplementation(
+    actual.sanitizeShopifyCollectionStoryHtml,
+  )
+
+  return {
+    ...actual,
+    sanitizeShopifyCollectionStoryHtml:
+      htmlContentMocks.sanitizeShopifyCollectionStoryHtml,
+  }
+})
 
 vi.mock('@/lib/shopify/operations/collection', () => ({
   COLLECTION_PRODUCT_PAGE_SIZE: 24,
@@ -125,6 +142,10 @@ function productFixture(
     ...overrides,
   }
 }
+
+beforeEach(() => {
+  htmlContentMocks.sanitizeShopifyCollectionStoryHtml.mockClear()
+})
 
 describe('PageContent out-of-range and stale-cursor handling', () => {
   beforeEach(() => {
@@ -445,6 +466,7 @@ describe('PageContent collection rich hero rendering', () => {
     expect(html).toContain('View our Tea Bag Manufacturing Catalogue')
     expect(html).toContain('Minimum Order Quantity: 6,000 Tea Bags Per Blend')
     expect(html).not.toContain('Read more about Bulk Tea Bags')
+    expect(htmlContentMocks.sanitizeShopifyCollectionStoryHtml).not.toHaveBeenCalled()
   })
 
   it('keeps the existing hero path for normal collection descriptions', async () => {
@@ -478,6 +500,8 @@ describe('PageContent collection rich hero rendering', () => {
           <img src="https://cdn.shopify.com/s/files/1/0786/8339/files/Wholesale-Bulk-Tea_1440x640.jpg" alt="Wholesale Bulk Tea">
           <h2>Wholesale Bulk Tea</h2>
           <p>Browse loose leaf teas for cafes, retailers, and foodservice teams.</p>
+          <h3>Why hospitality teams choose Teavision</h3>
+          <h4>Flexible wholesale ordering</h4>
           <ul><li>Black tea</li><li>Green tea</li><li>Herbal tea</li></ul>
         `,
       }),
@@ -512,6 +536,14 @@ describe('PageContent collection rich hero rendering', () => {
     expect(html.indexOf('id="product-grid"')).toBeGreaterThan(-1)
     expect(html.indexOf('id="product-grid"')).toBeLessThan(
       html.indexOf('Read more about Wholesale Bulk Tea'),
+    )
+    expect(html.indexOf('Read more about Wholesale Bulk Tea')).toBeLessThan(
+      html.indexOf(
+        '<h2 class="type-heading-05 text-ink mt-5">Why hospitality teams choose Teavision</h2>',
+      ),
+    )
+    expect(html).toContain(
+      '<h3 class="type-label text-ink mt-5">Flexible wholesale ordering</h3>',
     )
   })
 })
