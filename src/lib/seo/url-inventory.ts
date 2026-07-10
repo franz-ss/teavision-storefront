@@ -122,7 +122,7 @@ export function buildUrlInventoryRows(
     throw new Error('URL inventory requires the canonical production origin')
   }
 
-  const legalPoliciesByPath = new Map(
+  const legalPoliciesByPath = new Map<string, (typeof LEGAL_POLICIES)[number]>(
     LEGAL_POLICIES.map((policy) => [policy.href, policy]),
   )
   const launchExpectations = getLaunchSeoRouteExpectations().filter(

@@ -20,6 +20,9 @@ export type ObservabilityEventName =
   | 'sanity_webhook_rejected'
   | 'draft_preview_enabled'
   | 'draft_preview_rejected'
+  | 'seo_url_export_completed'
+  | 'seo_url_export_failed'
+  | 'seo_url_export_rejected'
   | 'route_action_failed'
 
 type LogContext = Record<string, unknown>

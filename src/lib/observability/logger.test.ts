@@ -133,6 +133,9 @@ describe('observability logger', () => {
       'sanity_webhook_rejected',
       'draft_preview_enabled',
       'draft_preview_rejected',
+      'seo_url_export_completed',
+      'seo_url_export_failed',
+      'seo_url_export_rejected',
     ]
 
     try {

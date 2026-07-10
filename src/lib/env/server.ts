@@ -28,6 +28,14 @@ export function isNoindexModeEnabledFromEnv(): boolean {
   return truthyEnv('DISABLE_INDEXING')
 }
 
+export function isSeoUrlExportEnabledFromEnv(): boolean {
+  return truthyEnv('SEO_URL_EXPORT_ENABLED')
+}
+
+export function getSeoUrlExportSecret(): string | undefined {
+  return optionalEnv('SEO_URL_EXPORT_SECRET')
+}
+
 export function getAnalyticsModeFromEnv(): string | undefined {
   return optionalEnv('NEXT_PUBLIC_ANALYTICS_MODE')
 }
