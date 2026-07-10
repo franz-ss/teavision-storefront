@@ -25,6 +25,58 @@ Source: external SEO consultant's migration review. All three phases are fixes t
 
 **Build order:** Phase 24 first (unblocks the consultant). Phases 25 and 26 are independent and can proceed in parallel.
 
+### Phase 24: Sitemap & URL-inventory unblock
+
+**Goal:** Provide the SEO consultant with a complete canonical-host URL inventory without weakening staging noindex protections.
+
+**Requirements:** SEO-01, SEO-02
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run `/gsd:plan-phase 24` to break down)
+
+**Success Criteria**:
+
+1. A complete CSV inventory covers every canonical storefront route required for the consultant's redirect worksheet.
+2. Access requires both the URL-export feature flag and a valid secret.
+3. Export responses carry an explicit noindex directive and use the canonical production host.
+4. Existing `sitemap.ts` and `robots.ts` noindex behavior remains unchanged and its regression contract continues to pass.
+
+### Phase 25: Heading structure fixes
+
+**Goal:** Correct product and collection content heading levels without weakening native disclosure semantics or changing product-description sanitization.
+
+**Requirements:** SEO-03, SEO-04
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run `/gsd:plan-phase 25` to break down)
+
+**Success Criteria**:
+
+1. Product disclosure titles render as accessible H2 headings while retaining native `details` and `summary` behavior.
+2. Collection story H3/H4 source headings render as H2/H3 through an isolated sanitizer variant.
+3. Product-description rendering and the shared `compact` sanitizer contract remain unchanged.
+
+### Phase 26: Collection & product server-render shell
+
+**Goal:** Ensure collection and product primary content is present in the initial server-rendered HTML before client JavaScript runs.
+
+**Requirements:** SEO-05, SEO-06
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run `/gsd:plan-phase 26` to break down)
+
+**Success Criteria**:
+
+1. Collection initial HTML contains the H1, introductory content, and first product-grid rows.
+2. Product initial HTML contains the H1, gallery, description, and specification disclosures.
+3. Existing cache, canonical, JSON-LD, LCP, and one-H1 behavior does not regress.
+
 <details>
 <summary>✅ v1.0 Headless Storefront Launch (Phases 1–11) — SHIPPED 2026-06-11</summary>
 
