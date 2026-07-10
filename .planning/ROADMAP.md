@@ -180,7 +180,7 @@ Full phase details: `milestones/v1.6-ROADMAP.md` · Audit: `milestones/v1.6-MILE
 | 22. Storefront Data and Rendering                                 | v1.6      | 9/9            | Complete   | 2026-07-03 |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 1/1            | Complete   | 2026-07-06 |
 | 24. Sitemap & URL-inventory unblock                               | v1.7      | 1/1 | Complete    | 2026-07-10 |
-| 25. Heading structure fixes                                       | v1.7      | 0/—            | Pending    | —          |
+| 25. Heading structure fixes                                       | v1.7      | 0/1 | Planned    |  |
 | 26. Collection & product server-render shell                      | v1.7      | 0/—            | Pending    | —          |
 
 ## Next
