@@ -9,8 +9,12 @@ export type SanitizedHtml = string & {
 }
 
 type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-type ShopifyHtmlVariant = 'page' | 'article' | 'compact'
+type ShopifyHtmlVariant = 'page' | 'article' | 'compact' | 'collectionStory'
 type ShopifyHtmlClassMap = Partial<Record<string, string>>
+type HeadingTransform = {
+  tagName: HeadingTag
+  className?: string
+}
 
 const SHOPIFY_HTML_ALLOWED_TAGS = [
   'a',
@@ -176,6 +180,26 @@ const SHOPIFY_HTML_CLASS_NAMES: Record<
     th: 'type-mono-meta text-ink-faint border-b border-hairline-2 p-3 text-left align-top',
     ul: 'list-disc pl-6',
   },
+  collectionStory: {
+    blockquote: 'font-display italic border-l-2 border-gold pl-4 text-ink my-6',
+    caption: 'type-mono-meta text-ink-faint mb-3',
+    figcaption: 'type-mono-meta text-ink-faint mt-3',
+    figure: 'my-6',
+    h2: 'type-heading-04 text-ink mt-6',
+    h3: 'type-heading-05 text-ink mt-5',
+    h4: 'type-label text-ink mt-5',
+    h5: 'type-label text-ink mt-4',
+    h6: 'type-label text-ink mt-4',
+    hr: 'border-hairline',
+    img: 'my-6 h-auto max-w-full rounded-lg border border-hairline',
+    li: 'text-ink-soft text-[1.02rem] leading-[1.6] pl-1 marker:text-brand',
+    ol: 'list-decimal pl-6',
+    p: 'text-ink-soft text-[1.02rem] leading-[1.6]',
+    table: 'w-full min-w-full border-collapse',
+    td: 'type-body-sm border-b border-hairline-2 p-3 align-top',
+    th: 'type-mono-meta text-ink-faint border-b border-hairline-2 p-3 text-left align-top',
+    ul: 'list-disc pl-6',
+  },
 }
 
 const SHOPIFY_HTML_TABLE_REGION_CLASS_NAMES: Record<
@@ -187,15 +211,23 @@ const SHOPIFY_HTML_TABLE_REGION_CLASS_NAMES: Record<
     'focus-visible:ring-ring my-8 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
   compact:
     'focus-visible:ring-ring my-6 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+  collectionStory:
+    'focus-visible:ring-ring my-6 overflow-x-auto rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
 }
 
 const SHOPIFY_HTML_HEADING_TRANSFORMS: Record<
   ShopifyHtmlVariant,
-  Partial<Record<HeadingTag, HeadingTag>>
+  Partial<Record<HeadingTag, HeadingTransform>>
 > = {
-  article: { h1: 'h2' },
-  compact: { h1: 'h3', h2: 'h3' },
-  page: { h1: 'h2' },
+  article: { h1: { tagName: 'h2' } },
+  compact: { h1: { tagName: 'h3' }, h2: { tagName: 'h3' } },
+  collectionStory: {
+    h1: { tagName: 'h3' },
+    h2: { tagName: 'h3' },
+    h3: { tagName: 'h2', className: 'type-heading-05 text-ink mt-5' },
+    h4: { tagName: 'h3', className: 'type-label text-ink mt-5' },
+  },
+  page: { h1: { tagName: 'h2' } },
 }
 
 const SHOPIFY_HTML_LINK_CLASS_NAME =
@@ -292,7 +324,7 @@ function buildAllowedClasses(): NonNullable<
 
 function buildHeadingTransforms(
   classMap: ShopifyHtmlClassMap,
-  headingMap: Partial<Record<HeadingTag, HeadingTag>>,
+  headingMap: Partial<Record<HeadingTag, HeadingTransform>>,
 ): NonNullable<sanitizeHtml.IOptions['transformTags']> {
   const transforms: NonNullable<sanitizeHtml.IOptions['transformTags']> = {
     a: transformExternalLink,
@@ -307,11 +339,14 @@ function buildHeadingTransforms(
       transformWithClass(currentTagName, attributes, classMap)
   }
 
-  for (const [from, to] of Object.entries(headingMap)) {
-    if (!to) continue
+  for (const [from, transform] of Object.entries(headingMap)) {
+    if (!transform) continue
     transforms[from] = (_tagName, attributes) => ({
-      tagName: to,
-      attribs: withClass(attributes, classMap[to]),
+      tagName: transform.tagName,
+      attribs: withClass(
+        attributes,
+        transform.className ?? classMap[transform.tagName],
+      ),
     })
   }
 
@@ -373,6 +408,12 @@ export function sanitizeShopifyArticleHtml(html: string): SanitizedHtml {
 
 export function sanitizeShopifyCompactHtml(html: string): SanitizedHtml {
   return sanitizeShopifyHtml(html, 'compact')
+}
+
+export function sanitizeShopifyCollectionStoryHtml(
+  html: string,
+): SanitizedHtml {
+  return sanitizeShopifyHtml(html, 'collectionStory')
 }
 
 export function plainTextFromHtml(html: string): string {
