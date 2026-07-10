@@ -109,7 +109,7 @@ describe('ProductContent heading hierarchy', () => {
     )
   })
 
-  it('keeps the product title as the only H1 and demotes imported description headings', async () => {
+  it('keeps the product title as the only H1, preserves native disclosures, and demotes imported description headings', async () => {
     const element = await ProductContent({
       params: Promise.resolve({ handle: 'only-product-title' }),
       searchParams: Promise.resolve({}),
@@ -126,6 +126,23 @@ describe('ProductContent heading hierarchy', () => {
     )
     expect(html).not.toContain('<h1>Imported product title</h1>')
     expect(html).not.toContain('<h2>Imported section</h2>')
+
+    const detailTags = html.match(/<details\b[^>]*>/g) ?? []
+    const disclosureTitles = [
+      ...html.matchAll(
+        /<details\b[^>]*><summary\b[^>]*><h2\b[^>]*>([^<]+)<\/h2>/g,
+      ),
+    ].map((match) => match[1])
+
+    expect(detailTags).toHaveLength(3)
+    expect(detailTags[0]).toContain('open=""')
+    expect(disclosureTitles).toEqual([
+      'Tasting &amp; brewing',
+      'Ingredients &amp; certification',
+      'Packing, shipping &amp; storage',
+    ])
+    expect(html).not.toContain('aria-expanded')
+    expect(html).not.toContain('role="button"')
   })
 })
 

@@ -361,11 +361,13 @@ export async function ProductContent({
                 className="group border-hairline border-t last:border-b"
                 open={index === 0}
               >
-                <summary className="font-display text-ink flex cursor-pointer list-none items-center justify-between gap-5 py-5 text-[1.15rem] leading-tight marker:hidden">
-                  {item.title}
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-5 marker:hidden">
+                  <h2 className="font-display text-ink min-w-0 wrap-break-word text-[1.15rem] leading-tight">
+                    {item.title}
+                  </h2>
                   <ChevronDown
                     aria-hidden="true"
-                    className="text-brand size-4 transition-transform group-open:rotate-180"
+                    className="text-brand size-4 shrink-0 transition-transform group-open:rotate-180"
                   />
                 </summary>
                 {item.kind === 'table' ? (
