@@ -26,6 +26,18 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 **Current launch gates:** Automated code readiness is `100/100` after dated PERF-01 performance acceptance; v1.5 superseded that acceptance for `/` with a real owner-run PSI result (Performance 95–97), and v1.6 refreshed the indexable homepage candidate with mobile 95/100/100/100 and desktop 97/100/100/100. Production launch still needs owner-gated Shopify/admin/Search Console proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, sitemap submission, and URL inspection.
 
+## Current Milestone: v1.7 SEO / Migration Readiness
+
+**Goal:** Close the remaining SEO/crawlability gaps from the external consultant's migration review so the site is ready for the Shopify→headless cutover.
+
+**Target features:**
+
+- Sitemap & URL-inventory unblock — a secret-gated URL export so the consultant can build the 301 redirect sheet without exposing staging to indexing.
+- Heading structure fixes — product-description accordion titles → H2; collection story content H3/H4 → H2/H3 (via an isolated sanitizer variant, product description unaffected).
+- Collection & product server-render shell — get H1/intro/product grid into the initial server-rendered HTML to resolve the CSR/thin-HTML crawlability finding.
+
+**Explicitly dropped:** `/blog` canonical listing migration (was proposed as a phase). `/blogs/teavision-blogs` stays as-is — the change was cosmetic and the only justification was folding it into the migration redirect sheet, which the owner declined (see `research/URL-MIGRATION.md` for the analysis kept on record).
+
 ## Shipped Milestone: v1.6 Sanity CMS Homepage Integration
 
 **Shipped:** 2026-07-06. The front page is now CMS-authored through the sibling `teavision-cms` Studio while preserving the current storefront experience and enforcing strict no SEO/PageSpeed regression.
@@ -86,7 +98,14 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 ### Active
 
-- [ ] Next milestone requirements to be defined with `$gsd-new-milestone`.
+**v1.7 SEO / Migration Readiness:**
+
+- [ ] **SEO-01**: SEO consultant can retrieve a complete canonical-host URL inventory (CSV) without exposing staging to indexing.
+- [ ] **SEO-02**: The URL export is secret-gated + flag-controlled + `X-Robots-Tag: noindex`; `sitemap.ts`/`robots.ts` noindex behavior is unchanged.
+- [ ] **SEO-03**: Product-description accordion titles render as `<h2>` with native `<details>` semantics preserved.
+- [ ] **SEO-04**: Collection story content headings render one level higher (H3→H2, H4→H3) with zero change to product-description rendering.
+- [ ] **SEO-05**: Collection pages render H1 + intro + first product-grid rows in the initial server HTML.
+- [ ] **SEO-06**: Product pages render H1 + gallery + description + disclosures in the initial server HTML.
 
 ### Deferred / Carryover
 
@@ -173,4 +192,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-06 after completing v1.6 milestone_
+_Last updated: 2026-07-10 after starting v1.7 SEO / Migration Readiness milestone_

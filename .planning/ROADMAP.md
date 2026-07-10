@@ -9,8 +9,21 @@
 - ✅ **v1.4 Production Readiness 100/100** — Phases 15–19 (shipped 2026-06-26; H1 re-remediation 2026-06-29) — see `milestones/v1.4-ROADMAP.md`
 - ✅ **v1.5 Performance & PageSpeed 100** — Phase 20 (shipped 2026-07-01, lean scope) — see `milestones/v1.5-ROADMAP.md`
 - ✅ **v1.6 Sanity CMS Homepage Integration** — Phases 21–23 (shipped 2026-07-06) — see `milestones/v1.6-ROADMAP.md`
+- 🔨 **v1.7 SEO / Migration Readiness** — Phases 24–26 (in planning, started 2026-07-10)
 
 ## Phases
+
+### 🔨 v1.7 SEO / Migration Readiness (Phases 24–26) — IN PLANNING
+
+Source: external SEO consultant's migration review. All three phases are fixes to existing code; research in `research/SUMMARY.md`.
+
+- [ ] Phase 24: Sitemap & URL-inventory unblock — secret-gated URL export (CSV) so the consultant can build the 301 sheet without exposing staging to indexing (SEO-01, SEO-02)
+- [ ] Phase 25: Heading structure fixes — product accordion titles → H2; collection story content H3/H4 → H2/H3 via an isolated `collectionStory` sanitizer variant (SEO-03, SEO-04)
+- [ ] Phase 26: Collection & product server-render shell — H1/intro/product grid into the initial server HTML to fix the CSR/thin-HTML crawlability finding (SEO-05, SEO-06)
+
+**Dropped:** `/blog` canonical listing migration — cosmetic, owner declined; `/blogs/teavision-blogs` stays (analysis in `research/URL-MIGRATION.md`).
+
+**Build order:** Phase 24 first (unblocks the consultant). Phases 25 and 26 are independent and can proceed in parallel.
 
 <details>
 <summary>✅ v1.0 Headless Storefront Launch (Phases 1–11) — SHIPPED 2026-06-11</summary>
@@ -114,7 +127,12 @@ Full phase details: `milestones/v1.6-ROADMAP.md` · Audit: `milestones/v1.6-MILE
 | 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
 | 22. Storefront Data and Rendering                                 | v1.6      | 9/9            | Complete    | 2026-07-03 |
 | 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 1/1            | Complete    | 2026-07-06 |
+| 24. Sitemap & URL-inventory unblock                               | v1.7      | 0/—            | Pending     | —          |
+| 25. Heading structure fixes                                       | v1.7      | 0/—            | Pending     | —          |
+| 26. Collection & product server-render shell                      | v1.7      | 0/—            | Pending     | —          |
 
 ## Next
 
-Start the next milestone with `$gsd-new-milestone`. Carry forward only unrelated external launch proof gates: hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, authoritative B2B/company-location pricing, Search Console sitemap submission, and Search Console URL inspection.
+Plan the first v1.7 phase with `/gsd:plan-phase 24` (unblocks the consultant's 301 sheet). Phases 25 and 26 are independent and can be planned in any order.
+
+Carry forward only unrelated external launch proof gates: hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, authoritative B2B/company-location pricing, Search Console sitemap submission, and Search Console URL inspection.
