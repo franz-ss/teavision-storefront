@@ -1,8 +1,8 @@
 ---
 phase: '24-sitemap-url-inventory-unblock'
-verified: '2026-07-10T09:44:14+08:00'
-status: human_needed
-score: '6/6 must-have truths verified; 2/2 requirements verified'
+verified: '2026-07-10T12:18:38+08:00'
+status: passed
+score: '6/6 must-have truths verified; 2/2 requirements verified; 1/1 human checks passed'
 automated_checks:
   passed: 8
   failed: 0
@@ -12,8 +12,9 @@ requirements:
 gaps: []
 human_verification:
   - test: 'Approved-runtime canonical CSV handoff'
+    status: passed
     expected: 'With DISABLE_INDEXING=true, a temporary SEO_URL_EXPORT_ENABLED=true flag and a rotated 32+ character bearer secret produce a 200 CSV attachment whose rows are unique, plausible by source/type, and all use https://www.teavision.com.au; disabling the flag restores 404 concealment while sitemap.xml remains empty and robots omits its sitemap line.'
-    why_human: 'The plan explicitly keeps live Shopify/Sanity access and consultant delivery owner-gated. Deterministic mocks prove the contract, but only an approved deployment can prove current live counts and operational download semantics.'
+    evidence: 'Passed on 2026-07-10 in an approved local production-runtime window: authorized 200 CSV with the exact public header and 514 unique canonical rows (15 static, 1 blog, 82 article, 144 collection, 24 page, 5 legal, 243 product); required static paths present; unauthorized 401; disabled flag concealed the route with 404 and no attachment; noindex/private-no-store headers, empty sitemap, and robots sitemap omission preserved; CSV parsed in memory, server stopped, and local export flag restored to false.'
 ---
 
 # Phase 24: Sitemap & URL-inventory Unblock Verification Report
@@ -22,9 +23,7 @@ human_verification:
 
 ## Result
 
-Phase 24 has no code-level gaps. All six must-have truths, all required artifacts and key links, and both requirement IDs are verified against the implementation. The focused tests, repository test suites, frozen-file checks, lint, TypeScript, contracts, and production build all pass.
-
-Status is `human_needed` only because the plan deliberately reserves the real Shopify/Sanity CSV handoff and live count sampling for an owner-approved runtime window. No live export, secret provisioning, or consultant delivery was attempted during this verification.
+Phase 24 passes. All six must-have truths, all required artifacts and key links, both requirement IDs, and the sole owner-gated runtime check are verified. The approved-runtime handoff produced a complete canonical CSV while preserving every staging noindex control, and the independently rerun focused tests, repository suites, frozen-file checks, lint, TypeScript, contracts, and production build all pass.
 
 ## Goal Achievement
 
@@ -65,8 +64,8 @@ Status is `human_needed` only because the plan deliberately reserves the real Sh
 
 | Requirement | Plan coverage | Status | Evidence |
 | --- | --- | --- | --- |
-| SEO-01 | 24-01-01, 24-01-02, 24-01-03 | VERIFIED | Complete finite source coverage, canonical-origin guard, deterministic unique/sorted CSV, complete paginated operations, and dynamic attachment response are implemented and tested. The remaining live handoff is listed under Human Verification. |
-| SEO-02 | 24-01-02, 24-01-03 | VERIFIED | Strict flag plus server-only bearer secret, same-length timing-safe comparison, secured headers on all tested outcomes, request-time execution, redacted logs, and unchanged sitemap/robots/noindex behavior are proven. |
+| SEO-01 | 24-01-01, 24-01-02, 24-01-03 | VERIFIED | Complete finite source coverage, canonical-origin guard, deterministic unique/sorted CSV, complete paginated operations, and dynamic attachment response are implemented and tested; the approved runtime returned 514 unique canonical rows across all seven required types with required static paths present. |
+| SEO-02 | 24-01-02, 24-01-03 | VERIFIED | Strict flag plus server-only bearer secret, same-length timing-safe comparison, secured headers on all tested outcomes, request-time execution, redacted logs, and unchanged sitemap/robots/noindex behavior are proven; runtime checks confirmed 401 unauthorized, concealed 404 after disablement, secured headers, empty sitemap, robots omission, and local flag restoration to false. |
 
 All requirement IDs in the plan frontmatter are present in `.planning/REQUIREMENTS.md`, mapped only to Phase 24, and accounted for above.
 
@@ -79,7 +78,7 @@ All requirement IDs in the plan frontmatter are present in `.planning/REQUIREMEN
 | Focused Phase 24 suites | PASSED | 3 files / 36 tests. |
 | Lint | PASSED | Tailwind class check and ESLint exited 0. |
 | TypeScript | PASSED | `tsc --noEmit` exited 0. |
-| Unit suite | PASSED | 70 files / 312 tests. |
+| Unit suite | PASSED | 70 files / 313 tests. |
 | Integration and contract suites | PASSED | Integration: 13 files / 82 tests. Contracts: 55/55 tests. |
 | Next.js production build | PASSED | Next.js 16.2.9 build completed; `/api/seo/url-inventory` is emitted as dynamic (`ƒ`). |
 
@@ -90,32 +89,24 @@ No real Shopify checkout, payment, shipping-rate, tax, order-creation, success-r
 - No skipped, todo, focused-only, or trivial assertion markers were found in the Phase 24 tests.
 - No unreferenced `TBD`, `FIXME`, or `XXX` debt marker exists in the Phase 24 implementation or test files.
 - No UI, Storybook, GraphQL/codegen, schema, dependency, checkout, downloaded CSV, or real secret change is present in the Phase 24 implementation diff.
-- The three unrelated dirty blog/Sanity files were not modified, staged, or included in verification scope.
+- No source file was edited during this rerun; only this verification report changed.
 
-## Human Verification Required
+## Human Verification Completed
 
-### Approved-runtime canonical CSV handoff
+### Approved-runtime canonical CSV handoff — PASSED
 
-Follow `.planning/phases/24-sitemap-url-inventory-unblock/24-USER-SETUP.md` during an owner-approved window:
-
-1. Keep `DISABLE_INDEXING=true`; temporarily set `SEO_URL_EXPORT_ENABLED=true` and a rotated 32+ character `SEO_URL_EXPORT_SECRET`.
-2. Request the route with the bearer secret in the `Authorization` header only.
-3. Confirm HTTP 200, the exact attachment/content type, `X-Robots-Tag: noindex, nofollow`, and private/no-store caching.
-4. Parse the CSV and confirm unique rows, exact canonical origin on every row, required static paths, and plausible live counts by type against the approved Shopify/Sanity sources.
-5. Confirm staging `/sitemap.xml` remains empty and robots still omits its sitemap line, then disable the export flag and delete the downloaded CSV.
-
-**Why human:** live credentials, source counts, deployment state, and consultant delivery are explicitly owner-gated. Automated evidence uses deterministic mocks and must not fabricate this operational proof.
+On 2026-07-10, an approved local production-runtime window returned a 200 CSV attachment with the exact public header and 514 unique `https://www.teavision.com.au` rows: 15 static, 1 blog, 82 article, 144 collection, 24 page, 5 legal, and 243 product. Required static paths were present. Unauthorized access returned 401; disabling the export restored concealed 404 behavior without an attachment. Every handled response retained `X-Robots-Tag: noindex, nofollow` and private/no-store caching; the sitemap contained zero URL entries and robots omitted its sitemap line. The CSV was parsed in memory, the server was stopped, and the local export flag is false. Full evidence is retained in `24-HUMAN-UAT.md` and `24-USER-SETUP.md`; no secret or CSV was persisted.
 
 ## Gaps Summary
 
-No implementation, security, regression, test-quality, or requirement-traceability gaps were found. One owner-gated runtime verification item remains, so the phase cannot receive `passed` status until that check is completed and verification is rerun.
+No implementation, security, regression, test-quality, operational, or requirement-traceability gaps remain. The sole owner-gated runtime item passed and the complete automated gate was independently rerun successfully.
 
 ## Verification Metadata
 
 - **Approach:** Goal-backward verification against the Phase 24 plan, summary, validation strategy, roadmap goal, requirements, actual implementation, source-operation pagination, frozen SEO controls, focused tests, full repository gates, and production route classification.
-- **Verified commit:** `2d2726ae39ead30e4701fe0b1437af1a3d29bf1a`.
+- **Verified commit:** `2a03b52142e3ffb50a644391558c772879a243cd`.
 - **Verifier:** Independent Codex phase verifier.
 
 ---
 
-_Verified: 2026-07-10T09:44:14+08:00_
+_Verified: 2026-07-10T12:18:38+08:00_
