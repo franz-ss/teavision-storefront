@@ -1,5 +1,7 @@
 import { timingSafeEqual } from 'crypto'
 
+import { connection } from 'next/server'
+
 import { DEFAULT_BLOG_HANDLE, getBlog } from '@/lib/blog/operations'
 import {
   getSeoUrlExportSecret,
@@ -98,6 +100,8 @@ function countRowsByType(rows: readonly UrlInventoryRow[]) {
 }
 
 export async function GET(request: Request): Promise<Response> {
+  await connection()
+
   if (!isSeoUrlExportEnabledFromEnv()) {
     logEvent('info', 'seo_url_export_rejected', {
       reason: 'feature-disabled',

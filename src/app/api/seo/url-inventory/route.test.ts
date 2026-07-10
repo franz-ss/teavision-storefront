@@ -28,6 +28,7 @@ const CSV_BODY =
 
 const {
   buildUrlInventoryRowsMock,
+  connectionMock,
   getAllProductsMock,
   getBlogMock,
   getCollectionSummariesMock,
@@ -38,6 +39,7 @@ const {
   serializeUrlInventoryCsvMock,
 } = vi.hoisted(() => ({
   buildUrlInventoryRowsMock: vi.fn(),
+  connectionMock: vi.fn(),
   getAllProductsMock: vi.fn(),
   getBlogMock: vi.fn(),
   getCollectionSummariesMock: vi.fn(),
@@ -46,6 +48,10 @@ const {
   isSeoUrlExportEnabledFromEnvMock: vi.fn(),
   logEventMock: vi.fn(),
   serializeUrlInventoryCsvMock: vi.fn(),
+}))
+
+vi.mock('next/server', () => ({
+  connection: connectionMock,
 }))
 
 vi.mock('@/lib/env/server', () => ({
@@ -137,6 +143,7 @@ function expectLogsToExclude(values: readonly string[]): void {
 describe('SEO URL inventory route', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    connectionMock.mockResolvedValue(undefined)
     isSeoUrlExportEnabledFromEnvMock.mockReturnValue(true)
     getSeoUrlExportSecretMock.mockReturnValue(VALID_SECRET)
     getAllProductsMock.mockResolvedValue([{ marker: 'raw-product-payload' }])
