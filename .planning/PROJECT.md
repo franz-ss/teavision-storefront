@@ -26,6 +26,8 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 
 **Current launch gates:** Automated code readiness is `100/100` after dated PERF-01 performance acceptance; v1.5 superseded that acceptance for `/` with a real owner-run PSI result (Performance 95–97), and v1.6 refreshed the indexable homepage candidate with mobile 95/100/100/100 and desktop 97/100/100/100. Production launch still needs owner-gated Shopify/admin/Search Console proof for hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, B2B/customer pricing, sitemap submission, and URL inspection.
 
+**v1.7 progress:** Phase 24 is complete. The SEO consultant URL-inventory path is deterministic, canonical-production-host-only, flag- and bearer-secret-gated, request-time, private/no-store, and noindex. Approved runtime verification produced 514 unique URLs while staging sitemap and robots protections remained unchanged; the local export flag was disabled after validation.
+
 ## Current Milestone: v1.7 SEO / Migration Readiness
 
 **Goal:** Close the remaining SEO/crawlability gaps from the external consultant's migration review so the site is ready for the Shopify→headless cutover.
@@ -95,13 +97,12 @@ Customers can confidently choose the right bulk product, quantity, and price pat
 - ✓ Sanity homepage singleton schema and seed path in sibling `teavision-cms` — Validated in Phase 21 — v1.6
 - ✓ Typed Sanity homepage data boundary and storefront `/` rendering through existing homepage sections with visual, SEO, image, form, and Shopify commerce parity — Validated in Phase 22 — v1.6
 - ✓ Deployed homepage Draft Mode preview, signed `homePage` webhook revalidation, Sanity publish smoke, crawler indexability, and no-regression PageSpeed release gate — Validated in Phase 23 — v1.6
+- ✓ Complete canonical-host CSV URL inventory with request-time flag/secret gating, private/no-store and noindex response controls, and unchanged staging sitemap/robots protections (SEO-01, SEO-02) — Validated in Phase 24 — v1.7
 
 ### Active
 
 **v1.7 SEO / Migration Readiness:**
 
-- [ ] **SEO-01**: SEO consultant can retrieve a complete canonical-host URL inventory (CSV) without exposing staging to indexing.
-- [ ] **SEO-02**: The URL export is secret-gated + flag-controlled + `X-Robots-Tag: noindex`; `sitemap.ts`/`robots.ts` noindex behavior is unchanged.
 - [ ] **SEO-03**: Product-description accordion titles render as `<h2>` with native `<details>` semantics preserved.
 - [ ] **SEO-04**: Collection story content headings render one level higher (H3→H2, H4→H3) with zero change to product-description rendering.
 - [ ] **SEO-05**: Collection pages render H1 + intro + first product-grid rows in the initial server HTML.
@@ -192,4 +193,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-10 after starting v1.7 SEO / Migration Readiness milestone_
+_Last updated: 2026-07-10 after completing Phase 24 URL-inventory unblock_
