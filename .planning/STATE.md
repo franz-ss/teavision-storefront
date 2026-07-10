@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.7
 milestone_name: SEO / Migration Readiness
-status: executing
-stopped_at: v1.6 ready for milestone close after Phase 23 release-gate evidence passed
-last_updated: '2026-07-10T00:58:03.181Z'
-last_activity: 2026-07-10 -- Phase 24 planning complete
+status: verifying
+stopped_at: Completed 24-01-PLAN.md
+last_updated: "2026-07-10T01:32:26.139Z"
+last_activity: 2026-07-10
 progress:
   total_phases: 3
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
+  percent: 33
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-06)
 
 **Core value:** Customers can confidently choose the right bulk product, quantity, and price path before checkout.
-**Current focus:** Planning next milestone
+**Current focus:** Phase 24 — sitemap-url-inventory-unblock
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Ready to execute
-Last activity: 2026-07-10 -- Phase 24 planning complete
+Phase: 24 (sitemap-url-inventory-unblock) — EXECUTING
+Plan: 1 of 1
+Status: Phase complete — ready for verification
+Last activity: 2026-07-10
 
 ## Performance Metrics
 
@@ -122,6 +122,7 @@ Last activity: 2026-07-10 -- Phase 24 planning complete
 | Phase 22 P07 | 23m | 2 tasks | 3 files |
 | Phase 22 PGAP-01 | 10 min | 3 tasks | 2 files |
 | Phase 22 P08 | 7 min | 2 tasks | 0 files |
+| Phase 24 P01 | 30 min | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -225,6 +226,9 @@ Recent decisions affecting current work:
 - [Phase 22-GAP-01]: Homepage render-critical CMS content now renders in the default `/` route output without `connection()` or a null Suspense shell. — `getHomepage()` is cached and should contribute visible initial HTML; request-time streaming is reserved for genuinely per-request data.
 - [Phase 19]: Owner directed that `cacheComponents` stays enabled — Approach A (disable cacheComponents) was implemented then reverted (efed85b3). SEO-H1-01 (multiple H1s while browsing) resolved via accept+document: Googlebot renders each URL statelessly and never assembles the soft-nav accumulation, and multiple H1s are not a Google ranking/indexing issue (cited research). The enforced invariant is one visible H1 per standalone route load.
 - [Phase 19]: SEO-H1-02 — banner-collection H1 kept COMPACT as the breadcrumb crumb (D-08 upheld). A larger visible H1 + intro was trialled (e1c4204c) then reverted (48193d0d) because the banner image already carries the title and the big heading unbalanced the layout; the crumb remains a real visible H1 (one per route). Audit pages 2-9 brought into compliance (brand-suffix removal on indexed service pages; read-more-below-grid and lang=en-AU already in place; blog /blog/ slug deferred to migration). See docs/launch/seo-audit-pages-2-9-response.md.
+- [Phase 24]: Keep the inventory independent of DISABLE_INDEXING and protect it with dedicated server-only export settings. — The export must remain usable on staging without weakening sitemap or robots noindex behavior.
+- [Phase 24]: Treat upstream, assembly, serialization, canonical-origin, date, and metadata-conflict failures as generic non-CSV failures. — The consultant worksheet must fail closed instead of appearing complete with partial or malformed data.
+- [Phase 24]: Use Next.js connection() before the flag-first gate so a disabled build cannot prerender and cache the temporary route. — Build inspection showed the disabled early return otherwise prevented later header access from making the route request-time.
 
 ### Roadmap Evolution
 
@@ -349,9 +353,9 @@ Note: the open-artifact audit reported four debug artifact files and one resolve
 
 ## Session Continuity
 
-Last session: 2026-07-03T01:18:22.582Z
-Stopped at: v1.6 ready for milestone close after Phase 23 release-gate evidence passed
-Resume file: .planning/milestones/v1.6-phases/23-preview-revalidation-and-no-regression-release/23-01-SUMMARY.md
+Last session: 2026-07-10T01:32:26.126Z
+Stopped at: Completed 24-01-PLAN.md
+Resume file: None
 
 ## Operator Next Steps
 

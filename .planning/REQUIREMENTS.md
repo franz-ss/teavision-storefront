@@ -9,8 +9,8 @@ Requirements for this milestone. Each maps to exactly one roadmap phase. All fou
 
 ### Sitemap & URL Inventory
 
-- [ ] **SEO-01**: The SEO consultant can retrieve a complete, canonical-host URL inventory (CSV) of all routes, without exposing staging to indexing.
-- [ ] **SEO-02**: The URL export is secret-gated + flag-controlled (`SEO_URL_EXPORT_SECRET` / `SEO_URL_EXPORT_ENABLED`) and returns `X-Robots-Tag: noindex`; `sitemap.ts`/`robots.ts` noindex behavior is left unchanged (the test-locked noindex-mode contract is preserved).
+- [x] **SEO-01**: The SEO consultant can retrieve a complete, canonical-host URL inventory (CSV) of all routes, without exposing staging to indexing.
+- [x] **SEO-02**: The URL export is secret-gated + flag-controlled (`SEO_URL_EXPORT_SECRET` / `SEO_URL_EXPORT_ENABLED`) and returns `X-Robots-Tag: noindex`; `sitemap.ts`/`robots.ts` noindex behavior is left unchanged (the test-locked noindex-mode contract is preserved).
 
 ### Heading Structure
 
@@ -39,8 +39,8 @@ Explicitly excluded for this milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEO-01 | Phase 24 | Pending |
-| SEO-02 | Phase 24 | Pending |
+| SEO-01 | Phase 24 | Complete |
+| SEO-02 | Phase 24 | Complete |
 | SEO-03 | Phase 25 | Pending |
 | SEO-04 | Phase 25 | Pending |
 | SEO-05 | Phase 26 | Pending |
