@@ -30,11 +30,11 @@ Source: external SEO consultant's migration review. All three phases are fixes t
 **Goal:** Provide the SEO consultant with a complete canonical-host URL inventory without weakening staging noindex protections.
 
 **Requirements:** SEO-01, SEO-02
-**Plans:** 0 plans
+**Plans:** 1 plan
 
 Plans:
 
-- [ ] TBD (run `/gsd:plan-phase 24` to break down)
+- [ ] 24-01-PLAN.md — Complete, secret-gated canonical URL inventory export with frozen noindex regression proof
 
 **Success Criteria**:
 
@@ -156,35 +156,35 @@ Full phase details: `milestones/v1.6-ROADMAP.md` · Audit: `milestones/v1.6-MILE
 
 ## Progress
 
-| Phase                                                             | Milestone | Plans Complete | Status      | Completed  |
-| ----------------------------------------------------------------- | --------- | -------------- | ----------- | ---------- |
-| 1. Bulk Savings PDP and Cart Parity                               | v1.0      | 1/1            | Complete    | 2026-05-26 |
-| 2. Searchanise API Search Results                                 | v1.0      | 1/1            | Complete    | 2026-05-27 |
-| 4. Footer 1:1 Parity                                              | v1.0      | 1/1            | Complete    | 2026-05-29 |
-| 5. Codebase Review Remediation                                    | v1.0      | 5/5            | Complete    | 2026-06-02 |
-| 6. Prevent site indexing                                          | v1.0      | 1/1            | Complete    | 2026-06-03 |
-| 8. Optimized Collection Quick Add                                 | v1.0      | 1/1            | Complete    | 2026-06-03 |
-| 9. Collection Product Card Improvements                           | v1.0      | —              | Superseded  | 2026-06-11 |
-| 10. Cart/Checkout Critical Flow Tests                             | v1.0      | 4/4            | Complete    | —          |
-| 11. Full Visual Redesign                                          | v1.0      | 22/22          | Complete    | 2026-06-11 |
-| 12. Optimize blog loading                                         | v1.1      | 4/4            | Complete    | 2026-06-12 |
-| 13. Production-parity collection pagination                       | v1.2      | 2/2            | Complete    | 2026-06-12 |
-| 14. Shopify Customer Accounts                                     | v1.3      | 9/9            | Complete    | 2026-06-22 |
-| 15. Security, Dependency, and Runtime Header Hardening            | v1.4      | 5/5            | Complete    | 2026-06-22 |
-| 16. Legal, Consent, Analytics, and SEO Launch Coverage            | v1.4      | 4/4            | Complete    | 2026-06-23 |
-| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4      | 15/15          | Complete    | 2026-06-26 |
-| 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete    | 2026-06-26 |
-| 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete    | 2026-06-29 |
-| 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete    | 2026-07-01 |
-| 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete    | 2026-07-02 |
-| 22. Storefront Data and Rendering                                 | v1.6      | 9/9            | Complete    | 2026-07-03 |
-| 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 1/1            | Complete    | 2026-07-06 |
-| 24. Sitemap & URL-inventory unblock                               | v1.7      | 0/—            | Pending     | —          |
-| 25. Heading structure fixes                                       | v1.7      | 0/—            | Pending     | —          |
-| 26. Collection & product server-render shell                      | v1.7      | 0/—            | Pending     | —          |
+| Phase                                                             | Milestone | Plans Complete | Status     | Completed  |
+| ----------------------------------------------------------------- | --------- | -------------- | ---------- | ---------- |
+| 1. Bulk Savings PDP and Cart Parity                               | v1.0      | 1/1            | Complete   | 2026-05-26 |
+| 2. Searchanise API Search Results                                 | v1.0      | 1/1            | Complete   | 2026-05-27 |
+| 4. Footer 1:1 Parity                                              | v1.0      | 1/1            | Complete   | 2026-05-29 |
+| 5. Codebase Review Remediation                                    | v1.0      | 5/5            | Complete   | 2026-06-02 |
+| 6. Prevent site indexing                                          | v1.0      | 1/1            | Complete   | 2026-06-03 |
+| 8. Optimized Collection Quick Add                                 | v1.0      | 1/1            | Complete   | 2026-06-03 |
+| 9. Collection Product Card Improvements                           | v1.0      | —              | Superseded | 2026-06-11 |
+| 10. Cart/Checkout Critical Flow Tests                             | v1.0      | 4/4            | Complete   | —          |
+| 11. Full Visual Redesign                                          | v1.0      | 22/22          | Complete   | 2026-06-11 |
+| 12. Optimize blog loading                                         | v1.1      | 4/4            | Complete   | 2026-06-12 |
+| 13. Production-parity collection pagination                       | v1.2      | 2/2            | Complete   | 2026-06-12 |
+| 14. Shopify Customer Accounts                                     | v1.3      | 9/9            | Complete   | 2026-06-22 |
+| 15. Security, Dependency, and Runtime Header Hardening            | v1.4      | 5/5            | Complete   | 2026-06-22 |
+| 16. Legal, Consent, Analytics, and SEO Launch Coverage            | v1.4      | 4/4            | Complete   | 2026-06-23 |
+| 17. Operations, Performance, and Final Production-Readiness Audit | v1.4      | 15/15          | Complete   | 2026-06-26 |
+| 18. SEO Audit Remediation                                         | v1.4      | 6/6            | Complete   | 2026-06-26 |
+| 19. H1 Correctness Re-Remediation                                 | v1.4      | 4/4            | Complete   | 2026-06-29 |
+| 20. PageSpeed 100/100 Perfection (lean)                           | v1.5      | 1/1            | Complete   | 2026-07-01 |
+| 21. Sanity Homepage Model and Seed                                | v1.6      | 1/1            | Complete   | 2026-07-02 |
+| 22. Storefront Data and Rendering                                 | v1.6      | 9/9            | Complete   | 2026-07-03 |
+| 23. Preview, Revalidation, and No-Regression Release              | v1.6      | 1/1            | Complete   | 2026-07-06 |
+| 24. Sitemap & URL-inventory unblock                               | v1.7      | 0/1            | Planned    | —          |
+| 25. Heading structure fixes                                       | v1.7      | 0/—            | Pending    | —          |
+| 26. Collection & product server-render shell                      | v1.7      | 0/—            | Pending    | —          |
 
 ## Next
 
-Plan the first v1.7 phase with `/gsd:plan-phase 24` (unblocks the consultant's 301 sheet). Phases 25 and 26 are independent and can be planned in any order.
+Execute Phase 24 with `/gsd:execute-phase 24` to unblock the consultant's 301 sheet. Phases 25 and 26 are independent and can be planned in any order.
 
 Carry forward only unrelated external launch proof gates: hosted checkout, payment, shipping, tax, order creation, success redirect, live Customer Account OAuth, protected customer data, authoritative B2B/company-location pricing, Search Console sitemap submission, and Search Console URL inspection.
