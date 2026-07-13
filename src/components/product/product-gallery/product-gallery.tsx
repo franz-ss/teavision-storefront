@@ -63,7 +63,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   height={image.height}
                   preload={i === 0}
                   quality={68}
-                  sizes="(min-width: 1280px) 38rem, (min-width: 1024px) calc(50vw - 3.5rem), calc(100vw - 2rem)"
+                  sizes="(min-width: 1480px) 41rem, (min-width: 1024px) 44vw, (min-width: 400px) 90vw, calc(100vw - 2.5rem)"
                   className="size-full object-cover"
                 />
               ) : (

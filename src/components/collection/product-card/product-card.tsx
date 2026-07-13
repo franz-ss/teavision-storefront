@@ -65,7 +65,8 @@ export function ProductCard({
               alt={featuredImage.altText ?? product.title}
               fill
               preload={priority}
-              sizes="(min-width: 1280px) 340px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 50vw"
+              quality={68}
+              sizes="(min-width: 1480px) 336px, (min-width: 1024px) calc(30vw - 6.833rem), (min-width: 640px) calc(45vw - 0.5625rem), calc(50vw - 1.625rem)"
               className="object-contain transition-transform duration-300 group-hover:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />
           ) : (

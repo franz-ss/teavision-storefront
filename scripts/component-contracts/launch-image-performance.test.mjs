@@ -46,11 +46,11 @@ test('launch-critical AVIF assets stay within byte budgets', async () => {
   }
 })
 
-test('home uses its high-resolution master and fake Shopify uses its launch AVIF', async () => {
+test('home uses its original source and fake Shopify uses its launch AVIF', async () => {
   const homeContent = await readSource('src/components/homepage/content.ts')
   const fakeShopify = await readSource('tests/mocks/shopify-graphql-server.ts')
 
-  assert.match(homeContent, /homepage-hero-tea-master\.jpg/)
+  assert.match(homeContent, /homepage-hero-tea-harvest\.png/)
   assert.match(fakeShopify, /bulk-wholesale-lcp\.avif/)
 })
 
@@ -103,7 +103,11 @@ test('launch image components avoid deprecated priority and invalid preload comb
 
   assert.doesNotMatch(homeHero, /\bpreload\b/)
   assert.match(productGallery, /\bpreload\b/)
+  assert.match(productGallery, /quality=\{68\}/)
+  assert.match(productGallery, /\(min-width: 1480px\) 41rem/)
   assert.match(productCard, /preload=\{priority\}/)
+  assert.match(productCard, /quality=\{68\}/)
+  assert.match(productCard, /\(min-width: 1480px\) 336px/)
   assert.doesNotMatch(productGallery, /isLocalLaunchLcpImage/)
   assert.doesNotMatch(productCard, /isLocalLaunchLcpImage/)
   assert.doesNotMatch(productCard, /loading=\{priority \? 'eager' : 'lazy'\}/)

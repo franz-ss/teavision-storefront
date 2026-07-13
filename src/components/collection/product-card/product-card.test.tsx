@@ -16,8 +16,7 @@ import { ProductCard } from './product-card'
 
 function getImagePreloads(html: string): string[] {
   return (
-    html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ??
-    []
+    html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ?? []
   )
 }
 
@@ -131,6 +130,9 @@ describe('ProductCard', () => {
     )
 
     expect(getImagePreloads(html)).toHaveLength(1)
+    expect(html).toContain(
+      'sizes="(min-width: 1480px) 336px, (min-width: 1024px) calc(30vw - 6.833rem), (min-width: 640px) calc(45vw - 0.5625rem), calc(50vw - 1.625rem)"',
+    )
     expect(html).not.toContain('loading="eager"')
     expect(html).not.toContain('fetchPriority="high"')
   })

@@ -108,10 +108,10 @@ export const HOMEPAGE_HERO_FIXTURE = {
     href: '/collections',
   },
   image: {
-    src: '/images/homepage/homepage-hero-tea-master.jpg',
+    src: '/images/homepage/homepage-hero-tea-harvest.png',
     alt: 'Loose-leaf green tea with a black teapot and cups',
-    width: 3840,
-    height: 1733,
+    width: 1440,
+    height: 650,
   },
   trustMarks: {
     src: '/images/homepage/homepage-trust-marks.webp',
