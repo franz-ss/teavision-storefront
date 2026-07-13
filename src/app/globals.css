@@ -250,14 +250,14 @@
   background:
     linear-gradient(
       to top,
-      oklch(22.5% 0.016 167 / 0.92),
-      oklch(22.5% 0.016 167 / 0.4) 30%,
-      transparent 58%
+      oklch(22.5% 0.016 167 / 0.84),
+      oklch(22.5% 0.016 167 / 0.32) 32%,
+      transparent 62%
     ),
     linear-gradient(
       105deg,
-      oklch(22.5% 0.016 167 / 0.72),
-      oklch(22.5% 0.016 167 / 0.12)
+      oklch(22.5% 0.016 167 / 0.58),
+      oklch(22.5% 0.016 167 / 0.05)
     );
 }
 

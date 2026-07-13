@@ -49,7 +49,7 @@ const nextConfig: NextConfig = {
     ]
   },
   images: {
-    qualities: [68, 75],
+    qualities: [68, 75, 82],
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
@@ -76,8 +76,12 @@ export default withSentryConfig(nextConfig, {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   release: {
-    create: Boolean(process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_RELEASE),
-    finalize: Boolean(process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_RELEASE),
+    create: Boolean(
+      process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_RELEASE,
+    ),
+    finalize: Boolean(
+      process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_RELEASE,
+    ),
     name: process.env.SENTRY_RELEASE,
   },
   silent: !process.env.CI,

@@ -32,8 +32,10 @@ export function HomepageHero({ hero }: HomepageHeroProps) {
         alt={hero.image.alt}
         fill
         sizes="100vw"
-        preload
         fetchPriority="high"
+        quality={82}
+        placeholder={hero.image.lqip ? 'blur' : 'empty'}
+        blurDataURL={hero.image.lqip ?? undefined}
         className="absolute inset-0 -z-20 object-cover"
       />
       <div aria-hidden="true" className="hero-scrim absolute inset-0 -z-10" />

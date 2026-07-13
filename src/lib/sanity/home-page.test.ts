@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { getSanityImageUrl, sanityDraftFetch, sanityFetch } from '@/lib/sanity/client'
+import {
+  getSanityImageUrl,
+  sanityDraftFetch,
+  sanityFetch,
+} from '@/lib/sanity/client'
 import {
   getSanityDraftReadToken,
   getSanityPreviewSecret,
@@ -301,11 +305,14 @@ describe('getHomepage', () => {
       title: 'Homepage title',
     })
 
-    expect(getSanityImageUrl).toHaveBeenCalledWith(
+    expect(homepage.hero.image.src).toBe(
+      'https://cdn.sanity.io/images/project/dataset/hero.jpg',
+    )
+    expect(getSanityImageUrl).not.toHaveBeenCalledWith(
       expect.objectContaining({
         asset: expect.objectContaining({ _id: 'image-hero' }),
       }),
-      { fit: 'max', quality: 75, width: 1920 },
+      expect.anything(),
     )
     expect(getSanityImageUrl).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -331,12 +338,8 @@ describe('getHomepage', () => {
     vi.stubEnv('SANITY_API_READ_TOKEN', ' ')
     vi.stubEnv('SANITY_PREVIEW_SECRET', ' ')
 
-    expect(() => getSanityDraftReadToken()).toThrow(
-      /SANITY_API_READ_TOKEN/,
-    )
-    expect(() => getSanityPreviewSecret()).toThrow(
-      /SANITY_PREVIEW_SECRET/,
-    )
+    expect(() => getSanityDraftReadToken()).toThrow(/SANITY_API_READ_TOKEN/)
+    expect(() => getSanityPreviewSecret()).toThrow(/SANITY_PREVIEW_SECRET/)
   })
 
   it('normalizes draft homepage content without using published cache tags', async () => {

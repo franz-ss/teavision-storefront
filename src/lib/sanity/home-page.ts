@@ -25,11 +25,6 @@ import type {
   SanitySeo,
 } from '@/lib/sanity/types'
 
-const IMAGE_OPTIONS_HERO: SanityImageUrlOptions = {
-  fit: 'max',
-  quality: 75,
-  width: 1920,
-}
 const IMAGE_OPTIONS_CARD: SanityImageUrlOptions = {
   fit: 'max',
   quality: 75,
@@ -262,7 +257,7 @@ function requireImageDimensions(
 function reshapeImage(
   image: SanityImageWithAlt | null,
   path: string,
-  options: SanityImageUrlOptions,
+  options: SanityImageUrlOptions | 'original',
 ): HomepageImage {
   const requiredImage = requireObject(image, path)
   const source = requireObject(requiredImage.image, `${path}.image`)
@@ -274,9 +269,12 @@ function reshapeImage(
 
   const alt = requireString(requiredImage.alt, `${path}.alt`)
   const { width, height } = requireImageDimensions(requiredImage, path)
-  const src = asset._id
-    ? getSanityImageUrl(source as SanityImageSource, options)
-    : asset.url
+  const src =
+    options === 'original'
+      ? asset.url
+      : asset._id
+        ? getSanityImageUrl(source as SanityImageSource, options)
+        : asset.url
 
   if (!src) fail(`${path}.image.asset.url`, 'image URL is required')
 
@@ -346,7 +344,9 @@ function reshapeHero(hero: SanityHomeHero | null): HomepageContent['hero'] {
     title: requireString(requiredHero.title, 'hero.title'),
     copy: requireString(requiredHero.copy, 'hero.copy'),
     cta: reshapeLink(requiredHero.cta, 'hero.cta'),
-    image: reshapeImage(requiredHero.image, 'hero.image', IMAGE_OPTIONS_HERO),
+    // Keep the CMS upload as the single high-quality master. Next/Image owns
+    // responsive sizing and final AVIF/WebP encoding for this LCP asset.
+    image: reshapeImage(requiredHero.image, 'hero.image', 'original'),
     trustMarks: reshapeImage(
       requiredHero.trustMarks,
       'hero.trustMarks',
@@ -573,8 +573,9 @@ export async function getHomepage(): Promise<HomepageContent> {
 }
 
 export async function getDraftHomepage(): Promise<HomepageContent> {
-  const data =
-    await sanityDraftFetch<SanityHomePageResult | null>(homePageQuery)
+  const data = await sanityDraftFetch<SanityHomePageResult | null>(
+    homePageQuery,
+  )
   if (!data) fail('homePage', 'singleton draft document is missing')
 
   return reshapeHomepage(data)

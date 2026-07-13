@@ -46,21 +46,14 @@ test('launch-critical AVIF assets stay within byte budgets', async () => {
   }
 })
 
-test('home and fake Shopify LCP routes use the launch AVIF sources', async () => {
+test('home uses its high-resolution master and fake Shopify uses its launch AVIF', async () => {
   const homeContent = await readSource('src/components/homepage/content.ts')
   const fakeShopify = await readSource('tests/mocks/shopify-graphql-server.ts')
 
-  assert.match(homeContent, /homepage-hero-tea-harvest-lcp\.avif/)
+  assert.match(homeContent, /homepage-hero-tea-master\.jpg/)
   assert.match(fakeShopify, /bulk-wholesale-lcp\.avif/)
 })
 
-// The homepage hero is the one launch-critical LCP image where `preload` and
-// `fetchPriority="high"` are intentionally combined: Next.js emits a
-// `<link rel="preload" as="image" fetchpriority="high">` (and the same
-// fetchpriority on the rendered <img>), which is what the real-PSI "LCP
-// request discovery" audit requires (20-PSI-EVIDENCE.md). Every other
-// launch-critical Image usage keeps the existing guard against combining the
-// two.
 const HERO_PATH = 'src/components/homepage/hero/hero.tsx'
 
 test('launch image components avoid deprecated priority and invalid preload combinations', async () => {
@@ -83,9 +76,6 @@ test('launch image components avoid deprecated priority and invalid preload comb
       )
       const combinesPreloadAndFetchPriority =
         block.includes('preload') && block.includes('fetchPriority="high"')
-      if (relativePath === HERO_PATH) {
-        continue
-      }
       assert.ok(
         !combinesPreloadAndFetchPriority,
         `${relativePath} should not combine preload with high fetchPriority`,
@@ -97,16 +87,13 @@ test('launch image components avoid deprecated priority and invalid preload comb
   const heroBlocks = imageBlocks(heroSource)
   const heroLcpBlock = heroBlocks.find((block) => block.includes('fill'))
   assert.ok(heroLcpBlock, `${HERO_PATH} should contain the fill hero Image`)
-  assert.match(
-    heroLcpBlock,
-    /\bpreload\b/,
-    `${HERO_PATH} LCP image should keep preload`,
-  )
+  assert.doesNotMatch(heroLcpBlock, /\bpreload\b/)
   assert.match(
     heroLcpBlock,
     /fetchPriority="high"/,
-    `${HERO_PATH} LCP image should carry fetchPriority="high" so the preload link emits fetchpriority=high`,
+    `${HERO_PATH} LCP image should be discovered at high priority`,
   )
+  assert.match(heroLcpBlock, /quality=\{82\}/)
 
   const [homeHero, productGallery, productCard] = await Promise.all([
     readSource('src/components/homepage/hero/hero.tsx'),
@@ -114,15 +101,12 @@ test('launch image components avoid deprecated priority and invalid preload comb
     readSource('src/components/collection/product-card/product-card.tsx'),
   ])
 
-  assert.match(homeHero, /\bpreload\b/)
+  assert.doesNotMatch(homeHero, /\bpreload\b/)
   assert.match(productGallery, /\bpreload\b/)
   assert.match(productCard, /preload=\{priority\}/)
   assert.doesNotMatch(productGallery, /isLocalLaunchLcpImage/)
   assert.doesNotMatch(productCard, /isLocalLaunchLcpImage/)
-  assert.doesNotMatch(
-    productCard,
-    /loading=\{priority \? 'eager' : 'lazy'\}/,
-  )
+  assert.doesNotMatch(productCard, /loading=\{priority \? 'eager' : 'lazy'\}/)
   assert.doesNotMatch(
     productCard,
     /fetchPriority=\{priority \? 'high' : 'auto'\}/,
