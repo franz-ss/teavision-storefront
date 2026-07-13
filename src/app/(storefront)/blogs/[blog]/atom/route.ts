@@ -2,6 +2,7 @@ import {
   getArticlePath,
   getBlog,
   getBlogPath,
+  getCanonicalBlogListingPath,
   isLocalCanonicalPath,
   normalizeBlogHandle,
 } from '@/lib/blog/operations'
@@ -30,6 +31,7 @@ export async function GET(_request: Request, { params }: Props) {
   }
 
   const blogPath = getBlogPath(normalizedBlog)
+  const canonicalListingPath = getCanonicalBlogListingPath(normalizedBlog)
   const articles = blogData.articles.filter((article) => {
     const localPath = getArticlePath(normalizedBlog, article.handle)
 
@@ -60,8 +62,8 @@ export async function GET(_request: Request, { params }: Props) {
     '<feed xmlns="http://www.w3.org/2005/Atom">',
     `<title>${escapeXml(blogData.title)}</title>`,
     `<link href="${escapeXml(`${SITE_URL}${blogPath}/atom`)}" rel="self" />`,
-    `<link href="${escapeXml(`${SITE_URL}${blogPath}`)}" />`,
-    `<id>${escapeXml(`${SITE_URL}${blogPath}`)}</id>`,
+    `<link href="${escapeXml(`${SITE_URL}${canonicalListingPath}`)}" />`,
+    `<id>${escapeXml(`${SITE_URL}${canonicalListingPath}`)}</id>`,
     `<updated>${new Date(updated).toISOString()}</updated>`,
     entries,
     '</feed>',

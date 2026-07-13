@@ -174,6 +174,30 @@ export const APP_OWNED_REDIRECT_EXPECTATIONS = [
     shouldAppearInSitemap: false,
     checks: REDIRECT_CHECKS,
   },
+  {
+    path: '/blogs/teavision-blogs',
+    expectedStatus: 308,
+    canonicalPath: '/blog',
+    shouldIndexWhenEnabled: false,
+    shouldAppearInSitemap: false,
+    checks: REDIRECT_CHECKS,
+  },
+  {
+    path: '/blogs/journal',
+    expectedStatus: 308,
+    canonicalPath: '/blog',
+    shouldIndexWhenEnabled: false,
+    shouldAppearInSitemap: false,
+    checks: REDIRECT_CHECKS,
+  },
+  {
+    path: '/blogs/journal/:path*',
+    expectedStatus: 308,
+    canonicalPath: '/blogs/teavision-blogs/:path*',
+    shouldIndexWhenEnabled: false,
+    shouldAppearInSitemap: false,
+    checks: REDIRECT_CHECKS,
+  },
 ] satisfies readonly LaunchSeoRouteExpectation[]
 
 export const POLICY_REDIRECT_ROUTE_EXPECTATIONS = getPolicyRedirects().map(

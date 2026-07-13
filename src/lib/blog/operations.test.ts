@@ -1,5 +1,3 @@
-import { readFileSync } from 'node:fs'
-
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { generateListingMetadata } from '@/app/(storefront)/blogs/[blog]/_lib/metadata'
@@ -12,8 +10,11 @@ import type {
 } from '@/lib/sanity/types'
 
 import {
+  CANONICAL_BLOG_LISTING_PATH,
   DEFAULT_BLOG_HANDLE,
+  getArticlePath,
   getBlogPath,
+  getCanonicalBlogListingPath,
   getBlogSearchListing,
   getDefaultBlogListing,
   getHomepageArticles,
@@ -288,6 +289,33 @@ describe('generateListingMetadata', () => {
     expect(metadata.robots).toBeUndefined()
     expect(metadata.alternates?.canonical).toBe('/blogs/teavision-blogs/page/3')
   })
+
+  it('uses /blog as the canonical for the main Tea Journal listing', async () => {
+    const result: SanityBlogListingResult = {
+      articles: [makePost('article')],
+      blog: {
+        _id: 'blog',
+        description: 'Tea journal',
+        featuredPosts: [],
+        heroImage: null,
+        seo: {
+          canonicalPath: '/blogs/teavision-blogs',
+          metaDescription: 'Tea journal metadata',
+          metaTitle: 'Tea Journal',
+          noIndex: false,
+          ogImage: null,
+        },
+        slug: 'teavision-blogs',
+        title: 'Tea Journal',
+      },
+    }
+    vi.mocked(sanityFetch).mockResolvedValue(result)
+
+    const metadata = await generateListingMetadata({ page: 1 })
+
+    expect(metadata.alternates?.canonical).toBe(CANONICAL_BLOG_LISTING_PATH)
+    expect(metadata.openGraph?.url).toBe(CANONICAL_BLOG_LISTING_PATH)
+  })
 })
 
 describe('getTagListing', () => {
@@ -373,14 +401,12 @@ describe('getBlogSearchListing', () => {
 })
 
 describe('blog listing URL handoff', () => {
-  it('keeps the default listing path while documenting the /blog owner handoff', () => {
-    const remediation = readFileSync(
-      'docs/launch/seo-audit-remediation.md',
-      'utf8',
-    )
-
+  it('moves only the main listing while preserving article paths', () => {
+    expect(CANONICAL_BLOG_LISTING_PATH).toBe('/blog')
+    expect(getCanonicalBlogListingPath(DEFAULT_BLOG_HANDLE)).toBe('/blog')
     expect(getBlogPath(DEFAULT_BLOG_HANDLE)).toBe('/blogs/teavision-blogs')
-    expect(remediation).toContain('### Blog Listing URL')
-    expect(remediation).toContain('owner/SEO handoff')
+    expect(getArticlePath(DEFAULT_BLOG_HANDLE, 'selecting-wholesale-tea')).toBe(
+      '/blogs/teavision-blogs/selecting-wholesale-tea',
+    )
   })
 })

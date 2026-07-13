@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import { DEFAULT_LISTING_DESCRIPTION, getListingHref } from '@/lib/blog/listing'
 import {
+  CANONICAL_BLOG_LISTING_PATH,
   DEFAULT_BLOG_HANDLE,
   findTagBySlug,
   getBlog,
@@ -33,8 +34,8 @@ export async function generateListingMetadata({
   const description = blogData.seo.description ?? DEFAULT_LISTING_DESCRIPTION
 
   const canonical =
-    !activeTag && currentPage === 1 && blogData.seo.canonicalPath
-      ? blogData.seo.canonicalPath
+    !activeTag && currentPage === 1
+      ? CANONICAL_BLOG_LISTING_PATH
       : getListingHref({
           blogHandle: DEFAULT_BLOG_HANDLE,
           activeTag,

@@ -12,7 +12,7 @@ import {
   getArticle,
   getArticlePath,
   getBlog,
-  getBlogPath,
+  getCanonicalBlogListingPath,
   getTagPath,
   normalizeBlogHandle,
 } from '@/lib/blog/operations'
@@ -117,7 +117,7 @@ async function ArticleContent({ params }: Props) {
           <ol className="flex min-w-0 items-center gap-2" role="list">
             <li className="shrink-0">
               <Link
-                href={getBlogPath(normalizedBlog)}
+                href={getCanonicalBlogListingPath(normalizedBlog)}
                 className="text-brand hover:text-brand-deep focus-visible:ring-ring hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 Tea Journal
@@ -256,7 +256,7 @@ async function ArticleContent({ params }: Props) {
 
         <div className="border-hairline mx-auto mt-12 max-w-prose border-t pt-8">
           <Link
-            href={getBlogPath(normalizedBlog)}
+            href={getCanonicalBlogListingPath(normalizedBlog)}
             className="type-label text-brand hover:text-brand-deep focus-visible:ring-ring inline-flex min-h-11 items-center hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Back to Tea Journal

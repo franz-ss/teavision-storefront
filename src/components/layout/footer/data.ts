@@ -1,3 +1,4 @@
+import { CANONICAL_BLOG_LISTING_PATH } from '@/lib/blog/paths'
 import { getFooterLegalLinks } from '@/lib/legal/policies'
 
 import type {
@@ -13,7 +14,7 @@ export const MAIN_MENU_LINKS = [
   { href: '/collections/bulk-tea-bags', label: 'Tea Bags' },
   { href: '/collections/herbs-and-spices', label: 'Herbs & Spices' },
   { href: '/pages/services', label: 'Services' },
-  { href: '/blogs/teavision-blogs', label: 'Tea Journal' },
+  { href: CANONICAL_BLOG_LISTING_PATH, label: 'Tea Journal' },
   { href: '/pages/our-story', label: 'Our Story' },
 ] satisfies FooterLink[]
 

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { getBlogPath, getTagPath } from '@/lib/blog/operations'
+import { getCanonicalBlogListingPath, getTagPath } from '@/lib/blog/operations'
 import { cn } from '@/lib/utils'
 
 type TagFilterNavProps = {
@@ -17,7 +17,7 @@ export function TagFilterNav({
   return (
     <nav aria-label="Filter by tag" className="mb-8 flex flex-wrap gap-2">
       <Link
-        href={getBlogPath(blogHandle)}
+        href={getCanonicalBlogListingPath(blogHandle)}
         aria-current={!activeTag ? 'page' : undefined}
         className={cn(
           'type-label focus-visible:ring-ring inline-flex min-h-11 items-center rounded-full border px-3.5 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',

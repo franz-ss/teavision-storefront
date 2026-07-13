@@ -157,6 +157,38 @@ test('/pages/privacy-policy loads without 404', async ({ page }) => {
   assertNoLiveFlow()
 })
 
+test('/blog is the canonical Tea Journal listing', async ({ page }) => {
+  const assertNoLiveFlow = observeForbiddenLiveFlowUrls(page)
+
+  const response = await gotoWithoutServerError(page, '/blog')
+
+  expect(response.status()).toBe(200)
+  await expect(
+    page.getByRole('heading', {
+      name: 'Discover the Finest Teas for Your Business',
+    }),
+  ).toBeVisible()
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://www.teavision.com.au/blog',
+  )
+  assertNoLiveFlow()
+})
+
+test('legacy Tea Journal listings permanently redirect to /blog', async ({
+  request,
+}) => {
+  for (const path of [
+    '/blogs/teavision-blogs?source=legacy',
+    '/blogs/journal?source=legacy',
+  ]) {
+    const response = await request.get(path, { maxRedirects: 0 })
+
+    expect(response.status()).toBe(308)
+    expect(response.headers().location).toBe('/blog?source=legacy')
+  }
+})
+
 test('mobile launch routes do not create horizontal overflow', async ({
   page,
 }) => {

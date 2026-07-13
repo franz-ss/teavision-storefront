@@ -391,7 +391,7 @@ function parseRegisterRows(markdown) {
 function parseNextConfigLiteralRedirects(nextConfigSource) {
   return [
     ...nextConfigSource.matchAll(
-      /\{\s*source:\s*'([^']+)'[\s\S]*?destination:\s*'([^']+)'[\s\S]*?permanent:\s*true[\s\S]*?\}/g,
+      /\{[^{}]*source:\s*'([^']+)'[^{}]*destination:\s*'([^']+)'[^{}]*permanent:\s*true[^{}]*\}/g,
     ),
   ].map((match) => ({
     source: match[1],
@@ -672,7 +672,10 @@ function runUrlAuditMode() {
     (row) => row.Decision === 'app-owned redirect',
   )
   const blogListingRow = registerRows.find(
-    (row) => normalizeRegisterPath(row['Source URL'] ?? '') === '/blog/',
+    (row) =>
+      normalizeRegisterPath(row['Source URL'] ?? '') ===
+        '/blogs/teavision-blogs' &&
+      normalizeRegisterPath(row['Target URL'] ?? '') === '/blog',
   )
   const ownerExportPath = process.env.SEO_URL_MIGRATION_EXPORT?.trim() ?? ''
 
@@ -722,23 +725,27 @@ function runUrlAuditMode() {
     blogListingRow
       ? pass(
           'Blog Listing URL audit item',
-          '/blog/',
+          '/blogs/teavision-blogs',
           `${blogListingRow.Decision}; ${blogListingRow.Status}`,
         )
-      : fail('Blog Listing URL audit item', '/blog/', 'missing register row'),
+      : fail(
+          'Blog Listing URL audit item',
+          '/blogs/teavision-blogs',
+          'missing /blog app-owned redirect row',
+        ),
   )
   results.push(
     remediation.includes('### Blog Listing URL') &&
-      remediation.includes('owner/SEO handoff')
+      remediation.includes('Implemented 2026-07-13')
       ? pass(
-          'Blog Listing URL handoff evidence',
+          'Blog Listing URL implementation evidence',
           SOURCE_PATHS.auditRemediation,
-          'owner/SEO handoff recorded',
+          '/blog implementation recorded',
         )
       : fail(
-          'Blog Listing URL handoff evidence',
+          'Blog Listing URL implementation evidence',
           SOURCE_PATHS.auditRemediation,
-          'missing Blog Listing URL owner/SEO handoff row',
+          'missing implemented Blog Listing URL row',
         ),
   )
   results.push(

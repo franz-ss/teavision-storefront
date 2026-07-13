@@ -102,21 +102,30 @@ describe('launch SEO route matrix', () => {
     }
   })
 
-  test('represents the app-owned nested collection product redirect', () => {
-    expect(APP_OWNED_REDIRECT_EXPECTATIONS).toEqual([
-      {
-        path: '/collections/:handle/products/:productHandle',
+  test('represents app-owned product and blog redirects', () => {
+    const redirects = [
+      [
+        '/collections/:handle/products/:productHandle',
+        '/products/:productHandle',
+      ],
+      ['/blogs/teavision-blogs', '/blog'],
+      ['/blogs/journal', '/blog'],
+      ['/blogs/journal/:path*', '/blogs/teavision-blogs/:path*'],
+    ] as const
+
+    for (const [path, canonicalPath] of redirects) {
+      const expectation = {
+        path,
         expectedStatus: 308,
-        canonicalPath: '/products/:productHandle',
+        canonicalPath,
         shouldIndexWhenEnabled: false,
         shouldAppearInSitemap: false,
         checks: ['status', 'redirect', 'canonical'],
-      },
-    ])
+      }
 
-    expect(REDIRECT_ROUTE_EXPECTATIONS).toContainEqual(
-      APP_OWNED_REDIRECT_EXPECTATIONS[0],
-    )
+      expect(APP_OWNED_REDIRECT_EXPECTATIONS).toContainEqual(expectation)
+      expect(REDIRECT_ROUTE_EXPECTATIONS).toContainEqual(expectation)
+    }
   })
 
   test('includes required legacy policy redirect aliases', () => {

@@ -33,9 +33,14 @@ async function probeProductHtml({
     })
 
   try {
-    const { probeProductStructuredData } = await import('./probe-launch-seo.mjs')
+    const { probeProductStructuredData } =
+      await import('./probe-launch-seo.mjs')
 
-    return probeProductStructuredData(new URL('http://example.test'), path, source)
+    return probeProductStructuredData(
+      new URL('http://example.test'),
+      path,
+      source,
+    )
   } finally {
     globalThis.fetch = originalFetch
   }
@@ -50,7 +55,7 @@ test('url-audit mode validates the URL parity register with warnings only for op
   assert.match(result.stdout, /Two-source confirmation/)
   assert.match(result.stdout, /app-owned register rows/)
   assert.match(result.stdout, /Blog Listing URL audit item/)
-  assert.match(result.stdout, /owner\/SEO handoff/)
+  assert.match(result.stdout, /app-owned redirect; Implemented 2026-07-13/)
   assert.match(result.stdout, /WARN/)
   assert.match(result.stdout, /missing optional owner export/)
   assert.doesNotMatch(result.stdout, /FAIL/)
@@ -182,15 +187,20 @@ test('Product structured data probe fails when an explicit product path is missi
   })
 
   assert.equal(results[0].status, 'FAIL')
-  assert.match(results[0].detail, /product route not found for selected data source/)
+  assert.match(
+    results[0].detail,
+    /product route not found for selected data source/,
+  )
 })
 
 test('enabled mode defaults to a representative product path for Product JSON-LD checks', async () => {
-  const { DEFAULT_PRODUCT_PATH, parseArgs } = await import(
-    './probe-launch-seo.mjs'
-  )
+  const { DEFAULT_PRODUCT_PATH, parseArgs } =
+    await import('./probe-launch-seo.mjs')
 
-  assert.equal(parseArgs(['--mode', 'enabled']).productPath, DEFAULT_PRODUCT_PATH)
+  assert.equal(
+    parseArgs(['--mode', 'enabled']).productPath,
+    DEFAULT_PRODUCT_PATH,
+  )
   assert.equal(DEFAULT_PRODUCT_PATH, '/products/test-standard-tea')
 })
 

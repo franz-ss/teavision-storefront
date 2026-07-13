@@ -1,10 +1,10 @@
 import type { MetadataRoute } from 'next'
 
 import {
+  CANONICAL_BLOG_LISTING_PATH,
   DEFAULT_BLOG_HANDLE,
   getArticlePath,
   getBlog,
-  getBlogPath,
   isLocalCanonicalPath,
 } from '@/lib/blog/operations'
 import { getLaunchSeoRouteExpectations } from '@/lib/seo/launch-route-matrix'
@@ -76,7 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blog && !blog.seo.noIndex
       ? [
           {
-            url: `${SITE_URL}${getBlogPath(DEFAULT_BLOG_HANDLE)}`,
+            url: `${SITE_URL}${CANONICAL_BLOG_LISTING_PATH}`,
             lastModified: latestArticleDate,
             changeFrequency: 'monthly',
             priority: 0.5,

@@ -195,7 +195,7 @@ describe('buildUrlInventoryRows', () => {
         '/products/last-product',
         '/collections/first-collection',
         '/collections/last-collection',
-        '/blogs/teavision-blogs',
+        '/blog',
         '/blogs/teavision-blogs/path-canonical',
         '/blogs/teavision-blogs/absolute-canonical',
         '/blogs/teavision-blogs/implicit-canonical',
@@ -208,7 +208,7 @@ describe('buildUrlInventoryRows', () => {
 
     expect(paths).not.toEqual(
       expect.arrayContaining([
-        '/blog',
+        '/blogs/teavision-blogs',
         '/api/seo/url-inventory',
         '/account',
         '/account/orders/example',

@@ -1,4 +1,8 @@
-import { getBlogPath, getTagPath } from '@/lib/blog/operations'
+import {
+  getBlogPath,
+  getCanonicalBlogListingPath,
+  getTagPath,
+} from '@/lib/blog/operations'
 
 export const DEFAULT_LISTING_DESCRIPTION =
   'Expert insights on bulk tea purchasing, supplier guides, and cost-effective solutions for Australian businesses.'
@@ -19,6 +23,10 @@ export function getListingHref({
   blogHandle: string
   page?: number
 }) {
+  if (!activeTag && (!page || page <= 1)) {
+    return getCanonicalBlogListingPath(blogHandle)
+  }
+
   const path = activeTag
     ? getTagPath(blogHandle, activeTag)
     : getBlogPath(blogHandle)

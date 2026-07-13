@@ -2,6 +2,7 @@ import type { NextConfig } from 'next'
 import { withSentryConfig } from '@sentry/nextjs'
 
 import { getPolicyRedirects } from './src/lib/legal/policies'
+import { CANONICAL_BLOG_LISTING_PATH } from './src/lib/blog/paths'
 import { securityHeaders } from './src/lib/security/headers'
 
 const nextConfig: NextConfig = {
@@ -22,8 +23,13 @@ const nextConfig: NextConfig = {
       // Legacy blog handle → canonical. The listing routes only statically
       // generate the canonical handle, so redirect the alias before it 404s.
       {
+        source: '/blogs/teavision-blogs',
+        destination: CANONICAL_BLOG_LISTING_PATH,
+        permanent: true,
+      },
+      {
         source: '/blogs/journal',
-        destination: '/blogs/teavision-blogs',
+        destination: CANONICAL_BLOG_LISTING_PATH,
         permanent: true,
       },
       {

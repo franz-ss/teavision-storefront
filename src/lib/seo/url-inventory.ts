@@ -1,7 +1,7 @@
 import {
+  CANONICAL_BLOG_LISTING_PATH,
   DEFAULT_BLOG_HANDLE,
   getArticlePath,
-  getBlogPath,
   isLocalCanonicalPath,
   type BlogIndex,
 } from '@/lib/blog/operations'
@@ -188,7 +188,7 @@ export function buildUrlInventoryRows(
     ? []
     : [
         createDynamicRow(
-          getBlogPath(DEFAULT_BLOG_HANDLE),
+          CANONICAL_BLOG_LISTING_PATH,
           'blog',
           eligibleArticles[0]?.publishedAt,
         ),

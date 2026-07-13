@@ -1,3 +1,5 @@
+import { CANONICAL_BLOG_LISTING_PATH } from '@/lib/blog/paths'
+
 export type MenuKey = 'shop' | 'services'
 export type ShopKey = 'tea' | 'tea-bags' | 'herbs-spices' | 'superfood-powders'
 
@@ -148,7 +150,7 @@ export const CATALOGUE_LINKS = [
 ] satisfies NavLink[]
 
 export const DIRECT_LINKS = [
-  { href: '/blogs/teavision-blogs', label: 'Tea Journal' },
+  { href: CANONICAL_BLOG_LISTING_PATH, label: 'Tea Journal' },
   { href: '/pages/our-story', label: 'Our Story' },
   { href: '/pages/contact', label: 'Contact' },
 ] satisfies NavLink[]

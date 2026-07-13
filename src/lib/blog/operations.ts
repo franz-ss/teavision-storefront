@@ -20,11 +20,23 @@ import type {
   SanitySeo,
 } from '@/lib/sanity/types'
 
+import { DEFAULT_BLOG_HANDLE, normalizeBlogHandle, slugifyTag } from './paths'
+
+export {
+  CANONICAL_BLOG_LISTING_PATH,
+  DEFAULT_BLOG_HANDLE,
+  LEGACY_BLOG_HANDLE,
+  getArticlePath,
+  getBlogPath,
+  getCanonicalBlogListingPath,
+  getTagPath,
+  normalizeBlogHandle,
+  slugifyTag,
+} from './paths'
+
 const WORDS_PER_MINUTE = 220
 const FALLBACK_PUBLISHED_AT = '1970-01-01T00:00:00.000Z'
 
-export const DEFAULT_BLOG_HANDLE = 'teavision-blogs'
-export const LEGACY_BLOG_HANDLE = 'journal'
 export const ARTICLES_PER_PAGE = 6
 
 export type BlogImage = {
@@ -252,34 +264,6 @@ function reshapeArticle(article: SanityBlogPost): BlogArticle {
     comments: (article.legacyComments ?? []).map(reshapeComment),
     updatedAt: article._updatedAt ?? summary.publishedAt,
   }
-}
-
-export function normalizeBlogHandle(handle: string): string {
-  return handle === LEGACY_BLOG_HANDLE ? DEFAULT_BLOG_HANDLE : handle
-}
-
-export function getBlogPath(blogHandle: string): string {
-  return `/blogs/${normalizeBlogHandle(blogHandle)}`
-}
-
-export function getArticlePath(
-  blogHandle: string,
-  articleHandle: string,
-): string {
-  return `${getBlogPath(blogHandle)}/${articleHandle}`
-}
-
-export function slugifyTag(tag: string): string {
-  return tag
-    .trim()
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-export function getTagPath(blogHandle: string, tag: string): string {
-  return `${getBlogPath(blogHandle)}/tagged/${slugifyTag(tag)}`
 }
 
 export function isLocalCanonicalPath(

@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { parseListingPage } from '@/lib/blog/listing'
 import {
   DEFAULT_BLOG_HANDLE,
-  getBlogPath,
+  getCanonicalBlogListingPath,
   getDefaultBlogListing,
 } from '@/lib/blog/operations'
 
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogPaginationPage({ params }: Props) {
   const { blog, page } = await params
   const pageNumber = parseListingPage(page)
-  if (pageNumber <= 1) redirect(getBlogPath(blog))
+  if (pageNumber <= 1) redirect(getCanonicalBlogListingPath(blog))
 
   const listingData = await getDefaultBlogListing(blog, pageNumber)
   if (!listingData || pageNumber > listingData.paginated.totalPages) notFound()

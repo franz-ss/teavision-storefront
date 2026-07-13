@@ -4,9 +4,9 @@ import { ArrowRight } from 'lucide-react'
 
 import { Eyebrow, Section } from '@/components/ui'
 import {
+  CANONICAL_BLOG_LISTING_PATH,
   formatArticleDate,
   getArticlePath,
-  getBlogPath,
   getHomepageArticles,
   type BlogArticleSummary,
 } from '@/lib/blog/operations'
@@ -51,7 +51,7 @@ export function TeaJournalSection({
           </div>
 
           <Link
-            href={getBlogPath(config.blogHandle)}
+            href={CANONICAL_BLOG_LISTING_PATH}
             className="focus-visible:ring-ring border-hairline text-ink hover:border-brand hover:text-brand inline-flex items-center gap-2 border-b-[1.5px] pb-0.75 text-[0.92rem] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none [&_svg]:transition-transform hover:[&_svg]:translate-x-1"
           >
             {config.linkLabel}
