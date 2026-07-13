@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
+import { LoadingSkeleton } from '@/components/collection'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import {
   getCollection,
   getCollections,
 } from '@/lib/shopify/operations/collection'
 
+import { HeroContent } from './_components/hero-content'
 import { PageContent } from './_components/page-content'
 import {
   getHeroImage,
@@ -64,8 +66,11 @@ export async function generateMetadata({
 
 export default function Page({ params, searchParams }: PageProps) {
   return (
-    <Suspense fallback={null}>
-      <PageContent params={params} searchParams={searchParams} />
-    </Suspense>
+    <>
+      <HeroContent params={params} />
+      <Suspense fallback={<LoadingSkeleton showHero={false} />}>
+        <PageContent params={params} searchParams={searchParams} />
+      </Suspense>
+    </>
   )
 }

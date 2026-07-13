@@ -17,13 +17,10 @@ import type { CollectionProductFilter } from '@/lib/shopify/types'
 
 import {
   buildCategoryFilter,
-  cleanHeroDescription,
   filterProductsByCategoryTags,
   findCategoryTagForPath,
   firstParam,
   getCategoryFilterInput,
-  getDescriptionHeroImage,
-  getHeroImage,
   getHref,
   getPaginationHref,
   getPath,
@@ -42,8 +39,6 @@ import {
   SORT_MAP,
 } from '../_lib/page-helpers'
 import type { PageProps } from '../_lib/page-types'
-import { CollectionRichHero } from './collection-rich-hero'
-import { Hero } from './hero'
 import { JsonLd } from './json-ld'
 import { ProductList } from './product-list'
 import { Sidebar } from './sidebar'
@@ -203,19 +198,10 @@ export async function PageContent({ params, searchParams }: PageProps) {
         !isCategoryFilter(filter),
     ),
   ].filter((filter): filter is CollectionProductFilter => Boolean(filter))
-  // bannerImage: art embedded in descriptionHtml → banner hero mode
-  const bannerImage = getDescriptionHeroImage(collection.descriptionHtml)
-  // heroImage: fallback for the green-band mode (collection featuredImage)
-  const heroImage = getHeroImage(
-    collection.featuredImage,
-    collection.descriptionHtml,
-  )
-
   const collectionPath = category
     ? `${getPath(handle)}/${category}`
     : getPath(handle)
   const collectionUrl = `${SITE_URL}${collectionPath}`
-  const heroDescription = cleanHeroDescription(collection.description)
   const richDescriptionHtml = normalizeHtml(collection.descriptionHtml)
   const hasRichDescription = shouldRenderRichDescription(
     collection.descriptionHtml,
@@ -245,17 +231,6 @@ export async function PageContent({ params, searchParams }: PageProps) {
         collectionUrl={collectionUrl}
         products={products}
       />
-
-      {richHero ? (
-        <CollectionRichHero richHero={richHero} />
-      ) : (
-        <Hero
-          collectionTitle={collection.title}
-          heroDescription={heroDescription}
-          heroImage={heroImage}
-          bannerImage={bannerImage}
-        />
-      )}
 
       <Section.Root tone="transparent" className="pt-8 md:pt-10">
         <Section.Container>

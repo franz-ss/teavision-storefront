@@ -51,8 +51,7 @@ const product: CollectionProductSummary = {
 
 function getImagePreloads(html: string): string[] {
   return (
-    html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ??
-    []
+    html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ?? []
   )
 }
 
@@ -82,7 +81,7 @@ describe('ProductList', () => {
     expect(html).not.toContain('divide-y')
   })
 
-  it('preloads the first visible product row for product-image LCP candidates', () => {
+  it('preloads only the first product image so other cards do not compete with the LCP request', () => {
     const products = Array.from({ length: 4 }, (_, index) => ({
       ...product,
       id: `gid://shopify/Product/product-${index}`,
@@ -98,10 +97,10 @@ describe('ProductList', () => {
 
     const html = renderToStaticMarkup(<ProductList products={products} />)
 
-    expect(getImagePreloads(html)).toHaveLength(3)
+    expect(getImagePreloads(html)).toHaveLength(1)
     expect(html.match(/<img[^>]*loading="eager"/g) ?? []).toHaveLength(0)
     expect(html.match(/<img[^>]*fetchPriority="high"/g) ?? []).toHaveLength(0)
-    expect(html.match(/<img[^>]*loading="lazy"/g)).toHaveLength(1)
+    expect(html.match(/<img[^>]*loading="lazy"/g)).toHaveLength(3)
   })
 
   it('renders numbered pagination with aria-label when totalPages > 1', () => {

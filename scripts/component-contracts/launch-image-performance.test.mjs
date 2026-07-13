@@ -112,3 +112,18 @@ test('launch image components avoid deprecated priority and invalid preload comb
     /fetchPriority=\{priority \? 'high' : 'auto'\}/,
   )
 })
+
+test('collection route streams its hero independent of query-controlled content', async () => {
+  const [collectionPage, collectionSkeleton] = await Promise.all([
+    readSource('src/app/(storefront)/collections/[handle]/page.tsx'),
+    readSource(
+      'src/components/collection/loading-skeleton/loading-skeleton.tsx',
+    ),
+  ])
+
+  assert.doesNotMatch(collectionPage, /fallback=\{null\}/)
+  assert.match(collectionPage, /<HeroContent params=\{params\} \/>/)
+  assert.match(collectionPage, /<LoadingSkeleton showHero=\{false\} \/>/)
+  assert.match(collectionSkeleton, /aspect-square/)
+  assert.doesNotMatch(collectionSkeleton, /aspect-25\/28/)
+})

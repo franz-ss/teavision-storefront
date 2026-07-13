@@ -12,7 +12,7 @@ type ProductListProps = {
   products: CollectionProductSummary[]
 }
 
-const FIRST_VISIBLE_PRODUCT_ROW_COUNT = 3
+const PRODUCT_IMAGE_PRELOAD_COUNT = 1
 
 export function ProductList({
   clearFiltersHref = null,
@@ -54,7 +54,7 @@ export function ProductList({
           <li key={product.id} className="border-hairline-2">
             <ProductCard
               product={product}
-              priority={index < FIRST_VISIBLE_PRODUCT_ROW_COUNT}
+              priority={index < PRODUCT_IMAGE_PRELOAD_COUNT}
             />
           </li>
         ))}

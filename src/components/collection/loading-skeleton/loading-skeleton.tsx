@@ -4,12 +4,14 @@ import { cn } from '@/lib/utils'
 type LoadingSkeletonProps = {
   className?: string
   productCount?: number
+  showHero?: boolean
   sidebarRowCount?: number
 }
 
 export function LoadingSkeleton({
   className,
   productCount = 6,
+  showHero = true,
   sidebarRowCount = 5,
 }: LoadingSkeletonProps) {
   return (
@@ -20,39 +22,34 @@ export function LoadingSkeleton({
       aria-busy="true"
     >
       <span className="sr-only">Loading collection</span>
-      <Section.Root tone="transparent" spacing="none">
-        <Section.Container className="pt-6">
-          <div className="overflow-hidden" aria-hidden="true">
-            <Skeleton
-              className="aspect-16/7 w-full rounded-none"
-              data-skeleton="hero"
-            />
-          </div>
-        </Section.Container>
-      </Section.Root>
-      <Section.Root tone="transparent" spacing="none">
-        <Section.Container>
-          <div
-            className="flex flex-wrap items-center gap-2 pt-5.5"
-            aria-hidden="true"
-          >
-            <Skeleton className="h-3 w-10" />
-            <Skeleton className="h-3 w-1.5" />
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="h-3 w-1.5" />
-            <Skeleton className="h-3 w-72 max-w-full" />
-          </div>
-        </Section.Container>
-      </Section.Root>
-      <Section.Root tone="transparent" spacing="compact">
-        <Section.Container>
-          <div
-            className="bg-paper border-hairline h-14 animate-pulse rounded-lg border motion-reduce:animate-none"
-            aria-hidden="true"
-            data-skeleton="story-disclosure"
-          />
-        </Section.Container>
-      </Section.Root>
+      {showHero ? (
+        <>
+          <Section.Root tone="transparent" spacing="none">
+            <Section.Container className="pt-6">
+              <div className="overflow-hidden" aria-hidden="true">
+                <Skeleton
+                  className="aspect-16/7 w-full rounded-none"
+                  data-skeleton="hero"
+                />
+              </div>
+            </Section.Container>
+          </Section.Root>
+          <Section.Root tone="transparent" spacing="none">
+            <Section.Container>
+              <div
+                className="flex flex-wrap items-center gap-2 pt-5.5"
+                aria-hidden="true"
+              >
+                <Skeleton className="h-3 w-10" />
+                <Skeleton className="h-3 w-1.5" />
+                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-3 w-1.5" />
+                <Skeleton className="h-3 w-72 max-w-full" />
+              </div>
+            </Section.Container>
+          </Section.Root>
+        </>
+      ) : null}
       <Section.Root tone="transparent" className="pt-8 md:pt-10">
         <Section.Container>
           <div className="mb-6" aria-hidden="true">
@@ -89,7 +86,7 @@ export function LoadingSkeleton({
                   className="border-hairline-2"
                   data-skeleton="product"
                 >
-                  <Skeleton className="aspect-25/28 rounded-lg" />
+                  <Skeleton className="aspect-square rounded-lg" />
                   <div className="pt-4">
                     <Skeleton className="mb-1 h-3 w-18" />
                     <Skeleton className="my-1.5 h-6 w-4/5" />

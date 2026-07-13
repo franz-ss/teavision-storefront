@@ -14,7 +14,7 @@ function sourcePath(...segments) {
   return path.join(repoRoot, ...segments)
 }
 
-test('collection page fallback is real content, not a visible loading shell', async () => {
+test('collection page hero renders as real content; only the query-controlled grid falls back to a skeleton', async () => {
   const source = await readFile(
     sourcePath(
       'src',
@@ -27,10 +27,11 @@ test('collection page fallback is real content, not a visible loading shell', as
     'utf8',
   )
 
-  assert.doesNotMatch(source, /Loading collection/)
-  assert.doesNotMatch(source, /LoadingSkeleton/)
+  assert.doesNotMatch(source, /Suspense fallback=\{null\}/)
   assert.doesNotMatch(source, /staticShell/)
   assert.doesNotMatch(source, /getCollectionHandleSamples/)
+  assert.match(source, /<HeroContent params=\{params\} \/>/)
+  assert.match(source, /<LoadingSkeleton showHero=\{false\} \/>/)
 })
 
 test('base collection page resolves to content after search params settle', async () => {
