@@ -73,7 +73,7 @@ test('product page fallback is real content, not a broad skeleton shell', async 
   assert.doesNotMatch(source, /getProductHandleSamples/)
 })
 
-test('base product page resolves to content after search params settle', async () => {
+test('base product page resolves to content without waiting on search params', async () => {
   const source = await readFile(
     sourcePath(
       'src',
@@ -86,11 +86,9 @@ test('base product page resolves to content after search params settle', async (
     'utf8',
   )
 
-  assert.doesNotMatch(source, /searchParams\.then[\s\S]*:\s*null/)
-  assert.match(
-    source,
-    /<ProductContent\s+params=\{params\}\s+searchParams=\{searchParams\}\s*\/>/,
-  )
+  assert.doesNotMatch(source, /await searchParams/)
+  assert.doesNotMatch(source, /searchParams\.then/)
+  assert.match(source, /<ProductContent params=\{params\} \/>/)
   assert.equal(source.match(/<ProductContent\b/g)?.length, 1)
 })
 

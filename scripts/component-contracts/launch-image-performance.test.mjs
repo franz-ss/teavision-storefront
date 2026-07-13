@@ -113,12 +113,13 @@ test('launch image components avoid deprecated priority and invalid preload comb
   )
 })
 
-test('collection route streams its hero independent of query-controlled content', async () => {
-  const [collectionPage, collectionSkeleton] = await Promise.all([
+test('product and collection routes preserve crawlable content and layout-stable streaming', async () => {
+  const [collectionPage, collectionSkeleton, productPage] = await Promise.all([
     readSource('src/app/(storefront)/collections/[handle]/page.tsx'),
     readSource(
       'src/components/collection/loading-skeleton/loading-skeleton.tsx',
     ),
+    readSource('src/app/(storefront)/products/[handle]/page.tsx'),
   ])
 
   assert.doesNotMatch(collectionPage, /fallback=\{null\}/)
@@ -126,4 +127,10 @@ test('collection route streams its hero independent of query-controlled content'
   assert.match(collectionPage, /<LoadingSkeleton showHero=\{false\} \/>/)
   assert.match(collectionSkeleton, /aspect-square/)
   assert.doesNotMatch(collectionSkeleton, /aspect-25\/28/)
+
+  assert.doesNotMatch(productPage, /await searchParams/)
+  assert.doesNotMatch(productPage, /searchParams\.then/)
+  assert.match(productPage, /<PurchaseForm/)
+  assert.match(productPage, /<ProductContent params=\{params\} \/>/)
+  assert.doesNotMatch(productPage, /Loading product/)
 })

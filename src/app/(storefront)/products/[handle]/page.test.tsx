@@ -8,6 +8,7 @@ import type { Product } from '@/lib/shopify/types'
 import { makeProduct } from '@/tests/fixtures/shopify/product'
 
 import { ProductContent } from './page'
+import { PurchaseForm } from './_components/purchase-form'
 
 vi.mock('server-only', () => ({}))
 
@@ -15,6 +16,7 @@ vi.mock('next/navigation', () => ({
   notFound: () => {
     throw new Error('notFound')
   },
+  useSearchParams: () => new URLSearchParams('variant=41503540936791'),
 }))
 
 vi.mock('next/script', () => ({
@@ -33,7 +35,11 @@ vi.mock('next/script', () => ({
 }))
 
 vi.mock('@/components/product', () => ({
-  ProductForm: () => <div data-testid="product-form">Buy controls</div>,
+  ProductForm: ({ initialVariantId }: { initialVariantId?: string }) => (
+    <div data-testid="product-form" data-initial-variant={initialVariantId}>
+      Buy controls
+    </div>
+  ),
   ProductGallery: ({ title }: { title: string }) => (
     <div data-testid="product-gallery">{title} gallery</div>
   ),
@@ -89,7 +95,6 @@ async function renderProductContent(product: Product) {
 
   const element = await ProductContent({
     params: Promise.resolve({ handle: product.handle }),
-    searchParams: Promise.resolve({}),
   })
 
   return renderToStaticMarkup(element as ReactNode)
@@ -112,7 +117,6 @@ describe('ProductContent heading hierarchy', () => {
   it('keeps the product title as the only H1, preserves native disclosures, and demotes imported description headings', async () => {
     const element = await ProductContent({
       params: Promise.resolve({ handle: 'only-product-title' }),
-      searchParams: Promise.resolve({}),
     })
     const html = renderToStaticMarkup(element as ReactNode)
 
@@ -143,6 +147,25 @@ describe('ProductContent heading hierarchy', () => {
     ])
     expect(html).not.toContain('aria-expanded')
     expect(html).not.toContain('role="button"')
+  })
+
+  it('renders critical product content independently of runtime search parameters', async () => {
+    const element = await ProductContent({
+      params: Promise.resolve({ handle: 'only-product-title' }),
+    })
+    const html = renderToStaticMarkup(element as ReactNode)
+
+    expect(html).toContain('data-testid="product-gallery"')
+    expect(html).toContain('<h1')
+    expect(html).toContain('Only Product Title')
+  })
+
+  it('keeps deep-linked variant selection in the route-local client leaf', () => {
+    const html = renderToStaticMarkup(
+      <PurchaseForm variants={[]} options={[]} bulkPricingTiers={[]} />,
+    )
+
+    expect(html).toContain('data-initial-variant="41503540936791"')
   })
 })
 

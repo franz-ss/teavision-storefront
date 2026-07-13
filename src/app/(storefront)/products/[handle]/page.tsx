@@ -20,6 +20,7 @@ import { Badge, Eyebrow, Section, StarRating } from '@/components/ui'
 import { ProductForm, ProductGallery } from '@/components/product'
 
 import { CustomersAlsoBought } from './_components/customers-also-bought'
+import { PurchaseForm } from './_components/purchase-form'
 import { RelatedProducts } from './_components/related-products'
 import {
   getNumericShopifyId,
@@ -79,7 +80,6 @@ function getVisibleProductReviewSummary(summary: {
 
 type Props = {
   params: Promise<{ handle: string }>
-  searchParams: Promise<{ variant?: string | string[] }>
 }
 
 export async function generateStaticParams(): Promise<
@@ -125,14 +125,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function ProductContent({
   params,
-  searchParams,
 }: {
   params: Promise<{ handle: string }>
-  searchParams: Promise<{ variant?: string | string[] }>
 }) {
   const { handle } = await params
-  const { variant } = await searchParams
-  const initialVariantId = Array.isArray(variant) ? variant[0] : variant
   const product = await getProduct(handle, PRODUCT_DETAIL_CACHE_VERSION)
   if (!product) notFound()
 
@@ -336,13 +332,23 @@ export async function ProductContent({
 
           {/* ProductForm first — buy controls (size, qty, add-to-cart, bulk savings)
               precede the description, matching the original site's PDP order */}
-          <ProductForm
-            variants={product.variants}
-            options={product.options}
-            bulkPricingTiers={product.bulkPricingTiers}
-            initialVariantId={initialVariantId}
-            className="mt-6.5"
-          />
+          <Suspense
+            fallback={
+              <ProductForm
+                variants={product.variants}
+                options={product.options}
+                bulkPricingTiers={product.bulkPricingTiers}
+                className="mt-6.5"
+              />
+            }
+          >
+            <PurchaseForm
+              variants={product.variants}
+              options={product.options}
+              bulkPricingTiers={product.bulkPricingTiers}
+              className="mt-6.5"
+            />
+          </Suspense>
 
           {/* Description: follows the buy section */}
           {descriptionHtml ? (
@@ -362,7 +368,7 @@ export async function ProductContent({
                 open={index === 0}
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-5 marker:hidden">
-                  <h2 className="font-display text-ink min-w-0 wrap-break-word text-[1.15rem] leading-tight">
+                  <h2 className="font-display text-ink min-w-0 text-[1.15rem] leading-tight wrap-break-word">
                     {item.title}
                   </h2>
                   <ChevronDown
@@ -439,12 +445,10 @@ export async function ProductContent({
   )
 }
 
-export default function ProductPage({ params, searchParams }: Props) {
+export default function ProductPage({ params }: Props) {
   return (
     <div className="max-w-wide px-gutter mx-auto w-full">
-      <Suspense fallback={null}>
-        <ProductContent params={params} searchParams={searchParams} />
-      </Suspense>
+      <ProductContent params={params} />
     </div>
   )
 }
