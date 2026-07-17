@@ -1,6 +1,7 @@
 import type { SanityImageSource } from '@sanity/image-url'
 import { cacheLife, cacheTag } from 'next/cache'
 
+import { formatAustralianDate } from '@/lib/date-formatting'
 import {
   blogArticleQuery,
   blogListingQuery,
@@ -288,11 +289,7 @@ export function findTagBySlug(tags: string[], slug?: string): string | null {
 }
 
 export function formatArticleDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-AU', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
+  return formatAustralianDate(iso) ?? 'Date unavailable'
 }
 
 export function getUniqueArticleTags(articles: BlogArticleSummary[]): string[] {

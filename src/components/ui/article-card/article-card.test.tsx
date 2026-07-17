@@ -53,7 +53,7 @@ describe('ArticleCard', () => {
       <ArticleCard
         article={article}
         href="/blogs/teavision-blogs/selecting-wholesale-tea"
-        publishedLabel="1 Jun 2026"
+        publishedLabel="01/06/2026"
       />,
     )
 
@@ -72,7 +72,7 @@ describe('ArticleCard', () => {
           featuredImage: { ...article.featuredImage, lqip: null },
         }}
         href="/blogs/teavision-blogs/selecting-wholesale-tea"
-        publishedLabel="1 Jun 2026"
+        publishedLabel="01/06/2026"
       />,
     )
 

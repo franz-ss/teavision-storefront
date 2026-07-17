@@ -1,11 +1,8 @@
+import { formatAustralianDate } from '@/lib/date-formatting'
 import type { Money } from '@/lib/shopify/types'
 
 export function formatAccountOrderDate(value: string): string {
-  return new Intl.DateTimeFormat('en-AU', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(value))
+  return formatAustralianDate(value) ?? 'Date unavailable'
 }
 
 export function formatOrderStatus(value: string | null): string {

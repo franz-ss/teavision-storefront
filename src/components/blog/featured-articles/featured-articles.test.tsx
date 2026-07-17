@@ -22,7 +22,7 @@ vi.mock('next/image', () => ({
 }))
 
 vi.mock('@/lib/blog/operations', () => ({
-  formatArticleDate: () => '1 Jun 2026',
+  formatArticleDate: () => '01/06/2026',
   getArticlePath: () => '/blogs/teavision-blogs/selecting-wholesale-tea',
 }))
 

@@ -9,7 +9,7 @@ import {
 
 describe('account order formatting', () => {
   test('formats account order dates for Australia', () => {
-    expect(formatAccountOrderDate('2026-06-01T04:20:00Z')).toBe('1 June 2026')
+    expect(formatAccountOrderDate('2026-06-01T04:20:00Z')).toBe('01/06/2026')
   })
 
   test('formats Shopify statuses into customer-friendly labels', () => {

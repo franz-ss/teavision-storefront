@@ -26,20 +26,6 @@ export function getMetaDescription(page: ShopifyPage): string {
   return truncateMetaDescription(fallbackDescription)
 }
 
-export function formatUpdatedDate(iso: string): string {
-  const date = new Date(iso)
-
-  if (Number.isNaN(date.getTime())) {
-    return 'Recently updated'
-  }
-
-  return date.toLocaleDateString('en-AU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
 function truncateMetaDescription(value: string): string {
   return truncateDescription(value, 160)
 }

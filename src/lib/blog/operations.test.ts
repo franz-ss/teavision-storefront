@@ -12,6 +12,7 @@ import type {
 import {
   CANONICAL_BLOG_LISTING_PATH,
   DEFAULT_BLOG_HANDLE,
+  formatArticleDate,
   getArticlePath,
   getBlogPath,
   getCanonicalBlogListingPath,
@@ -72,6 +73,12 @@ function makePost(id: string): SanityBlogPostSummary {
     title: `${id} title`,
   }
 }
+
+describe('formatArticleDate', () => {
+  it('uses the numeric Australian date format', () => {
+    expect(formatArticleDate('2026-06-01T00:00:00.000Z')).toBe('01/06/2026')
+  })
+})
 
 describe('getDefaultBlogListing', () => {
   beforeEach(() => {

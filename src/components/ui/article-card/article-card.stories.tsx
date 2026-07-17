@@ -39,7 +39,7 @@ export const Default: Story = {
   args: {
     article: stubArticle,
     href: '/blogs/teavision-blogs/the-complete-guide-to-tea-bags-types-quality-and-bulk-options',
-    publishedLabel: '5 Nov 2025',
+    publishedLabel: '05/11/2025',
   },
 }
 
@@ -47,7 +47,7 @@ export const Featured: Story = {
   args: {
     article: stubArticle,
     href: '/blogs/teavision-blogs/the-complete-guide-to-tea-bags-types-quality-and-bulk-options',
-    publishedLabel: '5 Nov 2025',
+    publishedLabel: '05/11/2025',
     variant: 'featured',
     preload: true,
   },
@@ -60,7 +60,7 @@ export const WithoutImage: Story = {
       featuredImage: null,
     },
     href: '/blogs/teavision-blogs/the-complete-guide-to-tea-bags-types-quality-and-bulk-options',
-    publishedLabel: '5 Nov 2025',
+    publishedLabel: '05/11/2025',
   },
 }
 
@@ -75,7 +75,7 @@ export const LongContent: Story = {
       tags: ['Tea Bag', 'Tea Business', 'Private Label', 'Compliance'],
     },
     href: '/blogs/teavision-blogs/long-content',
-    publishedLabel: '5 Nov 2025',
+    publishedLabel: '05/11/2025',
   },
 }
 
@@ -92,6 +92,6 @@ export const WithBlurPlaceholder: Story = {
       },
     },
     href: '/blogs/teavision-blogs/the-complete-guide-to-tea-bags-types-quality-and-bulk-options',
-    publishedLabel: '5 Nov 2025',
+    publishedLabel: '05/11/2025',
   },
 }
