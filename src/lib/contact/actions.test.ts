@@ -113,7 +113,7 @@ const VALID_WHOLESALE_SUBMISSION = {
 
 const VALID_NPD_ORDER_SUBMISSION = {
   company: 'NPD Tea Co',
-  date: '2026-07-01',
+  date: '01/07/2026',
   timeframe: 'ASAP (priority)',
   otherTimeframe: '',
   productTypes: ['Tea Bags and Loose Leaf'],
@@ -221,7 +221,9 @@ describe('sendWholesaleAccountAction', () => {
       expect.objectContaining({
         subject: 'New Teavision wholesale account request',
         replyTo: 'ada@example.com',
-        text: expect.stringContaining('Company / business name: Analytical Tea Co'),
+        text: expect.stringContaining(
+          'Company / business name: Analytical Tea Co',
+        ),
       }),
     )
   })
@@ -244,7 +246,8 @@ describe('sendWholesaleAccountAction', () => {
 
       expect(result).toEqual({
         success: false,
-        error: 'Unable to send your message right now. Please try again shortly.',
+        error:
+          'Unable to send your message right now. Please try again shortly.',
       })
       expect(consoleError).toHaveBeenCalledWith(
         '[observability]',
@@ -294,5 +297,52 @@ describe('sendWholesaleAccountAction', () => {
       success: false,
       error: 'Please fill in all required fields.',
     })
+  })
+})
+
+describe('sendNpdOrderAction', () => {
+  test('accepts an Australian date and includes it in the staff email', async () => {
+    const result = await sendNpdOrderAction(
+      formData(VALID_NPD_ORDER_SUBMISSION),
+    )
+
+    expect(result.success).toBe(true)
+    expect(resendSendMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subject: 'New Teavision NPD form submission',
+        text: expect.stringContaining('Date: 01/07/2026'),
+      }),
+    )
+  })
+
+  test('normalizes legacy ISO date submissions during rollout', async () => {
+    const result = await sendNpdOrderAction(
+      formData({
+        ...VALID_NPD_ORDER_SUBMISSION,
+        date: '2026-07-01',
+      }),
+    )
+
+    expect(result.success).toBe(true)
+    expect(resendSendMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        text: expect.stringContaining('Date: 01/07/2026'),
+      }),
+    )
+  })
+
+  test('rejects impossible dates', async () => {
+    const result = await sendNpdOrderAction(
+      formData({
+        ...VALID_NPD_ORDER_SUBMISSION,
+        date: '31/04/2026',
+      }),
+    )
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Please fill in all required fields.',
+    })
+    expect(resendSendMock).not.toHaveBeenCalled()
   })
 })

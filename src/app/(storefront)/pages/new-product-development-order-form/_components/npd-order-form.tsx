@@ -125,10 +125,20 @@ export function NpdOrderForm() {
             <TextInput
               id="npd-date"
               name="date"
-              type="date"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              placeholder="dd/mm/yyyy"
+              pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}"
+              title="Enter a date in dd/mm/yyyy format"
+              aria-describedby="npd-date-hint"
               required
+              maxLength={10}
               className="mt-2"
             />
+            <p id="npd-date-hint" className="type-body-sm text-ink-soft mt-2">
+              Use dd/mm/yyyy, for example 01/07/2026.
+            </p>
           </div>
 
           <div>
@@ -159,7 +169,7 @@ export function NpdOrderForm() {
                 name="otherTimeframe"
                 type="text"
                 maxLength={NPD_ORDER_LIMITS.text}
-                placeholder="Example: launch by 15 March, coordinate with retailer promo"
+                placeholder="Example: launch by 15/03/2027, coordinate with retailer promo"
                 className="mt-2"
               />
             </div>

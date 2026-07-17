@@ -25,6 +25,7 @@ import {
   WHOLESALE_ACCOUNT_LIMITS,
   isWholesaleAccountStartOption,
 } from '@/lib/contact/wholesale-account'
+import { normalizeAustralianDateInput } from '@/lib/date-formatting'
 import { logEvent } from '@/lib/observability/logger'
 import { checkRateLimit, getClientIpFromHeaders } from '@/lib/rate-limit'
 
@@ -331,8 +332,10 @@ function formatWholesaleAccountSubmission(
 
 async function submitContactSubmission(
   submission: ContactSubmission,
-  surface: Extract<ContactProviderSurface, 'contact' | 'custom-tea-blend'> =
-    'contact',
+  surface: Extract<
+    ContactProviderSurface,
+    'contact' | 'custom-tea-blend'
+  > = 'contact',
 ): Promise<ContactActionResult> {
   if (submission.website) {
     return { success: true }
@@ -508,6 +511,7 @@ function readNpdBlendCount(formData: FormData): number {
 
 function readNpdOrderSubmission(formData: FormData): NpdOrderSubmission {
   const blendCount = readNpdBlendCount(formData)
+  const date = normalizeAustralianDateInput(readStringField(formData, 'date'))
   const blends = Array.from({ length: blendCount }, (_, blendIndex) => {
     const index = blendIndex + 1
 
@@ -538,7 +542,7 @@ function readNpdOrderSubmission(formData: FormData): NpdOrderSubmission {
 
   return {
     company: readStringField(formData, 'company'),
-    date: readStringField(formData, 'date'),
+    date: date ?? '',
     timeframe: readStringField(formData, 'timeframe'),
     otherTimeframe: readStringField(formData, 'otherTimeframe'),
     productTypes: readStringList(formData, 'productTypes'),
