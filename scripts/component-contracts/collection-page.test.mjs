@@ -55,6 +55,28 @@ test('base collection page resolves to content after search params settle', asyn
   assert.equal(source.match(/<PageContent\b/g)?.length, 1)
 })
 
+test('category collection page reserves the results layout while query content streams', async () => {
+  const source = await readFile(
+    sourcePath(
+      'src',
+      'app',
+      '(storefront)',
+      'collections',
+      '[handle]',
+      '[category]',
+      'page.tsx',
+    ),
+    'utf8',
+  )
+
+  assert.doesNotMatch(source, /Suspense fallback=\{null\}/)
+  assert.match(source, /<LoadingSkeleton showHero=\{false\} \/>/)
+  assert.match(
+    source,
+    /<PageContent\s+params=\{params\}\s+searchParams=\{searchParams\}\s*\/>/,
+  )
+})
+
 test('product page fallback is real content, not a broad skeleton shell', async () => {
   const source = await readFile(
     sourcePath(
