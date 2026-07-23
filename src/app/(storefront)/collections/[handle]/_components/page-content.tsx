@@ -21,6 +21,7 @@ import {
   findCategoryTagForPath,
   firstParam,
   getCategoryFilterInput,
+  getHeroImage,
   getHref,
   getPaginationHref,
   getPath,
@@ -208,6 +209,13 @@ export async function PageContent({ params, searchParams }: PageProps) {
     collection.description,
   )
   const richHero = parseCollectionRichHero(collection.descriptionHtml)
+  const collectionHeroImage = getHeroImage(
+    collection.featuredImage,
+    collection.descriptionHtml,
+  )
+  const hasRenderableCollectionHeroImage = Boolean(
+    !category && collectionHeroImage?.width && collectionHeroImage.height,
+  )
 
   // Prev/next link tags for adjacent pages — hoisted to <head> by React 19 (D-05)
   // The Next 16 Metadata API has no prev/next field, so we render them as JSX links.
@@ -266,6 +274,7 @@ export async function PageContent({ params, searchParams }: PageProps) {
                   sort,
                 })
               }
+              preloadFirstImage={!hasRenderableCollectionHeroImage}
               products={products}
             />
           </div>

@@ -42,6 +42,8 @@ const fakeProductImage = {
   height: 534,
 }
 
+const fakeBannerCollectionHandle = 'test-banner'
+
 function readRequestBody(request: NodeJS.ReadableStream): Promise<string> {
   return new Promise((resolve, reject) => {
     let body = ''
@@ -199,11 +201,27 @@ function makeCollectionSummary() {
   }
 }
 
-function makeCollection() {
+function makeCollection(handle: string) {
+  if (handle === fakeBannerCollectionHandle) {
+    return {
+      ...makeCollectionSummary(),
+      id: 'gid://shopify/Collection/test-banner',
+      handle: fakeBannerCollectionHandle,
+      title: 'Test Banner Collection',
+      description: 'Representative collection banner performance fixture.',
+      descriptionHtml:
+        '<img src="/images/homepage/homepage-hero-tea-harvest-lcp.avif" alt="Test Banner Collection" width="1440" height="650"><h2>Test Banner Collection</h2><p>Representative collection banner performance fixture.</p>',
+    }
+  }
+
   return {
     ...makeCollectionSummary(),
     descriptionHtml: '<p>All test products.</p>',
   }
+}
+
+function isFakeCollectionHandle(handle: string | null): handle is string {
+  return handle === 'all' || handle === fakeBannerCollectionHandle
 }
 
 function makeCollectionProductNode() {
@@ -358,7 +376,11 @@ export async function createFakeShopifyServer({
     if (operationName === 'GetCollection') {
       const handle = readString(graphqlRequest.variables?.handle)
       writeJson(response, 200, {
-        data: { collection: handle === 'all' ? makeCollection() : null },
+        data: {
+          collection: isFakeCollectionHandle(handle)
+            ? makeCollection(handle)
+            : null,
+        },
       })
       return
     }
@@ -367,16 +389,15 @@ export async function createFakeShopifyServer({
       const handle = readString(graphqlRequest.variables?.handle)
       writeJson(response, 200, {
         data: {
-          collection:
-            handle === 'all'
-              ? {
-                  products: {
-                    edges: [{ node: makeCollectionProductNode() }],
-                    filters: [],
-                    pageInfo: { hasNextPage: false, endCursor: null },
-                  },
-                }
-              : null,
+          collection: isFakeCollectionHandle(handle)
+            ? {
+                products: {
+                  edges: [{ node: makeCollectionProductNode() }],
+                  filters: [],
+                  pageInfo: { hasNextPage: false, endCursor: null },
+                },
+              }
+            : null,
         },
       })
       return
@@ -386,20 +407,19 @@ export async function createFakeShopifyServer({
       const handle = readString(graphqlRequest.variables?.handle)
       writeJson(response, 200, {
         data: {
-          collection:
-            handle === 'all'
-              ? {
-                  products: {
-                    edges: [
-                      {
-                        cursor: 'fake-product-cursor',
-                        node: { tags: makeCollectionProductNode().tags },
-                      },
-                    ],
-                    pageInfo: { hasNextPage: false, endCursor: null },
-                  },
-                }
-              : null,
+          collection: isFakeCollectionHandle(handle)
+            ? {
+                products: {
+                  edges: [
+                    {
+                      cursor: 'fake-product-cursor',
+                      node: { tags: makeCollectionProductNode().tags },
+                    },
+                  ],
+                  pageInfo: { hasNextPage: false, endCursor: null },
+                },
+              }
+            : null,
         },
       })
       return

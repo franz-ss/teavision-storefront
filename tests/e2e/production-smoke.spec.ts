@@ -99,6 +99,25 @@ test('/collections/all loads without a 500 response', async ({ page }) => {
   assertNoLiveFlow()
 })
 
+test('collection banner is the only prioritized listing image', async ({
+  page,
+}) => {
+  const assertNoLiveFlow = observeForbiddenLiveFlowUrls(page)
+
+  await gotoWithoutServerError(page, '/collections/test-banner')
+
+  const banner = page.locator('img.w-full.object-cover').first()
+  await expect(banner).toHaveAttribute('loading', 'eager')
+  await expect(banner).toHaveAttribute('fetchpriority', 'high')
+  await expect(
+    page.locator('link[rel="preload"][as="image"][fetchpriority="high"]'),
+  ).toHaveCount(1)
+  await expect(
+    page.locator('#product-grid img[fetchpriority="high"]'),
+  ).toHaveCount(0)
+  assertNoLiveFlow()
+})
+
 test('/products/test-standard-tea loads with Add to Cart', async ({ page }) => {
   const assertNoLiveFlow = observeForbiddenLiveFlowUrls(page)
 

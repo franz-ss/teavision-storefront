@@ -9,6 +9,7 @@ type ProductListProps = {
   currentPage?: number
   totalPages?: number
   buildPageHref?: (page: number) => string
+  preloadFirstImage?: boolean
   products: CollectionProductSummary[]
 }
 
@@ -19,6 +20,7 @@ export function ProductList({
   currentPage = 1,
   totalPages = 1,
   buildPageHref,
+  preloadFirstImage = true,
   products,
 }: ProductListProps) {
   if (products.length === 0) {
@@ -54,7 +56,9 @@ export function ProductList({
           <li key={product.id} className="border-hairline-2">
             <ProductCard
               product={product}
-              priority={index < PRODUCT_IMAGE_PRELOAD_COUNT}
+              priority={
+                preloadFirstImage && index < PRODUCT_IMAGE_PRELOAD_COUNT
+              }
             />
           </li>
         ))}

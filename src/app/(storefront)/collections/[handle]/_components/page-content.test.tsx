@@ -145,6 +145,12 @@ function productFixture(
   }
 }
 
+function getImagePreloads(html: string): string[] {
+  return (
+    html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ?? []
+  )
+}
+
 beforeEach(() => {
   htmlContentMocks.sanitizeShopifyCollectionStoryHtml.mockClear()
 })
@@ -288,6 +294,49 @@ describe('PageContent category pagination hrefs', () => {
     // re-serialise it as a ?filter= query param (two URL variants).
     expect(html).toContain('/collections/all/categories_herbs?page=3')
     expect(html).not.toContain('filter=')
+  })
+
+  it('preloads the first product image when the category route does not render the collection hero', async () => {
+    shopifyMocks.getCollection.mockResolvedValue(
+      collectionFixture({
+        handle: 'all',
+        title: 'All Products',
+        featuredImage: {
+          url: 'https://cdn.shopify.com/s/files/1/0000/0001/collections/all.jpg',
+          altText: 'All products',
+          width: 1440,
+          height: 640,
+        },
+      }),
+    )
+    shopifyMocks.getCollectionSummaries.mockResolvedValue([])
+    shopifyMocks.getCollectionTagCounts.mockResolvedValue({})
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 1, totalPages: 1 }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: false },
+      products: [
+        productFixture({
+          tags: ['categories_herbs'],
+          featuredImage: {
+            url: 'https://cdn.shopify.com/s/files/1/0000/0001/products/herbs.jpg',
+            altText: 'Dried herbs',
+            width: 900,
+            height: 900,
+          },
+        }),
+      ],
+    })
+
+    const element = await PageContent({
+      params: Promise.resolve({ handle: 'all', category: 'categories_herbs' }),
+      searchParams: Promise.resolve({}),
+    })
+    const html = renderToStaticMarkup(element)
+
+    expect(getImagePreloads(html)).toHaveLength(1)
   })
 })
 
@@ -466,6 +515,12 @@ describe('Collection hero and page content rendering', () => {
     expect(html).toContain('Ready-Made Bulk Tea Bags for Cafes')
     expect(html).toContain('View our Tea Bag Manufacturing Catalogue')
     expect(html).toContain('Minimum Order Quantity: 6,000 Tea Bags Per Blend')
+    expect(html).toMatch(
+      /<img(?=[^>]*class="h-auto max-h-90 w-full object-cover")(?=[^>]*fetchPriority="high")(?=[^>]*loading="eager")[^>]*>/,
+    )
+    expect(html).toMatch(
+      /<link(?=[^>]*rel="preload")(?=[^>]*as="image")(?=[^>]*fetchPriority="high")[^>]*>/,
+    )
     expect(html).not.toContain('Read more about Bulk Tea Bags')
     expect(
       htmlContentMocks.sanitizeShopifyCollectionStoryHtml,
@@ -537,6 +592,12 @@ describe('Collection hero and page content rendering', () => {
     expect(heroHtml).not.toContain(
       '<p class="type-body text-ink-soft mt-4 max-w-[58ch]">Hero summary should not render',
     )
+    expect(heroHtml).toMatch(
+      /<img(?=[^>]*class="w-full object-cover")(?=[^>]*fetchPriority="high")(?=[^>]*loading="eager")[^>]*>/,
+    )
+    expect(heroHtml).toMatch(
+      /<link(?=[^>]*rel="preload")(?=[^>]*as="image")(?=[^>]*fetchPriority="high")[^>]*>/,
+    )
     expect(pageHtml.indexOf('id="product-grid"')).toBeGreaterThan(-1)
     expect(pageHtml.indexOf('id="product-grid"')).toBeLessThan(
       pageHtml.indexOf('Read more about Wholesale Bulk Tea'),
@@ -549,5 +610,43 @@ describe('Collection hero and page content rendering', () => {
     expect(pageHtml).toContain(
       '<h3 class="type-label text-ink mt-5">Flexible wholesale ordering</h3>',
     )
+  })
+
+  it('preloads the first product image when incomplete hero dimensions prevent the hero from rendering', async () => {
+    shopifyMocks.getCollection.mockResolvedValue(
+      collectionFixture({
+        featuredImage: {
+          url: 'https://cdn.shopify.com/s/files/1/0000/0001/collections/incomplete.jpg',
+          altText: 'Incomplete collection image',
+          width: null,
+          height: null,
+        },
+      }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: false },
+      products: [
+        productFixture({
+          featuredImage: {
+            url: 'https://cdn.shopify.com/s/files/1/0000/0001/products/first.jpg',
+            altText: 'First product',
+            width: 900,
+            height: 900,
+          },
+        }),
+      ],
+    })
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 1, totalPages: 1 }),
+    )
+
+    const element = await PageContent({
+      params: Promise.resolve({ handle: 'bulk-tea-bags' }),
+      searchParams: Promise.resolve({}),
+    })
+    const html = renderToStaticMarkup(element)
+
+    expect(getImagePreloads(html)).toHaveLength(1)
   })
 })

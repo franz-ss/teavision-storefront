@@ -36,7 +36,8 @@ export function CollectionRichHero({ richHero }: CollectionRichHeroProps) {
               height={richHero.image.height ?? 577}
               sizes="(min-width: 1180px) 1120px, calc(100vw - 32px)"
               className="h-auto max-h-90 w-full object-cover"
-              preload
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
 

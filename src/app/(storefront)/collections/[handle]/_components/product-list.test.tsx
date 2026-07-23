@@ -103,6 +103,28 @@ describe('ProductList', () => {
     expect(html.match(/<img[^>]*loading="lazy"/g)).toHaveLength(3)
   })
 
+  it('does not preload a product image when the collection hero owns LCP', () => {
+    const products = Array.from({ length: 2 }, (_, index) => ({
+      ...product,
+      id: `gid://shopify/Product/product-${index}`,
+      handle: `product-${index}`,
+      title: `Product ${index}`,
+      featuredImage: {
+        url: `https://cdn.shopify.com/s/files/1/0000/0001/products/product-${index}.jpg?v=1`,
+        altText: `Product ${index}`,
+        width: 900,
+        height: 900,
+      },
+    }))
+
+    const html = renderToStaticMarkup(
+      <ProductList products={products} preloadFirstImage={false} />,
+    )
+
+    expect(getImagePreloads(html)).toHaveLength(0)
+    expect(html.match(/<img[^>]*loading="lazy"/g)).toHaveLength(2)
+  })
+
   it('renders numbered pagination with aria-label when totalPages > 1', () => {
     const html = renderToStaticMarkup(
       <ProductList

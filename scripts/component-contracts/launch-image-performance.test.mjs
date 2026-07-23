@@ -115,6 +115,39 @@ test('launch image components avoid deprecated priority and invalid preload comb
     productCard,
     /fetchPriority=\{priority \? 'high' : 'auto'\}/,
   )
+
+  const collectionHero = await readSource(
+    'src/app/(storefront)/collections/[handle]/_components/hero.tsx',
+  )
+  const collectionHeroBlocks = imageBlocks(collectionHero)
+  const collectionBannerBlock = collectionHeroBlocks.find((block) =>
+    block.includes('className="w-full object-cover"'),
+  )
+  assert.ok(
+    collectionBannerBlock,
+    'collection hero should contain the banner Image',
+  )
+  assert.match(collectionBannerBlock, /loading="eager"/)
+  assert.match(collectionBannerBlock, /fetchPriority="high"/)
+  assert.doesNotMatch(collectionBannerBlock, /\bpreload\b/)
+
+  for (const block of collectionHeroBlocks) {
+    assert.match(block, /loading="eager"/)
+    assert.match(block, /fetchPriority="high"/)
+    assert.doesNotMatch(block, /\bpreload\b/)
+  }
+
+  const collectionRichHero = await readSource(
+    'src/app/(storefront)/collections/[handle]/_components/collection-rich-hero.tsx',
+  )
+  const collectionRichHeroBlock = imageBlocks(collectionRichHero)[0]
+  assert.ok(
+    collectionRichHeroBlock,
+    'collection rich hero should contain its LCP Image',
+  )
+  assert.match(collectionRichHeroBlock, /loading="eager"/)
+  assert.match(collectionRichHeroBlock, /fetchPriority="high"/)
+  assert.doesNotMatch(collectionRichHeroBlock, /\bpreload\b/)
 })
 
 test('product and collection routes preserve crawlable content and layout-stable streaming', async () => {

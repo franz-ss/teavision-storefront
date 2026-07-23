@@ -35,7 +35,8 @@ export function Hero({
                   height={bannerImage.height}
                   sizes="(min-width: 1480px) 1480px, 100vw"
                   className="w-full object-cover"
-                  preload
+                  loading="eager"
+                  fetchPriority="high"
                 />
               </div>
             </Section.Container>
@@ -92,6 +93,8 @@ export function Hero({
             sizes="100vw"
             className="object-cover opacity-35"
             aria-hidden="true"
+            loading="eager"
+            fetchPriority="high"
           />
         </div>
       ) : null}
