@@ -9,6 +9,7 @@ import type {
   CollectionSummary,
 } from '@/lib/shopify/types'
 
+import { DefaultResults } from './default-results'
 import { PageContent } from './page-content'
 import { HeroContent } from './hero-content'
 
@@ -648,5 +649,73 @@ describe('Collection hero and page content rendering', () => {
     const html = renderToStaticMarkup(element)
 
     expect(getImagePreloads(html)).toHaveLength(1)
+  })
+})
+
+describe('DefaultResults fallback', () => {
+  beforeEach(() => {
+    shopifyMocks.getCollection.mockResolvedValue(collectionFixture())
+    shopifyMocks.getCollectionSummaries.mockResolvedValue([])
+    shopifyMocks.getCollectionTagCounts.mockResolvedValue({})
+    shopifyMocks.getCollectionPageIndex.mockResolvedValue(
+      pageIndexFixture({ totalCount: 1, totalPages: 1 }),
+    )
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: false },
+      products: [productFixture()],
+    })
+  })
+
+  it('renders the real default grid without page-level metadata', async () => {
+    const fallbackHtml = renderToStaticMarkup(
+      await DefaultResults({
+        params: Promise.resolve({ handle: 'bulk-tea-bags' }),
+      }),
+    )
+    const resolvedHtml = renderToStaticMarkup(
+      await PageContent({
+        params: Promise.resolve({ handle: 'bulk-tea-bags' }),
+        searchParams: Promise.resolve({}),
+      }),
+    )
+
+    // Real content, identical to the resolved no-query grid
+    expect(fallbackHtml).toContain('Tea Masters Sencha Green Tea')
+    expect(fallbackHtml).toContain('href="/products/tea-masters-sencha"')
+
+    // Metadata singletons stay exclusive to the resolved copy
+    expect(fallbackHtml).not.toContain('application/ld+json')
+    expect(resolvedHtml).toContain('application/ld+json')
+    expect(fallbackHtml).not.toContain('rel="prev"')
+    expect(fallbackHtml).not.toContain('rel="next"')
+  })
+
+  it('renders the category-filtered grid from the path param alone', async () => {
+    shopifyMocks.getCollectionProductsPage.mockResolvedValue({
+      filters: [],
+      pageInfo: { endCursor: null, hasNextPage: false },
+      products: [
+        productFixture({ tags: ['categories_herbs'] }),
+        productFixture({
+          id: 'gid://shopify/Product/other',
+          handle: 'other-product',
+          title: 'Unrelated Product',
+          tags: [],
+        }),
+      ],
+    })
+
+    const html = renderToStaticMarkup(
+      await DefaultResults({
+        params: Promise.resolve({
+          handle: 'bulk-tea-bags',
+          category: 'categories_herbs',
+        }),
+      }),
+    )
+
+    expect(html).toContain('Tea Masters Sencha Green Tea')
+    expect(html).not.toContain('Unrelated Product')
   })
 })

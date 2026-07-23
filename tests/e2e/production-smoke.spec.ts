@@ -118,6 +118,41 @@ test('collection banner is the only prioritized listing image', async ({
   assertNoLiveFlow()
 })
 
+test('collection grid is crawlable in the served HTML before any streamed chunk', async ({
+  request,
+}) => {
+  const response = await request.get('/collections/all')
+  expect(response.status()).toBe(200)
+  const html = await response.text()
+
+  const productLinkIndex = html.indexOf('href="/products/')
+  const firstStreamedChunkIndex = html.indexOf('<div hidden id="S:')
+
+  expect(productLinkIndex).toBeGreaterThan(-1)
+  if (firstStreamedChunkIndex !== -1) {
+    expect(productLinkIndex).toBeLessThan(firstStreamedChunkIndex)
+  }
+
+  // The fallback and resolved copies preload the same LCP image — React must
+  // dedupe them to a single tag.
+  const preloads =
+    html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ?? []
+  expect(preloads).toHaveLength(1)
+})
+
+test('blog listing serves complete HTML with no pending stream boundaries', async ({
+  request,
+}) => {
+  const response = await request.get('/blog')
+  expect(response.status()).toBe(200)
+  const html = await response.text()
+
+  // A pending boundary here would reproduce the pre-render flash the SEO
+  // team screenshotted — the listing must be fully server-rendered.
+  expect(html).not.toContain('<!--$?-->')
+  expect(html).toContain('href="/blogs/teavision-blogs/')
+})
+
 test('/products/test-standard-tea loads with Add to Cart', async ({ page }) => {
   const assertNoLiveFlow = observeForbiddenLiveFlowUrls(page)
 

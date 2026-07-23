@@ -14,7 +14,7 @@ function sourcePath(...segments) {
   return path.join(repoRoot, ...segments)
 }
 
-test('collection page hero renders as real content; only the query-controlled grid falls back to a skeleton', async () => {
+test('collection page hero and grid fallback both render as real content', async () => {
   const source = await readFile(
     sourcePath(
       'src',
@@ -30,8 +30,9 @@ test('collection page hero renders as real content; only the query-controlled gr
   assert.doesNotMatch(source, /Suspense fallback=\{null\}/)
   assert.doesNotMatch(source, /staticShell/)
   assert.doesNotMatch(source, /getCollectionHandleSamples/)
+  assert.doesNotMatch(source, /LoadingSkeleton/)
   assert.match(source, /<HeroContent params=\{params\} \/>/)
-  assert.match(source, /<LoadingSkeleton showHero=\{false\} \/>/)
+  assert.match(source, /fallback=\{<DefaultResults params=\{params\} \/>\}/)
 })
 
 test('base collection page resolves to content after search params settle', async () => {
@@ -69,12 +70,67 @@ test('category collection page reserves the results layout while query content s
     'utf8',
   )
 
+  // No generateStaticParams here, so the prerendered shell cannot await
+  // params — the fallback must stay static (skeleton, not DefaultResults).
   assert.doesNotMatch(source, /Suspense fallback=\{null\}/)
+  assert.doesNotMatch(source, /fallback=\{<DefaultResults/)
   assert.match(source, /<LoadingSkeleton showHero=\{false\} \/>/)
   assert.match(
     source,
     /<PageContent\s+params=\{params\}\s+searchParams=\{searchParams\}\s*\/>/,
   )
+})
+
+test('collection grid fallback renders real content without duplicating page metadata', async () => {
+  const [defaultResults, pageContent, results] = await Promise.all([
+    readFile(
+      sourcePath(
+        'src',
+        'app',
+        '(storefront)',
+        'collections',
+        '[handle]',
+        '_components',
+        'default-results.tsx',
+      ),
+      'utf8',
+    ),
+    readFile(
+      sourcePath(
+        'src',
+        'app',
+        '(storefront)',
+        'collections',
+        '[handle]',
+        '_components',
+        'page-content.tsx',
+      ),
+      'utf8',
+    ),
+    readFile(
+      sourcePath(
+        'src',
+        'app',
+        '(storefront)',
+        'collections',
+        '[handle]',
+        '_components',
+        'results.tsx',
+      ),
+      'utf8',
+    ),
+  ])
+
+  // The fallback reads only params — searchParams would force it into the
+  // streamed region and defeat the crawlable-shell purpose.
+  assert.doesNotMatch(defaultResults, /searchParams/)
+  assert.match(defaultResults, /includeMeta: false/)
+  assert.match(pageContent, /includeMeta: true/)
+  // JsonLd and rel prev/next must appear exactly once per document, so the
+  // shared view only emits them for the query-resolved copy.
+  assert.match(results, /\{includeMeta && \(\s*<JsonLd/)
+  assert.match(results, /\{includeMeta && prevPageHref/)
+  assert.match(results, /\{includeMeta && nextPageHref/)
 })
 
 test('product page fallback is real content, not a broad skeleton shell', async () => {
@@ -123,7 +179,7 @@ test('collection product listing keeps deliberate spacing below the hero', async
       'collections',
       '[handle]',
       '_components',
-      'page-content.tsx',
+      'results.tsx',
     ),
     'utf8',
   )

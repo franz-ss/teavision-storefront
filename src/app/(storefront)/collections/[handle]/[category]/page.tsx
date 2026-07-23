@@ -54,6 +54,12 @@ export async function generateMetadata({
 }
 
 export default function Page({ params, searchParams }: PageProps) {
+  // Unlike the base collection route, this segment has no generateStaticParams,
+  // so its prerendered shell cannot await params — a DefaultResults fallback
+  // fails the build ("uncached data outside Suspense"). The skeleton keeps the
+  // shell static; category URLs canonicalize to the parent collection (D-27),
+  // so they are not indexation targets and the crawlable-fallback treatment
+  // stays on the base route.
   return (
     <Suspense fallback={<LoadingSkeleton showHero={false} />}>
       <PageContent params={params} searchParams={searchParams} />

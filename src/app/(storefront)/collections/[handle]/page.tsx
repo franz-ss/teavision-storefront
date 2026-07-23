@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { LoadingSkeleton } from '@/components/collection'
 import { withNoindexRobots } from '@/lib/seo/noindex'
 import {
   getCollection,
   getCollections,
 } from '@/lib/shopify/operations/collection'
 
+import { DefaultResults } from './_components/default-results'
 import { HeroContent } from './_components/hero-content'
 import { PageContent } from './_components/page-content'
 import {
@@ -68,7 +68,10 @@ export default function Page({ params, searchParams }: PageProps) {
   return (
     <>
       <HeroContent params={params} />
-      <Suspense fallback={<LoadingSkeleton showHero={false} />}>
+      {/* The fallback is the real default grid, not a skeleton: it reads only
+          params + cached data, so crawlers and no-JS renders get actual
+          products while query-driven variants stream in over it. */}
+      <Suspense fallback={<DefaultResults params={params} />}>
         <PageContent params={params} searchParams={searchParams} />
       </Suspense>
     </>

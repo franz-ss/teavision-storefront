@@ -161,7 +161,12 @@ test('product and collection routes preserve crawlable content and layout-stable
 
   assert.doesNotMatch(collectionPage, /fallback=\{null\}/)
   assert.match(collectionPage, /<HeroContent params=\{params\} \/>/)
-  assert.match(collectionPage, /<LoadingSkeleton showHero=\{false\} \/>/)
+  assert.match(
+    collectionPage,
+    /fallback=\{<DefaultResults params=\{params\} \/>\}/,
+  )
+  // The category route still falls back to the skeleton, which must keep the
+  // product-card aspect ratio for layout-stable streaming.
   assert.match(collectionSkeleton, /aspect-square/)
   assert.doesNotMatch(collectionSkeleton, /aspect-25\/28/)
 
