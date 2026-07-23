@@ -50,3 +50,6 @@ next-env.d.ts
 
 storybook-static
 .claude/worktrees/
+
+# generated exports (PDF renders of launch docs)
+output/
