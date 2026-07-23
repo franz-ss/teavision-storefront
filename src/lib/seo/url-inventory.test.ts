@@ -132,6 +132,8 @@ function createSources(): UrlInventorySources {
     pages: [
       createPage('consultant-page', '2026-07-04'),
       createPage('download-catalogues', '2026-07-05'),
+      createPage('search-results', '2026-07-06'),
+      createPage('test-page', '2026-07-07'),
     ],
     blog: createBlog([
       pathCanonicalArticle,
@@ -223,6 +225,8 @@ describe('buildUrlInventoryRows', () => {
         '/blogs/teavision-blogs/noindex-article',
         '/blogs/teavision-blogs/external-canonical',
         '/blogs/teavision-blogs/different-local-canonical',
+        '/pages/search-results',
+        '/pages/test-page',
       ]),
     )
     expect(

@@ -7,11 +7,14 @@ import {
   getBlog,
   isLocalCanonicalPath,
 } from '@/lib/blog/operations'
+import { isSitemapExposureEnabledFromEnv } from '@/lib/env/server'
 import { getLaunchSeoRouteExpectations } from '@/lib/seo/launch-route-matrix'
 import { isNoindexModeEnabled } from '@/lib/seo/noindex'
+import { isShopifyPageEligibleForSitemap } from '@/lib/seo/shopify-page-eligibility'
 import { SITE_URL } from '@/lib/seo/site-url'
-import { getAllProducts } from '@/lib/shopify/operations/product'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
+import { getAllProducts } from '@/lib/shopify/operations/product'
+import { getPagePath, getPages } from '@/lib/shopify/operations/storefront-page'
 
 const STATIC_LAST_MODIFIED = '2026-06-02'
 
@@ -31,14 +34,19 @@ const STATIC_PAGES: MetadataRoute.Sitemap = getLaunchSeoRouteExpectations()
     priority: expectation.path === '/' ? 1.0 : 0.5,
   }))
 
+const STATIC_PAGE_PATHS = new Set(
+  STATIC_PAGES.map((page) => new URL(page.url).pathname),
+)
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  if (isNoindexModeEnabled()) {
+  if (isNoindexModeEnabled() && !isSitemapExposureEnabledFromEnv()) {
     return []
   }
 
-  const [products, collections, blog] = await Promise.all([
+  const [products, collections, pages, blog] = await Promise.all([
     getAllProducts(),
     getCollectionSummaries(250),
+    getPages(),
     getBlog(DEFAULT_BLOG_HANDLE),
   ])
 
@@ -57,6 +65,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }),
   )
+
+  const pageUrls: MetadataRoute.Sitemap = pages
+    .filter(
+      (page) =>
+        isShopifyPageEligibleForSitemap(page.handle) &&
+        !STATIC_PAGE_PATHS.has(getPagePath(page.handle)),
+    )
+    .map((page) => ({
+      url: `${SITE_URL}${getPagePath(page.handle)}`,
+      lastModified: page.updatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    }))
 
   const indexedArticles =
     blog?.articles.filter((article) => {
@@ -94,6 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...STATIC_PAGES,
     ...blogUrls,
+    ...pageUrls,
     ...productUrls,
     ...collectionUrls,
     ...articleUrls,

@@ -28,6 +28,10 @@ export function isNoindexModeEnabledFromEnv(): boolean {
   return truthyEnv('DISABLE_INDEXING')
 }
 
+export function isSitemapExposureEnabledFromEnv(): boolean {
+  return truthyEnv('EXPOSE_SITEMAP')
+}
+
 export function isSeoUrlExportEnabledFromEnv(): boolean {
   return truthyEnv('SEO_URL_EXPORT_ENABLED')
 }

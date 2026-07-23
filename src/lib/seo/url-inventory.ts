@@ -7,6 +7,7 @@ import {
 } from '@/lib/blog/operations'
 import { LEGAL_POLICIES } from '@/lib/legal/policies'
 import { getLaunchSeoRouteExpectations } from '@/lib/seo/launch-route-matrix'
+import { isShopifyPageEligibleForSitemap } from '@/lib/seo/shopify-page-eligibility'
 import { getSiteUrl, SITE_URL } from '@/lib/seo/site-url'
 import {
   getPagePath,
@@ -158,7 +159,11 @@ export function buildUrlInventoryRows(
     }))
 
   const pageRows = sources.pages
-    .filter((page) => !routeOwnedPaths.has(getPagePath(page.handle)))
+    .filter(
+      (page) =>
+        isShopifyPageEligibleForSitemap(page.handle) &&
+        !routeOwnedPaths.has(getPagePath(page.handle)),
+    )
     .map((page) =>
       createDynamicRow(getPagePath(page.handle), 'page', page.updatedAt),
     )

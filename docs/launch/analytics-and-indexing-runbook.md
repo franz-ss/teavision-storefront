@@ -41,6 +41,10 @@ must never be copied into analytics payloads.
 ## Pre-Cutover Indexing Verification
 
 1. Confirm the launch environment still has `DISABLE_INDEXING=true`.
+   If the SEO team needs the canonical URL list from staging, set
+   `EXPOSE_SITEMAP=true`. This exposes `/sitemap.xml` without removing the
+   page-level noindex protection or advertising the sitemap in staging
+   `robots.txt`.
 2. Run disabled-mode route evidence against the local production server or
    staging host:
 
@@ -139,5 +143,6 @@ proof exists.
 | --- | --- | --- | --- | --- | --- | --- |
 | Pending | Local/CI | fake/test sink | Analytics denied/granted | Unit tests prove fake sink and consent gates | `pnpm test:unit -- src/lib/analytics/adapter.test.ts` | Engineering |
 | Pending | Local production | SEO route matrix | Not applicable | Disabled mode, enabled mode, redirects, sitemap, canonical, noindex, and structured-data evidence | `node scripts/seo/probe-launch-seo.mjs --mode disabled` and `--mode enabled` | Engineering |
+| Pending | Staging | SEO sitemap review | Not applicable | `DISABLE_INDEXING=true`, `EXPOSE_SITEMAP=true`, pages remain noindex, canonical production URLs are present in `/sitemap.xml`, and staging `robots.txt` does not advertise it | Browser or HTTP inspection of staging metadata, sitemap, and robots | Engineering/SEO |
 | Pending | Production | GA4 | Analytics granted | Realtime/DebugView launch event verification | Pending owner public ID | Owner/Engineering |
 | Owner-gated | Production | Search Console | Not applicable | Sitemap submission and URL inspection | Pending owner property access or dated proof | Owner |

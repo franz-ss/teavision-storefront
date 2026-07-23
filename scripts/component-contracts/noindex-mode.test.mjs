@@ -15,6 +15,8 @@ test('noindex helper exposes an explicit server-side metadata overlay', () => {
   assert.match(source, /isNoindexModeEnabledFromEnv/)
   assert.match(envSource, /DISABLE_INDEXING/)
   assert.match(envExampleSource, /DISABLE_INDEXING=true/)
+  assert.match(envSource, /EXPOSE_SITEMAP/)
+  assert.match(envExampleSource, /EXPOSE_SITEMAP=false/)
   assert.match(envSource, /truthyEnv/)
   assert.match(source, /export function withNoindexRobots/)
   assert.match(source, /index: false/)
@@ -31,10 +33,12 @@ test('metadata, robots, and sitemap routes use shared noindex controls', () => {
   assert.match(layout, /withNoindexRobots/)
   assert.match(robots, /isNoindexModeEnabled/)
   assert.match(sitemap, /isNoindexModeEnabled/)
+  assert.match(sitemap, /isSitemapExposureEnabledFromEnv/)
   assert.match(
     sitemap,
-    /if\s*\(\s*isNoindexModeEnabled\(\)\s*\)\s*{\s*return\s*\[\]\s*}/s,
+    /if\s*\(\s*isNoindexModeEnabled\(\)\s*&&\s*!isSitemapExposureEnabledFromEnv\(\)\s*\)\s*{\s*return\s*\[\]\s*}/s,
   )
+  assert.doesNotMatch(robots, /isSitemapExposureEnabledFromEnv/)
   assert.doesNotMatch(robots, /disallow:\s*['"]\/['"]/)
   assert.match(robots, /disallow:\s*DISALLOWED_PATHS/)
 
@@ -94,7 +98,10 @@ test('sitemap static coverage is driven by the launch route matrix', () => {
   }
 
   assert.match(matrix, /path:\s*'\/search'/)
-  assert.match(matrix, /path:\s*'\/search'[\s\S]*?shouldAppearInSitemap:\s*false/)
+  assert.match(
+    matrix,
+    /path:\s*'\/search'[\s\S]*?shouldAppearInSitemap:\s*false/,
+  )
 })
 
 test('enabled SEO probe fails when indexable routes still render noindex', () => {

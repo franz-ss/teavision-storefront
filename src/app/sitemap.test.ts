@@ -7,12 +7,18 @@ import {
 } from '@/lib/blog/operations'
 import { getCollectionSummaries } from '@/lib/shopify/operations/collection'
 import { getAllProducts } from '@/lib/shopify/operations/product'
+import { getPages } from '@/lib/shopify/operations/storefront-page'
 
 import sitemap from './sitemap'
 
-const { getBlogMock, isNoindexModeEnabledMock } = vi.hoisted(() => ({
+const {
+  getBlogMock,
+  isNoindexModeEnabledMock,
+  isSitemapExposureEnabledFromEnvMock,
+} = vi.hoisted(() => ({
   getBlogMock: vi.fn(),
   isNoindexModeEnabledMock: vi.fn(),
+  isSitemapExposureEnabledFromEnvMock: vi.fn(),
 }))
 
 vi.mock('@/lib/blog/operations', () => ({
@@ -35,6 +41,10 @@ vi.mock('@/lib/seo/noindex', () => ({
   isNoindexModeEnabled: isNoindexModeEnabledMock,
 }))
 
+vi.mock('@/lib/env/server', () => ({
+  isSitemapExposureEnabledFromEnv: isSitemapExposureEnabledFromEnvMock,
+}))
+
 vi.mock('@/lib/shopify/operations/collection', () => ({
   getCollectionSummaries: vi.fn(),
 }))
@@ -42,6 +52,15 @@ vi.mock('@/lib/shopify/operations/collection', () => ({
 vi.mock('@/lib/shopify/operations/product', () => ({
   getAllProducts: vi.fn(),
 }))
+
+vi.mock('@/lib/shopify/operations/storefront-page', () => ({
+  getPagePath: (handle: string) => `/pages/${handle}`,
+  getPages: vi.fn(),
+}))
+
+beforeEach(() => {
+  vi.clearAllMocks()
+})
 
 function createBlog(): BlogIndex {
   return {
@@ -84,9 +103,11 @@ function createBlog(): BlogIndex {
 describe('sitemap blog paths', () => {
   beforeEach(() => {
     isNoindexModeEnabledMock.mockReturnValue(false)
+    isSitemapExposureEnabledFromEnvMock.mockReturnValue(false)
     getBlogMock.mockResolvedValue(createBlog())
     vi.mocked(getAllProducts).mockResolvedValue([])
     vi.mocked(getCollectionSummaries).mockResolvedValue([])
+    vi.mocked(getPages).mockResolvedValue([])
   })
 
   test('uses /blog for the listing and preserves article URLs', async () => {
@@ -98,5 +119,89 @@ describe('sitemap blog paths', () => {
     expect(paths).toContain(
       getArticlePath(DEFAULT_BLOG_HANDLE, 'selecting-wholesale-tea'),
     )
+  })
+})
+
+describe('sitemap staging exposure', () => {
+  beforeEach(() => {
+    getBlogMock.mockResolvedValue(createBlog())
+    vi.mocked(getAllProducts).mockResolvedValue([])
+    vi.mocked(getCollectionSummaries).mockResolvedValue([])
+    vi.mocked(getPages).mockResolvedValue([])
+  })
+
+  test('stays empty when indexing and sitemap exposure are disabled', async () => {
+    isNoindexModeEnabledMock.mockReturnValue(true)
+    isSitemapExposureEnabledFromEnvMock.mockReturnValue(false)
+
+    await expect(sitemap()).resolves.toEqual([])
+    expect(getAllProducts).not.toHaveBeenCalled()
+    expect(getCollectionSummaries).not.toHaveBeenCalled()
+    expect(getPages).not.toHaveBeenCalled()
+    expect(getBlogMock).not.toHaveBeenCalled()
+  })
+
+  test('shows canonical URLs while staging pages remain in noindex mode', async () => {
+    isNoindexModeEnabledMock.mockReturnValue(true)
+    isSitemapExposureEnabledFromEnvMock.mockReturnValue(true)
+
+    const entries = await sitemap()
+    const urls = entries.map((entry) => entry.url)
+
+    expect(urls).toContain('https://www.teavision.com.au')
+    expect(urls).toContain('https://www.teavision.com.au/blog')
+    expect(
+      urls.every(
+        (url) => new URL(url).origin === 'https://www.teavision.com.au',
+      ),
+    ).toBe(true)
+  })
+})
+
+describe('sitemap Shopify page coverage', () => {
+  beforeEach(() => {
+    isNoindexModeEnabledMock.mockReturnValue(false)
+    isSitemapExposureEnabledFromEnvMock.mockReturnValue(false)
+    getBlogMock.mockResolvedValue(createBlog())
+    vi.mocked(getAllProducts).mockResolvedValue([])
+    vi.mocked(getCollectionSummaries).mockResolvedValue([])
+  })
+
+  test('includes eligible Shopify pages without app-owned or utility pages', async () => {
+    vi.mocked(getPages).mockResolvedValue([
+      {
+        id: 'gid://shopify/Page/custom',
+        handle: 'custom-shopify-page',
+        title: 'Custom Shopify Page',
+        bodySummary: 'Custom page summary',
+        updatedAt: '2026-07-20T00:00:00.000Z',
+        seo: { title: null, description: null },
+      },
+      {
+        id: 'gid://shopify/Page/privacy',
+        handle: 'privacy-policy',
+        title: 'Privacy Policy',
+        bodySummary: 'Privacy policy summary',
+        updatedAt: '2026-07-21T00:00:00.000Z',
+        seo: { title: null, description: null },
+      },
+      {
+        id: 'gid://shopify/Page/test',
+        handle: 'test-page',
+        title: 'Test Page',
+        bodySummary: '',
+        updatedAt: '2026-07-22T00:00:00.000Z',
+        seo: { title: null, description: null },
+      },
+    ])
+
+    const entries = await sitemap()
+    const paths = entries.map((entry) => new URL(entry.url).pathname)
+
+    expect(paths).toContain('/pages/custom-shopify-page')
+    expect(
+      paths.filter((path) => path === '/pages/privacy-policy'),
+    ).toHaveLength(1)
+    expect(paths).not.toContain('/pages/test-page')
   })
 })

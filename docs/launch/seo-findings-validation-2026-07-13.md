@@ -14,6 +14,11 @@
 
 The staging deployment is intentionally in `noindex` mode. Its empty public sitemap is therefore expected application behaviour, but it still blocks the SEO team's migration crawl. The correct remedy is to provide the protected URL inventory export (or a dated CSV), not to make staging indexable.
 
+**Decision update (2026-07-23):** the site owner approved exposing a
+production-canonical sitemap on noindex staging for SEO review. Staging keeps
+`DISABLE_INDEXING=true`, enables `EXPOSE_SITEMAP=true`, and does not advertise
+the sitemap in `robots.txt`.
+
 ## Validation matrix
 
 |   # | Finding                                                                 | Status                                  | Evidence                                                                                                                                                                                                                                                                                                                               | SEO impact                                                                                                                                                  | Required action                                                                                                                                                                                                                                                                                                                                                                                                    | Priority                                                                                                                                            | Effort                                                                                                                                                                          |
